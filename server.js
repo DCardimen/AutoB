@@ -10,6 +10,7 @@ const types = {
   ".svg": "image/svg+xml",
   ".png": "image/png",
   ".webp": "image/webp",
+  ".mp4": "video/mp4",
   ".json": "application/json",
   ".woff2": "font/woff2",
 };
@@ -26,6 +27,12 @@ const entryFiles = new Set([
   "/sound.js",
   "/arena.js",
   "/Starfall-Menagerie.html",
+  "/prototype.html",
+  "/prototype.css",
+  "/prototype.js",
+  "/prototype-engine.js",
+  "/prototype-sprites.js",
+  "/Starfall-Training-Glade.html",
 ]);
 http
   .createServer((req, res) => {

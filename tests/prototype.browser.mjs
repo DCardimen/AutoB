@@ -1,0 +1,81 @@
+import {chromium} from 'playwright';
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import {createHash} from 'node:crypto';
+const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||'/usr/bin/chromium',headless:true,args:['--no-sandbox']});
+const base=process.env.BASE_URL||'http://127.0.0.1:3003',report={checks:[],errors:[],screenshots:[]};
+const page=await browser.newPage({viewport:{width:1440,height:1100}});
+page.on('pageerror',e=>report.errors.push(e.message));page.on('response',r=>{if(r.status()>=400)report.errors.push(r.status()+' '+r.url());});
+await page.goto(base+'/prototype.html');await page.waitForFunction(()=>window.prototypeLab?.state.artLoaded);
+await page.clock.install();
+assert.equal(await page.locator('.character-card').count(),5);
+assert.equal(await page.evaluate(()=>prototypeLab.state.arena.units.length),10);
+await page.locator('#play-pause').click();
+const frozen=await page.evaluate(()=>prototypeLab.state.arena.time);await page.clock.runFor(800);
+assert.equal(await page.evaluate(()=>prototypeLab.state.arena.time),frozen);
+await page.locator('#frame-step').click();assert.ok(await page.evaluate(()=>prototypeLab.state.arena.time)>frozen);
+report.checks.push('Five complete character portraits and a ten-body scene; pause and frame stepping preserve simulation control');
+await page.locator('[data-select="0-elf-2"]').click();
+let box=await page.locator('canvas').boundingBox();
+await page.mouse.click(box.x+350*box.width/1000,box.y+510*box.height/650);
+const order=await page.evaluate(()=>prototypeLab.state.arena.units.find(u=>u.uid===prototypeLab.state.selected).order);
+assert.ok(Math.abs(order.x-350)<1&&Math.abs(order.y-750)<2);
+const before=await page.evaluate(()=>prototypeLab.state.arena.units.find(u=>u.uid===prototypeLab.state.selected).x);
+await page.locator('#play-pause').click();await page.clock.runFor(1000);
+assert.ok(await page.evaluate(()=>prototypeLab.state.arena.units.find(u=>u.uid===prototypeLab.state.selected).x)>before+20);
+report.checks.push('Selecting a character and clicking ground produces actual movement in the physical scene');
+await page.locator('[data-scene="movement"]').click();await page.clock.runFor(2500);
+const movement=await page.evaluate(()=>prototypeLab.state.arena.units.map(u=>({travel:u.travel,gait:u.gait,dir:Math.round(u.facing/(Math.PI/4))})));
+assert.ok(movement.every(u=>u.travel>30&&u.gait>0.25));
+await page.locator('[data-speed="0.25"]').click();assert.equal(await page.evaluate(()=>prototypeLab.state.speed),0.25);
+await page.locator('[data-speed="1"]').click();
+await page.screenshot({path:'playtest-artifacts/prototype-movement.png',fullPage:true});report.screenshots.push('prototype-movement.png');
+report.checks.push('All five locomotion profiles travel around the circuits; speed changes work');
+await page.locator('[data-scene="study"]').click();await page.locator('[data-select="0-orc-1"]').click();
+await page.locator('#focus-view').click();assert.equal(await page.evaluate(()=>prototypeLab.state.focusView),true);
+await page.locator('#play-pause').click();
+const hashes=new Set();
+for(let dir=0;dir<8;dir++){
+  await page.locator('#pose-facing').selectOption(String(dir));await page.locator('#frame-step').click();
+  const data=await page.locator('canvas').evaluate(c=>c.toDataURL());hashes.add(createHash('sha256').update(data).digest('hex'));
+}
+assert.equal(hashes.size,8);
+const stateFrames=new Set();
+for(const state of ['idle','walk','run','turn','attack','cast','dash','dodge','hit','stagger','death']){
+  await page.locator(`[data-pose="${state}"]`).click();for(let i=0;i<6;i++)await page.locator('#frame-step').click();
+  assert.equal(await page.evaluate(()=>prototypeLab.sample.state),state);
+  const data=await page.locator('canvas').evaluate(c=>c.toDataURL());stateFrames.add(createHash('sha256').update(data).digest('hex'));
+}
+assert.ok(stateFrames.size>=10);report.directionFrames=hashes.size;report.stateFrames=stateFrames.size;
+await page.locator('[data-pose="attack"]').click();for(let i=0;i<4;i++)await page.locator('#frame-step').click();
+await page.screenshot({path:'playtest-artifacts/prototype-study.png',fullPage:true});report.screenshots.push('prototype-study.png');
+report.checks.push('Eight directional views and eleven animation states are inspectable, including a close view and death');
+await page.locator('#focus-view').click();await page.locator('[data-scene="battle"]').click();await page.locator('#play-pause').click();
+await page.clock.runFor(8500);
+const liveMetrics=await page.evaluate(()=>({...prototypeLab.state.arena.metrics}));assert.ok(liveMetrics.hits>0&&liveMetrics.rolls>0&&liveMetrics.projectiles>0);
+await page.screenshot({path:'playtest-artifacts/prototype-battle.png',fullPage:true});report.screenshots.push('prototype-battle.png');
+await page.locator('#sound-toggle').click();assert.equal(await page.locator('#sound-toggle').getAttribute('aria-pressed'),'true');
+await page.locator('#sound-toggle').click();assert.equal(await page.locator('#sound-toggle').getAttribute('aria-pressed'),'false');
+for(let i=0;i<55;i++){if(await page.evaluate(()=>prototypeLab.state.arena.done))break;await page.clock.runFor(1000);}
+assert.equal(await page.evaluate(()=>prototypeLab.state.arena.done),true);assert.equal(await page.locator('#result').isVisible(),true);
+report.battle=await page.evaluate(()=>({time:prototypeLab.state.arena.time,metrics:prototypeLab.state.arena.metrics,cache:prototypeLab.state.cache}));
+assert.ok(report.battle.cache.frames<=report.battle.cache.maxFrames);
+report.checks.push('Rendered sparring resolves with physical hits, projectile travel, rolls, interruptions and deaths; optional audio toggles');
+await page.setViewportSize({width:390,height:844});await page.locator('[data-scene="study"]').click();
+assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
+await page.locator('[data-select="0-wolf-4"]').click();assert.equal(await page.evaluate(()=>prototypeLab.sample.id),'wolf');
+await page.screenshot({path:'playtest-artifacts/prototype-mobile.png',fullPage:true});report.screenshots.push('prototype-mobile.png');
+report.checks.push('390px mobile layout has no horizontal overflow and retains scene and character controls');
+const offline=await browser.newPage({viewport:{width:1280,height:900}}),requests=[];
+offline.on('pageerror',e=>report.errors.push('offline: '+e.message));
+// The managed browser blocks file: navigation. Exercise the exact embedded HTML
+// through one intercepted local document; abort every additional request.
+const offlineURL=base+'/offline-prototype',body=fs.readFileSync('Starfall-Training-Glade.html');
+await offline.route('**/*',r=>{if(r.request().url()===offlineURL)return r.fulfill({status:200,contentType:'text/html',body});requests.push(r.request().url());return r.abort();});
+await offline.goto(offlineURL);await offline.waitForFunction(()=>prototypeLab.state.artLoaded);
+await offline.clock.install();await offline.clock.runFor(8000);assert.ok(await offline.evaluate(()=>prototypeLab.state.arena.metrics.hits)>0);
+await offline.locator('[data-scene="study"]').click();await offline.locator('[data-pose="death"]').click();await offline.clock.runFor(1000);
+assert.deepEqual(requests,[]);report.offlineExternalRequests=requests.length;report.checks.push('Standalone HTML runs combat and pose inspection with zero external requests');
+assert.deepEqual(report.errors,[]);
+fs.writeFileSync('playtest-artifacts/prototype-browser-report.json',JSON.stringify(report,null,2));
+console.log(JSON.stringify(report,null,2));await browser.close();

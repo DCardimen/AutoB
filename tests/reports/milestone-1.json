@@ -1,0 +1,54 @@
+{
+  "checks": [
+    "Five complete character portraits and a ten-body scene; pause and frame stepping preserve simulation control",
+    "Selecting a character and clicking ground produces actual movement in the physical scene",
+    "All five locomotion profiles travel around the circuits; speed changes work",
+    "Eight directional views and eleven animation states are inspectable, including a close view and death",
+    "Rendered sparring resolves with physical hits, projectile travel, rolls, interruptions and deaths; optional audio toggles",
+    "390px mobile layout has no horizontal overflow and retains scene and character controls",
+    "Standalone HTML runs combat and pose inspection with zero external requests"
+  ],
+  "errors": [],
+  "screenshots": [
+    "prototype-movement.png",
+    "prototype-study.png",
+    "prototype-battle.png",
+    "prototype-mobile.png"
+  ],
+  "directionFrames": 8,
+  "stateFrames": 11,
+  "battle": {
+    "time": 40.31666666666502,
+    "metrics": {
+      "hits": 78,
+      "misses": 38,
+      "rolls": 44,
+      "avoided": 23,
+      "interrupts": 3,
+      "projectiles": 49,
+      "contacts": 2321,
+      "knockouts": 7
+    },
+    "cache": {
+      "frames": 420,
+      "maxFrames": 420,
+      "sourceReady": true,
+      "frameSize": 176
+    }
+  },
+  "offlineExternalRequests": 0,
+  "rules": {
+    "passed": 77,
+    "failed": 0,
+    "prototypeChecks": 10
+  },
+  "preview": {
+    "file": "public/prototype-preview.mp4",
+    "durationSeconds": 18,
+    "fps": 30,
+    "bytes": 3442355,
+    "sha256": "42c4023d8d0ded714dfabebc8c1543bed5eca8ecf4384b3ec6e944937a905795"
+  },
+  "scope": "Iteration 1: five-character visual and movement prototype. Automated checks do not establish human playtime or a fun score.",
+  "offlineValidation": "Exact embedded HTML served as one intercepted document; all other requests blocked. Managed browser policy blocks file navigation."
+}

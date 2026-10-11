@@ -87,7 +87,8 @@ const html = fs
   .replace(
     '<script type="module" src="app.js"></script>',
     "<script>" + js + "</script>",
-  );
+  )
+  .replace('href="prototype.html"', 'href="Starfall-Training-Glade.html"');
 fs.writeFileSync(path.join(root, "Starfall-Menagerie.html"), html);
 console.log(
   "Built standalone game: " +
