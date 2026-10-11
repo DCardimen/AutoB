@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#111916" />
+    <title>Starfall Menagerie — A creature collecting autobattler</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="ambient"></div>
+    <header class="header">
+      <a class="brand" href="#arena" aria-label="Starfall Menagerie home"
+        ><span class="brand-mark">✧</span
+        ><span>STARFALL <small>MENAGERIE</small></span></a
+      >
+      <nav class="main-nav" aria-label="Main navigation">
+        <button data-view="arena" class="active"><span>⚔</span> Arena</button
+        ><button data-view="map"><span>✧</span> Star chart</button
+        ><button data-view="collection">
+          <span>◈</span> Menagerie <i id="collection-count">6</i>
+        </button>
+      </nav>
+      <div class="header-end">
+        <button
+          id="sound"
+          class="icon-button"
+          aria-label="Enable sound"
+          title="Toggle sound"
+        >
+          ♫</button
+        ><button
+          id="help"
+          class="icon-button"
+          aria-label="How to play"
+          title="How to play"
+        >
+          ?</button
+        ><span class="local-label"><i></i> LOCAL SAVE</span>
+      </div>
+    </header>
+    <main id="app">
+      <div class="run-bar">
+        <span class="eyebrow"
+          ><span class="star-mini">✦</span> THE LONG WAY HOME
+          <span class="divider">/</span> EXPEDITION
+          <span id="run-number">001</span></span
+        ><button id="new-run" class="text-button">
+          New expedition <span>→</span>
+        </button>
+      </div>
+      <section class="page-heading">
+        <div>
+          <div class="eyebrow planet-kicker" id="planet-kicker">
+            PLANET 01 / 03 · THE OUTER WILDS
+          </div>
+          <h1 id="page-title">Verdant Reach<span>.</span></h1>
+          <p id="page-subtitle">
+            Strange worlds. Unlikely companions. One extraordinary expedition.
+          </p>
+        </div>
+        <div class="resources">
+          <div title="Spend gold at shops">
+            <span class="resource-icon gold">◉</span>
+            <div><strong id="gold">160</strong><small>GOLD</small></div>
+          </div>
+          <div title="Use capture orbs after victories">
+            <span class="resource-icon mint">◈</span>
+            <div><strong id="orbs">5</strong><small>CAPTURE ORBS</small></div>
+          </div>
+          <div title="Retreating costs one expedition life">
+            <span class="resource-icon pink">♡</span>
+            <div>
+              <strong id="lives">3 <em>/ 3</em></strong
+              ><small>EXPEDITION LIVES</small>
+            </div>
+          </div>
+        </div>
+      </section>
+      <div id="view"></div>
+      <footer>
+        <span
+          ><span class="star-mini">✧</span> EVERY CREATURE HAS A STORY. MAKE IT
+          PART OF YOURS.</span
+        ><span>Built for curious explorers <i>•</i> Saves on this device</span>
+      </footer>
+    </main>
+    <div id="modal-root"></div>
+    <div id="toast" role="status"></div>
+    <script type="module" src="app.js"></script>
+  </body>
+</html>

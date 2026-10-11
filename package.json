@@ -1,0 +1,19 @@
+{
+  "name": "starfall-menagerie",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js",
+    "test": "node --test tests/*.test.js",
+    "test:browser": "node tests/browser.mjs && node tests/boss.browser.mjs",
+    "playtest": "node tests/playtest.mjs"
+  },
+  "devDependencies": {
+    "playwright": "1.58.2"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

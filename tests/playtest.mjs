@@ -1,0 +1,108 @@
+import fs from "node:fs";
+import assert from "node:assert/strict";
+import {
+  SPECIES,
+  PERSONAL_RELICS,
+  makeRun,
+  generateRoute,
+  encounter,
+  simulate,
+  creature,
+  personalRelic,
+  equipRelic,
+  linkRelic,
+  rng,
+  pick,
+  BY_ID,
+  RELIC_SLOTS,
+  stats,
+  RELICS,
+} from "../game.js";
+import { loadoutFor } from "../skills.js";
+const requestedHours = Number(process.env.SIM_HOURS || 50);
+const report = {
+  kind: "Automated simulation, NOT human playtime",
+  targetHours: requestedHours,
+  battles: 0,
+  seconds: 0,
+  wins: 0,
+  timeouts: 0,
+  skills: 0,
+  dodges: 0,
+  echoes: 0,
+  crits: 0,
+  byPlanet: [0, 0, 0],
+  minTime: Infinity,
+  maxTime: 0,
+};
+const start = performance.now();
+while (report.seconds < requestedHours * 3600) {
+  const seed = report.battles + 1001,
+    r = rng(seed),
+    run = makeRun(seed);
+  run.planet = seed % 3;
+  run.depth = seed % 6;
+  run.team = Array.from({ length: 6 }, () =>
+    creature(pick(SPECIES, r).id, 1 + run.planet * 2 + Math.floor(r() * 3)),
+  );
+  run.team.forEach((c) => {
+    c.training = Math.floor(r() * 5);
+  });
+  run.relics = RELICS.filter(() => r() < 0.2).map((v) => v.id);
+  for (let index = 0; index < 6; index++) {
+    const c = run.team[index],
+      loadout = loadoutFor(BY_ID[c.id]),
+      gemCount = Math.floor(r() * (RELIC_SLOTS[BY_ID[c.id].rarity] + 1));
+    const options = [...PERSONAL_RELICS];
+    for (let j = 0; j < gemCount; j++) {
+      const gem = options.splice(Math.floor(r() * options.length), 1)[0];
+      const item = personalRelic(gem.id);
+      run.inventory.push(item);
+      assert.ok(equipRelic(run, index, item.uid));
+      assert.ok(
+        linkRelic(run, index, j, pick([loadout.auto, ...loadout.active], r)),
+      );
+    }
+  }
+  const type =
+    run.depth === 5
+      ? "boss"
+      : seed % 7 === 0
+        ? "elite"
+        : seed % 5 === 0
+          ? "capture"
+          : "battle";
+  const b = simulate(run, encounter(run, type, seed), seed);
+  assert.ok(b.done && Number.isFinite(b.time));
+  for (const u of b.units) {
+    assert.ok(Number.isFinite(u.hp) && u.hp >= 0 && u.hp <= u.maxHp);
+    assert.ok(Number.isFinite(u.shield) && u.shield >= 0);
+    assert.ok(Number.isFinite(u.x) && Number.isFinite(u.y));
+  }
+  report.battles++;
+  report.seconds += b.time;
+  report.wins += b.winner === 0;
+  report.timeouts += b.time >= 90;
+  report.skills += b.metrics.skills;
+  report.dodges += b.metrics.dodges;
+  report.echoes += b.metrics.echoes;
+  report.crits += b.metrics.crits;
+  report.byPlanet[run.planet]++;
+  report.minTime = Math.min(report.minTime, b.time);
+  report.maxTime = Math.max(report.maxTime, b.time);
+  if (report.battles % 500 === 0)
+    console.log(
+      `${report.battles} seeded battles · ${(report.seconds / 3600).toFixed(1)} simulated combat hours`,
+    );
+}
+report.simulatedHours = report.seconds / 3600;
+report.executionSeconds = (performance.now() - start) / 1000;
+report.winRate = report.wins / report.battles;
+report.timeoutRate = report.timeouts / report.battles;
+report.meanBattleSeconds = report.seconds / report.battles;
+fs.mkdirSync("playtest-artifacts", { recursive: true });
+fs.writeFileSync(
+  "playtest-artifacts/simulation-report.json",
+  JSON.stringify(report, null, 2),
+);
+console.log(JSON.stringify(report, null, 2));

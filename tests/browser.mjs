@@ -1,0 +1,258 @@
+import { chromium } from "playwright";
+import assert from "node:assert/strict";
+import fs from "node:fs";
+import { makeRun, generateRoute, encounter, STARTERS } from "../game.js";
+const browser = await chromium.launch({
+  executablePath: process.env.CHROMIUM_PATH || "/usr/bin/chromium",
+  headless: true,
+  args: ["--no-sandbox"],
+});
+const page = await browser.newPage({ viewport: { width: 1440, height: 1050 } });
+const errors = [],
+  report = { battles: [], checks: [], startedAt: new Date().toISOString() };
+page.on("pageerror", (e) => errors.push(e.message));
+page.on("response", (r) => {
+  if (r.status() >= 400) errors.push(`HTTP ${r.status()} ${r.url()}`);
+});
+const fixture = makeRun(1);
+fixture.route = generateRoute(fixture);
+const node = fixture.route[0][0];
+fixture.encounterType = "battle";
+const { random, ...data } = fixture;
+await page.addInitScript(
+  ({ data, node, foes, starters }) => {
+    if (!localStorage.getItem("starfall-menagerie-v1"))
+      localStorage.setItem(
+        "starfall-menagerie-v1",
+        JSON.stringify({
+          profile: { owned: starters, runs: 1, tutorial: true },
+          run: data,
+          phase: "prep",
+          node,
+          foes,
+        }),
+      );
+  },
+  {
+    data,
+    node,
+    foes: encounter(fixture, "battle", node.seed),
+    starters: STARTERS,
+  },
+);
+await page.goto("http://127.0.0.1:3000");
+await page.waitForFunction(() =>
+  document.querySelector("[data-creature] img")?.src.startsWith("data:"),
+);
+await page.waitForTimeout(500);
+assert.equal(await page.locator("[data-creature]").count(), 6);
+for (let i = 0; i < 3; i++) {
+  await page.locator(`[data-creature="${i}"]`).click();
+  assert.equal(await page.locator(".ability-list .skill-detail").count(), 3);
+  await page.locator("[data-equip]").first().click();
+  assert.equal(await page.locator(".gem-link").count(), 1);
+  if (i === 0) {
+    await page.locator(".gem-link").selectOption("auto-cinderfox");
+    assert.equal(await page.locator(".linked-gems").count(), 1);
+    await page.locator(".gem-link").selectOption("cinderfox");
+  }
+  await page.locator('[data-action="close"]').first().click();
+}
+report.checks.push(
+  "Equip three support gems; link and relink a signature auto-attack",
+);
+await page.screenshot({
+  path: "playtest-artifacts/browser-arena.png",
+  fullPage: true,
+});
+await page.clock.install();
+await page.locator('[data-speed="3"]').click();
+async function advanceBattle() {
+  await page.locator('[data-action="battle"]').click();
+  await page.locator('[data-action="pause"]').click();
+  const t = await page.evaluate(() => starfall.state.battle.time);
+  await page.clock.runFor(500);
+  assert.equal(await page.evaluate(() => starfall.state.battle.time), t);
+  await page.locator('[data-action="pause"]').click();
+  for (let i = 0; i < 33; i++) {
+    if (await page.evaluate(() => starfall.state.phase !== "battle")) break;
+    await page.clock.runFor(1000);
+  }
+  assert.equal(await page.evaluate(() => starfall.state.phase), "reward");
+  const result = await page.evaluate(() => ({
+    planet: starfall.state.run.planet,
+    depth: starfall.state.run.depth,
+    won: starfall.state.battle.winner === 0,
+    time: starfall.state.battle.time,
+    metrics: starfall.state.battle.metrics,
+  }));
+  report.battles.push(result);
+  console.log(
+    "Browser encounter",
+    result.planet + 1,
+    result.depth + 1,
+    result.won ? "WIN" : "LOSS",
+    Math.round(result.time) + "s",
+  );
+  if (result.won) {
+    await page.locator('[data-upgrade="training"]').click();
+    const capture = page.locator('[data-action="capture"]');
+    if ((await capture.count()) && (await capture.isEnabled())) {
+      await capture.click();
+      const before = await page.evaluate(() => ({
+        owned: [...starfall.state.profile.owned],
+        bench: starfall.state.run.bench.length,
+        orbs: starfall.state.run.orbs,
+      }));
+      await page.reload();
+      await page.clock.runFor(100);
+      const after = await page.evaluate(() => ({
+        owned: [...starfall.state.profile.owned],
+        bench: starfall.state.run.bench.length,
+        orbs: starfall.state.run.orbs,
+      }));
+      assert.deepEqual(after, before);
+      assert.ok(await page.locator('[data-action="capture"]').isDisabled());
+      report.checks.push(
+        "Capture result and permanent collection persist on reload; no second attempt",
+      );
+    }
+  }
+  await page.locator('[data-action="continue"]').click();
+  return result;
+}
+let ended = false;
+for (let iteration = 0; iteration < 40 && !ended; iteration++) {
+  const state = await page.evaluate(() => ({
+    phase: starfall.state.phase,
+    p: starfall.state.run.planet,
+    d: starfall.state.run.depth,
+    lives: starfall.state.run.integrity,
+  }));
+  if (state.phase === "ended") {
+    ended = true;
+    break;
+  }
+  if (state.phase === "prep") {
+    const result = await advanceBattle();
+    if (!result.won && result.depth === 5) {
+      const st = await page.evaluate(() => ({
+        p: starfall.state.run.planet,
+        d: starfall.state.run.depth,
+        phase: starfall.state.phase,
+      }));
+      if (st.phase !== "ended") {
+        assert.equal(st.p, result.planet);
+        assert.equal(st.d, 5);
+        report.checks.push("Boss defeat prevents planet advancement");
+      }
+    }
+    continue;
+  }
+  if (state.phase === "map") {
+    const lane =
+      state.d === 1
+        ? 1
+        : state.d === 2
+          ? 2
+          : state.d === 3
+            ? 1
+            : state.d === 4
+              ? 1
+              : 0;
+    await page.locator(`[data-node="p${state.p}-${state.d}-${lane}"]`).click();
+    const phase = await page.evaluate(() => starfall.state.phase);
+    if (phase === "shop") {
+      const wanted = ["clock", "fangs", "prism"][state.p],
+        buy = page.locator(`[data-action="buy-${wanted}"]`);
+      if ((await buy.count()) && (await buy.isEnabled())) await buy.click();
+      // If not on the shelf, a refresh is a real economic decision.
+      else {
+        for (let i = 0; i < 2; i++) {
+          const refresh = page.locator('[data-action="reroll"]');
+          if (!(await refresh.isEnabled())) break;
+          await refresh.click();
+          if ((await buy.count()) && (await buy.isEnabled())) {
+            await buy.click();
+            break;
+          }
+        }
+      }
+      const personal = page.locator(
+        '[data-action^="buy-personal-"]:not(:disabled)',
+      );
+      if (await personal.count()) {
+        const gold = await page.evaluate(() => starfall.state.run.gold);
+        await personal.first().click();
+        assert.ok((await page.evaluate(() => starfall.state.run.gold)) < gold);
+        report.checks.push("Shop sells support gems and deducts gold");
+      }
+      await page.screenshot({
+        path: `playtest-artifacts/shop-planet-${state.p + 1}.png`,
+        fullPage: true,
+      });
+      await page.locator('[data-action="leave-node"]').click();
+    } else if (phase === "event") {
+      const choice = state.p === 0 ? 0 : state.p === 1 ? 2 : 1;
+      const pick = page.locator(`[data-event="${choice}"]`);
+      if (await pick.isEnabled()) await pick.click();
+      else await page.locator("[data-event]:not(:disabled)").first().click();
+      report.checks.push("Event choice applies and advances the path");
+    } else if (phase === "rest") {
+      const heal = page.locator('[data-action="rest-life"]');
+      await (
+        (await heal.isEnabled())
+          ? heal
+          : page.locator('[data-action="rest-xp"]')
+      ).click();
+      report.checks.push("Rest changes expedition life or team EXP");
+    }
+    continue;
+  }
+  throw new Error(`Unexpected phase ${state.phase}`);
+}
+assert.ok(ended, "The browser run reaches a genuine end state");
+report.ending = await page.evaluate(() => ({
+  complete: starfall.state.run.complete,
+  wins: starfall.state.run.wins,
+  planet: starfall.state.run.planet,
+  collection: starfall.state.profile.owned.length,
+}));
+await page.screenshot({
+  path: "playtest-artifacts/expedition-end.png",
+  fullPage: true,
+});
+await page.locator('#modal-root [data-action="new-run"]').click();
+assert.equal(await page.locator("[data-starter].selected").count(), 6);
+await page.locator('[data-action="confirm-run"]').click();
+assert.equal(await page.evaluate(() => starfall.state.run.team[0].level), 1);
+report.checks.push("New expedition retains captures and resets run growth");
+await page.setViewportSize({ width: 390, height: 844 });
+await page.locator('[data-view="collection"]').click();
+assert.ok(
+  await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth),
+);
+await page.screenshot({
+  path: "playtest-artifacts/mobile-menagerie.png",
+  fullPage: true,
+});
+await page.locator('[data-view="arena"]').click();
+assert.ok(
+  await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth),
+);
+await page.screenshot({
+  path: "playtest-artifacts/mobile-arena.png",
+  fullPage: true,
+});
+report.checks.push(
+  "390px mobile arena and menagerie have no horizontal overflow",
+);
+assert.deepEqual(errors, []);
+report.checks.push("No browser exceptions or failed HTTP responses");
+report.checks = [...new Set(report.checks)];
+fs.writeFileSync(
+  "playtest-artifacts/browser-report.json",
+  JSON.stringify(report, null, 2),
+);
+console.log(JSON.stringify(report, null, 2));
+await browser.close();
