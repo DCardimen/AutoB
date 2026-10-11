@@ -2989,3 +2989,333 @@ footer i {
     display: none;
   }
 }
+/* Tactical overhaul */
+.scout-panel,
+.trait-panel,
+.tactical-toolbar,
+.difficulty-panel,
+.chaos-victory,
+.report-advice {
+  border: 1px solid #52664866;
+  background: #14201bb3;
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 16px;
+}
+.scout-panel strong,
+.trait-panel strong {
+  font-family: "DM Sans", sans-serif;
+  color: #d8e5bd;
+  font-size: 13px;
+}
+.scout-panel p,
+.trait-panel p {
+  font-size: 11px;
+  line-height: 1.7;
+  margin: 8px 0;
+}
+.scout-panel b,
+.scout-panel small {
+  display: block;
+  color: #a4c493;
+  font-size: 9px;
+  margin-top: 12px;
+}
+.scout-panel span {
+  font-size: 10px;
+  color: #b9cdb3;
+  line-height: 1.7;
+  display: block;
+}
+.tactical-toolbar-head {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.tactical-toolbar-head > .section-kicker {
+  margin-right: auto;
+}
+.capture-planner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 14px;
+}
+.capture-planner label,
+.capture-select,
+.chaos-picker {
+  font-size: 9px;
+  letter-spacing: 1px;
+  color: #c1d6b0;
+}
+.capture-planner p {
+  grid-column: 1/-1;
+  font-size: 11px;
+  line-height: 1.7;
+  margin: 0;
+  color: #a8bd9a;
+}
+.capture-planner select,
+.capture-select select,
+.policy-control select,
+.chaos-picker select {
+  display: block;
+  width: 100%;
+  margin-top: 8px;
+  padding: 10px;
+  border: 1px solid #667c5b;
+  background: #101b17;
+  color: #e1ead0;
+  border-radius: 5px;
+  font:
+    12px "DM Sans",
+    sans-serif;
+}
+.capture-select {
+  display: block;
+  margin: 18px 0 8px;
+}
+.reservation-note {
+  font-size: 10px;
+  color: #e1c28f;
+  line-height: 1.7;
+}
+.policy-control {
+  display: block;
+  margin: 18px 0;
+}
+.policy-control small {
+  display: block;
+  font-size: 11px;
+  line-height: 1.7;
+  margin-top: 8px;
+  color: #aec49b;
+}
+.formation-picker {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+.formation-picker button {
+  background: #17271c;
+  border: 1px solid #4b6240;
+  color: #d2dfba;
+  padding: 8px;
+  border-radius: 6px;
+  font-size: 10px;
+}
+.formation-picker img {
+  width: 62px;
+  height: 62px;
+  object-fit: contain;
+  display: block;
+  margin: auto;
+}
+.formation-picker span {
+  display: block;
+}
+.formation-picker .selected,
+.deployment-grid .selected,
+.difficulty-options .selected {
+  border-color: #e2c581;
+  background: #33402a;
+  box-shadow: inset 0 0 0 1px #e2c58155;
+}
+.formation-columns {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  text-align: center;
+  margin: 20px 0 8px;
+  font-size: 9px;
+  letter-spacing: 1px;
+  color: #b8cda3;
+}
+.deployment-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+.deployment-grid button {
+  min-height: 100px;
+  background: #18221c;
+  border: 1px solid #506343;
+  color: #b7cc9f;
+  border-radius: 7px;
+  position: relative;
+}
+.deployment-grid img {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+}
+.deployment-grid small {
+  display: block;
+  font-size: 8px;
+  opacity: 0.65;
+}
+.deployment-grid span {
+  font-size: 26px;
+}
+.difficulty-options {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin: 12px 0;
+}
+.difficulty-options button {
+  background: #18271c;
+  border: 1px solid #4d6343;
+  padding: 14px;
+  border-radius: 6px;
+  color: #dbe5c9;
+  text-align: left;
+}
+.difficulty-options strong {
+  display: block;
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+.difficulty-options small {
+  display: block;
+  color: #acbf99;
+  line-height: 1.6;
+  font-size: 10px;
+}
+.difficulty-options button:disabled {
+  opacity: 0.45;
+}
+.chaos-picker {
+  display: block;
+  margin-top: 15px;
+}
+.chaos-rules {
+  color: #b6c6a8;
+  font-size: 11px;
+  line-height: 1.8;
+  margin-top: 14px;
+}
+.chaos-rules ol {
+  list-style: none;
+  padding-left: 0;
+}
+.chaos-rules li {
+  padding: 4px 0;
+}
+.chaos-rules b {
+  color: #e4c385;
+}
+.legendary-outpost {
+  padding: 16px;
+  border: 1px solid #b48e5266;
+  background: #30261a66;
+  border-radius: 8px;
+  margin-top: 18px;
+}
+.legendary-outpost p {
+  font-size: 11px;
+}
+.legendary-outpost img {
+  width: 64px;
+  height: 64px;
+}
+.legendary-outpost small {
+  display: block;
+  font-size: 10px;
+  margin-top: 4px;
+}
+.adoption-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin: 20px 0;
+}
+.adoption-grid button {
+  background: #26261c;
+  border: 1px solid #a98a5866;
+  border-radius: 8px;
+  color: #e2d6b4;
+  padding: 10px;
+}
+.adoption-grid img {
+  width: 85px;
+  height: 85px;
+  object-fit: contain;
+}
+.adoption-grid strong,
+.adoption-grid small {
+  display: block;
+}
+.adoption-grid small {
+  font-size: 9px;
+  margin-top: 7px;
+}
+.adoption-grid button:disabled {
+  opacity: 0.4;
+}
+.report-advice p {
+  font-size: 12px;
+  line-height: 1.8;
+  margin: 6px 0;
+}
+.effective-skill {
+  color: #d2dbae !important;
+  font-size: 10px !important;
+}
+.performance-row {
+  flex-wrap: wrap;
+  gap: 9px;
+}
+.chaos-victory p {
+  font-size: 12px;
+  line-height: 1.8;
+}
+.chaos-victory strong {
+  color: #d6b4f1;
+}
+.tutorial-callout {
+  flex-wrap: wrap;
+}
+.tutorial-callout > span {
+  flex: 1;
+  min-width: 160px;
+}
+@media (max-width: 600px) {
+  .capture-planner {
+    grid-template-columns: 1fr;
+  }
+  .difficulty-options {
+    grid-template-columns: 1fr 1fr;
+  }
+  .adoption-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .formation-picker img {
+    width: 50px;
+    height: 50px;
+  }
+  .deployment-grid img {
+    width: 65px;
+    height: 65px;
+  }
+  .deployment-grid button {
+    min-height: 90px;
+  }
+  .tactical-toolbar {
+    padding: 12px;
+  }
+  .performance-row strong {
+    flex-basis: 65%;
+  }
+  .chaos-rules {
+    font-size: 10px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .transformation-reveal,
+  .creature-card,
+  .ambient {
+    animation: none !important;
+    transition: none !important;
+  }
+}

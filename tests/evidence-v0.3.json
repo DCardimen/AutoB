@@ -1,0 +1,799 @@
+{
+  "version": "0.3.0",
+  "recordedAt": "2026-10-11T04:39:15.589420+00:00",
+  "rules": {
+    "passed": 51,
+    "failed": 0
+  },
+  "standaloneSha256": "733a5eee41434ac219bca8b3445acc1a5ccf0316ddc97a7f294e1ebdac437dce",
+  "campaign": {
+    "battles": [
+      {
+        "planet": 0,
+        "depth": 0,
+        "won": true,
+        "time": 11.159999999999938,
+        "metrics": {
+          "dodges": 5,
+          "skills": 22,
+          "damage": 1523.571663999994,
+          "healing": 270.1378640000004,
+          "crits": 3,
+          "echoes": 0,
+          "intercepts": 15,
+          "shieldDamage": 800.1807999999982,
+          "wastedHealing": 364.9221359999992,
+          "statusDamage": 71.11999999999688,
+          "hazardDamage": 230.2682900000001,
+          "cleanses": 5,
+          "traitProcs": 0,
+          "captures": 0
+        }
+      },
+      {
+        "planet": 0,
+        "depth": 3,
+        "won": true,
+        "time": 17.599999999999802,
+        "metrics": {
+          "dodges": 12,
+          "skills": 36,
+          "damage": 3241.435999999999,
+          "healing": 1194.114099999996,
+          "crits": 2,
+          "echoes": 0,
+          "intercepts": 12,
+          "shieldDamage": 851.364000000006,
+          "wastedHealing": 617.0416000000018,
+          "statusDamage": 158.5199999999966,
+          "hazardDamage": 615.2,
+          "cleanses": 13,
+          "traitProcs": 1,
+          "captures": 0
+        }
+      },
+      {
+        "planet": 0,
+        "depth": 5,
+        "won": true,
+        "time": 41.63999999999929,
+        "metrics": {
+          "dodges": 16,
+          "skills": 77,
+          "damage": 9893.65803199993,
+          "healing": 5017.853971999917,
+          "crits": 15,
+          "echoes": 0,
+          "intercepts": 69,
+          "shieldDamage": 3721.2000000000094,
+          "wastedHealing": 1389.062414000011,
+          "statusDamage": 185.99999999998568,
+          "hazardDamage": 1337.0832000000003,
+          "cleanses": 18,
+          "traitProcs": 0,
+          "captures": 0
+        }
+      },
+      {
+        "planet": 1,
+        "depth": 0,
+        "won": true,
+        "time": 7.1600000000000055,
+        "metrics": {
+          "dodges": 4,
+          "skills": 23,
+          "damage": 2704.8626900000013,
+          "healing": 833.8808899999971,
+          "crits": 1,
+          "echoes": 0,
+          "intercepts": 4,
+          "shieldDamage": 197.20999999999935,
+          "wastedHealing": 244.21680000000265,
+          "statusDamage": 128.15999999999693,
+          "hazardDamage": 539.424,
+          "cleanses": 5,
+          "traitProcs": 0,
+          "captures": 0
+        }
+      },
+      {
+        "planet": 1,
+        "depth": 1,
+        "won": true,
+        "time": 7.440000000000006,
+        "metrics": {
+          "dodges": 3,
+          "skills": 23,
+          "damage": 2248.377780000004,
+          "healing": 603.1133799999935,
+          "crits": 2,
+          "echoes": 0,
+          "intercepts": 11,
+          "shieldDamage": 261.18599999999975,
+          "wastedHealing": 716.8224000000104,
+          "statusDamage": 37.07999999999957,
+          "hazardDamage": 435.6673599999999,
+          "cleanses": 1,
+          "traitProcs": 0,
+          "captures": 0
+        }
+      },
+      {
+        "planet": 1,
+        "depth": 5,
+        "won": true,
+        "time": 13.159999999999895,
+        "metrics": {
+          "dodges": 8,
+          "skills": 41,
+          "damage": 6759.578214399962,
+          "healing": 1306.9550000000047,
+          "crits": 3,
+          "echoes": 0,
+          "intercepts": 35,
+          "shieldDamage": 2238.5569599999994,
+          "wastedHealing": 470.6989999999996,
+          "statusDamage": 136.31999999999184,
+          "hazardDamage": 2569.837904159998,
+          "cleanses": 10,
+          "traitProcs": 0,
+          "captures": 0
+        }
+      },
+      {
+        "planet": 2,
+        "depth": 0,
+        "won": true,
+        "time": 10.839999999999945,
+        "metrics": {
+          "dodges": 5,
+          "skills": 30,
+          "damage": 2739.1882599999994,
+          "healing": 585.159460000004,
+          "crits": 0,
+          "echoes": 0,
+          "intercepts": 9,
+          "shieldDamage": 1433.058271999998,
+          "wastedHealing": 892.3597199999913,
+          "statusDamage": 37.47999999999746,
+          "hazardDamage": 333.72390000000007,
+          "cleanses": 0,
+          "traitProcs": 0,
+          "captures": 0
+        }
+      },
+      {
+        "planet": 2,
+        "depth": 3,
+        "won": true,
+        "time": 11.279999999999935,
+        "metrics": {
+          "dodges": 3,
+          "skills": 39,
+          "damage": 4055.855593439995,
+          "healing": 1083.1021814400096,
+          "crits": 2,
+          "echoes": 0,
+          "intercepts": 18,
+          "shieldDamage": 1697.272588000001,
+          "wastedHealing": 1265.232179999984,
+          "statusDamage": 81.28079999999936,
+          "hazardDamage": 675.6568359999994,
+          "cleanses": 4,
+          "traitProcs": 0,
+          "captures": 0
+        }
+      },
+      {
+        "planet": 2,
+        "depth": 5,
+        "won": true,
+        "time": 22.079999999999707,
+        "metrics": {
+          "dodges": 40,
+          "skills": 63,
+          "damage": 8831.279187600005,
+          "healing": 3036.702630200052,
+          "crits": 8,
+          "echoes": 0,
+          "intercepts": 105,
+          "shieldDamage": 4203.318782700009,
+          "wastedHealing": 1924.0598238000339,
+          "statusDamage": 107.55999999999636,
+          "hazardDamage": 1079.452,
+          "cleanses": 4,
+          "traitProcs": 3,
+          "captures": 0
+        }
+      }
+    ],
+    "checks": [
+      "Equip three support gems; link and relink a signature auto-attack",
+      "Earned evolutions, new gem sockets and scouted AI policies used during the campaign",
+      "Capture result and permanent collection persist on reload; no second attempt",
+      "Rest changes expedition life or team EXP",
+      "Shop sells support gems and deducts gold",
+      "New expedition retains captures and resets run growth",
+      "390px mobile arena and menagerie have no horizontal overflow",
+      "No browser exceptions or failed HTTP responses"
+    ],
+    "startedAt": "2026-10-11T04:33:42.113Z",
+    "ending": {
+      "complete": true,
+      "wins": 9,
+      "planet": 3,
+      "collection": 10
+    }
+  },
+  "bossLoss": {
+    "passed": true,
+    "checks": [
+      "Boss defeat consumes exactly one life",
+      "Boss defeat does not advance planet or depth",
+      "Retry state persists on reload",
+      "Boss health UI appears"
+    ],
+    "errors": []
+  },
+  "evolution": {
+    "checks": [
+      "60 codex entries",
+      "Wild evolution and ascension",
+      "Warden evolution",
+      "new sockets and preserved auto-attack gem link",
+      "transformation reveal",
+      "390px mobile modal without overflow",
+      "animated locomotion",
+      "pause freezes deterministic pose",
+      "completed rendered combat",
+      "saved evolution and form discovery survive reload"
+    ],
+    "errors": []
+  },
+  "overhaul": {
+    "checks": [
+      "Chaos is locked for a fresh profile; selectable base difficulties",
+      "Grid deployment and per-creature AI policy work through the UI",
+      "Tactical capture consumes one orb across reloads and persists its result",
+      "Actionable battle report renders actual damage causes",
+      "Real boss victory unlocks Chaos 1 and earns a permanent Legendary adoption",
+      "Chaos 20 applies twenty rules and correct starting resources; shop prices match deductions",
+      "390px deployment and Chaos selection fit without horizontal overflow",
+      "Two mastered Legendary starters fit the twelve-point budget and retain bond bonuses",
+      "Unaffordable events always allow declining; no resource softlock"
+    ],
+    "capture": {
+      "success": true,
+      "uid": "sparkhare-mv3by9tist8-10",
+      "chance": 0.97,
+      "creature": {
+        "id": "sparkhare",
+        "level": 1,
+        "evolution": 0,
+        "evolutionPath": null,
+        "capturePreparation": {
+          "healthFraction": 0.3497999999999999,
+          "status": true,
+          "mode": "mercy"
+        }
+      }
+    },
+    "errors": []
+  },
+  "feedback": {
+    "checks": [
+      "Optional audio starts after interaction and mutes",
+      "All five elemental sounds, phase, death, capture and score execute",
+      "Gentle motion persists after reload",
+      "Deployment modal reaches full opacity"
+    ],
+    "audio": {
+      "state": "running",
+      "enabled": false
+    },
+    "errors": []
+  },
+  "standalone": {
+    "checks": [
+      "single embedded HTML",
+      "new creature artwork",
+      "Wild evolution",
+      "added socket and preserved gem link",
+      "completed animated combat",
+      "saved reload",
+      "zero external requests"
+    ],
+    "errors": [],
+    "requests": []
+  },
+  "balance": {
+    "kind": "Deterministic legal starter campaigns with earned resources; not human fun ratings",
+    "campaigns": 240,
+    "executionSeconds": 47.069090652,
+    "results": [
+      {
+        "difficulty": "story",
+        "chaos": 0,
+        "build": "balanced",
+        "runs": 12,
+        "wins": 11,
+        "planets": [
+          12,
+          12,
+          11
+        ],
+        "bossLosses": 3,
+        "battles": 117,
+        "seedsWon": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          8,
+          9,
+          10,
+          11,
+          12
+        ]
+      },
+      {
+        "difficulty": "story",
+        "chaos": 0,
+        "build": "venom",
+        "runs": 12,
+        "wins": 12,
+        "planets": [
+          12,
+          12,
+          12
+        ],
+        "bossLosses": 0,
+        "battles": 115,
+        "seedsWon": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12
+        ]
+      },
+      {
+        "difficulty": "story",
+        "chaos": 0,
+        "build": "tide",
+        "runs": 12,
+        "wins": 12,
+        "planets": [
+          12,
+          12,
+          12
+        ],
+        "bossLosses": 0,
+        "battles": 115,
+        "seedsWon": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12
+        ]
+      },
+      {
+        "difficulty": "story",
+        "chaos": 0,
+        "build": "assassins",
+        "runs": 12,
+        "wins": 10,
+        "planets": [
+          12,
+          10,
+          10
+        ],
+        "bossLosses": 6,
+        "battles": 113,
+        "seedsWon": [
+          1,
+          2,
+          4,
+          5,
+          6,
+          8,
+          9,
+          10,
+          11,
+          12
+        ]
+      },
+      {
+        "difficulty": "standard",
+        "chaos": 0,
+        "build": "balanced",
+        "runs": 12,
+        "wins": 6,
+        "planets": [
+          10,
+          7,
+          6
+        ],
+        "bossLosses": 19,
+        "battles": 105,
+        "seedsWon": [
+          2,
+          4,
+          6,
+          9,
+          11,
+          12
+        ]
+      },
+      {
+        "difficulty": "standard",
+        "chaos": 0,
+        "build": "venom",
+        "runs": 12,
+        "wins": 6,
+        "planets": [
+          10,
+          6,
+          6
+        ],
+        "bossLosses": 20,
+        "battles": 104,
+        "seedsWon": [
+          2,
+          3,
+          4,
+          6,
+          9,
+          12
+        ]
+      },
+      {
+        "difficulty": "standard",
+        "chaos": 0,
+        "build": "tide",
+        "runs": 12,
+        "wins": 9,
+        "planets": [
+          12,
+          11,
+          9
+        ],
+        "bossLosses": 9,
+        "battles": 118,
+        "seedsWon": [
+          1,
+          2,
+          3,
+          4,
+          6,
+          9,
+          10,
+          11,
+          12
+        ]
+      },
+      {
+        "difficulty": "standard",
+        "chaos": 0,
+        "build": "assassins",
+        "runs": 12,
+        "wins": 4,
+        "planets": [
+          10,
+          5,
+          4
+        ],
+        "bossLosses": 21,
+        "battles": 101,
+        "seedsWon": [
+          2,
+          4,
+          6,
+          9
+        ]
+      },
+      {
+        "difficulty": "veteran",
+        "chaos": 0,
+        "build": "balanced",
+        "runs": 12,
+        "wins": 0,
+        "planets": [
+          4,
+          3,
+          0
+        ],
+        "bossLosses": 34,
+        "battles": 83,
+        "seedsWon": []
+      },
+      {
+        "difficulty": "veteran",
+        "chaos": 0,
+        "build": "venom",
+        "runs": 12,
+        "wins": 1,
+        "planets": [
+          5,
+          2,
+          1
+        ],
+        "bossLosses": 32,
+        "battles": 81,
+        "seedsWon": [
+          6
+        ]
+      },
+      {
+        "difficulty": "veteran",
+        "chaos": 0,
+        "build": "tide",
+        "runs": 12,
+        "wins": 8,
+        "planets": [
+          10,
+          9,
+          8
+        ],
+        "bossLosses": 12,
+        "battles": 109,
+        "seedsWon": [
+          2,
+          3,
+          4,
+          6,
+          9,
+          10,
+          11,
+          12
+        ]
+      },
+      {
+        "difficulty": "veteran",
+        "chaos": 0,
+        "build": "assassins",
+        "runs": 12,
+        "wins": 0,
+        "planets": [
+          8,
+          1,
+          0
+        ],
+        "bossLosses": 34,
+        "battles": 88,
+        "seedsWon": []
+      },
+      {
+        "difficulty": "chaos",
+        "chaos": 10,
+        "build": "balanced",
+        "runs": 12,
+        "wins": 2,
+        "planets": [
+          8,
+          5,
+          2
+        ],
+        "bossLosses": 30,
+        "battles": 98,
+        "seedsWon": [
+          6,
+          11
+        ]
+      },
+      {
+        "difficulty": "chaos",
+        "chaos": 10,
+        "build": "venom",
+        "runs": 12,
+        "wins": 3,
+        "planets": [
+          6,
+          3,
+          3
+        ],
+        "bossLosses": 26,
+        "battles": 85,
+        "seedsWon": [
+          4,
+          6,
+          9
+        ]
+      },
+      {
+        "difficulty": "chaos",
+        "chaos": 10,
+        "build": "tide",
+        "runs": 12,
+        "wins": 7,
+        "planets": [
+          11,
+          10,
+          7
+        ],
+        "bossLosses": 15,
+        "battles": 119,
+        "seedsWon": [
+          2,
+          3,
+          4,
+          6,
+          9,
+          10,
+          11
+        ]
+      },
+      {
+        "difficulty": "chaos",
+        "chaos": 10,
+        "build": "assassins",
+        "runs": 12,
+        "wins": 2,
+        "planets": [
+          9,
+          2,
+          2
+        ],
+        "bossLosses": 28,
+        "battles": 91,
+        "seedsWon": [
+          4,
+          6
+        ]
+      },
+      {
+        "difficulty": "chaos",
+        "chaos": 20,
+        "build": "balanced",
+        "runs": 12,
+        "wins": 0,
+        "planets": [
+          5,
+          2,
+          0
+        ],
+        "bossLosses": 33,
+        "battles": 83,
+        "seedsWon": []
+      },
+      {
+        "difficulty": "chaos",
+        "chaos": 20,
+        "build": "venom",
+        "runs": 12,
+        "wins": 0,
+        "planets": [
+          4,
+          0,
+          0
+        ],
+        "bossLosses": 32,
+        "battles": 71,
+        "seedsWon": []
+      },
+      {
+        "difficulty": "chaos",
+        "chaos": 20,
+        "build": "tide",
+        "runs": 12,
+        "wins": 4,
+        "planets": [
+          7,
+          5,
+          4
+        ],
+        "bossLosses": 26,
+        "battles": 96,
+        "seedsWon": [
+          3,
+          6,
+          9,
+          11
+        ]
+      },
+      {
+        "difficulty": "chaos",
+        "chaos": 20,
+        "build": "assassins",
+        "runs": 12,
+        "wins": 0,
+        "planets": [
+          7,
+          0,
+          0
+        ],
+        "bossLosses": 33,
+        "battles": 82,
+        "seedsWon": []
+      }
+    ]
+  },
+  "simulation": {
+    "kind": "Automated simulation, NOT human playtime",
+    "targetHours": 50,
+    "battles": 16011,
+    "seconds": 180003.4799999992,
+    "wins": 13627,
+    "timeouts": 2,
+    "skills": 490924,
+    "dodges": 154089,
+    "echoes": 13545,
+    "crits": 64184,
+    "byPlanet": [
+      5337,
+      5337,
+      5337
+    ],
+    "minTime": 2.080000000000001,
+    "maxTime": 90.00000000000287,
+    "forms": [
+      65168,
+      26487,
+      4411
+    ],
+    "chaosTiers": [
+      12009,
+      200,
+      200,
+      200,
+      200,
+      200,
+      200,
+      200,
+      200,
+      200,
+      200,
+      200,
+      201,
+      201,
+      200,
+      200,
+      200,
+      200,
+      200,
+      200,
+      200
+    ],
+    "tacticalCaptures": 1690,
+    "weather": {
+      "magnet": 3592,
+      "clear": 7142,
+      "cinders": 1730,
+      "rain": 889,
+      "pollen": 893,
+      "void": 1765
+    },
+    "archetypes": {
+      "pack": 2018,
+      "venom": 2048,
+      "bastion": 2015,
+      "duelists": 2034,
+      "swarm": 1965,
+      "wardens": 1996,
+      "artillery": 1926,
+      "garden": 2009
+    },
+    "simulatedHours": 50.00096666666644,
+    "executionSeconds": 258.784388688,
+    "winRate": 0.8511023671226032,
+    "timeoutRate": 0.00012491412154144027,
+    "meanBattleSeconds": 11.242488289301056
+  }
+}

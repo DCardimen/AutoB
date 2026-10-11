@@ -1,5 +1,10 @@
 import { BY_ID, ELEMENTS, evolutionStage } from "./game.js";
-import { creaturePose, spriteBone } from "./animation.js";
+import {
+  creaturePose,
+  spriteBone,
+  dashPosition,
+  visualUnit,
+} from "./animation.js";
 const TAU = Math.PI * 2;
 const atlases = Object.fromEntries(
   [
@@ -106,7 +111,7 @@ export function drawCreature(
       c.globalAlpha = pose.alpha;
     }
     // Connected strip bones animate the head, torso, wings, tail, and feet.
-    const bones = dead || unit.staticArtwork ? 1 : 14;
+    const bones = unit.staticArtwork ? 1 : dead ? 8 : 20;
     for (let bone = 0; bone < bones; bone++) {
       const f = bone / bones,
         part = spriteBone(pose, f, dim);
@@ -1152,10 +1157,10 @@ export function renderBattle(
   drawArena(c, w, h, planet, time);
   c.save();
   c.scale(w / 1000, h / 560);
-  if (battle?.shake) {
+  if (battle?.shake && !battle.reducedMotion) {
     c.translate(
-      Math.sin(time * 83) * battle.shake,
-      Math.cos(time * 69) * battle.shake * 0.4,
+      Math.sin(battle.time * 83) * battle.shake,
+      Math.cos(battle.time * 69) * battle.shake * 0.4,
     );
   }
   const units = battle
@@ -1164,8 +1169,16 @@ export function renderBattle(
         ...previewTeam.map((u, i) => ({
           ...u,
           side: 0,
-          x: (BY_ID[u.id].range > 100 ? 155 : 300) + (i >= 3 ? -28 : 25),
-          y: 180 + (i % 3) * 100 + (i >= 3 ? 35 : -25),
+          x: u.deployment
+            ? [155, 225, 305][u.deployment.column]
+            : i >= 3
+              ? 225
+              : BY_ID[u.id].range > 100
+                ? 155
+                : 305,
+          y: u.deployment
+            ? [155, 275, 395][u.deployment.row] + (i >= 3 ? 24 : -15)
+            : [155, 275, 395][i % 3] + (i >= 3 ? 24 : -15),
           hp: 1,
           maxHp: 1,
         })),
@@ -1179,9 +1192,19 @@ export function renderBattle(
         })),
       ];
   if (battle) {
+    for (const field of battle.fields || []) {
+      c.fillStyle = "#97df9d15";
+      c.strokeStyle = "#b5e7b466";
+      c.lineWidth = 1.5;
+      c.beginPath();
+      c.ellipse(field.x, field.y, field.r, field.r * 0.5, 0, 0, TAU);
+      c.fill();
+      c.stroke();
+    }
     for (const hazard of battle.hazards) {
-      c.strokeStyle = (hazard.color || "#f08a69") + "bb";
-      c.fillStyle = (hazard.color || "#f08a69") + "20";
+      const danger = hazard.source.side === 1;
+      c.strokeStyle = danger ? "#ff826cdd" : "#b2e49aaa";
+      c.fillStyle = danger ? "#ff826c22" : "#b2e49a16";
       c.lineWidth = 2;
       c.setLineDash([5, 5]);
       c.beginPath();
@@ -1189,9 +1212,29 @@ export function renderBattle(
       c.fill();
       c.stroke();
       c.setLineDash([]);
+      c.lineWidth = 3;
+      c.beginPath();
+      c.ellipse(
+        hazard.x,
+        hazard.y,
+        hazard.r,
+        hazard.r * 0.52,
+        0,
+        -Math.PI / 2,
+        -Math.PI / 2 + TAU * (1 - hazard.ttl / hazard.total),
+      );
+      c.stroke();
+      c.fillStyle = danger ? "#ffbead" : "#d7ecc2";
+      c.font = 'bold 10px "DM Sans",sans-serif';
+      c.textAlign = "center";
+      c.fillText(danger ? "DANGER" : "ALLY FIELD", hazard.x, hazard.y + 4);
     }
   }
-  for (const u of units.slice().sort((a, b) => a.y - b.y)) {
+  for (const raw of units.slice().sort((a, b) => a.y - b.y)) {
+    const u =
+      battle && !battle.reducedMotion
+        ? visualUnit(raw, battle.renderAlpha, battle.finishedVisualTime || 0)
+        : raw;
     const s = BY_ID[u.id],
       color = ELEMENTS[s.element].color;
     const size = u.boss ? 55 : 34;
@@ -1210,16 +1253,51 @@ export function renderBattle(
       c.ellipse(u.x, u.y + 20, size * 0.83, 12, 0, 0, TAU);
       c.stroke();
     }
+    const position =
+      battle && !battle.reducedMotion ? dashPosition(u) : { x: u.x, y: u.y };
+    if (u.dashAnim > 0 && u.dashFrom && !battle?.reducedMotion) {
+      for (let trail = 0; trail < 3; trail++) {
+        const fraction = Math.max(0, 1 - u.dashAnim / 0.38 - trail * 0.1);
+        c.globalAlpha = 0.11 * (1 - trail / 3);
+        drawCreature(
+          c,
+          u.id,
+          u.dashFrom.x + (u.x - u.dashFrom.x) * fraction,
+          u.dashFrom.y + (u.y - u.dashFrom.y) * fraction,
+          size,
+          u.face,
+          battle.time,
+          false,
+          { ...u, staticArtwork: true, attackAnim: 0, dashAnim: 0 },
+        );
+      }
+      c.globalAlpha = 1;
+    }
     drawCreature(
       c,
       u.id,
-      u.x,
-      u.y,
+      position.x,
+      position.y,
       size,
       u.face || (u.side === 0 ? 1 : -1),
-      battle ? battle.time : time,
+      battle
+        ? battle.time +
+            (battle.renderAlpha || 0) * 0.04 +
+            (battle.finishedVisualTime || 0)
+        : time,
       u.hp <= 0,
-      u,
+      battle?.reducedMotion
+        ? {
+            ...u,
+            staticArtwork: true,
+            motion: 0,
+            attackAnim: 0,
+            castAnim: 0,
+            dodgeAnim: 0,
+            hitAnim: 0,
+            velocityX: 0,
+          }
+        : u,
     );
     if (u.hp > 0) {
       const barw = u.boss ? 80 : 47,
@@ -1242,6 +1320,27 @@ export function renderBattle(
           2,
         );
         if (u.burn > 0) ellipse(c, u.x + 24, u.y - 20, 3, 4, "#ff8c56");
+        const statuses = [
+          ["poison", "P", "#b4d97b"],
+          ["root", "R", "#b2d18c"],
+          ["slow", "S", "#9ddff0"],
+          ["wither", "W", "#d6a0d7"],
+          ["exposed", "!", "#f6c284"],
+        ].filter(([key]) => u[key] > 0);
+        c.font = 'bold 8px "DM Sans",sans-serif';
+        c.textAlign = "center";
+        statuses.forEach(([key, label, tint], i) => {
+          ellipse(c, bx + i * 11, by - 10, 5, 5, "#102019");
+          c.fillStyle = tint;
+          c.fillText(label, bx + i * 11, by - 7);
+        });
+        if (battle.capturePlan?.uid === u.uid && !battle.captureSettled) {
+          c.strokeStyle = "#f4d995";
+          c.lineWidth = 2;
+          c.beginPath();
+          c.ellipse(u.x, u.y + 20, size, 15, 0, 0, TAU);
+          c.stroke();
+        }
         if (u.flash > 0) {
           c.globalAlpha = 0.4;
           c.fillStyle = "#fff";
@@ -1367,6 +1466,23 @@ export function renderBattle(
         c.lineWidth = 2;
         c.strokeStyle = "#fff1d3";
         c.stroke();
+      } else if (e.type === "capture") {
+        c.lineWidth = 3;
+        const radius = e.r * (0.6 + Math.sin(t * Math.PI) * 0.4);
+        c.beginPath();
+        c.ellipse(e.x, e.y - 20, radius * 0.55, radius * 0.8, 0, 0, TAU);
+        c.stroke();
+        for (let i = 0; i < 8; i++) {
+          const angle = (i * TAU) / 8 + t * 5;
+          ellipse(
+            c,
+            e.x + Math.cos(angle) * radius * 0.6,
+            e.y - 20 + Math.sin(angle) * radius * 0.7,
+            3,
+            3,
+            e.color,
+          );
+        }
       } else if (e.type === "heal") {
         c.lineWidth = 2;
         c.beginPath();

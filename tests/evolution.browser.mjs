@@ -54,7 +54,7 @@ await page.addInitScript(
   },
   { data, node, foes, owned: SPECIES.map((s) => s.id) },
 );
-await page.goto("http://127.0.0.1:3000", { waitUntil: "networkidle" });
+await page.goto((process.env.BASE_URL || "http://127.0.0.1:3000"), { waitUntil: "networkidle" });
 await page.locator('[data-view="collection"]').click();
 assert.equal(await page.locator("[data-codex]").count(), 60);
 await page.locator('[data-view="arena"]').click();

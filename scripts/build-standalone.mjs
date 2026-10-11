@@ -35,7 +35,16 @@ const chunks = [
     JSON.stringify(assets) +
     ";",
 ];
-for (const name of ["roster", "skills", "game", "animation", "art", "app"]) {
+for (const name of [
+  "tactics",
+  "roster",
+  "skills",
+  "game",
+  "animation",
+  "sound",
+  "art",
+  "app",
+]) {
   let code = fs.readFileSync(path.join(root, name + ".js"), "utf8");
   const exports = [
     ...code.matchAll(/^export\s+(?:const|let|function|class)\s+(\w+)/gm),

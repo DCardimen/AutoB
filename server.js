@@ -22,6 +22,8 @@ const entryFiles = new Set([
   "/skills.js",
   "/roster.js",
   "/animation.js",
+  "/tactics.js",
+  "/sound.js",
   "/Starfall-Menagerie.html",
 ]);
 http

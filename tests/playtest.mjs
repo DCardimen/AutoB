@@ -11,6 +11,7 @@ import {
   personalRelic,
   equipRelic,
   linkRelic,
+  canSupport,
   rng,
   pick,
   BY_ID,
@@ -20,6 +21,7 @@ import {
   relicSlots,
 } from "../game.js";
 import { loadoutFor } from "../skills.js";
+import { POLICIES, chaosLevel } from "../tactics.js";
 const requestedHours = Number(process.env.SIM_HOURS || 50);
 const report = {
   kind: "Automated simulation, NOT human playtime",
@@ -36,12 +38,19 @@ const report = {
   minTime: Infinity,
   maxTime: 0,
   forms: [0, 0, 0],
+  chaosTiers: Array(21).fill(0),
+  tacticalCaptures: 0,
+  weather: {},
+  archetypes: {},
 };
 const start = performance.now();
 while (report.seconds < requestedHours * 3600) {
   const seed = report.battles + 1001,
     r = rng(seed),
     run = makeRun(seed);
+  run.difficulty =
+    seed % 4 === 0 ? "chaos" : seed % 4 === 1 ? "veteran" : "standard";
+  run.chaos = 1 + (Math.floor(seed / 4) % 20);
   run.planet = seed % 3;
   run.depth = seed % 6;
   run.team = Array.from({ length: 6 }, () =>
@@ -49,6 +58,7 @@ while (report.seconds < requestedHours * 3600) {
   );
   run.team.forEach((c) => {
     c.training = Math.floor(r() * 5);
+    c.policy = pick(Object.keys(POLICIES), r);
     c.evolution =
       c.level >= 8
         ? Math.floor(r() * 3)
@@ -63,14 +73,26 @@ while (report.seconds < requestedHours * 3600) {
     const c = run.team[index],
       loadout = loadoutFor(BY_ID[c.id], c.level),
       gemCount = Math.floor(r() * (relicSlots(c) + 1));
-    const options = [...PERSONAL_RELICS];
+    const options = PERSONAL_RELICS.filter((g) =>
+      [loadout.auto, ...loadout.active].some((id) => canSupport(g.id, id)),
+    );
     for (let j = 0; j < gemCount; j++) {
       const gem = options.splice(Math.floor(r() * options.length), 1)[0];
       const item = personalRelic(gem.id);
       run.inventory.push(item);
       assert.ok(equipRelic(run, index, item.uid));
       assert.ok(
-        linkRelic(run, index, j, pick([loadout.auto, ...loadout.active], r)),
+        linkRelic(
+          run,
+          index,
+          j,
+          pick(
+            [loadout.auto, ...loadout.active].filter((id) =>
+              canSupport(item.id, id),
+            ),
+            r,
+          ),
+        ),
       );
     }
   }
@@ -82,7 +104,21 @@ while (report.seconds < requestedHours * 3600) {
         : seed % 5 === 0
           ? "capture"
           : "battle";
-  const b = simulate(run, encounter(run, type, seed), seed);
+  run.route = generateRoute(run);
+  const node = pick(run.route[run.depth], r);
+  run.encounterType = type;
+  const foes = encounter(run, type, node.seed);
+  if (seed % 9 === 0)
+    run.captureOrder = {
+      uid: foes.find((f) => !f.boss)?.uid,
+      mode: seed % 2 ? "mercy" : "swift",
+    };
+  const b = simulate(run, foes, seed);
+  report.chaosTiers[chaosLevel(run)]++;
+  report.tacticalCaptures += b.metrics.captures;
+  report.weather[b.weather] = (report.weather[b.weather] || 0) + 1;
+  report.archetypes[b.activeArchetype] =
+    (report.archetypes[b.activeArchetype] || 0) + 1;
   assert.ok(b.done && Number.isFinite(b.time));
   for (const u of b.units) {
     assert.ok(Number.isFinite(u.hp) && u.hp >= 0 && u.hp <= u.maxHp);

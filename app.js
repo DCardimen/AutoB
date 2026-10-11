@@ -40,9 +40,32 @@ import {
   evolutionOffer,
   evolveCreature,
   EVOLUTION_PATHS,
+  encounterInfo,
+  defaultDeployment,
+  setDeployment,
+  effectiveSkill,
+  awardCapture,
+  buyLegendaryLure,
+  eventAvailable,
+  generateShop,
+  canSupport,
 } from "./game.js";
 import { SKILLS, loadoutFor } from "./skills.js";
 import { creatureImage, renderBattle } from "./art.js";
+import {
+  POLICIES,
+  traitFor,
+  evolutionMechanic,
+  DIFFICULTIES,
+  CHAOS_TIERS,
+  chaosLevel,
+  shopPrice,
+  unlockChaos,
+  starterPoints,
+  recordBond,
+} from "./tactics.js";
+import { Soundscape } from "./sound.js";
+const soundscape = new Soundscape();
 const $ = (s) => document.querySelector(s);
 const STORE = "starfall-menagerie-v1";
 const ICONS = {
@@ -76,8 +99,15 @@ let profile = {
   tutorial: false,
   sound: false,
   formDiscoveries: {},
+  chaosUnlocked: 0,
+  chaosCleared: 0,
+  starlight: 0,
+  bonds: {},
+  reducedMotion: window.matchMedia("(prefers-reduced-motion: reduce)").matches,
   ...saved?.profile,
 };
+if (profile.victories > 0)
+  profile.chaosUnlocked = Math.max(1, profile.chaosUnlocked || 0);
 profile.owned = [
   ...new Set([...STARTERS, ...profile.owned.filter((id) => BY_ID[id])]),
 ];
@@ -104,7 +134,11 @@ let run,
   toastTimer,
   modalKind = null,
   selectedCreature = 0,
-  recordedEnd = false;
+  recordedEnd = !!saved?.recordedEnd,
+  lastReport = saved?.lastReport || null,
+  selectedDifficulty = "standard",
+  selectedChaos = 1,
+  formationSelection = 0;
 if (saved?.run?.team?.length === 6 && saved.run.planet <= 3) {
   run = {
     ...saved.run,
@@ -124,9 +158,10 @@ if (saved?.run?.team?.length === 6 && saved.run.planet <= 3) {
 } else freshRun(STARTERS, false);
 run.inventory ??= [];
 for (const c of [...run.team, ...run.bench]) c.relics ??= [];
-function freshRun(ids, increment = true) {
+function freshRun(ids, increment = true, options = {}) {
   if (increment) profile.runs++;
-  run = makeRun(Date.now() % 2147483647, ids);
+  run = makeRun(Date.now() % 2147483647, ids, options);
+  run.team.forEach((c) => (c.bond = Math.min(5, profile.bonds[c.id] || 0)));
   run.route = generateRoute(run);
   phase = "prep";
   node = run.route[0][0];
@@ -140,6 +175,7 @@ function freshRun(ids, increment = true) {
   upgradeChosen = null;
   shopStock = null;
   recordedEnd = false;
+  lastReport = null;
   viewName = "arena";
   speed = 1;
   paused = false;
@@ -163,6 +199,8 @@ function save() {
         upgradeChosen,
         shopStock,
         eventIndex,
+        recordedEnd,
+        lastReport,
       }),
     );
     $(".local-label").innerHTML = "<i></i> LOCAL SAVE";
@@ -264,7 +302,7 @@ function arenaHTML() {
               "",
               !["battle", "elite", "boss", "capture"].includes(type),
             );
-  return `${!profile.tutorial ? `<div class="tutorial-callout"><span>Welcome, explorer. Your six companions are ready. Enter battle to begin — or inspect a creature to shape your strategy.</span><button data-action="dismiss-tutorial" aria-label="Dismiss welcome">×</button></div>` : ""}<div class="arena-grid"><div class="arena-main"><section class="panel arena-panel"><div class="panel-top"><span class="panel-title">THE OVERGROWN ARENA <span style="color:#687d5d;margin-left:9px">/ ${String(run.depth + 1).padStart(2, "0")}</span></span><span class="status-dot ${live ? "live" : ""}"><i></i> ${live ? "BATTLE IN PROGRESS" : phase === "reward" ? "ENCOUNTER COMPLETE" : mapWaiting ? "AWAITING YOUR PATH" : ended ? "EXPEDITION ENDED" : "PREPARING FOR BATTLE"}</span></div><div class="arena-viewport"><canvas id="battle-canvas" aria-label="Real-time creature arena. Your expedition is on the left, wild creatures on the right."></canvas><div class="arena-label"><span class="location-icon">${ICONS[type]}</span><div><strong>${type === "boss" ? p.bossName : "The Forgotten Colosseum"}</strong><small>${p.name.toUpperCase()} · ${LABELS[type].toUpperCase()}</small></div></div><div class="arena-timer" id="arena-timer">${live ? "00:00" : "READY"}</div>${type === "boss" ? `<div class="boss-banner"><div><span>${p.bossName}</span><small id="boss-phase">PHASE I</small></div><div class="boss-health-track"><i id="boss-health" style="width:100%"></i></div></div>` : ""}<div class="arena-bottom-labels"><span id="ally-count">YOUR EXPEDITION · 6</span><span class="versus">vs.</span><span id="foe-count">THE WILDS · ${foes?.length || 4}</span></div></div><div class="arena-control"><div class="control-left"><button class="pause-btn" data-action="pause" title="Pause battle (Space)" aria-label="Pause battle" ${!live ? "disabled" : ""}>${paused ? "▶" : "II"}</button><div class="speed-switch" aria-label="Battle speed">${[1, 2, 3].map((v) => `<button data-speed="${v}" class="${speed === v ? "active" : ""}">${v}×</button>`).join("")}</div><span class="control-note"><kbd>SPACE</kbd> to pause</span></div>${mainAction}</div></section><div class="formation-section"><div class="section-heading"><h2>YOUR EXPEDITION <span>6 / 6</span></h2><p>Drag to reposition · Click to inspect</p><div class="segmented" title="Team AI priority">${["balanced", "hunt", "guard"].map((s) => `<button data-stance="${s}" class="${run.stance === s ? "active" : ""}" ${live ? "disabled" : ""}>${{ balanced: "Balanced", hunt: "Hunt", guard: "Guard" }[s]}</button>`).join("")}</div></div><div class="team-grid">${run.team.map((u, i) => creatureCard(u, i)).join("")}</div></div><div class="relic-section"><span class="relic-heading">✧ EXPEDITION RELICS <span class="muted">${run.relics.length}</span></span><button class="text-button pack-button" data-action="pack">◈ Relic pack · ${run.inventory.length}</button>${
+  return `${!profile.tutorial ? `<div class="tutorial-callout"><span>Welcome, explorer. Your six companions are ready. Scout the enemy counterplan, link your first gem, then deploy your six companions. Battles run automatically.</span>${button("Link your first gem", "tutorial-gem", "secondary small")}<button data-action="dismiss-tutorial" aria-label="Dismiss welcome">×</button></div>` : ""}<div class="arena-grid"><div class="arena-main"><section class="panel arena-panel"><div class="panel-top"><span class="panel-title">THE OVERGROWN ARENA <span style="color:#687d5d;margin-left:9px">/ ${String(run.depth + 1).padStart(2, "0")}</span></span><span class="status-dot ${live ? "live" : ""}"><i></i> ${live ? "BATTLE IN PROGRESS" : phase === "reward" ? "ENCOUNTER COMPLETE" : mapWaiting ? "AWAITING YOUR PATH" : ended ? "EXPEDITION ENDED" : "PREPARING FOR BATTLE"}</span></div><div class="arena-viewport"><canvas id="battle-canvas" aria-label="Real-time creature arena. Your expedition is on the left, wild creatures on the right."></canvas><div class="arena-label"><span class="location-icon">${ICONS[type]}</span><div><strong>${type === "boss" ? p.bossName : "The Forgotten Colosseum"}</strong><small>${p.name.toUpperCase()} · ${LABELS[type].toUpperCase()}</small></div></div><div class="arena-timer" id="arena-timer">${live ? "00:00" : "READY"}</div>${type === "boss" ? `<div class="boss-banner"><div><span>${p.bossName}</span><small id="boss-phase">PHASE I</small></div><div class="boss-health-track"><i id="boss-health" style="width:100%"></i></div></div>` : ""}<div class="arena-bottom-labels"><span id="ally-count">YOUR EXPEDITION · 6</span><span class="versus">vs.</span><span id="foe-count">THE WILDS · ${foes?.length || 4}</span></div></div><div class="arena-control"><div class="control-left"><button class="pause-btn" data-action="pause" title="Pause battle (Space)" aria-label="Pause battle" ${!live ? "disabled" : ""}>${paused ? "▶" : "II"}</button><div class="speed-switch" aria-label="Battle speed">${[1, 2, 3].map((v) => `<button data-speed="${v}" class="${speed === v ? "active" : ""}">${v}×</button>`).join("")}</div><span class="control-note"><kbd>SPACE</kbd> to pause</span></div>${mainAction}</div></section><div class="formation-section"><div class="section-heading"><h2>YOUR EXPEDITION <span>6 / 6</span></h2><p>Inspect skills & AI · Deploy on the tactical grid</p><div class="segmented" title="Team AI priority">${["balanced", "hunt", "guard"].map((s) => `<button data-stance="${s}" class="${run.stance === s ? "active" : ""}" ${live ? "disabled" : ""}>${{ balanced: "Balanced", hunt: "Hunt", guard: "Guard" }[s]}</button>`).join("")}</div></div><div class="team-grid">${run.team.map((u, i) => creatureCard(u, i)).join("")}</div></div><div class="relic-section"><span class="relic-heading">✧ EXPEDITION RELICS <span class="muted">${run.relics.length}</span></span><button class="text-button pack-button" data-action="pack">◈ Relic pack · ${run.inventory.length}</button>${
     run.relics.length
       ? `<div class="relic-list">${run.relics
           .map((id) => {
@@ -273,7 +311,7 @@ function arenaHTML() {
           })
           .join("")}</div>`
       : '<span class="relic-empty">A story yet to be written. Find relics at outposts and along your path.</span>'
-  }</div><div class="battle-feed"><time id="feed-time">✧</time><span id="feed-text">${live ? battle?.log[0]?.text || "The gates open." : "Your formation is set. Let your companions do the fighting."}</span><button class="text-button" data-action="report" style="margin-left:auto;white-space:nowrap">Battle log →</button></div></div><aside class="side-column">${briefingHTML()}${synergyHTML()}</aside></div>`;
+  }</div>${tacticalHTML()}<div class="battle-feed"><time id="feed-time">✧</time><span id="feed-text">${live ? battle?.log[0]?.text || "The gates open." : "Your formation is set. Let your companions do the fighting."}</span><button class="text-button" data-action="report" style="margin-left:auto;white-space:nowrap">Battle log →</button></div></div><aside class="side-column">${briefingHTML()}${synergyHTML()}</aside></div>`;
 }
 function creatureCard(u, i) {
   const s = BY_ID[u.id],
@@ -316,7 +354,7 @@ function briefingHTML() {
     )
     .join(
       "",
-    )}</div><div class="thin-rule"></div><span class="section-kicker">VICTORY REWARDS</span><div class="reward-preview"><span>◉ ${type === "boss" ? 145 : type === "elite" ? 85 : 48 + run.depth * 4} gold</span><span>✧ ${Math.round((type === "boss" ? 72 : type === "elite" ? 46 : 32 + run.depth * 3) * (1 + run.planet * 0.35))} EXP</span><span>◈ Capture</span></div><div class="tactical-tip"><strong>AN EXPLORER’S INSTINCT</strong>${type === "boss" ? "Boss creatures have reinforced health. Protect your healers and invest in cooldowns." : "Two of a kind is a beginning. Pair elements to awaken synergies — your Ember and Grove bonds are already active."}</div></section>`;
+    )}</div><div class="thin-rule"></div><span class="section-kicker">VICTORY REWARDS</span><div class="reward-preview"><span>◉ ${type === "boss" ? 145 : type === "elite" ? 85 : 48 + run.depth * 4} gold</span><span>✧ ${Math.round((type === "boss" ? 72 : type === "elite" ? 46 : 32 + run.depth * 3) * (1 + run.planet * 0.35))} EXP</span><span>◈ Capture</span></div><div class="scout-panel"><strong>${encounterInfo(run, node).arch.name}</strong><p>${type === "boss" ? encounterInfo(run, node).boss.desc : encounterInfo(run, node).arch.desc}</p><b>COUNTERPLAN</b><p>${type === "boss" ? encounterInfo(run, node).boss.counter : encounterInfo(run, node).arch.counter}</p><span>${encounterInfo(run, node).weather.name} · ${encounterInfo(run, node).weather.desc}</span><small>${DIFFICULTIES[run.difficulty || "standard"].name}${chaosLevel(run) ? " " + chaosLevel(run) + " / 20" : ""}${run.legendaryLure ? " · CELESTIAL BEACON READY" : ""}</small></div><div class="tactical-tip"><strong>AN EXPLORER’S INSTINCT</strong>${type === "boss" ? "Boss creatures have reinforced health. Protect your healers and invest in cooldowns." : "Scout the enemy tactic, link a counter to one skill, then adjust deployment."}</div></section>`;
 }
 function synergyHTML() {
   const syn = synergies(run.team);
@@ -359,7 +397,7 @@ function mapHTML() {
         phase !== "battle" &&
         phase !== "reward" &&
         phase !== "ended";
-      return `<button class="route-node ${available ? "available" : ""} ${run.path.includes(n.id) ? "visited" : ""} ${n.type === "boss" ? "boss" : ""} ${node?.id === n.id && phase === "prep" ? "selected" : ""}" data-node="${n.id}" style="left:${n.x}%;top:${n.y}%" ${!available ? "disabled" : ""} aria-label="${LABELS[n.type]}, encounter ${n.depth + 1}" title="${LABELS[n.type]} · ${available ? "Available path" : run.path.includes(n.id) ? "Visited" : "Not yet reachable"}">${run.path.includes(n.id) && n.depth < run.depth ? "✓" : ICONS[n.type]}<small>${LABELS[n.type].toUpperCase()}</small></button>`;
+      return `<button class="route-node ${available ? "available" : ""} ${run.path.includes(n.id) ? "visited" : ""} ${n.type === "boss" ? "boss" : ""} ${node?.id === n.id && phase === "prep" ? "selected" : ""}" data-node="${n.id}" style="left:${n.x}%;top:${n.y}%" ${!available ? "disabled" : ""} aria-label="${LABELS[n.type]}, encounter ${n.depth + 1}" title="${LABELS[n.type]} · ${encounterInfo(run, n).arch.name} · ${encounterInfo(run, n).weather.name} · ${n.type === "event" ? EVENTS[n.event || 0].title : encounterInfo(run, n).arch.counter}">${run.path.includes(n.id) && n.depth < run.depth ? "✓" : ICONS[n.type]}<small>${LABELS[n.type].toUpperCase()}</small></button>`;
     })
     .join(
       "",
@@ -378,7 +416,7 @@ function collectionHTML() {
       (filter === "owned" && profile.owned.includes(s.id)) ||
       s.element === filter,
   );
-  return `<div class="collection-banner"><div><h2>Every ending is a new beginning.</h2><p>Captured creatures become permanent starters. Build a new six-creature team within a 12-point budget.</p></div>${button('Build an expedition <span class="arrow">→</span>', "new-run", "secondary")}</div><div class="collection-toolbar"><div class="filters">${[{ id: "all", name: "All creatures" }, { id: "owned", name: "Discovered" }, ...Object.entries(ELEMENTS).map(([id, e]) => ({ id, name: e.name }))].map((f) => `<button data-filter="${f.id}" class="${filter === f.id ? "active" : ""}">${f.name}</button>`).join("")}</div><p><strong style="color:#c2d5b0">${profile.owned.length}</strong> / ${SPECIES.length} discovered · ${profile.victories} completed expeditions</p></div><div class="codex-grid">${shown
+  return `<div class="collection-banner"><div><h2>Every ending is a new beginning.</h2><p>Captured creatures become permanent starters. Repeat captures grow bonds: +2% starter health per bond. At bond 5, starter cost drops; Legendary families cost 4 points. Build six within twelve points.</p></div>${button('Build an expedition <span class="arrow">→</span>', "new-run", "secondary")}</div><div class="collection-toolbar">${button(`✦ Celestial adoption · ${profile.starlight || 0} starlight`, "legendary-adopt", "secondary small", (profile.starlight || 0) < 3)}<div class="filters">${[{ id: "all", name: "All creatures" }, { id: "owned", name: "Discovered" }, ...Object.entries(ELEMENTS).map(([id, e]) => ({ id, name: e.name }))].map((f) => `<button data-filter="${f.id}" class="${filter === f.id ? "active" : ""}">${f.name}</button>`).join("")}</div><p><strong style="color:#c2d5b0">${profile.owned.length}</strong> / ${SPECIES.length} discovered · ${profile.victories} completed expeditions</p></div><div class="codex-grid">${shown
     .map((s) => {
       const owned = profile.owned.includes(s.id);
       const discoveredForm = {
@@ -386,7 +424,7 @@ function collectionHTML() {
         evolution: profile.formDiscoveries[s.id] || 0,
         evolutionPath: "wild",
       };
-      return `<button class="creature-card codex-card ${owned ? "" : "locked"}" data-codex="${s.id}" style="--element:${ELEMENTS[s.element].color}"><div class="card-top"><span style="color:${owned ? RARITY[s.rarity].color : "#6b7d62"}">${s.rarity.toUpperCase()}</span><span class="role-icon">${owned ? ROLES[s.role] : "◇"}</span></div>${image(discoveredForm, "creature-art")}<strong>${owned ? s.name : "Undiscovered"}</strong><div class="card-meta"><span style="color:${owned ? ELEMENTS[s.element].color : ""}">${ELEMENTS[s.element].icon} ${ELEMENTS[s.element].name}</span><span>${s.role}</span></div><div class="thin-rule" style="margin:13px 0 8px"></div><span style="font-size:8px;color:#8fa280">${owned ? (evolutionStage(discoveredForm) ? "EVOLVED FORM DISCOVERED · BASE STARTER" : "AVAILABLE AS A STARTER") : "ENCOUNTER & CAPTURE TO UNLOCK"}</span></button>`;
+      return `<button class="creature-card codex-card ${owned ? "" : "locked"}" data-codex="${s.id}" style="--element:${ELEMENTS[s.element].color}"><div class="card-top"><span style="color:${owned ? RARITY[s.rarity].color : "#6b7d62"}">${s.rarity.toUpperCase()}</span><span class="role-icon">${owned ? ROLES[s.role] : "◇"}</span></div>${image(discoveredForm, "creature-art")}<strong>${owned ? s.name : "Undiscovered"}</strong><div class="card-meta"><span style="color:${owned ? ELEMENTS[s.element].color : ""}">${ELEMENTS[s.element].icon} ${ELEMENTS[s.element].name}</span><span>${s.role}</span></div><div class="thin-rule" style="margin:13px 0 8px"></div><span style="font-size:8px;color:#8fa280">${owned ? (evolutionStage(discoveredForm) ? "EVOLVED FORM DISCOVERED · BASE STARTER" : `AVAILABLE AS A STARTER · BOND ${profile.bonds[s.id] || 0}/5`) : "ENCOUNTER & CAPTURE TO UNLOCK"}</span></button>`;
     })
     .join("")}</div>`;
 }
@@ -509,6 +547,8 @@ function evolutionHTML(u, index) {
               ? "Ascend " + EVOLUTION_PATHS[path].name + " form"
               : EVOLUTION_PATHS[path].name + " evolution") +
             "</strong><small>" +
+            evolutionMechanic(u, BY_ID[u.id].role, path) +
+            "<br>" +
             effect +
             "<br>+1 relic socket · " +
             (path === "warden"
@@ -595,7 +635,7 @@ function openDetail(u, index = null, codex = false) {
     ),
     locked = codex && !profile.owned.includes(u.id);
   modal(
-    `<div class="detail-top">${image(u)}<div><span class="section-kicker" style="color:${RARITY[s.rarity].color}">${s.rarity.toUpperCase()} CREATURE</span><h2>${creatureName(u)}</h2><p style="margin:0">${s.role} · ${e.name} · Level ${u.level}</p><div class="tags">${tag(`${ROLES[s.role]} ${s.role}`)}${tag(`${e.icon} ${e.name}`)}</div></div></div><div class="stat-grid"><div class="stat"><small>HEALTH</small><strong>${st.hp}</strong></div><div class="stat"><small>ATTACK</small><strong>${st.atk}</strong></div><div class="stat"><small>MOVEMENT</small><strong>${Math.round(st.speed)}</strong></div><div class="stat"><small>SKILL COOLDOWN</small><strong>${st.cd.toFixed(1)}s</strong></div></div>${evolutionHTML(u, index)}${skillsHTML(u, index)}${loadoutHTML(u, index)}${index !== null ? `<div class="focus-control"><span class="section-kicker">TRAINING FOCUS · CHOOSE BEFORE BATTLE</span><div class="segmented">${["balanced", "aggressive", "defensive", "swift"].map((f) => `<button data-focus="${f}" data-index="${index}" class="${u.focus === f ? "active" : ""}" ${phase === "battle" ? "disabled" : ""}>${f.charAt(0).toUpperCase() + f.slice(1)}</button>`).join("")}</div><p style="font-size:10px;margin:9px 0 0">${{ balanced: "Natural strengths. No stat tradeoffs.", aggressive: "+15% attack · −8% health.", defensive: "+15% health · −8% attack.", swift: "15% faster skills · −6% attack." }[u.focus || "balanced"]}</p></div><div class="thin-rule"></div><span class="section-kicker">SWAP WITH A COMPANION ON YOUR BENCH</span><div class="bench-list">${run.bench.length ? run.bench.map((b, j) => `<button class="bench-button" data-swap="${j}" data-index="${index}" ${phase === "battle" ? "disabled" : ""}>${image(b)}${creatureName(b)}<br><span class="muted">Lv. ${b.level}</span></button>`).join("") : '<div class="empty-bench">Capture a creature or recruit one at an outpost to fill your bench.</div>'}</div><p class="starter-note">${u.level >= 5 && !evolutionStage(u) ? "EVOLUTION AVAILABLE · INSPECT YOUR EVOLUTION PATH ABOVE · " : ""}${u.level >= 5 ? "AWAKENED · THIRD SKILL UNLOCKED · " : ""}${u.xp} / ${xpNeeded(u.level)} EXP toward the next level · ${u.training || 0} training upgrades</p>` : locked ? '<p class="disabled-note">Find this creature in the wild and capture it to unlock it as a future starter.</p>' : `<p style="font-size:11px">${e.description}. Rare companions have stronger base stats and specialized skills.</p>`}${button("Back to expedition", "close", "secondary")}`,
+    `<div class="detail-top">${image(u)}<div><span class="section-kicker" style="color:${RARITY[s.rarity].color}">${s.rarity.toUpperCase()} CREATURE</span><h2>${creatureName(u)}</h2><p style="margin:0">${s.role} · ${e.name} · Level ${u.level}</p><div class="tags">${tag(`${ROLES[s.role]} ${s.role}`)}${tag(`${e.icon} ${e.name}`)}</div></div></div><div class="stat-grid"><div class="stat"><small>HEALTH</small><strong>${st.hp}</strong></div><div class="stat"><small>ATTACK</small><strong>${st.atk}</strong></div><div class="stat"><small>MOVEMENT</small><strong>${Math.round(st.speed)}</strong></div><div class="stat"><small>SKILL COOLDOWN</small><strong>${st.cd.toFixed(1)}s</strong></div></div><div class="trait-panel"><strong>${traitFor(u).name}</strong><p>${traitFor(u).desc}</p></div>${index !== null ? policyHTML(u, index) : ""}${evolutionHTML(u, index)}${skillsHTML(u, index)}${loadoutHTML(u, index)}${index !== null ? `<div class="focus-control"><span class="section-kicker">TRAINING FOCUS · CHOOSE BEFORE BATTLE</span><div class="segmented">${["balanced", "aggressive", "defensive", "swift"].map((f) => `<button data-focus="${f}" data-index="${index}" class="${u.focus === f ? "active" : ""}" ${phase === "battle" ? "disabled" : ""}>${f.charAt(0).toUpperCase() + f.slice(1)}</button>`).join("")}</div><p style="font-size:10px;margin:9px 0 0">${{ balanced: "Natural strengths. No stat tradeoffs.", aggressive: "+15% attack · −8% health.", defensive: "+15% health · −8% attack.", swift: "15% faster skills · −6% attack." }[u.focus || "balanced"]}</p></div><div class="thin-rule"></div><span class="section-kicker">SWAP WITH A COMPANION ON YOUR BENCH</span><div class="bench-list">${run.bench.length ? run.bench.map((b, j) => `<button class="bench-button" data-swap="${j}" data-index="${index}" ${phase === "battle" ? "disabled" : ""}>${image(b)}${creatureName(b)}<br><span class="muted">Lv. ${b.level}</span></button>`).join("") : '<div class="empty-bench">Capture a creature or recruit one at an outpost to fill your bench.</div>'}</div><p class="starter-note">${u.level >= 5 && !evolutionStage(u) ? "EVOLUTION AVAILABLE · INSPECT YOUR EVOLUTION PATH ABOVE · " : ""}${u.level >= 5 ? "AWAKENED · THIRD SKILL UNLOCKED · " : ""}${u.bond ? `BOND ${u.bond} · +${u.bond * 2}% BASE HEALTH · ` : ""}${u.xp} / ${xpNeeded(u.level)} EXP toward the next level · ${u.training || 0} training upgrades</p>` : locked ? '<p class="disabled-note">Find this creature in the wild and capture it to unlock it as a future starter.</p>' : `<p style="font-size:11px">${e.description}. Rare companions have stronger base stats and specialized skills.</p>`}${button("Back to expedition", "close", "secondary")}`,
     "creature",
   );
 }
@@ -609,7 +649,30 @@ function startBattle() {
     enterNode(run, node);
     committed = true;
   }
+  if (run.captureOrder) {
+    const target = foes.find((f) => f.uid === run.captureOrder.uid && !f.boss);
+    if (
+      !target ||
+      (!run.captureReservation?.result && run.bench.length >= 12) ||
+      (!run.captureReservation && run.orbs < 1)
+    ) {
+      toast("Capture requires a wild target, an orb, and bench space.");
+      return;
+    }
+    if (!run.captureReservation) {
+      run.orbs--;
+      run.captureReservation = {
+        uid: target.uid,
+        seed: node.seed,
+        result: null,
+      };
+    }
+  }
+  if (node.type === "capture" && run.legendaryLure) run.legendaryLure = false;
   battle = new Battle(run, foes, node.seed);
+  battle.reducedMotion = profile.reducedMotion;
+  soundscape.begin(run.planet, profile.sound);
+  save();
   phase = "battle";
   paused = false;
   reward = null;
@@ -622,6 +685,27 @@ function startBattle() {
 }
 function finishBattle() {
   const won = battle.winner === 0;
+  lastReport = {
+    time: battle.time,
+    done: battle.done,
+    winner: battle.winner,
+    metrics: { ...battle.metrics },
+    log: [...battle.log],
+    advice: battle.reportAdvice(),
+    units: battle.units.map((u) => ({
+      id: u.id,
+      uid: u.uid,
+      level: u.level,
+      evolution: u.evolution,
+      evolutionPath: u.evolutionPath,
+      side: u.side,
+      damage: u.damage,
+      healed: u.healed,
+      kills: u.kills,
+      damageTaken: u.damageTaken,
+      shieldAbsorbed: u.shieldAbsorbed,
+    })),
+  };
   reward = {
     ...rewardBattle(run, node.type, won),
     won,
@@ -634,7 +718,7 @@ function finishBattle() {
     personalRelic: pick(PERSONAL_RELICS, rng(node.seed + 888)).id,
   };
   if (won) {
-    const candidates = foes;
+    const candidates = foes.filter((f) => !f.boss);
     captureTarget = candidates
       .slice()
       .sort(
@@ -642,6 +726,18 @@ function finishBattle() {
           RARITY[BY_ID[b.id].rarity].cost - RARITY[BY_ID[a.id].rarity].cost,
       )[0];
   }
+  settleTacticalCapture();
+  if (run.captureReservation) {
+    captureAttempted = !!run.captureReservation.result;
+    captureTarget =
+      foes.find((f) => f.uid === run.captureReservation.uid) || captureTarget;
+    reward.captureSuccess = !!run.captureReservation.result?.success;
+    reward.tacticalCapture = run.captureReservation.result;
+  }
+  reward.captureOptions = foes.filter((f) => !f.boss);
+  if (run.relics.includes("salvage") && node.type === "elite" && won)
+    run.inventory.push(personalRelic(reward.personalRelic));
+  run.contracts = [];
   phase = "reward";
   profile.best = Math.max(profile.best, run.wins);
   save();
@@ -681,7 +777,27 @@ function openRewards() {
     },
   ];
   modal(
-    `<div class="result-hero"><span class="result-sigil">${won ? "✧" : "↩"}</span><span class="section-kicker" style="display:block">${won ? "ANOTHER STORY TO TELL" : "LIVE TO FIGHT ANOTHER DAY"}</span><h2>${won ? "The wilds remember you." : "A difficult lesson."}</h2><p>${won ? (node.type === "boss" ? "A world opens its gates. Your next planet awaits." : "Your companions grow stronger. A new path is opening.") : `The team retreats and recovers. ${run.integrity} expedition ${run.integrity === 1 ? "life remains" : "lives remain"}.`}</p><div class="result-summary"><span>◉ +${reward.gold} gold</span><span>✧ +${reward.xp} EXP / creature</span><span>◷ ${Math.floor(reward.time)}s</span></div>${reward.levels?.length ? `<p class="result-levels">LEVEL UP · ${reward.levels.map((id) => BY_ID[id].name).join(" · ")}</p>` : ""}</div>${won ? `<span class="section-kicker">CHOOSE ONE EXPEDITION UPGRADE</span><div class="upgrade-grid">${upgrades.map((u) => `<button class="upgrade-card ${upgradeChosen === u.id ? "selected" : ""}" data-upgrade="${u.id}" ${upgradeChosen ? "disabled" : ""}><span class="upgrade-symbol">${u.icon}</span><strong>${upgradeChosen === u.id ? "✓ " : ""}${u.name}</strong><p>${u.desc}</p></button>`).join("")}</div>${captureTarget ? `<div class="capture-box ${reward.captureSuccess ? "captured" : ""}">${image(captureTarget)}<div><span class="section-kicker" style="color:${RARITY[BY_ID[captureTarget.id].rarity].color}">${BY_ID[captureTarget.id].rarity.toUpperCase()} · POTENTIAL COMPANION</span><strong style="display:block;margin-top:5px">${creatureName(captureTarget)}</strong><p>Lv. ${captureTarget.level} · ${BY_ID[captureTarget.id].role}<br>${captureAttempted ? (reward.captureSuccess ? "Captured! Added to your bench and permanent collection." : "The orb shattered. Another encounter, another chance.") : "Capture it for this run. Keep it for the next."}</p>${!captureAttempted ? `<small>${Math.round(captureChance(run, captureTarget) * 100)}% chance · ${run.orbs} orbs remaining</small>` : ""}</div>${button(captureAttempted ? (reward.captureSuccess ? "✓ Captured" : "Escaped") : "Throw an orb · 1 ◈", "capture", "secondary", captureAttempted || run.orbs <= 0 || run.bench.length >= 12)}</div>` : ""}` : ""}<div class="modal-actions">${button(won ? "Continue the journey →" : run.integrity <= 0 ? "End expedition →" : node.type === "boss" ? "Challenge the guardian again →" : "Choose the next path →", "continue", "", won && !upgradeChosen)}</div>`,
+    `<div class="result-hero"><span class="result-sigil">${won ? "✧" : "↩"}</span><span class="section-kicker" style="display:block">${won ? "ANOTHER STORY TO TELL" : "LIVE TO FIGHT ANOTHER DAY"}</span><h2>${won ? "The wilds remember you." : "A difficult lesson."}</h2><p>${won ? (node.type === "boss" ? "A world opens its gates. Your next planet awaits." : "Your companions grow stronger. A new path is opening.") : `The team retreats and recovers. ${run.integrity} expedition ${run.integrity === 1 ? "life remains" : "lives remain"}.`}</p><div class="result-summary"><span>◉ +${reward.gold} gold</span><span>✧ +${reward.xp} EXP / creature</span><span>◷ ${Math.floor(reward.time)}s</span></div>${reward.levels?.length ? `<p class="result-levels">LEVEL UP · ${reward.levels.map((id) => BY_ID[id].name).join(" · ")}</p>` : ""}</div>${
+      won
+        ? `<span class="section-kicker">CHOOSE ONE EXPEDITION UPGRADE</span><div class="upgrade-grid">${upgrades.map((u) => `<button class="upgrade-card ${upgradeChosen === u.id ? "selected" : ""}" data-upgrade="${u.id}" ${upgradeChosen ? "disabled" : ""}><span class="upgrade-symbol">${u.icon}</span><strong>${upgradeChosen === u.id ? "✓ " : ""}${u.name}</strong><p>${u.desc}</p></button>`).join("")}</div>${
+            captureTarget
+              ? `${
+                  !captureAttempted
+                    ? `<label class="capture-select">CHOOSE A DEFEATED CREATURE<select id="reward-capture-target">${(
+                        reward.captureOptions || foes
+                      )
+                        .filter((f) => !f.boss)
+                        .map(
+                          (f) =>
+                            `<option value="${f.uid}" ${f.uid === captureTarget.uid ? "selected" : ""}>${creatureName(f)} · ${BY_ID[f.id].rarity}</option>`,
+                        )
+                        .join("")}</select></label>`
+                    : ""
+                }<div class="capture-box ${reward.captureSuccess ? "captured" : ""}">${image(captureTarget)}<div><span class="section-kicker" style="color:${RARITY[BY_ID[captureTarget.id].rarity].color}">${BY_ID[captureTarget.id].rarity.toUpperCase()} · POTENTIAL COMPANION</span><strong style="display:block;margin-top:5px">${creatureName(captureTarget)}</strong><p>Lv. ${captureTarget.level} · ${BY_ID[captureTarget.id].role}<br>${captureAttempted ? (reward.captureSuccess ? "Captured! Added to your bench and permanent collection." : reward.tacticalCapture?.reason || "The orb shattered. Another encounter, another chance.") : "Recruit after victory, or prepare a tactical capture next battle for improved odds."}</p>${!captureAttempted ? `<small>${Math.round(captureChance(run, captureTarget) * 100)}% chance · ${run.orbs} orbs remaining</small>` : ""}</div>${button(captureAttempted ? (reward.captureSuccess ? "✓ Captured" : "Escaped") : "Throw an orb · 1 ◈", "capture", "secondary", captureAttempted || run.orbs <= 0 || run.bench.length >= 12)}</div>`
+              : ""
+          }`
+        : ""
+    }<div class="modal-actions">${button("Why this result?", "report", "secondary")}${button(won ? "Continue the journey →" : run.integrity <= 0 ? "End expedition →" : node.type === "boss" ? "Challenge the guardian again →" : "Choose the next path →", "continue", "", won && !upgradeChosen)}</div>`,
     "reward",
     false,
   );
@@ -709,6 +825,7 @@ function tryCapture() {
   captureAttempted = true;
   reward.captureSuccess = result.success;
   if (result.success) {
+    result.creature.bond = recordBond(profile, result.creature.id);
     discoverForm(result.creature);
     unlock(captureTarget.id);
   }
@@ -725,6 +842,8 @@ function continueRun() {
     return;
   }
   if (!reward.won && node.type === "boss") {
+    run.captureOrder = null;
+    run.captureReservation = null;
     phase = "prep";
     battle = null;
     reward = null;
@@ -737,6 +856,8 @@ function continueRun() {
     );
     return;
   }
+  run.captureOrder = null;
+  run.captureReservation = null;
   const oldPlanet = run.planet;
   nextNode(run);
   if (run.complete) {
@@ -775,6 +896,8 @@ function chooseNode(id) {
     return;
   }
   node = n;
+  run.captureOrder = null;
+  run.captureReservation = null;
   run.encounterType = n.type;
   committed = false;
   if (["battle", "elite", "boss", "capture"].includes(n.type)) {
@@ -793,7 +916,7 @@ function chooseNode(id) {
     render();
     if (n.type === "shop") openShop();
     if (n.type === "event") {
-      eventIndex = Math.min(run.planet, 2);
+      eventIndex = n.event ?? Math.floor(rng(n.seed)() * EVENTS.length);
       save();
       openEvent();
     }
@@ -811,39 +934,23 @@ function leaveNode() {
   render();
 }
 function stockShop() {
-  const r = rng(node.seed);
-  const available = RELICS.filter((r) => !run.relics.includes(r.id));
-  const relics = [];
-  while (available.length && relics.length < 3) {
-    const i = Math.floor(r() * available.length);
-    relics.push(available.splice(i, 1)[0].id);
-  }
-  const options = SPECIES.filter((s) => s.rarity !== "Legendary");
-  const personal = [];
-  const gear = [...PERSONAL_RELICS];
-  while (personal.length < 3) {
-    const i = Math.floor(r() * gear.length);
-    personal.push(gear.splice(i, 1)[0].id);
-  }
-  return {
-    relics,
-    personal,
-    creature: pick(options, r).id,
-    sold: [],
-    rerolls: 0,
-  };
+  return generateShop(run, node.seed);
 }
 function openShop() {
   shopStock = shopStock || stockShop();
   save();
   const stock = shopStock;
   stock.personal ??= ["ward-stone", "moonstone", "echo-prism"];
+  stock.legendary ??= pick(
+    SPECIES.filter((s) => s.rarity === "Legendary"),
+    rng(node.seed + 321),
+  ).id;
   modal(
     `<div class="modal-head-row"><span class="section-kicker">THE WAYFARER’S OUTPOST</span><span class="modal-currency">◉ ${run.gold}</span></div><h2>A little edge goes a long way.</h2><p>Relics reshape your whole team. Companions reshape your possibilities.</p><div class="shop-grid">${stock.relics
       .map((id) => {
         const r = RELICS.find((r) => r.id === id),
           sold = run.relics.includes(id);
-        return `<div class="shop-card ${sold ? "sold" : ""}"><span class="shop-icon" style="color:${r.color}">${r.icon}</span><h3>${r.name}</h3><p>${r.desc}</p>${button(sold ? "✓ Equipped" : `◉ ${r.cost}`, `buy-${id}`, "secondary small", sold || run.gold < r.cost)}</div>`;
+        return `<div class="shop-card ${sold ? "sold" : ""}"><span class="shop-icon" style="color:${r.color}">${r.icon}</span><h3>${r.name}</h3><p>${r.desc}</p>${button(sold ? "✓ Equipped" : `◉ ${shopPrice(run, r.cost)}`, `buy-${id}`, "secondary small", sold || run.gold < shopPrice(run, r.cost))}</div>`;
       })
       .join(
         "",
@@ -851,11 +958,11 @@ function openShop() {
       .map((id) => {
         const r = PERSONAL_BY_ID[id],
           sold = stock.sold.includes(id);
-        return `<div class="shop-personal"><span style="color:${r.color}">${r.icon}</span><strong>${r.name}</strong><p>${r.desc}</p>${button(sold ? "✓ In your pack" : `◉ ${r.cost}`, `buy-personal-${id}`, "secondary small", sold || run.gold < r.cost)}</div>`;
+        return `<div class="shop-personal"><span style="color:${r.color}">${r.icon}</span><strong>${r.name}</strong><p>${r.desc}</p>${button(sold ? "✓ In your pack" : `◉ ${shopPrice(run, r.cost)}`, `buy-personal-${id}`, "secondary small", sold || run.gold < shopPrice(run, r.cost))}</div>`;
       })
       .join(
         "",
-      )}</div><div class="shop-supplies"><span>◈ <strong>Capture supplies</strong><br><span class="muted" style="font-size:9px">One orb. One more possibility.</span></span>${button("◉ 35 · +1 orb", "buy-orb", "secondary small", run.gold < 35)}</div><div class="shop-supplies"><div class="shop-companion" style="display:flex;align-items:center;gap:10px">${image(stock.creature)}<span><strong>${BY_ID[stock.creature].name}</strong><br><span style="font-size:9px;color:${RARITY[BY_ID[stock.creature].rarity].color}">${BY_ID[stock.creature].rarity} · ${BY_ID[stock.creature].role}</span></span></div>${button(stock.sold.includes("creature") ? "✓ Recruited" : `◉ ${RARITY[BY_ID[stock.creature].rarity].cost} · Recruit`, "buy-creature", "secondary small", stock.sold.includes("creature") || run.gold < RARITY[BY_ID[stock.creature].rarity].cost || run.bench.length >= 12)}</div><div class="modal-actions">${button(`Refresh relics · ◉ ${20 + stock.rerolls * 15}`, "reroll", "ghost", run.gold < 20 + stock.rerolls * 15)}${button("Leave outpost →", "leave-node")}</div>`,
+      )}</div><div class="shop-supplies"><span>◈ <strong>Capture supplies</strong><br><span class="muted" style="font-size:9px">One orb. One more possibility.</span></span>${button(`◉ ${shopPrice(run, 35)} · +1 orb`, "buy-orb", "secondary small", run.gold < shopPrice(run, 35))}</div><div class="shop-supplies"><div class="shop-companion" style="display:flex;align-items:center;gap:10px">${image(stock.creature)}<span><strong>${BY_ID[stock.creature].name}</strong><br><span style="font-size:9px;color:${RARITY[BY_ID[stock.creature].rarity].color}">${BY_ID[stock.creature].rarity} · ${BY_ID[stock.creature].role}</span></span></div>${button(stock.sold.includes("creature") ? "✓ Recruited" : `◉ ${shopPrice(run, RARITY[BY_ID[stock.creature].rarity].cost)} · Recruit`, "buy-creature", "secondary small", stock.sold.includes("creature") || run.gold < shopPrice(run, RARITY[BY_ID[stock.creature].rarity].cost) || run.bench.length >= 12)}</div><div class="legendary-outpost"><span class="section-kicker">CELESTIAL CONTRACTS</span><div class="shop-supplies">${image(stock.legendary)}<span><strong>${BY_ID[stock.legendary].name}</strong><small>Legendary · recruit and permanently unlock</small></span>${button(stock.sold.includes("legendary") ? "✓ Recruited" : `◉ ${shopPrice(run, 290)} · Recruit`, "buy-legendary", "secondary small", stock.sold.includes("legendary") || run.gold < shopPrice(run, 290) || run.bench.length >= 12)}</div><p>Signal a Legendary at your next sanctuary. Prepare a tactical capture to improve its odds.</p>${button(run.legendaryLure ? "✓ Beacon ready" : `◉ ${shopPrice(run, 90)} · Celestial beacon`, "buy-beacon", "secondary", run.legendaryLure || run.gold < shopPrice(run, 90))}</div><div class="modal-actions">${button(`Refresh relics · ◉ ${shopPrice(run, 20 + stock.rerolls * 15)}`, "reroll", "ghost", run.gold < shopPrice(run, 20 + stock.rerolls * 15))}${button("Leave outpost →", "leave-node")}</div>`,
     "shop",
     false,
   );
@@ -870,15 +977,26 @@ function purchase(action) {
       r &&
       shopStock.personal.includes(id) &&
       !shopStock.sold.includes(id) &&
-      run.gold >= r.cost
+      run.gold >= shopPrice(run, r.cost)
     ) {
-      run.gold -= r.cost;
+      run.gold -= shopPrice(run, r.cost);
       run.inventory.push(personalRelic(id));
       shopStock.sold.push(id);
       success = true;
     }
-  } else if (action === "buy-orb" && run.gold >= 35) {
-    run.gold -= 35;
+  } else if (action === "buy-beacon") {
+    success = buyLegendaryLure(run);
+  } else if (
+    action === "buy-legendary" &&
+    !shopStock.sold.includes("legendary")
+  ) {
+    success = buyCreature(run, shopStock.legendary);
+    if (success) {
+      shopStock.sold.push("legendary");
+      unlock(shopStock.legendary);
+    }
+  } else if (action === "buy-orb" && run.gold >= shopPrice(run, 35)) {
+    run.gold -= shopPrice(run, 35);
     run.orbs++;
     success = true;
   } else if (
@@ -903,7 +1021,7 @@ function purchase(action) {
 }
 function rerollShop() {
   if (phase !== "shop") return;
-  const price = 20 + shopStock.rerolls * 15;
+  const price = shopPrice(run, 20 + shopStock.rerolls * 15);
   if (run.gold < price) return;
   run.gold -= price;
   const r = rng(node.seed + shopStock.rerolls * 999 + 11);
@@ -923,19 +1041,12 @@ function rerollShop() {
   openShop();
 }
 function eventDisabled(c) {
-  return (
-    (c.kind === "relic" &&
-      (run.gold < c.cost || run.relics.includes(c.relic))) ||
-    (c.kind === "trade" && (run.orbs < c.cost || run.bench.length >= 12)) ||
-    (c.kind === "sacrifice" &&
-      (run.integrity <= 1 || run.relics.includes(c.relic))) ||
-    (c.kind === "risk" && (run.integrity <= 1 || run.bench.length >= 12))
-  );
+  return !eventAvailable(run, c);
 }
 function openEvent() {
   const e = EVENTS[eventIndex];
   modal(
-    `<span class="section-kicker">AN UNKNOWN SIGNAL · ${PLANETS[run.planet].name.toUpperCase()}</span><h2>${e.title}.</h2><div class="event-art">${["❋", "✧", "⌛"][eventIndex]}</div><p>${e.story}</p><div class="choice-list">${e.choices.map((c, i) => `<button class="event-choice" data-event="${i}" ${eventDisabled(c) ? "disabled" : ""}><strong>${c.title} <span style="float:right;color:#c1dba5">→</span></strong><p>${c.desc}</p></button>`).join("")}</div>`,
+    `<span class="section-kicker">AN UNKNOWN SIGNAL · ${PLANETS[run.planet].name.toUpperCase()}</span><h2>${e.title}.</h2><div class="event-art">${["❋", "✧", "⌛"][eventIndex % 3]}</div><p>${e.story}</p><div class="choice-list">${e.choices.map((c, i) => `<button class="event-choice" data-event="${i}" ${eventDisabled(c) ? "disabled" : ""}><strong>${c.title} <span style="float:right;color:#c1dba5">→</span></strong><p>${c.desc}</p></button>`).join("")}</div><div class="modal-actions">${button("Leave without a bargain →", "leave-event", "ghost")}</div>`,
     "event",
     false,
   );
@@ -950,29 +1061,34 @@ function eventChoose(i) {
 }
 function openRest() {
   modal(
-    `<span class="section-kicker">A QUIET GROVE</span><h2>Let the world wait.</h2><div class="event-art">❋</div><p>Your companions gather beneath the glowing canopy. There is time for one thing before the journey continues.</p><div class="choice-list"><button class="event-choice" data-action="rest-life" ${run.integrity >= 3 ? "disabled" : ""}><strong>Mend the expedition <span style="float:right">♡</span></strong><p>Recover one expedition life. Currently ${run.integrity} / 3.</p></button><button class="event-choice" data-action="rest-xp"><strong>Practice together <span style="float:right">✧</span></strong><p>Every active creature gains 40 EXP. Stronger bonds, stronger companions.</p></button><button class="event-choice" data-action="rest-orbs"><strong>Search the undergrowth <span style="float:right">◈</span></strong><p>Find 2 capture orbs. The next companion might be just around the bend.</p></button></div>`,
+    `<span class="section-kicker">A QUIET GROVE</span><h2>Let the world wait.</h2><div class="event-art">❋</div><p>Your companions gather beneath the glowing canopy. There is time for one thing before the journey continues.</p><div class="choice-list"><button class="event-choice" data-action="rest-life" ${run.integrity >= 3 ? "disabled" : ""}><strong>Mend the expedition <span style="float:right">♡</span></strong><p>Recover one expedition life. Currently ${run.integrity} / 3.</p></button><button class="event-choice" data-action="rest-xp"><strong>Practice together <span style="float:right">✧</span></strong><p>Every active creature gains ${chaosLevel(run) >= 12 ? 30 : 40} EXP. Stronger bonds, stronger companions.</p></button><button class="event-choice" data-action="rest-orbs"><strong>Search the undergrowth <span style="float:right">◈</span></strong><p>Find 2 capture orbs. The next companion might be just around the bend.</p></button></div>`,
     "rest",
     false,
   );
 }
 function starterCost(id) {
-  return { Common: 1, Uncommon: 2, Rare: 3, Epic: 4, Legendary: 6 }[
-    BY_ID[id].rarity
-  ];
+  return starterPoints(BY_ID[id].rarity, profile.bonds[id] || 0);
 }
 function openStarters(reset = true) {
   if (phase === "battle") {
     toast("Finish this battle before starting a new expedition.");
     return;
   }
-  if (reset) starterSelection = [...STARTERS];
+  if (reset) {
+    starterSelection = [...STARTERS];
+    selectedDifficulty = run.difficulty || "standard";
+    selectedChaos = Math.max(
+      1,
+      Math.min(profile.chaosUnlocked || 1, run.chaos || 1),
+    );
+  }
   const cost = starterSelection.reduce((s, id) => s + starterCost(id), 0);
   modal(
-    `<span class="section-kicker">A NEW EXPEDITION</span><h2>Choose your unlikely heroes.</h2><p>Six companions. Twelve points. Captures from past expeditions let you start with rarer creatures — if you can afford the team around them.</p><div class="starter-budget"><span>${starterSelection.length} / 6 companions</span><strong style="color:${cost > 12 ? "#f4a391" : ""}">${cost} / 12 starter points</strong></div><div class="starter-grid">${profile.owned
+    `<span class="section-kicker">A NEW EXPEDITION</span><h2>Choose your unlikely heroes.</h2><p>Six companions. Twelve points. Captures from past expeditions let you start with rarer creatures — if you can afford the team around them.</p>${difficultyHTML()}<div class="starter-budget"><span>${starterSelection.length} / 6 companions</span><strong style="color:${cost > 12 ? "#f4a391" : ""}">${cost} / 12 starter points</strong></div><div class="starter-grid">${profile.owned
       .map((id) => {
         const s = BY_ID[id],
           selected = starterSelection.includes(id);
-        return `<button class="starter-card ${selected ? "selected" : ""}" data-starter="${id}"><span class="starter-check">${selected ? "✓" : starterCost(id) + "pt"}</span>${image(id)}<strong>${s.name}</strong><small style="color:${RARITY[s.rarity].color}">${s.rarity} · ${starterCost(id)} ${starterCost(id) === 1 ? "point" : "points"}</small></button>`;
+        return `<button class="starter-card ${selected ? "selected" : ""}" data-starter="${id}"><span class="starter-check">${selected ? "✓" : starterCost(id) + "pt"}</span>${image(id)}<strong>${s.name}</strong><small style="color:${RARITY[s.rarity].color}">${s.rarity} · ${starterCost(id)} ${starterCost(id) === 1 ? "point" : "points"}<br>Bond ${profile.bonds[id] || 0} / 5</small></button>`;
       })
       .join(
         "",
@@ -994,7 +1110,11 @@ function endRun(won) {
   phase = "ended";
   run.complete = won;
   if (!recordedEnd) {
-    if (won) profile.victories++;
+    if (won) {
+      profile.victories++;
+      profile.starlight = (profile.starlight || 0) + 3;
+      unlockChaos(profile, run);
+    }
     recordedEnd = true;
   }
   profile.best = Math.max(profile.best, run.wins);
@@ -1004,13 +1124,14 @@ function endRun(won) {
 }
 function openEnd(won = run.complete) {
   modal(
-    `<div class="result-hero"><span class="result-sigil">${won ? "✧" : "♡"}</span><span class="section-kicker" style="display:block">${won ? "THREE WORLDS. ONE EXTRAORDINARY TEAM." : "SOME STORIES ARE ONLY THE BEGINNING"}</span><h2>${won ? "You brought the stars home." : "The journey stays with you."}</h2><p>${won ? "Your companions have conquered the Silent Expanse. There are more teams to discover, more paths to try." : "Your expedition ends here. Every creature you discovered is waiting for your next attempt."}</p></div><div class="end-stats"><div><strong>${run.wins}</strong><small>BATTLES WON</small></div><div><strong>${profile.owned.length}</strong><small>PERMANENT CREATURES</small></div><div><strong>${run.relics.length}</strong><small>RELICS FOUND</small></div></div><p class="starter-note" style="text-align:center">Captured creatures are saved on this device. Use them as starters to discover new team combinations.</p><div class="modal-actions">${button("View menagerie", "end-collection", "secondary")}${button("Build a new expedition →", "new-run")}</div>`,
+    `<div class="result-hero"><span class="result-sigil">${won ? "✧" : "♡"}</span><span class="section-kicker" style="display:block">${won ? "THREE WORLDS. ONE EXTRAORDINARY TEAM." : "SOME STORIES ARE ONLY THE BEGINNING"}</span><h2>${won ? "You brought the stars home." : "The journey stays with you."}</h2><p>${won ? "Your companions have conquered the Silent Expanse. There are more teams to discover, more paths to try." : "Your expedition ends here. Every creature you discovered is waiting for your next attempt."}</p></div><div class="end-stats"><div><strong>${run.wins}</strong><small>BATTLES WON</small></div><div><strong>${profile.owned.length}</strong><small>PERMANENT CREATURES</small></div><div><strong>${run.relics.length}</strong><small>RELICS FOUND</small></div></div>${won ? `<div class="chaos-victory"><strong>CHAOS ${profile.chaosUnlocked} / 20 UNLOCKED</strong><p>Victory grants 3 starlight: adopt a Legendary family from the menagerie. ${chaosLevel(run) ? `Chaos ${chaosLevel(run)} cleared. ` : ""}New expeditions can select the next unlocked tier.</p></div>` : ""}<p class="starter-note" style="text-align:center">Captured creatures are saved on this device. Use them as starters to discover new team combinations.</p><div class="modal-actions">${button("View menagerie", "end-collection", "secondary")}${button("Build a new expedition →", "new-run")}</div>`,
     "end",
     false,
   );
 }
 function openReport() {
-  if (!battle) {
+  const reportBattle = battle || lastReport;
+  if (!reportBattle) {
     modal(
       `<span class="section-kicker">BATTLE REPORT</span><h2>The story is still unwritten.</h2><p>Enter a battle to see combat events, damage dealt, healing, skills, and dodges.</p>${button("Back to expedition", "close", "secondary")}`,
       "report",
@@ -1018,16 +1139,16 @@ function openReport() {
     return;
   }
   modal(
-    `<span class="section-kicker">BATTLE REPORT · ${Math.floor(battle.time)} SECONDS</span><h2>${battle.done ? (battle.winner === 0 ? "A hard-earned victory." : "Lessons from the arena.") : "Every companion contributes."}</h2><div class="live-metrics"><span>Skills <b>${battle.metrics.skills}</b></span><span>Dodges <b>${battle.metrics.dodges}</b></span><span>Healing <b>${Math.round(battle.metrics.healing)}</b></span></div><div class="modal-list">${battle.units
+    `<span class="section-kicker">BATTLE REPORT · ${Math.floor(reportBattle.time)} SECONDS</span><h2>${reportBattle.done ? (reportBattle.winner === 0 ? "A hard-earned victory." : "Lessons from the arena.") : "Every companion contributes."}</h2><div class="report-advice">${(battle ? battle.reportAdvice() : lastReport.advice).map((note) => `<p>${note}</p>`).join("")}</div><div class="live-metrics"><span>Skills <b>${reportBattle.metrics.skills}</b></span><span>Dodges <b>${reportBattle.metrics.dodges}</b></span><span>Healing <b>${Math.round(reportBattle.metrics.healing)}</b></span></div><div class="modal-list">${reportBattle.units
       .filter((u) => u.side === 0)
       .sort((a, b) => b.damage - a.damage)
       .map(
         (u) =>
-          `<div class="performance-row">${image(u)}<strong>${creatureName(u)}</strong><span>${Math.round(u.damage)} DMG</span><span>${Math.round(u.healed)} HEAL</span><span>${u.kills} K.O.</span></div>`,
+          `<div class="performance-row">${image(u)}<strong>${creatureName(u)}</strong><span>${Math.round(u.damage)} DMG</span><span>${Math.round(u.healed)} HEAL</span><span>${Math.round(u.damageTaken)} TAKEN</span><span>${Math.round(u.shieldAbsorbed)} BLOCK</span></div>`,
       )
       .join(
         "",
-      )}</div><div class="thin-rule"></div><span class="section-kicker">RECENT COMBAT EVENTS</span><div class="modal-list">${battle.log
+      )}</div><div class="thin-rule"></div><span class="section-kicker">RECENT COMBAT EVENTS</span><div class="modal-list">${reportBattle.log
       .slice(0, 12)
       .map(
         (l) =>
@@ -1041,7 +1162,7 @@ function openReport() {
 }
 function openHelp() {
   modal(
-    `<span class="section-kicker">FIELD NOTES FOR A NEW EXPLORER</span><h2>A little strategy. A lot of heart.</h2><p>Collect creatures. Build bonds. Let your companions fight. Bring their stories home.</p><div class="help-grid"><div><h3>01 · Six unlikely heroes</h3><p>Inspect creatures to choose training focuses or swap bench companions. Guardians hold the front; supports and rangers keep their distance. Drag cards to change lanes.</p></div><div><h3>02 · Smart, automatic combat</h3><p>Creatures seek targets, dodge marked danger, use skills on cooldown, and protect their roles. Hunt prioritizes wounded enemies; Guard holds the frontline. Space pauses; 1, 2, 3 change speed.</p></div><div><h3>03 · Your route matters</h3><p>Each planet has six encounters. Choose adjacent paths to battle, shop, capture, recover, or make a difficult choice. Losing costs a life. Defeat each planet’s boss to advance.</p></div><div><h3>04 · Small bonds, big results</h3><p>Two creatures of an element activate a team bonus. Four unlock another. Expedition relics affect every ally. Personal relics fill individual slots: Common 1, Uncommon 2, Rare 3, Epic 4, Legendary 5. Levels and training improve base stats. Skills show their effective cooldown in the creature panel.</p></div><div><h3>05 · Catch your next beginning</h3><p>After a victory, spend an orb for one capture attempt. Rare creatures have stronger skills and lower capture chances. Successful captures join your bench and unlock permanent starters.</p></div><div><h3>06 · Evolve your companions</h3><p>At level 5, spend 50 gold in a creature panel to choose Wild damage or Warden resilience. At level 8, ascend for 100 gold. Each stage adds a relic socket and preserves your linked gems. Common companions also awaken at level 5. New expeditions start in base forms at level 1 with no run relics. Your permanent creatures stay. Choose six within a 12-point rarity budget. Captured Legendary creatures cost 6 points — real power has a price.</p></div></div><p class="starter-note">All allies fully recover between encounters. Expedition lives measure your ability to retreat. Browser storage keeps your collection and run; sound is optional.</p><div class="modal-actions">${button("I’m ready to explore →", "help-done")}</div>`,
+    `<span class="section-kicker">FIELD NOTES FOR A NEW EXPLORER</span><h2>A little strategy. A lot of heart.</h2><p>Collect creatures. Build bonds. Let your companions fight. Bring their stories home.</p><div class="help-grid"><div><h3>01 · Six unlikely heroes</h3><p>Inspect creatures to choose training focuses or swap bench companions. Guardians hold the front; supports and rangers keep their distance. Open Deployment to place each companion on a three-by-three grid. Inspect a creature to choose its AI policy.</p></div><div><h3>02 · Smart, automatic combat</h3><p>Creatures seek targets, dodge marked danger, save healing and barriers for useful moments, and protect their roles. Hunt prioritizes wounded enemies; Guard holds the frontline. Space pauses; 1, 2, 3 change speed.</p></div><div><h3>03 · Your route matters</h3><p>Each planet has six encounters. Choose adjacent paths to battle, shop, capture, recover, or make a difficult choice. Losing costs a life. Defeat each planet’s boss to advance.</p></div><div><h3>04 · Small bonds, big results</h3><p>Two creatures of an element activate a team bonus. Four unlock another. Expedition relics affect every ally. Personal relics fill individual slots: Common 1, Uncommon 2, Rare 3, Epic 4, Legendary 5. Levels and training improve base stats. Skills show their effective cooldown in the creature panel.</p></div><div><h3>05 · Catch your next beginning</h3><p>Choose a wild target and Mercy or Swift capture before battle. Your team deals less damage while preparing an automatic throw; weakening and statuses improve odds. Alternatively, select any defeated wild creature after victory for an unprepared attempt. Rare creatures have stronger skills and lower capture chances. Successful captures join your bench and unlock permanent starters.</p></div><div><h3>06 · Evolve your companions</h3><p>At level 5, spend 50 gold in a creature panel to choose Wild damage or Warden resilience. At level 8, ascend for 100 gold. Each stage adds a relic socket and preserves your linked gems. Common companions also awaken at level 5. New expeditions start in base forms at level 1 with no run relics. Your permanent creatures stay. Choose six within a 12-point rarity budget. Legendary starters cost 6 points, or 4 after five captures strengthen their bond. Victories earn Starlight for permanent Legendary adoption.</p></div></div><p class="starter-note">All allies fully recover between encounters. Expedition lives measure your ability to retreat. Browser storage keeps your collection and run; sound is optional.</p><div class="modal-actions">${button("I’m ready to explore →", "help-done")}</div>`,
     "help",
   );
 }
@@ -1052,40 +1173,8 @@ function openRelic(id) {
     "relic",
   );
 }
-let audioContext = null;
 function sound(kind) {
-  if (!profile.sound) return;
-  try {
-    audioContext ??= new (window.AudioContext || window.webkitAudioContext)();
-    audioContext.resume();
-    const notes = {
-      start: [196, 293, 392],
-      win: [392, 493, 587, 784],
-      loss: [220, 196],
-      capture: [523, 659, 784, 1046],
-      buy: [440, 660],
-      hit: [110],
-    };
-    (notes[kind] || [330]).forEach((f, i) => {
-      const o = audioContext.createOscillator(),
-        g = audioContext.createGain();
-      o.type = "sine";
-      o.frequency.value = f;
-      g.gain.setValueAtTime(0, audioContext.currentTime + i * 0.11);
-      g.gain.linearRampToValueAtTime(
-        0.04,
-        audioContext.currentTime + i * 0.11 + 0.02,
-      );
-      g.gain.exponentialRampToValueAtTime(
-        0.001,
-        audioContext.currentTime + i * 0.11 + 0.3,
-      );
-      o.connect(g);
-      g.connect(audioContext.destination);
-      o.start(audioContext.currentTime + i * 0.11);
-      o.stop(audioContext.currentTime + i * 0.11 + 0.32);
-    });
-  } catch {}
+  if (profile.sound) soundscape.action(kind);
 }
 function setView(v) {
   viewName = v;
@@ -1119,6 +1208,42 @@ document.addEventListener("click", (e) => {
         guard:
           "Guard: strikers stay near the frontline. Safer, but less burst pressure.",
       }[run.stance],
+    );
+    return;
+  }
+  if (el.dataset.formationUnit !== undefined) {
+    formationSelection = Number(el.dataset.formationUnit);
+    openFormation();
+    return;
+  }
+  if (el.dataset.deploy !== undefined && phase !== "battle") {
+    const [row, col] = el.dataset.deploy.split(":").map(Number);
+    setDeployment(run, formationSelection, row, col);
+    save();
+    render();
+    openFormation();
+    return;
+  }
+  if (el.dataset.difficulty) {
+    if (el.dataset.difficulty === "chaos" && !profile.chaosUnlocked) return;
+    selectedDifficulty = el.dataset.difficulty;
+    openStarters(false);
+    return;
+  }
+  if (el.dataset.adopt) {
+    if (
+      (profile.starlight || 0) < 3 ||
+      profile.owned.includes(el.dataset.adopt)
+    )
+      return;
+    profile.starlight -= 3;
+    recordBond(profile, el.dataset.adopt);
+    unlock(el.dataset.adopt);
+    save();
+    closeModal();
+    setView("collection");
+    toast(
+      "Legendary family adopted. Available within your next starter budget.",
     );
     return;
   }
@@ -1229,6 +1354,25 @@ document.addEventListener("click", (e) => {
     return;
   }
   const action = el.dataset.action;
+  if (action === "formation") {
+    openFormation();
+    return;
+  }
+  if (action === "legendary-adopt") {
+    openAdoption();
+    return;
+  }
+  if (action === "motion") {
+    profile.reducedMotion = !profile.reducedMotion;
+    if (battle) battle.reducedMotion = profile.reducedMotion;
+    save();
+    render();
+    return;
+  }
+  if (action === "tutorial-gem") {
+    openCreature(0);
+    return;
+  }
   if (action === "evolution-back") {
     openCreature(selectedCreature);
     return;
@@ -1247,7 +1391,13 @@ document.addEventListener("click", (e) => {
   if (action === "view-map") setView("map");
   if (action === "new-run") openStarters();
   if (action === "confirm-run") {
-    freshRun(starterSelection);
+    freshRun(starterSelection, true, {
+      difficulty: selectedDifficulty,
+      chaos:
+        selectedDifficulty === "chaos"
+          ? Math.min(selectedChaos, profile.chaosUnlocked || 1)
+          : 1,
+    });
     closeModal();
     save();
     render();
@@ -1257,6 +1407,7 @@ document.addEventListener("click", (e) => {
   if (action === "capture") tryCapture();
   if (action === "continue") continueRun();
   if (action === "leave-node" && phase === "shop") leaveNode();
+  if (action === "leave-event" && phase === "event") leaveNode();
   if (action === "reroll") rerollShop();
   if (action === "rest-life" && phase === "rest" && run.integrity < 3) {
     run.integrity++;
@@ -1264,8 +1415,8 @@ document.addEventListener("click", (e) => {
     leaveNode();
   }
   if (action === "rest-xp" && phase === "rest") {
-    run.team.forEach((u) => gainXP(u, 40));
-    toast("Every companion gains 40 EXP.");
+    run.team.forEach((u) => gainXP(u, chaosLevel(run) >= 12 ? 30 : 40));
+    toast(`Every companion gains ${chaosLevel(run) >= 12 ? 30 : 40} EXP.`);
     leaveNode();
   }
   if (action === "rest-orbs" && phase === "rest") {
@@ -1294,6 +1445,7 @@ $(".brand").addEventListener("click", (e) => {
 });
 $("#sound").addEventListener("click", () => {
   profile.sound = !profile.sound;
+  soundscape.setEnabled(profile.sound);
   $("#sound").textContent = profile.sound ? "♫" : "♪";
   $("#sound").setAttribute(
     "aria-label",
@@ -1312,7 +1464,9 @@ document.addEventListener("keydown", (e) => {
     closeModal();
   if (e.key === "Tab" && modalKind) {
     const buttons = [
-      ...document.querySelectorAll("#modal-root button:not(:disabled)"),
+      ...document.querySelectorAll(
+        "#modal-root button:not(:disabled), #modal-root select:not(:disabled), #modal-root input:not(:disabled)",
+      ),
     ];
     if (!buttons.length) return;
     const first = buttons[0],
@@ -1345,8 +1499,7 @@ document.addEventListener("keydown", (e) => {
       );
   }
 });
-let uiTick = 0,
-  soundTick = 0;
+let uiTick = 0;
 function frame(now) {
   const dt = Math.min((now - last) / 1000, 0.08);
   last = now;
@@ -1355,14 +1508,21 @@ function frame(now) {
     while (remaining > 0 && !battle.done) {
       const step = Math.min(0.04, remaining);
       battle.step(step);
+      settleTacticalCapture();
       remaining -= step;
     }
     if (battle.done) finishBattle();
-    else if (profile.sound && now - soundTick > 2300) {
-      soundTick = now;
-      sound("hit");
-    }
+    if (profile.sound) {
+      soundscape.update(battle.time, run.planet);
+      const events = battle.audioEvents.splice(0);
+      for (const event of events) soundscape.event(event);
+    } else battle.audioEvents = [];
   }
+  if (battle?.done && !paused)
+    battle.finishedVisualTime = Math.min(
+      2,
+      (battle.finishedVisualTime || 0) + dt,
+    );
   if (ctx && canvas)
     renderBattle(
       ctx,
@@ -1380,7 +1540,9 @@ function frame(now) {
     if (boss && $("#boss-health")) {
       $("#boss-health").style.width = `${(boss.hp / boss.maxHp) * 100}%`;
       $("#boss-phase").textContent =
-        boss.hp <= 0 ? "DEFEATED" : boss.enraged ? "PHASE II" : "PHASE I";
+        boss.hp <= 0
+          ? "DEFEATED"
+          : ["PHASE I", "PHASE II", "PHASE III"][(boss.phase || 1) - 1];
     }
     const timer = $("#arena-timer");
     if (timer)
@@ -1416,6 +1578,58 @@ function frame(now) {
 }
 document.addEventListener("change", (e) => {
   const el = e.target;
+  if (el.id === "chaos-tier") {
+    selectedChaos = Math.max(
+      1,
+      Math.min(profile.chaosUnlocked || 1, Number(el.value)),
+    );
+    openStarters(false);
+    return;
+  }
+  if (
+    el.id === "capture-target" &&
+    phase === "prep" &&
+    !run.captureReservation
+  ) {
+    run.captureOrder = el.value
+      ? { uid: el.value, mode: run.captureOrder?.mode || "mercy" }
+      : null;
+    save();
+    render();
+    return;
+  }
+  if (
+    el.id === "capture-mode" &&
+    phase === "prep" &&
+    run.captureOrder &&
+    !run.captureReservation
+  ) {
+    run.captureOrder.mode = el.value;
+    save();
+    render();
+    return;
+  }
+  if (
+    el.id === "reward-capture-target" &&
+    phase === "reward" &&
+    !captureAttempted
+  ) {
+    captureTarget = foes.find((f) => f.uid === el.value && !f.boss);
+    save();
+    openRewards();
+    return;
+  }
+  if (el.matches("[data-policy]") && phase !== "battle") {
+    const i = Number(el.dataset.policy);
+    if (POLICIES[el.value]) {
+      const formation = modalKind === "formation";
+      run.team[i].policy = el.value;
+      save();
+      render();
+      formation ? openFormation() : openCreature(i);
+    }
+    return;
+  }
   if (el.matches("[data-link-slot]") && phase !== "battle") {
     const i = Number(el.dataset.linkIndex);
     if (linkRelic(run, i, Number(el.dataset.linkSlot), el.value)) {
@@ -1450,7 +1664,7 @@ function loadoutHTML(u, index) {
     (_, i) => {
       const item = items[i],
         r = item ? PERSONAL_BY_ID[item.id] : null;
-      return `<div class="relic-slot ${r ? "equipped" : ""}" style="--relic:${r?.color || "#728666"}"><span>${r ? r.icon : "+"}</span><strong>${r ? r.name : "Empty socket"}</strong>${r ? `<small class="gem-effect">${r.desc}</small>` : ""}${r && index !== null ? `<label class="gem-link-label">SUPPORTS<select class="gem-link" data-link-slot="${i}" data-link-index="${index}" ${phase === "battle" ? "disabled" : ""}>${[loadout.auto, ...loadout.active].map((id) => `<option value="${id}" ${(item.link || u.id) === id ? "selected" : ""}>${SKILLS[id].auto ? "AUTO · " : ""}${SKILLS[id].name}</option>`).join("")}</select></label><button class="gem-remove" data-unequip="${i}" data-index="${index}" ${phase === "battle" ? "disabled" : ""}>Unsocket</button>` : `<small>${r ? SKILLS[item.link || u.id]?.name || "Skill linked" : "Equip from your pack"}</small>`}</div>`;
+      return `<div class="relic-slot ${r ? "equipped" : ""}" style="--relic:${r?.color || "#728666"}"><span>${r ? r.icon : "+"}</span><strong>${r ? r.name : "Empty socket"}</strong>${r ? `<small class="gem-effect">${r.desc}</small>` : ""}${r && index !== null ? `<label class="gem-link-label">SUPPORTS<select class="gem-link" data-link-slot="${i}" data-link-index="${index}" ${phase === "battle" ? "disabled" : ""}>${[loadout.auto, ...loadout.active].map((id) => `<option value="${id}" ${(item.link || u.id) === id ? "selected" : ""} ${!canSupport(item.id, id) ? "disabled" : ""}>${SKILLS[id].auto ? "AUTO · " : ""}${SKILLS[id].name}</option>`).join("")}</select></label><button class="gem-remove" data-unequip="${i}" data-index="${index}" ${phase === "battle" ? "disabled" : ""}>Unsocket</button>` : `<small>${r ? SKILLS[item.link || u.id]?.name || "Skill linked" : "Equip from your pack"}</small>`}</div>`;
     },
   ).join("")}</div>${
     index !== null
@@ -1459,13 +1673,121 @@ function loadoutHTML(u, index) {
             ? run.inventory
                 .map((item) => {
                   const r = PERSONAL_BY_ID[item.id];
-                  return `<button class="inventory-item" data-equip="${item.uid}" data-index="${index}" ${items.length >= slots || items.some((i) => i.id === item.id) || phase === "battle" ? "disabled" : ""} title="${r.desc}"><span style="color:${r.color}">${r.icon}</span><div><strong>${r.name}</strong><small>${r.desc}</small></div><b>+</b></button>`;
+                  return `<button class="inventory-item" data-equip="${item.uid}" data-index="${index}" ${items.length >= slots || items.some((i) => i.id === item.id) || ![loadout.auto, ...loadout.active].some((id) => canSupport(item.id, id)) || phase === "battle" ? "disabled" : ""} title="${r.desc}"><span style="color:${r.color}">${r.icon}</span><div><strong>${r.name}</strong><small>${r.desc}</small></div><b>+</b></button>`;
                 })
                 .join("")
             : '<p class="starter-note">Find support gems in battle rewards and outpost shops. Rarer creatures have more sockets.</p>'
-        }</div><p class="starter-note">Choose a linked skill for each gem. Multiple different gems can support one ability. Unsocket freely between battles.</p>`
+        }</div><p class="starter-note">Choose a linked skill for each gem. Multiple different gems can support one ability. Unsocket freely between battles. Disabled skill links are incompatible: damage supports need damage, Reservoir needs healing, and Beacon/Aftershock/Resonance need cooldown casts.</p>`
       : `<p class="starter-note">${s.rarity} creatures can socket ${slots} support ${slots === 1 ? "gem" : "gems"} to modify their abilities. They have ${loadout.active.length} cooldown skills and a unique auto-attack.</p>`
   }</div>`;
+}
+
+function policyHTML(u, index) {
+  const policy = POLICIES[u.policy || "adaptive"] || POLICIES.adaptive;
+  return `<label class="policy-control"><span class="section-kicker">CREATURE AI POLICY</span><select data-policy="${index}" ${phase === "battle" ? "disabled" : ""}>${Object.entries(
+    POLICIES,
+  )
+    .map(
+      ([id, p]) =>
+        `<option value="${id}" ${(u.policy || "adaptive") === id ? "selected" : ""}>${p.name}</option>`,
+    )
+    .join("")}</select><small>${policy.desc}</small></label>`;
+}
+function tacticalHTML() {
+  const editable = phase === "prep",
+    targets = (foes || []).filter((f) => !f.boss),
+    plan = run.captureOrder;
+  return `<section class="tactical-toolbar"><div class="tactical-toolbar-head"><span class="section-kicker">PLAN BEFORE THE GATES OPEN</span>${button("▦ Deployment & AI", "formation", "secondary small", phase === "battle")}${button(profile.reducedMotion ? "Motion: gentle" : "Motion: full", "motion", "ghost small")}</div>${targets.length && editable ? `<div class="capture-planner"><label>TACTICAL CAPTURE<select id="capture-target" ${run.orbs < 1 || run.bench.length >= 12 || run.captureReservation ? "disabled" : ""}><option value="">No capture order</option>${targets.map((f) => `<option value="${f.uid}" ${plan?.uid === f.uid ? "selected" : ""}>${creatureName(f)} · ${BY_ID[f.id].rarity}</option>`).join("")}</select></label><label>APPROACH<select id="capture-mode" ${!plan || run.captureReservation ? "disabled" : ""}><option value="mercy" ${plan?.mode !== "swift" ? "selected" : ""}>Mercy · throw at 35% health</option><option value="swift" ${plan?.mode === "swift" ? "selected" : ""}>Swift · throw at 55% health</option></select></label><p>${plan ? `Reserves 1 orb when battle starts. ${plan.mode === "swift" ? "6%" : "14%"} less team damage until the throw. Weakening and statuses raise odds. Mercy adds another 8 percentage points.` : "Select a wild target to automate a capture during combat. An unprepared attempt is also available after victory."}</p></div>` : ""}${run.captureReservation ? `<p class="reservation-note">Capture orb committed. Reloading preserves the reservation and any resolved result.</p>` : ""}${run.contracts?.length ? `<p class="reservation-note">Contract active: next enemy team gains ${Math.round(run.contracts.reduce((n, c) => n + (c.attack || 0), 0) * 100)}% attack and ${Math.round(run.contracts.reduce((n, c) => n + (c.health || 0), 0) * 100)}% health.</p>` : ""}</section>`;
+}
+function openFormation() {
+  const selected = run.team[formationSelection];
+  modal(
+    `<span class="section-kicker">DEPLOYMENT · ENEMIES APPROACH FROM THE RIGHT</span><h2>Give everyone a place.</h2><p>Choose a companion, then a cell. Occupied cells swap companions. Protectors cover nearby allies; spread rows against artillery.</p><div class="formation-picker">${run.team.map((c, i) => `<button data-formation-unit="${i}" class="${i === formationSelection ? "selected" : ""}">${image(c)}<span>${creatureName(c)}</span></button>`).join("")}</div><div class="formation-columns"><span>BACKLINE</span><span>MIDFIELD</span><span>FRONTLINE →</span></div><div class="deployment-grid">${Array.from(
+      { length: 9 },
+      (_, cell) => {
+        const row = Math.floor(cell / 3),
+          column = cell % 3;
+        const occupants = run.team.filter((c, i) => {
+          const d = c.deployment || defaultDeployment(c, i);
+          return d.row === row && d.column === column;
+        });
+        return `<button data-deploy="${row}:${column}" ${phase === "battle" ? "disabled" : ""} class="${occupants.includes(selected) ? "selected" : ""}" aria-label="Deploy ${creatureName(selected)} in row ${row + 1}, column ${column + 1}">${occupants.length ? occupants.map((c) => image(c)).join("") : "<span>+</span>"}<small>ROW ${row + 1}</small></button>`;
+      },
+    ).join(
+      "",
+    )}</div>${policyHTML(selected, formationSelection)}<div class="modal-actions">${button("Formation ready →", "close")}</div>`,
+    "formation",
+  );
+}
+function difficultyHTML() {
+  const tier = selectedDifficulty === "chaos" ? selectedChaos : 0;
+  return `<section class="difficulty-panel"><span class="section-kicker">CHOOSE YOUR CHALLENGE</span><div class="difficulty-options">${Object.entries(
+    DIFFICULTIES,
+  )
+    .map(
+      ([id, d]) =>
+        `<button data-difficulty="${id}" class="${selectedDifficulty === id ? "selected" : ""}" ${id === "chaos" && !profile.chaosUnlocked ? "disabled" : ""}><strong>${d.name}</strong><small>${id === "chaos" && !profile.chaosUnlocked ? "Win an expedition to unlock" : d.desc}</small></button>`,
+    )
+    .join("")}</div>${
+    selectedDifficulty === "chaos"
+      ? `<label class="chaos-picker">CHAOS TIER<select id="chaos-tier">${Array.from({ length: profile.chaosUnlocked || 1 }, (_, i) => `<option value="${i + 1}" ${i + 1 === tier ? "selected" : ""}>Chaos ${i + 1} / 20${i + 1 <= (profile.chaosCleared || 0) ? " · CLEARED" : ""}</option>`).join("")}</select></label><details class="chaos-rules" open><summary>${tier} cumulative challenge rules</summary><ol>${CHAOS_TIERS.slice(
+          0,
+          tier,
+        )
+          .map((rule, i) => `<li><b>${i + 1}.</b> ${rule}</li>`)
+          .join("")}</ol></details>`
+      : ""
+  }</section>`;
+}
+function openAdoption() {
+  modal(
+    `<span class="section-kicker">CELESTIAL ADOPTION · ${profile.starlight || 0} STARLIGHT</span><h2>A victory written in the stars.</h2><p>Each completed expedition grants three starlight. Spend three to permanently unlock one Legendary family. Future starter teams still use the twelve-point budget.</p><div class="adoption-grid">${SPECIES.filter(
+      (s) => s.rarity === "Legendary",
+    )
+      .map(
+        (s) =>
+          `<button data-adopt="${s.id}" ${profile.owned.includes(s.id) || (profile.starlight || 0) < 3 ? "disabled" : ""}>${image(s.id)}<strong>${s.name}</strong><small>${profile.owned.includes(s.id) ? "Already discovered" : "3 starlight · Permanent starter"}</small></button>`,
+      )
+      .join("")}</div>${button("Back to menagerie", "close", "secondary")}`,
+    "adoption",
+  );
+}
+function settleTacticalCapture() {
+  if (
+    !battle?.captureResult ||
+    !run.captureReservation ||
+    run.captureReservation.result
+  )
+    return;
+  const result = battle.captureResult;
+  run.captureReservation.result = JSON.parse(JSON.stringify(result));
+  if (result.success) {
+    const caught = awardCapture(run, result.creature);
+    caught.bond = recordBond(profile, caught.id);
+    discoverForm(caught);
+    unlock(caught.id);
+  }
+  save();
+}
+function skillSummary(u, id) {
+  const def = SKILLS[id],
+    m = linkedSupport(u, id),
+    parts = [];
+  if (def.power)
+    parts.push(
+      `${Math.round(def.power * m.damage * 100)}% ATK${m.execute ? ` · +${Math.round(m.execute * 100)}% below 30% HP` : ""}`,
+    );
+  if (def.heal) parts.push(`${Math.round(def.heal * m.healing)} base healing`);
+  if (def.radius) parts.push(`${Math.round(def.radius * m.area)} radius`);
+  if (m.targets) parts.push(`+${m.targets} targets`);
+  if (m.echo) parts.push(`echo ${Math.round(m.echo * 100)}%`);
+  if (m.fork) parts.push(`${m.fork} bounces`);
+  if (m.pierce) parts.push(`${Math.round(m.pierce * 100)}% shield bypass`);
+  if (m.wither) parts.push("55% less enemy healing");
+  if (m.chill) parts.push(`${m.chill}s slow`);
+  if (m.overheal)
+    parts.push(`${Math.round(m.overheal * 100)}% excess heal → shield`);
+  return parts.join(" · ") + " · before team bonuses and target defenses";
 }
 function skillsHTML(u, index) {
   const s = BY_ID[u.id],
@@ -1483,7 +1805,7 @@ function skillsHTML(u, index) {
       const def = SKILLS[id],
         links = (u.relics || []).filter((item) => (item.link || u.id) === id),
         m = linkedSupport(u, id);
-      return `<div class="skill-detail" style="--element:${def.color || ELEMENTS[s.element].color}"><span class="skill-icon">${def.auto ? "⌁" : def.icon}</span><div><h3>${def.name}<small>${def.auto ? "AUTO-ATTACK" : (def.cd * st.cdFactor * m.cooldown).toFixed(1) + " SEC"}</small></h3><p>${def.desc}</p>${links.length ? `<div class="linked-gems">${links.map((item) => `<span style="color:${PERSONAL_BY_ID[item.id].color}">◇ ${PERSONAL_BY_ID[item.id].name}</span>`).join("")}</div>` : ""}</div></div>`;
+      return `<div class="skill-detail" style="--element:${def.color || ELEMENTS[s.element].color}"><span class="skill-icon">${def.auto ? "⌁" : def.icon}</span><div><h3>${def.name}<small>${def.auto ? "AUTO-ATTACK" : (def.cd * st.cdFactor * m.cooldown).toFixed(1) + " SEC"}</small></h3><p>${def.desc}</p><p class="effective-skill">${skillSummary(u, id)}</p>${links.length ? `<div class="linked-gems">${links.map((item) => `<span style="color:${PERSONAL_BY_ID[item.id].color}">◇ ${PERSONAL_BY_ID[item.id].name}</span>`).join("")}</div>` : ""}</div></div>`;
     })
     .join("")}</div>`;
 }
@@ -1508,7 +1830,7 @@ function openEquipTarget(uid) {
   if (!item) return;
   const r = PERSONAL_BY_ID[item.id];
   modal(
-    `<span class="section-kicker">SOCKET A SUPPORT GEM</span><h2>${r.name}.</h2><p>${r.desc} Choose the creature that will benefit most.</p><div class="starter-grid">${run.team.map((c, i) => `<button class="starter-card" data-pack-target="${i}" data-item="${uid}" ${(c.relics || []).length >= relicSlots(c) || c.relics?.some((r) => r.id === item.id) || phase === "battle" ? "disabled" : ""}>${image(c)}<strong>${BY_ID[c.id].name}</strong><small>${c.relics?.length || 0} / ${relicSlots(c)} slots filled</small></button>`).join("")}</div><div class="modal-actions">${button("Back to expedition", "close", "secondary")}</div>`,
+    `<span class="section-kicker">SOCKET A SUPPORT GEM</span><h2>${r.name}.</h2><p>${r.desc} Choose the creature that will benefit most.</p><div class="starter-grid">${run.team.map((c, i) => `<button class="starter-card" data-pack-target="${i}" data-item="${uid}" ${(c.relics || []).length >= relicSlots(c) || c.relics?.some((r) => r.id === item.id) || ![loadoutFor(BY_ID[c.id], c.level).auto, ...loadoutFor(BY_ID[c.id], c.level).active].some((id) => canSupport(item.id, id)) || phase === "battle" ? "disabled" : ""}>${image(c)}<strong>${BY_ID[c.id].name}</strong><small>${c.relics?.length || 0} / ${relicSlots(c)} slots filled</small></button>`).join("")}</div><div class="modal-actions">${button("Back to expedition", "close", "secondary")}</div>`,
     "equip",
   );
 }

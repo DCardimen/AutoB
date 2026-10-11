@@ -33,7 +33,7 @@ await page.addInitScript(
   },
   { run, node, foes: encounter(r, "boss", node.seed), starters: STARTERS },
 );
-await page.goto("http://127.0.0.1:3000");
+await page.goto((process.env.BASE_URL || "http://127.0.0.1:3000"));
 await page.waitForTimeout(300);
 await page.clock.install();
 await page.locator('[data-speed="3"]').click();

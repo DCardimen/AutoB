@@ -1,8 +1,37 @@
 # Playtest evidence and critique
 
-This is a playable first version, not a claim of a finished 9/10 game. Automated simulations and browser automation do not replace human playtesting. No 50-hour human playtest or defensible subjective 9/10 rating was completed.
+This is the tactical overhaul, not a claim of a measured 9/10 game. Automated simulations and browser automation do not replace human playtesting. No 50-hour human playtest or defensible subjective 9/10 rating was completed.
 
-## Current expansion checks (0.2.0)
+## Tactical overhaul checks (0.3.0)
+
+- **51 rules tests passed.** New coverage includes family specialties, formation swaps, useful defensive AI, cluster targeting, healing and shield counters, support compatibility, prepared captures, locked replay results, Legendary beacons/contracts, permanent bonds, all twenty Chaos tiers, distinct three-phase bosses, actual Wild/Warden mechanics, reports, and animation interpolation.
+- **Frame-rate independence passed.** The same encounter produced identical winner, duration, damage metrics, and final health with 8, 16, 40, 50, and 100 ms calls. Physics advances at a fixed 40 ms interval; visual interpolation keeps motion smooth. Browser frame timing previously changed some close outcomes; this regression guards the correction.
+- **Full rendered starter campaign passed:** nine victories, three planets and all bosses, using original starters, earned evolutions, compatible gems, scouting, shops, and rests. Permanent ownership grew from 6 to 10. No free levels, training, or gold were granted in this campaign.
+- **Nine overhaul browser checks passed:** deployment and AI; fresh-profile Chaos lock; one capture orb across reloads with preserved results; diagnostic reports; actual final-boss victory unlocking Chaos and adoption; Chaos 20 rules/resources/prices; mobile controls; two mastered Legendary starters within the budget; and declining unaffordable events. The advanced final-boss fixture verifies the victory flow separately from the legal full campaign.
+- **Evolution and retreat browser regressions passed.** Both evolution paths, ascension, added sockets, preserved links, new families, animated locomotion, pause, mobile layout, loss, retry, and saves remain functional.
+- **Audio/motion browser checks passed:** optional Web Audio, all five elemental effects plus phase/death/capture sounds and the procedural score, muting, persisted gentle motion, and fully visible deployment dialogs. This verifies execution; perceived sound quality needs listening tests.
+- **Standalone browser checks passed.** The embedded HTML completed animated combat, evolution, gem links, and save reload with zero external requests.
+- **50.00097 simulated combat-hours across 16,011 seeded battles** passed finite-health/shield/position and termination checks. Each planet received 5,337 battles. Coverage includes all 20 Chaos tiers, eight enemy compositions, six weather conditions, 490,924 cooldown casts, 154,089 dodges/avoided hazards, 13,545 echoes, and 1,690 tactical captures. Two battles reached the bounded 90-second tie-break (0.0125%). Mean duration was 11.24 simulated seconds; machine execution took about 259 seconds. These are not human play hours.
+
+### Legal campaign balance sample
+
+The separate harness ran 240 complete campaigns: four valid twelve-point starter compositions, twelve seeds each, and five difficulty settings. It used earned gold, shop stock, rewards, captures, rests, and paid evolutions. It did not use the stress harness's unrestricted random teams.
+
+| Difficulty | Victories / campaigns |
+|---|---:|
+| Explorer | 45 / 48 |
+| Expedition | 25 / 48 |
+| Veteran | 9 / 48 |
+| Chaos 10 | 14 / 48 |
+| Chaos 20 | 4 / 48 |
+
+These are small deterministic AI samples, not estimated human win rates. Chaos 10 was easier than Veteran for this particular bot and sample despite cumulative penalties; no monotonic win-rate claim follows. All four compositions won Expedition campaigns. Tide was substantially stronger in the harder settings and accounted for the sampled Chaos 20 wins. Broader balancing and human testing should address that advantage before calling every criterion 9/10.
+
+A matched shield encounter demonstrates a meaningful support choice: the same starter team loses without Shieldbreaker, then wins with it linked to Cinderfox's auto-attack (seed 4, level-4 allies versus the same level-2 bastion squad). This is a controlled counterexample, not proof that one support is always best. Protective AI and healer hunting also carry positioning and target-selection tradeoffs.
+
+The recorded reports and standalone SHA-256 are in `tests/evidence-v0.3.json`. [DESIGN.md](DESIGN.md) maps all twenty review criteria to implemented changes and human acceptance targets. The creatures use deformable painted cutouts with procedural gaits; they are not bespoke frame-by-frame character animations.
+
+## Previous expansion checks (0.2.0)
 
 - **23 rules tests passed**, including all 128 ability definitions, 60 reachable creature families, opening rarity limits, evolution requirements, both evolution paths, ascension, preserved gem links, actual Warden shield scaling, evolved capture, future starter resets, and deterministic animation poses.
 - **Full rendered expedition passed**: nine victories and all three bosses, shops, events, rest, captures, reward persistence, and restart. The permanent collection grew from 6 to 12. This used the original six starters and real purchases, without granting evolution for free.

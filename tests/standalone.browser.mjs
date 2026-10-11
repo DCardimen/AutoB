@@ -11,7 +11,7 @@ const page = await browser.newPage({ viewport: { width: 1280, height: 960 } });
 const errors = [],
   requests = [];
 page.on("pageerror", (e) => errors.push(e.message));
-const url = "http://127.0.0.1:3000/offline-game";
+const url = (process.env.BASE_URL || "http://127.0.0.1:3000") + "/offline-game";
 const body = fs.readFileSync("Starfall-Menagerie.html");
 await page.route("**/*", (route) => {
   if (route.request().url() === url)

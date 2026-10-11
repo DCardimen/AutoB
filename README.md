@@ -1,77 +1,72 @@
-# Starfall Menagerie
+# Starfall Menagerie · Tactical Overhaul 0.3.0
 
-A playable, single-player creature-collecting roguelike autobattler. Explore three planets, build a six-creature expedition, socket skill support gems, and carry captured creatures into future runs.
+A single-player creature-collecting roguelike autobattler. Explore three planets with six companions, modify individual abilities with support gems, capture permanent starters, and climb twenty Chaos tiers.
 
-## Play without installation
+## Play
 
-Download this branch using GitHub's **Code → Download ZIP**, extract the ZIP, and open `Starfall-Menagerie.html` in Chrome or Firefox. The standalone file includes all game code, artwork, and fonts; it needs no server or internet connection. Keep the file in the same location to retain its browser-local save. Run `npm run build:standalone` after source changes to rebuild this file.
+Download this branch with **Code → Download ZIP**, extract it, and open **Starfall-Menagerie.html** in Chrome or Firefox. The HTML embeds all code, artwork, audio synthesis, and fonts. It needs no installation, server, or internet connection.
 
-## Run locally
+Keep the file at the same location to retain its browser-local save. Existing collections are preserved on the same browser origin. New runs use the new route generator; an existing run keeps its saved route.
 
-Requires Node.js 20+ and a modern browser. There is no build step or external service.
+## What changed
+
+- **60 families / 120 painted forms / 128 named abilities.** Every family has a signature auto-attack, two or three cooldown skills, and a passive specialty. Common shield-breakers, interceptors, cleansers, and dodge counters can earn a place beside rarer creatures.
+- **30 support gems.** Link a gem to one ability. Fork changes targeting; Cryostasis combines slow and burn into steam; Withering counters healing; Reservoir turns excess healing into shields; Soul Link intercepts damage; other supports create traps, healing fields, cooldown relays, and execution builds. Tradeoffs are stated in the item description. Incompatible skills are disabled, and equipment chooses a valid initial link.
+- **Rarity-scaled sockets.** Common 1, Uncommon 2, Rare 3, Epic 4, Legendary 5. Evolution and ascension add one socket each. Different supports can share a skill; duplicate supports on one creature are prohibited. Relink and unsocket freely between battles.
+- **Behavior-changing evolution.** At level 5, spend 50 gold to choose Wild or Warden. Guardians become retaliators or interceptors; Strikers become executioners or dodge counters; Rangers become artillery or trappers; Supports become curse-weavers or protectors. Level 8 ascension costs 100 gold and strengthens the chosen path. Identity, EXP, and skill links remain intact.
+- **24 expedition relics.** Build around excess-healing shields, dodge-driven cooldown relays, poison networks, elemental diversity, execution resets, or one emergency revival. Several strong effects carry an explicit drawback.
+- **Scouting and deployment.** Place companions on a three-by-three grid. Choose Adaptive, Hunt Healers, Break Armor, Protect, or Finish Wounded per creature. AI saves healing and barriers for useful conditions, aims areas at clusters, kites, and avoids marked danger. Taunts still matter.
+- **Eight enemy compositions, six weather conditions, sixteen events.** Routes vary node placement and scouting across seeds. Contracts exchange immediate resources for an explicitly stronger next battle. Every event can be declined.
+- **Three distinct bosses with three phases each.** The Hollow Crown feeds on its retinue, the Sun Eater consumes burn for shields, and the Last Colossus gathers creatures into gravity wells. Their counterplans are visible before combat.
+- **Tactical captures.** Choose a wild target before combat. Mercy throws at 35% HP, grants an additional capture bonus, and reduces team damage by 14% until the throw. Swift throws at 55% HP with a 6% damage penalty. Low health and statuses improve odds. One orb is committed at battle start; if conditions are never reached, the attempt fails. Resolved captures persist even after a retreat. After victory, an unprepared attempt can instead target any wild opponent. Planet guardians cannot be captured; their wild families can.
+- **More Legendary access.** Every shop offers a Legendary contract and a celestial beacon. Beacons guarantee a Legendary at the next sanctuary. Later sanctuaries can also contain natural Legendary spawns. Migration events trade resources for Legendary recruits. Each expedition victory grants three starlight, enough to adopt one permanent Legendary family from the menagerie.
+- **Permanent bonds.** Successful captures raise a family's bond, capped at five. Each bond gives its starters 2% additional base health. Bond 5 reduces starter cost by one, or by two for Legendary families. Two mastered Legendary starters plus four Common starters fit the twelve-point budget. Runs still begin at level 1 in base forms, without expedition relics.
+- **Difficulty and Chaos.** Choose Explorer, Expedition, or Veteran. Winning unlocks Chaos 1; clearing Chaos N unlocks N+1, through 20. Rules accumulate: elite improvements, economic constraints, earlier boss phases, enhanced enemy healers, additional shields, and stronger final retinues. The new-expedition screen lists every active rule. Previously won profiles automatically unlock Chaos 1.
+- **Animation v2.** Movement accelerates and turns smoothly. Shape-specific gaits, breathing, wing motion, attack anticipation, delayed melee contact, follow-through, interpolated dashes and trails, recoil, and timed death collapses animate the painted sprites. Pause freezes creature poses and camera shake. Gentle motion is available and respects the browser's reduced-motion preference.
+- **Combat feedback.** Enemy danger zones use distinct rings and countdowns. Status markers, skill cooldowns, shield bars, elemental impact sounds, and a local procedural score communicate combat. Reports explain poison, burn, area damage, healing threats, interception, and shield absorption. The last report survives reload.
+
+All allies recover fully between encounters. EXP, training, gems, and expedition relics last for the run; captures, bonds, adopted families, and Chaos unlocks persist.
+
+## Controls
+
+- Inspect a creature to choose AI, training, evolution, and skill links, or swap a bench companion.
+- **Deployment & AI** opens the grid. Select a companion, then a cell; occupied cells swap.
+- **Tactical capture** selects a target and approach before entering combat.
+- **Space** pauses; **1 / 2 / 3** change battle speed.
+- The **Star chart** opens neighboring routes. Scout composition, weather, and counters before committing.
+- **Menagerie → Celestial adoption** spends victory-earned starlight.
+- **New expedition** selects starters, difficulty, and an unlocked Chaos tier.
+- The sound button enables optional effects and music. **Motion: gentle** reduces deformation and shake.
+
+## Saves
+
+The game uses `localStorage` on the current origin. Clearing browser storage or changing origin removes access to that device's save. Cloud accounts and cross-device sync are not implemented.
+
+Refreshing during battle returns to preparation. The committed capture orb and any resolved capture result remain: replaying does not charge again or reroll the result. Rewards, purchases, bonds, Chaos unlocks, and the last battle report persist. Each victory grants its starlight once.
+
+## Development and validation
+
+Requires Node.js 20+; Playwright is a development dependency only.
 
 ```sh
 npm ci --cache /tmp/autob-npm-cache
 npm run dev
 ```
 
-The development server listens on port 3000. Set `PORT` to choose another port. Gameplay, art, and fonts are served locally; the game has no runtime CDN dependency.
-
-## The game
-
-- **60 collectible creature families**, each with a painted base form and a separate painted evolved form, five elements, five rarity tiers, and four combat roles.
-- **128 distinct abilities**: 60 signature auto-attacks and 68 cooldown skills. Creatures start with two or three active skills. At level 5, Common and Uncommon companions awaken, gain 20% stronger base stats, and unlock a third active skill.
-- **Choose your evolution**: inspect an active creature at level 5 and pay 50 gold to choose Wild or Warden. Wild improves attack and skill damage; Warden improves health, healing, shielding, and cooldowns. At level 8, spend 100 gold to ascend the chosen path. Evolution changes the name and artwork; ascension adds an aura. Each stage adds one relic socket. Levels, EXP, gems, and skill links remain intact.
-- **Living animation**: deterministic breathing, head/tail movement, wing motion, locomotion, attack anticipation and recoil, casting, hit reactions, dodges, and collapse poses animate the painted silhouettes. Pausing combat freezes poses. Transformation has a luminous animated reveal.
-- **12 skill support gems**: socket them on an individual creature and choose which auto-attack or active skill each supports. Multiple different supports can modify the same ability. Spell Echo repeats casts, Convergence adds targets or radius, Acceleration reduces cooldowns, and other supports add roots, poison, explosions, healing, shielding, or evasion.
-- **Rarity-scaled sockets**: Common 1, Uncommon 2, Rare 3, Epic 4, Legendary 5; evolution and ascension each add a socket. Unsocket and relink freely between battles. A creature cannot equip two copies of the same support.
-- **9 expedition relics** with team-wide effects, distinct from individual support gems.
-- **Three branching planet routes**, each with six encounters: battles, elites, wild sanctuaries, shops, events, rest stops, and bosses. Paths connect neighboring lanes. A boss must be defeated to advance; losing a normal battle costs a life and allows a retreat forward.
-- **Persistent captures** unlock future starters. Capturing an evolved enemy retains its form in the current expedition. Evolved-form discoveries are saved in the menagerie. Future runs start in base forms. Each new run begins at level 1 with a fresh economy and a six-creature, 12-point starter budget. Rarer starters cost more points.
-- **Real-time combat** with role-aware targeting, ranged kiting, hazard avoidance, taunts, shields, healing, elemental synergies, status effects, critical hits, and phase-two bosses. Skill trails, dash streaks, lightning, shockwaves, damage numbers, particles, and attack lunges communicate the action.
-
-Two creatures of an element activate a team bonus; four activate a second bonus. Allies recover fully between encounters. EXP, training, support gems, and relics remain for the current run; successful captures remain across runs.
-
-The starter pack contains three support gems. Inspect a creature or open the relic pack to equip them before your first battle.
-
-## Controls
-
-- **Creature card**: inspect abilities and evolution lineage, choose an evolution, change training focus, socket/relink support gems, or swap a bench creature.
-- **Drag creature cards**: change lanes within the formation. Roles determine frontline or backline placement.
-- **Balanced / Hunt / Guard**: change the team's targeting priority before combat.
-- **Space**: pause/resume. **1 / 2 / 3**: battle speed.
-- **Star chart**: select an available encounter.
-- **Menagerie**: inspect permanent discoveries and build new starter teams.
-- **Sound button**: optional synthesized effects; no audio autoplay.
-
-## Saves
-
-The run and collection use browser `localStorage` on the current origin. Capture attempts and reward choices persist so reloading cannot repeat those rewards. Refreshing during an active battle restarts that encounter from preparation. Clearing browser storage or moving to another origin removes access to that device's save; cloud accounts and cross-device sync are not implemented.
-
-## Validation
+The server listens on port 3000. Use `PORT=3001 npm run dev` if another service occupies it. Check that the arena renders and that `/game.js`, `/tactics.js`, `/sound.js`, and the local artwork load.
 
 ```sh
 npm test
-npm run test:browser   # start npm run dev in another terminal first
-npm run playtest      # defaults to 50 simulated combat-hours
+npm run test:browser
+npm run test:balance
+npm run playtest
+npm run test:standalone
 ```
 
-Browser checks use Playwright and `/usr/bin/chromium`; set `CHROMIUM_PATH` if needed. The game itself has no package dependencies. Playwright is a development dependency only.
+Browser tests use `/usr/bin/chromium`; override with `CHROMIUM_PATH`. For another port, use `BASE_URL=http://127.0.0.1:3001 npm run test:browser` and the same variable for the standalone check. `SIM_HOURS=1 npm run playtest` runs a shorter stress sample; the default is fifty **simulated** combat-hours.
 
-The simulation harness generates varied seeded teams, skill links, rarities, expedition relics, planets, and encounters. It checks termination and finite health, shield, and position values. `SIM_HOURS=1 npm run playtest` runs a shorter sample. Results and browser screenshots are written to the ignored `playtest-artifacts/` directory.
+`npm run build:standalone` rebuilds the downloadable HTML after source changes. Browser artifacts and raw simulation reports are written to ignored `playtest-artifacts/`. See [PLAYTEST.md](PLAYTEST.md) for recorded results and limitations, and [DESIGN.md](DESIGN.md) for the twenty review targets. Automated tests establish functionality and controlled outcomes; they do not establish a human 9/10 fun rating.
 
-See [PLAYTEST.md](PLAYTEST.md) for the actual results and critique. Automated combat-hours are not human playtime and do not establish a subjective fun score.
+## Source
 
-## Source map
-
-- `game.js`: progression, economy, capture, equipment, and combat rules.
-- `skills.js`: the 128-ability catalogue and creature loadouts.
-- `roster.js`: the 40 additional families, their atlas indices, and signature abilities.
-- `animation.js`: deterministic movement and combat poses and sprite deformation.
-- `scripts/build-standalone.mjs`: embeds the game, artwork, and fonts in the downloadable HTML.
-- `app.js`: browser UI, run state machine, local persistence, and input.
-- `art.js`: painted sprite-sheet rendering, procedural fallback art, arena, and combat effects.
-- `public/`: locally served generated artwork and vendored fonts. Fonts retain their upstream licenses.
-- `tests/`: rules tests, browser playthrough, and simulation stress harness.
-
-The creature sheet and arena artwork were generated for this project. The game is inspired by creature-collecting roguelikes and tactical autobattlers; it uses its own creatures, names, art, and systems.
+`game.js` contains progression and combat; `tactics.js` contains specialties, challenge tiers, encounters, new items, and events; `skills.js` and `roster.js` define abilities and families. `app.js` handles UI and persistence. `animation.js`, `art.js`, and `sound.js` handle presentation. `scripts/build-standalone.mjs` embeds the complete game. `public/` contains original generated artwork and licensed, vendored fonts.
