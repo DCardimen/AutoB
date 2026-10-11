@@ -4,7 +4,8 @@
     "Five complete character portraits and a ten-body scene; pause and frame stepping preserve simulation control",
     "Selecting a character and clicking ground produces actual movement in the physical scene",
     "All five locomotion profiles travel around the circuits and turn through all eight facings; speed changes work",
-    "Eight directional views and eleven animation states are inspectable, including a close view and death",
+    "Walk/run/sprint pace controls, selected sprint toggle, Shift hold/release, acceleration, stride blending and stamina recovery work",
+    "Eight directional views and twelve animation states are inspectable, including a close view and death",
     "Rendered sparring resolves with physical hits, projectile travel, rolls and deaths; optional audio toggles",
     "390px mobile layout has no horizontal overflow and retains scene and character controls",
     "Standalone HTML runs combat and pose inspection with zero external requests"
@@ -17,6 +18,7 @@
     "directions-caster.png",
     "directions-wolf.png",
     "prototype-movement.png",
+    "prototype-sprint.png",
     "prototype-study.png",
     "prototype-battle.png",
     "prototype-mobile.png",
@@ -29,6 +31,10 @@
     "caster": 8,
     "wolf": 8
   },
+  "jointCoverage": {
+    "checks": 5952,
+    "gaps": []
+  },
   "movementDirectionFrames": {
     "knight": 8,
     "orc": 8,
@@ -36,20 +42,52 @@
     "caster": 8,
     "wolf": 8
   },
-  "rigVersion": 2,
+  "rigVersion": 3,
+  "sprint": [
+    {
+      "id": "knight",
+      "active": true,
+      "blend": 0.010664420032207666,
+      "stamina": 59.99999999999904
+    },
+    {
+      "id": "orc",
+      "active": true,
+      "blend": 0.0052172184991922735,
+      "stamina": 59.99999999999904
+    },
+    {
+      "id": "elf",
+      "active": true,
+      "blend": 0.001009533007225126,
+      "stamina": 59.99999999999904
+    },
+    {
+      "id": "caster",
+      "active": true,
+      "blend": 0.9769739391010954,
+      "stamina": 59.99999999999904
+    },
+    {
+      "id": "wolf",
+      "active": true,
+      "blend": 0.0009440907757838261,
+      "stamina": 59.99999999999904
+    }
+  ],
   "directionFrames": 8,
-  "stateFrames": 11,
+  "stateFrames": 12,
   "battle": {
-    "time": 40.43333333333168,
+    "time": 36.49166666666524,
     "metrics": {
       "hits": 77,
-      "misses": 53,
-      "rolls": 51,
-      "avoided": 32,
-      "interrupts": 0,
-      "projectiles": 38,
-      "contacts": 2577,
-      "knockouts": 7
+      "misses": 46,
+      "rolls": 45,
+      "avoided": 27,
+      "interrupts": 1,
+      "projectiles": 39,
+      "contacts": 3545,
+      "knockouts": 6
     },
     "cache": {
       "frames": 192,
@@ -57,7 +95,7 @@
       "sourceReady": true,
       "frameSize": 256,
       "rasterScale": 1.5,
-      "rigVersion": 2,
+      "rigVersion": 3,
       "directionalArt": {
         "columns": 8,
         "characters": 5,
@@ -68,9 +106,9 @@
   },
   "offlineExternalRequests": 0,
   "rules": {
-    "passed": 86,
+    "passed": 92,
     "failed": 0,
-    "prototypeChecks": 19
+    "prototypeChecks": 25
   },
   "preview": {
     "file": "public/prototype-preview.mp4",
@@ -78,15 +116,15 @@
     "fps": 30,
     "width": 1000,
     "height": 650,
-    "bytes": 9420805,
-    "sha256": "7878a2a506c62417deaba65aef39f2432b3ecff5c6d972c1b8303445991e2a38"
+    "bytes": 8829617,
+    "sha256": "6c672527da43e53eda30476f715d2b82c5550987f07a048016848459b8c1a38f",
+    "clock": "Paused browser clock; each encoded frame advances simulation by 1/30 second."
   },
-  "scope": "Iteration 1 Motion v2: five-character visual and movement prototype, new anatomical rig, 30 aligned limb/foot parts, world-space foot planting, rigid weapon grips, and physical blade sweeps. Automated checks do not establish human playtime or a fun score.",
-  "performanceSample": {
-    "frames": 240,
-    "medianFrameIntervalMs": 16.7,
-    "p95FrameIntervalMs": 16.8,
-    "environment": "Headless Chromium in this cloud workspace; local observation, not a device performance guarantee."
+  "standalone": {
+    "file": "Starfall-Training-Glade.html",
+    "bytes": 19978554,
+    "sha256": "6332d761eb6cb3f9b134d9f373b785f8d156c8bac9fa5420ee5829f13d3e8921"
   },
+  "scope": "Iteration 1 Natural Motion v3: five-character movement prototype; heel/toe steps, weight transfer, connected painted joints, world-space foot planting, wolf hocks and gallop, carried weapon grips, and sustained stamina-paid sprint with acceleration/braking and ground orders. Automated checks do not establish human playtime or a fun score.",
   "offlineValidation": "Exact embedded HTML served as one intercepted document; all other requests blocked. Managed browser policy blocks file navigation."
 }

@@ -54,6 +54,8 @@ Include idle, walk, run, turn, attack, cast, dodge, hit, stagger, and death stat
 
 The Motion v2 revision replaces distorted limbs with an anatomical rig and separate feet, plants supporting feet in world coordinates, blends locomotion, and attaches rigid weapons to their grips. Physical tip sweeps determine melee contact and impact pauses. The small roster remains the basis for iteration 2 production, pending visual review.
 
+Natural Motion v3 adds sustained stamina-paid sprinting, heel/toe transfer, opposing arm motion, acceleration and braking limits, a distinct wolf gallop with rear hocks, and connected painted joint overlaps. Directional joint coverage and live gait tests validate the five-body prototype before roster production.
+
 ## Iteration 2 — Expand identities, body types, and evolution
 
 Initial expansion target: 36 new fantasy families beyond the existing 60, delivered in reviewed batches of roughly six to twelve. Adjust batch size to measured asset quality and effort. Cover humans, elves, orcs, dwarves, goblins, undead, trolls, minotaurs, constructs, and other distinct bodies. Bring existing animals into the same visual language over successive batches.

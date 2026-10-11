@@ -6,3 +6,13 @@
 #facing-control[hidden]{display:none}
 @media(max-width:540px){#facing-status{flex-basis:100%}.scene-tabs{gap:2px}.scene-header{align-items:flex-start;gap:8px}}
 .character-card img{image-rendering:auto}
+#locomotion-controls{display:flex;align-items:center;gap:7px;flex-wrap:wrap;padding:10px 15px;border-top:1px solid var(--line);background:#1a291f}
+#locomotion-controls[hidden]{display:none}
+#locomotion-controls>span{font-size:9px;letter-spacing:1.1px;color:var(--muted);margin-right:8px}
+#locomotion-controls button{font-size:11px;padding:5px 12px}
+#locomotion-controls button.active,#order-sprint[aria-pressed=true]{background:#405138;border-color:var(--mint);color:var(--ink)}
+#locomotion-controls small{font-size:10px;color:var(--muted);margin-left:7px}
+.sprint-meter{display:flex;align-items:center;gap:10px;margin-top:12px;font-size:10px;color:var(--muted)}
+.sprint-meter progress{width:88px;height:6px;accent-color:var(--gold)}
+.sprint-meter progress::-webkit-progress-bar{background:#112018;border-radius:3px}
+.sprint-meter progress::-webkit-progress-value{background:var(--gold);border-radius:3px}

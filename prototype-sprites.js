@@ -6,7 +6,7 @@ const ROOT_Y=194,RASTER_SCALE=1.5,MAX_FRAMES=192,TAU=Math.PI*2;
 const parts=new Image();parts.src='/public/prototype-parts.png';
 const heads=new Image();heads.src='/public/prototype-heads-8.png';
 const bodies=new Image();bodies.src='/public/prototype-bodies-8.png';
-const limbs=new Image();limbs.src='/public/prototype-limbs-v2.png';
+const limbs=new Image();limbs.src='/public/prototype-limbs-v3.png';
 const weapons=new Image();weapons.src='/public/prototype-weapons-v2.png';
 const source=(image,columns,rows)=>({image,columns,rows,trims:new Map()});
 const partSource=source(parts,9,5),headSource=source(heads,8,5),bodySource=source(bodies,8,5),limbSource=source(limbs,6,5),weaponSource=source(weapons,4,1);
@@ -37,9 +37,24 @@ function directionArt(c,s,row,dir,p,maxWidth,height,pivotY=0.5,rotation=0){
 }
 function segment(c,row,col,a,b,width,flip=false){
   const dx=b.x-a.x,dy=b.y-a.y,distance=Math.hypot(dx,dy);
+  // A shaded anatomical bridge sits beneath the painted part. Transparent
+  // padding in a source piece can no longer disconnect the shared joint.
+  bridge(c,row,a,b,width*0.42);
   // Artwork has a vertical bone axis and excludes the boot. The overlap hides
   // seams without squeezing an entire bent limb into one line.
-  art(c,limbSource,row,col,a.x,a.y,width,distance+3,Math.atan2(dy,dx)-Math.PI/2,0.5,0.04,flip);
+  const height=distance+8;
+  art(c,limbSource,row,col,a.x,a.y,width,height,Math.atan2(dy,dx)-Math.PI/2,0.5,4/height,flip);
+}
+const jointColors=[['#bbc1bd','#4e5b65','#28343d'],['#91a65b','#627841','#344527'],['#a2ad74','#5c7048','#35472e'],['#dbd3bd','#968c82','#534f56'],['#c88248','#9c582e','#5e351e']];
+function bridge(c,row,a,b,width){
+  const colors=jointColors[row],g=c.createLinearGradient(a.x-width/2,a.y,b.x+width/2,b.y);
+  g.addColorStop(0,colors[0]);g.addColorStop(0.5,colors[1]);g.addColorStop(1,colors[2]);
+  c.strokeStyle=g;c.lineWidth=width;c.lineCap='round';c.beginPath();c.moveTo(a.x,a.y);c.lineTo(b.x,b.y);c.stroke();
+}
+function joint(c,row,p,width){
+  const colors=jointColors[row],g=c.createLinearGradient(p.x-width/2,p.y-width/3,p.x+width/2,p.y+width/3);
+  g.addColorStop(0,colors[0]);g.addColorStop(0.45,colors[1]);g.addColorStop(1,colors[2]);
+  c.fillStyle=g;c.beginPath();c.ellipse(p.x,p.y,width*0.28,width*0.24,0,0,TAU);c.fill();
 }
 function shield(c,p,angle){
   c.save();c.translate(p.x,p.y);c.scale(0.72+Math.abs(Math.sin(angle))*0.28,1);
@@ -84,9 +99,13 @@ function poseFrame(spec,state,phase,angle,stage='',options={}){
   const project=p=>projectRig(p,angle);
   const legs=rig.legs.slice().sort((a,b)=>project(a.root).depth-project(b.root).depth);
   for(const leg of legs){
-    const root=project(leg.root),joint=project(leg.joint),end=project(leg.end);
-    segment(c,spec.row,wolf&&leg.front?2:0,root,joint,d.legW,flip);
-    segment(c,spec.row,wolf&&leg.front?3:1,joint,end,d.calfW,flip);
+    const root=project(leg.root),knee=project(leg.joint),end=project(leg.end),hock=leg.hock?project(leg.hock):end;
+    if(!wolf)bridge(c,spec.row,project({...rig.pelvis,z:rig.pelvis.z+4}),root,d.legW*0.45);
+    joint(c,spec.row,knee,d.calfW);joint(c,spec.row,end,d.calfW*0.7);
+    if(leg.hock)joint(c,spec.row,hock,d.calfW*0.8);
+    segment(c,spec.row,wolf&&leg.front?2:0,root,knee,d.legW,flip);
+    segment(c,spec.row,wolf&&leg.front?3:1,knee,hock,d.calfW,flip);
+    if(leg.hock)segment(c,spec.row,1,hock,end,d.calfW*0.7,flip);
     const footAngle=angle+leg.foot.angle,front=Math.abs(Math.sin(footAngle))>0.68,width=d.footW*(front?0.76:1),height=wolf?7:10;
     art(c,limbSource,spec.row,front?5:4,end.x,end.y,width,height,leg.foot.pitch*Math.cos(footAngle),0.45,wolf?0.6:0.7,Math.cos(footAngle)<0&&!front);
   }
@@ -104,6 +123,8 @@ function poseFrame(spec,state,phase,angle,stage='',options={}){
     const arms=rig.arms.slice().sort((a,b)=>project(a.root).depth-project(b.root).depth);
     const armedSide=spec.id==='elf'?-1:1;
     const drawArm=a=>{
+      bridge(c,spec.row,project({...rig.body,z:a.root.z-2}),project(a.root),d.armW*0.45);
+      joint(c,spec.row,project(a.root),d.armW*0.8);joint(c,spec.row,project(a.joint),d.armW*0.7);
       segment(c,spec.row,2,project(a.root),project(a.joint),d.armW,flip);
       if(a.side===armedSide)drawWeapon(c,rig,angle);
       segment(c,spec.row,3,project(a.joint),project(a.end),d.armW*0.85,flip);
@@ -111,8 +132,8 @@ function poseFrame(spec,state,phase,angle,stage='',options={}){
     };
     drawArm(arms[0]);
     const neck=project({...rig.body,z:rig.body.z+d.bodyH*0.36}),jaw=project({...rig.head,z:rig.head.z-d.headH*0.3});
-    c.strokeStyle=spec.id==='elf'?'#b49470':spec.id==='orc'?'#668644':spec.id==='caster'?'#b3a58d':'#657581';c.lineWidth=spec.id==='orc'?13:8;c.lineCap='round';c.beginPath();c.moveTo(neck.x,neck.y);c.lineTo(jaw.x,jaw.y);c.stroke();
-    directionArt(c,bodySource,spec.row,dir,project(rig.body),d.bodyW,d.bodyH,0.5,-rig.lean*Math.cos(angle));
+    bridge(c,spec.row,neck,jaw,spec.id==='orc'?7:6);
+    directionArt(c,bodySource,spec.row,dir,project(rig.body),d.bodyW,d.bodyH,0.5,rig.lean*Math.cos(angle));
     drawArm(arms[1]);
     directionArt(c,headSource,spec.row,dir,project(rig.head),d.headW,d.headH,0.55,rig.lean*Math.cos(angle)*0.2);
   }
@@ -120,9 +141,9 @@ function poseFrame(spec,state,phase,angle,stage='',options={}){
 }
 export function spriteSample(u,time=0,override=null){
   const state=override?.state||animationState(u),dir=directionalFrame(u.facing||0),angleIndex=((Math.round((u.facing||0)/(Math.PI/32))%64)+64)%64;
-  let phase=0,stage='',count=['walk','run'].includes(state)?48:24;
+  let phase=0,stage='',count=['walk','run','sprint'].includes(state)?64:24;
   if(override)phase=override.phase;
-  else if(state==='walk'||state==='run')phase=((u.gait%1)+1)%1;
+  else if(['walk','run','sprint'].includes(state))phase=((u.gait%1)+1)%1;
   else if(state==='attack'||state==='cast'){
     const a=u.action;
     if(a&&!a.released){stage='windup';phase=a.elapsed/a.windup;count=32;}
@@ -140,11 +161,13 @@ export function spriteSample(u,time=0,override=null){
   const index=clamp(Math.floor(phase*count),0,count-1),foot=u.transitionFoot,weight=foot&&!override?Math.max(0,1-(time-foot.time)/0.2):0;
   const transition=weight>0&&foot.moving>0.1?{gait:Math.floor((foot.gait%1)*48)/48,weight:Math.ceil(weight*8)/8}:null;
   const motion=override?1:Math.round(clamp((u.moving||0)/0.5,0,1)*8)/8;
-  const runBlend=override?(state==='run'?1:0):Math.round(clamp(((u.moving||0)-0.55)/0.35,0,1)*8)/8;
+  const runBlend=override?(['run','sprint'].includes(state)?1:0):Math.round(clamp(u.runBlend||0,0,1)*12)/12;
+  const sprintBlend=override?(state==='sprint'?1:0):Math.round(clamp(u.sprintBlend||0,0,1)*12)/12;
+  const acceleration=override?0:Math.round((u.acceleration||0)*8)/8;
   const feet=override?null:localFootContacts({...u,facing:angleIndex*Math.PI/32})?.map(f=>({x:Math.round(f.x*2)/2,y:Math.round(f.y*2)/2,z:Math.round(f.z*2)/2,angle:Math.round(f.angle*8)/8}));
   const movementAngle=override?0:Math.round(Math.atan2(Math.sin((u.moveFacing??u.facing)-u.facing),Math.cos((u.moveFacing??u.facing)-u.facing))*8)/8;
-  const key=[u.id,state,angleIndex,stage,index,motion,runBlend,movementAngle,transition?transition.gait+':'+transition.weight:'',feet?JSON.stringify(feet):''].join(':');
-  return {state,dir,angleIndex,index,phase:['walk','run'].includes(state)?index/count:index/(count-1),stage,transition,motion,runBlend,movementAngle,feet,key};
+  const key=[u.id,state,angleIndex,stage,index,motion,runBlend,sprintBlend,acceleration,movementAngle,transition?transition.gait+':'+transition.weight:'',feet?JSON.stringify(feet):''].join(':');
+  return {state,dir,angleIndex,index,phase:['walk','run','sprint'].includes(state)?index/count:index/(count-1),stage,transition,motion,runBlend,sprintBlend,acceleration,movementAngle,feet,key};
 }
 export function drawPrototypeSprite(c,u,x,y,time=0,scale=1,override=null){
   if(!spritesReady())return;
@@ -153,9 +176,9 @@ export function drawPrototypeSprite(c,u,x,y,time=0,scale=1,override=null){
   c.save();c.globalAlpha*=u.hp<=0?0.82:1;c.imageSmoothingEnabled=true;c.imageSmoothingQuality='high';
   c.drawImage(frame,x-FRAME_SIZE*scale/2,y-ROOT_Y*scale,FRAME_SIZE*scale,FRAME_SIZE*scale);c.restore();
 }
-export function spriteCacheStats(){return {frames:frames.size,maxFrames:MAX_FRAMES,sourceReady:spritesReady(),frameSize:FRAME_SIZE,rasterScale:RASTER_SCALE,rigVersion:2,directionalArt:{columns:8,characters:5,heads:40,bodies:40}};}
-export function prototypeDirectionFrames(id,state='idle'){
-  return Array.from({length:8},(_,dir)=>{const canvas=document.createElement('canvas');canvas.width=FRAME_SIZE;canvas.height=FRAME_SIZE;drawPrototypeSprite(canvas.getContext('2d'),{id,facing:dir*Math.PI/4,hp:1,gait:0},FRAME_SIZE/2,ROOT_Y,0,1,{state,phase:0.25});return canvas.toDataURL();});
+export function spriteCacheStats(){return {frames:frames.size,maxFrames:MAX_FRAMES,sourceReady:spritesReady(),frameSize:FRAME_SIZE,rasterScale:RASTER_SCALE,rigVersion:3,directionalArt:{columns:8,characters:5,heads:40,bodies:40}};}
+export function prototypeDirectionFrames(id,state='idle',phase=0.25){
+  return Array.from({length:8},(_,dir)=>{const canvas=document.createElement('canvas');canvas.width=FRAME_SIZE;canvas.height=FRAME_SIZE;drawPrototypeSprite(canvas.getContext('2d'),{id,facing:dir*Math.PI/4,hp:1,gait:0},FRAME_SIZE/2,ROOT_Y,0,1,{state,phase});return canvas.toDataURL();});
 }
 export function prototypePortrait(id){
   const canvas=document.createElement('canvas');canvas.width=100;canvas.height=120;

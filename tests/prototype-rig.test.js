@@ -7,12 +7,13 @@ function fixture(){
   const arena=new PrototypeArena('study'),a=makePrototypeUnit('knight',0,0,350,350),b=makePrototypeUnit('orc',1,0,400,350);
   arena.units=[a,b];return {arena,a,b};
 }
-test('anatomical legs keep their lengths and planted ankle height through full walk/run cycles',()=>{
-  for(const spec of PROTOTYPE_CHARACTERS)for(const state of ['idle','walk','run'])for(let i=0;i<96;i++){
+test('anatomical legs keep their lengths and planted ankle height through full walk/run/sprint cycles',()=>{
+  for(const spec of PROTOTYPE_CHARACTERS)for(const state of ['idle','walk','run','sprint'])for(let i=0;i<96;i++){
     const rig=characterRig(spec.id,state,i/96,'',{stride:spec.stride});
     for(const leg of rig.legs){
       assert.ok(Math.abs(dist(leg.root,leg.joint)-leg.upper)<1e-8);
-      assert.ok(Math.abs(dist(leg.joint,leg.end)-leg.lower)<1e-8);
+      assert.ok(Math.abs(dist(leg.joint,leg.hock||leg.end)-leg.lower)<1e-8);
+      if(leg.hock)assert.ok(Math.abs(dist(leg.hock,leg.end)-leg.hockLength)<1e-8);
       assert.equal(leg.clamped,false,spec.id+' '+state+' must not need a stretched or unreachable leg');
       if(leg.foot.planted)assert.ok(Math.abs(leg.end.z-3)<1e-8);
     }
@@ -99,4 +100,35 @@ test('creatures align toward a target before attacking rather than snapping thro
   arena.step(1/120);assert.ok(Math.abs(a.facing-Math.PI)<0.07);assert.ok(a.facing<Math.PI);
   for(let i=0;i<55;i++)arena.step(1/120);
   assert.equal(arena.attack(a,b),true);
+});
+test('live walking, running and sprinting keep every limb reachable while turning and accelerating',()=>{
+  for(const pace of ['walk','run','sprint']){
+    const arena=new PrototypeArena('movement');arena.setLocomotion(pace);
+    for(let frame=0;frame<600;frame++){
+      arena.step(1/120);
+      for(const u of arena.units){
+        const rig=characterRig(u.id,u.sprintBlend>0.35?'sprint':u.runBlend>0.4?'run':'walk',u.gait%1,'',{
+          stride:u.stride,motion:Math.min(1,u.moving/0.5),runBlend:u.runBlend,sprintBlend:u.sprintBlend,acceleration:u.acceleration,feet:localFootContacts(u)});
+        for(const limb of [...rig.legs,...rig.arms])assert.equal(limb.clamped,false,`${u.id} ${pace} limb must remain reachable`);
+      }
+    }
+  }
+});
+test('carried weapons retain their grip through walk/run/sprint, including both axe hands',()=>{
+  for(const state of ['idle','walk','run','sprint'])for(let i=0;i<96;i++)for(const id of ['knight','orc','elf','caster']){
+    const rig=characterRig(id,state,i/96),w=rig.weapon,grip=rig.arms.find(a=>a.side===(id==='elf'?-1:1)).end;
+    assert.ok(dist(grip,w.grip)<1e-8);
+    if(id==='orc')assert.ok(dist(rig.arms.find(a=>a.side===-1).end,{x:w.grip.x-w.axis.x*11,y:w.grip.y,z:w.grip.z-w.axis.z*11})<1e-8);
+    for(const arm of rig.arms)assert.equal(arm.clamped,false);
+  }
+});
+test('walking rolls heel to toe; sprint adds lift, forward lean and a separate wolf gallop',()=>{
+  assert.ok(rigFoot(0,76,false).pitch<0);assert.ok(rigFoot(0.6,76,false).pitch>0);
+  for(const spec of PROTOTYPE_CHARACTERS){
+    const walk=characterRig(spec.id,'walk',0.78),sprint=characterRig(spec.id,'sprint',0.78);
+    assert.ok(sprint.lean>walk.lean+0.1);
+    if(spec.id==='wolf')assert.equal(sprint.legs.filter(l=>l.hock).length,2);
+  }
+  const walk=characterRig('wolf','walk',0),sprint=characterRig('wolf','sprint',0);
+  assert.notDeepEqual(walk.legs.map(l=>l.foot.planted),sprint.legs.map(l=>l.foot.planted));
 });

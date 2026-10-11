@@ -6,7 +6,9 @@ The next overhaul follows [ROADMAP.md](ROADMAP.md), with eleven playable milesto
 
 The prototype now opens with an **8 directions** comparison. Choose a companion to see all eight views together; click a view to inspect it up close. Forty head views and forty torso views replace the initial shared front/back artwork. Watch the [normal-speed iteration 1 preview](public/prototype-preview.mp4) for the comparisons, movement, sparring, a close attack, and death animation.
 
-**Motion v2** rebuilds the legs and arms with aligned artwork, separate boots/paws, fixed segment lengths, and feet planted in world space during turns. It adds smoother stride transitions and target alignment, hand-anchored weapons, a two-handed axe, an animated bow draw/release, physical blade sweeps, and brief contact pauses. Open **Starfall-Training-Glade.html** and look for **MOTION V2** in its header.
+**Motion v2** rebuilds the legs and arms with aligned artwork, separate boots/paws, fixed segment lengths, and feet planted in world space during turns. It adds smoother stride transitions and target alignment, hand-anchored weapons, a two-handed axe, an animated bow draw/release, physical blade sweeps, and brief contact pauses. These changes remain in Natural Motion v3.
+
+**Natural Motion v3** adds heel-to-toe steps, weight transfer, opposing arm swings, connected joint overlaps, wolf hocks and a gallop. In the Training Glade, choose **Movement → Sprint**, use the selected companion’s **Sprint** toggle, or hold **Shift** while the arena has focus. Sprint spends stamina and blends back into walking when released. Look for **NATURAL MOTION V3** in the header.
 
 ## Play
 

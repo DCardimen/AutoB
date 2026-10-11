@@ -64,3 +64,34 @@ test('a planted gait foot cancels actual ground travel instead of sliding',()=>{
     assert.ok(gaitFoot(0.82,s.stride,running).z>0);
   }
 });
+test('sprint accelerates smoothly above running speed and spends stamina instead of acting as a dash',()=>{
+  const normal=fixture('knight','orc',450),sprint=fixture('knight','orc',450);
+  for(const f of [normal,sprint]){f.arena.mode='battle';f.arena.moveOrder(f.a.uid,{x:850,y:350});}
+  assert.equal(sprint.arena.setSprint(sprint.a.uid,true),true);
+  sprint.arena.step(1/120);assert.ok(Math.hypot(sprint.a.vx,sprint.a.vy)<5);assert.equal(sprint.a.roll,null);
+  advance(sprint.arena,1.1-1/120);advance(normal.arena,1.1);
+  assert.ok(sprint.a.x-350>(normal.a.x-350)*1.4);
+  assert.ok(Math.hypot(sprint.a.vx,sprint.a.vy)>sprint.a.run);
+  assert.ok(sprint.a.stamina<80&&sprint.a.stamina>75);assert.equal(animationState(sprint.a),'sprint');
+  assert.equal(sprint.arena.setSprint(sprint.a.uid,false),true);
+  const before=sprint.a.stamina;advance(sprint.arena,0.5);assert.ok(sprint.a.stamina>before);
+});
+test('exhausted sprint falls back to walking and requires a fresh request after recovery',()=>{
+  const low=new PrototypeArena('movement');low.units[0].stamina=20;low.setLocomotion('sprint');low.step(1/120);
+  assert.equal(low.units[0].sprintActive,false);assert.equal(low.setSprint(low.units[0].uid,true),false);
+  const arena=new PrototypeArena('movement');arena.setLocomotion('sprint');advance(arena,6);
+  assert.ok(arena.units.every(u=>u.sprintExhausted&&!u.sprintActive));
+  assert.ok(arena.units.every(u=>u.stamina>8&&u.stamina<40));
+  arena.setLocomotion('walk');advance(arena,2);
+  assert.equal(arena.setSprint(arena.units[0].uid,true),true);
+  advance(arena,0.5);assert.equal(arena.units[0].sprintActive,true);
+  const dead=arena.units[1];dead.hp=0;assert.equal(arena.setSprint(dead.uid,true),false);
+});
+test('sprint movement and fatigue remain deterministic at different display intervals',()=>{
+  const results=[1/120,1/60,1/30,0.1].map(dt=>{
+    const a=new PrototypeArena('movement');a.setLocomotion('sprint');
+    for(let i=0;i<Math.round(2/dt);i++)a.step(dt);
+    a.setLocomotion('walk');for(let i=0;i<Math.round(0.6/dt);i++)a.step(dt);
+    return a.units.map(u=>({x:u.x,y:u.y,stamina:u.stamina,gait:u.gait,run:u.runBlend,sprint:u.sprintBlend}));
+  });for(const r of results.slice(1))assert.deepEqual(r,results[0]);
+});

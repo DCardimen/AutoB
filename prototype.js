@@ -1,12 +1,13 @@
 import { PrototypeArena, PROTOTYPE_CHARACTERS, PROTOTYPE_BY_ID, ANIMATION_STATES, animationState, directionalFrame, groundToScreen, screenToGround, clamp } from './prototype-engine.js';
 import { drawPrototypeSprite, spritesReady, prototypePortrait, spriteCacheStats, prototypeDirectionFrames } from './prototype-sprites.js';
 import { Soundscape } from './sound.js';
+import { locomotionStride } from './prototype-rig.js';
 const $=s=>document.querySelector(s),canvas=$('#prototype-canvas'),c=canvas.getContext('2d');
 const backdrop=new Image();backdrop.src='/public/prototype-glade.png';
 backdrop.addEventListener('error',()=>{$('#loading').textContent='The artwork could not load. Reload this page.';});
 const sound=new Soundscape();
 let mode='directions',arena=new PrototypeArena(mode),selected='0-knight-0',paused=false,speed=1,last=performance.now(),uiClock=0,sounding=false;
-let pose='idle',poseFacing=0,labels=true,telegraphs=true,artLoaded=false,focusView=false;
+let pose='idle',poseFacing=0,labels=true,telegraphs=true,artLoaded=false,focusView=false,heldSprintUid=null;
 const directions=['East','Southeast','South','Southwest','West','Northwest','North','Northeast'];
 const descriptions={knight:'Silver plate, a measured stride, and a committed sword strike. Aurel resists displacement and recovers deliberately.',orc:'A broad stance and a slower, heavier axe swing. Brakk hits hard, but a missed windup leaves an opening.',elf:'Light footsteps, a drawn bow, and aimed arrows. Syl creates distance; released arrows keep their original path.',caster:'An ivory hood, a planted casting stance, and a visible channel. Nyra releases an arcane bolt at the end of the windup.',wolf:'Four planted paws, a diagonal gait, and a low, quick lunge. Ember closes on the backline and changes direction quickly.'};
 function selectedUnit(){return arena.units.find(u=>u.uid===selected)||arena.units[0];}
@@ -16,7 +17,7 @@ function studyPose(u){
     const elapsed=arena.time%(u.windup+u.recovery);
     return {state:pose,phase:elapsed<u.windup?elapsed/u.windup:(elapsed-u.windup)/u.recovery,stage:elapsed<u.windup?'windup':'recovery'};
   }
-  const duration=pose==='walk'?u.stride/u.speed:pose==='run'?u.stride/u.run:pose==='dash'?0.34:pose==='dodge'?0.29:pose==='hit'?0.13:pose==='stagger'?0.46:pose==='death'?0.95:1.8;
+  const duration=pose==='walk'?u.stride/u.speed:pose==='run'?locomotionStride(u.stride,1,0,u.id)/u.run:pose==='sprint'?locomotionStride(u.stride,1,1,u.id)/u.sprint:pose==='dash'?0.34:pose==='dodge'?0.29:pose==='hit'?0.13:pose==='stagger'?0.46:pose==='death'?0.95:1.8;
   return {state:pose,phase:pose==='death'?Math.min(1,arena.time/duration):(arena.time/duration)%1};
 }
 function chooseUnit(uid){selected=uid;updateUI();}
@@ -24,12 +25,14 @@ function makeCards(){
   $('#character-cards').innerHTML=PROTOTYPE_CHARACTERS.map((s,i)=>`<button class="character-card ${selected===`0-${s.id}-${i}`?'active':''}" data-select="0-${s.id}-${i}"><img src="${spritesReady()?prototypePortrait(s.id):''}" alt="${s.name}"><span class="role">${s.role.toUpperCase()}</span><strong>${s.name.split(' · ')[0]}</strong><small>${s.id==='wolf'?'Ember wolf':s.name.split(' · ')[1]}</small><div class="stats"><span>${s.mass.toFixed(1)} mass</span><span class="card-state">Ready</span></div><div class="hp-track"><i style="width:100%"></i></div><small class="card-health">${s.hp} / ${s.hp} HP</small></button>`).join('');
 }
 function changeMode(next){
+  heldSprintUid=null;
   const id=selectedId();mode=next;arena=new PrototypeArena(mode);selected=arena.units.find(u=>u.id===id&&u.side===0).uid;
   $('#result').hidden=true;$('#pose-controls').hidden=!['study','directions'].includes(mode);
   $('#facing-control').hidden=mode==='directions';$('#focus-view').disabled=mode==='directions';
+  $('#locomotion-controls').hidden=mode!=='movement';
   for(const b of document.querySelectorAll('[data-scene]')){b.classList.toggle('active',b.dataset.scene===mode);b.setAttribute('aria-pressed',b.dataset.scene===mode);}
   $('#scene-title').textContent=mode==='battle'?'THE OLD COURTYARD':mode==='movement'?'THE LONG WAY AROUND':mode==='directions'?'ONE CHARACTER. EIGHT VIEWS.':'A STUDY IN MOTION';
-  $('#scene-status').textContent=mode==='battle'?'Five companions · five challengers':mode==='movement'?'Five gaits · eight directions':mode==='directions'?'Click a view to inspect it up close':'Eleven states · eight directions';
+  $('#scene-status').textContent=mode==='battle'?'Five companions · five challengers':mode==='movement'?'Walk · run · sprint':mode==='directions'?'Click a view to inspect it up close':'Twelve states · eight directions';
   updateUI();
 }
 function updateUI(){
@@ -43,6 +46,13 @@ function updateUI(){
     card.querySelector('.card-health').textContent=`${Math.ceil(unit.hp)} / ${unit.maxHp} HP`;
   }
   for(const b of document.querySelectorAll('.action-buttons button'))b.disabled=mode!=='battle'||u.hp<=0||arena.done;
+  const sprintOn=u.sprintRequested||(mode==='movement'&&arena.locomotion==='sprint');
+  $('#order-sprint').disabled=!['battle','movement'].includes(mode)||u.hp<=0||arena.done||(!sprintOn&&u.stamina<25);
+  $('#order-sprint').title=u.stamina<25&&!sprintOn?'Recover to 25 stamina to sprint':'Toggle sprint for the selected companion';
+  $('#order-sprint').textContent=sprintOn?'Stop sprint':'Sprint';$('#order-sprint').setAttribute('aria-pressed',sprintOn);
+  $('#stamina-meter').value=u.stamina;
+  $('#sprint-status').textContent=u.sprintExhausted&&sprintOn?'Winded · release and restart after recovery':u.sprintActive?'Sprinting · stamina '+Math.ceil(u.stamina):'Stamina '+Math.ceil(u.stamina)+' · sprint costs 20/s';
+  for(const b of document.querySelectorAll('[data-pace]')){b.classList.toggle('active',b.dataset.pace===arena.locomotion);b.setAttribute('aria-pressed',b.dataset.pace===arena.locomotion);}
   $('#scene-clock').textContent=`${String(Math.floor(arena.time/60)).padStart(2,'0')}:${String(Math.floor(arena.time%60)).padStart(2,'0')}`;
   $('#contact-count').textContent=`${arena.metrics.hits} CONTACTS · ${arena.metrics.misses} MISSES`;
   const facing=mode==='directions'?'All eight views':directions[mode==='study'?poseFacing:directionalFrame(u.facing)];
@@ -131,16 +141,23 @@ function render(){
 }
 function togglePause(){paused=!paused;$('#play-pause').textContent=paused?'Play':'Pause';$('#play-pause').setAttribute('aria-label',paused?'Resume scene':'Pause scene');}
 function selectedRoll(kind){const u=selectedUnit();arena.roll(u,u.facing+(kind==='dodge'?Math.PI/2:0),kind);}
+function toggleSprint(){
+  if(mode==='movement'&&arena.locomotion==='sprint')arena.setLocomotion('walk');
+  else arena.setSprint(selected, !selectedUnit().sprintRequested);
+  updateUI();
+}
 document.addEventListener('click',e=>{
   const el=e.target.closest('button');if(!el)return;
   if(el.dataset.select)chooseUnit(el.dataset.select);
   if(el.dataset.scene)changeMode(el.dataset.scene);
+  if(el.dataset.pace){arena.setLocomotion(el.dataset.pace);updateUI();}
   if(el.dataset.speed){speed=Number(el.dataset.speed);for(const b of document.querySelectorAll('[data-speed]'))b.classList.toggle('active',Number(b.dataset.speed)===speed);}
   if(el.dataset.pose){pose=el.dataset.pose;arena.time=0;for(const b of document.querySelectorAll('[data-pose]'))b.classList.toggle('active',b.dataset.pose===pose);}
   if(el.id==='play-pause')togglePause();
   if(el.id==='restart'||el.hasAttribute('data-replay'))changeMode(mode);
   if(el.id==='frame-step'){if(!paused)togglePause();arena.step(1/12);render();updateUI();}
   if(el.id==='order-dash')selectedRoll('dash');if(el.id==='order-dodge')selectedRoll('dodge');
+  if(el.id==='order-sprint')toggleSprint();
   if(el.id==='order-attack'){const u=selectedUnit(),target=arena.target(u);if(target)arena.attack(u,target);}
   if(el.id==='sound-toggle'){sounding=!sounding;sound.begin(0,sounding);el.textContent=sounding?'Sound on':'Sound off';el.setAttribute('aria-pressed',sounding);}
   if(el.id==='focus-view'){focusView=!focusView;el.textContent=focusView?'Wide view':'Focus selected';el.setAttribute('aria-pressed',focusView);}
@@ -157,7 +174,7 @@ canvas.addEventListener('pointerdown',e=>{
   }
   if(focusView){const p=groundToScreen(selectedUnit().x,selectedUnit().y);sx=p.x+(sx-500)/1.8;sy=p.y+(sy-370)/1.8;}
   const point=screenToGround(sx,sy);
-  if(mode!=='battle')return;
+  if(!['battle','movement'].includes(mode))return;
   const near=arena.units.filter(u=>u.side===0&&u.hp>0).sort((a,b)=>Math.hypot(a.x-point.x,a.y-point.y)-Math.hypot(b.x-point.x,b.y-point.y))[0];
   if(near&&Math.hypot(near.x-point.x,near.y-point.y)<35)chooseUnit(near.uid);else arena.moveOrder(selected,point);
   canvas.focus();
@@ -166,6 +183,8 @@ document.addEventListener('keydown',e=>{
   if(e.target.matches('select,input,button,a'))return;
   if(e.code==='Space'){e.preventDefault();togglePause();}
   if(e.key.toLowerCase()==='r')changeMode(mode);
+  if(e.key==='Shift'&&['battle','movement'].includes(mode)&&!e.repeat){e.preventDefault();if(arena.setSprint(selected,true))heldSprintUid=selected;updateUI();}
+  if(e.key.toLowerCase()==='s'&&['battle','movement'].includes(mode)&&!e.repeat)toggleSprint();
   if(mode!=='battle')return;
   if(e.key.toLowerCase()==='d')selectedRoll('dash');
   if(e.key.toLowerCase()==='f'){const u=selectedUnit(),t=arena.target(u);if(t)arena.attack(u,t);}
@@ -173,6 +192,9 @@ document.addEventListener('keydown',e=>{
     e.preventDefault();const u=selectedUnit(),v={ArrowLeft:[-90,0],ArrowRight:[90,0],ArrowUp:[0,-90],ArrowDown:[0,90]}[e.key];arena.moveOrder(u.uid,{x:u.x+v[0],y:u.y+v[1]});
   }
 });
+function releaseHeldSprint(){if(heldSprintUid){arena.setSprint(heldSprintUid,false);heldSprintUid=null;updateUI();}}
+document.addEventListener('keyup',e=>{if(e.key==='Shift')releaseHeldSprint();});
+window.addEventListener('blur',releaseHeldSprint);
 $('#pose-states').innerHTML=ANIMATION_STATES.map(s=>`<button data-pose="${s}" class="${s===pose?'active':''}">${s[0].toUpperCase()+s.slice(1)}</button>`).join('');
 window.addEventListener('prototype-art-ready',()=>{makeCards();updateUI();});
 window.addEventListener('prototype-art-error',()=>{$('#loading').textContent='The artwork could not load. Reload this page.';});

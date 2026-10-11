@@ -1,5 +1,5 @@
 import { sweepCircle } from './arena.js';
-import { characterRig, weaponContactPath, weaponTipAt, rigFoot, plantFeet } from './prototype-rig.js';
+import { characterRig, weaponContactPath, weaponTipAt, rigFoot, plantFeet, locomotionStride } from './prototype-rig.js';
 
 // Milestone 1's isolated deterministic arena. All positions are ground coordinates.
 export const PROTOTYPE_CHARACTERS = [
@@ -10,7 +10,8 @@ export const PROTOTYPE_CHARACTERS = [
   {id:'wolf',name:'Ember · Wolf',role:'Pursuer',mass:1.15,hp:285,speed:172,run:240,reach:53,damage:29,windup:0.23,recovery:0.23,cooldown:0.88,radius:17,stride:72,color:'#e3a879',weapon:'claws',row:4},
 ];
 export const PROTOTYPE_BY_ID=Object.fromEntries(PROTOTYPE_CHARACTERS.map(x=>[x.id,x]));
-export const ANIMATION_STATES=['idle','walk','run','turn','attack','cast','dash','dodge','hit','stagger','death'];
+for(const spec of PROTOTYPE_CHARACTERS)spec.sprint=Math.round(spec.run*(spec.id==='wolf'?1.4:spec.id==='orc'?1.3:1.35));
+export const ANIMATION_STATES=['idle','walk','run','sprint','turn','attack','cast','dash','dodge','hit','stagger','death'];
 export const ARENA_LIMITS={left:70,right:930,top:110,bottom:805};
 export const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
 export const distance=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
@@ -26,7 +27,7 @@ export function makePrototypeUnit(id,side=0,index=0,x=200,y=300){
   if(!spec)throw new Error('Unknown prototype character');
   return {uid:`${side}-${id}-${index}`,id,side,...spec,x,y,px:x,py:y,hp:spec.hp,maxHp:spec.hp,
     facing:side?Math.PI:0,previousFacing:side?Math.PI:0,vx:0,vy:0,ix:0,iy:0,
-    gait:0.25,travel:0,moving:0,moveFacing:side?Math.PI:0,aimFacing:null,action:null,actionSerial:0,attackCooldown:0.25+index*0.12,
+    gait:0.25,travel:0,moving:0,runBlend:0,sprintBlend:0,acceleration:0,sprintRequested:false,sprintActive:false,sprintExhausted:false,moveFacing:side?Math.PI:0,aimFacing:null,action:null,actionSerial:0,attackCooldown:0.25+index*0.12,
     stamina:100,poise:0,stagger:0,hitTime:0,roll:null,dodgeCooldown:0.7+index*0.1,
     deathTime:0,turning:0,target:null,manualUntil:0,order:null,intention:'ready',
     hits:0,misses:0,damageDealt:0,dodges:0,interrupts:0,lastState:'idle'};
@@ -38,7 +39,8 @@ export function animationState(u){
   if(u.hitTime>0)return 'hit';
   if(u.roll)return u.roll.kind;
   if(u.action)return u.id==='caster'?'cast':'attack';
-  if(u.moving>0.72)return 'run';
+  if(u.sprintBlend>0.35)return 'sprint';
+  if(u.runBlend>0.4)return 'run';
   if(u.moving>0.07)return 'walk';
   if(u.turning>0.8)return 'turn';
   return 'idle';
@@ -49,17 +51,35 @@ export function meleeConnects(source,target,angle,reach,arc=0.68){
 }
 export class PrototypeArena {
   constructor(mode='battle'){
-    this.mode=mode;this.time=0;this.accumulator=0;this.alpha=0;this.done=false;this.winner=null;
+    this.mode=mode;this.locomotion='auto';this.time=0;this.accumulator=0;this.alpha=0;this.done=false;this.winner=null;
     this.units=[];this.projectiles=[];this.particles=[];this.effects=[];this.audio=[];this.events=[];
     this.shake=0;this.serial=0;this.metrics={hits:0,misses:0,rolls:0,avoided:0,interrupts:0,projectiles:0,contacts:0,knockouts:0};
     for(let side=0;side<(mode==='battle'?2:1);side++)
       PROTOTYPE_CHARACTERS.forEach((s,i)=>{
         const x=mode==='battle'?(side?760:240)+(i>1?(side?70:-70):0):170+i*163;
         const y=mode==='battle'?230+i*110:420;
-        this.units.push(makePrototypeUnit(s.id,side,i,x,y));
+        const u=makePrototypeUnit(s.id,side,i,x,y);
+        if(mode==='movement'){
+          u.trackPhase=i*0.4;u.x=175+i*160+Math.cos(u.trackPhase)*59;u.y=400+Math.sin(u.trackPhase)*150;u.px=u.x;u.py=u.y;
+          u.facing=Math.atan2(Math.cos(u.trackPhase)*150,-Math.sin(u.trackPhase)*59);u.previousFacing=u.facing;u.moveFacing=u.facing;
+        }
+        this.units.push(u);
       });
   }
   living(side){return this.units.filter(u=>u.hp>0&&(side===undefined||u.side===side));}
+  setLocomotion(pace){
+    if(!['auto','walk','run','sprint'].includes(pace))return false;
+    this.locomotion=pace;
+    for(const u of this.units){u.sprintRequested=false;if(pace==='sprint')u.sprintExhausted=u.stamina<25;}
+    return true;
+  }
+  setSprint(uid,on){
+    const u=this.units.find(u=>u.uid===uid&&u.hp>0);
+    if(!u||this.done||!['battle','movement'].includes(this.mode))return false;
+    if(on&&u.stamina<25)return false;
+    u.sprintRequested=Boolean(on);if(on)u.sprintExhausted=false;
+    return true;
+  }
   event(type,u,detail={}){
     const event={type,time:this.time,uid:u.uid,id:u.id,...detail};
     this.events.push(event);if(this.events.length>300)this.events.shift();
@@ -182,7 +202,7 @@ export class PrototypeArena {
       u.px=u.x;u.py=u.y;u.previousFacing=u.facing;
       if(u.hp<=0){u.deathTime+=dt;u.x+=u.ix*dt;u.y+=u.iy*dt;u.ix*=Math.exp(-6*dt);u.iy*=Math.exp(-6*dt);this.confine(u);continue;}
       u.hitTime=Math.max(0,u.hitTime-dt);u.stagger=Math.max(0,u.stagger-dt);u.dodgeCooldown=Math.max(0,u.dodgeCooldown-dt);
-      u.attackCooldown-=dt;u.poise=Math.max(0,u.poise-dt*10);u.stamina=Math.min(100,u.stamina+dt*(u.action||u.roll?8:22));
+      u.attackCooldown-=dt;u.poise=Math.max(0,u.poise-dt*10);
       if(this.done){u.moving*=Math.exp(-8*dt);continue;}
       if(u.action){
         const action=u.action,previous=action.elapsed;
@@ -194,10 +214,17 @@ export class PrototypeArena {
       }
       let desiredX=0,desiredY=0,running=false;
       if(this.mode==='movement'){
-        const angle=this.time*0.58+PROTOTYPE_BY_ID[u.id].row*0.4;
+        const derivative=Math.hypot(Math.sin(u.trackPhase)*59,Math.cos(u.trackPhase)*150);
+        u.trackPhase+=Math.hypot(u.vx,u.vy)*dt/(derivative||1);
+        const angle=u.trackPhase;
         const goal={x:175+PROTOTYPE_BY_ID[u.id].row*160+Math.cos(angle)*59,y:400+Math.sin(angle)*150};
-        const d=distance(u,goal)||1;desiredX=(goal.x-u.x)/d;desiredY=(goal.y-u.y)/d;
-        running=Math.sin(this.time*0.7)>0.2;u.intention=running?'running circuit':'walking circuit';
+        const tx=-Math.sin(angle)*59/(derivative||1)+(goal.x-u.x)*0.024,ty=Math.cos(angle)*150/(derivative||1)+(goal.y-u.y)*0.024,normal=Math.max(1,Math.hypot(tx,ty));
+        desiredX=tx/normal;desiredY=ty/normal;
+        running=this.locomotion==='run'||this.locomotion==='sprint'||(this.locomotion==='auto'&&Math.sin(this.time*0.7)>0.2);u.intention=running?'running circuit':'walking circuit';
+        if(u.order&&this.time<u.manualUntil){
+          const d=distance(u,u.order),arrival=Math.min(1,d/45);
+          desiredX=d>3?(u.order.x-u.x)/(d||1)*arrival:0;desiredY=d>3?(u.order.y-u.y)/(d||1)*arrival:0;u.intention='following your order';
+        }
       }else if(this.mode==='battle'){
         const target=this.target(u);u.target=target?.uid||null;
         if(target){
@@ -223,20 +250,37 @@ export class PrototypeArena {
       }
       const busy=u.action||u.roll||u.stagger>0;
       if(busy){desiredX=0;desiredY=0;}
+      const wantsSprint=u.sprintRequested||(this.mode==='movement'&&this.locomotion==='sprint');
+      if(u.stamina<=8&&wantsSprint)u.sprintExhausted=true;
+      u.sprintActive=Boolean(wantsSprint&&!u.sprintExhausted&&!busy&&Math.hypot(desiredX,desiredY)>0.1);
+      if(wantsSprint&&u.sprintExhausted)running=false;
+      if(u.sprintActive)u.intention='sprinting';
+      else if(wantsSprint&&u.sprintExhausted)u.intention='catching breath';
+      u.stamina=clamp(u.stamina+dt*(busy?8:u.sprintActive?-20:u.moving>0.1?15:22),0,100);
       if(!busy&&(Math.hypot(desiredX,desiredY)>0.1||u.aimFacing!==null)){
-        const a=Math.hypot(desiredX,desiredY)>0.1?Math.atan2(desiredY,desiredX):u.aimFacing,change=angleDelta(u.facing,a);
+        const steering=Math.hypot(desiredX,desiredY)>0.1;
+        const a=steering?(Math.hypot(u.vx,u.vy)>20?Math.atan2(u.vy,u.vx):Math.atan2(desiredY,desiredX)):u.aimFacing,change=angleDelta(u.facing,a);
         u.facing+=clamp(change,-dt*(u.mass>2?5:7.5),dt*(u.mass>2?5:7.5));u.turning=Math.abs(change);
       }else u.turning*=Math.exp(-10*dt);
-      const targetSpeed=running?u.run:u.speed;
-      const acceleration=1-Math.exp(-dt*(u.mass>2?7:11));
-      u.vx+=(desiredX*targetSpeed-u.vx)*acceleration;u.vy+=(desiredY*targetSpeed-u.vy)*acceleration;
+      const targetSpeed=u.sprintActive?u.sprint:running?u.run:u.speed;
+      const previousSpeed=Math.hypot(u.vx,u.vy),turn=previousSpeed>8&&Math.hypot(desiredX,desiredY)>0.1?Math.abs(angleDelta(Math.atan2(u.vy,u.vx),Math.atan2(desiredY,desiredX))):0;
+      const cornerSpeed=1-(u.sprintActive?0.48:0.25)*Math.sin(Math.min(Math.PI/2,turn));
+      const accelerationLimit=(u.mass>2?260:390)*(u.sprintActive?0.85:1),brakingLimit=u.mass>2?400:600;
+      const tx=desiredX*targetSpeed*cornerSpeed,ty=desiredY*targetSpeed*cornerSpeed,deltaX=tx-u.vx,deltaY=ty-u.vy,deltaSpeed=Math.hypot(deltaX,deltaY);
+      const limit=(Math.hypot(tx,ty)<previousSpeed?brakingLimit:accelerationLimit)*dt,blend=Math.min(1,limit/(deltaSpeed||1));
+      u.vx+=deltaX*blend;u.vy+=deltaY*blend;
+      const actualSpeed=Math.hypot(u.vx,u.vy);
+      u.acceleration+=(clamp((actualSpeed-previousSpeed)/(dt*accelerationLimit),-1,1)-u.acceleration)*Math.min(1,dt*10);
+      const gaitBlend=1-Math.exp(-dt*10);
+      u.runBlend+=(clamp((actualSpeed-u.speed)/(u.run-u.speed),0,1)-u.runBlend)*gaitBlend;
+      u.sprintBlend+=(clamp((actualSpeed-u.run)/(u.sprint-u.run),0,1)-u.sprintBlend)*gaitBlend;
       if(u.roll){
         const roll=u.roll;roll.elapsed+=dt;const p=roll.elapsed/roll.duration,speed=(roll.kind==='dash'?480:440)*(0.62+0.38*Math.sin(Math.PI*clamp(p,0,1)))*(u.mass>2?0.84:1);
         u.x+=roll.dx*speed*dt;u.y+=roll.dy*speed*dt;
         if(roll.elapsed>=roll.duration){u.roll=null;u.vx=0;u.vy=0;}
       }else if(!u.action&&u.stagger<=0){
         const move=Math.hypot(u.vx,u.vy)*dt;u.x+=u.vx*dt;u.y+=u.vy*dt;
-        u.travel+=move;u.gait+=move/u.stride;
+        u.travel+=move;u.gait+=move/locomotionStride(u.stride,u.runBlend,u.sprintBlend,u.id);
       }
       const speed=Math.hypot(u.vx,u.vy);
       if(speed>3)u.moveFacing=Math.atan2(u.vy,u.vx);

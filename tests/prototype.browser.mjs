@@ -8,9 +8,10 @@ const page=await browser.newPage({viewport:{width:1440,height:1100}});
 page.on('pageerror',e=>report.errors.push(e.message));page.on('response',r=>{if(r.status()>=400)report.errors.push(r.status()+' '+r.url());});
 await page.clock.install();
 await page.goto(base+'/prototype.html');await page.waitForFunction(()=>window.prototypeLab?.state.artLoaded);
+await page.clock.pauseAt(await page.evaluate(()=>Date.now()+100));
 assert.equal(await page.locator('.character-card').count(),5);
 assert.equal(await page.evaluate(()=>prototypeLab.state.mode),'directions');
-assert.equal(await page.evaluate(()=>prototypeLab.state.cache.rigVersion),2);
+assert.equal(await page.evaluate(()=>prototypeLab.state.cache.rigVersion),3);
 const directionFrames={};
 for(const [id,index] of ['knight','orc','elf','caster','wolf'].map((id,i)=>[id,i])){
   const frames=await page.evaluate(id=>prototypeLab.directionFrames(id),id);
@@ -23,6 +24,25 @@ for(const [id,index] of ['knight','orc','elf','caster','wolf'].map((id,i)=>[id,i
 }
 assert.deepEqual(await page.evaluate(()=>prototypeLab.state.cache.directionalArt),{columns:8,characters:5,heads:40,bodies:40});
 report.characterDirectionFrames=directionFrames;
+report.jointCoverage=await page.evaluate(async()=>{
+  const {characterRig,projectRig}=await import('/prototype-rig.js');
+  const {PROTOTYPE_CHARACTERS}=await import('/prototype-engine.js');
+  let checks=0;const gaps=[];
+  for(const spec of PROTOTYPE_CHARACTERS)for(const state of ['walk','run','sprint'])for(const phase of [0.125,0.25,0.5,0.75]){
+    const rig=characterRig(spec.id,state,phase,'',{stride:spec.stride});
+    const frames=prototypeLab.directionFrames(spec.id,state,phase);
+    for(let dir=0;dir<8;dir++){
+      const img=new Image();img.src=frames[dir];await img.decode();const sheet=document.createElement('canvas');sheet.width=256;sheet.height=256;const ctx=sheet.getContext('2d');ctx.drawImage(img,0,0);
+      const points=[...rig.legs.flatMap(l=>[l.root,l.joint,...(l.hock?[l.hock]:[]),l.end]),...rig.arms.flatMap(a=>[a.root,a.joint,a.end])];
+      for(const point of points){
+        const p=projectRig(point,dir*Math.PI/4),x=Math.round(128+p.x),y=Math.round(194+p.y),pixels=ctx.getImageData(x-1,y-1,3,3).data;
+        checks++;if(!pixels.some((v,i)=>i%4===3&&v>180))gaps.push({id:spec.id,state,dir,x,y});
+      }
+    }
+  }
+  return {checks,gaps};
+});
+assert.deepEqual(report.jointCoverage.gaps,[],'rendered shoulders, hips, elbows, knees, hocks and ankles must have opaque joins');
 let directionBox=await page.locator('canvas').boundingBox();
 await page.mouse.click(directionBox.x+375*directionBox.width/1000,directionBox.y+530*directionBox.height/650);
 assert.equal(await page.evaluate(()=>prototypeLab.state.mode),'study');
@@ -50,12 +70,13 @@ await page.locator('[data-scene="movement"]').click();await page.clock.runFor(25
 const movement=await page.evaluate(()=>prototypeLab.state.arena.units.map(u=>({travel:u.travel,gait:u.gait,dir:Math.round(u.facing/(Math.PI/4))})));
 assert.ok(movement.every(u=>u.travel>30&&u.gait>0.25));
 const facingSets=Object.fromEntries(['knight','orc','elf','caster','wolf'].map(id=>[id,new Set()]));
-for(let i=0;i<64;i++){
-  await page.clock.runFor(250);
+for(let i=0;i<160;i++){
+  await page.clock.runFor(100);
   for(const u of await page.evaluate(()=>prototypeLab.state.arena.units.map(u=>({id:u.id,dir:((Math.round(u.facing/(Math.PI/4))%8)+8)%8}))))facingSets[u.id].add(u.dir);
 }
 report.movementDirectionFrames=Object.fromEntries(Object.entries(facingSets).map(([id,dirs])=>[id,dirs.size]));
 assert.ok(Object.values(report.movementDirectionFrames).every(n=>n===8),'each moving character must turn through all eight facings');
+await page.locator('[data-pace="walk"]').click();await page.clock.runFor(1500);
 const planted=await page.evaluate(()=>prototypeLab.state.arena.units.map(u=>({id:u.id,feet:u.groundFeet.filter(f=>f.planted).map(f=>({x:f.x,y:f.y,z:f.z,serial:f.serial}))})));
 assert.ok(planted.every(u=>u.feet.length>0),'each walking profile must have a supporting foot');
 report.rigVersion=await page.evaluate(()=>prototypeLab.state.cache.rigVersion);
@@ -63,6 +84,29 @@ await page.locator('[data-speed="0.25"]').click();assert.equal(await page.evalua
 await page.locator('[data-speed="1"]').click();
 await page.screenshot({path:'playtest-artifacts/prototype-movement.png',fullPage:true});report.screenshots.push('prototype-movement.png');
 report.checks.push('All five locomotion profiles travel around the circuits and turn through all eight facings; speed changes work');
+assert.equal(await page.locator('#locomotion-controls').isVisible(),true);
+await page.locator('[data-pace="sprint"]').click();await page.clock.runFor(2000);
+const sprinting=await page.evaluate(()=>prototypeLab.state.arena.units.map(u=>({id:u.id,active:u.sprintActive,blend:u.sprintBlend,stamina:u.stamina})));
+assert.ok(sprinting.every(u=>u.active&&u.stamina<65&&u.stamina>50));
+assert.ok(sprinting.some(u=>u.blend>0.35),'straight portions of the circuit must reach the sprint gait; tight turns may slow it');
+await page.screenshot({path:'playtest-artifacts/prototype-sprint.png',fullPage:true});report.screenshots.push('prototype-sprint.png');
+await page.locator('[data-pace="walk"]').click();await page.clock.runFor(1500);
+assert.ok(await page.evaluate(()=>prototypeLab.state.arena.units.every(u=>!u.sprintActive&&u.sprintBlend<0.05)));
+await page.locator('canvas').focus();await page.keyboard.down('Shift');await page.clock.runFor(800);
+assert.equal(await page.evaluate(()=>prototypeLab.state.arena.units.find(u=>u.uid===prototypeLab.state.selected).sprintRequested),true);
+await page.keyboard.up('Shift');
+assert.equal(await page.evaluate(()=>prototypeLab.state.arena.units.find(u=>u.uid===prototypeLab.state.selected).sprintRequested),false);
+await page.locator('#order-sprint').click();assert.equal(await page.locator('#order-sprint').getAttribute('aria-pressed'),'true');
+await page.locator('#order-sprint').click();assert.equal(await page.locator('#order-sprint').getAttribute('aria-pressed'),'false');
+report.sprint=sprinting;
+await page.locator('[data-select="0-knight-0"]').click();
+const moveBox=await page.locator('canvas').boundingBox();
+const moveBefore=await page.evaluate(()=>prototypeLab.state.arena.units.find(u=>u.uid===prototypeLab.state.selected).x);
+await page.mouse.click(moveBox.x+850*moveBox.width/1000,moveBox.y+481*moveBox.height/650);
+assert.ok(await page.evaluate(()=>Math.abs(prototypeLab.state.arena.units.find(u=>u.uid===prototypeLab.state.selected).order.x-850)<1));
+await page.clock.runFor(800);
+assert.ok(await page.evaluate(()=>prototypeLab.state.arena.units.find(u=>u.uid===prototypeLab.state.selected).x)>moveBefore+20);
+report.checks.push('Walk/run/sprint pace controls, selected sprint toggle, Shift hold/release, acceleration, stride blending and stamina recovery work');
 await page.locator('[data-scene="study"]').click();await page.locator('[data-select="0-orc-1"]').click();
 await page.locator('#focus-view').click();assert.equal(await page.evaluate(()=>prototypeLab.state.focusView),true);
 await page.locator('#play-pause').click();
@@ -73,7 +117,7 @@ for(let dir=0;dir<8;dir++){
 }
 assert.equal(hashes.size,8);
 const stateFrames=new Set();
-for(const state of ['idle','walk','run','turn','attack','cast','dash','dodge','hit','stagger','death']){
+for(const state of ['idle','walk','run','sprint','turn','attack','cast','dash','dodge','hit','stagger','death']){
   await page.locator(`[data-pose="${state}"]`).click();for(let i=0;i<6;i++)await page.locator('#frame-step').click();
   assert.equal(await page.evaluate(()=>prototypeLab.sample.state),state);
   const data=await page.locator('canvas').evaluate(c=>c.toDataURL());stateFrames.add(createHash('sha256').update(data).digest('hex'));
@@ -81,7 +125,7 @@ for(const state of ['idle','walk','run','turn','attack','cast','dash','dodge','h
 assert.ok(stateFrames.size>=10);report.directionFrames=hashes.size;report.stateFrames=stateFrames.size;
 await page.locator('[data-pose="attack"]').click();for(let i=0;i<4;i++)await page.locator('#frame-step').click();
 await page.screenshot({path:'playtest-artifacts/prototype-study.png',fullPage:true});report.screenshots.push('prototype-study.png');
-report.checks.push('Eight directional views and eleven animation states are inspectable, including a close view and death');
+report.checks.push('Eight directional views and twelve animation states are inspectable, including a close view and death');
 await page.locator('#focus-view').click();await page.locator('[data-scene="battle"]').click();await page.locator('#play-pause').click();
 await page.clock.runFor(8500);
 const liveMetrics=await page.evaluate(()=>({...prototypeLab.state.arena.metrics}));assert.ok(liveMetrics.hits>0&&liveMetrics.rolls>0&&liveMetrics.projectiles>0);
@@ -109,6 +153,7 @@ const offlineURL=base+'/offline-prototype',body=fs.readFileSync('Starfall-Traini
 await offline.route('**/*',r=>{if(r.request().url()===offlineURL)return r.fulfill({status:200,contentType:'text/html',body});requests.push(r.request().url());return r.abort();});
 await offline.clock.install();
 await offline.goto(offlineURL);await offline.waitForFunction(()=>prototypeLab.state.artLoaded);
+await offline.clock.pauseAt(await offline.evaluate(()=>Date.now()+100));
 assert.equal(await offline.evaluate(()=>prototypeLab.state.mode),'directions');
 assert.equal(new Set(await offline.evaluate(()=>prototypeLab.directionFrames('wolf'))).size,8);
 await offline.locator('[data-scene="battle"]').click();
