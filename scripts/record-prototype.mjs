@@ -18,10 +18,14 @@ try{
       if(!encoder.stdin.write(Buffer.from(data,'base64')))await new Promise(resolve=>encoder.stdin.once('drain',resolve));
     }
   }
-  await page.locator('[data-scene="movement"]').click();await capture(5);
+  await page.locator('[data-scene="directions"]').click();
+  for(const [id,index] of ['knight','orc','elf','caster','wolf'].map((id,i)=>[id,i])){
+    await page.locator(`[data-select="0-${id}-${index}"]`).click();await capture(1);
+  }
+  await page.locator('[data-scene="movement"]').click();await capture(12);
   await page.locator('[data-scene="battle"]').click();await capture(8);
   await page.locator('[data-scene="study"]').click();await page.locator('[data-select="0-orc-1"]').click();await page.locator('#focus-view').click();
   await page.locator('[data-pose="attack"]').click();await capture(3);
   await page.locator('[data-pose="death"]').click();await capture(2);
-  encoder.stdin.end();await finished;console.log(`Recorded 18 seconds at normal speed: ${output}`);
+  encoder.stdin.end();await finished;console.log(`Recorded 30 seconds at normal speed: ${output}`);
 }finally{await browser.close();if(!encoder.stdin.destroyed)encoder.stdin.destroy();}

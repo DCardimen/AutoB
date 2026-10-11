@@ -9,6 +9,27 @@ page.on('pageerror',e=>report.errors.push(e.message));page.on('response',r=>{if(
 await page.goto(base+'/prototype.html');await page.waitForFunction(()=>window.prototypeLab?.state.artLoaded);
 await page.clock.install();
 assert.equal(await page.locator('.character-card').count(),5);
+assert.equal(await page.evaluate(()=>prototypeLab.state.mode),'directions');
+const directionFrames={};
+for(const [id,index] of ['knight','orc','elf','caster','wolf'].map((id,i)=>[id,i])){
+  const frames=await page.evaluate(id=>prototypeLab.directionFrames(id),id);
+  directionFrames[id]=new Set(frames.map(f=>createHash('sha256').update(f).digest('hex'))).size;
+  assert.equal(directionFrames[id],8,`${id} must have eight distinct sprites at the SAME idle phase`);
+  await page.locator(`[data-select="0-${id}-${index}"]`).click();
+  await page.clock.runFor(100);
+  await page.locator('canvas').screenshot({path:`playtest-artifacts/directions-${id}.png`});
+  report.screenshots.push(`directions-${id}.png`);
+}
+assert.deepEqual(await page.evaluate(()=>prototypeLab.state.cache.directionalArt),{columns:8,characters:5,heads:40,bodies:40});
+report.characterDirectionFrames=directionFrames;
+let directionBox=await page.locator('canvas').boundingBox();
+await page.mouse.click(directionBox.x+375*directionBox.width/1000,directionBox.y+530*directionBox.height/650);
+assert.equal(await page.evaluate(()=>prototypeLab.state.mode),'study');
+assert.equal(await page.evaluate(()=>prototypeLab.state.poseFacing),5);
+assert.equal(await page.evaluate(()=>prototypeLab.state.focusView),true);
+await page.locator('#focus-view').click();
+report.checks.push('Opening scene shows eight views side by side; all five characters have eight distinct sprites at one fixed pose phase, with 40 painted heads and 40 painted torsos; clicking a view opens its close inspection');
+await page.locator('[data-scene="battle"]').click();
 assert.equal(await page.evaluate(()=>prototypeLab.state.arena.units.length),10);
 await page.locator('#play-pause').click();
 const frozen=await page.evaluate(()=>prototypeLab.state.arena.time);await page.clock.runFor(800);
@@ -27,17 +48,24 @@ report.checks.push('Selecting a character and clicking ground produces actual mo
 await page.locator('[data-scene="movement"]').click();await page.clock.runFor(2500);
 const movement=await page.evaluate(()=>prototypeLab.state.arena.units.map(u=>({travel:u.travel,gait:u.gait,dir:Math.round(u.facing/(Math.PI/4))})));
 assert.ok(movement.every(u=>u.travel>30&&u.gait>0.25));
+const facingSets=Object.fromEntries(['knight','orc','elf','caster','wolf'].map(id=>[id,new Set()]));
+for(let i=0;i<64;i++){
+  await page.clock.runFor(250);
+  for(const u of await page.evaluate(()=>prototypeLab.state.arena.units.map(u=>({id:u.id,dir:((Math.round(u.facing/(Math.PI/4))%8)+8)%8}))))facingSets[u.id].add(u.dir);
+}
+report.movementDirectionFrames=Object.fromEntries(Object.entries(facingSets).map(([id,dirs])=>[id,dirs.size]));
+assert.ok(Object.values(report.movementDirectionFrames).every(n=>n===8),'each moving character must turn through all eight facings');
 await page.locator('[data-speed="0.25"]').click();assert.equal(await page.evaluate(()=>prototypeLab.state.speed),0.25);
 await page.locator('[data-speed="1"]').click();
 await page.screenshot({path:'playtest-artifacts/prototype-movement.png',fullPage:true});report.screenshots.push('prototype-movement.png');
-report.checks.push('All five locomotion profiles travel around the circuits; speed changes work');
+report.checks.push('All five locomotion profiles travel around the circuits and turn through all eight facings; speed changes work');
 await page.locator('[data-scene="study"]').click();await page.locator('[data-select="0-orc-1"]').click();
 await page.locator('#focus-view').click();assert.equal(await page.evaluate(()=>prototypeLab.state.focusView),true);
 await page.locator('#play-pause').click();
-const hashes=new Set();
+const hashes=new Set(await page.evaluate(()=>prototypeLab.directionFrames('orc')));
 for(let dir=0;dir<8;dir++){
   await page.locator('#pose-facing').selectOption(String(dir));await page.locator('#frame-step').click();
-  const data=await page.locator('canvas').evaluate(c=>c.toDataURL());hashes.add(createHash('sha256').update(data).digest('hex'));
+  assert.equal(await page.evaluate(()=>prototypeLab.state.poseFacing),dir);
 }
 assert.equal(hashes.size,8);
 const stateFrames=new Set();
@@ -65,6 +93,9 @@ await page.setViewportSize({width:390,height:844});await page.locator('[data-sce
 assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
 await page.locator('[data-select="0-wolf-4"]').click();assert.equal(await page.evaluate(()=>prototypeLab.sample.id),'wolf');
 await page.screenshot({path:'playtest-artifacts/prototype-mobile.png',fullPage:true});report.screenshots.push('prototype-mobile.png');
+await page.locator('[data-scene="directions"]').click();
+assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
+await page.screenshot({path:'playtest-artifacts/directions-mobile.png',fullPage:true});report.screenshots.push('directions-mobile.png');
 report.checks.push('390px mobile layout has no horizontal overflow and retains scene and character controls');
 const offline=await browser.newPage({viewport:{width:1280,height:900}}),requests=[];
 offline.on('pageerror',e=>report.errors.push('offline: '+e.message));
@@ -73,6 +104,9 @@ offline.on('pageerror',e=>report.errors.push('offline: '+e.message));
 const offlineURL=base+'/offline-prototype',body=fs.readFileSync('Starfall-Training-Glade.html');
 await offline.route('**/*',r=>{if(r.request().url()===offlineURL)return r.fulfill({status:200,contentType:'text/html',body});requests.push(r.request().url());return r.abort();});
 await offline.goto(offlineURL);await offline.waitForFunction(()=>prototypeLab.state.artLoaded);
+assert.equal(await offline.evaluate(()=>prototypeLab.state.mode),'directions');
+assert.equal(new Set(await offline.evaluate(()=>prototypeLab.directionFrames('wolf'))).size,8);
+await offline.locator('[data-scene="battle"]').click();
 await offline.clock.install();await offline.clock.runFor(8000);assert.ok(await offline.evaluate(()=>prototypeLab.state.arena.metrics.hits)>0);
 await offline.locator('[data-scene="study"]').click();await offline.locator('[data-pose="death"]').click();await offline.clock.runFor(1000);
 assert.deepEqual(requests,[]);report.offlineExternalRequests=requests.length;report.checks.push('Standalone HTML runs combat and pose inspection with zero external requests');

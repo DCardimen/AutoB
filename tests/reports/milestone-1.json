@@ -1,8 +1,9 @@
 {
   "checks": [
+    "Opening scene shows eight views side by side; all five characters have eight distinct sprites at one fixed pose phase, with 40 painted heads and 40 painted torsos; clicking a view opens its close inspection",
     "Five complete character portraits and a ten-body scene; pause and frame stepping preserve simulation control",
     "Selecting a character and clicking ground produces actual movement in the physical scene",
-    "All five locomotion profiles travel around the circuits; speed changes work",
+    "All five locomotion profiles travel around the circuits and turn through all eight facings; speed changes work",
     "Eight directional views and eleven animation states are inspectable, including a close view and death",
     "Rendered sparring resolves with physical hits, projectile travel, rolls, interruptions and deaths; optional audio toggles",
     "390px mobile layout has no horizontal overflow and retains scene and character controls",
@@ -10,15 +11,35 @@
   ],
   "errors": [],
   "screenshots": [
+    "directions-knight.png",
+    "directions-orc.png",
+    "directions-elf.png",
+    "directions-caster.png",
+    "directions-wolf.png",
     "prototype-movement.png",
     "prototype-study.png",
     "prototype-battle.png",
-    "prototype-mobile.png"
+    "prototype-mobile.png",
+    "directions-mobile.png"
   ],
+  "characterDirectionFrames": {
+    "knight": 8,
+    "orc": 8,
+    "elf": 8,
+    "caster": 8,
+    "wolf": 8
+  },
+  "movementDirectionFrames": {
+    "knight": 8,
+    "orc": 8,
+    "elf": 8,
+    "caster": 8,
+    "wolf": 8
+  },
   "directionFrames": 8,
   "stateFrames": 11,
   "battle": {
-    "time": 40.31666666666502,
+    "time": 40.149999999998364,
     "metrics": {
       "hits": 78,
       "misses": 38,
@@ -33,7 +54,13 @@
       "frames": 420,
       "maxFrames": 420,
       "sourceReady": true,
-      "frameSize": 176
+      "frameSize": 176,
+      "directionalArt": {
+        "columns": 8,
+        "characters": 5,
+        "heads": 40,
+        "bodies": 40
+      }
     }
   },
   "offlineExternalRequests": 0,
@@ -44,11 +71,11 @@
   },
   "preview": {
     "file": "public/prototype-preview.mp4",
-    "durationSeconds": 18,
+    "durationSeconds": 30,
     "fps": 30,
-    "bytes": 3442355,
-    "sha256": "42c4023d8d0ded714dfabebc8c1543bed5eca8ecf4384b3ec6e944937a905795"
+    "bytes": 6225737,
+    "sha256": "089856b9bdc55565c33770667a67c3feef6551b6ea47fba29e0ee76f406727f8"
   },
-  "scope": "Iteration 1: five-character visual and movement prototype. Automated checks do not establish human playtime or a fun score.",
+  "scope": "Iteration 1 direction correction: five-character visual and movement prototype, 40 painted head views and 40 torso views. Automated checks do not establish human playtime or a fun score.",
   "offlineValidation": "Exact embedded HTML served as one intercepted document; all other requests blocked. Managed browser policy blocks file navigation."
 }

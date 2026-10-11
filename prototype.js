@@ -1,12 +1,13 @@
-import { PrototypeArena, PROTOTYPE_CHARACTERS, PROTOTYPE_BY_ID, ANIMATION_STATES, animationState, groundToScreen, screenToGround, clamp } from './prototype-engine.js';
-import { drawPrototypeSprite, spritesReady, prototypePortrait, spriteCacheStats } from './prototype-sprites.js';
+import { PrototypeArena, PROTOTYPE_CHARACTERS, PROTOTYPE_BY_ID, ANIMATION_STATES, animationState, directionalFrame, groundToScreen, screenToGround, clamp } from './prototype-engine.js';
+import { drawPrototypeSprite, spritesReady, prototypePortrait, spriteCacheStats, prototypeDirectionFrames } from './prototype-sprites.js';
 import { Soundscape } from './sound.js';
 const $=s=>document.querySelector(s),canvas=$('#prototype-canvas'),c=canvas.getContext('2d');
 const backdrop=new Image();backdrop.src='/public/prototype-glade.png';
 backdrop.addEventListener('error',()=>{$('#loading').textContent='The artwork could not load. Reload this page.';});
 const sound=new Soundscape();
-let arena=new PrototypeArena(),mode='battle',selected='0-knight-0',paused=false,speed=1,last=performance.now(),uiClock=0,sounding=false;
+let mode='directions',arena=new PrototypeArena(mode),selected='0-knight-0',paused=false,speed=1,last=performance.now(),uiClock=0,sounding=false;
 let pose='idle',poseFacing=0,labels=true,telegraphs=true,artLoaded=false,focusView=false;
+const directions=['East','Southeast','South','Southwest','West','Northwest','North','Northeast'];
 const descriptions={knight:'Silver plate, a measured stride, and a committed sword strike. Aurel resists displacement and recovers deliberately.',orc:'A broad stance and a slower, heavier axe swing. Brakk hits hard, but a missed windup leaves an opening.',elf:'Light footsteps, a drawn bow, and aimed arrows. Syl creates distance; released arrows keep their original path.',caster:'An ivory hood, a planted casting stance, and a visible channel. Nyra releases an arcane bolt at the end of the windup.',wolf:'Four planted paws, a diagonal gait, and a low, quick lunge. Ember closes on the backline and changes direction quickly.'};
 function selectedUnit(){return arena.units.find(u=>u.uid===selected)||arena.units[0];}
 function selectedId(){return selectedUnit().id;}
@@ -16,10 +17,11 @@ function makeCards(){
 }
 function changeMode(next){
   const id=selectedId();mode=next;arena=new PrototypeArena(mode);selected=arena.units.find(u=>u.id===id&&u.side===0).uid;
-  $('#result').hidden=true;$('#pose-controls').hidden=mode!=='study';
+  $('#result').hidden=true;$('#pose-controls').hidden=!['study','directions'].includes(mode);
+  $('#facing-control').hidden=mode==='directions';$('#focus-view').disabled=mode==='directions';
   for(const b of document.querySelectorAll('[data-scene]')){b.classList.toggle('active',b.dataset.scene===mode);b.setAttribute('aria-pressed',b.dataset.scene===mode);}
-  $('#scene-title').textContent=mode==='battle'?'THE OLD COURTYARD':mode==='movement'?'THE LONG WAY AROUND':'A STUDY IN MOTION';
-  $('#scene-status').textContent=mode==='battle'?'Five companions · five challengers':mode==='movement'?'Five gaits · eight directions':'Eleven states · eight directions';
+  $('#scene-title').textContent=mode==='battle'?'THE OLD COURTYARD':mode==='movement'?'THE LONG WAY AROUND':mode==='directions'?'ONE CHARACTER. EIGHT VIEWS.':'A STUDY IN MOTION';
+  $('#scene-status').textContent=mode==='battle'?'Five companions · five challengers':mode==='movement'?'Five gaits · eight directions':mode==='directions'?'Click a view to inspect it up close':'Eleven states · eight directions';
   updateUI();
 }
 function updateUI(){
@@ -28,13 +30,15 @@ function updateUI(){
   for(const card of document.querySelectorAll('[data-select]')){
     const unit=arena.units.find(u=>u.uid===card.dataset.select);if(!unit)continue;
     card.classList.toggle('active',unit.uid===selected);card.setAttribute('aria-pressed',unit.uid===selected);
-    card.querySelector('.card-state').textContent=mode==='study'?pose:animationState(unit);
+    card.querySelector('.card-state').textContent=['study','directions'].includes(mode)?pose:animationState(unit);
     card.querySelector('.hp-track i').style.width=Math.max(0,unit.hp/unit.maxHp*100)+'%';
     card.querySelector('.card-health').textContent=`${Math.ceil(unit.hp)} / ${unit.maxHp} HP`;
   }
   for(const b of document.querySelectorAll('.action-buttons button'))b.disabled=mode!=='battle'||u.hp<=0||arena.done;
   $('#scene-clock').textContent=`${String(Math.floor(arena.time/60)).padStart(2,'0')}:${String(Math.floor(arena.time%60)).padStart(2,'0')}`;
   $('#contact-count').textContent=`${arena.metrics.hits} CONTACTS · ${arena.metrics.misses} MISSES`;
+  const facing=mode==='directions'?'All eight views':directions[mode==='study'?poseFacing:directionalFrame(u.facing)];
+  $('#facing-status').textContent=`${spec.name.split(' · ')[0]} · ${facing}`;
   const events=arena.events.filter(e=>['contact','miss','interrupt','death','dodge'].includes(e.type)).slice(-5).reverse();
   const name=uid=>arena.units.find(u=>u.uid===uid)?.name.split(' · ')[0]||'target';
   $('#event-feed').innerHTML=events.map(e=>`<li><time>${e.time.toFixed(1)}s</time>${e.type==='contact'?`${name(e.uid)} connects with ${name(e.targetUid)} · ${Math.round(e.damage)} damage`:e.type==='miss'?`${name(e.uid)} misses the committed attack`:e.type==='interrupt'?`${name(e.uid)} is staggered; the windup breaks`:e.type==='death'?`${name(e.uid)} falls`: `${name(e.uid)} dodges an aimed threat`}</li>`).join('')||'<li>Contact events appear here during the sparring match.</li>';
@@ -56,6 +60,19 @@ function background(){
 }
 function render(){
   c.clearRect(0,0,1000,650);c.save();
+  if(mode==='directions'){
+    background();
+    const u=selectedUnit();
+    for(let dir=0;dir<8;dir++){
+      const x=125+(dir%4)*250,y=285+Math.floor(dir/4)*282;
+      c.fillStyle='#101e18aa';c.strokeStyle='#a3b98c35';c.lineWidth=1;
+      c.beginPath();c.roundRect(x-109,y-221,218,260,8);c.fill();c.stroke();
+      ellipse(x,y,u.id==='wolf'?41:27,9,'#091811aa');
+      drawPrototypeSprite(c,{...u,facing:dir*Math.PI/4,hp:pose==='death'?0:u.hp},x,y,arena.time,1.65,{state:pose,phase:arena.time*0.55%1});
+      c.textAlign='center';c.fillStyle='#e4e9cf';c.font='13px system-ui';c.fillText(directions[dir].toUpperCase(),x,y+25);
+    }
+    c.restore();return;
+  }
   if(focusView){const p=groundToScreen(selectedUnit().x,selectedUnit().y);c.translate(500,370);c.scale(1.8,1.8);c.translate(-p.x,-p.y);}
   background();c.save();
   if(arena.shake&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches)c.translate(Math.sin(arena.time*92)*arena.shake,Math.cos(arena.time*71)*arena.shake*0.6);
@@ -84,7 +101,7 @@ function render(){
       c.fillStyle='#d4b47466';c.fillRect(p.x-20,barY+6,40*u.stamina/100,1.5);
       if(u.action&&!u.action.released){c.fillStyle=u.side?'#eb9b80':'#e7d39d';c.fillRect(p.x-20,barY+10,40*u.action.elapsed/u.action.windup,1.5);}
     }
-    if(labels&&u.side===0&&u.hp>0){c.font='10px system-ui';c.textAlign='center';c.fillStyle='#ebebd2';c.shadowColor='#0c2117';c.shadowBlur=4;c.fillText(u.name.split(' · ')[0],p.x,p.y+19);c.shadowBlur=0;}
+    if(labels&&u.side===0&&u.hp>0){c.font='10px system-ui';c.textAlign='center';c.fillStyle='#ebebd2';c.shadowColor='#0c2117';c.shadowBlur=4;c.fillText(u.name.split(' · ')[0],p.x,p.y+19);c.font='8px system-ui';c.fillText(directions[mode==='study'?poseFacing:directionalFrame(u.facing)],p.x,p.y+31);c.shadowBlur=0;}
   }
   for(const p of arena.projectiles){
     const q=groundToScreen(p.x,p.y),angle=Math.atan2(p.vy*0.58,p.vx);
@@ -125,6 +142,11 @@ $('#show-labels').addEventListener('change',e=>labels=e.target.checked);
 $('#show-telegraphs').addEventListener('change',e=>telegraphs=e.target.checked);
 canvas.addEventListener('pointerdown',e=>{
   const r=canvas.getBoundingClientRect();let sx=(e.clientX-r.left)*1000/r.width,sy=(e.clientY-r.top)*650/r.height;
+  if(mode==='directions'){
+    if(sy<64||sy>606)return;
+    poseFacing=clamp(Math.floor(sx/250),0,3)+(sy>=346?4:0);$('#pose-facing').value=String(poseFacing);
+    changeMode('study');focusView=true;$('#focus-view').textContent='Wide view';$('#focus-view').setAttribute('aria-pressed','true');return;
+  }
   if(focusView){const p=groundToScreen(selectedUnit().x,selectedUnit().y);sx=p.x+(sx-500)/1.8;sy=p.y+(sy-370)/1.8;}
   const point=screenToGround(sx,sy);
   if(mode!=='battle')return;
@@ -155,6 +177,6 @@ function frame(now){
   render();uiClock+=dt;if(uiClock>0.1){updateUI();uiClock=0;}
   requestAnimationFrame(frame);
 }
-makeCards();updateUI();requestAnimationFrame(frame);
+makeCards();changeMode('directions');requestAnimationFrame(frame);
 // Read-only instrumentation for reproducible browser verification.
-window.prototypeLab={get state(){return {arena,mode,selected,paused,speed,pose,poseFacing,artLoaded,focusView,cache:spriteCacheStats()};},get sample(){return {id:selectedId(),state:mode==='study'?pose:animationState(selectedUnit())};}};
+window.prototypeLab={get state(){return {arena,mode,selected,paused,speed,pose,poseFacing,artLoaded,focusView,cache:spriteCacheStats()};},get sample(){return {id:selectedId(),state:['study','directions'].includes(mode)?pose:animationState(selectedUnit())};},directionFrames:prototypeDirectionFrames};

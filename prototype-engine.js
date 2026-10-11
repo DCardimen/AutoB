@@ -16,7 +16,7 @@ export const distance=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
 const angleDelta=(a,b)=>Math.atan2(Math.sin(b-a),Math.cos(b-a));
 export function groundToScreen(x,y){return {x,y:y*0.58+75};}
 export function screenToGround(x,y){return {x,y:(y-75)/0.58};}
-export function directionalFrame(angle){return (Math.round(angle/(Math.PI/4))+8)%8;}
+export function directionalFrame(angle){return ((Math.round(angle/(Math.PI/4))%8)+8)%8;}
 export function gaitFoot(phase,stride,running=false){
   const stance=running?0.43:0.6;phase=(phase%1+1)%1;const half=stride*stance/2;
   if(phase<stance)return {x:half-phase/stance*half*2,z:0,planted:true};

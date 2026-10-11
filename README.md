@@ -4,7 +4,7 @@ A single-player creature-collecting roguelike autobattler with physical arena co
 
 The next overhaul follows [ROADMAP.md](ROADMAP.md), with eleven playable milestones covering reference-inspired directional animation, a broader fantasy roster, the sixty proposed gameplay improvements, and player testing. [Iteration 1](MILESTONE-1.md) now has a playable five-character prototype: open **Starfall-Training-Glade.html**, or use the Training Glade link in the game footer. Its visual direction awaits review; later roadmap items remain planned.
 
-Watch the [normal-speed iteration 1 preview](public/prototype-preview.mp4) for movement, sparring, a close attack, and death animation.
+The prototype now opens with an **8 directions** comparison. Choose a companion to see all eight views together; click a view to inspect it up close. Forty head views and forty torso views replace the initial shared front/back artwork. Watch the [normal-speed iteration 1 preview](public/prototype-preview.mp4) for the comparisons, movement, sparring, a close attack, and death animation.
 
 ## Play
 

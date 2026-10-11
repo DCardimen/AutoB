@@ -6,22 +6,32 @@ const TAU=Math.PI*2;
 export const FRAME_SIZE=176;
 const ROOT_Y=139;
 const parts=new Image();parts.src='/public/prototype-parts.png';
-const trims=new Map(),frames=new Map();
-let sourcePixels=null;
-export function spritesReady(){return !!(parts.complete&&parts.naturalWidth);}
-parts.addEventListener('load',()=>{
-  const canvas=document.createElement('canvas');canvas.width=parts.width;canvas.height=parts.height;
-  const c=canvas.getContext('2d',{willReadFrequently:true});c.drawImage(parts,0,0);sourcePixels=c.getImageData(0,0,parts.width,parts.height).data;
-  trims.clear();frames.clear();window.dispatchEvent(new Event('prototype-art-ready'));
-});
-parts.addEventListener('error',()=>window.dispatchEvent(new Event('prototype-art-error')));
-function sourcePart(row,column){
-  const key=row+':'+column;if(trims.has(key))return trims.get(key);
-  const x0=Math.floor(column*parts.width/9),x1=Math.floor((column+1)*parts.width/9),y0=Math.floor(row*parts.height/5),y1=Math.floor((row+1)*parts.height/5);
+const heads=new Image();heads.src='/public/prototype-heads-8.png';
+const bodies=new Image();bodies.src='/public/prototype-bodies-8.png';
+const partSource={image:parts,columns:9,rows:5,trims:new Map()},headSource={image:heads,columns:8,rows:5,trims:new Map()},bodySource={image:bodies,columns:8,rows:5,trims:new Map()};
+const sources=[partSource,headSource,bodySource],frames=new Map();
+export function spritesReady(){return sources.every(s=>s.pixels&&s.image.complete&&s.image.naturalWidth);}
+for(const source of sources){
+  source.image.addEventListener('load',()=>{
+    const canvas=document.createElement('canvas');canvas.width=source.image.width;canvas.height=source.image.height;
+    const c=canvas.getContext('2d',{willReadFrequently:true});c.drawImage(source.image,0,0);source.pixels=c.getImageData(0,0,canvas.width,canvas.height).data;
+    source.trims.clear();frames.clear();window.dispatchEvent(new Event('prototype-art-ready'));
+  });
+  source.image.addEventListener('error',()=>window.dispatchEvent(new Event('prototype-art-error')));
+}
+function sourcePart(row,column,source=partSource){
+  const {image,columns,rows,pixels,trims}=source,key=row+':'+column;if(trims.has(key))return trims.get(key);
+  const x0=Math.floor(column*image.width/columns),x1=Math.floor((column+1)*image.width/columns),y0=Math.floor(row*image.height/rows),y1=Math.floor((row+1)*image.height/rows);
   let left=x1,right=x0,top=y1,bottom=y0;
-  if(sourcePixels)for(let y=y0;y<y1;y++)for(let x=x0;x<x1;x++)if(sourcePixels[(y*parts.width+x)*4+3]>90){left=Math.min(left,x);right=Math.max(right,x);top=Math.min(top,y);bottom=Math.max(bottom,y);}
+  if(pixels)for(let y=y0;y<y1;y++)for(let x=x0;x<x1;x++)if(pixels[(y*image.width+x)*4+3]>90){left=Math.min(left,x);right=Math.max(right,x);top=Math.min(top,y);bottom=Math.max(bottom,y);}
   const part=right>left?{x:left,y:top,w:right-left+1,h:bottom-top+1}:{x:x0,y:y0,w:x1-x0,h:y1-y0};
   trims.set(key,part);return part;
+}
+function directionPart(c,source,row,dir,x,y,maxWidth,height,pivotY=0.5){
+  const s=sourcePart(row,dir,source),width=Math.min(maxWidth,height*s.w/s.h);
+  // Each facing has its own painted projection. Never mirror a frontal cutout
+  // to stand in for a profile or rear three-quarter view.
+  c.drawImage(source.image,s.x,s.y,s.w,s.h,x-width/2,y-height*pivotY,width,height);
 }
 function part(c,row,col,x,y,w,h,angle=0,pivotX=0.5,pivotY=0.5,flip=false){
   const s=sourcePart(row,col);c.save();c.translate(x,y);c.rotate(angle);if(flip)c.scale(-1,1);
@@ -50,7 +60,7 @@ function poseFrame(spec,state,phase,angle,stage='',transition=null){
   const c=canvas.getContext('2d');c.imageSmoothingEnabled=true;
   c.translate(FRAME_SIZE/2,ROOT_Y);
   const wolf=spec.id==='wolf',heavy=spec.id==='orc',moving=['walk','run'].includes(state),running=state==='run';
-  const back=Math.sin(angle)<-0.3,flip=Math.cos(angle)<-0.05;
+  const dir=directionalFrame(angle),flip=Math.cos(angle)<-0.05;
   const gait=phase,breath=Math.sin(phase*TAU)*0.55;
   let crouch=0,lean=0,thrust=0,anticipation=0,armLift=0,hipX=0;
   if(state==='attack'||state==='cast'){
@@ -85,10 +95,10 @@ function poseFrame(spec,state,phase,angle,stage='',transition=null){
   }
   if(wolf){
     const tail=P(-28,0,32),tip=P(-47,Math.sin(phase*TAU)*5,40);
-    part(c,row,8,tail.x,tail.y,34,24,Math.atan2(tip.y-tail.y,tip.x-tail.x)-Math.PI,0.15,0.5,flip);
+    part(c,row,8,tail.x,tail.y,30,20,Math.atan2(tip.y-tail.y,tip.x-tail.x)-Math.atan2(-0.55,-0.65),0.8,0.75);
     const torso=P(0,0,34-crouch),head=P(30,0,42-crouch+(thrust?3:0));
-    part(c,row,3,torso.x,torso.y,55,31,Math.sin(angle)*0.06,0.5,0.5,flip);
-    part(c,row,back?1:0,head.x,head.y,29,31,-anticipation*0.12+thrust*0.12,0.5,0.6,flip);
+    directionPart(c,bodySource,row,dir,torso.x,torso.y,60,31);
+    directionPart(c,headSource,row,dir,head.x,head.y,42,31,0.6);
   }else{
     const torso=P(0,0,(heavy?50:52)-crouch),shoulderWidth=heavy?20:spec.id==='knight'?14:12;
     const arms=[-1,1].map(side=>{
@@ -107,7 +117,7 @@ function poseFrame(spec,state,phase,angle,stage='',transition=null){
     const drawArm=(a)=>{limb(c,row,4,a.shoulder,a.elbow,heavy?13:10,flip);limb(c,row,5,a.elbow,a.hand,heavy?12:8,flip);};
     drawArm(arms[0]);
     const bodyWidth=heavy?52:spec.id==='knight'?35:31;
-    part(c,row,back?3:2,torso.x,torso.y,bodyWidth*(0.82+Math.abs(Math.sin(angle))*0.18),heavy?43:35,0,0.5,0.48,flip);
+    directionPart(c,bodySource,row,dir,torso.x,torso.y,bodyWidth,heavy?43:35,0.48);
     drawArm(arms[1]);
     const hand=arms.find(a=>a.side===1).hand;
     if(spec.id==='knight'){
@@ -131,14 +141,11 @@ function poseFrame(spec,state,phase,angle,stage='',transition=null){
       }
     }
     const head=P(2+thrust*2,0,78-crouch);
-    part(c,row,back?1:0,head.x,head.y,heavy?33:spec.id==='knight'?29:27,heavy?33:31,anticipation*-0.06+thrust*0.05,0.5,0.58,flip);
+    directionPart(c,headSource,row,dir,head.x,head.y,heavy?36:spec.id==='knight'?32:30,heavy?33:31,0.58);
   }
-  // Bake into a reduced pixel grid once; draw those frames with nearest-neighbor scaling.
-  const low=document.createElement('canvas');low.width=88;low.height=88;
-  low.getContext('2d').drawImage(canvas,0,0,88,88);
-  const final=document.createElement('canvas');final.width=FRAME_SIZE;final.height=FRAME_SIZE;
-  const f=final.getContext('2d');f.imageSmoothingEnabled=false;f.drawImage(low,0,0,FRAME_SIZE,FRAME_SIZE);
-  return final;
+  // Keep the native frame detail: halving this grid obscures the eyes, profile
+  // contours, and front/back material differences that communicate facing.
+  return canvas;
 }
 export function spriteSample(u,time=0,override=null){
   const state=override?.state||animationState(u),dir=directionalFrame(u.facing||0);
@@ -171,7 +178,14 @@ export function drawPrototypeSprite(c,u,x,y,time=0,scale=1,override=null){
   c.save();c.globalAlpha*=alpha;c.imageSmoothingEnabled=false;
   c.drawImage(frame,x-FRAME_SIZE*scale/2,y-ROOT_Y*scale,FRAME_SIZE*scale,FRAME_SIZE*scale);c.restore();
 }
-export function spriteCacheStats(){return {frames:frames.size,maxFrames:420,sourceReady:spritesReady(),frameSize:FRAME_SIZE};}
+export function spriteCacheStats(){return {frames:frames.size,maxFrames:420,sourceReady:spritesReady(),frameSize:FRAME_SIZE,directionalArt:{columns:8,characters:5,heads:40,bodies:40}};}
+export function prototypeDirectionFrames(id,state='idle'){
+  return Array.from({length:8},(_,dir)=>{
+    const canvas=document.createElement('canvas');canvas.width=FRAME_SIZE;canvas.height=FRAME_SIZE;
+    drawPrototypeSprite(canvas.getContext('2d'),{id,facing:dir*Math.PI/4,hp:1,gait:0},FRAME_SIZE/2,ROOT_Y,0,1,{state,phase:0.25});
+    return canvas.toDataURL();
+  });
+}
 export function prototypePortrait(id){
   const c=document.createElement('canvas');c.width=100;c.height=110;
   const u={id,facing:Math.PI/4,hp:1,deathTime:0,moving:0,gait:0};
