@@ -13,7 +13,18 @@ await page.clock.pauseAt(await page.evaluate(()=>Date.now()+1000));
 await page.goto(base+'/prototype.html');await page.clock.runFor(100);await page.waitForFunction(()=>window.prototypeLab?.state.artLoaded);
 assert.equal(await page.locator('.character-card').count(),5);
 assert.equal(await page.evaluate(()=>prototypeLab.state.mode),'directions');
-assert.equal(await page.evaluate(()=>prototypeLab.state.cache.rigVersion),4);
+assert.equal(await page.evaluate(()=>prototypeLab.state.cache.rigVersion),5);
+report.pixelPresentation=await page.evaluate(()=>{
+  const canvas=document.querySelector('#prototype-canvas'),pixels=canvas.getContext('2d').getImageData(0,0,1000,650).data;
+  let mismatchedBlocks=0;
+  for(let y=0;y<650;y+=2)for(let x=0;x<1000;x+=2){
+    const base=(y*1000+x)*4;
+    if([base+4,base+4000,base+4004].some(p=>[0,1,2,3].some(channel=>pixels[p+channel]!==pixels[base+channel])))mismatchedBlocks++;
+  }
+  return {mismatchedBlocks,nativeArena:prototypeLab.state.cache.renderer.nativeArena,style:prototypeLab.state.cache.renderer.artStyle};
+});
+assert.equal(report.pixelPresentation.mismatchedBlocks,0,'background, characters and effects must share crisp two-pixel blocks');
+assert.deepEqual(report.pixelPresentation.nativeArena,[500,325]);
 const directionFrames={};
 for(const [id,index] of ['knight','orc','elf','caster','wolf'].map((id,i)=>[id,i])){
   const frames=await page.evaluate(id=>prototypeLab.directionFrames(id),id);

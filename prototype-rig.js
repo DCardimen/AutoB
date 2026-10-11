@@ -12,11 +12,11 @@ export const length=a=>Math.hypot(a.x,a.y,a.z);
 const unit=a=>times(a,1/(length(a)||1));
 export const mix=(a,b,t)=>plus(times(a,1-t),times(b,t));
 export const RIGS={
-  knight:{hip:52,thigh:25,shin:25,stance:7,shoulder:15,arm:18,forearm:17,bodyW:37,bodyH:38,headW:29,headH:29,legW:14,calfW:12,armW:12,footW:17},
-  orc:{hip:45,thigh:22,shin:22,stance:10,shoulder:21,arm:20,forearm:19,bodyW:54,bodyH:46,headW:35,headH:34,legW:20,calfW:17,armW:17,footW:22},
-  elf:{hip:52,thigh:25,shin:25,stance:6.5,shoulder:13,arm:18,forearm:17,bodyW:33,bodyH:37,headW:27,headH:28,legW:13,calfW:11,armW:10,footW:16},
-  caster:{hip:50,thigh:24,shin:24,stance:7,shoulder:14,arm:17,forearm:16,bodyW:35,bodyH:40,headW:30,headH:30,legW:15,calfW:12,armW:12,footW:17},
-  wolf:{hip:34,thigh:18.5,shin:18.5,hock:9,stance:7,bodyW:61,bodyH:31,headW:35,headH:27,legW:11,calfW:8,footW:13},
+  knight:{hip:44,thigh:21,shin:21,stance:7,shoulder:14,arm:16,forearm:15,bodyW:37,bodyH:32,headW:38,headH:36,legW:14,calfW:12,armW:12,footW:17},
+  orc:{hip:35,thigh:18,shin:18,stance:10,shoulder:18,arm:18,forearm:17,bodyW:54,bodyH:34,headW:43,headH:36,legW:20,calfW:17,armW:17,footW:22},
+  elf:{hip:44,thigh:21,shin:21,stance:6.5,shoulder:13,arm:17,forearm:16,bodyW:33,bodyH:32,headW:37,headH:35,legW:13,calfW:11,armW:10,footW:16},
+  caster:{hip:41,thigh:20,shin:20,stance:7,shoulder:14,arm:16,forearm:15,bodyW:35,bodyH:33,headW:39,headH:36,legW:15,calfW:12,armW:12,footW:17},
+  wolf:{hip:29,thigh:18.5,shin:18.5,hock:9,stance:7,bodyW:61,bodyH:31,headW:43,headH:34,legW:11,calfW:8,footW:13},
 };
 
 export function projectRig(p,angle){return {x:p.x*Math.cos(angle)-p.y*Math.sin(angle),y:(p.x*Math.sin(angle)+p.y*Math.cos(angle))*0.58-p.z,depth:p.x*Math.sin(angle)+p.y*Math.cos(angle)};}
@@ -66,19 +66,19 @@ export function rigFoot(phase,stride,running=false,sprinting=0){
 }
 
 function weaponMotion(id,phase,stage){
-  const heavy=id==='orc',rest=point(heavy?10:9,heavy?4:14,heavy?63:59);
-  const raised=point(heavy?-8:-11,heavy?3:13,heavy?81:85);
-  const contact=point(heavy?22:21,heavy?2:12,heavy?60:61);
-  const follow=point(heavy?25:25,heavy?-8:-4,heavy?47:51);
+  const heavy=id==='orc',hip=RIGS[id].hip,rest=point(heavy?10:9,heavy?10:14,hip+(heavy?18:7)),restTilt=heavy?1.1:0.22;
+  const raised=point(heavy?-8:-11,heavy?3:13,hip+(heavy?36:33));
+  const contact=point(heavy?22:21,heavy?2:12,hip+(heavy?15:9));
+  const follow=point(25,heavy?-8:-4,hip+(heavy?2:-1));
   if(stage==='windup'){
-    if(phase<0.72){const t=ease(phase/0.72);return {hand:mix(rest,raised,t),tilt:0.22+(-1.05-0.22)*t,active:false,weight:t};}
+    if(phase<0.72){const t=ease(phase/0.72);return {hand:mix(rest,raised,t),tilt:restTilt+(-1.05-restTilt)*t,active:false,weight:t};}
     const t=ease((phase-0.72)/0.28);return {hand:mix(raised,contact,t),tilt:-1.05+(1.53+1.05)*t,active:true,weight:1-t*0.4};
   }
   if(stage==='recovery'){
     if(phase<0.26){const t=ease(phase/0.26);return {hand:mix(contact,follow,t),tilt:1.53+(2.1-1.53)*t,active:true,weight:0.6*(1-t)};}
-    const t=ease((phase-0.26)/0.74);return {hand:mix(follow,rest,t),tilt:2.1+(0.22-2.1)*t,active:false,weight:0};
+    const t=ease((phase-0.26)/0.74);return {hand:mix(follow,rest,t),tilt:2.1+(restTilt-2.1)*t,active:false,weight:0};
   }
-  return {hand:rest,tilt:0.22,active:false,weight:0};
+  return {hand:rest,tilt:restTilt,active:false,weight:0};
 }
 
 export function characterRig(id,state='idle',phase=0,stage='',options={}){
@@ -118,12 +118,12 @@ export function characterRig(id,state='idle',phase=0,stage='',options={}){
   if(state==='death'){crouch=ease(phase/0.5)*(wolf?12:24);shift=-4*ease(phase);}
   let hipHeight=d.hip-crouch+bob;
   let pelvis=point(shift,authored.sway*motion+sideShift,hipHeight);
-  let body=point(shift+lean*14,pelvis.y*0.55+sideLean*14,wolf?hipHeight+7:hipHeight+18);
-  let head=point(wolf?24+shift:shift+lean*22+1,pelvis.y*0.3+sideLean*22,wolf?hipHeight+10:hipHeight+44-bob*0.65);
+  let body=point(shift+lean*14,pelvis.y*0.55+sideLean*14,wolf?hipHeight+7:hipHeight+14);
+  let head=point(wolf?24+shift:shift+lean*22+1,pelvis.y*0.3+sideLean*22,wolf?hipHeight+10:hipHeight+35-bob*0.65);
   const transition=options.transition&&!moving?options.transition:null;
   const prior=transition?characterRig(id,transition.sprintBlend>0.35?'sprint':transition.runBlend>0.4?'run':'walk',transition.gait,'',{stride:options.stride,motion:transition.motion??1,runBlend:transition.runBlend||0,sprintBlend:transition.sprintBlend||0}):null;
   if(prior){const w=transition.weight;pelvis=mix(pelvis,prior.pelvis,w);body=mix(body,prior.body,w);head=mix(head,prior.head,w);hipHeight=pelvis.z;lean=lean*(1-w)+prior.lean*w;torsoYaw=torsoYaw*(1-w)+prior.torsoYaw*w;}
-  const shoulderZ=hipHeight+32,shoulderX=body.x;
+  const shoulderZ=hipHeight+24,shoulderX=body.x;
   if(wolf&&state==='attack')head.x+=stage==='recovery'?6*(1-ease(phase/0.35)):6*ease((phase-0.72)/0.28);
   const movementAngle=options.movementAngle||0;
   const legs=layout.map((l,i)=>{
@@ -147,11 +147,11 @@ export function characterRig(id,state='idle',phase=0,stage='',options={}){
     const swing=moving?authored.arm*motion:0;
     const elbowLift=(runBlend*4+sprintBlend*5)*motion;
     if(id==='knight'){right=point(9+swing,14,hipHeight+7+elbowLift);left=point(7-swing*0.7,-17,hipHeight+17+elbowLift*0.4);tilt=0.22-runBlend*0.35-sprintBlend*0.2;}
-    if(heavy){right=point(10,4,hipHeight+18);left=point(5,-5,hipHeight+12);}
+    if(heavy){right=point(10,10,hipHeight+18);left=point(5,-5,hipHeight+12);}
     if(id==='elf'){right=point(7+swing,13,hipHeight+6+elbowLift);left=point(14-swing*0.5,-11,hipHeight+14+elbowLift*0.5);bowString={draw:0};}
     if(id==='caster'){right=point(11+swing*0.3,15,hipHeight+14+elbowLift*0.4);left=point(5-swing,-15,hipHeight+9+elbowLift);}
     if(moving){right.x+=shoulderX;left.x+=shoulderX;}
-    if(heavy){tilt=state==='attack'?tilt:0.48+Math.sin(gait*TAU)*motion*0.08;left=plus(right,times(point(Math.sin(tilt),0,Math.cos(tilt)),-11));}
+    if(heavy){tilt=state==='attack'?tilt:1.1+Math.sin(gait*TAU)*motion*0.08;left=plus(right,times(point(Math.sin(tilt),0,Math.cos(tilt)),-11));}
     if(state==='attack'&&(id==='knight'||heavy)){
       right={...wm.hand};tilt=wm.tilt;
       if(heavy)left=plus(right,times(point(Math.sin(tilt),0,Math.cos(tilt)),-11));
@@ -177,7 +177,8 @@ export function characterRig(id,state='idle',phase=0,stage='',options={}){
     const r=arms.find(a=>a.side===1).end,l=arms.find(a=>a.side===-1).end;
     const grip=id==='elf'?l:r,axis=point(Math.sin(tilt),0,Math.cos(tilt));
     const reach=id==='knight'?45:heavy?48:id==='elf'?27:43;
-    weapon={kind:id==='knight'?'sword':heavy?'axe':id==='elf'?'bow':'staff',grip,axis,tip:plus(grip,times(axis,reach)),length:reach,tilt,active:state==='attack'&&wm.active};
+    const roll=heavy?(state!=='attack'?0.85:stage==='windup'?0.85*(1-ease(phase/0.5)):0.85*ease((phase-0.26)/0.74)):0;
+    weapon={kind:id==='knight'?'sword':heavy?'axe':id==='elf'?'bow':'staff',grip,axis,tip:plus(grip,times(axis,reach)),length:reach,tilt,roll,active:state==='attack'&&wm.active};
     if(heavy){const hand=arms.find(a=>a.side===-1),target=plus(grip,times(axis,-11));Object.assign(hand,solveLimb(hand.root,target,d.arm,d.forearm,point(-0.5,-0.7,-0.7)));}
     if(id==='knight')shield={grip:l};
   }

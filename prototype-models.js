@@ -7,21 +7,28 @@ import { characterRig, RIGS } from './prototype-rig.js';
 // No painted image bounds participate in anatomy or model scale.
 const V=p=>new T.Vector3(p.x||0,p.y||0,p.z||0),Z=new T.Vector3(0,0,1);
 const models=new Map(),materials=new Map();
+const headScales={knight:[1.4,1.7,1.38],orc:[1.3,1.45,1.26],elf:[1.4,1.7,1.38],caster:[1.4,1.7,1.38],wolf:[1.32,1.5,1.35]};
 const palettes={
-  knight:{skin:0x493c36,cloth:0x792d35,metal:0x889da5,edge:0xd0af68,leather:0x332c25},
-  orc:{skin:0x6d8250,cloth:0x4c3730,metal:0x535c60,edge:0xb69b67,leather:0x38271d},
-  elf:{skin:0xcaa582,cloth:0x335542,metal:0x6b816e,edge:0xc0a367,leather:0x493828},
-  caster:{skin:0xb89b90,cloth:0x55506e,metal:0x6d8791,edge:0xb9a887,leather:0x393444},
-  wolf:{skin:0xa66b3c,cloth:0x57402d,metal:0x86715c,edge:0xdfc99f,leather:0x302619},
+  knight:{skin:0x72554a,cloth:0xb84557,metal:0xa7bac8,edge:0xe5bf70,leather:0x49362e},
+  orc:{skin:0x79a659,cloth:0x79533d,metal:0x77838c,edge:0xe1b96c,leather:0x523629},
+  elf:{skin:0xe8bc96,cloth:0x4c886a,metal:0x91ae8a,edge:0xe1c777,leather:0x71523a},
+  caster:{skin:0xdfb3a1,cloth:0x8062aa,metal:0x91aeb7,edge:0xe1cd92,leather:0x55415c},
+  wolf:{skin:0xdd9144,cloth:0x8d603d,metal:0xad8858,edge:0xf2d6a4,leather:0x453128},
 };
 function mat(color,kind='cloth'){
   const key=color+':'+kind;if(materials.has(key))return materials.get(key);
   const m=new T.MeshStandardMaterial({color,roughness:kind==='metal'?0.56:kind==='skin'?0.88:0.94,metalness:kind==='metal'?0.32:0,flatShading:false});
-  // Object-space pigment variation keeps the surface from looking like plastic.
+  // Discrete material shade bands, quiet warm contours and a 5-bit channel
+  // palette create readable sprite clusters instead of smooth plastic shading.
   m.onBeforeCompile=shader=>{
-    shader.vertexShader=shader.vertexShader.replace('#include <common>','#include <common>\nvarying vec3 pigmentPosition;').replace('#include <begin_vertex>','#include <begin_vertex>\npigmentPosition = position;');
-    shader.fragmentShader=shader.fragmentShader.replace('#include <common>','#include <common>\nvarying vec3 pigmentPosition;').replace('#include <color_fragment>',`#include <color_fragment>\nfloat grain = sin(dot(pigmentPosition,vec3(28.9,41.7,19.3))) * sin(dot(pigmentPosition,vec3(53.2,7.1,37.4)));\ndiffuseColor.rgb *= 0.97 + 0.025 * grain;`);
-  };m.customProgramCacheKey=()=>kind;materials.set(key,m);return m;
+    shader.fragmentShader=shader.fragmentShader.replace('#include <opaque_fragment>',`
+float baseLuma = max(dot(diffuseColor.rgb, vec3(0.2126,0.7152,0.0722)), 0.015);
+float litLuma = max(dot(outgoingLight, vec3(0.2126,0.7152,0.0722)) / baseLuma, 0.01);
+outgoingLight *= max(0.25, floor(litLuma * 4.0 + 0.5) / 4.0) / litLuma;
+float facingLight = abs(dot(normal, geometryViewDir));
+outgoingLight *= facingLight < 0.24 ? 0.48 : facingLight < 0.4 ? 0.78 : 1.0;
+#include <opaque_fragment>`).replace('#include <colorspace_fragment>',`#include <colorspace_fragment>\ngl_FragColor.rgb = floor(gl_FragColor.rgb * 31.0 + 0.5) / 31.0;`);
+  };m.customProgramCacheKey=()=>kind+'-pixel-v5';materials.set(key,m);return m;
 }
 function mesh(parent,geometry,color,kind='cloth'){const m=new T.Mesh(geometry,mat(color,kind));parent.add(m);return m;}
 function ball(parent,p,s,color,kind='cloth',segments=20){const m=mesh(parent,new T.SphereGeometry(1,segments,12),color,kind);m.position.copy(V(p));m.scale.set(...s);return m;}
@@ -55,19 +62,19 @@ function makeSegments(rig){
 // Smooth-union implicit sculpture. The skin is one welded surface, including
 // neck/torso and all limb roots, with continuous bone weights at the joins.
 function organicSkin(parent,id,bind,bones,index){
-  const p=palettes[id],wolf=id==='wolf',shapes=[];
+  const p=palettes[id],wolf=id==='wolf',shapes=[],hs=headScales[id],headSize=s=>s.map((v,i)=>v*hs[i]);
   const ell=(c,r,b)=>shapes.push({c:V(c),r:new T.Vector3(...r),bone:index[b],ell:true});
   const cap=(a,b,r,bone)=>shapes.push({a:V(a),b:V(b),r,bone:index[bone]});
   const d=RIGS[id];
   if(wolf){
     ell(bind.body,[26,9.5,12],'chest');ell({...bind.body,x:-16,z:bind.body.z-1},[13,10,12],'pelvis');
-    cap({...bind.body,x:16,z:bind.body.z+4},bind.head,8,'head');ell(bind.head,[11,8.5,10],'head');
-    ell({...bind.head,x:bind.head.x+10,z:bind.head.z-4},[11,5.5,5.5],'head');
+    cap({...bind.body,x:16,z:bind.body.z+4},bind.head,9,'head');ell(bind.head,headSize([11,8.5,10]),'head');
+    ell({...bind.head,x:bind.head.x+10*hs[0],z:bind.head.z-4*hs[2]},headSize([11,5.5,5.5]),'head');
   }else{
     ell({...bind.pelvis,z:bind.pelvis.z+3},[8,d.stance+3,10],'pelvis');
-    ell({...bind.body,z:bind.body.z-2},[id==='orc'?11:7.5,d.shoulder*0.74,17],'chest');
+    ell({...bind.body,z:bind.body.z-2},[id==='orc'?11:7.5,d.shoulder*0.74,14],'chest');
     cap({...bind.body,z:bind.body.z+12},{...bind.head,z:bind.head.z-5},id==='orc'?6:3.5,'head');
-    ell({...bind.head,x:bind.head.x+0.4},id==='orc'?[10,11.5,12.5]:id==='knight'?[8,8.4,10.5]:[7.8,7.7,10.5],'head');
+    ell({...bind.head,x:bind.head.x+0.4*hs[0]},headSize(id==='orc'?[10,11.5,12.5]:id==='knight'?[8,8.4,10.5]:[7.8,7.7,10.5]),'head');
   }
   for(const l of bind.legs){
     cap(l.root,l.joint,wolf?l.front?4:5.5:id==='orc'?7:4.7,'thigh'+l.index);
@@ -82,7 +89,7 @@ function organicSkin(parent,id,bind,bones,index){
     return Math.hypot(ax-bx*t,ay-by*t,az-bz*t)-s.r;
   };
   const field=(x,y,z)=>{let a=1000;for(const s of shapes){const b=distance(s,x,y,z),h=Math.max(2.4-Math.abs(a-b),0)/2.4;a=Math.min(a,b)-h*h*0.6;}return a;};
-  const step=2.5,xMin=-40,xMax=52,yMin=-38,yMax=38,zMin=-3,zMax=125;
+  const step=2.5,xMin=-40,xMax=60,yMin=-38,yMax=38,zMin=-3,zMax=125;
   const nx=Math.ceil((xMax-xMin)/step),ny=Math.ceil((yMax-yMin)/step),nz=Math.ceil((zMax-zMin)/step),values=new Float32Array((nx+1)*(ny+1)*(nz+1));
   const at=(x,y,z)=>((z*(ny+1)+y)*(nx+1)+x);
   for(let z=0;z<=nz;z++)for(let y=0;y<=ny;y++)for(let x=0;x<=nx;x++)values[at(x,y,z)]=field(xMin+x*step,yMin+y*step,zMin+z*step);
@@ -93,7 +100,7 @@ function organicSkin(parent,id,bind,bones,index){
     const contributions=new Map();for(const s of shapes){const dd=distance(s,...v),w=Math.exp(-Math.max(0,dd)*0.65);contributions.set(s.bone,(contributions.get(s.bone)||0)+w);}
     const top=[...contributions].sort((a,b)=>b[1]-a[1]).slice(0,4),sum=top.reduce((a,b)=>a+b[1],0);
     for(let j=0;j<4;j++){skinIndices.push(top[j]?.[0]||0);weights.push((top[j]?.[1]||0)/sum);}
-    const face=v[2]>bind.head.z-14,skin=id==='knight'&&face?new T.Color(p.metal):id==='orc'||wolf||face?color:cloth;const shade=0.88+0.12*Math.cos(v[2]*0.1);colors.push(skin.r*shade,skin.g*shade,skin.b*shade);return i;
+    const face=top[0][0]===index.head||v[2]>bind.head.z-14,skin=id==='knight'&&face?new T.Color(p.metal):id==='orc'||wolf||face?color:cloth;const shade=0.94+0.06*Math.cos(v[2]*0.1);colors.push(skin.r*shade,skin.g*shade,skin.b*shade);return i;
   };
   const tetra=[[0,5,1,6],[0,1,2,6],[0,2,3,6],[0,3,7,6],[0,7,4,6],[0,4,5,6]],corners=[[0,0,0],[1,0,0],[1,1,0],[0,1,0],[0,0,1],[1,0,1],[1,1,1],[0,1,1]];
   for(let z=0;z<nz;z++)for(let y=0;y<ny;y++)for(let x=0;x<nx;x++){
@@ -111,7 +118,10 @@ function organicSkin(parent,id,bind,bones,index){
     }
   }
   const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(positions,3));g.setAttribute('skinIndex',new T.Uint16BufferAttribute(skinIndices,4));g.setAttribute('skinWeight',new T.Float32BufferAttribute(weights,4));g.setAttribute('color',new T.Float32BufferAttribute(colors,3));g.setIndex(indices);g.computeVertexNormals();
-  const material=mat(0xffffff,'skin').clone();material.vertexColors=true;
+  const skinPalette=mat(0xffffff,'skin'),material=skinPalette.clone();material.vertexColors=true;
+  // Three.js Material.clone() omits custom shader callbacks. Carry the pixel
+  // shading onto the vertex-colored skin as well as armor and equipment.
+  material.onBeforeCompile=skinPalette.onBeforeCompile;material.customProgramCacheKey=skinPalette.customProgramCacheKey;
   const skin=new T.SkinnedMesh(g,material);skin.add(...bones);skin.bind(new T.Skeleton(bones));skin.frustumCulled=false;parent.add(skin);return skin;
 }
 
@@ -128,9 +138,11 @@ function armorSegment(bone,length,radius,p,knight,leg=false){
 function face(head,id,p){
   const orc=id==='orc',wide=orc?11:7.8,front=orc?9.2:7;
   for(const sign of [-1,1]){
-    ball(head,{x:front,y:sign*wide*0.39,z:2},[0.55,1.3,0.65],0xd5c6a3,'skin');
-    ball(head,{x:front+0.5,y:sign*wide*0.37,z:2},[0.3,0.5,0.58],orc?0xd2a53e:0x668474,'skin');
-    ball(head,{x:front+0.72,y:sign*wide*0.37,z:2},[0.12,0.22,0.42],0x182022);
+    ball(head,{x:front,y:sign*wide*0.39,z:2},[1.25,1.5,1.65],0xfff1d4,'skin');
+    ball(head,{x:front+0.65,y:sign*wide*0.37,z:2},[0.7,0.9,1.2],orc?0xd2a53e:0x427763,'skin');
+    ball(head,{x:front+1.12,y:sign*wide*0.37,z:2},[0.3,0.48,0.9],0x172a30);
+    ball(head,{x:front+1.43,y:sign*wide*0.37-0.25,z:2.65},[0.15,0.22,0.22],0xffffff,'skin');
+    if(!orc)ball(head,{x:front+0.2,y:sign*wide*0.62,z:-1.4},[0.45,1.2,0.75],0xce8b7b,'skin');
     tube(head,[{x:front,y:sign*wide*0.2,z:4},{x:front+0.4,y:sign*wide*0.38,z:4.2},{x:front-0.5,y:sign*wide*0.6,z:3.5}],0.65,orc?0x3a472d:0x675140);
   }
   ball(head,{x:front+0.7,y:0,z:-0.5},[2.2,1.5,2.8],p.skin,'skin');
@@ -172,6 +184,7 @@ function humanoidDetails(model,id){
     ball(head,{x:-0.5,y:0,z:1},[9.2,9.7,12.4],p.metal,'metal');
     ball(head,{x:7.5,y:0,z:1},[3,8.6,8.9],0x81959e,'metal');
     for(const side of [-1,1]){
+      ball(head,{x:10.5,y:side*3.8,z:4},[0.55,2.55,1.35],0x172b3c,'skin');
       tube(head,[{x:10.6,y:side*0.8,z:4},{x:10.4,y:side*4,z:4.5},{x:9.3,y:side*7,z:3.8}],0.65,0x17242b);
       for(let i=0;i<3;i++)ball(head,{x:10.5-i*0.1,y:side*(1.8+i*1.2),z:-3},[0.16,0.34,1],0x263940);
       for(const z of [-6,7])ball(head,{x:8.5,y:side*6.5,z},[0.65,0.65,0.65],p.edge,'metal');
@@ -224,7 +237,8 @@ function wolfDetails(model){
     const ear=mesh(head,new T.ConeGeometry(4,13,5),p.skin,'skin');ear.position.set(-2,side*7,11);ear.rotation.x=0;ear.rotation.z=-0.17;ear.rotation.x=Math.PI/2;
     // Cone geometry points along +Y, rotate to +Z, then splay outward.
     ear.rotation.x=Math.PI/2;ear.rotation.y=side*0.18;
-    ball(head,{x:7,y:side*6,z:3},[1.9,1.1,1.1],0xdeb36a,'skin');ball(head,{x:8,y:side*6,z:3},[0.55,0.6,0.8],0x171c16);
+    ball(head,{x:7,y:side*6,z:3},[2.3,1.4,1.8],0xffeac5,'skin');ball(head,{x:8.5,y:side*7.1,z:3},[1.4,0.9,1.4],0x27312b);
+    ball(head,{x:9.6,y:side*7.7,z:3.7},[0.25,0.22,0.25],0xffffff,'skin');
     tube(head,[{x:12,y:side*4,z:-7},{x:6,y:side*6,z:-7},{x:2,y:side*7,z:-6}],0.6,0x423b32);
     ball(head,{x:5,y:side*6,z:-6},[8,3,3.5],p.edge,'skin');
   }
@@ -284,6 +298,10 @@ export function createCharacterModel(id){
   root.updateMatrixWorld(true);
   const skin=organicSkin(root,id,bind,bones,index),model={id,root,skin,nodes,bind,segments,palette:palettes[id]};
   if(id==='wolf')wolfDetails(model);else{humanoidDetails(model,id);weapon(model,id);}
+  // Matching geometry and equipment proportions are baked into the head's
+  // local geometry. The skeleton itself remains unscaled and connected.
+  const headScale=new T.Vector3(...headScales[id]);
+  for(const child of nodes.head.children){child.position.multiply(headScale);child.scale.multiply(headScale);}
   batchRigidDetails(root);
   skin.name='skin';model.accessories={};
   for(const [name,bone] of Object.entries(nodes)){const a=new T.Group();a.name='parts-'+name;const children=bone.children.slice();bone.add(a);for(const child of children)a.add(child);model.accessories[name]=a;}
@@ -315,6 +333,7 @@ export function poseCharacterModel(model,rig){
   if(model.tail)model.tail.rotation.z=Math.sin(rig.phase*Math.PI*2-0.7)*0.2;
   if(model.weapon&&rig.weapon){
     model.weapon.position.copy(V(rig.weapon.grip));model.weapon.quaternion.setFromUnitVectors(Z,V(rig.weapon.axis));
+    model.weapon.quaternion.multiply(new T.Quaternion().setFromAxisAngle(Z,rig.weapon.roll||0));
     if(model.string){const draw=rig.bowString?.draw||0;model.string.geometry.setFromPoints([new T.Vector3(0,0,25),new T.Vector3(-draw*24,0,0),new T.Vector3(0,0,-25)]);model.nocked.visible=draw>0.05&&rig.stage==='windup';}
     if(model.shield){model.shield.position.copy(V(rig.shield.grip));model.shield.rotation.z=-0.25;}
   }

@@ -2,7 +2,7 @@ import { PROTOTYPE_BY_ID, animationState, directionalFrame, clamp } from './prot
 import { characterRig, localFootContacts } from './prototype-rig.js';
 import { initializeCharacterRenderer, renderCharacterFrame, characterRendererStats, queueCharacter } from './prototype-renderer.js';
 export const FRAME_SIZE=256;
-const ROOT_Y=194,RASTER_SCALE=1.5,MAX_FRAMES=192,frames=new Map();
+const ROOT_Y=194,RASTER_SCALE=0.5,MAX_FRAMES=192,frames=new Map();
 let ready=false,failed=false;
 export function spritesReady(){
   if(!ready&&!failed){try{initializeCharacterRenderer();ready=true;}catch(error){failed=true;window.dispatchEvent(new CustomEvent('prototype-render-error',{detail:error.message}));}}
@@ -49,10 +49,10 @@ export function drawPrototypeSprite(c,u,x,y,time=0,scale=1,override=null){
   if(queueCharacter(u.id,characterRig(u.id,s.state,s.phase,s.stage,{...s,stride:PROTOTYPE_BY_ID[u.id].stride}),s.angleIndex*Math.PI/128,x,y,scale,c.getTransform()))return;
   let frame=frames.get(s.key);
   if(!frame){frame=poseFrame(PROTOTYPE_BY_ID[u.id],s.state,s.phase,s.angleIndex*Math.PI/128,s.stage,s);frames.set(s.key,frame);if(frames.size>MAX_FRAMES)frames.delete(frames.keys().next().value);}
-  c.save();c.globalAlpha*=u.hp<=0?0.82:1;c.imageSmoothingEnabled=true;c.imageSmoothingQuality='high';
+  c.save();c.globalAlpha*=u.hp<=0?0.82:1;c.imageSmoothingEnabled=false;
   c.drawImage(frame,x-FRAME_SIZE*scale/2,y-ROOT_Y*scale,FRAME_SIZE*scale,FRAME_SIZE*scale);c.restore();
 }
-export function spriteCacheStats(){return {frames:frames.size,maxFrames:MAX_FRAMES,sourceReady:spritesReady(),frameSize:FRAME_SIZE,rasterScale:RASTER_SCALE,rigVersion:4,directionalArt:{columns:8,characters:5,connectedModels:5},renderer:characterRendererStats()};}
+export function spriteCacheStats(){return {frames:frames.size,maxFrames:MAX_FRAMES,sourceReady:spritesReady(),frameSize:FRAME_SIZE,rasterScale:RASTER_SCALE,rigVersion:5,directionalArt:{columns:8,characters:5,connectedModels:5},renderer:characterRendererStats()};}
 export function prototypeDirectionFrames(id,state='idle',phase=0.25){
   return Array.from({length:8},(_,dir)=>{const canvas=document.createElement('canvas');canvas.width=FRAME_SIZE;canvas.height=FRAME_SIZE;drawPrototypeSprite(canvas.getContext('2d'),{id,facing:dir*Math.PI/4,hp:1,gait:0},FRAME_SIZE/2,ROOT_Y,0,1,{state,phase});return canvas.toDataURL();});
 }

@@ -5,7 +5,7 @@
 #facing-status{color:var(--mint);font-size:10px;min-width:90px}
 #facing-control[hidden]{display:none}
 @media(max-width:540px){#facing-status{flex-basis:100%}.scene-tabs{gap:2px}.scene-header{align-items:flex-start;gap:8px}}
-.character-card img{image-rendering:auto}
+.character-card img,#prototype-canvas{image-rendering:pixelated}
 #locomotion-controls{display:flex;align-items:center;gap:7px;flex-wrap:wrap;padding:10px 15px;border-top:1px solid var(--line);background:#1a291f}
 #locomotion-controls[hidden]{display:none}
 #locomotion-controls>span{font-size:9px;letter-spacing:1.1px;color:var(--muted);margin-right:8px}

@@ -63,11 +63,11 @@
   var unit = (a) => times(a, 1 / (length(a) || 1));
   var mix = (a, b, t) => plus(times(a, 1 - t), times(b, t));
   var RIGS = {
-    knight: { hip: 52, thigh: 25, shin: 25, stance: 7, shoulder: 15, arm: 18, forearm: 17, bodyW: 37, bodyH: 38, headW: 29, headH: 29, legW: 14, calfW: 12, armW: 12, footW: 17 },
-    orc: { hip: 45, thigh: 22, shin: 22, stance: 10, shoulder: 21, arm: 20, forearm: 19, bodyW: 54, bodyH: 46, headW: 35, headH: 34, legW: 20, calfW: 17, armW: 17, footW: 22 },
-    elf: { hip: 52, thigh: 25, shin: 25, stance: 6.5, shoulder: 13, arm: 18, forearm: 17, bodyW: 33, bodyH: 37, headW: 27, headH: 28, legW: 13, calfW: 11, armW: 10, footW: 16 },
-    caster: { hip: 50, thigh: 24, shin: 24, stance: 7, shoulder: 14, arm: 17, forearm: 16, bodyW: 35, bodyH: 40, headW: 30, headH: 30, legW: 15, calfW: 12, armW: 12, footW: 17 },
-    wolf: { hip: 34, thigh: 18.5, shin: 18.5, hock: 9, stance: 7, bodyW: 61, bodyH: 31, headW: 35, headH: 27, legW: 11, calfW: 8, footW: 13 }
+    knight: { hip: 44, thigh: 21, shin: 21, stance: 7, shoulder: 14, arm: 16, forearm: 15, bodyW: 37, bodyH: 32, headW: 38, headH: 36, legW: 14, calfW: 12, armW: 12, footW: 17 },
+    orc: { hip: 35, thigh: 18, shin: 18, stance: 10, shoulder: 18, arm: 18, forearm: 17, bodyW: 54, bodyH: 34, headW: 43, headH: 36, legW: 20, calfW: 17, armW: 17, footW: 22 },
+    elf: { hip: 44, thigh: 21, shin: 21, stance: 6.5, shoulder: 13, arm: 17, forearm: 16, bodyW: 33, bodyH: 32, headW: 37, headH: 35, legW: 13, calfW: 11, armW: 10, footW: 16 },
+    caster: { hip: 41, thigh: 20, shin: 20, stance: 7, shoulder: 14, arm: 16, forearm: 15, bodyW: 35, bodyH: 33, headW: 39, headH: 36, legW: 15, calfW: 12, armW: 12, footW: 17 },
+    wolf: { hip: 29, thigh: 18.5, shin: 18.5, hock: 9, stance: 7, bodyW: 61, bodyH: 31, headW: 43, headH: 34, legW: 11, calfW: 8, footW: 13 }
   };
   function solveLimb(root, target, upper, lower, pole = point(1, 0, 0)) {
     const delta = minus(target, root), raw = length(delta), dir = unit(raw > 1e-7 ? delta : point(0, 0, -1));
@@ -110,14 +110,14 @@
     return { x: -half + 2 * half * ease(t), z: Math.sin(Math.PI * t) ** 1.35 * (8 + run2 * 5 + sprint2 * 5), pitch: 0.28 * (1 - ease(t)) - 0.16 * ease(t), planted: false, duty };
   }
   function weaponMotion(id, phase, stage) {
-    const heavy = id === "orc", rest = point(heavy ? 10 : 9, heavy ? 4 : 14, heavy ? 63 : 59);
-    const raised = point(heavy ? -8 : -11, heavy ? 3 : 13, heavy ? 81 : 85);
-    const contact = point(heavy ? 22 : 21, heavy ? 2 : 12, heavy ? 60 : 61);
-    const follow = point(heavy ? 25 : 25, heavy ? -8 : -4, heavy ? 47 : 51);
+    const heavy = id === "orc", hip = RIGS[id].hip, rest = point(heavy ? 10 : 9, heavy ? 10 : 14, hip + (heavy ? 18 : 7)), restTilt = heavy ? 1.1 : 0.22;
+    const raised = point(heavy ? -8 : -11, heavy ? 3 : 13, hip + (heavy ? 36 : 33));
+    const contact = point(heavy ? 22 : 21, heavy ? 2 : 12, hip + (heavy ? 15 : 9));
+    const follow = point(25, heavy ? -8 : -4, hip + (heavy ? 2 : -1));
     if (stage === "windup") {
       if (phase < 0.72) {
         const t2 = ease(phase / 0.72);
-        return { hand: mix(rest, raised, t2), tilt: 0.22 + (-1.05 - 0.22) * t2, active: false, weight: t2 };
+        return { hand: mix(rest, raised, t2), tilt: restTilt + (-1.05 - restTilt) * t2, active: false, weight: t2 };
       }
       const t = ease((phase - 0.72) / 0.28);
       return { hand: mix(raised, contact, t), tilt: -1.05 + (1.53 + 1.05) * t, active: true, weight: 1 - t * 0.4 };
@@ -128,9 +128,9 @@
         return { hand: mix(contact, follow, t2), tilt: 1.53 + (2.1 - 1.53) * t2, active: true, weight: 0.6 * (1 - t2) };
       }
       const t = ease((phase - 0.26) / 0.74);
-      return { hand: mix(follow, rest, t), tilt: 2.1 + (0.22 - 2.1) * t, active: false, weight: 0 };
+      return { hand: mix(follow, rest, t), tilt: 2.1 + (restTilt - 2.1) * t, active: false, weight: 0 };
     }
-    return { hand: rest, tilt: 0.22, active: false, weight: 0 };
+    return { hand: rest, tilt: restTilt, active: false, weight: 0 };
   }
   function characterRig(id, state = "idle", phase = 0, stage = "", options = {}) {
     const d = RIGS[id], wolf = id === "wolf", heavy = id === "orc", moving = ["walk", "run", "sprint"].includes(state), running = state === "run" || state === "sprint";
@@ -201,8 +201,8 @@
     }
     let hipHeight = d.hip - crouch + bob;
     let pelvis = point(shift, authored.sway * motion + sideShift, hipHeight);
-    let body = point(shift + lean * 14, pelvis.y * 0.55 + sideLean * 14, wolf ? hipHeight + 7 : hipHeight + 18);
-    let head = point(wolf ? 24 + shift : shift + lean * 22 + 1, pelvis.y * 0.3 + sideLean * 22, wolf ? hipHeight + 10 : hipHeight + 44 - bob * 0.65);
+    let body = point(shift + lean * 14, pelvis.y * 0.55 + sideLean * 14, wolf ? hipHeight + 7 : hipHeight + 14);
+    let head = point(wolf ? 24 + shift : shift + lean * 22 + 1, pelvis.y * 0.3 + sideLean * 22, wolf ? hipHeight + 10 : hipHeight + 35 - bob * 0.65);
     const transition = options.transition && !moving ? options.transition : null;
     const prior = transition ? characterRig(id, transition.sprintBlend > 0.35 ? "sprint" : transition.runBlend > 0.4 ? "run" : "walk", transition.gait, "", { stride: options.stride, motion: transition.motion ?? 1, runBlend: transition.runBlend || 0, sprintBlend: transition.sprintBlend || 0 }) : null;
     if (prior) {
@@ -214,7 +214,7 @@
       lean = lean * (1 - w) + prior.lean * w;
       torsoYaw = torsoYaw * (1 - w) + prior.torsoYaw * w;
     }
-    const shoulderZ = hipHeight + 32, shoulderX = body.x;
+    const shoulderZ = hipHeight + 24, shoulderX = body.x;
     if (wolf && state === "attack") head.x += stage === "recovery" ? 6 * (1 - ease(phase / 0.35)) : 6 * ease((phase - 0.72) / 0.28);
     const movementAngle = options.movementAngle || 0;
     const legs = layout.map((l, i) => {
@@ -269,7 +269,7 @@
         tilt = 0.22 - runBlend * 0.35 - sprintBlend * 0.2;
       }
       if (heavy) {
-        right = point(10, 4, hipHeight + 18);
+        right = point(10, 10, hipHeight + 18);
         left = point(5, -5, hipHeight + 12);
       }
       if (id === "elf") {
@@ -286,7 +286,7 @@
         left.x += shoulderX;
       }
       if (heavy) {
-        tilt = state === "attack" ? tilt : 0.48 + Math.sin(gait * TAU2) * motion * 0.08;
+        tilt = state === "attack" ? tilt : 1.1 + Math.sin(gait * TAU2) * motion * 0.08;
         left = plus(right, times(point(Math.sin(tilt), 0, Math.cos(tilt)), -11));
       }
       if (state === "attack" && (id === "knight" || heavy)) {
@@ -331,7 +331,8 @@
       const r = arms.find((a) => a.side === 1).end, l = arms.find((a) => a.side === -1).end;
       const grip = id === "elf" ? l : r, axis = point(Math.sin(tilt), 0, Math.cos(tilt));
       const reach = id === "knight" ? 45 : heavy ? 48 : id === "elf" ? 27 : 43;
-      weapon2 = { kind: id === "knight" ? "sword" : heavy ? "axe" : id === "elf" ? "bow" : "staff", grip, axis, tip: plus(grip, times(axis, reach)), length: reach, tilt, active: state === "attack" && wm.active };
+      const roll = heavy ? state !== "attack" ? 0.85 : stage === "windup" ? 0.85 * (1 - ease(phase / 0.5)) : 0.85 * ease((phase - 0.26) / 0.74) : 0;
+      weapon2 = { kind: id === "knight" ? "sword" : heavy ? "axe" : id === "elf" ? "bow" : "staff", grip, axis, tip: plus(grip, times(axis, reach)), length: reach, tilt, roll, active: state === "attack" && wm.active };
       if (heavy) {
         const hand = arms.find((a) => a.side === -1), target = plus(grip, times(axis, -11));
         Object.assign(hand, solveLimb(hand.root, target, d.arm, d.forearm, point(-0.5, -0.7, -0.7)));
@@ -29740,24 +29741,29 @@ void main() {
   var Z = new Vector3(0, 0, 1);
   var models = /* @__PURE__ */ new Map();
   var materials = /* @__PURE__ */ new Map();
+  var headScales = { knight: [1.4, 1.7, 1.38], orc: [1.3, 1.45, 1.26], elf: [1.4, 1.7, 1.38], caster: [1.4, 1.7, 1.38], wolf: [1.32, 1.5, 1.35] };
   var palettes = {
-    knight: { skin: 4799542, cloth: 7941429, metal: 8953253, edge: 13676392, leather: 3353637 },
-    orc: { skin: 7176784, cloth: 4994864, metal: 5463136, edge: 11967335, leather: 3680029 },
-    elf: { skin: 13280642, cloth: 3364162, metal: 7045486, edge: 12624743, leather: 4798504 },
-    caster: { skin: 12098448, cloth: 5591150, metal: 7178129, edge: 12167303, leather: 3748932 },
-    wolf: { skin: 10906428, cloth: 5718061, metal: 8810844, edge: 14666143, leather: 3155481 }
+    knight: { skin: 7492938, cloth: 12076375, metal: 10992328, edge: 15056752, leather: 4797998 },
+    orc: { skin: 7972441, cloth: 7951165, metal: 7832460, edge: 14793068, leather: 5387817 },
+    elf: { skin: 15252630, cloth: 5015658, metal: 9547402, edge: 14796663, leather: 7426618 },
+    caster: { skin: 14660513, cloth: 8413866, metal: 9547447, edge: 14798226, leather: 5587292 },
+    wolf: { skin: 14520644, cloth: 9265213, metal: 11372632, edge: 15914660, leather: 4534568 }
   };
   function mat(color, kind = "cloth") {
     const key = color + ":" + kind;
     if (materials.has(key)) return materials.get(key);
     const m = new MeshStandardMaterial({ color, roughness: kind === "metal" ? 0.56 : kind === "skin" ? 0.88 : 0.94, metalness: kind === "metal" ? 0.32 : 0, flatShading: false });
     m.onBeforeCompile = (shader) => {
-      shader.vertexShader = shader.vertexShader.replace("#include <common>", "#include <common>\nvarying vec3 pigmentPosition;").replace("#include <begin_vertex>", "#include <begin_vertex>\npigmentPosition = position;");
-      shader.fragmentShader = shader.fragmentShader.replace("#include <common>", "#include <common>\nvarying vec3 pigmentPosition;").replace("#include <color_fragment>", `#include <color_fragment>
-float grain = sin(dot(pigmentPosition,vec3(28.9,41.7,19.3))) * sin(dot(pigmentPosition,vec3(53.2,7.1,37.4)));
-diffuseColor.rgb *= 0.97 + 0.025 * grain;`);
+      shader.fragmentShader = shader.fragmentShader.replace("#include <opaque_fragment>", `
+float baseLuma = max(dot(diffuseColor.rgb, vec3(0.2126,0.7152,0.0722)), 0.015);
+float litLuma = max(dot(outgoingLight, vec3(0.2126,0.7152,0.0722)) / baseLuma, 0.01);
+outgoingLight *= max(0.25, floor(litLuma * 4.0 + 0.5) / 4.0) / litLuma;
+float facingLight = abs(dot(normal, geometryViewDir));
+outgoingLight *= facingLight < 0.24 ? 0.48 : facingLight < 0.4 ? 0.78 : 1.0;
+#include <opaque_fragment>`).replace("#include <colorspace_fragment>", `#include <colorspace_fragment>
+gl_FragColor.rgb = floor(gl_FragColor.rgb * 31.0 + 0.5) / 31.0;`);
     };
-    m.customProgramCacheKey = () => kind;
+    m.customProgramCacheKey = () => kind + "-pixel-v5";
     materials.set(key, m);
     return m;
   }
@@ -29829,21 +29835,21 @@ diffuseColor.rgb *= 0.97 + 0.025 * grain;`);
     return result;
   }
   function organicSkin(parent, id, bind, bones, index) {
-    const p = palettes[id], wolf = id === "wolf", shapes = [];
+    const p = palettes[id], wolf = id === "wolf", shapes = [], hs = headScales[id], headSize = (s) => s.map((v, i) => v * hs[i]);
     const ell = (c2, r, b) => shapes.push({ c: V(c2), r: new Vector3(...r), bone: index[b], ell: true });
     const cap = (a, b, r, bone) => shapes.push({ a: V(a), b: V(b), r, bone: index[bone] });
     const d = RIGS[id];
     if (wolf) {
       ell(bind.body, [26, 9.5, 12], "chest");
       ell({ ...bind.body, x: -16, z: bind.body.z - 1 }, [13, 10, 12], "pelvis");
-      cap({ ...bind.body, x: 16, z: bind.body.z + 4 }, bind.head, 8, "head");
-      ell(bind.head, [11, 8.5, 10], "head");
-      ell({ ...bind.head, x: bind.head.x + 10, z: bind.head.z - 4 }, [11, 5.5, 5.5], "head");
+      cap({ ...bind.body, x: 16, z: bind.body.z + 4 }, bind.head, 9, "head");
+      ell(bind.head, headSize([11, 8.5, 10]), "head");
+      ell({ ...bind.head, x: bind.head.x + 10 * hs[0], z: bind.head.z - 4 * hs[2] }, headSize([11, 5.5, 5.5]), "head");
     } else {
       ell({ ...bind.pelvis, z: bind.pelvis.z + 3 }, [8, d.stance + 3, 10], "pelvis");
-      ell({ ...bind.body, z: bind.body.z - 2 }, [id === "orc" ? 11 : 7.5, d.shoulder * 0.74, 17], "chest");
+      ell({ ...bind.body, z: bind.body.z - 2 }, [id === "orc" ? 11 : 7.5, d.shoulder * 0.74, 14], "chest");
       cap({ ...bind.body, z: bind.body.z + 12 }, { ...bind.head, z: bind.head.z - 5 }, id === "orc" ? 6 : 3.5, "head");
-      ell({ ...bind.head, x: bind.head.x + 0.4 }, id === "orc" ? [10, 11.5, 12.5] : id === "knight" ? [8, 8.4, 10.5] : [7.8, 7.7, 10.5], "head");
+      ell({ ...bind.head, x: bind.head.x + 0.4 * hs[0] }, headSize(id === "orc" ? [10, 11.5, 12.5] : id === "knight" ? [8, 8.4, 10.5] : [7.8, 7.7, 10.5]), "head");
     }
     for (const l of bind.legs) {
       cap(l.root, l.joint, wolf ? l.front ? 4 : 5.5 : id === "orc" ? 7 : 4.7, "thigh" + l.index);
@@ -29873,7 +29879,7 @@ diffuseColor.rgb *= 0.97 + 0.025 * grain;`);
       }
       return a;
     };
-    const step = 2.5, xMin = -40, xMax = 52, yMin = -38, yMax = 38, zMin = -3, zMax = 125;
+    const step = 2.5, xMin = -40, xMax = 60, yMin = -38, yMax = 38, zMin = -3, zMax = 125;
     const nx = Math.ceil((xMax - xMin) / step), ny = Math.ceil((yMax - yMin) / step), nz = Math.ceil((zMax - zMin) / step), values = new Float32Array((nx + 1) * (ny + 1) * (nz + 1));
     const at = (x, y, z) => (z * (ny + 1) + y) * (nx + 1) + x;
     for (let z = 0; z <= nz; z++) for (let y = 0; y <= ny; y++) for (let x = 0; x <= nx; x++) values[at(x, y, z)] = field(xMin + x * step, yMin + y * step, zMin + z * step);
@@ -29894,8 +29900,8 @@ diffuseColor.rgb *= 0.97 + 0.025 * grain;`);
         skinIndices.push(top[j]?.[0] || 0);
         weights.push((top[j]?.[1] || 0) / sum);
       }
-      const face2 = v[2] > bind.head.z - 14, skin2 = id === "knight" && face2 ? new Color(p.metal) : id === "orc" || wolf || face2 ? color : cloth;
-      const shade = 0.88 + 0.12 * Math.cos(v[2] * 0.1);
+      const face2 = top[0][0] === index.head || v[2] > bind.head.z - 14, skin2 = id === "knight" && face2 ? new Color(p.metal) : id === "orc" || wolf || face2 ? color : cloth;
+      const shade = 0.94 + 0.06 * Math.cos(v[2] * 0.1);
       colors.push(skin2.r * shade, skin2.g * shade, skin2.b * shade);
       return i;
     };
@@ -29925,8 +29931,10 @@ diffuseColor.rgb *= 0.97 + 0.025 * grain;`);
     g.setAttribute("color", new Float32BufferAttribute(colors, 3));
     g.setIndex(indices);
     g.computeVertexNormals();
-    const material = mat(16777215, "skin").clone();
+    const skinPalette = mat(16777215, "skin"), material = skinPalette.clone();
     material.vertexColors = true;
+    material.onBeforeCompile = skinPalette.onBeforeCompile;
+    material.customProgramCacheKey = skinPalette.customProgramCacheKey;
     const skin = new SkinnedMesh(g, material);
     skin.add(...bones);
     skin.bind(new Skeleton(bones));
@@ -29947,9 +29955,11 @@ diffuseColor.rgb *= 0.97 + 0.025 * grain;`);
   function face(head, id, p) {
     const orc = id === "orc", wide = orc ? 11 : 7.8, front = orc ? 9.2 : 7;
     for (const sign2 of [-1, 1]) {
-      ball(head, { x: front, y: sign2 * wide * 0.39, z: 2 }, [0.55, 1.3, 0.65], 14010019, "skin");
-      ball(head, { x: front + 0.5, y: sign2 * wide * 0.37, z: 2 }, [0.3, 0.5, 0.58], orc ? 13804862 : 6718580, "skin");
-      ball(head, { x: front + 0.72, y: sign2 * wide * 0.37, z: 2 }, [0.12, 0.22, 0.42], 1581090);
+      ball(head, { x: front, y: sign2 * wide * 0.39, z: 2 }, [1.25, 1.5, 1.65], 16773588, "skin");
+      ball(head, { x: front + 0.65, y: sign2 * wide * 0.37, z: 2 }, [0.7, 0.9, 1.2], orc ? 13804862 : 4355939, "skin");
+      ball(head, { x: front + 1.12, y: sign2 * wide * 0.37, z: 2 }, [0.3, 0.48, 0.9], 1518128);
+      ball(head, { x: front + 1.43, y: sign2 * wide * 0.37 - 0.25, z: 2.65 }, [0.15, 0.22, 0.22], 16777215, "skin");
+      if (!orc) ball(head, { x: front + 0.2, y: sign2 * wide * 0.62, z: -1.4 }, [0.45, 1.2, 0.75], 13536123, "skin");
       tube(head, [{ x: front, y: sign2 * wide * 0.2, z: 4 }, { x: front + 0.4, y: sign2 * wide * 0.38, z: 4.2 }, { x: front - 0.5, y: sign2 * wide * 0.6, z: 3.5 }], 0.65, orc ? 3819309 : 6771008);
     }
     ball(head, { x: front + 0.7, y: 0, z: -0.5 }, [2.2, 1.5, 2.8], p.skin, "skin");
@@ -29998,6 +30008,7 @@ diffuseColor.rgb *= 0.97 + 0.025 * grain;`);
       ball(head, { x: -0.5, y: 0, z: 1 }, [9.2, 9.7, 12.4], p.metal, "metal");
       ball(head, { x: 7.5, y: 0, z: 1 }, [3, 8.6, 8.9], 8492446, "metal");
       for (const side of [-1, 1]) {
+        ball(head, { x: 10.5, y: side * 3.8, z: 4 }, [0.55, 2.55, 1.35], 1518396, "skin");
         tube(head, [{ x: 10.6, y: side * 0.8, z: 4 }, { x: 10.4, y: side * 4, z: 4.5 }, { x: 9.3, y: side * 7, z: 3.8 }], 0.65, 1516587);
         for (let i = 0; i < 3; i++) ball(head, { x: 10.5 - i * 0.1, y: side * (1.8 + i * 1.2), z: -3 }, [0.16, 0.34, 1], 2505024);
         for (const z of [-6, 7]) ball(head, { x: 8.5, y: side * 6.5, z }, [0.65, 0.65, 0.65], p.edge, "metal");
@@ -30064,8 +30075,9 @@ diffuseColor.rgb *= 0.97 + 0.025 * grain;`);
       ear.rotation.x = Math.PI / 2;
       ear.rotation.x = Math.PI / 2;
       ear.rotation.y = side * 0.18;
-      ball(head, { x: 7, y: side * 6, z: 3 }, [1.9, 1.1, 1.1], 14594922, "skin");
-      ball(head, { x: 8, y: side * 6, z: 3 }, [0.55, 0.6, 0.8], 1514518);
+      ball(head, { x: 7, y: side * 6, z: 3 }, [2.3, 1.4, 1.8], 16771781, "skin");
+      ball(head, { x: 8.5, y: side * 7.1, z: 3 }, [1.4, 0.9, 1.4], 2568491);
+      ball(head, { x: 9.6, y: side * 7.7, z: 3.7 }, [0.25, 0.22, 0.25], 16777215, "skin");
       tube(head, [{ x: 12, y: side * 4, z: -7 }, { x: 6, y: side * 6, z: -7 }, { x: 2, y: side * 7, z: -6 }], 0.6, 4340530);
       ball(head, { x: 5, y: side * 6, z: -6 }, [8, 3, 3.5], p.edge, "skin");
     }
@@ -30193,6 +30205,11 @@ diffuseColor.rgb *= 0.97 + 0.025 * grain;`);
       humanoidDetails(model, id);
       weapon(model, id);
     }
+    const headScale = new Vector3(...headScales[id]);
+    for (const child of nodes.head.children) {
+      child.position.multiply(headScale);
+      child.scale.multiply(headScale);
+    }
     batchRigidDetails(root);
     skin.name = "skin";
     model.accessories = {};
@@ -30258,6 +30275,7 @@ diffuseColor.rgb *= 0.97 + 0.025 * grain;`);
     if (model.weapon && rig.weapon) {
       model.weapon.position.copy(V(rig.weapon.grip));
       model.weapon.quaternion.setFromUnitVectors(Z, V(rig.weapon.axis));
+      model.weapon.quaternion.multiply(new Quaternion().setFromAxisAngle(Z, rig.weapon.roll || 0));
       if (model.string) {
         const draw = rig.bowString?.draw || 0;
         model.string.geometry.setFromPoints([new Vector3(0, 0, 25), new Vector3(-draw * 24, 0, 0), new Vector3(0, 0, -25)]);
@@ -30278,7 +30296,7 @@ diffuseColor.rgb *= 0.97 + 0.025 * grain;`);
   // prototype-renderer.js
   var FRAME = 256;
   var ROOT = 194;
-  var RASTER = 1.5;
+  var RASTER = 0.5;
   var vertical = Math.sqrt(1 - 0.58 ** 2);
   var renderer;
   var scene;
@@ -30288,9 +30306,34 @@ diffuseColor.rgb *= 0.97 + 0.025 * grain;`);
   var queue = null;
   var lastCalls = 0;
   var instances = /* @__PURE__ */ new Map();
+  var silhouette;
+  var outlined;
+  function pixelFrame() {
+    const source = renderer.domElement, w = source.width, h = source.height;
+    if (!silhouette) {
+      silhouette = document.createElement("canvas");
+      outlined = document.createElement("canvas");
+    }
+    for (const target of [silhouette, outlined]) if (target.width !== w || target.height !== h) {
+      target.width = w;
+      target.height = h;
+    }
+    const mask = silhouette.getContext("2d"), out = outlined.getContext("2d");
+    mask.clearRect(0, 0, w, h);
+    mask.globalCompositeOperation = "source-over";
+    mask.drawImage(source, 0, 0);
+    mask.globalCompositeOperation = "source-in";
+    mask.fillStyle = "#293329";
+    mask.fillRect(0, 0, w, h);
+    mask.globalCompositeOperation = "source-over";
+    out.clearRect(0, 0, w, h);
+    for (const [x, y] of [[-1, 0], [1, 0], [0, -1], [0, 1]]) out.drawImage(silhouette, x, y);
+    out.drawImage(source, 0, 0);
+    return outlined;
+  }
   function initializeCharacterRenderer() {
     if (renderer) return;
-    renderer = new WebGLRenderer({ alpha: true, antialias: true, preserveDrawingBuffer: true, powerPreference: "high-performance" });
+    renderer = new WebGLRenderer({ alpha: true, antialias: false, preserveDrawingBuffer: true, powerPreference: "high-performance" });
     renderer.setSize(FRAME * RASTER, FRAME * RASTER, false);
     renderer.setClearColor(0, 0);
     renderer.clippingPlanes = [new Plane(new Vector3(0, 0, 1), 0)];
@@ -30349,7 +30392,7 @@ diffuseColor.rgb *= 0.97 + 0.025 * grain;`);
     const canvas2 = document.createElement("canvas");
     canvas2.width = FRAME * RASTER;
     canvas2.height = FRAME * RASTER;
-    canvas2.getContext("2d").drawImage(renderer.domElement, 0, 0);
+    canvas2.getContext("2d").drawImage(pixelFrame(), 0, 0);
     return canvas2;
   }
   function beginCharacterFrame() {
@@ -30358,7 +30401,7 @@ diffuseColor.rgb *= 0.97 + 0.025 * grain;`);
   }
   function queueCharacter(id, rig, angle, x, y, scale, transform) {
     if (queue === null) return false;
-    queue.push({ id, rig, angle, x: transform.a * x + transform.c * y + transform.e, y: transform.b * x + transform.d * y + transform.f, scale: scale * transform.a });
+    queue.push({ id, rig, angle, x: transform.a * x + transform.c * y + transform.e, y: transform.b * x + transform.d * y + transform.f, scale: scale * transform.a, viewScale: transform.a });
     return true;
   }
   function flushCharacterFrame(c2) {
@@ -30378,24 +30421,25 @@ diffuseColor.rgb *= 0.97 + 0.025 * grain;`);
       model.root.visible = true;
       model.root.updateMatrixWorld(true);
     });
-    const raster = Math.min(1.5, window.devicePixelRatio || 1);
+    const raster = RASTER / Math.max(1, queue[0]?.viewScale || 1);
     size(Math.round(1e3 * raster), Math.round(650 * raster));
     renderer.render(scene, batchCamera);
     lastCalls = renderer.info.render.calls;
     c2.save();
     c2.resetTransform();
-    c2.drawImage(renderer.domElement, 0, 0, 1e3, 650);
+    c2.imageSmoothingEnabled = false;
+    c2.drawImage(pixelFrame(), 0, 0, 1e3, 650);
     c2.restore();
     queue = null;
   }
   function characterRendererStats() {
-    return { type: "WebGL2", models: characterModelStats(), continuousFacing: true, paintedViewCropping: false, arenaPasses: 1, drawCalls: lastCalls, instances: instances.size };
+    return { type: "WebGL2", artStyle: "32-bit pixel fantasy", nativeArena: [500, 325], nativePortrait: [128, 128], nearestNeighbor: true, antialias: false, models: characterModelStats(), continuousFacing: true, paintedViewCropping: false, arenaPasses: 1, drawCalls: lastCalls, instances: instances.size };
   }
 
   // prototype-sprites.js
   var FRAME_SIZE = 256;
   var ROOT_Y = 194;
-  var RASTER_SCALE = 1.5;
+  var RASTER_SCALE = 0.5;
   var MAX_FRAMES = 192;
   var frames = /* @__PURE__ */ new Map();
   var ready = false;
@@ -30471,13 +30515,12 @@ diffuseColor.rgb *= 0.97 + 0.025 * grain;`);
     }
     c2.save();
     c2.globalAlpha *= u.hp <= 0 ? 0.82 : 1;
-    c2.imageSmoothingEnabled = true;
-    c2.imageSmoothingQuality = "high";
+    c2.imageSmoothingEnabled = false;
     c2.drawImage(frame2, x - FRAME_SIZE * scale / 2, y - ROOT_Y * scale, FRAME_SIZE * scale, FRAME_SIZE * scale);
     c2.restore();
   }
   function spriteCacheStats() {
-    return { frames: frames.size, maxFrames: MAX_FRAMES, sourceReady: spritesReady(), frameSize: FRAME_SIZE, rasterScale: RASTER_SCALE, rigVersion: 4, directionalArt: { columns: 8, characters: 5, connectedModels: 5 }, renderer: characterRendererStats() };
+    return { frames: frames.size, maxFrames: MAX_FRAMES, sourceReady: spritesReady(), frameSize: FRAME_SIZE, rasterScale: RASTER_SCALE, rigVersion: 5, directionalArt: { columns: 8, characters: 5, connectedModels: 5 }, renderer: characterRendererStats() };
   }
   function prototypeDirectionFrames(id, state = "idle", phase = 0.25) {
     return Array.from({ length: 8 }, (_, dir) => {
@@ -30653,9 +30696,22 @@ diffuseColor.rgb *= 0.97 + 0.025 * grain;`);
   // prototype.js
   var $ = (s) => document.querySelector(s);
   var canvas = $("#prototype-canvas");
-  var c = canvas.getContext("2d");
+  var display = canvas.getContext("2d");
+  var sceneCanvas = document.createElement("canvas");
+  sceneCanvas.width = 1e3;
+  sceneCanvas.height = 650;
+  var c = sceneCanvas.getContext("2d");
+  var pixelCanvas = document.createElement("canvas");
+  var backdropPixels = document.createElement("canvas");
+  backdropPixels.width = 500;
+  backdropPixels.height = 325;
   var backdrop = new Image();
-  backdrop.src = "/public/prototype-glade.png";
+  backdrop.src = "/public/prototype-glade-pixel.png";
+  backdrop.addEventListener("load", () => {
+    const b = backdropPixels.getContext("2d");
+    b.imageSmoothingEnabled = false;
+    b.drawImage(backdrop, 0, 0, 500, 325);
+  });
   backdrop.addEventListener("error", () => {
     $("#loading").textContent = "The artwork could not load. Reload this page.";
   });
@@ -30765,9 +30821,10 @@ diffuseColor.rgb *= 0.97 + 0.025 * grain;`);
     if (backdrop.complete && backdrop.naturalWidth) {
       for (let row = -1; row <= 1; row++) for (let col = -1; col <= 1; col++) {
         c.save();
+        c.imageSmoothingEnabled = false;
         c.translate((col === 0 ? 0 : col + 1) * 1e3, (row === 0 ? 0 : row + 1) * 650);
         c.scale(col === 0 ? 1 : -1, row === 0 ? 1 : -1);
-        c.drawImage(backdrop, 0, 0, 1e3, 650);
+        c.drawImage(backdropPixels, 0, 0, 1e3, 650);
         c.restore();
       }
     } else {
@@ -30792,7 +30849,7 @@ diffuseColor.rgb *= 0.97 + 0.025 * grain;`);
     c.fillRect(0, 0, 1e3, 650);
     for (let i = 0; i < 18; i++) ellipse(i * 137 % 1e3 + Math.sin(arena.time * 0.18 + i) * 5, 100 + i * 53 % 470 + Math.sin(arena.time * 0.23 + i) * 7, 1, 1, "#edd99b55");
   }
-  function render() {
+  function drawScene() {
     c.clearRect(0, 0, 1e3, 650);
     c.save();
     if (spritesReady()) beginCharacterFrame();
@@ -30989,6 +31046,20 @@ diffuseColor.rgb *= 0.97 + 0.025 * grain;`);
     c.globalAlpha = 1;
     c.restore();
     c.restore();
+  }
+  function render() {
+    drawScene();
+    const zoom = focusView && mode !== "directions" ? 1.8 : 1, w = Math.round(500 / zoom), h = Math.round(325 / zoom);
+    if (pixelCanvas.width !== w || pixelCanvas.height !== h) {
+      pixelCanvas.width = w;
+      pixelCanvas.height = h;
+    }
+    const p = pixelCanvas.getContext("2d");
+    p.imageSmoothingEnabled = false;
+    p.drawImage(sceneCanvas, 0, 0, w, h);
+    display.imageSmoothingEnabled = false;
+    display.clearRect(0, 0, 1e3, 650);
+    display.drawImage(pixelCanvas, 0, 0, 1e3, 650);
   }
   function togglePause() {
     paused = !paused;

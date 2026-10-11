@@ -6,9 +6,9 @@ Status: iteration 1 has a playable implementation; its visual direction awaits u
 
 The working baseline is v0.4.0: six-creature teams, 60 families, 128 named abilities, 30 support gems, 24 expedition relics, three planets, evolution, permanent family unlocks, physical combat, casualty protection, and twenty Chaos tiers. The additional fantasy roster in `expedition.js` is a draft and is not connected to the released game.
 
-The latest provisional review averaged **7.6/10**. Across 480 automated campaigns, Expedition wins differed substantially by build: Tide 13/24, balanced 8/24, assassins 4/24, Venom 1/24. Veteran produced 5/96 victories versus Chaos 10's 10/96. Those results identify investigation targets; they are scripted-policy outcomes rather than human win rates.
+The earlier whole-game provisional review averaged **7.6/10**. Across 480 automated campaigns, Expedition wins differed substantially by build: Tide 13/24, balanced 8/24, assassins 4/24, Venom 1/24. Veteran produced 5/96 victories versus Chaos 10's 10/96. Those results identify investigation targets; they are scripted-policy outcomes rather than human win rates.
 
-The uploaded **Dimraeth Early Access trailer** is the accessible art and movement reference. The earlier YouTube Short remains an additional reference once access is available. Target detailed fantasy sprites, a raised three-quarter view, grounded directional movement, strong silhouettes, and readable impacts. Create original artwork and animations in that direction.
+The uploaded **Dimraeth Early Access trailer** remains the movement reference. The user's updated art direction is **32-bit-era pixel fantasy chibi**: broad expressive heads, compact bodies, sturdy limbs, clear equipment and strong silhouettes under the raised three-quarter camera. Preserve grounded motion and readable physical impacts. The five-pass [chibi movement plan](CHIBI-MOTION-PLAN.md) targets at least 9/10 in each of the seven movement categories before full-roster production.
 
 ## Rules for every iteration
 

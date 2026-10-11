@@ -3,8 +3,12 @@ import { drawPrototypeSprite, spritesReady, prototypePortrait, spriteCacheStats,
 import { Soundscape } from './sound.js';
 import { locomotionStride } from './prototype-rig.js';
 import { beginCharacterFrame, flushCharacterFrame } from './prototype-renderer.js';
-const $=s=>document.querySelector(s),canvas=$('#prototype-canvas'),c=canvas.getContext('2d');
-const backdrop=new Image();backdrop.src='/public/prototype-glade.png';
+const $=s=>document.querySelector(s),canvas=$('#prototype-canvas'),display=canvas.getContext('2d');
+const sceneCanvas=document.createElement('canvas');sceneCanvas.width=1000;sceneCanvas.height=650;
+const c=sceneCanvas.getContext('2d'),pixelCanvas=document.createElement('canvas');
+const backdropPixels=document.createElement('canvas');backdropPixels.width=500;backdropPixels.height=325;
+const backdrop=new Image();backdrop.src='/public/prototype-glade-pixel.png';
+backdrop.addEventListener('load',()=>{const b=backdropPixels.getContext('2d');b.imageSmoothingEnabled=false;b.drawImage(backdrop,0,0,500,325);});
 backdrop.addEventListener('error',()=>{$('#loading').textContent='The artwork could not load. Reload this page.';});
 const sound=new Soundscape();
 let mode='directions',arena=new PrototypeArena(mode),selected='0-knight-0',paused=false,speed=1,last=performance.now(),uiClock=0,sounding=false;
@@ -69,7 +73,7 @@ function ellipse(x,y,rx,ry,color){c.fillStyle=color;c.beginPath();c.ellipse(x,y,
 function background(){
   if(backdrop.complete&&backdrop.naturalWidth){
     // Extend the forest at the camera edges during close inspection.
-    for(let row=-1;row<=1;row++)for(let col=-1;col<=1;col++){c.save();c.translate((col===0?0:col+1)*1000,(row===0?0:row+1)*650);c.scale(col===0?1:-1,row===0?1:-1);c.drawImage(backdrop,0,0,1000,650);c.restore();}
+    for(let row=-1;row<=1;row++)for(let col=-1;col<=1;col++){c.save();c.imageSmoothingEnabled=false;c.translate((col===0?0:col+1)*1000,(row===0?0:row+1)*650);c.scale(col===0?1:-1,row===0?1:-1);c.drawImage(backdropPixels,0,0,1000,650);c.restore();}
   }
   else{
     const g=c.createLinearGradient(0,0,0,650);g.addColorStop(0,'#273d2c');g.addColorStop(0.6,'#65734a');g.addColorStop(1,'#31412c');c.fillStyle=g;c.fillRect(0,0,1000,650);
@@ -80,7 +84,7 @@ function background(){
   // A restrained dust layer remains behind the characters.
   for(let i=0;i<18;i++)ellipse((i*137)%1000+Math.sin(arena.time*0.18+i)*5,100+(i*53)%470+Math.sin(arena.time*0.23+i)*7,1,1,'#edd99b55');
 }
-function render(){
+function drawScene(){
   c.clearRect(0,0,1000,650);c.save();
   if(spritesReady())beginCharacterFrame();
   if(mode==='directions'){
@@ -144,6 +148,15 @@ function render(){
     c.restore();
   }
   for(const particle of arena.particles){const p=groundToScreen(particle.x,particle.y);c.globalAlpha=1-particle.age/particle.duration;ellipse(p.x,p.y-particle.z,1.8,1.8,particle.color);}c.globalAlpha=1;c.restore();c.restore();
+}
+function render(){
+  drawScene();
+  // The background, creature outlines, shadows and combat effects share one
+  // grid. Close inspection magnifies those pixels along with the world.
+  const zoom=focusView&&mode!=='directions'?1.8:1,w=Math.round(500/zoom),h=Math.round(325/zoom);
+  if(pixelCanvas.width!==w||pixelCanvas.height!==h){pixelCanvas.width=w;pixelCanvas.height=h;}
+  const p=pixelCanvas.getContext('2d');p.imageSmoothingEnabled=false;p.drawImage(sceneCanvas,0,0,w,h);
+  display.imageSmoothingEnabled=false;display.clearRect(0,0,1000,650);display.drawImage(pixelCanvas,0,0,1000,650);
 }
 function togglePause(){paused=!paused;$('#play-pause').textContent=paused?'Play':'Pause';$('#play-pause').setAttribute('aria-label',paused?'Resume scene':'Pause scene');}
 function selectedRoll(kind){const u=selectedUnit();arena.roll(u,u.facing+(kind==='dodge'?Math.PI/2:0),kind);}

@@ -27,7 +27,7 @@ try{
   async function focus(on){if(await page.evaluate(()=>prototypeLab.state.focusView)!==on)await page.locator('#focus-view').click();}
   await page.locator('[data-scene="directions"]').click();
   for(const [id,index] of [['knight',0],['wolf',4]]){
-    await page.locator(`[data-select="0-${id}-${index}"]`).click();await capture(2,'Connected Rigs v4 · eight views, one model');
+    await page.locator(`[data-select="0-${id}-${index}"]`).click();await capture(2,'Pixel chibi v5 · eight views, one model');
   }
   await page.locator('[data-scene="movement"]').click();await page.locator('[data-pace="walk"]').click();await focus(false);await capture(5,'Walk · planted feet and heel-to-toe steps');
   await page.locator('[data-pace="run"]').click();await capture(4,'Run · longer stride and opposing arm swing');

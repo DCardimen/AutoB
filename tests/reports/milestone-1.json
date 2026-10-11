@@ -24,6 +24,14 @@
     "prototype-mobile.png",
     "directions-mobile.png"
   ],
+  "pixelPresentation": {
+    "mismatchedBlocks": 0,
+    "nativeArena": [
+      500,
+      325
+    ],
+    "style": "32-bit pixel fantasy"
+  },
   "characterDirectionFrames": {
     "knight": 8,
     "orc": 8,
@@ -42,7 +50,7 @@
     "caster": 8,
     "wolf": 8
   },
-  "rigVersion": 4,
+  "rigVersion": 5,
   "sprint": [
     {
       "id": "knight",
@@ -78,7 +86,7 @@
   "directionFrames": 8,
   "stateFrames": 12,
   "battle": {
-    "time": 54.491666666664216,
+    "time": 54.50833333333088,
     "metrics": {
       "hits": 84,
       "misses": 48,
@@ -94,8 +102,8 @@
       "maxFrames": 192,
       "sourceReady": true,
       "frameSize": 256,
-      "rasterScale": 1.5,
-      "rigVersion": 4,
+      "rasterScale": 0.5,
+      "rigVersion": 5,
       "directionalArt": {
         "columns": 8,
         "characters": 5,
@@ -103,47 +111,58 @@
       },
       "renderer": {
         "type": "WebGL2",
+        "artStyle": "32-bit pixel fantasy",
+        "nativeArena": [
+          500,
+          325
+        ],
+        "nativePortrait": [
+          128,
+          128
+        ],
+        "nearestNeighbor": true,
+        "antialias": false,
         "models": [
           {
             "id": "knight",
             "skinned": true,
-            "vertices": 5584,
+            "vertices": 5326,
             "bones": 15,
-            "triangles": 11164
+            "triangles": 10648
           },
           {
             "id": "orc",
             "skinned": true,
-            "vertices": 7210,
+            "vertices": 6418,
             "bones": 15,
-            "triangles": 14416
+            "triangles": 12832
           },
           {
             "id": "elf",
             "skinned": true,
-            "vertices": 5516,
+            "vertices": 5352,
             "bones": 15,
-            "triangles": 11040
+            "triangles": 10704
           },
           {
             "id": "caster",
             "skinned": true,
-            "vertices": 5360,
+            "vertices": 5236,
             "bones": 15,
-            "triangles": 10716
+            "triangles": 10468
           },
           {
             "id": "wolf",
             "skinned": true,
-            "vertices": 6066,
+            "vertices": 6571,
             "bones": 17,
-            "triangles": 12128
+            "triangles": 13148
           }
         ],
         "continuousFacing": true,
         "paintedViewCropping": false,
         "arenaPasses": 1,
-        "drawCalls": 635,
+        "drawCalls": 674,
         "instances": 48
       }
     }
@@ -156,8 +175,8 @@
   },
   "preview": {
     "file": "public/prototype-preview.mp4",
-    "bytes": 8710170,
-    "sha256": "a5aaa32e991816721ca46122725d29a192a47107b78889dc2bd698faebc73f28",
+    "bytes": 14121329,
+    "sha256": "96c8df6c8ef9a41d2721ac0f7186d65ed84f2dab83e3199956c7c8ba7ee7ced9",
     "durationSeconds": 42,
     "fps": 30,
     "width": 1000,
@@ -166,9 +185,32 @@
   },
   "standalone": {
     "file": "Starfall-Training-Glade.html",
-    "bytes": 5902356,
-    "sha256": "71f04ea800271a6169333da09b5e91f87b37c6404737281462accc3405f0bdd9"
+    "bytes": 6110867,
+    "sha256": "4e1269f9dd62090a5c481b7e11602fe74b2bf0850942842742fe1e4bd177af47"
   },
-  "scope": "Iteration 1 Connected Rigs v4: five original skinned 3D prototype characters, welded neck and limb anatomy, fixed model scale, continuous facing, authored grounded gaits, heel/toe contact, recovery steps, sprinting, directional dodges, movement-to-attack blending and shared physical weapon transforms. Main expedition and wider roster are unchanged. Automated checks do not establish human playtime or a 9/10 visual or fun score.",
+  "art": {
+    "style": "32-bit-era pixel fantasy chibi",
+    "arenaNativeResolution": [
+      500,
+      325
+    ],
+    "displayResolution": [
+      1000,
+      650
+    ],
+    "portraitNativeResolution": [
+      128,
+      128
+    ],
+    "background": {
+      "file": "public/prototype-glade-pixel.png",
+      "bytes": 3550026,
+      "sha256": "044f9ca835b82e19b0c9bdba12dc82edad2e361dc481126b91dcd65f67cbb8d6"
+    },
+    "backgroundProvenance": "Image-generation redraw of the existing original prototype glade, retaining its playable composition.",
+    "characters": "Original procedural skinned models, connected anatomy, chibi proportions, stepped shading, nearest-neighbor sampling and one-pixel contours.",
+    "coherence": "Scenery, characters, shadows and combat effects share the world pixel grid; close inspection magnifies it."
+  },
+  "scope": "Iteration 1 Pixel Chibi v5: first art/proportion pass of CHIBI-MOTION-PLAN.md. Five original connected models have larger expressive heads, compact bodies, shorter reachable limbs, matching head details and revised weapon carry poses. The redrawn glade and characters share a pixel presentation. Movement refinement passes 2\u20135 remain planned. Automated checks do not establish human playtime or a 9/10 visual or fun score.",
   "offlineValidation": "Exact embedded HTML served as one intercepted document; all other requests blocked. Managed browser policy blocks file navigation."
 }
