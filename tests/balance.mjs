@@ -26,6 +26,10 @@ import {
   rng,
   pick,
   PERSONAL_RELICS,
+  settleDefeat,
+  deployReserve,
+  upgradeHospital,
+  rollCapture,
 } from "../game.js";
 import { shopPrice, chaosLevel } from "../tactics.js";
 const builds = {
@@ -116,6 +120,7 @@ for (const options of difficulties)
       bossLosses: 0,
       battles: 0,
       seedsWon: [],
+      casualties: 0,
     };
     const points = ids.reduce(
       (n, id) =>
@@ -161,6 +166,8 @@ for (const options of difficulties)
         run.encounterType = node.type;
         if (node.type === "shop") {
           shops++;
+          if ((run.fieldHospital || 0) < 1 && run.gold > 180)
+            upgradeHospital(run);
           const stock = generateShop(run, node.seed);
           const preferred = [
             "clock",
@@ -187,7 +194,9 @@ for (const options of difficulties)
             }
           }
         } else if (node.type === "rest") {
-          if (run.integrity < 3) run.integrity++;
+          if ((run.fieldHospital || 0) < 1 && run.integrity === 3)
+            run.fieldHospital++;
+          else if (run.integrity < 3) run.integrity++;
           else
             run.team.forEach((c) => gainXP(c, chaosLevel(run) >= 12 ? 30 : 40));
         } else if (node.type === "event") {
@@ -220,7 +229,7 @@ for (const options of difficulties)
         } else {
           equip(run);
           // Spend earned gold on role-specific evolutions and use the scouted counterplan.
-          for (let i = 0; i < 6; i++)
+          for (let i = 0; i < run.team.length; i++)
             if (evolutionOffer(run, run.team[i]).ready && run.gold >= 75)
               evolveCreature(
                 run,
@@ -239,8 +248,22 @@ for (const options of difficulties)
           row.battles++;
           const won = b.winner === 0;
           rewardBattle(run, node.type, won);
+          run.battleSerial++;
+          if (!won) {
+            const loss = settleDefeat(
+              run,
+              `${node.id}:${run.battleSerial}`,
+              node.seed + run.battleSerial * 9973,
+            );
+            row.casualties += loss.lost;
+            while (run.team.length < 6 && run.bench.length)
+              deployReserve(run, 0);
+          }
           run.contracts = [];
           if (won) {
+            const recruit = foes.filter((f) => !f.boss)[0];
+            if (recruit && run.bench.length < 2 && run.orbs > 0)
+              rollCapture(run, recruit, rng(node.seed + 444));
             if (run.wins % 3 === 0)
               run.inventory.push(
                 personalRelic(pick(PERSONAL_RELICS, rng(node.seed + 888)).id),

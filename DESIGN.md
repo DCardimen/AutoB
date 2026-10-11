@@ -5,7 +5,7 @@ The overhaul addresses each criterion from the review. These are implemented imp
 | Criterion | Implemented change | What player testing must establish |
 |---|---|---|
 | Core loop | Three worlds, tactical captures, evolution, permanent bonds, and a twenty-tier endgame | Players voluntarily begin another run |
-| Meaningful decisions | Capture damage penalties, item drawbacks, risky contracts, and competing gold uses | Choices change with the encounter rather than becoming automatic |
+| Meaningful decisions | Capture penalties, item drawbacks, risky contracts, permanent run casualties, and protection competing with damage upgrades | Choices change with the encounter rather than becoming automatic |
 | Team composition | Counter specialties, elemental bonds, positional protection, and diverse enemy squads | Multiple archetypes remain competitive |
 | Creature identity | Signature attacks combined with family specialties and role-dependent evolution mechanics | Players can explain why a specific Common belongs on their team |
 | Skills | Conditional AI, status combinations, defensive timing, and cluster targeting | Cooldowns and roles create understandable combat patterns |
@@ -13,9 +13,9 @@ The overhaul addresses each criterion from the review. These are implemented imp
 | Expedition relics | Twenty-four items, including cooldown relays, poison networks, revival, and excess-healing shields | No relic is the correct purchase in nearly every situation |
 | Economy | Shared purchase rules, scarce gold, evolution costs, Legendary contracts, and beacons | Saving and spending create credible competing plans |
 | Formation | Nine deployment cells, swaps, proximity protection, and artillery counterplay | Placement produces predictable benefits and risks |
-| Combat AI | Five policies, useful healing/barrier timing, target priorities, kiting, and hazard avoidance | Creatures usually act as players expect from their selected policy |
+| Combat AI | Five policies, target memory, flanking, defensive timing, physical threat detection, and scored stamina-paid escapes | Creatures usually act as players expect from their selected policy |
 | Readability | Scout counterplans, distinct danger rings, status markers, and persisted diagnostic reports | Players can identify the main cause of a defeat |
-| Combat impact | Delayed melee contact, anticipation, follow-through, dash interpolation, trails, recoil, and elemental foley | Impacts feel satisfying at normal speed without visual overload |
+| Combat impact | Committed attack geometry, body collision, actual traveling dashes, swept shots, mass-dependent impulse, poise breaks, recoil, and elemental foley | Impacts feel satisfying at normal speed without visual overload |
 | Creature presentation | Painted base/evolved forms, smoother silhouette animation, readable deployment and form effects | Players recognize and want to collect the roster |
 | Evolution | Wild/Warden mechanics differ by role, with additional sockets and ascension | Both branches earn a place in different builds |
 | Capturing | Target selection, automatic in-combat throws, health/status bonuses, and preserved results | A rare capture feels earned without excessive frustration |

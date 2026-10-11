@@ -1230,6 +1230,42 @@ export function renderBattle(
       c.fillText(danger ? "DANGER" : "ALLY FIELD", hazard.x, hazard.y + 4);
     }
   }
+  if (battle && !battle.done) {
+    for (const attack of battle.strikes || []) {
+      if (attack.cancelled || attack.source.hp <= 0) continue;
+      const u = attack.source,
+        angle = Math.atan2(attack.dy, attack.dx),
+        progress = 1 - attack.remaining / attack.total;
+      c.save();
+      c.translate(u.x, u.y);
+      c.rotate(angle);
+      c.fillStyle = u.side === 0 ? "#cbe8a226" : "#ef897c30";
+      c.strokeStyle = u.side === 0 ? "#d5efb688" : "#ffc1a2aa";
+      c.lineWidth = 1.5;
+      if (attack.beam) {
+        c.fillRect(0, -attack.width, attack.reach, attack.width * 2);
+        c.strokeRect(0, -attack.width, attack.reach, attack.width * 2);
+      } else {
+        c.beginPath();
+        c.moveTo(0, 0);
+        c.arc(0, 0, attack.reach, -attack.arc, attack.arc);
+        c.closePath();
+        c.fill();
+        c.stroke();
+        c.beginPath();
+        c.arc(
+          0,
+          0,
+          attack.reach,
+          -attack.arc,
+          -attack.arc + attack.arc * 2 * progress,
+        );
+        c.lineWidth = 3;
+        c.stroke();
+      }
+      c.restore();
+    }
+  }
   for (const raw of units.slice().sort((a, b) => a.y - b.y)) {
     const u =
       battle && !battle.reducedMotion
@@ -1254,10 +1290,15 @@ export function renderBattle(
       c.stroke();
     }
     const position =
-      battle && !battle.reducedMotion ? dashPosition(u) : { x: u.x, y: u.y };
+      battle && !battle.reducedMotion && !u.physicalDash
+        ? dashPosition(u)
+        : { x: u.x, y: u.y };
     if (u.dashAnim > 0 && u.dashFrom && !battle?.reducedMotion) {
       for (let trail = 0; trail < 3; trail++) {
-        const fraction = Math.max(0, 1 - u.dashAnim / 0.38 - trail * 0.1);
+        const fraction = Math.max(
+          0,
+          1 - u.dashAnim / (u.dashDuration || 0.38) - trail * 0.1,
+        );
         c.globalAlpha = 0.11 * (1 - trail / 3);
         drawCreature(
           c,
@@ -1319,6 +1360,15 @@ export function renderBattle(
           barw * (1 - Math.max(0, u.skillTimer) / u.cd),
           2,
         );
+        c.fillStyle = "#e3c389";
+        c.fillRect(bx, by + 12, (barw * (u.stamina ?? 100)) / 100, 2);
+        c.fillStyle = "#e5a47d";
+        c.fillRect(
+          bx,
+          by + 16,
+          barw * Math.min(1, (u.poise || 0) / (u.maxPoise || 1)),
+          2,
+        );
         if (u.burn > 0) ellipse(c, u.x + 24, u.y - 20, 3, 4, "#ff8c56");
         const statuses = [
           ["poison", "P", "#b4d97b"],
@@ -1326,6 +1376,8 @@ export function renderBattle(
           ["slow", "S", "#9ddff0"],
           ["wither", "W", "#d6a0d7"],
           ["exposed", "!", "#f6c284"],
+          ["bleed", "B", "#f59991"],
+          ["stagger", "✦", "#ffcd8d"],
         ].filter(([key]) => u[key] > 0);
         c.font = 'bold 8px "DM Sans",sans-serif';
         c.textAlign = "center";
@@ -1375,7 +1427,15 @@ export function renderBattle(
               .padStart(2, "0"),
         );
       }
-      ellipse(c, p.x, p.y, p.skill ? 5 : 3.5, p.skill ? 5 : 3.5, "#fff5df");
+      const alpha = battle.renderAlpha || 0;
+      ellipse(
+        c,
+        p.prevX + (p.x - p.prevX) * alpha,
+        p.prevY + (p.y - p.prevY) * alpha,
+        p.skill ? 5 : 3.5,
+        p.skill ? 5 : 3.5,
+        "#fff5df",
+      );
     }
     c.shadowBlur = 0;
     for (const e of battle.effects) {

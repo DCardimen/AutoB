@@ -3319,3 +3319,108 @@ footer i {
     transition: none !important;
   }
 }
+
+/* Physical arena and retreat survival */
+.empty-slot {
+  min-height: 190px;
+  justify-content: center;
+  border-style: dashed;
+  opacity: 0.8;
+}
+.empty-slot > span {
+  font-size: 40px;
+  color: var(--mint);
+}
+.empty-slot small {
+  font-size: 10px;
+  margin-top: 12px;
+  color: #a9bd97;
+}
+.survival-panel,
+.casualty-result,
+.field-care-shop {
+  padding: 20px;
+  margin: 18px 0;
+  border: 1px solid #586346;
+  border-radius: 8px;
+  background: #b5c78d08;
+}
+.survival-panel > strong {
+  display: block;
+  margin-top: 12px;
+  font-size: 15px;
+}
+.survival-panel small {
+  display: block;
+  margin-top: 10px;
+  color: #a9bd97;
+}
+.casualty-result.lost {
+  border-color: #936c64;
+  background: #d1876a0b;
+}
+.casualty-result > div {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 10px;
+}
+.casualty-result img,
+.care-roster img {
+  width: 55px;
+  height: 55px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+.casualty-rarities {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 18px 0;
+}
+.casualty-rarities span {
+  border: 1px solid currentColor;
+  border-radius: 6px;
+  padding: 10px;
+  font-size: 11px;
+}
+.casualty-rarities b {
+  display: block;
+  font-size: 20px;
+  margin-top: 6px;
+}
+.care-roster {
+  margin: 18px 0;
+}
+.care-roster > div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 0;
+  border-bottom: 1px solid #65774b44;
+  flex-wrap: wrap;
+}
+.care-roster strong {
+  flex: 1;
+  min-width: 95px;
+  font-size: 12px;
+}
+.care-roster span {
+  font-size: 11px;
+  color: #dbbd9d;
+}
+.care-roster .button {
+  padding: 8px 12px;
+}
+@media (max-width: 600px) {
+  .casualty-result > div {
+    align-items: flex-start;
+  }
+  .care-roster img {
+    width: 42px;
+    height: 42px;
+  }
+  .tactical-toolbar-head {
+    flex-wrap: wrap;
+  }
+}

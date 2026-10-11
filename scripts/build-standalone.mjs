@@ -37,6 +37,7 @@ const chunks = [
 ];
 for (const name of [
   "tactics",
+  "arena",
   "roster",
   "skills",
   "game",

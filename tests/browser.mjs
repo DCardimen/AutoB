@@ -139,7 +139,23 @@ for (let iteration = 0; iteration < 40 && !ended; iteration++) {
     break;
   }
   if (state.phase === "prep") {
-    for (let i = 0; i < 6; i++) {
+    if (
+      await page.evaluate(
+        () =>
+          starfall.state.run.team.length < 6 &&
+          starfall.state.run.bench.length > 0,
+      )
+    ) {
+      await page.locator('[data-action="reserves"]').click();
+      while (await page.locator("[data-deploy-reserve]:not(:disabled)").count())
+        await page
+          .locator("[data-deploy-reserve]:not(:disabled)")
+          .first()
+          .click();
+      await page.locator('[data-action="close"]').first().click();
+    }
+    const deployed = await page.evaluate(() => starfall.state.run.team.length);
+    for (let i = 0; i < deployed; i++) {
       await page.locator(`[data-creature="${i}"]`).click();
       const info = await page.evaluate(
         (i) => ({

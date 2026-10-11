@@ -1,6 +1,13 @@
 import { SKILLS, loadoutFor } from "./skills.js";
 import { EXPANSION_SPECIES } from "./roster.js";
 import {
+  bodyProperties,
+  movingBodyHit,
+  strikeContains,
+  separateBodies,
+  confineBody,
+} from "./arena.js";
+import {
   NEW_GEMS,
   NEW_RELICS,
   NEW_EVENTS,
@@ -36,7 +43,8 @@ export const ELEMENTS = {
     name: "Storm",
     color: "#d6b5fc",
     icon: "ϟ",
-    description: "2: skills recharge 18% faster · 4: +18% dodge",
+    description:
+      "2: skills recharge 18% faster · 4: faster dodge reactions and rolls",
   },
   void: {
     name: "Void",
@@ -189,7 +197,7 @@ export const SPECIES = [
     speed: 91,
     range: 38,
     skill: "Shadow step",
-    skillDesc: "Teleport behind a ranged enemy and strike for 3× attack.",
+    skillDesc: "Dash behind a ranged enemy and strike for 3× attack.",
     cd: 8,
     power: 3,
   },
@@ -336,7 +344,8 @@ export const SPECIES = [
     speed: 105,
     range: 42,
     skill: "Event horizon",
-    skillDesc: "Blink to the weakest enemy and strike twice for 2.4× attack.",
+    skillDesc:
+      "Dash toward the weakest enemy and strike twice for 2.4× attack.",
     cd: 10,
     power: 4.8,
   },
@@ -536,7 +545,7 @@ export const RELICS = [
     name: "Ghost Feather",
     icon: "〰",
     color: "#b296df",
-    desc: "All allies gain 12% dodge chance and 12% movement speed.",
+    desc: "All allies react faster, recharge dodge rolls 0.48s faster, and gain 12% movement speed.",
     cost: 115,
   },
   {
@@ -1098,6 +1107,10 @@ export function makeRun(seed = Date.now(), ids = STARTERS, options = {}) {
     chaos: Math.max(1, Math.min(20, Math.floor(Number(options.chaos) || 1))),
     legendaryLure: false,
     captureOrder: null,
+    fieldHospital: 0,
+    fallen: [],
+    defeatLedger: {},
+    battleSerial: 0,
     contracts: [],
     random,
     team,
@@ -1413,6 +1426,121 @@ export function buyCreature(run, id) {
   run.bench.push(creature(id, 1 + run.planet * 3));
   return true;
 }
+export const CASUALTY_RISK = {
+  Common: 0.65,
+  Uncommon: 0.5,
+  Rare: 0.35,
+  Epic: 0.22,
+  Legendary: 0.12,
+};
+export function casualtyRisk(run, c) {
+  const rarity = BY_ID[c.id]?.rarity;
+  return (
+    (CASUALTY_RISK[rarity] || 0.65) *
+    Math.pow(0.7, Math.min(3, run.fieldHospital || 0)) *
+    Math.pow(0.75, Math.min(2, c.survivalTraining || 0)) *
+    (evolutionStage(c) ? 0.85 : 1)
+  );
+}
+export function hospitalOffer(run) {
+  const level = Math.min(3, run.fieldHospital || 0),
+    cost = shopPrice(run, 65 + level * 45);
+  return { level, cost, ready: level < 3 && run.gold >= cost };
+}
+export function upgradeHospital(run) {
+  const offer = hospitalOffer(run);
+  if (!offer.ready) return false;
+  run.gold -= offer.cost;
+  run.fieldHospital = offer.level + 1;
+  return true;
+}
+export function trainSurvival(run, index) {
+  const c = run.team[index],
+    level = c?.survivalTraining || 0,
+    cost = shopPrice(run, 30 + level * 30);
+  if (!c || level >= 2 || run.gold < cost) return false;
+  run.gold -= cost;
+  c.survivalTraining = level + 1;
+  return true;
+}
+export function deployReserve(run, benchIndex, targetIndex = run.team.length) {
+  if (
+    !Number.isInteger(benchIndex) ||
+    !run.bench[benchIndex] ||
+    !Number.isInteger(targetIndex) ||
+    targetIndex < 0 ||
+    targetIndex > run.team.length ||
+    targetIndex >= 6
+  )
+    return false;
+  const reserve = run.bench[benchIndex],
+    previous = run.team[targetIndex];
+  if (previous) run.bench[benchIndex] = previous;
+  else run.bench.splice(benchIndex, 1);
+  const used = new Set(
+    run.team
+      .filter((c, i) => i !== targetIndex)
+      .map((c, i) => {
+        const d = c.deployment || defaultDeployment(c, run.team.indexOf(c));
+        return `${d.row}:${d.column}`;
+      }),
+  );
+  let deployment =
+    previous?.deployment ||
+    (previous ? defaultDeployment(previous, targetIndex) : null);
+  if (!deployment) {
+    for (let row = 0; row < 3 && !deployment; row++)
+      for (let column = 0; column < 3; column++)
+        if (!used.has(`${row}:${column}`)) {
+          deployment = { row, column };
+          break;
+        }
+  }
+  reserve.deployment = deployment;
+  run.team[targetIndex] = reserve;
+  return true;
+}
+export function settleDefeat(run, key, seed) {
+  run.defeatLedger ||= {};
+  if (run.defeatLedger[key]) return run.defeatLedger[key];
+  const r = rng(seed + 731947),
+    selected = run.team[Math.floor(r() * run.team.length)];
+  if (!selected)
+    return (run.defeatLedger[key] = {
+      lost: false,
+      reason: "No deployed companion remains",
+    });
+  const risk = casualtyRisk(run, selected),
+    lost = r() < risk;
+  const outcome = {
+    lost,
+    id: selected.id,
+    uid: selected.uid,
+    name: creatureName(selected),
+    rarity: BY_ID[selected.id].rarity,
+    level: selected.level,
+    risk,
+    hospital: run.fieldHospital || 0,
+    training: selected.survivalTraining || 0,
+    key,
+  };
+  if (lost) {
+    run.team.forEach((c, i) => {
+      c.deployment ||= defaultDeployment(c, i);
+    });
+    run.team = run.team.filter((c) => c.uid !== selected.uid);
+    run.inventory.push(
+      ...(selected.relics || []).map((item) => {
+        const { link, ...recovered } = item;
+        return recovered;
+      }),
+    );
+    run.fallen ||= [];
+    run.fallen.push({ ...outcome, planet: run.planet, depth: run.depth });
+  }
+  run.defeatLedger[key] = outcome;
+  return outcome;
+}
 export function rewardBattle(run, type, won) {
   if (won) {
     run.wins++;
@@ -1653,6 +1781,9 @@ export class Battle {
     this.winner = null;
     this.units = [];
     this.projectiles = [];
+    this.strikes = [];
+    this.attackSerial = 0;
+    this.cancelledAttacks = new Set();
     this.effects = [];
     this.particles = [];
     this.hazards = [];
@@ -1687,6 +1818,13 @@ export class Battle {
       cleanses: 0,
       traitProcs: 0,
       captures: 0,
+      whiffs: 0,
+      physicalHits: 0,
+      collisions: 0,
+      knockbacks: 0,
+      staggers: 0,
+      rolls: 0,
+      blockedProjectiles: 0,
     };
     this.teamSyn = synergies(run.team);
     this.foeSyn = synergies(foes);
@@ -1735,13 +1873,14 @@ export class Battle {
       this.units.push({
         ...c,
         ...st,
+        ...bodyProperties(BY_ID[c.id], c),
         maxHp: st.hp,
         hp: st.hp,
         side,
         x: actualX,
         y: actualY,
-        px: x,
-        py: y,
+        px: actualX,
+        py: actualY,
         loadout,
         cooldowns,
         attackTimer: 0.3 + this.random(),
@@ -1770,6 +1909,23 @@ export class Battle {
         dashFrom: null,
         velocityX: 0,
         velocityY: 0,
+        impulseX: 0,
+        impulseY: 0,
+        stamina: 100,
+        poise: 0,
+        stagger: 0,
+        bleed: 0,
+        dodgeCooldown: 0.6 + this.random() * 0.5,
+        rollTime: 0,
+        rollX: 0,
+        rollY: 0,
+        rollCount: 0,
+        actionLock: 0,
+        actionId: null,
+        targetMemory: null,
+        targetTimer: 0,
+        threatKey: null,
+        reactionTime: 0,
         captured: false,
         burn: 0,
         poison: 0,
@@ -1977,13 +2133,15 @@ export class Battle {
     if (cd) cd.remaining = Math.max(0, cd.remaining - seconds);
   }
   cleanse(u) {
-    if (u.burn > 0 || u.poison > 0 || u.root > 0) {
+    if (u.burn > 0 || u.poison > 0 || u.root > 0 || u.bleed > 0) {
       this.metrics.cleanses++;
       this.effect(u.x, u.y - 45, "CLEANSE", "#a9e7df");
     }
     u.burn = 0;
     u.poison = 0;
     u.root = 0;
+    u.bleed = 0;
+    u.slow = 0;
   }
   defeat(u, source, skillId) {
     if (u.hp > 0 || u.deathHandled || u.captured) return;
@@ -2204,15 +2362,6 @@ export class Battle {
       target.slow > 0
     )
       amount *= 1.2;
-    const dodge = Math.min(0.6, target.dodge + (target.evade > 0 ? 0.25 : 0));
-    if (this.random() < dodge) {
-      target.dodgeAnim = 0.3;
-      this.effect(target.x, target.y - 40, "DODGE", "#b5dadd");
-      this.metrics.dodges++;
-      this.fx("afterimage", target.x, target.y, "#cfdfd4", { r: 30 });
-      this.dodgeProc(target, source);
-      return 0;
-    }
     const crit = this.random() < 0.045 + m.crit;
     if (crit) {
       amount *= 1.65;
@@ -2238,6 +2387,15 @@ export class Battle {
     );
     target.flash = 0.12;
     target.hitAnim = 0.22;
+    if (kind === "physical" || kind === "projectile") {
+      this.metrics.physicalHits++;
+      this.applyImpact(
+        target,
+        source,
+        amount,
+        !def.auto || def.kind === "cleave",
+      );
+    }
     const color = def.color || ELEMENTS[BY_ID[source.id].element].color;
     this.effect(
       target.x + (this.random() - 0.5) * 16,
@@ -2313,23 +2471,17 @@ export class Battle {
         (trait === "ram" && !def.auto ? 55 : 0);
       if (push) {
         const d = distance(target, source) || 1;
-        target.x = clamp(
-          target.x + ((target.x - source.x) / d) * push,
-          55,
-          945,
-        );
-        target.y = clamp(
-          target.y + ((target.y - source.y) / d) * push,
-          90,
-          460,
-        );
+        target.impulseX +=
+          (((target.x - source.x) / d) * push * 7) / target.mass;
+        target.impulseY +=
+          (((target.y - source.y) / d) * push * 7) / target.mass;
       }
       if (trait === "implosion" && !def.auto)
         this.living(target.side)
           .filter((a) => a !== target && distance(a, target) < 150)
           .forEach((a) => {
-            a.x += (target.x - a.x) * 0.3;
-            a.y += (target.y - a.y) * 0.3;
+            a.impulseX += ((target.x - a.x) * 1.8) / a.mass;
+            a.impulseY += ((target.y - a.y) * 1.8) / a.mass;
             a.slow = 2;
           });
       if (
@@ -2573,11 +2725,285 @@ export class Battle {
       this.metrics.echoes++;
     }
   }
-  projectile(u, t, id, power, scale = 1, proc = true) {
+  // Attacks commit to a direction; a moved target is never hit by identity alone.
+  beginStrike(u, target, id, scale = 1, options = {}) {
+    if (!target) return null;
+    const def = SKILLS[id],
+      m = linkedSupport(u, id),
+      dx = target.x - u.x,
+      dy = target.y - u.y,
+      length = Math.hypot(dx, dy) || 1;
+    const heavy =
+      def.kind === "cleave" || def.kind === "charge" || u.mass > 1.8;
+    const windup = options.windup ?? (def.auto ? (heavy ? 0.3 : 0.22) : 0.36);
+    const strike = {
+      key: ++this.attackSerial,
+      source: u,
+      target,
+      skillId: id,
+      dx: dx / length,
+      dy: dy / length,
+      reach: options.reach ?? Math.max(48, u.range),
+      arc: options.arc ?? (def.kind === "cleave" ? 1.02 : 0.48),
+      beam: !!options.beam,
+      width: options.width || 12,
+      remaining: windup,
+      total: windup,
+      recovery: heavy ? 0.24 : 0.18,
+      scale,
+      power: options.power ?? (def.power || 1),
+      maxTargets:
+        options.maxTargets ??
+        (def.auto ? 1 + (def.radius ? 1 : 0) + m.targets : 1 + m.targets),
+      heavy,
+      targetRoll: target.rollCount,
+      cancelled: false,
+    };
+    this.strikes.push(strike);
+    u.actionId = strike.key;
+    u.actionLock = windup + strike.recovery;
+    u.attackDuration = windup + strike.recovery;
+    u.attackAnim = u.attackDuration;
+    u.face = strike.dx >= 0 ? 1 : -1;
+    return strike;
+  }
+  registerEvade(unit, source, key) {
+    if (!unit || unit.hp <= 0 || unit.lastEvadeKey === key) return;
+    unit.lastEvadeKey = key;
+    this.metrics.dodges++;
+    this.effect(unit.x, unit.y - 43, "EVADED", "#b5dadd");
+    this.dodgeProc(unit, source);
+  }
+  resolveStrike(strike) {
+    const u = strike.source;
+    if (strike.cancelled || u.hp <= 0) return;
+    const color =
+      SKILLS[strike.skillId].color || ELEMENTS[BY_ID[u.id].element].color;
+    this.fx(strike.beam ? "beam" : "slash", u.x, u.y - 12, color, {
+      tx: u.x + strike.dx * strike.reach,
+      ty: u.y + strike.dy * strike.reach - 12,
+      angle: Math.atan2(strike.dy, strike.dx),
+      face: u.face,
+      r: strike.beam ? 30 : strike.reach,
+      width: strike.width,
+      ttl: 0.22,
+      max: 0.22,
+    });
+    const targets = this.living(1 - u.side)
+      .filter((e) => strikeContains(strike, e))
+      .sort((a, b) => distance(a, u) - distance(b, u))
+      .slice(0, strike.maxTargets);
+    for (let i = 0; i < targets.length; i++) {
+      const victim = targets[i];
+      this.hit(
+        victim,
+        u.atk * strike.power,
+        u,
+        strike.skillId,
+        strike.scale * (i ? 0.65 : 1),
+        true,
+        "physical",
+      );
+      if (strike.heavy && !strike.beam && victim.hp > 0) {
+        victim.bleed = Math.max(victim.bleed, 3);
+        victim.bleedSource = u;
+        victim.bleedSkill = strike.skillId;
+      }
+    }
+    if (!targets.length) {
+      this.metrics.whiffs++;
+      this.effect(
+        u.x + strike.dx * strike.reach,
+        u.y + strike.dy * strike.reach - 20,
+        "MISS",
+        "#b9b1a0",
+      );
+      if (strike.target?.rollCount > strike.targetRoll)
+        this.registerEvade(strike.target, u, strike.key);
+    }
+    u.actionId = null;
+  }
+  applyImpact(target, source, strength, heavy) {
+    if (target.hp <= 0) return;
+    const dx = target.x - source.x,
+      dy = target.y - source.y,
+      d = Math.hypot(dx, dy) || 1;
+    const braced =
+      BY_ID[target.id].role === "Guardian" &&
+      (target.policy === "guardian" || target.fortify > 0);
+    const force =
+      (Math.min(175, 35 + strength * 1.1) * (braced ? 0.55 : 1)) /
+      (target.mass || 1);
+    target.impulseX += (dx / d || source.face) * force;
+    target.impulseY += (dy / d) * force;
+    this.metrics.knockbacks++;
+    target.poise +=
+      Math.min(45, strength * 0.38 + (heavy ? 16 : 5)) * (braced ? 0.55 : 1);
+    if (target.poise >= target.maxPoise) {
+      target.poise = 0;
+      target.stagger = target.boss ? 0.2 : 0.52;
+      target.rollTime = 0;
+      target.dashMotion = null;
+      for (const attack of this.strikes)
+        if (attack.source === target && attack.remaining > 0)
+          attack.cancelled = true;
+      if (target.actionId !== null) this.cancelledAttacks.add(target.actionId);
+      target.actionId = null;
+      target.actionLock = target.stagger;
+      this.metrics.staggers++;
+      this.effect(target.x, target.y - 55, "STAGGER", "#ffd99c");
+      this.say(
+        `${creatureName(target)} loses its footing. The windup is interrupted.`,
+      );
+    }
+  }
+  threatFor(u) {
+    for (const strike of this.strikes) {
+      if (
+        strike.source.side === u.side ||
+        strike.cancelled ||
+        strike.source.hp <= 0 ||
+        strike.remaining < 0.025 ||
+        strike.remaining > 0.65
+      )
+        continue;
+      if (strikeContains({ ...strike, reach: strike.reach + 18 }, u))
+        return {
+          key: `strike-${strike.key}`,
+          source: strike.source,
+          strike,
+          deadline: strike.remaining,
+        };
+    }
+    for (const p of this.projectiles) {
+      if (p.source.side === u.side || p.dead) continue;
+      const end = { x: p.x + p.vx * 0.35, y: p.y + p.vy * 0.35 };
+      if (
+        movingBodyHit(
+          { x: p.x, y: p.y },
+          end,
+          { ...u, px: u.x, py: u.y },
+          p.radius + 7,
+        ) !== null
+      )
+        return {
+          key: `shot-${p.key}`,
+          source: p.source,
+          projectile: p,
+          deadline: Math.hypot(u.x - p.x, u.y - 14 - p.y) / p.speed,
+        };
+    }
+    for (const h of this.hazards) {
+      if (
+        (h.environment || h.source.side !== u.side) &&
+        distance(h, u) < h.r + u.radius &&
+        h.ttl > 0.04
+      )
+        return {
+          key: `zone-${h.key}`,
+          source: h.source,
+          hazard: h,
+          deadline: h.ttl,
+        };
+    }
+    return null;
+  }
+  evadeDirection(u, threat) {
+    let best = null;
+    const rollDistance = 75 * (u.mass > 1.8 ? 0.75 : 1);
+    for (let i = 0; i < 8; i++) {
+      const a = (i * Math.PI) / 4,
+        dx = Math.cos(a),
+        dy = Math.sin(a),
+        point = {
+          ...u,
+          x: u.x + dx * rollDistance,
+          y: u.y + dy * rollDistance,
+        };
+      let score = 0;
+      if (point.x < 80 || point.x > 920 || point.y < 115 || point.y > 435)
+        score -= 600;
+      for (const other of this.living(u.side))
+        if (other !== u)
+          score -= Math.max(0, 55 - distance(point, other)) * 1.6;
+      for (const h of this.hazards)
+        if (h.environment || h.source.side !== u.side)
+          score -= Math.max(0, h.r + 25 - distance(point, h)) * 3;
+      if (threat.strike)
+        score += strikeContains(threat.strike, point) ? -150 : 100;
+      if (threat.projectile) {
+        const p = threat.projectile,
+          side =
+            Math.abs((point.x - p.x) * p.vy - (point.y - 14 - p.y) * p.vx) /
+            p.speed;
+        score += Math.min(90, side) * 2;
+      }
+      if (threat.hazard) score += distance(point, threat.hazard) * 2;
+      if (!best || score > best.score) best = { x: dx, y: dy, score };
+    }
+    return best;
+  }
+  reactToThreat(u, dt) {
+    const threat = this.threatFor(u);
+    if (!threat) {
+      u.threatKey = null;
+      u.reactionTime = 0;
+      return;
+    }
+    if (u.threatKey !== threat.key) {
+      u.threatKey = threat.key;
+      u.reactionTime = Math.max(
+        0.065,
+        0.16 -
+          u.dodge * 0.26 -
+          (RARITY[BY_ID[u.id].rarity].cost >= 180 ? 0.025 : 0),
+      );
+    }
+    u.reactionTime -= dt;
+    if (
+      u.reactionTime > 0 ||
+      u.dodgeCooldown > 0 ||
+      u.stamina < 30 ||
+      u.root > 0 ||
+      u.stagger > 0 ||
+      u.actionLock > 0 ||
+      u.rollTime > 0
+    )
+      return;
+    const direction = this.evadeDirection(u, threat);
+    u.rollX = direction.x;
+    u.rollY = direction.y;
+    u.rollTime = 0.25;
+    u.dodgeAnim = 0.32;
+    u.dodgeLock = 0.28;
+    u.dodgeCooldown = Math.max(1.5, 3.1 - u.dodge * 4 - (u.evade > 0 ? 1 : 0));
+    u.stamina -= 30;
+    u.rollCount++;
+    this.metrics.rolls++;
+    this.fx("afterimage", u.x, u.y, "#cfdfd4", { r: 30, ttl: 0.4, max: 0.4 });
+  }
+
+  projectile(u, t, id, power, scale = 1, proc = true, aim = null) {
     if (!t) return;
     const def = SKILLS[id],
       color = def.color || ELEMENTS[BY_ID[u.id].element].color;
+    const speed = def.auto ? 410 : 535,
+      mark = aim || t,
+      flight = Math.min(0.22, distance(u, mark) / speed);
+    const tx = mark.x + (mark.velocityX || 0) * flight,
+      ty = mark.y - 14 + (mark.velocityY || 0) * flight;
+    const dx = tx - u.x,
+      dy = ty - (u.y - 14),
+      length = Math.hypot(dx, dy) || 1;
     this.projectiles.push({
+      key: ++this.attackSerial,
+      vx: (dx / length) * speed,
+      vy: (dy / length) * speed,
+      age: 0,
+      ttl: 3.4,
+      radius: def.auto ? 4 : 7,
+      targetRoll: t.rollCount,
+      passTime: length / speed + 0.3,
       x: u.x,
       y: u.y - 15,
       prevX: u.x,
@@ -2589,7 +3015,7 @@ export class Battle {
       scale,
       proc,
       color,
-      speed: def.auto ? 410 : 535,
+      speed,
       skill: !def.auto,
       trail: [],
     });
@@ -2598,6 +3024,7 @@ export class Battle {
     const def = SKILLS[id],
       m = linkedSupport(u, id);
     this.hazards.push({
+      key: ++this.attackSerial,
       x: t.x,
       y: t.y,
       r: radius * m.area,
@@ -2638,6 +3065,8 @@ export class Battle {
       color = def.color || ELEMENTS[BY_ID[u.id].element].color;
     u.attackAnim = auto ? 0.32 : 0.2;
     if (!auto) {
+      u.actionLock = Math.max(u.actionLock, 0.22);
+      u.stamina = Math.max(0, u.stamina - 10);
       u.castAnim = 0.65;
       this.metrics.skills++;
       this.say(`${creatureName(u)} uses ${def.name}${echo ? " · Echo" : ""}.`);
@@ -2650,70 +3079,68 @@ export class Battle {
       .sort((a, b) => a.hp / a.maxHp - b.hp / b.maxHp);
     if (auto) {
       if (["bolt", "chain"].includes(def.kind)) {
-        this.projectile(u, t, id, def.power, scale);
-        if (def.kind === "chain" || m.targets) {
-          enemies
-            .filter((e) => e !== t)
-            .sort((a, b) => distance(a, t) - distance(b, t))
-            .slice(0, (def.targets || 1) - 1 + m.targets)
-            .forEach((e) => this.projectile(u, e, id, def.power * 0.6, scale));
-        }
-      } else if (def.kind === "beam") {
-        this.fx("beam", u.x, u.y - 10, color, {
-          tx: t.x,
-          ty: t.y - 12,
-          width: 3,
-          ttl: 0.25,
-          max: 0.25,
-        });
-        this.hit(t, power, u, id, scale);
-        if (def.pierce || m.targets)
-          enemies
-            .filter((e) => e !== t && lineDistance(e, u, t) < 30)
-            .slice(0, 2 + m.targets)
-            .forEach((e) => this.hit(e, power * 0.6, u, id, scale));
-      } else {
-        this.fx("slash", t.x, t.y - 8, color, {
-          face: u.face,
-          r: 32,
-          ttl: 0.22,
-          max: 0.22,
-        });
+        const key = ++this.attackSerial;
+        u.actionId = key;
+        u.actionLock = 0.34;
+        u.attackDuration = 0.34;
+        u.attackAnim = 0.34;
         this.queue.push({
-          ttl: 0.09,
+          ttl: 0.16,
           source: u,
           target: t,
           skillId: id,
           power: def.power,
           scale,
-          echo: true,
-          single: true,
+          projectile: true,
+          actionKey: key,
+          aim: {
+            x: t.x,
+            y: t.y,
+            velocityX: t.velocityX,
+            velocityY: t.velocityY,
+          },
         });
-        if (def.kind === "double")
-          this.queue.push({
-            ttl: 0.13,
-            source: u,
-            target: t,
-            skillId: id,
-            scale: scale * (def.hits - 1),
-            echo: true,
-            single: true,
-          });
-        if (def.radius || m.targets) {
+        if (def.kind === "chain" || m.targets) {
           enemies
-            .filter(
-              (e) => e !== t && distance(e, t) < (def.radius || 70) * m.area,
-            )
-            .slice(0, 1 + m.targets)
+            .filter((e) => e !== t)
+            .sort((a, b) => distance(a, t) - distance(b, t))
+            .slice(0, (def.targets || 1) - 1 + m.targets)
             .forEach((e) =>
-              this.hit(
-                e,
-                power * (def.kind === "cleave" ? 0.6 : 0.4),
-                u,
-                id,
+              this.queue.push({
+                ttl: 0.16,
+                source: u,
+                target: e,
+                skillId: id,
+                power: def.power * 0.6,
                 scale,
-              ),
+                projectile: true,
+                actionKey: key,
+                aim: {
+                  x: e.x,
+                  y: e.y,
+                  velocityX: e.velocityX,
+                  velocityY: e.velocityY,
+                },
+              }),
             );
+        }
+      } else if (def.kind === "beam") {
+        this.beginStrike(u, t, id, scale, {
+          beam: true,
+          reach: u.range + 40,
+          windup: 0.24,
+          width: 8,
+          maxTargets: def.pierce ? 3 + m.targets : 1 + m.targets,
+        });
+      } else {
+        const strike = this.beginStrike(u, t, id, scale);
+        if (def.kind === "double") {
+          this.strikes.push({
+            ...strike,
+            key: ++this.attackSerial,
+            remaining: strike.remaining + 0.13,
+            scale: scale * ((def.hits || 2) - 1),
+          });
         }
       }
       if (def.heal)
@@ -2726,8 +3153,7 @@ export class Battle {
       weakest.slice(0, 1 + m.targets).forEach((f) => {
         this.heal(f, def.heal, u, id, true, scale);
         if (def.cleanse) {
-          f.burn = 0;
-          f.poison = 0;
+          this.cleanse(f);
         }
         this.fx("beam", u.x, u.y - 10, color, {
           tx: f.x,
@@ -2764,54 +3190,44 @@ export class Battle {
           .filter((e) => distance(e, u) < 180 * m.area)
           .forEach((e) => (e.slow = def.slow));
     } else if (["dash", "blink", "charge"].includes(def.kind)) {
-      let victim = t;
-      if (def.backline)
-        victim = enemies.find((e) => BY_ID[e.id].range > 100) || t;
-      const oldx = u.x,
-        oldy = u.y;
-      u.dashFrom = { x: oldx, y: oldy };
-      u.dashAnim = 0.38;
-      u.x = clamp(victim.x - u.face * 35, 55, 945);
-      u.y = clamp(victim.y + 14, 90, 460);
-      this.fx("dash", oldx, oldy, color, {
-        tx: u.x,
-        ty: u.y,
-        r: 25,
-        ttl: 0.45,
-        max: 0.45,
+      const victim = def.backline
+        ? enemies.find((e) => BY_ID[e.id].range > 100) || t
+        : t;
+      const dx = victim.x - u.x,
+        dy = victim.y - u.y,
+        length = Math.hypot(dx, dy) || 1,
+        speed = def.kind === "charge" ? 440 : 540;
+      const travel = Math.min(
+          290,
+          Math.max(0, length - u.radius - victim.radius - 3),
+        ),
+        duration = travel / speed;
+      const strike = this.beginStrike(u, victim, id, scale, {
+        windup: 0.16 + duration + 0.1,
+        reach: 62,
+        arc: def.kind === "charge" ? 0.95 : 0.55,
+        maxTargets: def.kind === "charge" ? 6 : 1 + m.targets,
       });
-      this.hit(victim, power, u, id, scale);
-      this.fx("slash", victim.x, victim.y, color, {
-        face: u.face,
-        r: 55,
-        ttl: 0.3,
-        max: 0.3,
-      });
-      if (def.hits > 1)
-        this.queue.push({
-          ttl: 0.2,
-          source: u,
-          target: victim,
-          skillId: id,
-          scale: scale * (def.hits - 1),
-          echo: true,
-          single: true,
-        });
+      u.dashFrom = { x: u.x, y: u.y };
+      u.dashAnim = 0.16 + duration + 0.1;
+      u.dashDuration = u.dashAnim;
+      u.physicalDash = true;
+      u.dashMotion = {
+        x: dx / length,
+        y: dy / length,
+        speed,
+        delay: 0.16,
+        remaining: duration,
+      };
+      u.stamina = Math.max(0, u.stamina - 12);
       if (def.evade) u.evade = def.evade;
-      if (def.kind === "charge" || m.targets) {
-        enemies
-          .filter(
-            (e) =>
-              e !== victim && distance(e, victim) < (def.radius || 95) * m.area,
-          )
-          .slice(0, def.radius ? 6 : m.targets)
-          .forEach((e) => this.hit(e, power * 0.65, u, id, scale));
-        this.fx("ring", victim.x, victim.y, color, {
-          r: (def.radius || 95) * m.area,
-          ttl: 0.6,
-          max: 0.6,
+      if (def.hits > 1)
+        this.strikes.push({
+          ...strike,
+          key: ++this.attackSerial,
+          remaining: strike.remaining + 0.18,
+          scale: scale * (def.hits - 1),
         });
-      }
     } else if (["blast", "volley", "breath"].includes(def.kind)) {
       this.zone(u, t, id, def.power, def.radius, def.delay || 0.7, scale);
       if (def.kind === "breath")
@@ -2839,22 +3255,13 @@ export class Battle {
           );
       }
     } else if (def.kind === "beam") {
-      this.fx("beam", u.x, u.y - 13, color, {
-        tx: t.x,
-        ty: t.y - 13,
-        width: 9,
-        ttl: 0.45,
-        max: 0.45,
+      this.beginStrike(u, t, id, scale, {
+        beam: true,
+        reach: Math.max(300, u.range + 80),
+        windup: 0.38,
+        width: 16,
+        maxTargets: def.pierce ? 6 : 1 + m.targets,
       });
-      this.hit(t, power, u, id, scale);
-      enemies
-        .filter(
-          (e) =>
-            e !== t &&
-            (def.pierce ? lineDistance(e, u, t) < 40 : distance(e, t) < 80),
-        )
-        .slice(0, def.pierce ? 6 : m.targets)
-        .forEach((e) => this.hit(e, power * 0.75, u, id, scale));
     } else if (def.kind === "chain") {
       const targets = enemies
         .sort((a, b) => distance(a, t) - distance(b, t))
@@ -2948,8 +3355,8 @@ export class Battle {
         .filter((e) => distance(e, u) < def.radius * m.area)
         .forEach((e) => {
           if (def.kind === "gravity") {
-            e.x += (u.x - e.x) * 0.25;
-            e.y += (u.y - e.y) * 0.25;
+            e.impulseX += ((u.x - e.x) * 1.5) / e.mass;
+            e.impulseY += ((u.y - e.y) * 1.5) / e.mass;
           }
           this.hit(e, power, u, id, scale);
         });
@@ -2986,6 +3393,11 @@ export class Battle {
       enemies = this.living(1 - u.side);
     if (!enemies.length) return false;
     if (
+      ["dash", "blink", "charge"].includes(def.kind) &&
+      (u.root > 0 || distance(u, this.target(u) || u) >= 340)
+    )
+      return false;
+    if (
       u.policy === "execute" &&
       !["heal", "heal-all", "awakening", "shield"].includes(def.kind)
     )
@@ -2995,11 +3407,14 @@ export class Battle {
         friends.some(
           (a) =>
             a.hp < a.maxHp * 0.82 ||
-            (def.cleanse && (a.burn > 0 || a.poison > 0)),
+            (def.cleanse &&
+              (a.burn > 0 || a.poison > 0 || a.bleed > 0 || a.root > 0)),
         ) ||
         linkedSupport(u, id).overheal > 0 ||
         (u.side === 0 && this.run.relics.includes("overgrowth"))
       );
+    if (["dash", "blink", "charge"].includes(def.kind))
+      return u.root <= 0 && distance(u, this.target(u) || u) < 340;
     if (def.kind === "shield")
       return friends.some(
         (a) =>
@@ -3153,7 +3568,8 @@ export class Battle {
         target.burn > 0 ||
         target.poison > 0 ||
         target.root > 0 ||
-        target.slow > 0,
+        target.slow > 0 ||
+        target.bleed > 0,
       mode: this.capturePlan.mode,
     };
     const chance =
@@ -3205,7 +3621,7 @@ export class Battle {
       hazard = allies.reduce((n, a) => n + a.hazardTaken, 0);
     if (status > 80)
       notes.push(
-        `${Math.round(status)} health lost to burn and poison. Try Purification or a Springwater healer.`,
+        `${Math.round(status)} health lost to burn, poison, and bleed. Try Purification or a Springwater healer.`,
       );
     if (hazard > 80)
       notes.push(
@@ -3314,6 +3730,10 @@ export class Battle {
         "hitAnim",
         "dodgeAnim",
         "dodgeLock",
+        "dodgeCooldown",
+        "actionLock",
+        "stagger",
+        "bleed",
       ])
         u[k] = Math.max(0, u[k] - dt);
       if (u.burn > 0)
@@ -3336,7 +3756,24 @@ export class Battle {
           "status",
           false,
         );
+      if (u.bleed > 0)
+        this.damageUnit(
+          u,
+          dt * 6 * (u.motion > 0.2 ? 1.6 : 1),
+          u.bleedSource,
+          u.bleedSkill,
+          0,
+          "status",
+          false,
+        );
       if (u.hp <= 0) continue;
+      u.stamina = Math.min(
+        100,
+        u.stamina + dt * (u.actionLock > 0 || u.rollTime > 0 ? 9 : 20),
+      );
+      u.poise = Math.max(0, u.poise - dt * 12);
+      u.targetTimer -= dt;
+      this.reactToThreat(u, dt);
       if (u.regeneration > 0)
         this.heal(u, u.maxHp * 0.025 * dt, u, null, false);
       if (CREATURE_TRAITS[u.id] === "symbiosis" && u.hp > u.maxHp * 0.5)
@@ -3350,9 +3787,21 @@ export class Battle {
       for (const cooldown of Object.values(u.cooldowns))
         cooldown.remaining -= dt;
       if (u.boss) this.bossMechanic(u, dt);
-      const t = this.target(u);
+      const forced = this.living(1 - u.side).some(
+        (e) => e.taunt > 0 && distance(e, u) < 250,
+      );
+      if (
+        u.targetTimer <= 0 ||
+        !u.targetMemory ||
+        u.targetMemory.hp <= 0 ||
+        forced
+      ) {
+        u.targetMemory = this.target(u);
+        u.targetTimer = 0.45;
+      }
+      const t = u.targetMemory;
       if (!t) continue;
-      u.face = t.x >= u.x ? 1 : -1;
+      if (u.actionLock <= 0) u.face = t.x >= u.x ? 1 : -1;
       const sp = BY_ID[u.id],
         dist = distance(u, t);
       let vx = 0,
@@ -3384,6 +3833,30 @@ export class Battle {
         vx = (u.x - t.x) / (dist || 1);
         vy = (u.y - t.y) / (dist || 1);
       }
+      // Strikers seek a clear side of an occupied front rather than pushing through it.
+      const screen = this.living(u.side).find(
+        (a) =>
+          a !== u && BY_ID[a.id].role === "Guardian" && distance(a, t) < 90,
+      );
+      if (
+        screen &&
+        sp.role === "Striker" &&
+        dist < 160 &&
+        dist > u.range * 0.7 &&
+        !hazard
+      ) {
+        const dx = t.x - screen.x,
+          dy = t.y - screen.y,
+          len = Math.hypot(dx, dy) || 1;
+        const direction = u.y < t.y ? -1 : 1;
+        const point = {
+          x: t.x - (dy / len) * direction * 65,
+          y: t.y + (dx / len) * direction * 65,
+        };
+        const d = distance(u, point) || 1;
+        vx = (point.x - u.x) / d;
+        vy = (point.y - u.y) / d;
+      }
       for (const f of this.living(u.side)) {
         if (f === u) continue;
         const d = distance(f, u);
@@ -3395,18 +3868,52 @@ export class Battle {
       }
       u.px = u.x;
       u.py = u.y;
-      if (u.root <= 0) {
-        const movement =
-          u.speed * (u.slow > 0 ? 0.5 : 1) * (u.movementBuff > 0 ? 1.3 : 1);
-        const smoothing = 1 - Math.exp(-dt * 14);
-        u.velocityX += (vx * movement - u.velocityX) * smoothing;
-        u.velocityY += (vy * movement - u.velocityY) * smoothing;
-        u.x = clamp(u.x + u.velocityX * dt, 55, 945);
-        u.y = clamp(u.y + u.velocityY * dt, 90, 460);
+      const rooted = u.root > 0,
+        locked = u.actionLock > 0 || u.stagger > 0;
+      if (u.dashMotion && !rooted && u.stagger <= 0) {
+        const dash = u.dashMotion;
+        dash.delay -= dt;
+        if (dash.delay <= 0 && dash.remaining > 0) {
+          const travel = Math.min(dt, dash.remaining);
+          u.velocityX = dash.x * dash.speed;
+          u.velocityY = dash.y * dash.speed;
+          u.x += u.velocityX * travel;
+          u.y += u.velocityY * travel;
+          dash.remaining -= travel;
+        } else {
+          u.velocityX = 0;
+          u.velocityY = 0;
+        }
+        if (dash.remaining <= 0) u.dashMotion = null;
+      } else if (u.rollTime > 0 && !rooted && u.stagger <= 0) {
+        const speed = u.mass > 1.8 ? 225 : 300;
+        u.velocityX = u.rollX * speed;
+        u.velocityY = u.rollY * speed;
+        u.x += u.velocityX * dt;
+        u.y += u.velocityY * dt;
+        u.rollTime = Math.max(0, u.rollTime - dt);
       } else {
-        u.velocityX = 0;
-        u.velocityY = 0;
+        if (rooted) {
+          u.rollTime = 0;
+          u.dashMotion = null;
+        }
+        const movement =
+          u.speed *
+          (u.slow > 0 ? 0.5 : 1) *
+          (u.movementBuff > 0 ? 1.3 : 1) *
+          (u.stamina < 20 ? 0.7 : 1);
+        const smoothing = 1 - Math.exp(-dt * 14),
+          factor = rooted || locked ? 0 : 1;
+        u.velocityX += (vx * movement * factor - u.velocityX) * smoothing;
+        u.velocityY += (vy * movement * factor - u.velocityY) * smoothing;
+        u.x += u.velocityX * dt;
+        u.y += u.velocityY * dt;
       }
+      u.x += u.impulseX * dt;
+      u.y += u.impulseY * dt;
+      u.impulseX *= Math.exp(-dt * 9);
+      u.impulseY *= Math.exp(-dt * 9);
+      confineBody(u);
       u.dustTimer -= dt;
       u.motion = Math.min(
         1,
@@ -3428,7 +3935,14 @@ export class Battle {
       const ready = u.loadout.active.find(
         (id) => u.cooldowns[id].remaining <= 0 && this.shouldCast(u, id),
       );
-      if (ready && u.dodgeLock <= 0 && u.hp > 0) {
+      if (
+        ready &&
+        u.dodgeLock <= 0 &&
+        u.actionLock <= 0 &&
+        u.stagger <= 0 &&
+        u.stamina >= 10 &&
+        u.hp > 0
+      ) {
         const cd = u.cooldowns[ready];
         cd.remaining = cd.total;
         cd.casts++;
@@ -3438,6 +3952,9 @@ export class Battle {
       u.cd = u.cooldowns[u.id].total;
       if (
         u.attackTimer <= 0 &&
+        u.actionLock <= 0 &&
+        u.stagger <= 0 &&
+        u.stamina >= 8 &&
         dist <= u.range + 12 &&
         u.dodgeLock <= 0 &&
         u.hp > 0
@@ -3445,12 +3962,25 @@ export class Battle {
         u.attackTimer =
           (sp.role === "Guardian" ? 1.55 : 1.3) *
           linkedSupport(u, u.loadout.auto).attackSpeed;
+        u.stamina -= 8;
         this.cast(u, u.loadout.auto, t);
       }
     }
+    this.metrics.collisions += separateBodies(this.units);
+    for (const strike of this.strikes) {
+      strike.remaining -= dt;
+      if (strike.remaining <= 0) this.resolveStrike(strike);
+    }
+    this.strikes = this.strikes.filter(
+      (s) => s.remaining > 0 && !s.cancelled && s.source.hp > 0,
+    );
     for (const q of this.queue) {
       q.ttl -= dt;
-      if (q.ttl <= 0 && q.source.hp > 0) {
+      if (
+        q.ttl <= 0 &&
+        q.source.hp > 0 &&
+        !this.cancelledAttacks.has(q.actionKey)
+      ) {
         if (q.single) {
           if (q.target?.hp > 0)
             this.hit(
@@ -3461,39 +3991,52 @@ export class Battle {
               q.scale,
             );
         } else if (q.projectile)
-          this.projectile(q.source, q.target, q.skillId, q.power, q.scale);
+          this.projectile(
+            q.source,
+            q.target,
+            q.skillId,
+            q.power,
+            q.scale,
+            true,
+            q.aim,
+          );
         else this.cast(q.source, q.skillId, q.target, q.scale, true);
       }
     }
     this.queue = this.queue.filter((q) => q.ttl > 0);
     for (const p of this.projectiles) {
-      if (p.target.hp <= 0) {
-        p.dead = true;
-        continue;
-      }
       p.prevX = p.x;
       p.prevY = p.y;
+      p.age += dt;
+      p.ttl -= dt;
       p.trail.push({ x: p.x, y: p.y });
       if (p.trail.length > 7) p.trail.shift();
-      const dx = p.target.x - p.x,
-        dy = p.target.y - 14 - p.y,
-        d = Math.hypot(dx, dy);
-      if (d < p.speed * dt + 8) {
+      const end = { x: p.x + p.vx * dt, y: p.y + p.vy * dt };
+      const impacts = this.living(1 - p.source.side)
+        .map((unit) => ({ unit, t: movingBodyHit(p, end, unit, p.radius) }))
+        .filter((h) => h.t !== null)
+        .sort((a, b) => a.t - b.t);
+      const impact = impacts[0];
+      if (impact) {
+        p.x += (end.x - p.x) * impact.t;
+        p.y += (end.y - p.y) * impact.t;
         this.hit(
-          p.target,
+          impact.unit,
           p.source.atk * p.power,
           p.source,
           p.skillId,
           p.scale,
           p.proc,
+          "projectile",
         );
+        if (impact.unit !== p.target) this.metrics.blockedProjectiles++;
         const def = SKILLS[p.skillId];
         if (def.radius)
           this.living(1 - p.source.side)
             .filter(
               (e) =>
-                e !== p.target &&
-                distance(e, p.target) <
+                e !== impact.unit &&
+                distance(e, impact.unit) <
                   def.radius * linkedSupport(p.source, p.skillId).area,
             )
             .forEach((e) =>
@@ -3508,8 +4051,20 @@ export class Battle {
             );
         p.dead = true;
       } else {
-        p.x += (dx / d) * p.speed * dt;
-        p.y += (dy / d) * p.speed * dt;
+        p.x = end.x;
+        p.y = end.y;
+        if (
+          !p.evadeRecorded &&
+          p.age > p.passTime &&
+          p.target?.rollCount > p.targetRoll
+        ) {
+          p.evadeRecorded = true;
+          this.registerEvade(p.target, p.source, `shot-${p.key}`);
+        }
+        if (p.ttl <= 0 || p.x < 25 || p.x > 975 || p.y < 45 || p.y > 490) {
+          p.dead = true;
+          this.metrics.whiffs++;
+        }
       }
     }
     this.projectiles = this.projectiles.filter((p) => !p.dead);

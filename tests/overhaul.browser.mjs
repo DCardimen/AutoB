@@ -143,7 +143,7 @@ await page.locator('[data-action="close"]').first().click();
 report.checks.push("Actionable battle report renders actual damage causes");
 await page.close();
 // A deterministic advanced encounter fixture verifies real victory → Chaos unlock → adoption.
-const endRun = makeRun(90);
+const endRun = makeRun(91);
 endRun.planet = 2;
 endRun.depth = 5;
 endRun.team.forEach((c) => {

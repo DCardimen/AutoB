@@ -49,6 +49,13 @@ import {
   eventAvailable,
   generateShop,
   canSupport,
+  CASUALTY_RISK,
+  casualtyRisk,
+  hospitalOffer,
+  upgradeHospital,
+  trainSurvival,
+  settleDefeat,
+  deployReserve,
 } from "./game.js";
 import { SKILLS, loadoutFor } from "./skills.js";
 import { creatureImage, renderBattle } from "./art.js";
@@ -139,7 +146,13 @@ let run,
   selectedDifficulty = "standard",
   selectedChaos = 1,
   formationSelection = 0;
-if (saved?.run?.team?.length === 6 && saved.run.planet <= 3) {
+if (
+  Array.isArray(saved?.run?.team) &&
+  saved.run.team.length <= 6 &&
+  saved.run.team.every((c) => c && BY_ID[c.id]) &&
+  saved.run.planet >= 0 &&
+  saved.run.planet <= 3
+) {
   run = {
     ...saved.run,
     random: rng(saved.run.seed + saved.run.wins * 771 + saved.run.depth * 33),
@@ -157,6 +170,10 @@ if (saved?.run?.team?.length === 6 && saved.run.planet <= 3) {
   if (phase === "map") viewName = "map";
 } else freshRun(STARTERS, false);
 run.inventory ??= [];
+run.fieldHospital ??= 0;
+run.fallen ??= [];
+run.defeatLedger ??= {};
+run.battleSerial ??= 0;
 for (const c of [...run.team, ...run.bench]) c.relics ??= [];
 function freshRun(ids, increment = true, options = {}) {
   if (increment) profile.runs++;
@@ -302,7 +319,7 @@ function arenaHTML() {
               "",
               !["battle", "elite", "boss", "capture"].includes(type),
             );
-  return `${!profile.tutorial ? `<div class="tutorial-callout"><span>Welcome, explorer. Your six companions are ready. Scout the enemy counterplan, link your first gem, then deploy your six companions. Battles run automatically.</span>${button("Link your first gem", "tutorial-gem", "secondary small")}<button data-action="dismiss-tutorial" aria-label="Dismiss welcome">×</button></div>` : ""}<div class="arena-grid"><div class="arena-main"><section class="panel arena-panel"><div class="panel-top"><span class="panel-title">THE OVERGROWN ARENA <span style="color:#687d5d;margin-left:9px">/ ${String(run.depth + 1).padStart(2, "0")}</span></span><span class="status-dot ${live ? "live" : ""}"><i></i> ${live ? "BATTLE IN PROGRESS" : phase === "reward" ? "ENCOUNTER COMPLETE" : mapWaiting ? "AWAITING YOUR PATH" : ended ? "EXPEDITION ENDED" : "PREPARING FOR BATTLE"}</span></div><div class="arena-viewport"><canvas id="battle-canvas" aria-label="Real-time creature arena. Your expedition is on the left, wild creatures on the right."></canvas><div class="arena-label"><span class="location-icon">${ICONS[type]}</span><div><strong>${type === "boss" ? p.bossName : "The Forgotten Colosseum"}</strong><small>${p.name.toUpperCase()} · ${LABELS[type].toUpperCase()}</small></div></div><div class="arena-timer" id="arena-timer">${live ? "00:00" : "READY"}</div>${type === "boss" ? `<div class="boss-banner"><div><span>${p.bossName}</span><small id="boss-phase">PHASE I</small></div><div class="boss-health-track"><i id="boss-health" style="width:100%"></i></div></div>` : ""}<div class="arena-bottom-labels"><span id="ally-count">YOUR EXPEDITION · 6</span><span class="versus">vs.</span><span id="foe-count">THE WILDS · ${foes?.length || 4}</span></div></div><div class="arena-control"><div class="control-left"><button class="pause-btn" data-action="pause" title="Pause battle (Space)" aria-label="Pause battle" ${!live ? "disabled" : ""}>${paused ? "▶" : "II"}</button><div class="speed-switch" aria-label="Battle speed">${[1, 2, 3].map((v) => `<button data-speed="${v}" class="${speed === v ? "active" : ""}">${v}×</button>`).join("")}</div><span class="control-note"><kbd>SPACE</kbd> to pause</span></div>${mainAction}</div></section><div class="formation-section"><div class="section-heading"><h2>YOUR EXPEDITION <span>6 / 6</span></h2><p>Inspect skills & AI · Deploy on the tactical grid</p><div class="segmented" title="Team AI priority">${["balanced", "hunt", "guard"].map((s) => `<button data-stance="${s}" class="${run.stance === s ? "active" : ""}" ${live ? "disabled" : ""}>${{ balanced: "Balanced", hunt: "Hunt", guard: "Guard" }[s]}</button>`).join("")}</div></div><div class="team-grid">${run.team.map((u, i) => creatureCard(u, i)).join("")}</div></div><div class="relic-section"><span class="relic-heading">✧ EXPEDITION RELICS <span class="muted">${run.relics.length}</span></span><button class="text-button pack-button" data-action="pack">◈ Relic pack · ${run.inventory.length}</button>${
+  return `${!profile.tutorial ? `<div class="tutorial-callout"><span>Welcome, explorer. Your six companions are ready. Scout the enemy counterplan, link your first gem, then deploy your six companions. Battles run automatically.</span>${button("Link your first gem", "tutorial-gem", "secondary small")}<button data-action="dismiss-tutorial" aria-label="Dismiss welcome">×</button></div>` : ""}<div class="arena-grid"><div class="arena-main"><section class="panel arena-panel"><div class="panel-top"><span class="panel-title">THE OVERGROWN ARENA <span style="color:#687d5d;margin-left:9px">/ ${String(run.depth + 1).padStart(2, "0")}</span></span><span class="status-dot ${live ? "live" : ""}"><i></i> ${live ? "BATTLE IN PROGRESS" : phase === "reward" ? "ENCOUNTER COMPLETE" : mapWaiting ? "AWAITING YOUR PATH" : ended ? "EXPEDITION ENDED" : "PREPARING FOR BATTLE"}</span></div><div class="arena-viewport"><canvas id="battle-canvas" aria-label="Real-time creature arena. Your expedition is on the left, wild creatures on the right."></canvas><div class="arena-label"><span class="location-icon">${ICONS[type]}</span><div><strong>${type === "boss" ? p.bossName : "The Forgotten Colosseum"}</strong><small>${p.name.toUpperCase()} · ${LABELS[type].toUpperCase()}</small></div></div><div class="arena-timer" id="arena-timer">${live ? "00:00" : "READY"}</div>${type === "boss" ? `<div class="boss-banner"><div><span>${p.bossName}</span><small id="boss-phase">PHASE I</small></div><div class="boss-health-track"><i id="boss-health" style="width:100%"></i></div></div>` : ""}<div class="arena-bottom-labels"><span id="ally-count">YOUR EXPEDITION · ${run.team.length}</span><span class="versus">vs.</span><span id="foe-count">THE WILDS · ${foes?.length || 4}</span></div></div><div class="arena-control"><div class="control-left"><button class="pause-btn" data-action="pause" title="Pause battle (Space)" aria-label="Pause battle" ${!live ? "disabled" : ""}>${paused ? "▶" : "II"}</button><div class="speed-switch" aria-label="Battle speed">${[1, 2, 3].map((v) => `<button data-speed="${v}" class="${speed === v ? "active" : ""}">${v}×</button>`).join("")}</div><span class="control-note"><kbd>SPACE</kbd> to pause</span></div>${mainAction}</div></section><div class="formation-section"><div class="section-heading"><h2>YOUR EXPEDITION <span>${run.team.length} / 6</span></h2><p>Inspect skills & AI · Deploy on the tactical grid</p><div class="segmented" title="Team AI priority">${["balanced", "hunt", "guard"].map((s) => `<button data-stance="${s}" class="${run.stance === s ? "active" : ""}" ${live ? "disabled" : ""}>${{ balanced: "Balanced", hunt: "Hunt", guard: "Guard" }[s]}</button>`).join("")}</div></div><div class="team-grid">${Array.from({ length: 6 }, (_, i) => (run.team[i] ? creatureCard(run.team[i], i) : `<button class="creature-card empty-slot" data-action="reserves" ${phase === "battle" ? "disabled" : ""}><span>+</span><strong>Empty place</strong><small>Deploy a reserve companion</small></button>`)).join("")}</div></div><div class="relic-section"><span class="relic-heading">✧ EXPEDITION RELICS <span class="muted">${run.relics.length}</span></span><button class="text-button pack-button" data-action="pack">◈ Relic pack · ${run.inventory.length}</button>${
     run.relics.length
       ? `<div class="relic-list">${run.relics
           .map((id) => {
@@ -476,6 +493,10 @@ function closeModal() {
 function openCreature(i) {
   selectedCreature = i;
   const u = run.team[i];
+  if (!u) {
+    openReserves();
+    return;
+  }
   openDetail(u, i);
 }
 function discoverForm(c) {
@@ -635,11 +656,16 @@ function openDetail(u, index = null, codex = false) {
     ),
     locked = codex && !profile.owned.includes(u.id);
   modal(
-    `<div class="detail-top">${image(u)}<div><span class="section-kicker" style="color:${RARITY[s.rarity].color}">${s.rarity.toUpperCase()} CREATURE</span><h2>${creatureName(u)}</h2><p style="margin:0">${s.role} · ${e.name} · Level ${u.level}</p><div class="tags">${tag(`${ROLES[s.role]} ${s.role}`)}${tag(`${e.icon} ${e.name}`)}</div></div></div><div class="stat-grid"><div class="stat"><small>HEALTH</small><strong>${st.hp}</strong></div><div class="stat"><small>ATTACK</small><strong>${st.atk}</strong></div><div class="stat"><small>MOVEMENT</small><strong>${Math.round(st.speed)}</strong></div><div class="stat"><small>SKILL COOLDOWN</small><strong>${st.cd.toFixed(1)}s</strong></div></div><div class="trait-panel"><strong>${traitFor(u).name}</strong><p>${traitFor(u).desc}</p></div>${index !== null ? policyHTML(u, index) : ""}${evolutionHTML(u, index)}${skillsHTML(u, index)}${loadoutHTML(u, index)}${index !== null ? `<div class="focus-control"><span class="section-kicker">TRAINING FOCUS · CHOOSE BEFORE BATTLE</span><div class="segmented">${["balanced", "aggressive", "defensive", "swift"].map((f) => `<button data-focus="${f}" data-index="${index}" class="${u.focus === f ? "active" : ""}" ${phase === "battle" ? "disabled" : ""}>${f.charAt(0).toUpperCase() + f.slice(1)}</button>`).join("")}</div><p style="font-size:10px;margin:9px 0 0">${{ balanced: "Natural strengths. No stat tradeoffs.", aggressive: "+15% attack · −8% health.", defensive: "+15% health · −8% attack.", swift: "15% faster skills · −6% attack." }[u.focus || "balanced"]}</p></div><div class="thin-rule"></div><span class="section-kicker">SWAP WITH A COMPANION ON YOUR BENCH</span><div class="bench-list">${run.bench.length ? run.bench.map((b, j) => `<button class="bench-button" data-swap="${j}" data-index="${index}" ${phase === "battle" ? "disabled" : ""}>${image(b)}${creatureName(b)}<br><span class="muted">Lv. ${b.level}</span></button>`).join("") : '<div class="empty-bench">Capture a creature or recruit one at an outpost to fill your bench.</div>'}</div><p class="starter-note">${u.level >= 5 && !evolutionStage(u) ? "EVOLUTION AVAILABLE · INSPECT YOUR EVOLUTION PATH ABOVE · " : ""}${u.level >= 5 ? "AWAKENED · THIRD SKILL UNLOCKED · " : ""}${u.bond ? `BOND ${u.bond} · +${u.bond * 2}% BASE HEALTH · ` : ""}${u.xp} / ${xpNeeded(u.level)} EXP toward the next level · ${u.training || 0} training upgrades</p>` : locked ? '<p class="disabled-note">Find this creature in the wild and capture it to unlock it as a future starter.</p>' : `<p style="font-size:11px">${e.description}. Rare companions have stronger base stats and specialized skills.</p>`}${button("Back to expedition", "close", "secondary")}`,
+    `<div class="detail-top">${image(u)}<div><span class="section-kicker" style="color:${RARITY[s.rarity].color}">${s.rarity.toUpperCase()} CREATURE</span><h2>${creatureName(u)}</h2><p style="margin:0">${s.role} · ${e.name} · Level ${u.level}</p><div class="tags">${tag(`${ROLES[s.role]} ${s.role}`)}${tag(`${e.icon} ${e.name}`)}</div></div></div><div class="stat-grid"><div class="stat"><small>HEALTH</small><strong>${st.hp}</strong></div><div class="stat"><small>ATTACK</small><strong>${st.atk}</strong></div><div class="stat"><small>MOVEMENT</small><strong>${Math.round(st.speed)}</strong></div><div class="stat"><small>SKILL COOLDOWN</small><strong>${st.cd.toFixed(1)}s</strong></div></div><div class="trait-panel"><strong>${traitFor(u).name}</strong><p>${traitFor(u).desc}</p></div>${index !== null ? policyHTML(u, index) + survivalHTML(u, index) : ""}${evolutionHTML(u, index)}${skillsHTML(u, index)}${loadoutHTML(u, index)}${index !== null ? `<div class="focus-control"><span class="section-kicker">TRAINING FOCUS · CHOOSE BEFORE BATTLE</span><div class="segmented">${["balanced", "aggressive", "defensive", "swift"].map((f) => `<button data-focus="${f}" data-index="${index}" class="${u.focus === f ? "active" : ""}" ${phase === "battle" ? "disabled" : ""}>${f.charAt(0).toUpperCase() + f.slice(1)}</button>`).join("")}</div><p style="font-size:10px;margin:9px 0 0">${{ balanced: "Natural strengths. No stat tradeoffs.", aggressive: "+15% attack · −8% health.", defensive: "+15% health · −8% attack.", swift: "15% faster skills · −6% attack." }[u.focus || "balanced"]}</p></div><div class="thin-rule"></div><span class="section-kicker">SWAP WITH A COMPANION ON YOUR BENCH</span><div class="bench-list">${run.bench.length ? run.bench.map((b, j) => `<button class="bench-button" data-swap="${j}" data-index="${index}" ${phase === "battle" ? "disabled" : ""}>${image(b)}${creatureName(b)}<br><span class="muted">Lv. ${b.level}</span></button>`).join("") : '<div class="empty-bench">Capture a creature or recruit one at an outpost to fill your bench.</div>'}</div><p class="starter-note">${u.level >= 5 && !evolutionStage(u) ? "EVOLUTION AVAILABLE · INSPECT YOUR EVOLUTION PATH ABOVE · " : ""}${u.level >= 5 ? "AWAKENED · THIRD SKILL UNLOCKED · " : ""}${u.bond ? `BOND ${u.bond} · +${u.bond * 2}% BASE HEALTH · ` : ""}${u.xp} / ${xpNeeded(u.level)} EXP toward the next level · ${u.training || 0} training upgrades</p>` : locked ? '<p class="disabled-note">Find this creature in the wild and capture it to unlock it as a future starter.</p>' : `<p style="font-size:11px">${e.description}. Rare companions have stronger base stats and specialized skills.</p>`}${button("Back to expedition", "close", "secondary")}`,
     "creature",
   );
 }
 function startBattle() {
+  if (!run.team.length) {
+    toast("Deploy a reserve companion before entering battle.");
+    openReserves();
+    return;
+  }
   if (
     phase !== "prep" ||
     !["battle", "elite", "boss", "capture"].includes(node.type)
@@ -669,6 +695,13 @@ function startBattle() {
     }
   }
   if (node.type === "capture" && run.legendaryLure) run.legendaryLure = false;
+  if (!run.defeatReservation) {
+    run.battleSerial++;
+    run.defeatReservation = {
+      key: `${node.id}:${run.battleSerial}`,
+      seed: node.seed + run.battleSerial * 9973,
+    };
+  }
   battle = new Battle(run, foes, node.seed);
   battle.reducedMotion = profile.reducedMotion;
   soundscape.begin(run.planet, profile.sound);
@@ -735,6 +768,13 @@ function finishBattle() {
     reward.tacticalCapture = run.captureReservation.result;
   }
   reward.captureOptions = foes.filter((f) => !f.boss);
+  if (!won)
+    reward.casualty = settleDefeat(
+      run,
+      run.defeatReservation.key,
+      run.defeatReservation.seed,
+    );
+
   if (run.relics.includes("salvage") && node.type === "elite" && won)
     run.inventory.push(personalRelic(reward.personalRelic));
   run.contracts = [];
@@ -745,6 +785,38 @@ function finishBattle() {
   sound(won ? "win" : "loss");
   openRewards();
 }
+function casualtyHTML(outcome) {
+  if (!outcome?.id) return "";
+  return `<section class="casualty-result ${outcome.lost ? "lost" : "rescued"}"><span class="section-kicker">RETREAT CASUALTY · RESULT SAVED</span><div>${image(outcome.id)}<div><strong>${outcome.lost ? outcome.name + " has fallen." : outcome.name + " was rescued."}</strong><p>${outcome.rarity} · ${Math.round(outcome.risk * 1000) / 10}% death chance if selected. ${outcome.lost ? "Lost permanently from this expedition. Socketed gems were recovered into your pack. The family remains unlocked for future runs." : "Field care and survival drills lower this risk. Your companion remains on the team."}</p></div></div>${outcome.lost && run.bench.length ? button("Deploy a reserve companion →", "reserves", "secondary") : ""}</section>`;
+}
+function survivalHTML(c, index) {
+  const level = c.survivalTraining || 0,
+    cost = shopPrice(run, 30 + level * 30);
+  return `<section class="survival-panel"><span class="section-kicker">SURVIVAL · ${BY_ID[c.id].rarity.toUpperCase()}</span><strong>${Math.round(casualtyRisk(run, c) * 1000) / 10}% death chance if selected on defeat</strong><p>One random active ally faces a rescue roll after a lost battle. Rarer creatures are safer. Evolution lowers the risk 15%. Field hospital ${run.fieldHospital || 0} / 3 · drills ${level} / 2.</p>${button(level >= 2 ? "✓ Survival drills mastered" : `Survival drill · ◉ ${cost}`, `survival-${index}`, "secondary small", phase === "battle" || level >= 2 || run.gold < cost)}<small>Each drill lowers this companion’s remaining risk by 25% for the run.</small></section>`;
+}
+function openFieldCare() {
+  const offer = hospitalOffer(run);
+  modal(
+    `<span class="section-kicker">FIELD HOSPITAL · ${offer.level} / 3</span><h2>Bring them home.</h2><p>After defeat, one random deployed ally faces a rescue roll. A failed roll permanently removes that individual from this expedition. Its family remains in your menagerie and its gems return to your pack. Rarer companions have better survival odds.</p><div class="casualty-rarities">${Object.entries(
+      CASUALTY_RISK,
+    )
+      .map(
+        ([rarity, risk]) =>
+          `<span style="color:${RARITY[rarity].color}">${rarity}<b>${Math.round(risk * 100)}%</b></span>`,
+      )
+      .join(
+        "",
+      )}</div><p>These are base death chances <strong>when selected</strong>. Each hospital tier reduces everyone’s remaining risk by 30%; each personal drill reduces its wearer’s by 25%. Evolution reduces it another 15%. These protections stack.</p>${button(offer.level >= 3 ? "✓ Field hospital complete" : `Upgrade field hospital · ◉ ${offer.cost}`, "hospital-upgrade", "", phase === "battle" || !offer.ready)}<div class="care-roster">${run.team.map((c, i) => `<div>${image(c)}<strong>${creatureName(c)}</strong><span>${Math.round(casualtyRisk(run, c) * 1000) / 10}% risk</span>${button("Inspect & train", `care-creature-${i}`, "secondary small")}</div>`).join("")}</div>${run.fallen?.length ? `<span class="section-kicker">FALLEN THIS EXPEDITION · ${run.fallen.length}</span><p>${run.fallen.map((c) => c.name + " · Lv. " + c.level).join(" / ")}</p>` : ""}<div class="modal-actions">${button("Return to expedition", "close", "secondary")}</div>`,
+    "care",
+  );
+}
+function openReserves() {
+  modal(
+    `<span class="section-kicker">RESERVE COMPANIONS · ${run.team.length} / 6 DEPLOYED</span><h2>Fill the empty places.</h2><p>Casualties leave real vacancies. A reserve keeps its level, evolution, training, and gems when deployed.</p><div class="starter-grid">${run.bench.map((c, i) => `<button class="starter-card" data-deploy-reserve="${i}" ${phase === "battle" || run.team.length >= 6 ? "disabled" : ""}>${image(c)}<strong>${creatureName(c)}</strong><small>Lv. ${c.level} · ${BY_ID[c.id].rarity}<br>Deploy into an empty place →</small></button>`).join("") || "<p>No reserves yet. Capture a wild creature or recruit at an outpost. You may fight with fewer than six.</p>"}</div><div class="modal-actions">${button("Return to expedition", "close", "secondary")}</div>`,
+    "reserves",
+  );
+}
+
 function openRewards() {
   if (!reward) return;
   const won = reward.won;
@@ -797,7 +869,7 @@ function openRewards() {
               : ""
           }`
         : ""
-    }<div class="modal-actions">${button("Why this result?", "report", "secondary")}${button(won ? "Continue the journey →" : run.integrity <= 0 ? "End expedition →" : node.type === "boss" ? "Challenge the guardian again →" : "Choose the next path →", "continue", "", won && !upgradeChosen)}</div>`,
+    }${!won ? casualtyHTML(reward.casualty) : ""}<div class="modal-actions">${button("Why this result?", "report", "secondary")}${button(won ? "Continue the journey →" : run.integrity <= 0 ? "End expedition →" : node.type === "boss" ? "Challenge the guardian again →" : "Choose the next path →", "continue", "", won && !upgradeChosen)}</div>`,
     "reward",
     false,
   );
@@ -837,7 +909,8 @@ function tryCapture() {
 function continueRun() {
   if (phase !== "reward" || (reward.won && !upgradeChosen)) return;
   closeModal();
-  if (run.integrity <= 0) {
+  run.defeatReservation = null;
+  if (run.integrity <= 0 || (!run.team.length && !run.bench.length)) {
     endRun(false);
     return;
   }
@@ -962,7 +1035,7 @@ function openShop() {
       })
       .join(
         "",
-      )}</div><div class="shop-supplies"><span>◈ <strong>Capture supplies</strong><br><span class="muted" style="font-size:9px">One orb. One more possibility.</span></span>${button(`◉ ${shopPrice(run, 35)} · +1 orb`, "buy-orb", "secondary small", run.gold < shopPrice(run, 35))}</div><div class="shop-supplies"><div class="shop-companion" style="display:flex;align-items:center;gap:10px">${image(stock.creature)}<span><strong>${BY_ID[stock.creature].name}</strong><br><span style="font-size:9px;color:${RARITY[BY_ID[stock.creature].rarity].color}">${BY_ID[stock.creature].rarity} · ${BY_ID[stock.creature].role}</span></span></div>${button(stock.sold.includes("creature") ? "✓ Recruited" : `◉ ${shopPrice(run, RARITY[BY_ID[stock.creature].rarity].cost)} · Recruit`, "buy-creature", "secondary small", stock.sold.includes("creature") || run.gold < shopPrice(run, RARITY[BY_ID[stock.creature].rarity].cost) || run.bench.length >= 12)}</div><div class="legendary-outpost"><span class="section-kicker">CELESTIAL CONTRACTS</span><div class="shop-supplies">${image(stock.legendary)}<span><strong>${BY_ID[stock.legendary].name}</strong><small>Legendary · recruit and permanently unlock</small></span>${button(stock.sold.includes("legendary") ? "✓ Recruited" : `◉ ${shopPrice(run, 290)} · Recruit`, "buy-legendary", "secondary small", stock.sold.includes("legendary") || run.gold < shopPrice(run, 290) || run.bench.length >= 12)}</div><p>Signal a Legendary at your next sanctuary. Prepare a tactical capture to improve its odds.</p>${button(run.legendaryLure ? "✓ Beacon ready" : `◉ ${shopPrice(run, 90)} · Celestial beacon`, "buy-beacon", "secondary", run.legendaryLure || run.gold < shopPrice(run, 90))}</div><div class="modal-actions">${button(`Refresh relics · ◉ ${shopPrice(run, 20 + stock.rerolls * 15)}`, "reroll", "ghost", run.gold < shopPrice(run, 20 + stock.rerolls * 15))}${button("Leave outpost →", "leave-node")}</div>`,
+      )}</div><div class="shop-supplies"><span>◈ <strong>Capture supplies</strong><br><span class="muted" style="font-size:9px">One orb. One more possibility.</span></span>${button(`◉ ${shopPrice(run, 35)} · +1 orb`, "buy-orb", "secondary small", run.gold < shopPrice(run, 35))}</div><div class="shop-supplies"><div class="shop-companion" style="display:flex;align-items:center;gap:10px">${image(stock.creature)}<span><strong>${BY_ID[stock.creature].name}</strong><br><span style="font-size:9px;color:${RARITY[BY_ID[stock.creature].rarity].color}">${BY_ID[stock.creature].rarity} · ${BY_ID[stock.creature].role}</span></span></div>${button(stock.sold.includes("creature") ? "✓ Recruited" : `◉ ${shopPrice(run, RARITY[BY_ID[stock.creature].rarity].cost)} · Recruit`, "buy-creature", "secondary small", stock.sold.includes("creature") || run.gold < shopPrice(run, RARITY[BY_ID[stock.creature].rarity].cost) || run.bench.length >= 12)}</div><div class="field-care-shop"><strong>Keep your companions alive.</strong><p>Defeat can permanently cost one active companion. Upgrade your hospital or train survival drills before taking risks.</p>${button(`Field hospital · ${run.fieldHospital || 0}/3`, "field-care", "secondary")}</div><div class="legendary-outpost"><span class="section-kicker">CELESTIAL CONTRACTS</span><div class="shop-supplies">${image(stock.legendary)}<span><strong>${BY_ID[stock.legendary].name}</strong><small>Legendary · recruit and permanently unlock</small></span>${button(stock.sold.includes("legendary") ? "✓ Recruited" : `◉ ${shopPrice(run, 290)} · Recruit`, "buy-legendary", "secondary small", stock.sold.includes("legendary") || run.gold < shopPrice(run, 290) || run.bench.length >= 12)}</div><p>Signal a Legendary at your next sanctuary. Prepare a tactical capture to improve its odds.</p>${button(run.legendaryLure ? "✓ Beacon ready" : `◉ ${shopPrice(run, 90)} · Celestial beacon`, "buy-beacon", "secondary", run.legendaryLure || run.gold < shopPrice(run, 90))}</div><div class="modal-actions">${button(`Refresh relics · ◉ ${shopPrice(run, 20 + stock.rerolls * 15)}`, "reroll", "ghost", run.gold < shopPrice(run, 20 + stock.rerolls * 15))}${button("Leave outpost →", "leave-node")}</div>`,
     "shop",
     false,
   );
@@ -1061,7 +1134,7 @@ function eventChoose(i) {
 }
 function openRest() {
   modal(
-    `<span class="section-kicker">A QUIET GROVE</span><h2>Let the world wait.</h2><div class="event-art">❋</div><p>Your companions gather beneath the glowing canopy. There is time for one thing before the journey continues.</p><div class="choice-list"><button class="event-choice" data-action="rest-life" ${run.integrity >= 3 ? "disabled" : ""}><strong>Mend the expedition <span style="float:right">♡</span></strong><p>Recover one expedition life. Currently ${run.integrity} / 3.</p></button><button class="event-choice" data-action="rest-xp"><strong>Practice together <span style="float:right">✧</span></strong><p>Every active creature gains ${chaosLevel(run) >= 12 ? 30 : 40} EXP. Stronger bonds, stronger companions.</p></button><button class="event-choice" data-action="rest-orbs"><strong>Search the undergrowth <span style="float:right">◈</span></strong><p>Find 2 capture orbs. The next companion might be just around the bend.</p></button></div>`,
+    `<span class="section-kicker">A QUIET GROVE</span><h2>Let the world wait.</h2><div class="event-art">❋</div><p>Your companions gather beneath the glowing canopy. There is time for one thing before the journey continues.</p><div class="choice-list"><button class="event-choice" data-action="rest-life" ${run.integrity >= 3 ? "disabled" : ""}><strong>Mend the expedition <span style="float:right">♡</span></strong><p>Recover one expedition life. Currently ${run.integrity} / 3.</p></button><button class="event-choice" data-action="rest-xp"><strong>Practice together <span style="float:right">✧</span></strong><p>Every active creature gains ${chaosLevel(run) >= 12 ? 30 : 40} EXP. Stronger bonds, stronger companions.</p></button><button class="event-choice" data-action="rest-orbs"><strong>Search the undergrowth <span style="float:right">◈</span></strong><p>Find 2 capture orbs. The next companion might be just around the bend.</p></button><button class="event-choice" data-action="rest-care" ${(run.fieldHospital || 0) >= 3 ? "disabled" : ""}><strong>Prepare the field hospital · +1 tier</strong><p>Lower every ally’s remaining casualty risk by 30% for this run. No gold cost. Hospital ${run.fieldHospital || 0} / 3.</p></button></div>`,
     "rest",
     false,
   );
@@ -1139,7 +1212,7 @@ function openReport() {
     return;
   }
   modal(
-    `<span class="section-kicker">BATTLE REPORT · ${Math.floor(reportBattle.time)} SECONDS</span><h2>${reportBattle.done ? (reportBattle.winner === 0 ? "A hard-earned victory." : "Lessons from the arena.") : "Every companion contributes."}</h2><div class="report-advice">${(battle ? battle.reportAdvice() : lastReport.advice).map((note) => `<p>${note}</p>`).join("")}</div><div class="live-metrics"><span>Skills <b>${reportBattle.metrics.skills}</b></span><span>Dodges <b>${reportBattle.metrics.dodges}</b></span><span>Healing <b>${Math.round(reportBattle.metrics.healing)}</b></span></div><div class="modal-list">${reportBattle.units
+    `<span class="section-kicker">BATTLE REPORT · ${Math.floor(reportBattle.time)} SECONDS</span><h2>${reportBattle.done ? (reportBattle.winner === 0 ? "A hard-earned victory." : "Lessons from the arena.") : "Every companion contributes."}</h2><div class="report-advice">${(battle ? battle.reportAdvice() : lastReport.advice).map((note) => `<p>${note}</p>`).join("")}</div><div class="live-metrics"><span>Skills <b>${reportBattle.metrics.skills}</b></span><span>Dodges <b>${reportBattle.metrics.dodges}</b></span><span>Healing <b>${Math.round(reportBattle.metrics.healing)}</b></span><span>Whiffs <b>${reportBattle.metrics.whiffs || 0}</b></span><span>Staggers <b>${reportBattle.metrics.staggers || 0}</b></span><span>Body blocks <b>${reportBattle.metrics.blockedProjectiles || 0}</b></span></div><div class="modal-list">${reportBattle.units
       .filter((u) => u.side === 0)
       .sort((a, b) => b.damage - a.damage)
       .map(
@@ -1162,7 +1235,7 @@ function openReport() {
 }
 function openHelp() {
   modal(
-    `<span class="section-kicker">FIELD NOTES FOR A NEW EXPLORER</span><h2>A little strategy. A lot of heart.</h2><p>Collect creatures. Build bonds. Let your companions fight. Bring their stories home.</p><div class="help-grid"><div><h3>01 · Six unlikely heroes</h3><p>Inspect creatures to choose training focuses or swap bench companions. Guardians hold the front; supports and rangers keep their distance. Open Deployment to place each companion on a three-by-three grid. Inspect a creature to choose its AI policy.</p></div><div><h3>02 · Smart, automatic combat</h3><p>Creatures seek targets, dodge marked danger, save healing and barriers for useful moments, and protect their roles. Hunt prioritizes wounded enemies; Guard holds the frontline. Space pauses; 1, 2, 3 change speed.</p></div><div><h3>03 · Your route matters</h3><p>Each planet has six encounters. Choose adjacent paths to battle, shop, capture, recover, or make a difficult choice. Losing costs a life. Defeat each planet’s boss to advance.</p></div><div><h3>04 · Small bonds, big results</h3><p>Two creatures of an element activate a team bonus. Four unlock another. Expedition relics affect every ally. Personal relics fill individual slots: Common 1, Uncommon 2, Rare 3, Epic 4, Legendary 5. Levels and training improve base stats. Skills show their effective cooldown in the creature panel.</p></div><div><h3>05 · Catch your next beginning</h3><p>Choose a wild target and Mercy or Swift capture before battle. Your team deals less damage while preparing an automatic throw; weakening and statuses improve odds. Alternatively, select any defeated wild creature after victory for an unprepared attempt. Rare creatures have stronger skills and lower capture chances. Successful captures join your bench and unlock permanent starters.</p></div><div><h3>06 · Evolve your companions</h3><p>At level 5, spend 50 gold in a creature panel to choose Wild damage or Warden resilience. At level 8, ascend for 100 gold. Each stage adds a relic socket and preserves your linked gems. Common companions also awaken at level 5. New expeditions start in base forms at level 1 with no run relics. Your permanent creatures stay. Choose six within a 12-point rarity budget. Legendary starters cost 6 points, or 4 after five captures strengthen their bond. Victories earn Starlight for permanent Legendary adoption.</p></div></div><p class="starter-note">All allies fully recover between encounters. Expedition lives measure your ability to retreat. Browser storage keeps your collection and run; sound is optional.</p><div class="modal-actions">${button("I’m ready to explore →", "help-done")}</div>`,
+    `<span class="section-kicker">FIELD NOTES FOR A NEW EXPLORER</span><h2>A little strategy. A lot of heart.</h2><p>Collect creatures. Build bonds. Let your companions fight. Bring their stories home.</p><div class="help-grid"><div><h3>01 · Six unlikely heroes</h3><p>Inspect creatures to choose training focuses or swap bench companions. Guardians hold the front; supports and rangers keep their distance. Open Deployment to place each companion on a three-by-three grid. Inspect a creature to choose its AI policy.</p></div><div><h3>02 · Smart, automatic combat</h3><p>Creatures commit to aimed swings and straight-flying shots. Stamina pays for attacks and physical dodge rolls; roots prevent rolls. Guardians screen shots, strikers flank, and healers save defensive skills for danger. Heavy melee causes bleed and breaks poise; stagger interrupts windups. Hunt prioritizes wounded enemies; Guard holds the frontline. Space pauses; 1, 2, 3 change speed.</p></div><div><h3>03 · Your route matters</h3><p>Each planet has six encounters. Choose adjacent paths to battle, shop, capture, recover, or make a difficult choice. Losing costs a life. Defeat each planet’s boss to advance.</p></div><div><h3>04 · Small bonds, big results</h3><p>Two creatures of an element activate a team bonus. Four unlock another. Expedition relics affect every ally. Personal relics fill individual slots: Common 1, Uncommon 2, Rare 3, Epic 4, Legendary 5. Levels and training improve base stats. Skills show their effective cooldown in the creature panel.</p></div><div><h3>05 · Catch your next beginning</h3><p>Choose a wild target and Mercy or Swift capture before battle. Your team deals less damage while preparing an automatic throw; weakening and statuses improve odds. Alternatively, select any defeated wild creature after victory for an unprepared attempt. Rare creatures have stronger skills and lower capture chances. Successful captures join your bench and unlock permanent starters.</p></div><div><h3>06 · Evolve your companions</h3><p>At level 5, spend 50 gold in a creature panel to choose Wild damage or Warden resilience. At level 8, ascend for 100 gold. Each stage adds a relic socket and preserves your linked gems. Common companions also awaken at level 5. New expeditions start in base forms at level 1 with no run relics. Your permanent creatures stay. Choose six within a 12-point rarity budget. Legendary starters cost 6 points, or 4 after five captures strengthen their bond. Victories earn Starlight for permanent Legendary adoption.</p></div></div><p class="starter-note">Surviving allies fully recover between encounters. A defeat may permanently cost one random companion from the run; its family remains unlocked. Field care and survival drills reduce the risk. Expedition lives measure your ability to retreat. Browser storage keeps your collection and run; sound is optional.</p><div class="modal-actions">${button("I’m ready to explore →", "help-done")}</div>`,
     "help",
   );
 }
@@ -1331,7 +1404,7 @@ document.addEventListener("click", (e) => {
     if (phase === "battle") return;
     const i = Number(el.dataset.index),
       j = Number(el.dataset.swap);
-    [run.team[i], run.bench[j]] = [run.bench[j], run.team[i]];
+    if (!deployReserve(run, j, i)) return;
     save();
     render();
     openCreature(i);
@@ -1354,6 +1427,57 @@ document.addEventListener("click", (e) => {
     return;
   }
   const action = el.dataset.action;
+
+  if (el.dataset.deployReserve !== undefined) {
+    if (
+      phase !== "battle" &&
+      deployReserve(run, Number(el.dataset.deployReserve))
+    ) {
+      save();
+      render();
+      openReserves();
+    }
+    return;
+  }
+  if (action === "reserves") {
+    openReserves();
+    return;
+  }
+  if (action === "field-care") {
+    openFieldCare();
+    return;
+  }
+  if (action === "hospital-upgrade") {
+    if (phase !== "battle" && upgradeHospital(run)) {
+      save();
+      render();
+      openFieldCare();
+    }
+    return;
+  }
+  if (action?.startsWith("care-creature-")) {
+    openCreature(Number(action.slice(14)));
+    return;
+  }
+  if (action?.startsWith("survival-")) {
+    const index = Number(action.slice(9));
+    if (phase !== "battle" && trainSurvival(run, index)) {
+      save();
+      render();
+      openCreature(index);
+    }
+    return;
+  }
+  if (
+    action === "rest-care" &&
+    phase === "rest" &&
+    (run.fieldHospital || 0) < 3
+  ) {
+    run.fieldHospital = (run.fieldHospital || 0) + 1;
+    toast("Field hospital improved. Every ally is safer on retreat.");
+    leaveNode();
+    return;
+  }
   if (action === "formation") {
     openFormation();
     return;
@@ -1697,9 +1821,17 @@ function tacticalHTML() {
   const editable = phase === "prep",
     targets = (foes || []).filter((f) => !f.boss),
     plan = run.captureOrder;
-  return `<section class="tactical-toolbar"><div class="tactical-toolbar-head"><span class="section-kicker">PLAN BEFORE THE GATES OPEN</span>${button("▦ Deployment & AI", "formation", "secondary small", phase === "battle")}${button(profile.reducedMotion ? "Motion: gentle" : "Motion: full", "motion", "ghost small")}</div>${targets.length && editable ? `<div class="capture-planner"><label>TACTICAL CAPTURE<select id="capture-target" ${run.orbs < 1 || run.bench.length >= 12 || run.captureReservation ? "disabled" : ""}><option value="">No capture order</option>${targets.map((f) => `<option value="${f.uid}" ${plan?.uid === f.uid ? "selected" : ""}>${creatureName(f)} · ${BY_ID[f.id].rarity}</option>`).join("")}</select></label><label>APPROACH<select id="capture-mode" ${!plan || run.captureReservation ? "disabled" : ""}><option value="mercy" ${plan?.mode !== "swift" ? "selected" : ""}>Mercy · throw at 35% health</option><option value="swift" ${plan?.mode === "swift" ? "selected" : ""}>Swift · throw at 55% health</option></select></label><p>${plan ? `Reserves 1 orb when battle starts. ${plan.mode === "swift" ? "6%" : "14%"} less team damage until the throw. Weakening and statuses raise odds. Mercy adds another 8 percentage points.` : "Select a wild target to automate a capture during combat. An unprepared attempt is also available after victory."}</p></div>` : ""}${run.captureReservation ? `<p class="reservation-note">Capture orb committed. Reloading preserves the reservation and any resolved result.</p>` : ""}${run.contracts?.length ? `<p class="reservation-note">Contract active: next enemy team gains ${Math.round(run.contracts.reduce((n, c) => n + (c.attack || 0), 0) * 100)}% attack and ${Math.round(run.contracts.reduce((n, c) => n + (c.health || 0), 0) * 100)}% health.</p>` : ""}</section>`;
+  return `<section class="tactical-toolbar"><div class="tactical-toolbar-head"><span class="section-kicker">PLAN BEFORE THE GATES OPEN</span>${button("▦ Deployment & AI", "formation", "secondary small", phase === "battle")}${button(`Field care · ${run.fieldHospital || 0}/3`, "field-care", "secondary small", phase === "battle")}${run.team.length < 6 ? button(`Reserves · ${run.team.length}/6`, "reserves", "secondary small", phase === "battle") : ""}${button(profile.reducedMotion ? "Motion: gentle" : "Motion: full", "motion", "ghost small")}</div><p class="arena-legend">Gold bars: stamina · orange bars: poise. Enemy windups show red arcs or lines. Roots stop dodge rolls; stagger interrupts attacks; bleed worsens while moving.</p>${targets.length && editable ? `<div class="capture-planner"><label>TACTICAL CAPTURE<select id="capture-target" ${run.orbs < 1 || run.bench.length >= 12 || run.captureReservation ? "disabled" : ""}><option value="">No capture order</option>${targets.map((f) => `<option value="${f.uid}" ${plan?.uid === f.uid ? "selected" : ""}>${creatureName(f)} · ${BY_ID[f.id].rarity}</option>`).join("")}</select></label><label>APPROACH<select id="capture-mode" ${!plan || run.captureReservation ? "disabled" : ""}><option value="mercy" ${plan?.mode !== "swift" ? "selected" : ""}>Mercy · throw at 35% health</option><option value="swift" ${plan?.mode === "swift" ? "selected" : ""}>Swift · throw at 55% health</option></select></label><p>${plan ? `Reserves 1 orb when battle starts. ${plan.mode === "swift" ? "6%" : "14%"} less team damage until the throw. Weakening and statuses raise odds. Mercy adds another 8 percentage points.` : "Select a wild target to automate a capture during combat. An unprepared attempt is also available after victory."}</p></div>` : ""}${run.captureReservation ? `<p class="reservation-note">Capture orb committed. Reloading preserves the reservation and any resolved result.</p>` : ""}${run.contracts?.length ? `<p class="reservation-note">Contract active: next enemy team gains ${Math.round(run.contracts.reduce((n, c) => n + (c.attack || 0), 0) * 100)}% attack and ${Math.round(run.contracts.reduce((n, c) => n + (c.health || 0), 0) * 100)}% health.</p>` : ""}</section>`;
 }
 function openFormation() {
+  if (!run.team.length) {
+    openReserves();
+    return;
+  }
+  formationSelection = Math.max(
+    0,
+    Math.min(formationSelection, run.team.length - 1),
+  );
   const selected = run.team[formationSelection];
   modal(
     `<span class="section-kicker">DEPLOYMENT · ENEMIES APPROACH FROM THE RIGHT</span><h2>Give everyone a place.</h2><p>Choose a companion, then a cell. Occupied cells swap companions. Protectors cover nearby allies; spread rows against artillery.</p><div class="formation-picker">${run.team.map((c, i) => `<button data-formation-unit="${i}" class="${i === formationSelection ? "selected" : ""}">${image(c)}<span>${creatureName(c)}</span></button>`).join("")}</div><div class="formation-columns"><span>BACKLINE</span><span>MIDFIELD</span><span>FRONTLINE →</span></div><div class="deployment-grid">${Array.from(
@@ -1787,6 +1919,27 @@ function skillSummary(u, id) {
   if (m.chill) parts.push(`${m.chill}s slow`);
   if (m.overheal)
     parts.push(`${Math.round(m.overheal * 100)}% excess heal → shield`);
+  if (def.auto && !["bolt", "chain", "beam"].includes(def.kind))
+    parts.push("Aimed swing · windup + recovery · may miss");
+  if (
+    ["bolt", "salvo"].includes(def.kind) ||
+    (def.auto && def.kind === "chain")
+  )
+    parts.push("Straight-flying shots · bodies can screen targets");
+  if (def.kind === "beam") parts.push("Committed beam · telegraphed line");
+  if (["dash", "blink", "charge"].includes(def.kind))
+    parts.push("Physical dash · committed direction · may miss");
+  if (def.evade)
+    parts.push(
+      "Evasion shortens roll cooldown; it does not cancel connected hits",
+    );
+  if (
+    def.kind === "cleave" ||
+    (def.auto &&
+      BY_ID[u.id].role === "Guardian" &&
+      !["bolt", "chain", "beam"].includes(def.kind))
+  )
+    parts.push("Heavy melee causes 3s bleed; movement worsens bleed");
   return parts.join(" · ") + " · before team bonuses and target defenses";
 }
 function skillsHTML(u, index) {

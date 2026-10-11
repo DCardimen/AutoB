@@ -95,10 +95,14 @@ test("Spell Echo schedules and executes a second cast", () => {
   const b = new Battle(r, [creature("mossguard", 3)], 3),
     u = b.units[0],
     t = b.units.at(-1);
+  u.x = 250;
+  u.y = 250;
+  t.x = 310;
+  t.y = 250;
   b.cast(u, "cinderfox", t);
   assert.equal(b.metrics.echoes, 1);
   assert.equal(b.queue.filter((q) => q.echo).length, 1);
-  for (let i = 0; i < 5; i++) b.step(0.1);
+  for (let i = 0; i < 10; i++) b.step(0.1);
   assert.equal(b.metrics.skills, 2);
   assert.ok(u.damage > 0);
 });
@@ -113,6 +117,13 @@ test("Convergence adds an actual target to a signature auto-attack", () => {
     5,
   );
   b.cast(b.units[3], "auto-voltwing", b.units[6]);
+  assert.equal(b.queue.filter((q) => q.projectile).length, 3);
+  for (const u of b.units) {
+    u.attackTimer = 999;
+    Object.values(u.cooldowns).forEach((cd) => (cd.remaining = 999));
+  }
+  b.step(0.1);
+  b.step(0.1);
   assert.equal(b.projectiles.length, 3);
 });
 test("Fortification on an auto-attack shields its wearer and no teammate", () => {

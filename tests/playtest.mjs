@@ -40,6 +40,12 @@ const report = {
   forms: [0, 0, 0],
   chaosTiers: Array(21).fill(0),
   tacticalCaptures: 0,
+  rolls: 0,
+  physicalHits: 0,
+  collisions: 0,
+  staggers: 0,
+  whiffs: 0,
+  blockedProjectiles: 0,
   weather: {},
   archetypes: {},
 };
@@ -116,6 +122,15 @@ while (report.seconds < requestedHours * 3600) {
   const b = simulate(run, foes, seed);
   report.chaosTiers[chaosLevel(run)]++;
   report.tacticalCaptures += b.metrics.captures;
+  for (const key of [
+    "rolls",
+    "physicalHits",
+    "collisions",
+    "staggers",
+    "whiffs",
+    "blockedProjectiles",
+  ])
+    report[key] += b.metrics[key];
   report.weather[b.weather] = (report.weather[b.weather] || 0) + 1;
   report.archetypes[b.activeArchetype] =
     (report.archetypes[b.activeArchetype] || 0) + 1;
@@ -124,6 +139,8 @@ while (report.seconds < requestedHours * 3600) {
     assert.ok(Number.isFinite(u.hp) && u.hp >= 0 && u.hp <= u.maxHp);
     assert.ok(Number.isFinite(u.shield) && u.shield >= 0);
     assert.ok(Number.isFinite(u.x) && Number.isFinite(u.y));
+    assert.ok(Number.isFinite(u.stamina) && u.stamina >= 0 && u.stamina <= 100);
+    assert.ok(Number.isFinite(u.poise) && u.poise >= 0);
   }
   report.battles++;
   report.seconds += b.time;

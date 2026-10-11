@@ -331,7 +331,7 @@ export const ACTIVE_SKILLS = [
     targets: 3,
     hits: 3,
     color: "#bce3e7",
-    desc: "Launch a constellation of three seeking bolts, each dealing 110% attack.",
+    desc: "Launch a constellation of three aimed bolts, each dealing 110% attack.",
   },
 ];
 const autoData = [

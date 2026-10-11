@@ -1,6 +1,6 @@
-# Starfall Menagerie · Tactical Overhaul 0.3.0
+# Starfall Menagerie · Physical Arena Update 0.4.0
 
-A single-player creature-collecting roguelike autobattler. Explore three planets with six companions, modify individual abilities with support gems, capture permanent starters, and climb twenty Chaos tiers.
+A single-player creature-collecting roguelike autobattler with physical arena combat. Explore three planets with six companions, modify individual abilities with support gems, capture permanent starters, and climb twenty Chaos tiers.
 
 ## Play
 
@@ -8,7 +8,17 @@ Download this branch with **Code → Download ZIP**, extract it, and open **Star
 
 Keep the file at the same location to retain its browser-local save. Existing collections are preserved on the same browser origin. New runs use the new route generator; an existing run keeps its saved route.
 
-## What changed
+## What changed in 0.4.0
+
+- **Committed attacks.** Melee has a visible aimed arc, windup, contact, and recovery. Leaving the arc or reach avoids the swing. Beams telegraph a fixed line. Basic ranged attacks aim before releasing straight-flying projectiles; the first hostile body in their path takes the hit. Shots do not home in or vanish just because their original target dies.
+- **Physical movement and weight.** Allied and enemy bodies collide, heavier creatures resist displacement, and arena walls contain them. Hits impart decaying momentum. Dash and charge skills travel through the arena instead of teleporting onto a tracked enemy. Strikers flank an occupied front, while Guardians can screen incoming shots.
+- **Real dodge rolls.** AI reacts to incoming swings, projectile paths, and danger zones, scores escape directions, then physically moves. Rolls cost 30 stamina and have a cooldown. Attacks also cost stamina. Roots, stagger, committed actions, exhaustion, and nearby bodies can prevent a successful escape. Dodge stats improve reactions and roll cooldowns; they never randomly cancel a connected hit.
+- **Poise and statuses.** Heavy impacts break poise and stagger a creature, cancelling a pending windup. Heavy melee also causes three seconds of bleed; movement makes bleed 60% stronger. Cleanses remove bleed and roots as well as burn and poison. Existing slow, expose, wither, shields, and elemental interactions remain. Gold bars show stamina; orange bars show poise. Reports include whiffs, staggers, and physical body blocks.
+- **Permanent run casualties.** After a lost battle, one random active ally faces a rescue roll. Base death chance **when selected** is Common 65%, Uncommon 50%, Rare 35%, Epic 22%, Legendary 12%. A failed roll permanently removes that individual from this expedition. Its family stays unlocked for future runs, and its gems return to the pack. Results persist through reloads and cannot be rerolled after settlement.
+- **Upgradeable protection.** Three field-hospital tiers cost 65 / 110 / 155 gold before Chaos pricing. Each tier reduces everyone's remaining casualty risk by 30%. Each creature can buy two survival drills for 30 / 60 gold, reducing its remaining risk by 25% each. Evolution reduces risk another 15%. The reductions multiply. A rest can grant a free hospital tier instead of life, EXP, or orbs. Run protection resets on a new expedition.
+- **Real vacancies and reserves.** Losing a companion leaves an empty place. Deploy a captured or recruited reserve without losing its earned progression. You may fight with fewer than six. The save loader now preserves reduced teams, casualty records, protection upgrades, and retry state.
+
+## Creature collection and builds
 
 - **60 families / 120 painted forms / 128 named abilities.** Every family has a signature auto-attack, two or three cooldown skills, and a passive specialty. Common shield-breakers, interceptors, cleansers, and dodge counters can earn a place beside rarer creatures.
 - **30 support gems.** Link a gem to one ability. Fork changes targeting; Cryostasis combines slow and burn into steam; Withering counters healing; Reservoir turns excess healing into shields; Soul Link intercepts damage; other supports create traps, healing fields, cooldown relays, and execution builds. Tradeoffs are stated in the item description. Incompatible skills are disabled, and equipment chooses a valid initial link.
@@ -25,11 +35,13 @@ Keep the file at the same location to retain its browser-local save. Existing co
 - **Animation v2.** Movement accelerates and turns smoothly. Shape-specific gaits, breathing, wing motion, attack anticipation, delayed melee contact, follow-through, interpolated dashes and trails, recoil, and timed death collapses animate the painted sprites. Pause freezes creature poses and camera shake. Gentle motion is available and respects the browser's reduced-motion preference.
 - **Combat feedback.** Enemy danger zones use distinct rings and countdowns. Status markers, skill cooldowns, shield bars, elemental impact sounds, and a local procedural score communicate combat. Reports explain poison, burn, area damage, healing threats, interception, and shield absorption. The last report survives reload.
 
-All allies recover fully between encounters. EXP, training, gems, and expedition relics last for the run; captures, bonds, adopted families, and Chaos unlocks persist.
+Surviving allies recover fully between encounters. EXP, training, gems, and expedition relics last for the run; captures, bonds, adopted families, and Chaos unlocks persist.
 
 ## Controls
 
 - Inspect a creature to choose AI, training, evolution, and skill links, or swap a bench companion.
+- **Field care** opens rarity odds and hospital upgrades; inspect a companion for personal survival drills.
+- **Reserves** fills vacancies after a casualty.
 - **Deployment & AI** opens the grid. Select a companion, then a cell; occupied cells swap.
 - **Tactical capture** selects a target and approach before entering combat.
 - **Space** pauses; **1 / 2 / 3** change battle speed.
@@ -42,7 +54,7 @@ All allies recover fully between encounters. EXP, training, gems, and expedition
 
 The game uses `localStorage` on the current origin. Clearing browser storage or changing origin removes access to that device's save. Cloud accounts and cross-device sync are not implemented.
 
-Refreshing during battle returns to preparation. The committed capture orb and any resolved capture result remain: replaying does not charge again or reroll the result. Rewards, purchases, bonds, Chaos unlocks, and the last battle report persist. Each victory grants its starlight once.
+Refreshing during battle returns to preparation. A defeat reservation and its settled casualty result remain. The committed capture orb and any resolved capture result remain: replaying does not charge again or reroll the result. Rewards, purchases, bonds, Chaos unlocks, and the last battle report persist. Each victory grants its starlight once.
 
 ## Development and validation
 
@@ -69,4 +81,4 @@ Browser tests use `/usr/bin/chromium`; override with `CHROMIUM_PATH`. For anothe
 
 ## Source
 
-`game.js` contains progression and combat; `tactics.js` contains specialties, challenge tiers, encounters, new items, and events; `skills.js` and `roster.js` define abilities and families. `app.js` handles UI and persistence. `animation.js`, `art.js`, and `sound.js` handle presentation. `scripts/build-standalone.mjs` embeds the complete game. `public/` contains original generated artwork and licensed, vendored fonts.
+`arena.js` contains swept collision, attack geometry, body mass, and boundary rules; `game.js` contains progression and combat; `tactics.js` contains specialties, challenge tiers, encounters, new items, and events; `skills.js` and `roster.js` define abilities and families. `app.js` handles UI and persistence. `animation.js`, `art.js`, and `sound.js` handle presentation. `scripts/build-standalone.mjs` embeds the complete game. `public/` contains original generated artwork and licensed, vendored fonts.

@@ -14,13 +14,13 @@ export function creaturePose(unit, time = 0, shape = "fox") {
   const flying = ["bird", "dragon", "fish", "sprite"].includes(shape),
     heavy = ["golem", "turtle", "bear"].includes(shape);
   const stride = t * (flying ? 6.5 : heavy ? 7.5 : 11.5),
-    attack = clamp((unit.attackAnim || 0) / 0.32),
+    attack = clamp((unit.attackAnim || 0) / (unit.attackDuration || 0.32)),
     cast = clamp((unit.castAnim || 0) / 0.65),
     hit = clamp((unit.hitAnim || 0) / 0.22),
     dodge = clamp(Math.max(unit.dodgeAnim || 0, unit.dodgeLock || 0) / 0.3);
   const fallen = unit.hp !== undefined && unit.hp <= 0,
     death = smooth((unit.deathTime || 0) / 0.65),
-    dash = clamp((unit.dashAnim || 0) / 0.38);
+    dash = clamp((unit.dashAnim || 0) / (unit.dashDuration || 0.38));
   const progress = 1 - attack;
   const anticipation =
     attack > 0

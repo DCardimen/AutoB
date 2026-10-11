@@ -1,8 +1,36 @@
 # Playtest evidence and critique
 
-This is the tactical overhaul, not a claim of a measured 9/10 game. Automated simulations and browser automation do not replace human playtesting. No 50-hour human playtest or defensible subjective 9/10 rating was completed.
+This is the physical arena update, not a claim of a measured 9/10 game. Automated simulations and browser automation do not replace human playtesting. No 50-hour human playtest or defensible subjective 9/10 rating was completed.
 
-## Tactical overhaul checks (0.3.0)
+## Physical arena checks (0.4.0)
+
+- **67 rules tests passed.** Sixteen new rules tests cover swept collision, moving hitboxes, mass and walls, committed melee that can miss, actual contact and momentum, aimed projectiles, screening a target, removing random hit cancellation, stamina-paid reactive rolls, roots preventing rolls, poise-break interruptions, bleed/cleanses, traveling dash attacks, rarity and stacked protection, upgrade costs/caps, one permanent casualty with gem recovery, reserve progression/formation, and matched-seed protection outcomes.
+- **Full rendered starter campaign passed:** nine victories across all three planets and bosses. The original six companions used earned training, paid evolution, gems, shops and rests. Ownership grew from 6 to 10. No free campaign levels or gold were granted.
+- **Physical arena browser checks passed.** An actual underpowered boss defeat removed one selected ally; its gems returned to inventory, its family remained unlocked, and reloading retained the casualty and five-creature team. An earned reserve filled the vacancy while retaining its level. A rest granted a free hospital tier. Hospital and drill purchases deducted their stated prices and survived reload. The 390px care panel fit. The arena rendered actual hits, collisions, windups, and rolls; pause froze positions and stamina.
+- **Save regression corrected.** The old loader accepted only six-creature teams and would reset a run after a casualty. It now preserves valid reduced teams, and the browser regression checks the complete loss/reload/replacement/retry flow.
+- **All prior browser flows still passed:** retreat/life cost/retry, both evolution paths and ascension, sockets, collection, capture reservations, reports, victory/Chaos unlocks, Legendary adoption, mastered starters, unaffordable events, sound, gentle motion, and mobile menus. The final-victory fixture uses role-appropriate advanced companions separately from the legal starter campaign.
+- **Standalone browser passed.** The updated embedded HTML completed combat, evolution, gem links and save reload, with zero external requests.
+- **50.00018 simulated combat-hours across 11,308 seeded battles** passed health/shield/position/stamina/poise checks and termination. Recorded activity: 446,254 cooldown casts, 319,352 dodge rolls, 158,225 avoided attacks/hazards, 695,977 physical hits, 1,338,306 body-contact ticks, 150,316 poise breaks, 200,848 missed attacks/shots, and 92,573 screened projectiles. Eleven fights reached the bounded 90-second tie-break (0.0973%); no battle hung. Mean duration was 15.92 simulated seconds. Machine execution took about 508 seconds, not fifty hours of human play.
+
+### Campaigns with permanent casualties
+
+The 240-campaign sample now actually applies the casualty system, deploys earned reserves, captures with earned orbs, and can buy or rest for hospital protection. Starter budgets, gold, evolutions, and shop stock remain legal. These are four deterministic bot compositions over twelve seeds each, not predicted human win rates.
+
+| Difficulty | Victories / 48 campaigns | Permanent casualties |
+|---|---:|---:|
+| Explorer | 35 | 21 |
+| Expedition | 17 | 34 |
+| Veteran | 4 | 40 |
+| Chaos 10 | 9 | 39 |
+| Chaos 20 | 4 | 45 |
+
+All four compositions won at least one Expedition campaign. Tide remains strongest in this small sample; fragile Venom teams struggled. Two compositions cleared sampled Chaos 20 runs. Physical commitment and losing trained companions increase difficulty, so broader player balancing remains necessary. A correctly linked Shieldbreaker still flips the same controlled bastion encounter from defeat to victory (seed 4), while no support is universally best across the broader sample.
+
+The implemented physics is a deterministic two-dimensional circular-body model with swept projectile checks, directional attack volumes, impulses and poise. It is not a full ragdoll simulator. Instant magical effects such as chain lightning and healing keep their ability-specific behavior. Dodging a physical attack depends on actually leaving its collision geometry; there is no random connected-hit cancellation or roll invulnerability. Painted sprite animation continues to use deformable cutouts.
+
+Recorded reports and the standalone SHA-256 are in `tests/evidence-v0.4.json`.
+
+## Previous tactical overhaul checks (0.3.0)
 
 - **51 rules tests passed.** New coverage includes family specialties, formation swaps, useful defensive AI, cluster targeting, healing and shield counters, support compatibility, prepared captures, locked replay results, Legendary beacons/contracts, permanent bonds, all twenty Chaos tiers, distinct three-phase bosses, actual Wild/Warden mechanics, reports, and animation interpolation.
 - **Frame-rate independence passed.** The same encounter produced identical winner, duration, damage metrics, and final health with 8, 16, 40, 50, and 100 ms calls. Physics advances at a fixed 40 ms interval; visual interpolation keeps motion smooth. Browser frame timing previously changed some close outcomes; this regression guards the correction.
