@@ -2,7 +2,20 @@
 
 This is a playable first version, not a claim of a finished 9/10 game. Automated simulations and browser automation do not replace human playtesting. No 50-hour human playtest or defensible subjective 9/10 rating was completed.
 
-## Completed checks
+## Current expansion checks (0.2.0)
+
+- **23 rules tests passed**, including all 128 ability definitions, 60 reachable creature families, opening rarity limits, evolution requirements, both evolution paths, ascension, preserved gem links, actual Warden shield scaling, evolved capture, future starter resets, and deterministic animation poses.
+- **Full rendered expedition passed**: nine victories and all three bosses, shops, events, rest, captures, reward persistence, and restart. The permanent collection grew from 6 to 12. This used the original six starters and real purchases, without granting evolution for free.
+- **Evolution browser checks passed**: 60 menagerie entries, Wild evolution, ascension, Warden evolution, extra sockets, preserved auto-attack gem link, the animated reveal, saved form discoveries, and reload persistence. A rendered battle with new and evolved creatures completed. Movement poses appeared and froze when paused. The 390px evolution panel did not overflow.
+- **Boss-loss regression passed**: retreat, blocked planet advancement, retry, persistence, and boss health bar.
+- **Standalone browser checks passed**: the single embedded HTML ran new creatures, evolution, linked gems, and a completed battle, then retained progress after reload. It made zero external asset or network requests.
+- **Fresh 50.0025 simulated combat-hours** across **14,304 battles**, with 4,768 per planet. All health, shields, and positions stayed finite; every battle resolved. **Three matches reached the 90-second tie-break** (0.021%); these were bounded decisions, not hanging simulations. Mean combat duration was 12.58 seconds. The fixture exercised 23,840 evolved and 3,929 ascendant allied creatures, 456,074 cooldown casts, 23,527 echoes, and 137,525 dodges. It took about 134 seconds of machine time and is not human playtime or a fun rating.
+
+The first expanded-roster campaign exposed an opening fight containing powerful late-game creatures. Early wild encounters now restrict rarity and later spawns use rarity weights. A new regression checks 50 opening seeds. Visual inspection caught repeated glow bands from applying a shadow to every animation strip; glow now renders once behind the whole creature, and static portraits use an unsegmented sprite.
+
+The recorded expansion reports are included in `tests/evidence-v0.2.json`.
+
+## Original release checks (0.1.0)
 
 - **16 rules tests passed**: all 48 ability definitions and loadouts, rarity-scaled socket capacity, equipment ownership, valid skill links, multiple supports on one skill, executed Spell Echo, additional Convergence targets, Fortification, every active skill's executable effects, route reachability, capture economy, sanctuary bonus, purchase limits, EXP, boss phases, level-5 awakening, and finite combat state.
 - **Full browser expedition completed**: all three planets and all three bosses, with nine actual rendered battles on a route that also visited shops, events, and rest stops. The starter team used three equipped support gems. Captures increased the permanent collection from 6 to 11 creatures during that run.
@@ -35,4 +48,4 @@ Generated JSON evidence and screenshots live in the ignored `playtest-artifacts/
 - Whether some damage/Echo/area combinations crowd out defensive supports.
 - Whether effects remain readable during dense late-game fights, especially at 3× speed and on small screens.
 
-The content ceiling is still modest: 20 creatures, three worlds, three event stories, and fixed route archetypes with seeded opponents and shops. Creature art is rendered as painted sprites with motion, lunges, and effects; it does not have bespoke frame-by-frame or skeletal animation. Deeper event variety, evolving map layouts, additional enemies, richer creature animation, player telemetry, and sustained human sessions would be needed before assigning a release-quality fun score.
+Version 0.2.0 expands the roster to 60 families, adds painted evolved forms for all 60, branching evolution and ascension, and a deterministic deformable sprite rig. Ascendant forms use evolved artwork with additional aura effects. Animation deforms painted sprites; it is not bespoke frame-by-frame animation. The expedition still has three worlds, three event stories, and fixed route archetypes. Deeper event variety, evolving map layouts, player telemetry, and sustained human sessions would be needed before assigning a release-quality fun score.

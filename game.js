@@ -1,4 +1,5 @@
 import { SKILLS, loadoutFor } from "./skills.js";
+import { EXPANSION_SPECIES } from "./roster.js";
 // Pure game rules: shared by the browser and the automated simulation harness.
 export const ELEMENTS = {
   ember: {
@@ -361,6 +362,34 @@ export const SPECIES = [
     power: 2.3,
   },
 ];
+const originalEvolutionNames = [
+  "Embermane",
+  "Mosswarden",
+  "Tideweaver",
+  "Stormplume",
+  "Inferhorn",
+  "Floracrown",
+  "Frosttitan",
+  "Briarhart",
+  "Umbrapanther",
+  "Arcbound",
+  "Heliodrake",
+  "Moonsovereign",
+  "Voidseraph",
+  "Tempestlord",
+  "Dreamsage",
+  "Magmabastion",
+  "Yggrahart",
+  "Celestiger",
+  "Abyssarch",
+  "Coralwyrm",
+];
+SPECIES.forEach((s, i) => {
+  s.artSheet = "creatures";
+  s.artIndex = i;
+  s.evolvedName = originalEvolutionNames[i];
+});
+SPECIES.push(...EXPANSION_SPECIES);
 export const BY_ID = Object.fromEntries(SPECIES.map((s) => [s.id, s]));
 export const STARTERS = [
   "cinderfox",
@@ -393,6 +422,7 @@ export const PLANETS = [
       "brookfin",
       "duskcap",
       "sparkhare",
+      "voltwing",
     ],
   },
   {
@@ -430,6 +460,16 @@ export const PLANETS = [
     ],
   },
 ];
+// Every new family is encounterable on at least one planet and recruitable at shops.
+for (const s of EXPANSION_SPECIES) {
+  const planet =
+    s.element === "grove" || s.element === "tide"
+      ? 0
+      : s.element === "ember"
+        ? 1
+        : 2;
+  PLANETS[planet].pool.push(s.id);
+}
 export const RELICS = [
   {
     id: "fangs",
@@ -651,7 +691,69 @@ export function creature(id, level = 1) {
     training: 0,
     focus: "balanced",
     relics: [],
+    evolution: 0,
+    evolutionPath: null,
   };
+}
+export const EVOLUTION_PATHS = {
+  wild: {
+    name: "Wild",
+    description: "Sharper attacks and a stronger signature skill.",
+    color: "#ffb077",
+  },
+  warden: {
+    name: "Warden",
+    description: "More health, faster skills, stronger healing and shields.",
+    color: "#9ce0cb",
+  },
+};
+export function evolutionStage(c) {
+  return Math.max(0, Math.min(2, Math.floor(Number(c?.evolution) || 0)));
+}
+export function creatureName(c) {
+  const s = BY_ID[typeof c === "string" ? c : c.id];
+  const stage = typeof c === "string" ? 0 : evolutionStage(c);
+  return stage ? `${stage === 2 ? "Ascendant " : ""}${s.evolvedName}` : s.name;
+}
+export function relicSlots(c) {
+  return RELIC_SLOTS[BY_ID[c.id].rarity] + evolutionStage(c);
+}
+export function evolutionOffer(run, c) {
+  const stage = evolutionStage(c),
+    level = stage === 0 ? 5 : 8,
+    cost = stage === 0 ? 50 : 100;
+  if (stage === 2)
+    return { ready: false, reason: "Fully ascended", level, cost, stage };
+  if (c.level < level)
+    return { ready: false, reason: `Reach level ${level}`, level, cost, stage };
+  if (run.gold < cost)
+    return {
+      ready: false,
+      reason: `Requires ${cost} gold`,
+      level,
+      cost,
+      stage,
+    };
+  return { ready: true, reason: "Ready to evolve", level, cost, stage };
+}
+export function evolveCreature(run, index, path) {
+  const c = run.team[index];
+  if (!c || !EVOLUTION_PATHS[path])
+    return {
+      success: false,
+      reason: "Choose a valid creature and evolution path",
+    };
+  const offer = evolutionOffer(run, c);
+  if (!offer.ready) return { success: false, reason: offer.reason };
+  if (offer.stage && c.evolutionPath !== path)
+    return {
+      success: false,
+      reason: "Ascension follows your chosen evolution path",
+    };
+  run.gold -= offer.cost;
+  c.evolution = offer.stage + 1;
+  c.evolutionPath = path;
+  return { success: true, name: creatureName(c), stage: c.evolution, path };
 }
 export function personalRelic(id) {
   if (!PERSONAL_BY_ID[id]) throw new Error("Unknown personal relic");
@@ -703,12 +805,7 @@ export function personalEffects(c) {
 export function equipRelic(run, creatureIndex, itemUid) {
   const c = run.team[creatureIndex],
     index = run.inventory.findIndex((i) => i.uid === itemUid);
-  if (
-    !c ||
-    index < 0 ||
-    (c.relics || []).length >= RELIC_SLOTS[BY_ID[c.id].rarity]
-  )
-    return false;
+  if (!c || index < 0 || (c.relics || []).length >= relicSlots(c)) return false;
   const item = run.inventory[index];
   if ((c.relics || []).some((r) => r.id === item.id)) return false;
   c.relics ??= [];
@@ -772,6 +869,20 @@ export function linkedSupport(c, skillId) {
     ])
       m[key] += s[key] || 0;
   }
+  const stage = evolutionStage(c);
+  if (stage && c.evolutionPath === "wild") {
+    m.damage *=
+      skillId === c.id
+        ? stage === 2
+          ? 1.28
+          : 1.16
+        : stage === 2
+          ? 1.16
+          : 1.08;
+  } else if (stage && c.evolutionPath === "warden") {
+    m.healing *= stage === 2 ? 1.5 : 1.25;
+    m.cooldown *= stage === 2 ? 0.87 : 0.93;
+  }
   return m;
 }
 export function linkRelic(run, creatureIndex, slot, skillId) {
@@ -814,6 +925,25 @@ export function stats(c, team, relics = []) {
     cd = SKILLS[s.id].cd,
     speed = s.speed,
     dodge = 0.045;
+  const stage = evolutionStage(c);
+  if (stage) {
+    hp *=
+      c.evolutionPath === "warden"
+        ? stage === 2
+          ? 1.35
+          : 1.2
+        : stage === 2
+          ? 1.18
+          : 1.1;
+    atk *=
+      c.evolutionPath === "wild"
+        ? stage === 2
+          ? 1.25
+          : 1.15
+        : stage === 2
+          ? 1.12
+          : 1.06;
+  }
   if ((syn.tide || 0) >= 2) hp *= 1.18;
   if (has("banner") && s.role === "Guardian") hp *= 1.22;
   if (has("seed") && s.element === "grove") hp *= 1.12;
@@ -934,6 +1064,32 @@ export function encounter(run, type = "battle", seed = 1) {
             ? 4
             : 5;
   const foes = [];
+  const rarityRank = { Common: 0, Uncommon: 1, Rare: 2, Epic: 3, Legendary: 4 };
+  const maxRank =
+    run.planet === 0 && run.depth < 2
+      ? 1
+      : run.planet === 0
+        ? 2
+        : run.planet === 1
+          ? 3
+          : 4;
+  const pool = p.pool.filter((id) => rarityRank[BY_ID[id].rarity] <= maxRank);
+  const weights = {
+    Common: 5,
+    Uncommon: 4,
+    Rare: 2.5,
+    Epic: 1.2,
+    Legendary: 0.4,
+  };
+  const chooseWild = (available) => {
+    let roll =
+      r() * available.reduce((sum, id) => sum + weights[BY_ID[id].rarity], 0);
+    for (const id of available) {
+      roll -= weights[BY_ID[id].rarity];
+      if (roll <= 0) return id;
+    }
+    return available.at(-1);
+  };
   for (let i = 0; i < n; i++) {
     const rare = p.pool.filter((id) =>
       ["Rare", "Epic", "Legendary"].includes(BY_ID[id].rarity),
@@ -942,12 +1098,18 @@ export function encounter(run, type = "battle", seed = 1) {
       type === "boss" && i === 0
         ? p.boss
         : type === "capture" && i === n - 1 && rare.length
-          ? pick(rare, r)
-          : pick(p.pool, r);
+          ? chooseWild(rare)
+          : chooseWild(pool);
     const c = creature(id, Math.max(1, base + (type === "elite" ? 1 : 0)));
     if (type === "boss" && i === 0) {
       c.boss = true;
       c.bossName = p.bossName;
+    }
+    if (c.level >= 5 && ["elite", "boss"].includes(type)) {
+      c.evolution = 1;
+      c.evolutionPath = ["Guardian", "Support"].includes(BY_ID[c.id].role)
+        ? "warden"
+        : "wild";
     }
     foes.push(c);
   }
@@ -968,6 +1130,8 @@ export function rollCapture(run, c) {
   const success = run.random() < captureChance(run, c);
   if (success) {
     const caught = creature(c.id, Math.max(1, c.level));
+    caught.evolution = evolutionStage(c);
+    caught.evolutionPath = caught.evolution ? c.evolutionPath : null;
     run.bench.push(caught);
     return { success: true, creature: caught };
   }
@@ -1225,6 +1389,10 @@ export class Battle {
         flash: 0,
         attackAnim: 0,
         castAnim: 0,
+        hitAnim: 0,
+        dodgeAnim: 0,
+        motion: 0,
+        deathTime: 0,
         face: side === 0 ? 1 : -1,
         dodgeLock: 0,
         dustTimer: 0,
@@ -1312,6 +1480,7 @@ export class Battle {
     if (target.fortify > 0) amount *= 0.88;
     const dodge = target.dodge + (target.evade > 0 ? 0.25 : 0);
     if (this.random() < dodge) {
+      target.dodgeAnim = 0.3;
       this.effect(target.x, target.y - 40, "DODGE", "#b5dadd");
       this.metrics.dodges++;
       this.fx("afterimage", target.x, target.y, "#cfdfd4", { r: 30 });
@@ -1327,6 +1496,7 @@ export class Battle {
     amount = Math.round(amount - shield);
     target.hp = Math.max(0, target.hp - amount);
     target.flash = 0.16;
+    target.hitAnim = 0.22;
     source.damage += amount;
     this.metrics.damage += amount;
     const color = def.color || ELEMENTS[BY_ID[source.id].element].color;
@@ -1480,14 +1650,21 @@ export class Battle {
       t = target?.hp > 0 ? target : this.target(u);
     if (!t) return;
     this.supportedUse(u, id, echo);
+    const shieldScale =
+      scale *
+      (evolutionStage(u) && u.evolutionPath === "warden"
+        ? evolutionStage(u) === 2
+          ? 1.5
+          : 1.25
+        : 1);
     const friends = this.living(u.side),
       enemies = this.living(1 - u.side),
       color = def.color || ELEMENTS[BY_ID[u.id].element].color;
-    u.attackAnim = 0.25;
+    u.attackAnim = auto ? 0.32 : 0.2;
     if (!auto) {
       u.castAnim = 0.65;
       this.metrics.skills++;
-      this.say(`${BY_ID[u.id].name} uses ${def.name}${echo ? " · Echo" : ""}.`);
+      this.say(`${creatureName(u)} uses ${def.name}${echo ? " · Echo" : ""}.`);
       this.effect(u.x, u.y - 67, def.name, color);
       this.fx("cast", u.x, u.y, color, { r: 45, ttl: 0.65, max: 0.65 });
     }
@@ -1579,7 +1756,10 @@ export class Battle {
       friends.forEach((f) => {
         this.heal(f, def.heal, u, id, true, scale);
         if (def.shield)
-          f.shield = Math.min(f.maxHp * 0.7, f.shield + def.shield * scale);
+          f.shield = Math.min(
+            f.maxHp * 0.7,
+            f.shield + def.shield * shieldScale,
+          );
         if (def.haste) f.haste = def.haste;
       });
       this.fx("ring", u.x, u.y, color, { r: 220 * m.area, ttl: 0.8, max: 0.8 });
@@ -1587,7 +1767,10 @@ export class Battle {
       friends
         .filter((f) => def.all || distance(f, u) < def.radius * m.area)
         .forEach((f) => {
-          f.shield = Math.min(f.maxHp * 0.7, f.shield + def.shield * scale);
+          f.shield = Math.min(
+            f.maxHp * 0.7,
+            f.shield + def.shield * shieldScale,
+          );
           this.fx("shield", f.x, f.y, color, { r: 38, ttl: 0.9, max: 0.9 });
         });
       if (def.taunt) u.taunt = def.taunt;
@@ -1745,7 +1928,7 @@ export class Battle {
         .forEach((f) => this.heal(f, def.heal, u, id, true, scale));
       this.zone(u, t, id, def.power, 70, 0.5, scale);
     } else if (def.kind === "shell") {
-      u.shield = Math.min(u.maxHp * 0.7, u.shield + def.shield * scale);
+      u.shield = Math.min(u.maxHp * 0.7, u.shield + def.shield * shieldScale);
       enemies
         .filter((e) => distance(e, u) < def.radius * m.area)
         .forEach((e) => this.hit(e, power, u, id, scale));
@@ -1757,7 +1940,7 @@ export class Battle {
     } else if (def.kind === "awakening") {
       friends.forEach((f) => {
         this.heal(f, f.maxHp * def.healPercent, u, id, true, scale);
-        f.shield = Math.min(f.maxHp * 0.7, f.shield + def.shield * scale);
+        f.shield = Math.min(f.maxHp * 0.7, f.shield + def.shield * shieldScale);
       });
       enemies
         .filter((e) => distance(e, u) < def.radius * m.area)
@@ -1769,7 +1952,10 @@ export class Battle {
         .forEach((f) => {
           if (def.heal) this.heal(f, def.heal, u, id, true, scale);
           if (def.shield)
-            f.shield = Math.min(f.maxHp * 0.7, f.shield + def.shield * scale);
+            f.shield = Math.min(
+              f.maxHp * 0.7,
+              f.shield + def.shield * shieldScale,
+            );
         });
       enemies
         .filter((e) => distance(e, u) < def.radius * m.area)
@@ -1801,7 +1987,11 @@ export class Battle {
     }
     this.particles = this.particles.filter((p) => p.ttl > 0);
     for (const u of this.units) {
-      if (u.hp <= 0) continue;
+      if (u.hp <= 0) {
+        u.deathTime += dt;
+        u.motion = 0;
+        continue;
+      }
       for (const k of [
         "burn",
         "poison",
@@ -1817,6 +2007,8 @@ export class Battle {
         "flash",
         "attackAnim",
         "castAnim",
+        "hitAnim",
+        "dodgeAnim",
         "dodgeLock",
       ])
         u[k] = Math.max(0, u[k] - dt);
@@ -1904,6 +2096,10 @@ export class Battle {
         u.y = clamp(u.y + vy * movement * dt, 90, 460);
       }
       u.dustTimer -= dt;
+      u.motion = Math.min(
+        1,
+        Math.hypot(u.x - u.px, u.y - u.py) / (u.speed * dt || 1),
+      );
       if (Math.abs(vx) + Math.abs(vy) > 0.3 && u.dustTimer <= 0) {
         u.dustTimer = 0.25;
         this.particles.push({

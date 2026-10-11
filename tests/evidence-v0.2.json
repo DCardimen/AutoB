@@ -1,0 +1,223 @@
+{
+  "version": "0.2.0",
+  "recordedAt": "2026-10-11T03:43:53.862472+00:00",
+  "rules": {
+    "passed": 23,
+    "failed": 0
+  },
+  "standaloneSha256": "78ddc742d0f0c2e2df0750b8204cc4101fc2e5762801cfee3c772408f722e20e",
+  "campaign": {
+    "battles": [
+      {
+        "planet": 0,
+        "depth": 0,
+        "won": true,
+        "time": 22.54899999999948,
+        "metrics": {
+          "dodges": 7,
+          "skills": 40,
+          "damage": 2272,
+          "healing": 827.508799999996,
+          "crits": 6,
+          "echoes": 0
+        }
+      },
+      {
+        "planet": 0,
+        "depth": 2,
+        "won": true,
+        "time": 25.45599999999897,
+        "metrics": {
+          "dodges": 11,
+          "skills": 50,
+          "damage": 3131,
+          "healing": 1130.8574400000052,
+          "crits": 13,
+          "echoes": 0
+        }
+      },
+      {
+        "planet": 0,
+        "depth": 5,
+        "won": true,
+        "time": 22.062999999999345,
+        "metrics": {
+          "dodges": 13,
+          "skills": 48,
+          "damage": 3506,
+          "healing": 1406.6561920000236,
+          "crits": 7,
+          "echoes": 0
+        }
+      },
+      {
+        "planet": 1,
+        "depth": 0,
+        "won": true,
+        "time": 11.120000000000008,
+        "metrics": {
+          "dodges": 10,
+          "skills": 24,
+          "damage": 2438,
+          "healing": 303.75816,
+          "crits": 5,
+          "echoes": 0
+        }
+      },
+      {
+        "planet": 1,
+        "depth": 2,
+        "won": true,
+        "time": 9.294000000000008,
+        "metrics": {
+          "dodges": 6,
+          "skills": 27,
+          "damage": 2779,
+          "healing": 563.6840000000001,
+          "crits": 2,
+          "echoes": 0
+        }
+      },
+      {
+        "planet": 1,
+        "depth": 5,
+        "won": true,
+        "time": 19.50599999999963,
+        "metrics": {
+          "dodges": 9,
+          "skills": 39,
+          "damage": 7800,
+          "healing": 636.3503199999909,
+          "crits": 4,
+          "echoes": 0
+        }
+      },
+      {
+        "planet": 2,
+        "depth": 0,
+        "won": true,
+        "time": 8.512000000000006,
+        "metrics": {
+          "dodges": 0,
+          "skills": 25,
+          "damage": 2394,
+          "healing": 648.4640800000058,
+          "crits": 2,
+          "echoes": 0
+        }
+      },
+      {
+        "planet": 2,
+        "depth": 2,
+        "won": true,
+        "time": 9.649000000000008,
+        "metrics": {
+          "dodges": 10,
+          "skills": 28,
+          "damage": 2710,
+          "healing": 216.36,
+          "crits": 5,
+          "echoes": 0
+        }
+      },
+      {
+        "planet": 2,
+        "depth": 5,
+        "won": true,
+        "time": 25.270999999998995,
+        "metrics": {
+          "dodges": 44,
+          "skills": 72,
+          "damage": 9262,
+          "healing": 2224.03288,
+          "crits": 7,
+          "echoes": 0
+        }
+      }
+    ],
+    "checks": [
+      "Equip three support gems; link and relink a signature auto-attack",
+      "Capture result and permanent collection persist on reload; no second attempt",
+      "Event choice applies and advances the path",
+      "Rest changes expedition life or team EXP",
+      "Shop sells support gems and deducts gold",
+      "New expedition retains captures and resets run growth",
+      "390px mobile arena and menagerie have no horizontal overflow",
+      "No browser exceptions or failed HTTP responses"
+    ],
+    "startedAt": "2026-10-11T03:38:02.321Z",
+    "ending": {
+      "complete": true,
+      "wins": 9,
+      "planet": 3,
+      "collection": 12
+    }
+  },
+  "evolution": {
+    "checks": [
+      "60 codex entries",
+      "Wild evolution and ascension",
+      "Warden evolution",
+      "new sockets and preserved auto-attack gem link",
+      "transformation reveal",
+      "390px mobile modal without overflow",
+      "animated locomotion",
+      "pause freezes deterministic pose",
+      "completed rendered combat",
+      "saved evolution and form discovery survive reload"
+    ],
+    "errors": []
+  },
+  "bossLoss": {
+    "passed": true,
+    "checks": [
+      "Boss defeat consumes exactly one life",
+      "Boss defeat does not advance planet or depth",
+      "Retry state persists on reload",
+      "Boss health UI appears"
+    ],
+    "errors": []
+  },
+  "offline": {
+    "checks": [
+      "single embedded HTML",
+      "new creature artwork",
+      "Wild evolution",
+      "added socket and preserved gem link",
+      "completed animated combat",
+      "saved reload",
+      "zero external requests"
+    ],
+    "errors": [],
+    "requests": []
+  },
+  "stress": {
+    "kind": "Automated simulation, NOT human playtime",
+    "targetHours": 50,
+    "battles": 14304,
+    "seconds": 180009.05000000042,
+    "wins": 12963,
+    "timeouts": 3,
+    "skills": 456074,
+    "dodges": 137525,
+    "echoes": 23527,
+    "crits": 62852,
+    "byPlanet": [
+      4768,
+      4768,
+      4768
+    ],
+    "minTime": 3.1999999999999966,
+    "maxTime": 90.04999999999703,
+    "forms": [
+      58055,
+      23840,
+      3929
+    ],
+    "simulatedHours": 50.002513888889006,
+    "executionSeconds": 134.43158586299998,
+    "winRate": 0.90625,
+    "timeoutRate": 0.00020973154362416107,
+    "meanBattleSeconds": 12.584525307606294
+  }
+}

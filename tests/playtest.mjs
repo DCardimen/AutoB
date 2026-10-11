@@ -14,9 +14,10 @@ import {
   rng,
   pick,
   BY_ID,
-  RELIC_SLOTS,
   stats,
   RELICS,
+  evolutionStage,
+  relicSlots,
 } from "../game.js";
 import { loadoutFor } from "../skills.js";
 const requestedHours = Number(process.env.SIM_HOURS || 50);
@@ -34,6 +35,7 @@ const report = {
   byPlanet: [0, 0, 0],
   minTime: Infinity,
   maxTime: 0,
+  forms: [0, 0, 0],
 };
 const start = performance.now();
 while (report.seconds < requestedHours * 3600) {
@@ -43,16 +45,24 @@ while (report.seconds < requestedHours * 3600) {
   run.planet = seed % 3;
   run.depth = seed % 6;
   run.team = Array.from({ length: 6 }, () =>
-    creature(pick(SPECIES, r).id, 1 + run.planet * 2 + Math.floor(r() * 3)),
+    creature(pick(SPECIES, r).id, 1 + run.planet * 2 + Math.floor(r() * 5)),
   );
   run.team.forEach((c) => {
     c.training = Math.floor(r() * 5);
+    c.evolution =
+      c.level >= 8
+        ? Math.floor(r() * 3)
+        : c.level >= 5
+          ? Math.floor(r() * 2)
+          : 0;
+    c.evolutionPath = c.evolution ? (r() < 0.5 ? "wild" : "warden") : null;
+    report.forms[evolutionStage(c)]++;
   });
   run.relics = RELICS.filter(() => r() < 0.2).map((v) => v.id);
   for (let index = 0; index < 6; index++) {
     const c = run.team[index],
-      loadout = loadoutFor(BY_ID[c.id]),
-      gemCount = Math.floor(r() * (RELIC_SLOTS[BY_ID[c.id].rarity] + 1));
+      loadout = loadoutFor(BY_ID[c.id], c.level),
+      gemCount = Math.floor(r() * (relicSlots(c) + 1));
     const options = [...PERSONAL_RELICS];
     for (let j = 0; j < gemCount; j++) {
       const gem = options.splice(Math.floor(r() * options.length), 1)[0];

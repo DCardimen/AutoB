@@ -4,7 +4,7 @@ A playable, single-player creature-collecting roguelike autobattler. Explore thr
 
 ## Play without installation
 
-Download this branch using GitHub's **Code → Download ZIP**, extract the ZIP, and open `Starfall-Menagerie.html` in Chrome or Firefox. The standalone file includes all game code, artwork, and fonts; it needs no server or internet connection. Keep the file in the same location to retain its browser-local save. It is a snapshot of the current game; edits to the source files below do not automatically update it.
+Download this branch using GitHub's **Code → Download ZIP**, extract the ZIP, and open `Starfall-Menagerie.html` in Chrome or Firefox. The standalone file includes all game code, artwork, and fonts; it needs no server or internet connection. Keep the file in the same location to retain its browser-local save. Run `npm run build:standalone` after source changes to rebuild this file.
 
 ## Run locally
 
@@ -19,13 +19,15 @@ The development server listens on port 3000. Set `PORT` to choose another port. 
 
 ## The game
 
-- **20 collectible creatures**, five elements, five rarity tiers, and four combat roles.
-- **48 distinct abilities**: 20 signature auto-attacks and 28 cooldown skills. Creatures start with two or three active skills. At level 5, Common and Uncommon companions awaken, gain 20% stronger base stats, and unlock a third active skill.
+- **60 collectible creature families**, each with a painted base form and a separate painted evolved form, five elements, five rarity tiers, and four combat roles.
+- **128 distinct abilities**: 60 signature auto-attacks and 68 cooldown skills. Creatures start with two or three active skills. At level 5, Common and Uncommon companions awaken, gain 20% stronger base stats, and unlock a third active skill.
+- **Choose your evolution**: inspect an active creature at level 5 and pay 50 gold to choose Wild or Warden. Wild improves attack and skill damage; Warden improves health, healing, shielding, and cooldowns. At level 8, spend 100 gold to ascend the chosen path. Evolution changes the name and artwork; ascension adds an aura. Each stage adds one relic socket. Levels, EXP, gems, and skill links remain intact.
+- **Living animation**: deterministic breathing, head/tail movement, wing motion, locomotion, attack anticipation and recoil, casting, hit reactions, dodges, and collapse poses animate the painted silhouettes. Pausing combat freezes poses. Transformation has a luminous animated reveal.
 - **12 skill support gems**: socket them on an individual creature and choose which auto-attack or active skill each supports. Multiple different supports can modify the same ability. Spell Echo repeats casts, Convergence adds targets or radius, Acceleration reduces cooldowns, and other supports add roots, poison, explosions, healing, shielding, or evasion.
-- **Rarity-scaled sockets**: Common 1, Uncommon 2, Rare 3, Epic 4, Legendary 5. Unsocket and relink freely between battles. A creature cannot equip two copies of the same support.
+- **Rarity-scaled sockets**: Common 1, Uncommon 2, Rare 3, Epic 4, Legendary 5; evolution and ascension each add a socket. Unsocket and relink freely between battles. A creature cannot equip two copies of the same support.
 - **9 expedition relics** with team-wide effects, distinct from individual support gems.
 - **Three branching planet routes**, each with six encounters: battles, elites, wild sanctuaries, shops, events, rest stops, and bosses. Paths connect neighboring lanes. A boss must be defeated to advance; losing a normal battle costs a life and allows a retreat forward.
-- **Persistent captures** unlock future starters. Each new run begins at level 1 with a fresh economy and a six-creature, 12-point starter budget. Rarer starters cost more points.
+- **Persistent captures** unlock future starters. Capturing an evolved enemy retains its form in the current expedition. Evolved-form discoveries are saved in the menagerie. Future runs start in base forms. Each new run begins at level 1 with a fresh economy and a six-creature, 12-point starter budget. Rarer starters cost more points.
 - **Real-time combat** with role-aware targeting, ranged kiting, hazard avoidance, taunts, shields, healing, elemental synergies, status effects, critical hits, and phase-two bosses. Skill trails, dash streaks, lightning, shockwaves, damage numbers, particles, and attack lunges communicate the action.
 
 Two creatures of an element activate a team bonus; four activate a second bonus. Allies recover fully between encounters. EXP, training, support gems, and relics remain for the current run; successful captures remain across runs.
@@ -34,7 +36,7 @@ The starter pack contains three support gems. Inspect a creature or open the rel
 
 ## Controls
 
-- **Creature card**: inspect abilities, change training focus, socket/relink support gems, or swap a bench creature.
+- **Creature card**: inspect abilities and evolution lineage, choose an evolution, change training focus, socket/relink support gems, or swap a bench creature.
 - **Drag creature cards**: change lanes within the formation. Roles determine frontline or backline placement.
 - **Balanced / Hunt / Guard**: change the team's targeting priority before combat.
 - **Space**: pause/resume. **1 / 2 / 3**: battle speed.
@@ -63,7 +65,10 @@ See [PLAYTEST.md](PLAYTEST.md) for the actual results and critique. Automated co
 ## Source map
 
 - `game.js`: progression, economy, capture, equipment, and combat rules.
-- `skills.js`: the 48-ability catalogue and creature loadouts.
+- `skills.js`: the 128-ability catalogue and creature loadouts.
+- `roster.js`: the 40 additional families, their atlas indices, and signature abilities.
+- `animation.js`: deterministic movement and combat poses and sprite deformation.
+- `scripts/build-standalone.mjs`: embeds the game, artwork, and fonts in the downloadable HTML.
 - `app.js`: browser UI, run state machine, local persistence, and input.
 - `art.js`: painted sprite-sheet rendering, procedural fallback art, arena, and combat effects.
 - `public/`: locally served generated artwork and vendored fonts. Fonts retain their upstream licenses.

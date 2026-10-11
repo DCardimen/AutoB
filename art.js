@@ -1,15 +1,27 @@
-import { BY_ID, ELEMENTS, SPECIES } from "./game.js";
+import { BY_ID, ELEMENTS, evolutionStage } from "./game.js";
+import { creaturePose, spriteBone } from "./animation.js";
 const TAU = Math.PI * 2;
-const spriteSheet = new Image();
-spriteSheet.src = "/public/creatures.png";
+const atlases = Object.fromEntries(
+  [
+    "creatures",
+    "expansion-a",
+    "expansion-b",
+    "evolved-creatures",
+    "evolved-expansion-a",
+    "evolved-expansion-b",
+  ].map((name) => {
+    const sheet = new Image();
+    sheet.src = `/public/${name}.png`;
+    sheet.addEventListener("load", artLoaded);
+    return [name, sheet];
+  }),
+);
 const arenaArt = new Image();
 arenaArt.src = "/public/arena.png";
-const spriteIndex = Object.fromEntries(SPECIES.map((s, i) => [s.id, i]));
 function artLoaded() {
   iconCache.clear();
   window.dispatchEvent(new Event("art-ready"));
 }
-spriteSheet.addEventListener("load", artLoaded);
 arenaArt.addEventListener("load", artLoaded);
 
 function ellipse(c, x, y, rx, ry, color) {
@@ -55,32 +67,78 @@ export function drawCreature(
   face = 1,
   time = 0,
   dead = false,
+  unit = {},
 ) {
   const s = BY_ID[id],
     p = PALETTE[s.element];
+  const stage = evolutionStage(unit);
+  const evolvedSheet = atlases[`evolved-${s.artSheet}`];
+  const spriteSheet =
+    stage && evolvedSheet?.naturalWidth ? evolvedSheet : atlases[s.artSheet];
   if (spriteSheet.complete && spriteSheet.naturalWidth) {
-    const i = spriteIndex[id],
+    const i = s.artIndex,
       sw = spriteSheet.width / 5,
       sh = spriteSheet.height / 4,
-      dim = size * 2.5;
+      dim = size * 2.5 * (stage ? 1.12 + (stage === 2 ? 0.06 : 0) : 1),
+      pose = creaturePose({ ...unit, id, hp: dead ? 0 : 1 }, time, s.shape);
     c.save();
-    c.translate(x, y + Math.sin(time * 2.5 + id.length) * 1.5);
+    c.translate(x + pose.x * face, y + pose.y);
     c.scale(face, 1);
-    if (dead) {
-      c.globalAlpha = 0.17;
-      c.rotate(-0.18);
+    c.rotate(pose.rotation);
+    c.scale(pose.scaleX, pose.scaleY);
+    c.globalAlpha = pose.alpha;
+    if (stage && !dead) {
+      c.shadowColor = unit.evolutionPath === "warden" ? "#8ef4d0" : p[1];
+      c.shadowBlur = stage === 2 ? 15 : 7;
+      c.globalAlpha = pose.alpha * 0.18;
+      c.drawImage(
+        spriteSheet,
+        (i % 5) * sw,
+        Math.floor(i / 5) * sh,
+        sw,
+        sh,
+        -dim / 2,
+        -dim * 0.79,
+        dim,
+        dim,
+      );
+      c.shadowBlur = 0;
+      c.globalAlpha = pose.alpha;
     }
-    c.drawImage(
-      spriteSheet,
-      (i % 5) * sw,
-      Math.floor(i / 5) * sh,
-      sw,
-      sh,
-      -dim / 2,
-      -dim * 0.79,
-      dim,
-      dim,
-    );
+    // Connected strip bones animate the head, torso, wings, tail, and feet.
+    const bones = dead || unit.staticArtwork ? 1 : 14;
+    for (let bone = 0; bone < bones; bone++) {
+      const f = bone / bones,
+        part = spriteBone(pose, f, dim);
+      c.drawImage(
+        spriteSheet,
+        (i % 5) * sw,
+        Math.floor(i / 5) * sh + f * sh,
+        sw,
+        sh / bones,
+        -dim / 2 + part.x,
+        -dim * 0.79 + f * dim + part.y,
+        dim,
+        dim / bones + 0.5,
+      );
+    }
+    c.shadowBlur = 0;
+    if (!dead && (pose.glow || stage === 2)) {
+      c.globalAlpha = 0.3 + pose.glow * 0.45;
+      c.strokeStyle = p[1];
+      c.lineWidth = 1.3;
+      c.beginPath();
+      c.ellipse(
+        0,
+        -dim * 0.28,
+        dim * 0.44,
+        dim * 0.19,
+        Math.sin(time) * 0.35,
+        0,
+        TAU,
+      );
+      c.stroke();
+    }
     c.restore();
     return;
   }
@@ -843,8 +901,11 @@ export function drawCreature(
   c.restore();
 }
 const iconCache = new Map();
-export function creatureImage(id) {
-  if (iconCache.has(id)) return iconCache.get(id);
+export function creatureImage(input) {
+  const unit = typeof input === "string" ? { id: input } : input;
+  const id = unit.id,
+    key = `${id}:${evolutionStage(unit)}:${unit.evolutionPath || ""}`;
+  if (iconCache.has(key)) return iconCache.get(key);
   const c = document.createElement("canvas");
   c.width = 200;
   c.height = 200;
@@ -856,9 +917,12 @@ export function creatureImage(id) {
   x.fillStyle = g;
   x.fillRect(0, 0, 200, 200);
   ellipse(x, 100, 158, 45, 9, "#00000045");
-  drawCreature(x, id, 100, 116, 66);
+  drawCreature(x, id, 100, 130, 56, 1, 0, false, {
+    ...unit,
+    staticArtwork: true,
+  });
   const data = c.toDataURL();
-  iconCache.set(id, data);
+  iconCache.set(key, data);
   return data;
 }
 export function drawArena(c, w, h, planet, time = 0) {
@@ -1149,17 +1213,18 @@ export function renderBattle(
     drawCreature(
       c,
       u.id,
-      u.x + (u.attackAnim || 0) * 20 * (u.face || 1),
+      u.x,
       u.y,
       size,
       u.face || (u.side === 0 ? 1 : -1),
-      time + u.y,
+      battle ? battle.time : time,
       u.hp <= 0,
+      u,
     );
     if (u.hp > 0) {
       const barw = u.boss ? 80 : 47,
         bx = u.x - barw / 2,
-        by = u.y - (u.boss ? 116 : 81);
+        by = u.y - (u.boss ? 126 : evolutionStage(u) ? 96 : 81);
       c.fillStyle = "#081319d9";
       c.fillRect(bx - 1, by - 1, barw + 2, 6);
       c.fillStyle = u.side === 0 ? "#c1d998" : "#d99b86";

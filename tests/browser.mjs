@@ -68,13 +68,14 @@ await page.screenshot({
 await page.clock.install();
 await page.locator('[data-speed="3"]').click();
 async function advanceBattle() {
+  await page.locator('[data-speed="3"]').click();
   await page.locator('[data-action="battle"]').click();
   await page.locator('[data-action="pause"]').click();
   const t = await page.evaluate(() => starfall.state.battle.time);
   await page.clock.runFor(500);
   assert.equal(await page.evaluate(() => starfall.state.battle.time), t);
   await page.locator('[data-action="pause"]').click();
-  for (let i = 0; i < 33; i++) {
+  for (let i = 0; i < 40; i++) {
     if (await page.evaluate(() => starfall.state.phase !== "battle")) break;
     await page.clock.runFor(1000);
   }

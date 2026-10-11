@@ -20,6 +20,9 @@ const entryFiles = new Set([
   "/game.js",
   "/art.js",
   "/skills.js",
+  "/roster.js",
+  "/animation.js",
+  "/Starfall-Menagerie.html",
 ]);
 http
   .createServer((req, res) => {
