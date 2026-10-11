@@ -11,11 +11,13 @@ test('five prototype bodies have distinct mass, stride, and weapon profiles; dir
   for(let turns=-5;turns<=5;turns++)for(let i=0;i<8;i++)assert.equal(directionalFrame(i*Math.PI/4+turns*Math.PI*2),i);
   const p=screenToGround(...Object.values(groundToScreen(300,470)));assert.ok(Math.abs(p.x-300)<1e-9&&Math.abs(p.y-470)<1e-9);
 });
-test('melee damage occurs at contact after windup, and sound is attached to that event',()=>{
-  const {arena,a,b}=fixture();arena.attack(a,b);advance(arena,(Math.ceil(a.windup*120)-1)/120);
+test('melee damage follows blade contact after preparation, and sound occurs at that contact',()=>{
+  const {arena,a,b}=fixture();arena.attack(a,b);advance(arena,Math.floor(a.windup*0.72*120)/120);
   assert.equal(b.hp,b.maxHp);assert.equal(arena.audio.length,0);
-  arena.step(1/120);assert.equal(b.hp,b.maxHp-a.damage);
-  const contact=arena.events.find(e=>e.type==='contact');assert.ok(contact);assert.ok(Math.abs(contact.time-a.windup)<1/120+1e-9);assert.equal(arena.audio[0].type,'hit');
+  while(b.hp===b.maxHp&&arena.time<1)arena.step(1/120);
+  assert.equal(b.hp,b.maxHp-a.damage);
+  const contact=arena.events.find(e=>e.type==='contact');assert.ok(contact);assert.ok(contact.time>=a.windup*0.72&&contact.time<=a.windup+1/120);assert.equal(arena.audio[0].type,'hit');
+  assert.ok(Math.hypot(contact.point.x-contact.targetPosition.x,contact.point.y-contact.targetPosition.y)<=contact.targetPosition.radius+4+1e-6);
 });
 test('a committed melee cannot follow a target leaving its aim',()=>{
   const {arena,a,b}=fixture();arena.attack(a,b);b.y+=125;advance(arena,0.8);

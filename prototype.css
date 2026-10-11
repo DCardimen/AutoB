@@ -5,3 +5,4 @@
 #facing-status{color:var(--mint);font-size:10px;min-width:90px}
 #facing-control[hidden]{display:none}
 @media(max-width:540px){#facing-status{flex-basis:100%}.scene-tabs{gap:2px}.scene-header{align-items:flex-start;gap:8px}}
+.character-card img{image-rendering:auto}

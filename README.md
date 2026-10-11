@@ -6,6 +6,8 @@ The next overhaul follows [ROADMAP.md](ROADMAP.md), with eleven playable milesto
 
 The prototype now opens with an **8 directions** comparison. Choose a companion to see all eight views together; click a view to inspect it up close. Forty head views and forty torso views replace the initial shared front/back artwork. Watch the [normal-speed iteration 1 preview](public/prototype-preview.mp4) for the comparisons, movement, sparring, a close attack, and death animation.
 
+**Motion v2** rebuilds the legs and arms with aligned artwork, separate boots/paws, fixed segment lengths, and feet planted in world space during turns. It adds smoother stride transitions and target alignment, hand-anchored weapons, a two-handed axe, an animated bow draw/release, physical blade sweeps, and brief contact pauses. Open **Starfall-Training-Glade.html** and look for **MOTION V2** in its header.
+
 ## Play
 
 Download this branch with **Code → Download ZIP**, extract it, and open **Starfall-Menagerie.html** in Chrome or Firefox. The HTML embeds all code, artwork, audio synthesis, and fonts. It needs no installation, server, or internet connection.

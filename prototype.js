@@ -11,6 +11,14 @@ const directions=['East','Southeast','South','Southwest','West','Northwest','Nor
 const descriptions={knight:'Silver plate, a measured stride, and a committed sword strike. Aurel resists displacement and recovers deliberately.',orc:'A broad stance and a slower, heavier axe swing. Brakk hits hard, but a missed windup leaves an opening.',elf:'Light footsteps, a drawn bow, and aimed arrows. Syl creates distance; released arrows keep their original path.',caster:'An ivory hood, a planted casting stance, and a visible channel. Nyra releases an arcane bolt at the end of the windup.',wolf:'Four planted paws, a diagonal gait, and a low, quick lunge. Ember closes on the backline and changes direction quickly.'};
 function selectedUnit(){return arena.units.find(u=>u.uid===selected)||arena.units[0];}
 function selectedId(){return selectedUnit().id;}
+function studyPose(u){
+  if(pose==='attack'||pose==='cast'){
+    const elapsed=arena.time%(u.windup+u.recovery);
+    return {state:pose,phase:elapsed<u.windup?elapsed/u.windup:(elapsed-u.windup)/u.recovery,stage:elapsed<u.windup?'windup':'recovery'};
+  }
+  const duration=pose==='walk'?u.stride/u.speed:pose==='run'?u.stride/u.run:pose==='dash'?0.34:pose==='dodge'?0.29:pose==='hit'?0.13:pose==='stagger'?0.46:pose==='death'?0.95:1.8;
+  return {state:pose,phase:pose==='death'?Math.min(1,arena.time/duration):(arena.time/duration)%1};
+}
 function chooseUnit(uid){selected=uid;updateUI();}
 function makeCards(){
   $('#character-cards').innerHTML=PROTOTYPE_CHARACTERS.map((s,i)=>`<button class="character-card ${selected===`0-${s.id}-${i}`?'active':''}" data-select="0-${s.id}-${i}"><img src="${spritesReady()?prototypePortrait(s.id):''}" alt="${s.name}"><span class="role">${s.role.toUpperCase()}</span><strong>${s.name.split(' · ')[0]}</strong><small>${s.id==='wolf'?'Ember wolf':s.name.split(' · ')[1]}</small><div class="stats"><span>${s.mass.toFixed(1)} mass</span><span class="card-state">Ready</span></div><div class="hp-track"><i style="width:100%"></i></div><small class="card-health">${s.hp} / ${s.hp} HP</small></button>`).join('');
@@ -68,7 +76,7 @@ function render(){
       c.fillStyle='#101e18aa';c.strokeStyle='#a3b98c35';c.lineWidth=1;
       c.beginPath();c.roundRect(x-109,y-221,218,260,8);c.fill();c.stroke();
       ellipse(x,y,u.id==='wolf'?41:27,9,'#091811aa');
-      drawPrototypeSprite(c,{...u,facing:dir*Math.PI/4,hp:pose==='death'?0:u.hp},x,y,arena.time,1.65,{state:pose,phase:arena.time*0.55%1});
+      drawPrototypeSprite(c,{...u,facing:dir*Math.PI/4,hp:pose==='death'?0:u.hp},x,y,arena.time,1.65,studyPose(u));
       c.textAlign='center';c.fillStyle='#e4e9cf';c.font='13px system-ui';c.fillText(directions[dir].toUpperCase(),x,y+25);
     }
     c.restore();return;
@@ -93,11 +101,11 @@ function render(){
   }
   for(const u of live){
     const x=u.px+(u.x-u.px)*arena.alpha,y=u.py+(u.y-u.py)*arena.alpha,p=groundToScreen(x,y);
-    const override=mode==='study'?{state:pose,phase:arena.time*0.55%1}:null;
-    const renderUnit=mode==='study'?{...u,facing:poseFacing*Math.PI/4,hp:pose==='death'?0:u.hp}:u;
-    drawPrototypeSprite(c,renderUnit,p.x,p.y,arena.time,u.id==='orc'?1.1:1,override);
+    const override=mode==='study'?studyPose(u):null;
+    const renderUnit=mode==='study'?{...u,facing:poseFacing*Math.PI/4,hp:pose==='death'?0:u.hp}:{...u,x,y};
+    drawPrototypeSprite(c,renderUnit,p.x,p.y,arena.time,u.id==='orc'?1.02:1,override);
     if(u.hp>0&&mode==='battle'){
-      const barY=p.y-(u.id==='wolf'?66:103);c.fillStyle='#12201a';c.fillRect(p.x-21,barY,42,4);c.fillStyle=u.side?'#ce8979':'#bcd796';c.fillRect(p.x-20,barY+1,40*u.hp/u.maxHp,2);
+      const barY=p.y-(u.id==='wolf'?81:133);c.fillStyle='#12201a';c.fillRect(p.x-21,barY,42,4);c.fillStyle=u.side?'#ce8979':'#bcd796';c.fillRect(p.x-20,barY+1,40*u.hp/u.maxHp,2);
       c.fillStyle='#d4b47466';c.fillRect(p.x-20,barY+6,40*u.stamina/100,1.5);
       if(u.action&&!u.action.released){c.fillStyle=u.side?'#eb9b80':'#e7d39d';c.fillRect(p.x-20,barY+10,40*u.action.elapsed/u.action.windup,1.5);}
     }

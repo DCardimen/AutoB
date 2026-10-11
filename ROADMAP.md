@@ -52,6 +52,8 @@ Include idle, walk, run, turn, attack, cast, dodge, hit, stagger, and death stat
 
 **Implementation:** open `prototype.html` through the development server, or open the self-contained `Starfall-Training-Glade.html`. The Training Glade link is in the expedition footer. The opening **8 directions** scene compares eight painted head/torso projections of any selected companion; click a view for close inspection. Sparring, movement circuits, and pose study expose the five original characters, eleven animation states, slow playback, frame stepping, and a close view. See [MILESTONE-1.md](MILESTONE-1.md) for validation and the remaining visual review.
 
+The Motion v2 revision replaces distorted limbs with an anatomical rig and separate feet, plants supporting feet in world coordinates, blends locomotion, and attaches rigid weapons to their grips. Physical tip sweeps determine melee contact and impact pauses. The small roster remains the basis for iteration 2 production, pending visual review.
+
 ## Iteration 2 — Expand identities, body types, and evolution
 
 Initial expansion target: 36 new fantasy families beyond the existing 60, delivered in reviewed batches of roughly six to twelve. Adjust batch size to measured asset quality and effort. Cover humans, elves, orcs, dwarves, goblins, undead, trolls, minotaurs, constructs, and other distinct bodies. Bring existing animals into the same visual language over successive batches.

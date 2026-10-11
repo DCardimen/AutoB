@@ -5,7 +5,7 @@
     "Selecting a character and clicking ground produces actual movement in the physical scene",
     "All five locomotion profiles travel around the circuits and turn through all eight facings; speed changes work",
     "Eight directional views and eleven animation states are inspectable, including a close view and death",
-    "Rendered sparring resolves with physical hits, projectile travel, rolls, interruptions and deaths; optional audio toggles",
+    "Rendered sparring resolves with physical hits, projectile travel, rolls and deaths; optional audio toggles",
     "390px mobile layout has no horizontal overflow and retains scene and character controls",
     "Standalone HTML runs combat and pose inspection with zero external requests"
   ],
@@ -36,25 +36,28 @@
     "caster": 8,
     "wolf": 8
   },
+  "rigVersion": 2,
   "directionFrames": 8,
   "stateFrames": 11,
   "battle": {
-    "time": 40.149999999998364,
+    "time": 40.43333333333168,
     "metrics": {
-      "hits": 78,
-      "misses": 38,
-      "rolls": 44,
-      "avoided": 23,
-      "interrupts": 3,
-      "projectiles": 49,
-      "contacts": 2321,
+      "hits": 77,
+      "misses": 53,
+      "rolls": 51,
+      "avoided": 32,
+      "interrupts": 0,
+      "projectiles": 38,
+      "contacts": 2577,
       "knockouts": 7
     },
     "cache": {
-      "frames": 420,
-      "maxFrames": 420,
+      "frames": 192,
+      "maxFrames": 192,
       "sourceReady": true,
-      "frameSize": 176,
+      "frameSize": 256,
+      "rasterScale": 1.5,
+      "rigVersion": 2,
       "directionalArt": {
         "columns": 8,
         "characters": 5,
@@ -65,17 +68,25 @@
   },
   "offlineExternalRequests": 0,
   "rules": {
-    "passed": 77,
+    "passed": 86,
     "failed": 0,
-    "prototypeChecks": 10
+    "prototypeChecks": 19
   },
   "preview": {
     "file": "public/prototype-preview.mp4",
-    "durationSeconds": 30,
+    "durationSeconds": 42,
     "fps": 30,
-    "bytes": 6225737,
-    "sha256": "089856b9bdc55565c33770667a67c3feef6551b6ea47fba29e0ee76f406727f8"
+    "width": 1000,
+    "height": 650,
+    "bytes": 9420805,
+    "sha256": "7878a2a506c62417deaba65aef39f2432b3ecff5c6d972c1b8303445991e2a38"
   },
-  "scope": "Iteration 1 direction correction: five-character visual and movement prototype, 40 painted head views and 40 torso views. Automated checks do not establish human playtime or a fun score.",
+  "scope": "Iteration 1 Motion v2: five-character visual and movement prototype, new anatomical rig, 30 aligned limb/foot parts, world-space foot planting, rigid weapon grips, and physical blade sweeps. Automated checks do not establish human playtime or a fun score.",
+  "performanceSample": {
+    "frames": 240,
+    "medianFrameIntervalMs": 16.7,
+    "p95FrameIntervalMs": 16.8,
+    "environment": "Headless Chromium in this cloud workspace; local observation, not a device performance guarantee."
+  },
   "offlineValidation": "Exact embedded HTML served as one intercepted document; all other requests blocked. Managed browser policy blocks file navigation."
 }

@@ -10,7 +10,8 @@ let errors='';encoder.stderr.on('data',d=>errors+=d);const finished=new Promise(
 const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||'/usr/bin/chromium',headless:true,args:['--no-sandbox']});
 const page=await browser.newPage({viewport:{width:1280,height:960}});
 try{
-  await page.goto((process.env.BASE_URL||'http://127.0.0.1:3003')+'/prototype.html');await page.waitForFunction(()=>prototypeLab.state.artLoaded);await page.clock.install();
+  await page.clock.install();
+  await page.goto((process.env.BASE_URL||'http://127.0.0.1:3003')+'/prototype.html');await page.waitForFunction(()=>prototypeLab.state.artLoaded);
   async function capture(seconds){
     for(let i=0;i<seconds*30;i++){
       await page.clock.runFor(1000/30);
@@ -22,10 +23,15 @@ try{
   for(const [id,index] of ['knight','orc','elf','caster','wolf'].map((id,i)=>[id,i])){
     await page.locator(`[data-select="0-${id}-${index}"]`).click();await capture(1);
   }
-  await page.locator('[data-scene="movement"]').click();await capture(12);
-  await page.locator('[data-scene="battle"]').click();await capture(8);
+  await page.locator('[data-scene="movement"]').click();await capture(8);
+  await page.locator('[data-select="0-knight-0"]').click();await page.locator('#focus-view').click();await capture(4);
+  await page.locator('[data-select="0-wolf-4"]').click();await capture(4);
+  await page.locator('[data-scene="study"]').click();
+  for(const [id,index,pose,seconds] of [['knight',0,'attack',3],['orc',1,'attack',3],['elf',2,'attack',3],['caster',3,'cast',3]]){
+    await page.locator(`[data-select="0-${id}-${index}"]`).click();await page.locator('#pose-facing').selectOption('0');await page.locator(`[data-pose="${pose}"]`).click();await capture(seconds);
+  }
+  await page.locator('#focus-view').click();await page.locator('[data-scene="battle"]').click();await capture(7);
   await page.locator('[data-scene="study"]').click();await page.locator('[data-select="0-orc-1"]').click();await page.locator('#focus-view').click();
-  await page.locator('[data-pose="attack"]').click();await capture(3);
   await page.locator('[data-pose="death"]').click();await capture(2);
-  encoder.stdin.end();await finished;console.log(`Recorded 30 seconds at normal speed: ${output}`);
+  encoder.stdin.end();await finished;console.log(`Recorded 42 seconds at normal speed: ${output}`);
 }finally{await browser.close();if(!encoder.stdin.destroyed)encoder.stdin.destroy();}

@@ -13,7 +13,7 @@
     "build:standalone": "node scripts/build-standalone.mjs",
     "test:standalone": "npm run build:standalone && node tests/standalone.browser.mjs",
     "build:prototype": "node scripts/build-prototype.mjs",
-    "test:prototype": "npm run build:prototype && node --test tests/prototype.test.js && node tests/prototype.browser.mjs"
+    "test:prototype": "npm run build:prototype && node --test tests/prototype.test.js tests/prototype-rig.test.js && node tests/prototype.browser.mjs"
   },
   "devDependencies": {
     "playwright": "1.58.2"

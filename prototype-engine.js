@@ -1,12 +1,13 @@
 import { sweepCircle } from './arena.js';
+import { characterRig, weaponContactPath, weaponTipAt, rigFoot, plantFeet } from './prototype-rig.js';
 
 // Milestone 1's isolated deterministic arena. All positions are ground coordinates.
 export const PROTOTYPE_CHARACTERS = [
-  {id:'knight',name:'Aurel · Knight',role:'Vanguard',mass:1.9,hp:420,speed:115,run:180,reach:64,damage:40,windup:0.32,recovery:0.36,cooldown:1.2,radius:19,stride:46,color:'#e7ba74',weapon:'sword',row:0},
-  {id:'orc',name:'Brakk · Orc',role:'Brawler',mass:2.6,hp:470,speed:101,run:157,reach:72,damage:59,windup:0.48,recovery:0.46,cooldown:1.5,radius:23,stride:54,color:'#b3c985',weapon:'axe',row:1},
-  {id:'elf',name:'Syl · Elf archer',role:'Marksman',mass:0.8,hp:235,speed:150,run:215,reach:340,damage:31,windup:0.27,recovery:0.28,cooldown:1.08,radius:15,stride:43,color:'#b8daa0',weapon:'bow',row:2},
-  {id:'caster',name:'Nyra · Caster',role:'Arcanist',mass:1,hp:255,speed:123,run:178,reach:290,damage:45,windup:0.54,recovery:0.4,cooldown:1.7,radius:16,stride:42,color:'#a8d9ed',weapon:'staff',row:3},
-  {id:'wolf',name:'Ember · Wolf',role:'Pursuer',mass:1.15,hp:285,speed:172,run:240,reach:53,damage:29,windup:0.23,recovery:0.23,cooldown:0.88,radius:17,stride:58,color:'#e3a879',weapon:'claws',row:4},
+  {id:'knight',name:'Aurel · Knight',role:'Vanguard',mass:1.9,hp:420,speed:115,run:180,reach:64,damage:40,windup:0.32,recovery:0.36,cooldown:1.2,radius:19,stride:76,color:'#e7ba74',weapon:'sword',row:0},
+  {id:'orc',name:'Brakk · Orc',role:'Brawler',mass:2.6,hp:470,speed:101,run:157,reach:72,damage:59,windup:0.48,recovery:0.46,cooldown:1.5,radius:23,stride:82,color:'#b3c985',weapon:'axe',row:1},
+  {id:'elf',name:'Syl · Elf archer',role:'Marksman',mass:0.8,hp:235,speed:150,run:215,reach:340,damage:31,windup:0.27,recovery:0.28,cooldown:1.08,radius:15,stride:76,color:'#b8daa0',weapon:'bow',row:2},
+  {id:'caster',name:'Nyra · Caster',role:'Arcanist',mass:1,hp:255,speed:123,run:178,reach:290,damage:45,windup:0.54,recovery:0.4,cooldown:1.7,radius:16,stride:76,color:'#a8d9ed',weapon:'staff',row:3},
+  {id:'wolf',name:'Ember · Wolf',role:'Pursuer',mass:1.15,hp:285,speed:172,run:240,reach:53,damage:29,windup:0.23,recovery:0.23,cooldown:0.88,radius:17,stride:72,color:'#e3a879',weapon:'claws',row:4},
 ];
 export const PROTOTYPE_BY_ID=Object.fromEntries(PROTOTYPE_CHARACTERS.map(x=>[x.id,x]));
 export const ANIMATION_STATES=['idle','walk','run','turn','attack','cast','dash','dodge','hit','stagger','death'];
@@ -18,17 +19,14 @@ export function groundToScreen(x,y){return {x,y:y*0.58+75};}
 export function screenToGround(x,y){return {x,y:(y-75)/0.58};}
 export function directionalFrame(angle){return ((Math.round(angle/(Math.PI/4))%8)+8)%8;}
 export function gaitFoot(phase,stride,running=false){
-  const stance=running?0.43:0.6;phase=(phase%1+1)%1;const half=stride*stance/2;
-  if(phase<stance)return {x:half-phase/stance*half*2,z:0,planted:true};
-  const p=(phase-stance)/(1-stance),ease=p*p*(3-2*p);
-  return {x:-half+ease*half*2,z:Math.sin(p*Math.PI)*(running?13:9),planted:false};
+  return rigFoot(phase,stride,running);
 }
 export function makePrototypeUnit(id,side=0,index=0,x=200,y=300){
   const spec=PROTOTYPE_BY_ID[id];
   if(!spec)throw new Error('Unknown prototype character');
   return {uid:`${side}-${id}-${index}`,id,side,...spec,x,y,px:x,py:y,hp:spec.hp,maxHp:spec.hp,
     facing:side?Math.PI:0,previousFacing:side?Math.PI:0,vx:0,vy:0,ix:0,iy:0,
-    gait:0.25,travel:0,moving:0,action:null,actionSerial:0,attackCooldown:0.25+index*0.12,
+    gait:0.25,travel:0,moving:0,moveFacing:side?Math.PI:0,aimFacing:null,action:null,actionSerial:0,attackCooldown:0.25+index*0.12,
     stamina:100,poise:0,stagger:0,hitTime:0,roll:null,dodgeCooldown:0.7+index*0.1,
     deathTime:0,turning:0,target:null,manualUntil:0,order:null,intention:'ready',
     hits:0,misses:0,damageDealt:0,dodges:0,interrupts:0,lastState:'idle'};
@@ -74,8 +72,10 @@ export class PrototypeArena {
   attack(u,target){
     if(!u||!target||u.hp<=0||target.hp<=0||u.action||u.roll||u.stagger>0||u.stamina<10)return false;
     const angle=Math.atan2(target.y-u.y,target.x-u.x);
+    u.aimFacing=angle;
+    if(Math.abs(angleDelta(u.facing,angle))>0.5)return false;
     u.transitionFoot={gait:u.gait,moving:u.moving,time:this.time};
-    u.facing=angle;u.action={elapsed:0,windup:u.windup,duration:u.windup+u.recovery,angle,aim:{x:target.x,y:target.y},targetUid:target.uid,targetDodges:target.dodges,released:false,key:++this.serial};
+    u.action={elapsed:0,windup:u.windup,duration:u.windup+u.recovery,angle,aim:{x:target.x,y:target.y},targetUid:target.uid,targetDodges:target.dodges,released:false,impactHold:0,hitUids:[],key:++this.serial};
     u.stamina-=10;u.intention=u.id==='caster'?'channeling':u.id==='elf'?'drawing bow':'committed strike';
     this.event('windup',u,{targetUid:target.uid,angle});return true;
   }
@@ -84,10 +84,15 @@ export class PrototypeArena {
     u.roll={elapsed:0,duration:kind==='dash'?0.34:0.29,dx:Math.cos(angle),dy:Math.sin(angle),kind};
     u.stamina-=30;u.dodgeCooldown=2.8;u.dodges++;this.metrics.rolls++;this.event(kind,u);return true;
   }
-  hit(target,source,damage,kind='melee'){
+  hit(target,source,damage,kind='melee',contactHeight=null,contactPoint=null){
     if(target.hp<=0)return;
     const dx=target.x-source.x,dy=target.y-source.y,d=Math.hypot(dx,dy)||1;
-    const force=(kind==='spell'?65:source.id==='orc'?210:95)/target.mass;
+    const path=kind==='melee'?weaponContactPath(source.id,0):null;
+    const arc=path?path.slice(1).reduce((sum,p,i)=>sum+Math.hypot(p.x-path[i].x,p.y-path[i].y),0):0;
+    const weaponMass=source.id==='orc'?3.4:source.id==='knight'?1.5:1;
+    const impulse=kind==='spell'?65:kind==='melee'?clamp(arc/(source.windup*0.28)*weaponMass*0.035,75,230):80;
+    const force=impulse/target.mass;
+    if(kind==='melee'&&source.action)source.action.impactHold=source.id==='orc'?0.055:0.032;
     target.ix+=dx/d*force;target.iy+=dy/d*force;target.hitTime=0.13;
     target.poise+=damage*(source.id==='orc'?1.05:0.62);
     if(target.poise>50+target.mass*15){
@@ -96,8 +101,8 @@ export class PrototypeArena {
       target.roll=null;
     }
     target.hp=Math.max(0,target.hp-damage);source.hits++;source.damageDealt+=damage;this.metrics.hits++;
-    this.event('contact',source,{targetUid:target.uid,damage,kind});
-    this.effects.push({kind:'impact',x:target.x,y:target.y,z:32,age:0,duration:0.26,color:source.color,heavy:source.id==='orc'});
+    this.event('contact',source,{targetUid:target.uid,damage,kind,point:contactPoint,targetPosition:{x:target.x,y:target.y,radius:target.radius}});
+    this.effects.push({kind:'impact',x:contactPoint?.x??target.x,y:contactPoint?.y??target.y,z:contactHeight??(source.id==='wolf'?28:52),age:0,duration:0.26,color:source.color,heavy:source.id==='orc'});
     this.effects.push({kind:'number',x:target.x,y:target.y,z:76,age:0,duration:0.8,text:Math.round(damage),color:'#f4e8c9'});
     this.shake=Math.min(3,this.shake+(source.id==='orc'?1.7:0.45));
     for(let i=0;i<(source.id==='orc'?12:5);i++){
@@ -108,24 +113,37 @@ export class PrototypeArena {
       target.action=null;target.roll=null;target.deathTime=0;target.moving=0;target.lastState='death';this.metrics.knockouts++;this.event('death',target,{sourceUid:source.uid});
     }
   }
+  swingContact(u,from,to){
+    const a=u.action;if(!a||['elf','caster'].includes(u.id)||to<0.72||from>=1)return;
+    const before=weaponTipAt(u.id,Math.max(0.72,from),a.angle),after=weaponTipAt(u.id,Math.min(1,to),a.angle);
+    const start={x:u.x+before.x,y:u.y+before.y},end={x:u.x+after.x,y:u.y+after.y},limit=u.id==='orc'?2:1;
+    for(const target of this.living(1-u.side)){
+      if(a.hitUids.length>=limit)break;
+      if(a.hitUids.includes(target.uid)||!meleeConnects(u,target,a.angle,u.reach,u.id==='orc'?0.85:0.65))continue;
+      const fraction=sweepCircle(start,end,target,target.radius+(u.id==='orc'?8:4));
+      if(fraction===null)continue;
+      const contact={x:start.x+(end.x-start.x)*fraction,y:start.y+(end.y-start.y)*fraction,z:before.z+(after.z-before.z)*fraction};
+      a.hitUids.push(target.uid);this.hit(target,u,u.damage,'melee',contact.z,contact);
+    }
+  }
   release(u){
     const a=u.action;if(!a||a.released)return;a.released=true;
     if(u.id==='elf'||u.id==='caster'){
-      const dx=a.aim.x-u.x,dy=a.aim.y-u.y,d=Math.hypot(dx,dy)||1,speed=u.id==='elf'?560:360;
-      this.projectiles.push({key:++this.serial,x:u.x+dx/d*24,y:u.y+dy/d*24,px:u.x,py:u.y,vx:dx/d*speed,vy:dy/d*speed,source:u,damage:u.damage,z:34,kind:u.id==='elf'?'arrow':'spell',age:0,ttl:2.5,targetUid:a.targetUid,targetDodges:a.targetDodges,passTime:d/speed});
+      const rig=characterRig(u.id,u.id==='elf'?'attack':'cast',1,'windup'),hand=u.id==='elf'?rig.weapon.grip:rig.weapon.tip;
+      const sx=u.x+hand.x*Math.cos(a.angle)-hand.y*Math.sin(a.angle),sy=u.y+hand.x*Math.sin(a.angle)+hand.y*Math.cos(a.angle);
+      const dx=a.aim.x-sx,dy=a.aim.y-sy,d=Math.hypot(dx,dy)||1,speed=u.id==='elf'?560:360;
+      this.projectiles.push({key:++this.serial,x:sx,y:sy,px:sx,py:sy,vx:dx/d*speed,vy:dy/d*speed,source:u,damage:u.damage,z:hand.z,originZ:hand.z,kind:u.id==='elf'?'arrow':'spell',age:0,ttl:2.5,targetUid:a.targetUid,targetDodges:a.targetDodges,passTime:d/speed});
       this.metrics.projectiles++;this.event('release',u,{actionKey:a.key,kind:u.id==='elf'?'arrow':'spell'});
     }else{
-      const targets=this.living(1-u.side).filter(t=>meleeConnects(u,t,a.angle,u.reach,u.id==='orc'?0.85:0.65));
-      targets.slice(0,u.id==='orc'?2:1).forEach(t=>this.hit(t,u,u.damage,'melee'));
-      if(!targets.length){this.metrics.misses++;u.misses++;this.event('miss',u,{actionKey:a.key});
+      if(!a.hitUids.length){this.metrics.misses++;u.misses++;this.event('miss',u,{actionKey:a.key});
         const target=this.units.find(t=>t.uid===a.targetUid);if(target&&target.dodges>a.targetDodges){this.metrics.avoided++;this.event('evade',target,{sourceUid:u.uid});}
       }
-      this.effects.push({kind:'slash',x:u.x,y:u.y,z:30,angle:a.angle,age:0,duration:0.2,color:u.color,reach:u.reach,heavy:u.id==='orc'});
     }
   }
   threat(u){
     const candidates=[];
     for(const e of this.living(1-u.side))if(e.action&&!e.action.released&&e.id!=='elf'&&e.id!=='caster'){
+      if(e.action.hitUids.includes(u.uid)||e.action.hitUids.length>=(e.id==='orc'?2:1))continue;
       const left=e.action.windup-e.action.elapsed;
       if(left>0.04&&left<0.19&&meleeConnects(e,u,e.action.angle,e.reach+8))candidates.push({angle:e.action.angle+Math.PI/2,deadline:left,key:e.action.key,source:e});
     }
@@ -166,7 +184,14 @@ export class PrototypeArena {
       u.hitTime=Math.max(0,u.hitTime-dt);u.stagger=Math.max(0,u.stagger-dt);u.dodgeCooldown=Math.max(0,u.dodgeCooldown-dt);
       u.attackCooldown-=dt;u.poise=Math.max(0,u.poise-dt*10);u.stamina=Math.min(100,u.stamina+dt*(u.action||u.roll?8:22));
       if(this.done){u.moving*=Math.exp(-8*dt);continue;}
-      if(u.action){u.action.elapsed+=dt;if(u.action.elapsed>=u.action.windup)this.release(u);if(u.action.elapsed>=u.action.duration){u.action=null;u.attackCooldown=u.cooldown;}}
+      if(u.action){
+        const action=u.action,previous=action.elapsed;
+        if(action.impactHold>0)action.impactHold=Math.max(0,action.impactHold-dt);else action.elapsed+=dt;
+        if(action.elapsed>previous)this.swingContact(u,previous/action.windup,action.elapsed/action.windup);
+        const aim=angleDelta(u.facing,u.action.angle);u.facing+=clamp(aim,-dt*7,dt*7);
+        if(u.action.elapsed>=u.action.windup)this.release(u);
+        if(u.action.elapsed>=u.action.duration){u.action=null;u.attackCooldown=u.cooldown;u.transitionFoot={gait:u.gait,moving:0,time:this.time};}
+      }
       let desiredX=0,desiredY=0,running=false;
       if(this.mode==='movement'){
         const angle=this.time*0.58+PROTOTYPE_BY_ID[u.id].row*0.4;
@@ -182,8 +207,10 @@ export class PrototypeArena {
           else u.intention=dist>u.reach?'closing distance':'ready to strike';
           const dg=distance(u,goal);
           if((goal!==target&&dg>7)||(goal===target&&dist>u.reach*0.87)){
-            desiredX=(goal.x-u.x)/(dg||1);desiredY=(goal.y-u.y)/(dg||1);running=goal===target&&dist>170;
+            const arrival=goal!==target?Math.min(1,dg/45):1;
+            desiredX=(goal.x-u.x)/(dg||1)*arrival;desiredY=(goal.y-u.y)/(dg||1)*arrival;running=goal===target&&dist>170;
           }
+          if(goal===target)u.aimFacing=Math.atan2(target.y-u.y,target.x-u.x);
           if(goal===target&&dist<=u.reach&&u.attackCooldown<=0&&!u.action)this.attack(u,target);
           if(!u.action&&!u.roll){
             const threat=this.threat(u);
@@ -196,9 +223,9 @@ export class PrototypeArena {
       }
       const busy=u.action||u.roll||u.stagger>0;
       if(busy){desiredX=0;desiredY=0;}
-      if(!busy&&Math.hypot(desiredX,desiredY)>0.1){
-        const a=Math.atan2(desiredY,desiredX),change=angleDelta(u.facing,a);
-        u.facing+=clamp(change,-dt*9,dt*9);u.turning=Math.abs(change);
+      if(!busy&&(Math.hypot(desiredX,desiredY)>0.1||u.aimFacing!==null)){
+        const a=Math.hypot(desiredX,desiredY)>0.1?Math.atan2(desiredY,desiredX):u.aimFacing,change=angleDelta(u.facing,a);
+        u.facing+=clamp(change,-dt*(u.mass>2?5:7.5),dt*(u.mass>2?5:7.5));u.turning=Math.abs(change);
       }else u.turning*=Math.exp(-10*dt);
       const targetSpeed=running?u.run:u.speed;
       const acceleration=1-Math.exp(-dt*(u.mass>2?7:11));
@@ -212,14 +239,17 @@ export class PrototypeArena {
         u.travel+=move;u.gait+=move/u.stride;
       }
       const speed=Math.hypot(u.vx,u.vy);
+      if(speed>3)u.moveFacing=Math.atan2(u.vy,u.vx);
       u.moving+=(busy?0:clamp(speed/u.run,0,1)-u.moving)*(1-Math.exp(-dt*12));
       if(busy)u.moving*=Math.exp(-12*dt);
       u.x+=u.ix*dt;u.y+=u.iy*dt;u.ix*=Math.exp(-5*dt);u.iy*=Math.exp(-5*dt);this.confine(u);
       u.lastState=animationState(u);
     }
     this.separate();
+    for(const u of this.units)plantFeet(u,dt);
     for(const p of this.projectiles){
       p.age+=dt;p.ttl-=dt;
+      p.z=p.originZ+(52-p.originZ)*clamp(p.age/p.passTime,0,1);
       const start={x:p.x,y:p.y},end={x:p.x+p.vx*dt,y:p.y+p.vy*dt};
       let hit=null,t=Infinity;
       for(const target of this.living(1-p.source.side)){
@@ -227,7 +257,7 @@ export class PrototypeArena {
         if(fraction!==null&&fraction<t){t=fraction;hit=target;}
       }
       p.px=p.x;p.py=p.y;p.x=end.x;p.y=end.y;
-      if(hit){this.hit(hit,p.source,p.damage,p.kind==='spell'?'spell':'arrow');p.ttl=0;}
+      if(hit){this.hit(hit,p.source,p.damage,p.kind==='spell'?'spell':'arrow',p.z);p.ttl=0;}
       if(!hit&&!p.avoidChecked&&p.age>=p.passTime+0.08){
         p.avoidChecked=true;const target=this.units.find(u=>u.uid===p.targetUid);
         if(target?.hp>0&&target.dodges>p.targetDodges&&target.lastThreat===p.key){this.metrics.avoided++;this.event('evade',target,{sourceUid:p.source.uid});}

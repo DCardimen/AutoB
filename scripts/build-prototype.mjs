@@ -1,8 +1,8 @@
 import fs from 'node:fs';
 import vm from 'node:vm';
-const assets=Object.fromEntries(['prototype-parts','prototype-glade','prototype-heads-8','prototype-bodies-8'].map(name=>[name,`data:image/png;base64,${fs.readFileSync(`public/${name}.png`).toString('base64')}`]));
+const assets=Object.fromEntries(['prototype-parts','prototype-glade','prototype-heads-8','prototype-bodies-8','prototype-limbs-v2','prototype-weapons-v2'].map(name=>[name,`data:image/png;base64,${fs.readFileSync(`public/${name}.png`).toString('base64')}`]));
 const chunks=['(()=>{const modules={};const embeddedAssets='+JSON.stringify(assets)+';'];
-for(const name of ['arena','prototype-engine','prototype-sprites','sound','prototype']){
+for(const name of ['arena','prototype-rig','prototype-engine','prototype-sprites','sound','prototype']){
   let code=fs.readFileSync(name+'.js','utf8');
   const exports=[...code.matchAll(/^export\s+(?:const|let|function|class)\s+(\w+)/gm)].map(m=>m[1]);
   code=code.replace(/^import\s+\{([^}]+)\}\s+from\s+['"]\.\/([\w-]+)\.js['"];?/gm,(_,names,source)=>`const {${names}}=modules[${JSON.stringify(source)}];`);
@@ -10,6 +10,8 @@ for(const name of ['arena','prototype-engine','prototype-sprites','sound','proto
   code=code.replace("parts.src='/public/prototype-parts.png'","parts.src=embeddedAssets['prototype-parts']");
   code=code.replace("heads.src='/public/prototype-heads-8.png'","heads.src=embeddedAssets['prototype-heads-8']");
   code=code.replace("bodies.src='/public/prototype-bodies-8.png'","bodies.src=embeddedAssets['prototype-bodies-8']");
+  code=code.replace("limbs.src='/public/prototype-limbs-v2.png'","limbs.src=embeddedAssets['prototype-limbs-v2']");
+  code=code.replace("weapons.src='/public/prototype-weapons-v2.png'","weapons.src=embeddedAssets['prototype-weapons-v2']");
   code=code.replace("backdrop.src='/public/prototype-glade.png'","backdrop.src=embeddedAssets['prototype-glade']");
   chunks.push(`modules[${JSON.stringify(name)}]=(()=>{${code}\nreturn {${exports.join(',')}};})();`);
 }
