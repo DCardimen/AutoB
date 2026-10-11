@@ -50,11 +50,13 @@ Include idle, walk, run, turn, attack, cast, dodge, hit, stagger, and death stat
 
 **Exit gate:** show the five characters moving and fighting at 1× speed, including misses, dodges, interrupted attacks, and deaths. Inspect transitions at normal speed and frame by frame. Have the user review the visual direction before multiplying the asset workload; this is an art milestone review, not a technical permission requirement.
 
-**Implementation:** open `prototype.html` through the development server, or open the self-contained `Starfall-Training-Glade.html`. The Training Glade link is in the expedition footer. The opening **8 directions** scene compares eight painted head/torso projections of any selected companion; click a view for close inspection. Sparring, movement circuits, and pose study expose the five original characters, eleven animation states, slow playback, frame stepping, and a close view. See [MILESTONE-1.md](MILESTONE-1.md) for validation and the remaining visual review.
+**Implementation:** open `prototype.html` through the development server, or open the self-contained `Starfall-Training-Glade.html`. The Training Glade link is in the expedition footer. The opening **8 directions** scene compares eight views of connected skinned models of any selected companion; click a view for close inspection. Sparring, movement circuits, and pose study expose the five original characters, twelve animation states, slow playback, frame stepping, and a close view. See [MILESTONE-1.md](MILESTONE-1.md) for validation and the remaining visual review.
 
 The Motion v2 revision replaces distorted limbs with an anatomical rig and separate feet, plants supporting feet in world coordinates, blends locomotion, and attaches rigid weapons to their grips. Physical tip sweeps determine melee contact and impact pauses. The small roster remains the basis for iteration 2 production, pending visual review.
 
 Natural Motion v3 adds sustained stamina-paid sprinting, heel/toe transfer, opposing arm motion, acceleration and braking limits, a distinct wolf gallop with rear hocks, and connected painted joint overlaps. Directional joint coverage and live gait tests validate the five-body prototype before roster production.
+
+Connected Rigs v4 replaces the cropped-image anatomy with five welded skinned models, fixed body scale, continuous facing, authored gait curves, stopping recovery steps and torso-driven strikes. Neck coverage and model topology checks address gaps missed by the earlier limb-only pixel checks. The new visual finish and movement still require review against the reference; the 9/10 target is not established by technical checks.
 
 ## Iteration 2 — Expand identities, body types, and evolution
 

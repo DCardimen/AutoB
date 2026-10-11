@@ -7,15 +7,17 @@ const output=process.argv[2]||'playtest-artifacts/prototype-1x.mp4';
 fs.mkdirSync('playtest-artifacts',{recursive:true});
 const encoder=spawn(process.env.FFMPEG_PATH||'/usr/bin/ffmpeg',['-hide_banner','-loglevel','error','-f','image2pipe','-vcodec','png','-framerate','30','-i','pipe:0','-an','-c:v','libx264','-preset','fast','-crf','21','-pix_fmt','yuv420p','-movflags','+faststart','-y',output],{stdio:['pipe','ignore','pipe']});
 let errors='';encoder.stderr.on('data',d=>errors+=d);const finished=new Promise((resolve,reject)=>{encoder.on('error',reject);encoder.on('close',code=>code===0?resolve():reject(new Error(errors)));});
-const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||'/usr/bin/chromium',headless:true,args:['--no-sandbox']});
+const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||'/usr/bin/chromium',headless:true,args:['--no-sandbox','--enable-unsafe-swiftshader']});
 const page=await browser.newPage({viewport:{width:1280,height:960}});
 try{
   await page.clock.install();
-  await page.goto((process.env.BASE_URL||'http://127.0.0.1:3003')+'/prototype.html');await page.waitForFunction(()=>prototypeLab.state.artLoaded);
+  await page.clock.pauseAt(await page.evaluate(()=>Date.now()+1000));
+  await page.goto((process.env.BASE_URL||'http://127.0.0.1:3003')+'/prototype.html');await page.clock.runFor(100);await page.waitForFunction(()=>prototypeLab.state.artLoaded);
   // Stop wall-clock advancement: only the explicit 1/30-second step may move
   // simulation time while frames are encoded.
-  await page.clock.pauseAt(await page.evaluate(()=>Date.now()+100));
+
   async function capture(seconds,caption){
+    console.log(`Recording ${seconds}s: ${caption}`);
     for(let i=0;i<seconds*30;i++){
       await page.clock.runFor(1000/30);
       const data=await page.locator('canvas').evaluate((c,caption)=>{const frame=document.createElement('canvas');frame.width=c.width;frame.height=c.height;const ctx=frame.getContext('2d');ctx.drawImage(c,0,0);if(caption){ctx.fillStyle='#102018e6';ctx.fillRect(20,20,450,46);ctx.fillStyle='#e6ead5';ctx.font='17px system-ui';ctx.fillText(caption,35,49);}return frame.toDataURL('image/png').split(',')[1];},caption);
@@ -25,7 +27,7 @@ try{
   async function focus(on){if(await page.evaluate(()=>prototypeLab.state.focusView)!==on)await page.locator('#focus-view').click();}
   await page.locator('[data-scene="directions"]').click();
   for(const [id,index] of [['knight',0],['wolf',4]]){
-    await page.locator(`[data-select="0-${id}-${index}"]`).click();await capture(2,'Natural Motion v3 · eight painted views');
+    await page.locator(`[data-select="0-${id}-${index}"]`).click();await capture(2,'Connected Rigs v4 · eight views, one model');
   }
   await page.locator('[data-scene="movement"]').click();await page.locator('[data-pace="walk"]').click();await focus(false);await capture(5,'Walk · planted feet and heel-to-toe steps');
   await page.locator('[data-pace="run"]').click();await capture(4,'Run · longer stride and opposing arm swing');

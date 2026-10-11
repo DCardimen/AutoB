@@ -1,3 +1,4 @@
+import { locomotionPose } from './prototype-motion.js';
 // Anatomical poses shared by the renderer and physical weapon contacts.
 const TAU=Math.PI*2;
 const bound=(n,a,b)=>Math.max(a,Math.min(b,n));
@@ -34,7 +35,18 @@ export function solveLimb(root,target,upper,lower,pole=point(1,0,0)){
 }
 
 export function locomotionStride(stride,run=0,sprint=0,id='knight'){
-  return stride*(1+0.08*run+(id==='wolf'?0.36:0.2)*sprint);
+  // Human running covers more ground per cycle, rather than accelerating a
+  // walking cycle to an implausible number of footfalls. Quadrupeds keep their
+  // own shorter, faster trot/gallop cadence.
+  return stride*(1+(id==='wolf'?0.08:0.35)*run+(id==='wolf'?0.36:0.45)*sprint);
+}
+export function footSoleLift(id,pitch,ankleZ=3){
+  const s=Math.sin(pitch),c=Math.cos(pitch);
+  // Shared rounded sole dimensions used by the models. Raise the ankle around
+  // heel/toe support so rotating a planted shoe cannot push it into the floor.
+  const profiles=id==='wolf'?[[3,-0.7,6,2.9],[6,-1.2,2.5,1.3]]:[[3,1,8,3.6],[3,-1.8,8,1.2]];
+  const bottom=Math.min(...profiles.map(([x,z,rx,rz])=>-x*s+z*c-Math.hypot(rx*s,rz*c)));
+  return Math.max(0,-ankleZ-bottom);
 }
 export function legLayout(id,run=0,sprint=0){
   if(id!=='wolf')return [{x:0,y:-RIGS[id].stance,offset:0},{x:0,y:RIGS[id].stance,offset:0.5}];
@@ -76,14 +88,16 @@ export function characterRig(id,state='idle',phase=0,stage='',options={}){
   const sprintBlend=options.sprintBlend??(state==='sprint'?1:0);
   const stride=locomotionStride(options.stride||(wolf?72:heavy?82:76),runBlend,sprintBlend,id);
   const layout=legLayout(id,runBlend,sprintBlend);
-  const support=layout.some(l=>rigFoot(gait+l.offset,stride,runBlend,sprintBlend).planted);
   const breath=Math.sin(phase*TAU)*0.25;
-  const bob=moving?(Math.cos(gait*TAU*2)*(0.7+runBlend*0.9)+(!support?1.5+sprintBlend*2:0))*motion:breath;
-  let crouch=moving?(wolf?6+runBlend+sprintBlend:heavy?8+runBlend*1.5+sprintBlend:7+runBlend*1.5+sprintBlend)*motion:0,shift=0;
-  let lean=moving?(0.04+runBlend*0.09+sprintBlend*0.1+(options.acceleration||0)*0.04)*motion:0;
-  const torsoYaw=moving?Math.sin(gait*TAU)*(0.045+runBlend*0.035)*motion:0;
+  const authored=locomotionPose(id,gait,runBlend,sprintBlend);
+  const bob=moving?authored.bob*motion:breath;
+  let crouch=moving?(wolf?6+runBlend+sprintBlend:heavy?8+runBlend*1.5+sprintBlend:7+runBlend*1.5+sprintBlend)*motion:0,shift=0,sideShift=0,sideLean=0;
+  const rollAngle=options.rollAngle??(state==='dodge'?Math.PI/2:0);
+  let lean=moving?(0.04+runBlend*0.09+sprintBlend*0.1+(options.acceleration||0)*0.04+authored.pitch)*motion:0;
+  let torsoYaw=moving?authored.yaw*motion:0;
   const wm=weaponMotion(id,phase,(state==='attack'?stage:''));
   if(state==='attack'&&(id==='knight'||heavy)){
+    torsoYaw=stage==='recovery'?0.22*(1-ease(phase)):phase<0.72?-0.2*ease(phase/0.72):-0.2+0.42*ease((phase-0.72)/0.28);
     crouch+=wm.weight*(heavy?4:2);
     const swing=ease((phase-0.72)/0.28);
     shift=stage==='recovery'?3*(1-ease(phase)):wm.active?-2+5*swing:-wm.weight*2;
@@ -96,36 +110,41 @@ export function characterRig(id,state='idle',phase=0,stage='',options={}){
     crouch=stage==='recovery'?1.5*(1-ease(phase)):1.5*ease(phase);
   }
   if(state==='cast')crouch=2*Math.sin(phase*Math.PI);
-  if(state==='dash'){crouch=10;lean=0.2;shift=7;}
-  if(state==='dodge'){crouch=15*Math.sin(phase*Math.PI);lean=-0.13*Math.sin(phase*Math.PI);shift=-4;}
-  if(state==='hit'){crouch=2*Math.sin(phase*Math.PI);shift=-4*Math.sin(phase*Math.PI);}
-  if(state==='stagger'){crouch=8*Math.sin(phase*Math.PI);shift=-3*Math.sin(phase*Math.PI);}
+  if(state==='dash'){const pulse=Math.sin(phase*Math.PI);crouch=7*pulse;lean=0.22*pulse;shift=7*pulse;}
+  if(state==='dodge'){const pulse=Math.sin(phase*Math.PI);crouch=15*pulse;lean=0.13*Math.cos(rollAngle)*pulse;sideLean=0.12*Math.sin(rollAngle)*pulse;shift=4*Math.cos(rollAngle)*pulse;sideShift=3*Math.sin(rollAngle)*pulse;}
+  if(state==='hit'){crouch=2*Math.sin(phase*Math.PI);shift=-4*Math.sin(phase*Math.PI);lean=-0.1*Math.sin(phase*Math.PI);torsoYaw=-0.08*Math.sin(phase*Math.PI);}
+  if(state==='stagger'){crouch=8*Math.sin(phase*Math.PI);shift=-3*Math.sin(phase*Math.PI);lean=-0.16*Math.sin(phase*Math.PI);torsoYaw=-0.13*Math.sin(phase*Math.PI);}
   if(state==='turn'){shift=Math.sin(phase*TAU)*1.5;crouch=1.5;lean=Math.sin(phase*TAU)*0.04;}
   if(state==='death'){crouch=ease(phase/0.5)*(wolf?12:24);shift=-4*ease(phase);}
-  const hipHeight=d.hip-crouch+bob;
-  const pelvis=point(shift,Math.sin(gait*TAU)*motion*(wolf?0.4:1.4),hipHeight);
-  const body=point(shift+lean*14,0,wolf?hipHeight+7:hipHeight+18);
-  const shoulderZ=hipHeight+32,shoulderX=shift+lean*14;
-  const head=point(wolf?24+shift:shift+lean*22+1,0,wolf?hipHeight+10:hipHeight+49-bob*0.65);
+  let hipHeight=d.hip-crouch+bob;
+  let pelvis=point(shift,authored.sway*motion+sideShift,hipHeight);
+  let body=point(shift+lean*14,pelvis.y*0.55+sideLean*14,wolf?hipHeight+7:hipHeight+18);
+  let head=point(wolf?24+shift:shift+lean*22+1,pelvis.y*0.3+sideLean*22,wolf?hipHeight+10:hipHeight+44-bob*0.65);
+  const transition=options.transition&&!moving?options.transition:null;
+  const prior=transition?characterRig(id,transition.sprintBlend>0.35?'sprint':transition.runBlend>0.4?'run':'walk',transition.gait,'',{stride:options.stride,motion:transition.motion??1,runBlend:transition.runBlend||0,sprintBlend:transition.sprintBlend||0}):null;
+  if(prior){const w=transition.weight;pelvis=mix(pelvis,prior.pelvis,w);body=mix(body,prior.body,w);head=mix(head,prior.head,w);hipHeight=pelvis.z;lean=lean*(1-w)+prior.lean*w;torsoYaw=torsoYaw*(1-w)+prior.torsoYaw*w;}
+  const shoulderZ=hipHeight+32,shoulderX=body.x;
   if(wolf&&state==='attack')head.x+=stage==='recovery'?6*(1-ease(phase/0.35)):6*ease((phase-0.72)/0.28);
   const movementAngle=options.movementAngle||0;
   const legs=layout.map((l,i)=>{
     let foot=rigFoot(gait+l.offset,stride,runBlend,sprintBlend);
-    if(!moving)foot={x:state==='dash'?(i%2?11:-11):state==='dodge'?(i%2?9:-9):(i%2?2:-2),z:0,pitch:0,planted:true};
+    if(!moving){const pulse=Math.sin(phase*Math.PI),action=state==='dash'||state==='dodge';foot={x:(i%2?1:-1)*(2+(action?(state==='dash'?9:7)*pulse:0)),z:state==='dash'?pulse*(i%2?5:2):0,pitch:action?-0.12*pulse:0,planted:state!=='dash'||pulse<0.05};}
+    if(state==='dodge'){const pulse=Math.sin(phase*Math.PI),side=Math.sign(l.y),lead=side*Math.sin(rollAngle)>0;foot.x=(i%2?2:-2)+side*7*pulse*Math.cos(rollAngle);foot.lateral=side*7*pulse*Math.sin(rollAngle);foot.z=lead?3*pulse:0;foot.planted=!lead||pulse<0.05;}
     if(state==='turn'){foot.x+=Math.sin((phase+l.offset)*TAU)*3;foot.z=Math.max(0,Math.sin((phase+l.offset)*TAU))*3;}
-    if(options.transition&&!moving){const old=rigFoot(options.transition.gait+l.offset,options.stride||76,false),t=options.transition.weight;foot.x=foot.x*(1-t)+old.x*t;foot.z=old.z*t;}
+    if(prior){const old=prior.legs[i],t=transition.weight;foot.x=foot.x*(1-t)+(old.end.x-l.x)*t;foot.z=foot.z*(1-t)+(old.end.z-3)*t;foot.pitch=foot.pitch*(1-t)+old.foot.pitch*t;}
     const root=point(pelvis.x+l.x,pelvis.y+l.y,hipHeight+(wolf&&l.front?1:0));
-    const target=options.feet?.[i]||point(l.x+foot.x*Math.cos(movementAngle)*(moving?motion:1),l.y+foot.x*Math.sin(movementAngle)*(moving?motion:1),foot.z*(moving?motion:1)+3);
+    const ground=options.feet?.[i]||point(l.x+foot.x*Math.cos(movementAngle)*(moving?motion:1),l.y+(foot.lateral||0)+foot.x*Math.sin(movementAngle)*(moving?motion:1),foot.z*(moving?motion:1)+3);
+    const soleLift=footSoleLift(id,foot.pitch,ground.z),target={...ground,z:ground.z+soleLift};
     const pole=point(wolf&&l.front?-1:1,0,0);
     const hock=wolf&&!l.front?plus(target,point(-d.hock*0.65,0,d.hock*Math.sqrt(1-0.65**2))):null;
     const solved=solveLimb(root,hock||target,wolf&&l.front?17:d.thigh,wolf&&l.front?18:d.shin,pole);
     return {...solved,hock:hock?solved.end:null,hockLength:hock?d.hock:0,end:hock?plus(solved.end,minus(target,hock)):solved.end,
-      side:l.y,front:l.front,foot:{...foot,position:target,angle:options.feet?.[i]?.angle||0},index:i};
+      side:l.y,front:l.front,foot:{...foot,position:target,ground,soleLift,angle:options.feet?.[i]?.angle||0},index:i};
   });
   const arms=[];let weapon=null,shield=null,bowString=null;
   if(!wolf){
     let right=point(8,d.shoulder+1,hipHeight+8),left=point(6,-d.shoulder-1,hipHeight+9),tilt=0.22;
-    const swing=moving?Math.sin(gait*TAU)*(6+runBlend*4+sprintBlend*3)*motion:0;
+    const swing=moving?authored.arm*motion:0;
     const elbowLift=(runBlend*4+sprintBlend*5)*motion;
     if(id==='knight'){right=point(9+swing,14,hipHeight+7+elbowLift);left=point(7-swing*0.7,-17,hipHeight+17+elbowLift*0.4);tilt=0.22-runBlend*0.35-sprintBlend*0.2;}
     if(heavy){right=point(10,4,hipHeight+18);left=point(5,-5,hipHeight+12);}
@@ -148,9 +167,10 @@ export function characterRig(id,state='idle',phase=0,stage='',options={}){
       const channel=stage==='windup'?ease(phase):1-ease(phase);
       right=point(14,12,hipHeight+22+channel*8);left=point(13+channel*9,-12,hipHeight+23+channel*4);tilt=-0.08;
     }
-    if(state==='dash'||state==='dodge'){right.x=-8;left.x=-6;right.z+=6;left.z+=4;tilt=-0.25;}
+    if(state==='dash'||state==='dodge'){const pulse=Math.sin(phase*Math.PI);right.x=right.x*(1-pulse)-8*pulse;left.x=left.x*(1-pulse)-6*pulse;right.z+=6*pulse;left.z+=4*pulse;tilt=tilt*(1-pulse)-0.25*pulse;}
+    if(prior){const w=transition.weight;right=mix(right,prior.arms.find(a=>a.side===1).end,w);left=mix(left,prior.arms.find(a=>a.side===-1).end,w);tilt=tilt*(1-w)+prior.weapon.tilt*w;}
     for(const [side,target] of [[-1,left],[1,right]]){
-      const root=point(shoulderX+side*d.shoulder*Math.sin(torsoYaw),side*d.shoulder*Math.cos(torsoYaw),shoulderZ);
+      const root=point(shoulderX-side*d.shoulder*Math.sin(torsoYaw),body.y+side*d.shoulder*Math.cos(torsoYaw),shoulderZ);
       const solved=solveLimb(root,target,d.arm,d.forearm,point(-0.6,side*0.7,-0.7));
       arms.push({...solved,side});
     }
@@ -161,7 +181,7 @@ export function characterRig(id,state='idle',phase=0,stage='',options={}){
     if(heavy){const hand=arms.find(a=>a.side===-1),target=plus(grip,times(axis,-11));Object.assign(hand,solveLimb(hand.root,target,d.arm,d.forearm,point(-0.5,-0.7,-0.7)));}
     if(id==='knight')shield={grip:l};
   }
-  return {id,state,phase,stage,dimensions:d,pelvis,body,head,legs,arms,weapon,shield,bowString,lean,torsoYaw,crouch,death:state==='death'?ease(phase):0,tail:point(-27+shift,0,hipHeight+9)};
+  return {id,state,phase,stage,dimensions:d,pelvis,body,head,legs,arms,weapon,shield,bowString,lean,sideLean,torsoYaw,crouch,death:state==='death'?ease(phase):0,tail:point(-27+shift,0,hipHeight+9)};
 }
 
 export function weaponContactPath(id,angle){
@@ -187,14 +207,23 @@ export function plantFeet(u,dt){
   const rig=characterRig(u.id,moving?(sprintBlend>0.35?'sprint':runBlend>0.4?'run':'walk'):'idle',u.gait%1,'',{stride:u.stride,motion,runBlend,sprintBlend,acceleration:u.acceleration,movementAngle:Math.atan2(Math.sin(u.moveFacing-u.facing),Math.cos(u.moveFacing-u.facing))});
   const layout=legLayout(u.id,runBlend,sprintBlend),stride=locomotionStride(u.stride,runBlend,sprintBlend,u.id);
   const world=p=>({x:u.x+p.x*Math.cos(u.facing)-p.y*Math.sin(u.facing),y:u.y+p.x*Math.sin(u.facing)+p.y*Math.cos(u.facing)});
-  if(!u.groundFeet)u.groundFeet=rig.legs.map(leg=>({...world(leg.end),z:leg.end.z,angle:u.facing,planted:leg.foot.planted,serial:0}));
+  if(!u.groundFeet)u.groundFeet=rig.legs.map(leg=>({...world(leg.end),z:leg.end.z-leg.foot.soleLift,angle:u.facing,planted:leg.foot.planted,serial:0}));
   for(let i=0;i<rig.legs.length;i++){
     const leg=rig.legs[i],f=u.groundFeet[i],goal=world(leg.end),phase=((u.gait+layout[i].offset)%1+1)%1;
     if(!moving){
-      if(!f.planted){f.x+=(goal.x-f.x)*Math.min(1,dt*15);f.y+=(goal.y-f.y)*Math.min(1,dt*15);f.z+=(3-f.z)*Math.min(1,dt*22);if(f.z<3.05){f.z=3;f.planted=true;f.serial++;}}
+      // Complete one recovery step at a time on stopping, rather than dragging
+      // two planted feet into an idle stance or snapping a stretched knee.
+      if(!u.action&&f.planted&&!u.groundFeet.some(other=>other.settling)&&Math.hypot(goal.x-f.x,goal.y-f.y)>7){f.settling={x:f.x,y:f.y,elapsed:0};f.planted=false;}
+      if(f.settling){
+        f.settling.elapsed+=dt;const t=Math.min(1,f.settling.elapsed/0.19),blend=ease(t);
+        f.x=f.settling.x+(goal.x-f.settling.x)*blend;f.y=f.settling.y+(goal.y-f.settling.y)*blend;f.z=3+Math.sin(t*Math.PI)*4;f.angle=u.facing;
+        if(t>=1){f.settling=null;f.z=3;f.planted=true;f.serial++;}
+      }else if(!f.planted){f.x+=(goal.x-f.x)*Math.min(1,dt*15);f.y+=(goal.y-f.y)*Math.min(1,dt*15);f.z+=(3-f.z)*Math.min(1,dt*22);if(f.z<3.05){f.z=3;f.planted=true;f.serial++;}}
     }else if(leg.foot.planted){
+      f.settling=null;
       if(!f.planted){f.planted=true;f.z=3;f.serial++;}
     }else{
+      f.settling=null;
       if(f.planted){f.start={x:f.x,y:f.y};f.planted=false;}
       const duty=leg.foot.duty,t=bound((phase-duty)/(1-duty),0,1),remaining=(1-phase)*stride/speed;
       const half=stride*duty/2,base=layout[i].x;
@@ -204,11 +233,11 @@ export function plantFeet(u,dt){
     }
     const root=world(leg.root),reach=leg.upper+leg.lower-0.2;
     const hockOffset=leg.hock?world(minus(leg.hock,leg.end)):null;
-    const targetX=f.x+(hockOffset?hockOffset.x-u.x:0),targetY=f.y+(hockOffset?hockOffset.y-u.y:0),targetZ=f.z+(leg.hock?leg.hock.z-leg.end.z:0);
+    const targetX=f.x+(hockOffset?hockOffset.x-u.x:0),targetY=f.y+(hockOffset?hockOffset.y-u.y:0),targetZ=f.z+footSoleLift(u.id,leg.foot.pitch,f.z)+(leg.hock?leg.hock.z-leg.end.z:0);
     if(Math.hypot(targetX-root.x,targetY-root.y,targetZ-leg.root.z)>reach){
       // A collision or sharp reversal can force a support change. Replant it
       // explicitly rather than lengthening a shin to keep an impossible anchor.
-      f.x=goal.x;f.y=goal.y;f.z=leg.end.z;f.angle=u.facing;f.serial++;
+      f.x=goal.x;f.y=goal.y;f.z=leg.end.z-leg.foot.soleLift;f.angle=u.facing;f.serial++;
     }
   }
 }

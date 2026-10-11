@@ -4,11 +4,11 @@ A single-player creature-collecting roguelike autobattler with physical arena co
 
 The next overhaul follows [ROADMAP.md](ROADMAP.md), with eleven playable milestones covering reference-inspired directional animation, a broader fantasy roster, the sixty proposed gameplay improvements, and player testing. [Iteration 1](MILESTONE-1.md) now has a playable five-character prototype: open **Starfall-Training-Glade.html**, or use the Training Glade link in the game footer. Its visual direction awaits review; later roadmap items remain planned.
 
-The prototype now opens with an **8 directions** comparison. Choose a companion to see all eight views together; click a view to inspect it up close. Forty head views and forty torso views replace the initial shared front/back artwork. Watch the [normal-speed iteration 1 preview](public/prototype-preview.mp4) for the comparisons, movement, sparring, a close attack, and death animation.
+The prototype opens with an **8 directions** comparison. Choose a companion to see all eight views; click one to inspect it closely. Watch the [normal-speed preview](public/prototype-preview.mp4) for walking, running, sprinting, combat and a fall.
 
-**Motion v2** rebuilds the legs and arms with aligned artwork, separate boots/paws, fixed segment lengths, and feet planted in world space during turns. It adds smoother stride transitions and target alignment, hand-anchored weapons, a two-handed axe, an animated bow draw/release, physical blade sweeps, and brief contact pauses. These changes remain in Natural Motion v3.
+**Connected Rigs v4** replaces independently cropped character parts with five original skinned 3D models under a fixed isometric camera. Heads, necks and limb roots share welded anatomy; model proportions remain fixed as facing turns continuously. Authored gait tracks add support-side weight transfer and landing compression. World-planted feet, stopping recovery steps, stamina-paid sprinting and shared physical weapon transforms carry into the new renderer.
 
-**Natural Motion v3** adds heel-to-toe steps, weight transfer, opposing arm swings, connected joint overlaps, wolf hocks and a gallop. In the Training Glade, choose **Movement → Sprint**, use the selected companion’s **Sprint** toggle, or hold **Shift** while the arena has focus. Sprint spends stamina and blends back into walking when released. Look for **NATURAL MOTION V3** in the header.
+Open **Starfall-Training-Glade.html** in Chrome or Edge; no installation is needed to play. It requires WebGL2. Choose **Movement → Sprint**, toggle the selected companion’s Sprint control, or hold Shift with the arena focused. Look for **CONNECTED RIGS V4** in the header. Developers must run `npm run build:prototype` after prototype source edits to regenerate the local bundle and offline HTML. The new model finish and movement await visual review; automated checks do not establish a 9/10 score.
 
 ## Play
 

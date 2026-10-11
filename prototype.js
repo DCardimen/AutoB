@@ -2,6 +2,7 @@ import { PrototypeArena, PROTOTYPE_CHARACTERS, PROTOTYPE_BY_ID, ANIMATION_STATES
 import { drawPrototypeSprite, spritesReady, prototypePortrait, spriteCacheStats, prototypeDirectionFrames } from './prototype-sprites.js';
 import { Soundscape } from './sound.js';
 import { locomotionStride } from './prototype-rig.js';
+import { beginCharacterFrame, flushCharacterFrame } from './prototype-renderer.js';
 const $=s=>document.querySelector(s),canvas=$('#prototype-canvas'),c=canvas.getContext('2d');
 const backdrop=new Image();backdrop.src='/public/prototype-glade.png';
 backdrop.addEventListener('error',()=>{$('#loading').textContent='The artwork could not load. Reload this page.';});
@@ -66,7 +67,10 @@ function updateUI(){
 }
 function ellipse(x,y,rx,ry,color){c.fillStyle=color;c.beginPath();c.ellipse(x,y,rx,ry,0,0,Math.PI*2);c.fill();}
 function background(){
-  if(backdrop.complete&&backdrop.naturalWidth)c.drawImage(backdrop,0,0,1000,650);
+  if(backdrop.complete&&backdrop.naturalWidth){
+    // Extend the forest at the camera edges during close inspection.
+    for(let row=-1;row<=1;row++)for(let col=-1;col<=1;col++){c.save();c.translate((col===0?0:col+1)*1000,(row===0?0:row+1)*650);c.scale(col===0?1:-1,row===0?1:-1);c.drawImage(backdrop,0,0,1000,650);c.restore();}
+  }
   else{
     const g=c.createLinearGradient(0,0,0,650);g.addColorStop(0,'#273d2c');g.addColorStop(0.6,'#65734a');g.addColorStop(1,'#31412c');c.fillStyle=g;c.fillRect(0,0,1000,650);
     c.fillStyle='#9a976f';c.beginPath();c.ellipse(500,345,420,255,0,0,Math.PI*2);c.fill();
@@ -78,6 +82,7 @@ function background(){
 }
 function render(){
   c.clearRect(0,0,1000,650);c.save();
+  if(spritesReady())beginCharacterFrame();
   if(mode==='directions'){
     background();
     const u=selectedUnit();
@@ -89,7 +94,7 @@ function render(){
       drawPrototypeSprite(c,{...u,facing:dir*Math.PI/4,hp:pose==='death'?0:u.hp},x,y,arena.time,1.65,studyPose(u));
       c.textAlign='center';c.fillStyle='#e4e9cf';c.font='13px system-ui';c.fillText(directions[dir].toUpperCase(),x,y+25);
     }
-    c.restore();return;
+    flushCharacterFrame(c);c.restore();return;
   }
   if(focusView){const p=groundToScreen(selectedUnit().x,selectedUnit().y);c.translate(500,370);c.scale(1.8,1.8);c.translate(-p.x,-p.y);}
   background();c.save();
@@ -121,6 +126,7 @@ function render(){
     }
     if(labels&&u.side===0&&u.hp>0){c.font='10px system-ui';c.textAlign='center';c.fillStyle='#ebebd2';c.shadowColor='#0c2117';c.shadowBlur=4;c.fillText(u.name.split(' · ')[0],p.x,p.y+19);c.font='8px system-ui';c.fillText(directions[mode==='study'?poseFacing:directionalFrame(u.facing)],p.x,p.y+31);c.shadowBlur=0;}
   }
+  flushCharacterFrame(c);
   for(const p of arena.projectiles){
     const q=groundToScreen(p.x,p.y),angle=Math.atan2(p.vy*0.58,p.vx);
     c.save();c.translate(q.x,q.y-p.z);c.rotate(angle);
@@ -197,7 +203,7 @@ document.addEventListener('keyup',e=>{if(e.key==='Shift')releaseHeldSprint();});
 window.addEventListener('blur',releaseHeldSprint);
 $('#pose-states').innerHTML=ANIMATION_STATES.map(s=>`<button data-pose="${s}" class="${s===pose?'active':''}">${s[0].toUpperCase()+s.slice(1)}</button>`).join('');
 window.addEventListener('prototype-art-ready',()=>{makeCards();updateUI();});
-window.addEventListener('prototype-art-error',()=>{$('#loading').textContent='The artwork could not load. Reload this page.';});
+window.addEventListener('prototype-render-error',e=>{$('#loading').textContent='3D rendering is unavailable. Enable hardware acceleration in your browser and reload. '+e.detail;});
 document.addEventListener('visibilitychange',()=>{last=performance.now();});
 function frame(now){
   const dt=Math.min(0.05,(now-last)/1000);last=now;

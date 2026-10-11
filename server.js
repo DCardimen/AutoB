@@ -32,6 +32,7 @@ const entryFiles = new Set([
   "/prototype.js",
   "/prototype-engine.js",
   "/prototype-rig.js",
+  "/prototype-motion.js",
   "/prototype-sprites.js",
   "/Starfall-Training-Glade.html",
 ]);

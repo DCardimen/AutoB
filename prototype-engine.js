@@ -3,11 +3,11 @@ import { characterRig, weaponContactPath, weaponTipAt, rigFoot, plantFeet, locom
 
 // Milestone 1's isolated deterministic arena. All positions are ground coordinates.
 export const PROTOTYPE_CHARACTERS = [
-  {id:'knight',name:'Aurel · Knight',role:'Vanguard',mass:1.9,hp:420,speed:115,run:180,reach:64,damage:40,windup:0.32,recovery:0.36,cooldown:1.2,radius:19,stride:76,color:'#e7ba74',weapon:'sword',row:0},
-  {id:'orc',name:'Brakk · Orc',role:'Brawler',mass:2.6,hp:470,speed:101,run:157,reach:72,damage:59,windup:0.48,recovery:0.46,cooldown:1.5,radius:23,stride:82,color:'#b3c985',weapon:'axe',row:1},
-  {id:'elf',name:'Syl · Elf archer',role:'Marksman',mass:0.8,hp:235,speed:150,run:215,reach:340,damage:31,windup:0.27,recovery:0.28,cooldown:1.08,radius:15,stride:76,color:'#b8daa0',weapon:'bow',row:2},
-  {id:'caster',name:'Nyra · Caster',role:'Arcanist',mass:1,hp:255,speed:123,run:178,reach:290,damage:45,windup:0.54,recovery:0.4,cooldown:1.7,radius:16,stride:76,color:'#a8d9ed',weapon:'staff',row:3},
-  {id:'wolf',name:'Ember · Wolf',role:'Pursuer',mass:1.15,hp:285,speed:172,run:240,reach:53,damage:29,windup:0.23,recovery:0.23,cooldown:0.88,radius:17,stride:72,color:'#e3a879',weapon:'claws',row:4},
+  {id:'knight',name:'Aurel · Knight',role:'Vanguard',mass:1.9,hp:420,speed:90,run:180,reach:64,damage:40,windup:0.32,recovery:0.36,cooldown:1.2,radius:19,stride:76,color:'#e7ba74',weapon:'sword',row:0},
+  {id:'orc',name:'Brakk · Orc',role:'Brawler',mass:2.6,hp:470,speed:78,run:157,reach:72,damage:59,windup:0.48,recovery:0.46,cooldown:1.5,radius:23,stride:82,color:'#b3c985',weapon:'axe',row:1},
+  {id:'elf',name:'Syl · Elf archer',role:'Marksman',mass:0.8,hp:235,speed:110,run:215,reach:340,damage:31,windup:0.27,recovery:0.28,cooldown:1.08,radius:15,stride:76,color:'#b8daa0',weapon:'bow',row:2},
+  {id:'caster',name:'Nyra · Caster',role:'Arcanist',mass:1,hp:255,speed:92,run:178,reach:290,damage:45,windup:0.54,recovery:0.4,cooldown:1.7,radius:16,stride:76,color:'#a8d9ed',weapon:'staff',row:3},
+  {id:'wolf',name:'Ember · Wolf',role:'Pursuer',mass:1.15,hp:285,speed:130,run:240,reach:53,damage:29,windup:0.23,recovery:0.23,cooldown:0.88,radius:17,stride:72,color:'#e3a879',weapon:'claws',row:4},
 ];
 export const PROTOTYPE_BY_ID=Object.fromEntries(PROTOTYPE_CHARACTERS.map(x=>[x.id,x]));
 for(const spec of PROTOTYPE_CHARACTERS)spec.sprint=Math.round(spec.run*(spec.id==='wolf'?1.4:spec.id==='orc'?1.3:1.35));
@@ -94,7 +94,7 @@ export class PrototypeArena {
     const angle=Math.atan2(target.y-u.y,target.x-u.x);
     u.aimFacing=angle;
     if(Math.abs(angleDelta(u.facing,angle))>0.5)return false;
-    u.transitionFoot={gait:u.gait,moving:u.moving,time:this.time};
+    u.transitionFoot={gait:u.gait,moving:u.moving,runBlend:u.runBlend,sprintBlend:u.sprintBlend,time:this.time};
     u.action={elapsed:0,windup:u.windup,duration:u.windup+u.recovery,angle,aim:{x:target.x,y:target.y},targetUid:target.uid,targetDodges:target.dodges,released:false,impactHold:0,hitUids:[],key:++this.serial};
     u.stamina-=10;u.intention=u.id==='caster'?'channeling':u.id==='elf'?'drawing bow':'committed strike';
     this.event('windup',u,{targetUid:target.uid,angle});return true;

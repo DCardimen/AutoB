@@ -1,6 +1,6 @@
 {
   "checks": [
-    "Opening scene shows eight views side by side; all five characters have eight distinct sprites at one fixed pose phase, with 40 painted heads and 40 painted torsos; clicking a view opens its close inspection",
+    "Opening scene shows eight views side by side; all five characters have eight distinct sprites at one fixed pose phase, with five connected skinned models; clicking a view opens its close inspection",
     "Five complete character portraits and a ten-body scene; pause and frame stepping preserve simulation control",
     "Selecting a character and clicking ground produces actual movement in the physical scene",
     "All five locomotion profiles travel around the circuits and turn through all eight facings; speed changes work",
@@ -32,7 +32,7 @@
     "wolf": 8
   },
   "jointCoverage": {
-    "checks": 5952,
+    "checks": 9792,
     "gaps": []
   },
   "movementDirectionFrames": {
@@ -42,51 +42,51 @@
     "caster": 8,
     "wolf": 8
   },
-  "rigVersion": 3,
+  "rigVersion": 4,
   "sprint": [
     {
       "id": "knight",
       "active": true,
-      "blend": 0.010664420032207666,
+      "blend": 0.0023596924617445827,
       "stamina": 59.99999999999904
     },
     {
       "id": "orc",
       "active": true,
-      "blend": 0.0052172184991922735,
+      "blend": 1.5888404754459378e-05,
       "stamina": 59.99999999999904
     },
     {
       "id": "elf",
       "active": true,
-      "blend": 0.001009533007225126,
+      "blend": 0.8082262422293642,
       "stamina": 59.99999999999904
     },
     {
       "id": "caster",
       "active": true,
-      "blend": 0.9769739391010954,
+      "blend": 0.9568266878647426,
       "stamina": 59.99999999999904
     },
     {
       "id": "wolf",
       "active": true,
-      "blend": 0.0009440907757838261,
+      "blend": 0.3007163799047651,
       "stamina": 59.99999999999904
     }
   ],
   "directionFrames": 8,
   "stateFrames": 12,
   "battle": {
-    "time": 36.49166666666524,
+    "time": 54.491666666664216,
     "metrics": {
-      "hits": 77,
-      "misses": 46,
-      "rolls": 45,
-      "avoided": 27,
+      "hits": 84,
+      "misses": 48,
+      "rolls": 62,
+      "avoided": 37,
       "interrupts": 1,
-      "projectiles": 39,
-      "contacts": 3545,
+      "projectiles": 28,
+      "contacts": 5400,
       "knockouts": 6
     },
     "cache": {
@@ -95,36 +95,80 @@
       "sourceReady": true,
       "frameSize": 256,
       "rasterScale": 1.5,
-      "rigVersion": 3,
+      "rigVersion": 4,
       "directionalArt": {
         "columns": 8,
         "characters": 5,
-        "heads": 40,
-        "bodies": 40
+        "connectedModels": 5
+      },
+      "renderer": {
+        "type": "WebGL2",
+        "models": [
+          {
+            "id": "knight",
+            "skinned": true,
+            "vertices": 5584,
+            "bones": 15,
+            "triangles": 11164
+          },
+          {
+            "id": "orc",
+            "skinned": true,
+            "vertices": 7210,
+            "bones": 15,
+            "triangles": 14416
+          },
+          {
+            "id": "elf",
+            "skinned": true,
+            "vertices": 5516,
+            "bones": 15,
+            "triangles": 11040
+          },
+          {
+            "id": "caster",
+            "skinned": true,
+            "vertices": 5360,
+            "bones": 15,
+            "triangles": 10716
+          },
+          {
+            "id": "wolf",
+            "skinned": true,
+            "vertices": 6066,
+            "bones": 17,
+            "triangles": 12128
+          }
+        ],
+        "continuousFacing": true,
+        "paintedViewCropping": false,
+        "arenaPasses": 1,
+        "drawCalls": 635,
+        "instances": 48
       }
     }
   },
   "offlineExternalRequests": 0,
   "rules": {
-    "passed": 92,
+    "passed": 105,
     "failed": 0,
-    "prototypeChecks": 25
+    "prototypeChecks": 38
   },
   "preview": {
     "file": "public/prototype-preview.mp4",
+    "bytes": 8710170,
+    "sha256": "a5aaa32e991816721ca46122725d29a192a47107b78889dc2bd698faebc73f28",
     "durationSeconds": 42,
     "fps": 30,
     "width": 1000,
     "height": 650,
-    "bytes": 8829617,
-    "sha256": "6c672527da43e53eda30476f715d2b82c5550987f07a048016848459b8c1a38f",
     "clock": "Paused browser clock; each encoded frame advances simulation by 1/30 second."
   },
   "standalone": {
     "file": "Starfall-Training-Glade.html",
-    "bytes": 19978554,
-    "sha256": "6332d761eb6cb3f9b134d9f373b785f8d156c8bac9fa5420ee5829f13d3e8921"
+    "bytes": 5902356,
+    "sha256": "71f04ea800271a6169333da09b5e91f87b37c6404737281462accc3405f0bdd9"
   },
-  "scope": "Iteration 1 Natural Motion v3: five-character movement prototype; heel/toe steps, weight transfer, connected painted joints, world-space foot planting, wolf hocks and gallop, carried weapon grips, and sustained stamina-paid sprint with acceleration/braking and ground orders. Automated checks do not establish human playtime or a fun score.",
+  "scope": "Iteration 1 Connected Rigs v4: five original skinned 3D prototype characters, welded neck and limb anatomy, fixed model scale, continuous facing, authored grounded gaits, heel/toe contact, recovery steps, sprinting, directional dodges, movement-to-attack blending and shared physical weapon transforms. Main expedition and wider roster are unchanged. Automated checks do not establish human playtime or a 9/10 visual or fun score.",
   "offlineValidation": "Exact embedded HTML served as one intercepted document; all other requests blocked. Managed browser policy blocks file navigation."
 }
