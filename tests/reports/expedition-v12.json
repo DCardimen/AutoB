@@ -1,0 +1,3938 @@
+{
+  "version": 12,
+  "applicationVersion": "0.8.0",
+  "units": {
+    "tests": 174,
+    "passed": 174,
+    "failed": 0,
+    "skipped": 0,
+    "v12Scenarios": 17
+  },
+  "relics": {
+    "new": 100,
+    "total": 124,
+    "routeEconomyCapture": 20,
+    "combat": 70,
+    "flat": 10
+  },
+  "startingCompanions": 2,
+  "maxTeam": 6,
+  "slotsAtWins": [
+    3,
+    6,
+    9,
+    12
+  ],
+  "routes": {
+    "roomsPerWorld": 8,
+    "outgoingEdges": [
+      1,
+      4
+    ],
+    "defaultSight": 4
+  },
+  "capturers": [
+    "scout",
+    "runic",
+    "astral",
+    "mythic"
+  ],
+  "balance": {
+    "kind": "automated first-three-round balance",
+    "seeds": 40,
+    "policies": [
+      {
+        "policy": "default",
+        "clears": 27,
+        "rounds": [
+          {
+            "depth": 0,
+            "played": 40,
+            "wins": 37
+          },
+          {
+            "depth": 1,
+            "played": 37,
+            "wins": 30
+          },
+          {
+            "depth": 2,
+            "played": 30,
+            "wins": 27
+          }
+        ],
+        "rows": [
+          {
+            "seed": 1,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "mireclaw",
+                  "nix"
+                ],
+                "winner": 0,
+                "hp": 54.4100000000019,
+                "stuns": 0
+              },
+              {
+                "depth": 1,
+                "enemies": 2,
+                "foes": [
+                  "brom",
+                  "emberhound"
+                ],
+                "winner": 0,
+                "hp": 730.5646800000034,
+                "stuns": 0
+              },
+              {
+                "depth": 2,
+                "enemies": 2,
+                "foes": [
+                  "rowan",
+                  "syl"
+                ],
+                "winner": 0,
+                "hp": 502.86961999999994,
+                "stuns": 0
+              }
+            ],
+            "clear": true
+          },
+          {
+            "seed": 2,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "brom",
+                  "emberhound"
+                ],
+                "winner": 0,
+                "hp": 165.84750000000082,
+                "stuns": 0
+              },
+              {
+                "depth": 1,
+                "enemies": 2,
+                "foes": [
+                  "mireclaw",
+                  "nix"
+                ],
+                "winner": 0,
+                "hp": 86.12000000000339,
+                "stuns": 0
+              },
+              {
+                "depth": 2,
+                "enemies": 2,
+                "foes": [
+                  "aurel",
+                  "grit"
+                ],
+                "winner": 0,
+                "hp": 445.82825,
+                "stuns": 0
+              }
+            ],
+            "clear": true
+          },
+          {
+            "seed": 3,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "aurel",
+                  "grit"
+                ],
+                "winner": 0,
+                "hp": 568.8199999999999,
+                "stuns": 0
+              },
+              {
+                "depth": 1,
+                "enemies": 2,
+                "foes": [
+                  "mireclaw",
+                  "grit"
+                ],
+                "winner": 0,
+                "hp": 473.2205,
+                "stuns": 0
+              },
+              {
+                "depth": 2,
+                "enemies": 2,
+                "foes": [
+                  "brom",
+                  "grit"
+                ],
+                "winner": 0,
+                "hp": 604.2349999999999,
+                "stuns": 1
+              }
+            ],
+            "clear": true
+          },
+          {
+            "seed": 4,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "brom",
+                  "nix"
+                ],
+                "winner": 0,
+                "hp": 377.23300000000137,
+                "stuns": 0
+              },
+              {
+                "depth": 1,
+                "enemies": 2,
+                "foes": [
+                  "brom",
+                  "nix"
+                ],
+                "winner": 0,
+                "hp": 257.7030000000019,
+                "stuns": 1
+              },
+              {
+                "depth": 2,
+                "enemies": 2,
+                "foes": [
+                  "mireclaw",
+                  "grit"
+                ],
+                "winner": 0,
+                "hp": 445.2800000000017,
+                "stuns": 0
+              }
+            ],
+            "clear": true
+          },
+          {
+            "seed": 5,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "aurel",
+                  "grit"
+                ],
+                "winner": 0,
+                "hp": 655,
+                "stuns": 1
+              },
+              {
+                "depth": 1,
+                "enemies": 2,
+                "foes": [
+                  "aurel",
+                  "emberhound"
+                ],
+                "winner": 0,
+                "hp": 436.68000000000194,
+                "stuns": 1
+              },
+              {
+                "depth": 2,
+                "enemies": 3,
+                "foes": [
+                  "aurel",
+                  "emberhound",
+                  "emberhound"
+                ],
+                "winner": 1,
+                "hp": 0,
+                "stuns": 1
+              }
+            ],
+            "clear": false
+          },
+          {
+            "seed": 6,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "aurel",
+                  "emberhound"
+                ],
+                "winner": 0,
+                "hp": 562.556,
+                "stuns": 0
+              },
+              {
+                "depth": 1,
+                "enemies": 2,
+                "foes": [
+                  "mireclaw",
+                  "emberhound"
+                ],
+                "winner": 0,
+                "hp": 453.6809999999998,
+                "stuns": 1
+              },
+              {
+                "depth": 2,
+                "enemies": 2,
+                "foes": [
+                  "aurel",
+                  "grit"
+                ],
+                "winner": 0,
+                "hp": 652.5094999999999,
+                "stuns": 0
+              }
+            ],
+            "clear": true
+          },
+          {
+            "seed": 7,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "brom",
+                  "nix"
+                ],
+                "winner": 0,
+                "hp": 384.70425000000125,
+                "stuns": 0
+              },
+              {
+                "depth": 1,
+                "enemies": 3,
+                "foes": [
+                  "aurel",
+                  "grit",
+                  "grit"
+                ],
+                "winner": 0,
+                "hp": 511.16999999999996,
+                "stuns": 1
+              },
+              {
+                "depth": 2,
+                "enemies": 2,
+                "foes": [
+                  "aurel",
+                  "grit"
+                ],
+                "winner": 0,
+                "hp": 512.2500000000031,
+                "stuns": 0
+              }
+            ],
+            "clear": true
+          },
+          {
+            "seed": 8,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "mireclaw",
+                  "nix"
+                ],
+                "winner": 0,
+                "hp": 354.03950000000225,
+                "stuns": 1
+              },
+              {
+                "depth": 1,
+                "enemies": 2,
+                "foes": [
+                  "brom",
+                  "mireclaw"
+                ],
+                "winner": 0,
+                "hp": 616.9159999999999,
+                "stuns": 0
+              },
+              {
+                "depth": 2,
+                "enemies": 2,
+                "foes": [
+                  "mireclaw",
+                  "nix"
+                ],
+                "winner": 0,
+                "hp": 418.77250000000265,
+                "stuns": 0
+              }
+            ],
+            "clear": true
+          },
+          {
+            "seed": 9,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "brom",
+                  "brom"
+                ],
+                "winner": 0,
+                "hp": 650,
+                "stuns": 0
+              },
+              {
+                "depth": 1,
+                "enemies": 2,
+                "foes": [
+                  "aurel",
+                  "nix"
+                ],
+                "winner": 0,
+                "hp": 406.93100000000106,
+                "stuns": 0
+              },
+              {
+                "depth": 2,
+                "enemies": 2,
+                "foes": [
+                  "brom",
+                  "grit"
+                ],
+                "winner": 0,
+                "hp": 653.46,
+                "stuns": 1
+              }
+            ],
+            "clear": true
+          },
+          {
+            "seed": 10,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "mireclaw",
+                  "emberhound"
+                ],
+                "winner": 0,
+                "hp": 441.82950000000653,
+                "stuns": 0
+              },
+              {
+                "depth": 1,
+                "enemies": 2,
+                "foes": [
+                  "aurel",
+                  "nix"
+                ],
+                "winner": 0,
+                "hp": 416.62000000000245,
+                "stuns": 1
+              },
+              {
+                "depth": 2,
+                "enemies": 3,
+                "foes": [
+                  "aurel",
+                  "nix",
+                  "grit"
+                ],
+                "winner": 0,
+                "hp": 638.7000000000027,
+                "stuns": 4
+              }
+            ],
+            "clear": true
+          },
+          {
+            "seed": 11,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "mireclaw",
+                  "nix"
+                ],
+                "winner": 0,
+                "hp": 399.3900000000028,
+                "stuns": 1
+              },
+              {
+                "depth": 1,
+                "enemies": 3,
+                "foes": [
+                  "aurel",
+                  "nix",
+                  "emberhound"
+                ],
+                "winner": 1,
+                "hp": 0,
+                "stuns": 1
+              }
+            ],
+            "clear": false
+          },
+          {
+            "seed": 12,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "aurel",
+                  "emberhound"
+                ],
+                "winner": 0,
+                "hp": 356.63400000000684,
+                "stuns": 0
+              },
+              {
+                "depth": 1,
+                "enemies": 2,
+                "foes": [
+                  "grit",
+                  "rowan"
+                ],
+                "winner": 0,
+                "hp": 578.1080000000001,
+                "stuns": 0
+              },
+              {
+                "depth": 2,
+                "enemies": 2,
+                "foes": [
+                  "mireclaw",
+                  "nix"
+                ],
+                "winner": 0,
+                "hp": 572.8250000000031,
+                "stuns": 0
+              }
+            ],
+            "clear": true
+          },
+          {
+            "seed": 13,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "nix",
+                  "nix"
+                ],
+                "winner": 0,
+                "hp": 254.50000000000094,
+                "stuns": 0
+              },
+              {
+                "depth": 1,
+                "enemies": 2,
+                "foes": [
+                  "brom",
+                  "nix"
+                ],
+                "winner": 0,
+                "hp": 592.5760000000035,
+                "stuns": 1
+              },
+              {
+                "depth": 2,
+                "enemies": 2,
+                "foes": [
+                  "brom",
+                  "grit"
+                ],
+                "winner": 0,
+                "hp": 689.762,
+                "stuns": 1
+              }
+            ],
+            "clear": true
+          },
+          {
+            "seed": 14,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "brom",
+                  "emberhound"
+                ],
+                "winner": 0,
+                "hp": 430.6718000000024,
+                "stuns": 2
+              },
+              {
+                "depth": 1,
+                "enemies": 2,
+                "foes": [
+                  "mireclaw",
+                  "grit"
+                ],
+                "winner": 0,
+                "hp": 597.852,
+                "stuns": 0
+              },
+              {
+                "depth": 2,
+                "enemies": 2,
+                "foes": [
+                  "brom",
+                  "nix"
+                ],
+                "winner": 0,
+                "hp": 498.04250000000417,
+                "stuns": 0
+              }
+            ],
+            "clear": true
+          },
+          {
+            "seed": 15,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "brom",
+                  "emberhound"
+                ],
+                "winner": 0,
+                "hp": 546.990000000002,
+                "stuns": 1
+              },
+              {
+                "depth": 1,
+                "enemies": 2,
+                "foes": [
+                  "mireclaw",
+                  "grit"
+                ],
+                "winner": 0,
+                "hp": 313.97510000000005,
+                "stuns": 0
+              },
+              {
+                "depth": 2,
+                "enemies": 2,
+                "foes": [
+                  "aurel",
+                  "grit"
+                ],
+                "winner": 0,
+                "hp": 513.0600000000001,
+                "stuns": 1
+              }
+            ],
+            "clear": true
+          },
+          {
+            "seed": 16,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "mireclaw",
+                  "nix"
+                ],
+                "winner": 0,
+                "hp": 345.7227500000039,
+                "stuns": 0
+              },
+              {
+                "depth": 1,
+                "enemies": 2,
+                "foes": [
+                  "aurel",
+                  "emberhound"
+                ],
+                "winner": 0,
+                "hp": 416.3650000000089,
+                "stuns": 0
+              },
+              {
+                "depth": 2,
+                "enemies": 2,
+                "foes": [
+                  "mireclaw",
+                  "nix"
+                ],
+                "winner": 0,
+                "hp": 850.6550000000003,
+                "stuns": 1
+              }
+            ],
+            "clear": true
+          },
+          {
+            "seed": 17,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "luma",
+                  "syl"
+                ],
+                "winner": 1,
+                "hp": 559.9648000000007,
+                "stuns": 1
+              }
+            ],
+            "clear": false
+          },
+          {
+            "seed": 18,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "brom",
+                  "emberhound"
+                ],
+                "winner": 0,
+                "hp": 425.74925000000883,
+                "stuns": 1
+              },
+              {
+                "depth": 1,
+                "enemies": 2,
+                "foes": [
+                  "aurel",
+                  "emberhound"
+                ],
+                "winner": 0,
+                "hp": 25.29468000000498,
+                "stuns": 0
+              },
+              {
+                "depth": 2,
+                "enemies": 2,
+                "foes": [
+                  "aurel",
+                  "emberhound"
+                ],
+                "winner": 0,
+                "hp": 373.6200000000039,
+                "stuns": 0
+              }
+            ],
+            "clear": true
+          },
+          {
+            "seed": 19,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "aurel",
+                  "nix"
+                ],
+                "winner": 0,
+                "hp": 225.8325000000022,
+                "stuns": 2
+              },
+              {
+                "depth": 1,
+                "enemies": 2,
+                "foes": [
+                  "nyra",
+                  "rowan"
+                ],
+                "winner": 1,
+                "hp": 255.58600000000638,
+                "stuns": 2
+              }
+            ],
+            "clear": false
+          },
+          {
+            "seed": 20,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "brom",
+                  "emberhound"
+                ],
+                "winner": 1,
+                "hp": 0,
+                "stuns": 1
+              }
+            ],
+            "clear": false
+          },
+          {
+            "seed": 21,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "aurel",
+                  "grit"
+                ],
+                "winner": 0,
+                "hp": 701.54,
+                "stuns": 0
+              },
+              {
+                "depth": 1,
+                "enemies": 3,
+                "foes": [
+                  "brom",
+                  "nix",
+                  "grit"
+                ],
+                "winner": 1,
+                "hp": 0,
+                "stuns": 0
+              }
+            ],
+            "clear": false
+          },
+          {
+            "seed": 22,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "mireclaw",
+                  "emberhound"
+                ],
+                "winner": 0,
+                "hp": 678.9700000000012,
+                "stuns": 1
+              },
+              {
+                "depth": 1,
+                "enemies": 3,
+                "foes": [
+                  "aurel",
+                  "grit",
+                  "nix"
+                ],
+                "winner": 0,
+                "hp": 497.5900000000031,
+                "stuns": 2
+              },
+              {
+                "depth": 2,
+                "enemies": 2,
+                "foes": [
+                  "brom",
+                  "grit"
+                ],
+                "winner": 0,
+                "hp": 781.3099999999998,
+                "stuns": 0
+              }
+            ],
+            "clear": true
+          },
+          {
+            "seed": 23,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "brom",
+                  "nix"
+                ],
+                "winner": 0,
+                "hp": 527.2160000000011,
+                "stuns": 0
+              },
+              {
+                "depth": 1,
+                "enemies": 3,
+                "foes": [
+                  "nix",
+                  "emberhound",
+                  "rowan"
+                ],
+                "winner": 1,
+                "hp": 0,
+                "stuns": 1
+              }
+            ],
+            "clear": false
+          },
+          {
+            "seed": 24,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "aurel",
+                  "grit"
+                ],
+                "winner": 0,
+                "hp": 580.08,
+                "stuns": 0
+              },
+              {
+                "depth": 1,
+                "enemies": 3,
+                "foes": [
+                  "aurel",
+                  "grit",
+                  "nix"
+                ],
+                "winner": 0,
+                "hp": 91.65000000000302,
+                "stuns": 0
+              },
+              {
+                "depth": 2,
+                "enemies": 2,
+                "foes": [
+                  "brom",
+                  "nix"
+                ],
+                "winner": 0,
+                "hp": 771.5430000000022,
+                "stuns": 1
+              }
+            ],
+            "clear": true
+          },
+          {
+            "seed": 25,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "brom",
+                  "grit"
+                ],
+                "winner": 0,
+                "hp": 621.8205000000019,
+                "stuns": 0
+              },
+              {
+                "depth": 1,
+                "enemies": 2,
+                "foes": [
+                  "aurel",
+                  "grit"
+                ],
+                "winner": 0,
+                "hp": 663.9,
+                "stuns": 0
+              },
+              {
+                "depth": 2,
+                "enemies": 2,
+                "foes": [
+                  "mireclaw",
+                  "grit"
+                ],
+                "winner": 0,
+                "hp": 749.9200000000001,
+                "stuns": 1
+              }
+            ],
+            "clear": true
+          },
+          {
+            "seed": 26,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "luma",
+                  "syl"
+                ],
+                "winner": 0,
+                "hp": 714.4500000000016,
+                "stuns": 1
+              },
+              {
+                "depth": 1,
+                "enemies": 2,
+                "foes": [
+                  "brom",
+                  "emberhound"
+                ],
+                "winner": 1,
+                "hp": 0,
+                "stuns": 2
+              }
+            ],
+            "clear": false
+          },
+          {
+            "seed": 27,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "aurel",
+                  "emberhound"
+                ],
+                "winner": 0,
+                "hp": 492.5252000000024,
+                "stuns": 1
+              },
+              {
+                "depth": 1,
+                "enemies": 2,
+                "foes": [
+                  "mireclaw",
+                  "grit"
+                ],
+                "winner": 0,
+                "hp": 524.0364999999999,
+                "stuns": 0
+              },
+              {
+                "depth": 2,
+                "enemies": 2,
+                "foes": [
+                  "brom",
+                  "nix"
+                ],
+                "winner": 1,
+                "hp": 0,
+                "stuns": 1
+              }
+            ],
+            "clear": false
+          },
+          {
+            "seed": 28,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "brom",
+                  "emberhound"
+                ],
+                "winner": 0,
+                "hp": 491.8640000000024,
+                "stuns": 0
+              },
+              {
+                "depth": 1,
+                "enemies": 2,
+                "foes": [
+                  "aurel",
+                  "emberhound"
+                ],
+                "winner": 1,
+                "hp": 0,
+                "stuns": 1
+              }
+            ],
+            "clear": false
+          },
+          {
+            "seed": 29,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "brom",
+                  "emberhound"
+                ],
+                "winner": 0,
+                "hp": 384.77200000000175,
+                "stuns": 1
+              },
+              {
+                "depth": 1,
+                "enemies": 2,
+                "foes": [
+                  "brom",
+                  "nyra"
+                ],
+                "winner": 0,
+                "hp": 555.753,
+                "stuns": 1
+              },
+              {
+                "depth": 2,
+                "enemies": 2,
+                "foes": [
+                  "aurel",
+                  "nix"
+                ],
+                "winner": 0,
+                "hp": 470.34000000000253,
+                "stuns": 0
+              }
+            ],
+            "clear": true
+          },
+          {
+            "seed": 30,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "brom",
+                  "emberhound"
+                ],
+                "winner": 0,
+                "hp": 348.36400000000015,
+                "stuns": 0
+              },
+              {
+                "depth": 1,
+                "enemies": 2,
+                "foes": [
+                  "brom",
+                  "nix"
+                ],
+                "winner": 0,
+                "hp": 267.0980000000024,
+                "stuns": 0
+              },
+              {
+                "depth": 2,
+                "enemies": 2,
+                "foes": [
+                  "brom",
+                  "nix"
+                ],
+                "winner": 1,
+                "hp": 0,
+                "stuns": 0
+              }
+            ],
+            "clear": false
+          },
+          {
+            "seed": 31,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "aurel",
+                  "grit"
+                ],
+                "winner": 0,
+                "hp": 594.5949999999999,
+                "stuns": 0
+              },
+              {
+                "depth": 1,
+                "enemies": 2,
+                "foes": [
+                  "brom",
+                  "emberhound"
+                ],
+                "winner": 0,
+                "hp": 656.17625,
+                "stuns": 1
+              },
+              {
+                "depth": 2,
+                "enemies": 2,
+                "foes": [
+                  "mireclaw",
+                  "emberhound"
+                ],
+                "winner": 0,
+                "hp": 623.6820000000038,
+                "stuns": 2
+              }
+            ],
+            "clear": true
+          },
+          {
+            "seed": 32,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "mireclaw",
+                  "emberhound"
+                ],
+                "winner": 0,
+                "hp": 484.9740000000046,
+                "stuns": 1
+              },
+              {
+                "depth": 1,
+                "enemies": 2,
+                "foes": [
+                  "aurel",
+                  "grit"
+                ],
+                "winner": 0,
+                "hp": 684.1545000000033,
+                "stuns": 1
+              },
+              {
+                "depth": 2,
+                "enemies": 2,
+                "foes": [
+                  "aurel",
+                  "grit"
+                ],
+                "winner": 0,
+                "hp": 939.1535000000001,
+                "stuns": 0
+              }
+            ],
+            "clear": true
+          },
+          {
+            "seed": 33,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "aurel",
+                  "emberhound"
+                ],
+                "winner": 0,
+                "hp": 455,
+                "stuns": 2
+              },
+              {
+                "depth": 1,
+                "enemies": 2,
+                "foes": [
+                  "aurel",
+                  "grit"
+                ],
+                "winner": 0,
+                "hp": 663.452,
+                "stuns": 0
+              },
+              {
+                "depth": 2,
+                "enemies": 2,
+                "foes": [
+                  "mireclaw",
+                  "nix"
+                ],
+                "winner": 0,
+                "hp": 468.25100000000134,
+                "stuns": 0
+              }
+            ],
+            "clear": true
+          },
+          {
+            "seed": 34,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "aurel",
+                  "emberhound"
+                ],
+                "winner": 1,
+                "hp": 0,
+                "stuns": 0
+              }
+            ],
+            "clear": false
+          },
+          {
+            "seed": 35,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "mireclaw",
+                  "emberhound"
+                ],
+                "winner": 0,
+                "hp": 293.5370000000005,
+                "stuns": 0
+              },
+              {
+                "depth": 1,
+                "enemies": 2,
+                "foes": [
+                  "luma",
+                  "rowan"
+                ],
+                "winner": 1,
+                "hp": 268.2693000000037,
+                "stuns": 4
+              }
+            ],
+            "clear": false
+          },
+          {
+            "seed": 36,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "aurel",
+                  "grit"
+                ],
+                "winner": 0,
+                "hp": 525.948,
+                "stuns": 0
+              },
+              {
+                "depth": 1,
+                "enemies": 2,
+                "foes": [
+                  "grit",
+                  "grit"
+                ],
+                "winner": 0,
+                "hp": 473.67999999999995,
+                "stuns": 0
+              },
+              {
+                "depth": 2,
+                "enemies": 2,
+                "foes": [
+                  "mireclaw",
+                  "brom"
+                ],
+                "winner": 0,
+                "hp": 519.1279999999999,
+                "stuns": 0
+              }
+            ],
+            "clear": true
+          },
+          {
+            "seed": 37,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "emberhound",
+                  "emberhound"
+                ],
+                "winner": 0,
+                "hp": 561.4380000000056,
+                "stuns": 1
+              },
+              {
+                "depth": 1,
+                "enemies": 2,
+                "foes": [
+                  "aurel",
+                  "grit"
+                ],
+                "winner": 0,
+                "hp": 634.4330000000001,
+                "stuns": 0
+              },
+              {
+                "depth": 2,
+                "enemies": 2,
+                "foes": [
+                  "aurel",
+                  "grit"
+                ],
+                "winner": 0,
+                "hp": 871.8116,
+                "stuns": 1
+              }
+            ],
+            "clear": true
+          },
+          {
+            "seed": 38,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "brom",
+                  "emberhound"
+                ],
+                "winner": 0,
+                "hp": 449.8150000000006,
+                "stuns": 1
+              },
+              {
+                "depth": 1,
+                "enemies": 3,
+                "foes": [
+                  "mireclaw",
+                  "nix",
+                  "nix"
+                ],
+                "winner": 0,
+                "hp": 126.8300000000029,
+                "stuns": 0
+              },
+              {
+                "depth": 2,
+                "enemies": 2,
+                "foes": [
+                  "aurel",
+                  "grit"
+                ],
+                "winner": 0,
+                "hp": 652.1279999999999,
+                "stuns": 0
+              }
+            ],
+            "clear": true
+          },
+          {
+            "seed": 39,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "mireclaw",
+                  "grit"
+                ],
+                "winner": 0,
+                "hp": 421.6400000000042,
+                "stuns": 1
+              },
+              {
+                "depth": 1,
+                "enemies": 3,
+                "foes": [
+                  "mireclaw",
+                  "grit",
+                  "emberhound"
+                ],
+                "winner": 0,
+                "hp": 53.42100000000144,
+                "stuns": 2
+              },
+              {
+                "depth": 2,
+                "enemies": 2,
+                "foes": [
+                  "brom",
+                  "emberhound"
+                ],
+                "winner": 0,
+                "hp": 462.9370000000043,
+                "stuns": 0
+              }
+            ],
+            "clear": true
+          },
+          {
+            "seed": 40,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "mireclaw",
+                  "grit"
+                ],
+                "winner": 0,
+                "hp": 523.5400000000001,
+                "stuns": 1
+              },
+              {
+                "depth": 1,
+                "enemies": 2,
+                "foes": [
+                  "aurel",
+                  "emberhound"
+                ],
+                "winner": 0,
+                "hp": 457.23400000000476,
+                "stuns": 2
+              },
+              {
+                "depth": 2,
+                "enemies": 2,
+                "foes": [
+                  "aurel",
+                  "grit"
+                ],
+                "winner": 0,
+                "hp": 667.5849999999999,
+                "stuns": 0
+              }
+            ],
+            "clear": true
+          }
+        ]
+      },
+      {
+        "policy": "prepared",
+        "clears": 30,
+        "rounds": [
+          {
+            "depth": 0,
+            "played": 40,
+            "wins": 38
+          },
+          {
+            "depth": 1,
+            "played": 38,
+            "wins": 32
+          },
+          {
+            "depth": 2,
+            "played": 32,
+            "wins": 30
+          }
+        ],
+        "rows": [
+          {
+            "seed": 1,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "mireclaw",
+                  "nix"
+                ],
+                "winner": 0,
+                "hp": 207.4160000000021,
+                "stuns": 1
+              },
+              {
+                "depth": 1,
+                "enemies": 2,
+                "foes": [
+                  "brom",
+                  "emberhound"
+                ],
+                "winner": 0,
+                "hp": 6.796000000004,
+                "stuns": 2
+              },
+              {
+                "depth": 2,
+                "enemies": 2,
+                "foes": [
+                  "rowan",
+                  "syl"
+                ],
+                "winner": 0,
+                "hp": 661.32648,
+                "stuns": 2
+              }
+            ],
+            "clear": true
+          },
+          {
+            "seed": 2,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "brom",
+                  "emberhound"
+                ],
+                "winner": 0,
+                "hp": 185.14410000000083,
+                "stuns": 0
+              },
+              {
+                "depth": 1,
+                "enemies": 2,
+                "foes": [
+                  "mireclaw",
+                  "nix"
+                ],
+                "winner": 0,
+                "hp": 54.700000000001324,
+                "stuns": 0
+              },
+              {
+                "depth": 2,
+                "enemies": 2,
+                "foes": [
+                  "aurel",
+                  "grit"
+                ],
+                "winner": 0,
+                "hp": 448.07000000000005,
+                "stuns": 0
+              }
+            ],
+            "clear": true
+          },
+          {
+            "seed": 3,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "aurel",
+                  "grit"
+                ],
+                "winner": 0,
+                "hp": 545.1514999999999,
+                "stuns": 0
+              },
+              {
+                "depth": 1,
+                "enemies": 2,
+                "foes": [
+                  "mireclaw",
+                  "grit"
+                ],
+                "winner": 0,
+                "hp": 442.26500000000004,
+                "stuns": 0
+              },
+              {
+                "depth": 2,
+                "enemies": 2,
+                "foes": [
+                  "brom",
+                  "grit"
+                ],
+                "winner": 0,
+                "hp": 696.684,
+                "stuns": 1
+              }
+            ],
+            "clear": true
+          },
+          {
+            "seed": 4,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "brom",
+                  "nix"
+                ],
+                "winner": 0,
+                "hp": 390.2505000000018,
+                "stuns": 2
+              },
+              {
+                "depth": 1,
+                "enemies": 2,
+                "foes": [
+                  "brom",
+                  "nix"
+                ],
+                "winner": 0,
+                "hp": 104.69100000000162,
+                "stuns": 0
+              },
+              {
+                "depth": 2,
+                "enemies": 2,
+                "foes": [
+                  "mireclaw",
+                  "grit"
+                ],
+                "winner": 0,
+                "hp": 407.25500000000267,
+                "stuns": 0
+              }
+            ],
+            "clear": true
+          },
+          {
+            "seed": 5,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "aurel",
+                  "grit"
+                ],
+                "winner": 0,
+                "hp": 602.7415,
+                "stuns": 0
+              },
+              {
+                "depth": 1,
+                "enemies": 2,
+                "foes": [
+                  "aurel",
+                  "emberhound"
+                ],
+                "winner": 0,
+                "hp": 405.96800000000195,
+                "stuns": 0
+              },
+              {
+                "depth": 2,
+                "enemies": 3,
+                "foes": [
+                  "aurel",
+                  "emberhound",
+                  "emberhound"
+                ],
+                "winner": 0,
+                "hp": 392,
+                "stuns": 2
+              }
+            ],
+            "clear": true
+          },
+          {
+            "seed": 6,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "aurel",
+                  "emberhound"
+                ],
+                "winner": 0,
+                "hp": 562.556,
+                "stuns": 0
+              },
+              {
+                "depth": 1,
+                "enemies": 2,
+                "foes": [
+                  "mireclaw",
+                  "emberhound"
+                ],
+                "winner": 0,
+                "hp": 486.8259999999999,
+                "stuns": 1
+              },
+              {
+                "depth": 2,
+                "enemies": 2,
+                "foes": [
+                  "aurel",
+                  "grit"
+                ],
+                "winner": 0,
+                "hp": 732.038,
+                "stuns": 0
+              }
+            ],
+            "clear": true
+          },
+          {
+            "seed": 7,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "brom",
+                  "nix"
+                ],
+                "winner": 0,
+                "hp": 290.33825000000127,
+                "stuns": 0
+              },
+              {
+                "depth": 1,
+                "enemies": 3,
+                "foes": [
+                  "aurel",
+                  "grit",
+                  "grit"
+                ],
+                "winner": 0,
+                "hp": 492.09400000000005,
+                "stuns": 2
+              },
+              {
+                "depth": 2,
+                "enemies": 2,
+                "foes": [
+                  "aurel",
+                  "grit"
+                ],
+                "winner": 0,
+                "hp": 558.9600000000022,
+                "stuns": 0
+              }
+            ],
+            "clear": true
+          },
+          {
+            "seed": 8,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "mireclaw",
+                  "nix"
+                ],
+                "winner": 0,
+                "hp": 397.8468000000022,
+                "stuns": 2
+              },
+              {
+                "depth": 1,
+                "enemies": 2,
+                "foes": [
+                  "brom",
+                  "mireclaw"
+                ],
+                "winner": 0,
+                "hp": 476.68499999999995,
+                "stuns": 0
+              },
+              {
+                "depth": 2,
+                "enemies": 2,
+                "foes": [
+                  "mireclaw",
+                  "nix"
+                ],
+                "winner": 0,
+                "hp": 500.75500000000306,
+                "stuns": 0
+              }
+            ],
+            "clear": true
+          },
+          {
+            "seed": 9,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "brom",
+                  "brom"
+                ],
+                "winner": 0,
+                "hp": 594.1165000000001,
+                "stuns": 0
+              },
+              {
+                "depth": 1,
+                "enemies": 2,
+                "foes": [
+                  "aurel",
+                  "nix"
+                ],
+                "winner": 0,
+                "hp": 522.8160000000009,
+                "stuns": 0
+              },
+              {
+                "depth": 2,
+                "enemies": 2,
+                "foes": [
+                  "brom",
+                  "grit"
+                ],
+                "winner": 0,
+                "hp": 642.96,
+                "stuns": 1
+              }
+            ],
+            "clear": true
+          },
+          {
+            "seed": 10,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "mireclaw",
+                  "emberhound"
+                ],
+                "winner": 0,
+                "hp": 454.7455000000065,
+                "stuns": 0
+              },
+              {
+                "depth": 1,
+                "enemies": 2,
+                "foes": [
+                  "aurel",
+                  "nix"
+                ],
+                "winner": 0,
+                "hp": 292.0790000000033,
+                "stuns": 0
+              },
+              {
+                "depth": 2,
+                "enemies": 3,
+                "foes": [
+                  "aurel",
+                  "nix",
+                  "grit"
+                ],
+                "winner": 0,
+                "hp": 661.6050000000014,
+                "stuns": 3
+              }
+            ],
+            "clear": true
+          },
+          {
+            "seed": 11,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "mireclaw",
+                  "nix"
+                ],
+                "winner": 0,
+                "hp": 501.12500000000387,
+                "stuns": 1
+              },
+              {
+                "depth": 1,
+                "enemies": 3,
+                "foes": [
+                  "aurel",
+                  "nix",
+                  "emberhound"
+                ],
+                "winner": 1,
+                "hp": 0,
+                "stuns": 2
+              }
+            ],
+            "clear": false
+          },
+          {
+            "seed": 12,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "aurel",
+                  "emberhound"
+                ],
+                "winner": 0,
+                "hp": 382.400000000005,
+                "stuns": 0
+              },
+              {
+                "depth": 1,
+                "enemies": 2,
+                "foes": [
+                  "grit",
+                  "rowan"
+                ],
+                "winner": 0,
+                "hp": 680,
+                "stuns": 0
+              },
+              {
+                "depth": 2,
+                "enemies": 2,
+                "foes": [
+                  "mireclaw",
+                  "nix"
+                ],
+                "winner": 0,
+                "hp": 414.2200000000025,
+                "stuns": 0
+              }
+            ],
+            "clear": true
+          },
+          {
+            "seed": 13,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "nix",
+                  "nix"
+                ],
+                "winner": 0,
+                "hp": 308.6900000000039,
+                "stuns": 1
+              },
+              {
+                "depth": 1,
+                "enemies": 2,
+                "foes": [
+                  "brom",
+                  "nix"
+                ],
+                "winner": 0,
+                "hp": 539.7360000000044,
+                "stuns": 1
+              },
+              {
+                "depth": 2,
+                "enemies": 2,
+                "foes": [
+                  "brom",
+                  "grit"
+                ],
+                "winner": 0,
+                "hp": 652.7384,
+                "stuns": 1
+              }
+            ],
+            "clear": true
+          },
+          {
+            "seed": 14,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "brom",
+                  "emberhound"
+                ],
+                "winner": 0,
+                "hp": 430.2718000000024,
+                "stuns": 2
+              },
+              {
+                "depth": 1,
+                "enemies": 2,
+                "foes": [
+                  "mireclaw",
+                  "grit"
+                ],
+                "winner": 0,
+                "hp": 545.8815,
+                "stuns": 2
+              },
+              {
+                "depth": 2,
+                "enemies": 2,
+                "foes": [
+                  "brom",
+                  "nix"
+                ],
+                "winner": 0,
+                "hp": 514.4805000000042,
+                "stuns": 1
+              }
+            ],
+            "clear": true
+          },
+          {
+            "seed": 15,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "brom",
+                  "emberhound"
+                ],
+                "winner": 0,
+                "hp": 503.560000000002,
+                "stuns": 1
+              },
+              {
+                "depth": 1,
+                "enemies": 2,
+                "foes": [
+                  "mireclaw",
+                  "grit"
+                ],
+                "winner": 0,
+                "hp": 390.95025,
+                "stuns": 0
+              },
+              {
+                "depth": 2,
+                "enemies": 2,
+                "foes": [
+                  "aurel",
+                  "grit"
+                ],
+                "winner": 0,
+                "hp": 597.0600000000001,
+                "stuns": 0
+              }
+            ],
+            "clear": true
+          },
+          {
+            "seed": 16,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "mireclaw",
+                  "nix"
+                ],
+                "winner": 0,
+                "hp": 403.2400000000033,
+                "stuns": 0
+              },
+              {
+                "depth": 1,
+                "enemies": 2,
+                "foes": [
+                  "aurel",
+                  "emberhound"
+                ],
+                "winner": 0,
+                "hp": 225.95000000000775,
+                "stuns": 0
+              },
+              {
+                "depth": 2,
+                "enemies": 2,
+                "foes": [
+                  "mireclaw",
+                  "nix"
+                ],
+                "winner": 0,
+                "hp": 607.4190000000024,
+                "stuns": 1
+              }
+            ],
+            "clear": true
+          },
+          {
+            "seed": 17,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "luma",
+                  "syl"
+                ],
+                "winner": 0,
+                "hp": 580.3210000000024,
+                "stuns": 0
+              },
+              {
+                "depth": 1,
+                "enemies": 3,
+                "foes": [
+                  "mireclaw",
+                  "emberhound",
+                  "nix"
+                ],
+                "winner": 0,
+                "hp": 20.750000000002473,
+                "stuns": 0
+              },
+              {
+                "depth": 2,
+                "enemies": 2,
+                "foes": [
+                  "brom",
+                  "luma"
+                ],
+                "winner": 1,
+                "hp": 339.69999999999993,
+                "stuns": 3
+              }
+            ],
+            "clear": false
+          },
+          {
+            "seed": 18,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "brom",
+                  "emberhound"
+                ],
+                "winner": 0,
+                "hp": 503.9025000000063,
+                "stuns": 2
+              },
+              {
+                "depth": 1,
+                "enemies": 2,
+                "foes": [
+                  "aurel",
+                  "emberhound"
+                ],
+                "winner": 0,
+                "hp": 320.58000000000357,
+                "stuns": 1
+              },
+              {
+                "depth": 2,
+                "enemies": 2,
+                "foes": [
+                  "aurel",
+                  "emberhound"
+                ],
+                "winner": 0,
+                "hp": 663.0730000000044,
+                "stuns": 2
+              }
+            ],
+            "clear": true
+          },
+          {
+            "seed": 19,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "aurel",
+                  "nix"
+                ],
+                "winner": 0,
+                "hp": 346.7140000000007,
+                "stuns": 2
+              },
+              {
+                "depth": 1,
+                "enemies": 2,
+                "foes": [
+                  "nyra",
+                  "rowan"
+                ],
+                "winner": 0,
+                "hp": 307.2090000000075,
+                "stuns": 3
+              },
+              {
+                "depth": 2,
+                "enemies": 2,
+                "foes": [
+                  "aurel",
+                  "grit"
+                ],
+                "winner": 0,
+                "hp": 726.7114999999999,
+                "stuns": 0
+              }
+            ],
+            "clear": true
+          },
+          {
+            "seed": 20,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "brom",
+                  "emberhound"
+                ],
+                "winner": 1,
+                "hp": 0,
+                "stuns": 1
+              }
+            ],
+            "clear": false
+          },
+          {
+            "seed": 21,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "aurel",
+                  "grit"
+                ],
+                "winner": 0,
+                "hp": 696.6179999999999,
+                "stuns": 0
+              },
+              {
+                "depth": 1,
+                "enemies": 3,
+                "foes": [
+                  "brom",
+                  "nix",
+                  "grit"
+                ],
+                "winner": 1,
+                "hp": 0,
+                "stuns": 3
+              }
+            ],
+            "clear": false
+          },
+          {
+            "seed": 22,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "mireclaw",
+                  "emberhound"
+                ],
+                "winner": 0,
+                "hp": 676.6075000000011,
+                "stuns": 1
+              },
+              {
+                "depth": 1,
+                "enemies": 3,
+                "foes": [
+                  "aurel",
+                  "grit",
+                  "nix"
+                ],
+                "winner": 0,
+                "hp": 396.5350000000054,
+                "stuns": 3
+              },
+              {
+                "depth": 2,
+                "enemies": 2,
+                "foes": [
+                  "brom",
+                  "grit"
+                ],
+                "winner": 0,
+                "hp": 700.2749999999999,
+                "stuns": 0
+              }
+            ],
+            "clear": true
+          },
+          {
+            "seed": 23,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "brom",
+                  "nix"
+                ],
+                "winner": 0,
+                "hp": 527.2160000000011,
+                "stuns": 0
+              },
+              {
+                "depth": 1,
+                "enemies": 3,
+                "foes": [
+                  "nix",
+                  "emberhound",
+                  "rowan"
+                ],
+                "winner": 1,
+                "hp": 0,
+                "stuns": 2
+              }
+            ],
+            "clear": false
+          },
+          {
+            "seed": 24,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "aurel",
+                  "grit"
+                ],
+                "winner": 0,
+                "hp": 580.08,
+                "stuns": 0
+              },
+              {
+                "depth": 1,
+                "enemies": 3,
+                "foes": [
+                  "aurel",
+                  "grit",
+                  "nix"
+                ],
+                "winner": 0,
+                "hp": 441.7387500000043,
+                "stuns": 2
+              },
+              {
+                "depth": 2,
+                "enemies": 2,
+                "foes": [
+                  "brom",
+                  "nix"
+                ],
+                "winner": 0,
+                "hp": 764.1080000000005,
+                "stuns": 2
+              }
+            ],
+            "clear": true
+          },
+          {
+            "seed": 25,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "brom",
+                  "grit"
+                ],
+                "winner": 0,
+                "hp": 577.5930000000037,
+                "stuns": 1
+              },
+              {
+                "depth": 1,
+                "enemies": 2,
+                "foes": [
+                  "aurel",
+                  "grit"
+                ],
+                "winner": 0,
+                "hp": 624.5,
+                "stuns": 0
+              },
+              {
+                "depth": 2,
+                "enemies": 2,
+                "foes": [
+                  "mireclaw",
+                  "grit"
+                ],
+                "winner": 0,
+                "hp": 769.1200000000001,
+                "stuns": 1
+              }
+            ],
+            "clear": true
+          },
+          {
+            "seed": 26,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "luma",
+                  "syl"
+                ],
+                "winner": 0,
+                "hp": 713.4250000000019,
+                "stuns": 1
+              },
+              {
+                "depth": 1,
+                "enemies": 2,
+                "foes": [
+                  "brom",
+                  "emberhound"
+                ],
+                "winner": 0,
+                "hp": 249.26750000000274,
+                "stuns": 2
+              },
+              {
+                "depth": 2,
+                "enemies": 3,
+                "foes": [
+                  "aurel",
+                  "grit",
+                  "nix"
+                ],
+                "winner": 0,
+                "hp": 148.59000000000407,
+                "stuns": 1
+              }
+            ],
+            "clear": true
+          },
+          {
+            "seed": 27,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "aurel",
+                  "emberhound"
+                ],
+                "winner": 0,
+                "hp": 399.5612000000039,
+                "stuns": 2
+              },
+              {
+                "depth": 1,
+                "enemies": 2,
+                "foes": [
+                  "mireclaw",
+                  "grit"
+                ],
+                "winner": 0,
+                "hp": 535.8469999999999,
+                "stuns": 0
+              },
+              {
+                "depth": 2,
+                "enemies": 2,
+                "foes": [
+                  "brom",
+                  "nix"
+                ],
+                "winner": 1,
+                "hp": 0,
+                "stuns": 2
+              }
+            ],
+            "clear": false
+          },
+          {
+            "seed": 28,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "brom",
+                  "emberhound"
+                ],
+                "winner": 0,
+                "hp": 491.8640000000024,
+                "stuns": 0
+              },
+              {
+                "depth": 1,
+                "enemies": 2,
+                "foes": [
+                  "aurel",
+                  "emberhound"
+                ],
+                "winner": 1,
+                "hp": 0,
+                "stuns": 1
+              }
+            ],
+            "clear": false
+          },
+          {
+            "seed": 29,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "brom",
+                  "emberhound"
+                ],
+                "winner": 0,
+                "hp": 346.27200000000175,
+                "stuns": 1
+              },
+              {
+                "depth": 1,
+                "enemies": 2,
+                "foes": [
+                  "brom",
+                  "nyra"
+                ],
+                "winner": 0,
+                "hp": 572,
+                "stuns": 1
+              },
+              {
+                "depth": 2,
+                "enemies": 2,
+                "foes": [
+                  "aurel",
+                  "nix"
+                ],
+                "winner": 0,
+                "hp": 537.0700000000024,
+                "stuns": 1
+              }
+            ],
+            "clear": true
+          },
+          {
+            "seed": 30,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "brom",
+                  "emberhound"
+                ],
+                "winner": 0,
+                "hp": 365.942,
+                "stuns": 0
+              },
+              {
+                "depth": 1,
+                "enemies": 2,
+                "foes": [
+                  "brom",
+                  "nix"
+                ],
+                "winner": 0,
+                "hp": 365.67000000000195,
+                "stuns": 1
+              },
+              {
+                "depth": 2,
+                "enemies": 2,
+                "foes": [
+                  "brom",
+                  "nix"
+                ],
+                "winner": 0,
+                "hp": 295.2700000000032,
+                "stuns": 0
+              }
+            ],
+            "clear": true
+          },
+          {
+            "seed": 31,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "aurel",
+                  "grit"
+                ],
+                "winner": 0,
+                "hp": 587.03,
+                "stuns": 0
+              },
+              {
+                "depth": 1,
+                "enemies": 2,
+                "foes": [
+                  "brom",
+                  "emberhound"
+                ],
+                "winner": 0,
+                "hp": 407.55675000000406,
+                "stuns": 2
+              },
+              {
+                "depth": 2,
+                "enemies": 2,
+                "foes": [
+                  "mireclaw",
+                  "emberhound"
+                ],
+                "winner": 0,
+                "hp": 423.5060000000036,
+                "stuns": 1
+              }
+            ],
+            "clear": true
+          },
+          {
+            "seed": 32,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "mireclaw",
+                  "emberhound"
+                ],
+                "winner": 0,
+                "hp": 423.23000000000457,
+                "stuns": 2
+              },
+              {
+                "depth": 1,
+                "enemies": 2,
+                "foes": [
+                  "aurel",
+                  "grit"
+                ],
+                "winner": 0,
+                "hp": 619.3450000000039,
+                "stuns": 0
+              },
+              {
+                "depth": 2,
+                "enemies": 2,
+                "foes": [
+                  "aurel",
+                  "grit"
+                ],
+                "winner": 0,
+                "hp": 900.404,
+                "stuns": 0
+              }
+            ],
+            "clear": true
+          },
+          {
+            "seed": 33,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "aurel",
+                  "emberhound"
+                ],
+                "winner": 1,
+                "hp": 0,
+                "stuns": 1
+              }
+            ],
+            "clear": false
+          },
+          {
+            "seed": 34,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "aurel",
+                  "emberhound"
+                ],
+                "winner": 0,
+                "hp": 382.89000000000647,
+                "stuns": 1
+              },
+              {
+                "depth": 1,
+                "enemies": 2,
+                "foes": [
+                  "grit",
+                  "grit"
+                ],
+                "winner": 0,
+                "hp": 697.7766499999999,
+                "stuns": 0
+              },
+              {
+                "depth": 2,
+                "enemies": 2,
+                "foes": [
+                  "aurel",
+                  "emberhound"
+                ],
+                "winner": 0,
+                "hp": 568.4900000000059,
+                "stuns": 1
+              }
+            ],
+            "clear": true
+          },
+          {
+            "seed": 35,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "mireclaw",
+                  "emberhound"
+                ],
+                "winner": 0,
+                "hp": 249.73100000000034,
+                "stuns": 0
+              },
+              {
+                "depth": 1,
+                "enemies": 2,
+                "foes": [
+                  "luma",
+                  "rowan"
+                ],
+                "winner": 0,
+                "hp": 590.3165000000017,
+                "stuns": 1
+              },
+              {
+                "depth": 2,
+                "enemies": 2,
+                "foes": [
+                  "mireclaw",
+                  "nix"
+                ],
+                "winner": 0,
+                "hp": 442.60000000000315,
+                "stuns": 2
+              }
+            ],
+            "clear": true
+          },
+          {
+            "seed": 36,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "aurel",
+                  "grit"
+                ],
+                "winner": 0,
+                "hp": 534.524,
+                "stuns": 0
+              },
+              {
+                "depth": 1,
+                "enemies": 2,
+                "foes": [
+                  "grit",
+                  "grit"
+                ],
+                "winner": 0,
+                "hp": 454.86999999999995,
+                "stuns": 0
+              },
+              {
+                "depth": 2,
+                "enemies": 2,
+                "foes": [
+                  "mireclaw",
+                  "brom"
+                ],
+                "winner": 0,
+                "hp": 322.42800000000005,
+                "stuns": 0
+              }
+            ],
+            "clear": true
+          },
+          {
+            "seed": 37,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "emberhound",
+                  "emberhound"
+                ],
+                "winner": 0,
+                "hp": 591.5780000000045,
+                "stuns": 1
+              },
+              {
+                "depth": 1,
+                "enemies": 2,
+                "foes": [
+                  "aurel",
+                  "grit"
+                ],
+                "winner": 0,
+                "hp": 579.4550000000003,
+                "stuns": 0
+              },
+              {
+                "depth": 2,
+                "enemies": 2,
+                "foes": [
+                  "aurel",
+                  "grit"
+                ],
+                "winner": 0,
+                "hp": 842.2076000000001,
+                "stuns": 0
+              }
+            ],
+            "clear": true
+          },
+          {
+            "seed": 38,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "brom",
+                  "emberhound"
+                ],
+                "winner": 0,
+                "hp": 449.8150000000006,
+                "stuns": 1
+              },
+              {
+                "depth": 1,
+                "enemies": 3,
+                "foes": [
+                  "mireclaw",
+                  "nix",
+                  "nix"
+                ],
+                "winner": 1,
+                "hp": 0,
+                "stuns": 0
+              }
+            ],
+            "clear": false
+          },
+          {
+            "seed": 39,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "mireclaw",
+                  "grit"
+                ],
+                "winner": 0,
+                "hp": 408.77500000000447,
+                "stuns": 2
+              },
+              {
+                "depth": 1,
+                "enemies": 3,
+                "foes": [
+                  "mireclaw",
+                  "grit",
+                  "emberhound"
+                ],
+                "winner": 1,
+                "hp": 0,
+                "stuns": 1
+              }
+            ],
+            "clear": false
+          },
+          {
+            "seed": 40,
+            "battles": [
+              {
+                "depth": 0,
+                "enemies": 2,
+                "foes": [
+                  "mireclaw",
+                  "grit"
+                ],
+                "winner": 0,
+                "hp": 487.1350000000001,
+                "stuns": 0
+              },
+              {
+                "depth": 1,
+                "enemies": 2,
+                "foes": [
+                  "aurel",
+                  "emberhound"
+                ],
+                "winner": 0,
+                "hp": 361.69000000000176,
+                "stuns": 1
+              },
+              {
+                "depth": 2,
+                "enemies": 2,
+                "foes": [
+                  "aurel",
+                  "grit"
+                ],
+                "winner": 0,
+                "hp": 634.2900000000001,
+                "stuns": 0
+              }
+            ],
+            "clear": true
+          }
+        ]
+      }
+    ]
+  },
+  "browser": {
+    "checks": [
+      "Two starters, schema-4 backup, above-head inspection, physical head/foot pickup and placement persistence",
+      "Configurable auto-capture, one reserved tool, lattice slow motion, actual cache and exact-once reload",
+      "Mobile arena fits; unseen encounters reveal no type or counterplan",
+      "Chaos enemies expose their actual buff names and effects above their heads",
+      "Defeat removes a starter, destroys its worn items and one relic, shows X, and reload cannot select a second casualty"
+    ],
+    "battles": [
+      {
+        "planet": 0,
+        "depth": 0,
+        "winner": 0,
+        "team": 2,
+        "time": 75.68000000000063,
+        "capacity": 2,
+        "capture": {
+          "tool": "scout",
+          "success": true,
+          "uid": "aurel-mv5ovoe1fo36-6",
+          "chance": 0.485,
+          "creature": {
+            "id": "aurel",
+            "level": 1,
+            "evolution": 0,
+            "evolutionPath": null,
+            "capturePreparation": {
+              "healthFraction": 0.226488197879859,
+              "status": false,
+              "mode": "mercy",
+              "tool": "scout"
+            },
+            "genes": {
+              "hp": 0.846,
+              "atk": 0.6376999999999999,
+              "speed": 0.932,
+              "cd": 1.135
+            },
+            "nature": "Titan",
+            "enemyRelics": []
+          }
+        },
+        "metrics": {
+          "chargedStrikes": 32,
+          "armorResists": 11,
+          "bladeContacts": 62,
+          "terrainBlocks": 0,
+          "interruptedSkills": 0,
+          "dodges": 37,
+          "skills": 52,
+          "nativeResolvedSkills": 0,
+          "damage": 691.4678400000015,
+          "healing": 241.58999999999997,
+          "crits": 3,
+          "echoes": 0,
+          "intercepts": 5,
+          "shieldDamage": 1169.1897600000013,
+          "wastedHealing": 148.41000000000003,
+          "statusDamage": 83.52000000000017,
+          "hazardDamage": 0,
+          "cleanses": 0,
+          "traitProcs": 0,
+          "captures": 1,
+          "whiffs": 56,
+          "physicalHits": 62,
+          "collisions": 267,
+          "knockbacks": 50,
+          "staggers": 0,
+          "rolls": 51,
+          "blockedProjectiles": 0
+        }
+      }
+    ],
+    "errors": []
+  },
+  "campaigns": [
+    {
+      "seed": 3,
+      "difficulty": "standard",
+      "battles": [
+        {
+          "planet": 0,
+          "depth": 0,
+          "type": "battle",
+          "winner": 0,
+          "team": 2,
+          "capacity": 2,
+          "levels": [
+            1,
+            1
+          ],
+          "capture": true,
+          "enemyRelics": 0
+        },
+        {
+          "planet": 0,
+          "depth": 1,
+          "type": "battle",
+          "winner": 0,
+          "team": 2,
+          "capacity": 2,
+          "levels": [
+            2,
+            2
+          ],
+          "capture": false,
+          "enemyRelics": 0
+        },
+        {
+          "planet": 0,
+          "depth": 2,
+          "type": "battle",
+          "winner": 0,
+          "team": 2,
+          "capacity": 3,
+          "levels": [
+            3,
+            3
+          ],
+          "capture": false,
+          "enemyRelics": 0
+        },
+        {
+          "planet": 0,
+          "depth": 4,
+          "type": "capture",
+          "winner": 0,
+          "team": 3,
+          "capacity": 3,
+          "levels": [
+            4,
+            4,
+            2
+          ],
+          "capture": false,
+          "enemyRelics": 0
+        },
+        {
+          "planet": 0,
+          "depth": 7,
+          "type": "boss",
+          "winner": 0,
+          "team": 3,
+          "capacity": 3,
+          "levels": [
+            6,
+            6,
+            4
+          ],
+          "capture": true,
+          "enemyRelics": 6
+        },
+        {
+          "planet": 1,
+          "depth": 0,
+          "type": "battle",
+          "winner": 0,
+          "team": 3,
+          "capacity": 4,
+          "levels": [
+            6,
+            6,
+            4
+          ],
+          "capture": true,
+          "enemyRelics": 1
+        },
+        {
+          "planet": 1,
+          "depth": 1,
+          "type": "battle",
+          "winner": 0,
+          "team": 4,
+          "capacity": 4,
+          "levels": [
+            6,
+            6,
+            5,
+            3
+          ],
+          "capture": false,
+          "enemyRelics": 1
+        },
+        {
+          "planet": 1,
+          "depth": 2,
+          "type": "battle",
+          "winner": 0,
+          "team": 4,
+          "capacity": 4,
+          "levels": [
+            7,
+            7,
+            5,
+            4
+          ],
+          "capture": true,
+          "enemyRelics": 2
+        },
+        {
+          "planet": 1,
+          "depth": 4,
+          "type": "capture",
+          "winner": 0,
+          "team": 4,
+          "capacity": 5,
+          "levels": [
+            7,
+            7,
+            6,
+            5
+          ],
+          "capture": true,
+          "enemyRelics": 0
+        },
+        {
+          "planet": 1,
+          "depth": 5,
+          "type": "battle",
+          "winner": 0,
+          "team": 5,
+          "capacity": 5,
+          "levels": [
+            8,
+            8,
+            7,
+            6,
+            4
+          ],
+          "capture": true,
+          "enemyRelics": 2
+        },
+        {
+          "planet": 1,
+          "depth": 7,
+          "type": "boss",
+          "winner": 1,
+          "team": 4,
+          "capacity": 5,
+          "levels": [
+            8,
+            7,
+            6,
+            4
+          ],
+          "capture": false,
+          "enemyRelics": 8
+        },
+        {
+          "planet": 1,
+          "depth": 7,
+          "type": "boss",
+          "winner": 0,
+          "team": 5,
+          "capacity": 5,
+          "levels": [
+            9,
+            8,
+            7,
+            5,
+            4
+          ],
+          "capture": false,
+          "enemyRelics": 8
+        },
+        {
+          "planet": 2,
+          "depth": 0,
+          "type": "battle",
+          "winner": 0,
+          "team": 5,
+          "capacity": 6,
+          "levels": [
+            9,
+            8,
+            7,
+            6,
+            5
+          ],
+          "capture": true,
+          "enemyRelics": 1
+        },
+        {
+          "planet": 2,
+          "depth": 1,
+          "type": "battle",
+          "winner": 0,
+          "team": 6,
+          "capacity": 6,
+          "levels": [
+            10,
+            9,
+            8,
+            6,
+            5,
+            4
+          ],
+          "capture": true,
+          "enemyRelics": 3
+        },
+        {
+          "planet": 2,
+          "depth": 2,
+          "type": "battle",
+          "winner": 0,
+          "team": 6,
+          "capacity": 6,
+          "levels": [
+            10,
+            9,
+            8,
+            7,
+            6,
+            5
+          ],
+          "capture": true,
+          "enemyRelics": 2
+        },
+        {
+          "planet": 2,
+          "depth": 7,
+          "type": "boss",
+          "winner": 0,
+          "team": 6,
+          "capacity": 6,
+          "levels": [
+            11,
+            10,
+            9,
+            8,
+            7,
+            6
+          ],
+          "capture": false,
+          "enemyRelics": 11
+        }
+      ],
+      "shops": [
+        {
+          "before": {
+            "gold": 452,
+            "capacity": 4
+          },
+          "after": {
+            "gold": 22,
+            "capacity": 4,
+            "bench": 4
+          }
+        },
+        {
+          "before": {
+            "gold": 104,
+            "capacity": 5
+          },
+          "after": {
+            "gold": 29,
+            "capacity": 5,
+            "bench": 5
+          }
+        },
+        {
+          "before": {
+            "gold": 130,
+            "capacity": 6
+          },
+          "after": {
+            "gold": 65,
+            "capacity": 6,
+            "bench": 7
+          }
+        },
+        {
+          "before": {
+            "gold": 65,
+            "capacity": 6
+          },
+          "after": {
+            "gold": 65,
+            "capacity": 6,
+            "bench": 7
+          }
+        },
+        {
+          "before": {
+            "gold": 65,
+            "capacity": 6
+          },
+          "after": {
+            "gold": 0,
+            "capacity": 6,
+            "bench": 8
+          }
+        }
+      ],
+      "checks": [
+        "Third-round slot and reward survive reload",
+        "Legal two-starter campaign clears three planets with no grants or combat overrides"
+      ],
+      "errors": [],
+      "complete": true,
+      "integrity": 3,
+      "fallen": 1
+    },
+    {
+      "seed": 3,
+      "difficulty": "chaos",
+      "battles": [
+        {
+          "planet": 0,
+          "depth": 0,
+          "type": "battle",
+          "winner": 0,
+          "team": 2,
+          "capacity": 2,
+          "levels": [
+            1,
+            1
+          ],
+          "capture": true,
+          "enemyRelics": 0
+        },
+        {
+          "planet": 0,
+          "depth": 1,
+          "type": "battle",
+          "winner": 0,
+          "team": 2,
+          "capacity": 2,
+          "levels": [
+            2,
+            2
+          ],
+          "capture": false,
+          "enemyRelics": 0
+        },
+        {
+          "planet": 0,
+          "depth": 2,
+          "type": "battle",
+          "winner": 0,
+          "team": 2,
+          "capacity": 3,
+          "levels": [
+            3,
+            3
+          ],
+          "capture": false,
+          "enemyRelics": 0
+        },
+        {
+          "planet": 0,
+          "depth": 4,
+          "type": "capture",
+          "winner": 0,
+          "team": 3,
+          "capacity": 3,
+          "levels": [
+            4,
+            4,
+            2
+          ],
+          "capture": false,
+          "enemyRelics": 0
+        },
+        {
+          "planet": 0,
+          "depth": 7,
+          "type": "boss",
+          "winner": 0,
+          "team": 3,
+          "capacity": 3,
+          "levels": [
+            6,
+            6,
+            4
+          ],
+          "capture": true,
+          "enemyRelics": 6
+        },
+        {
+          "planet": 1,
+          "depth": 0,
+          "type": "battle",
+          "winner": 0,
+          "team": 3,
+          "capacity": 4,
+          "levels": [
+            6,
+            6,
+            4
+          ],
+          "capture": true,
+          "enemyRelics": 1
+        },
+        {
+          "planet": 1,
+          "depth": 1,
+          "type": "battle",
+          "winner": 0,
+          "team": 4,
+          "capacity": 4,
+          "levels": [
+            6,
+            6,
+            5,
+            3
+          ],
+          "capture": false,
+          "enemyRelics": 1
+        },
+        {
+          "planet": 1,
+          "depth": 2,
+          "type": "battle",
+          "winner": 0,
+          "team": 4,
+          "capacity": 4,
+          "levels": [
+            7,
+            7,
+            5,
+            4
+          ],
+          "capture": true,
+          "enemyRelics": 2
+        },
+        {
+          "planet": 1,
+          "depth": 4,
+          "type": "capture",
+          "winner": 0,
+          "team": 4,
+          "capacity": 5,
+          "levels": [
+            7,
+            7,
+            6,
+            5
+          ],
+          "capture": true,
+          "enemyRelics": 0
+        },
+        {
+          "planet": 1,
+          "depth": 5,
+          "type": "battle",
+          "winner": 0,
+          "team": 5,
+          "capacity": 5,
+          "levels": [
+            8,
+            8,
+            7,
+            6,
+            4
+          ],
+          "capture": true,
+          "enemyRelics": 2
+        },
+        {
+          "planet": 1,
+          "depth": 7,
+          "type": "boss",
+          "winner": 1,
+          "team": 4,
+          "capacity": 5,
+          "levels": [
+            8,
+            7,
+            6,
+            4
+          ],
+          "capture": false,
+          "enemyRelics": 8
+        },
+        {
+          "planet": 1,
+          "depth": 7,
+          "type": "boss",
+          "winner": 0,
+          "team": 5,
+          "capacity": 5,
+          "levels": [
+            9,
+            8,
+            7,
+            5,
+            4
+          ],
+          "capture": false,
+          "enemyRelics": 8
+        },
+        {
+          "planet": 2,
+          "depth": 0,
+          "type": "battle",
+          "winner": 0,
+          "team": 5,
+          "capacity": 6,
+          "levels": [
+            9,
+            8,
+            7,
+            6,
+            5
+          ],
+          "capture": true,
+          "enemyRelics": 1
+        },
+        {
+          "planet": 2,
+          "depth": 1,
+          "type": "battle",
+          "winner": 0,
+          "team": 6,
+          "capacity": 6,
+          "levels": [
+            10,
+            9,
+            8,
+            6,
+            5,
+            4
+          ],
+          "capture": true,
+          "enemyRelics": 3
+        },
+        {
+          "planet": 2,
+          "depth": 2,
+          "type": "battle",
+          "winner": 0,
+          "team": 6,
+          "capacity": 6,
+          "levels": [
+            10,
+            9,
+            8,
+            7,
+            6,
+            5
+          ],
+          "capture": true,
+          "enemyRelics": 2
+        },
+        {
+          "planet": 2,
+          "depth": 7,
+          "type": "boss",
+          "winner": 0,
+          "team": 6,
+          "capacity": 6,
+          "levels": [
+            11,
+            10,
+            9,
+            8,
+            7,
+            6
+          ],
+          "capture": false,
+          "enemyRelics": 11
+        }
+      ],
+      "shops": [
+        {
+          "before": {
+            "gold": 452,
+            "capacity": 4
+          },
+          "after": {
+            "gold": 22,
+            "capacity": 4,
+            "bench": 4
+          }
+        },
+        {
+          "before": {
+            "gold": 104,
+            "capacity": 5
+          },
+          "after": {
+            "gold": 29,
+            "capacity": 5,
+            "bench": 5
+          }
+        },
+        {
+          "before": {
+            "gold": 130,
+            "capacity": 6
+          },
+          "after": {
+            "gold": 65,
+            "capacity": 6,
+            "bench": 7
+          }
+        },
+        {
+          "before": {
+            "gold": 65,
+            "capacity": 6
+          },
+          "after": {
+            "gold": 65,
+            "capacity": 6,
+            "bench": 7
+          }
+        },
+        {
+          "before": {
+            "gold": 65,
+            "capacity": 6
+          },
+          "after": {
+            "gold": 0,
+            "capacity": 6,
+            "bench": 8
+          }
+        }
+      ],
+      "checks": [
+        "Third-round slot and reward survive reload",
+        "Legal two-starter campaign clears three planets with no grants or combat overrides",
+        "Chaos 1 victory unlocks +1 starting budget point"
+      ],
+      "errors": [],
+      "complete": true,
+      "integrity": 3,
+      "fallen": 1
+    }
+  ],
+  "stress": [
+    {
+      "chaos": 5,
+      "build": [
+        "venom-clasp",
+        "serpent-contract",
+        "venom-hourglass",
+        "blood-signet"
+      ],
+      "winner": 0,
+      "time": 19.319999999999766,
+      "procs": 246,
+      "skills": 63,
+      "echoes": 0,
+      "queue": 4
+    },
+    {
+      "chaos": 5,
+      "build": [
+        "echo-script",
+        "quickglass",
+        "casting-aegis",
+        "blood-echo"
+      ],
+      "winner": 0,
+      "time": 20.319999999999744,
+      "procs": 177,
+      "skills": 118,
+      "echoes": 68,
+      "queue": 9
+    },
+    {
+      "chaos": 5,
+      "build": [
+        "dodge-battery",
+        "evasive-clock",
+        "bramble-footprint",
+        "storm-footprint"
+      ],
+      "winner": 1,
+      "time": 62.59999999999884,
+      "procs": 389,
+      "skills": 213,
+      "echoes": 0,
+      "queue": 2
+    },
+    {
+      "chaos": 5,
+      "build": [
+        "overflow-vessel",
+        "cleansing-nectar",
+        "funeral-oath",
+        "anchor-of-life"
+      ],
+      "winner": 0,
+      "time": 23.35999999999968,
+      "procs": 185,
+      "skills": 65,
+      "echoes": 0,
+      "queue": 1
+    },
+    {
+      "chaos": 10,
+      "build": [
+        "venom-clasp",
+        "serpent-contract",
+        "venom-hourglass",
+        "blood-signet"
+      ],
+      "winner": 0,
+      "time": 27.239999999999597,
+      "procs": 282,
+      "skills": 75,
+      "echoes": 0,
+      "queue": 1
+    },
+    {
+      "chaos": 10,
+      "build": [
+        "echo-script",
+        "quickglass",
+        "casting-aegis",
+        "blood-echo"
+      ],
+      "winner": 0,
+      "time": 11.439999999999932,
+      "procs": 109,
+      "skills": 79,
+      "echoes": 46,
+      "queue": 0
+    },
+    {
+      "chaos": 10,
+      "build": [
+        "dodge-battery",
+        "evasive-clock",
+        "bramble-footprint",
+        "storm-footprint"
+      ],
+      "winner": 0,
+      "time": 30.959999999999518,
+      "procs": 115,
+      "skills": 94,
+      "echoes": 9,
+      "queue": 1
+    },
+    {
+      "chaos": 10,
+      "build": [
+        "overflow-vessel",
+        "cleansing-nectar",
+        "funeral-oath",
+        "anchor-of-life"
+      ],
+      "winner": 0,
+      "time": 32.19999999999949,
+      "procs": 217,
+      "skills": 87,
+      "echoes": 4,
+      "queue": 2
+    },
+    {
+      "chaos": 20,
+      "build": [
+        "venom-clasp",
+        "serpent-contract",
+        "venom-hourglass",
+        "blood-signet"
+      ],
+      "winner": 1,
+      "time": 17.959999999999795,
+      "procs": 272,
+      "skills": 71,
+      "echoes": 18,
+      "queue": 2
+    },
+    {
+      "chaos": 20,
+      "build": [
+        "echo-script",
+        "quickglass",
+        "casting-aegis",
+        "blood-echo"
+      ],
+      "winner": 0,
+      "time": 15.679999999999842,
+      "procs": 150,
+      "skills": 102,
+      "echoes": 58,
+      "queue": 0
+    },
+    {
+      "chaos": 20,
+      "build": [
+        "dodge-battery",
+        "evasive-clock",
+        "bramble-footprint",
+        "storm-footprint"
+      ],
+      "winner": 0,
+      "time": 40.59999999999931,
+      "procs": 279,
+      "skills": 135,
+      "echoes": 0,
+      "queue": 1
+    },
+    {
+      "chaos": 20,
+      "build": [
+        "overflow-vessel",
+        "cleansing-nectar",
+        "funeral-oath",
+        "anchor-of-life"
+      ],
+      "winner": 1,
+      "time": 48.439999999999145,
+      "procs": 254,
+      "skills": 163,
+      "echoes": 15,
+      "queue": 0
+    }
+  ],
+  "regressions": [
+    {
+      "name": "native-roster",
+      "status": "passed"
+    },
+    {
+      "name": "native-controls",
+      "status": "passed"
+    },
+    {
+      "name": "grand-forms",
+      "status": "passed"
+    },
+    {
+      "name": "embedded-native-offline",
+      "status": "passed"
+    },
+    {
+      "name": "embedded-migrated-pixel-offline",
+      "status": "passed"
+    },
+    {
+      "name": "training-glade",
+      "status": "passed"
+    }
+  ],
+  "offline": {
+    "exactEmbeddedHTML": true,
+    "externalRequests": 0,
+    "directFileOrigin": "Blocked by managed Chromium administrator policy; not claimed as passed"
+  },
+  "artifact": {
+    "name": "Starfall-Menagerie.html",
+    "sha256": "1494d4c5ad88fb82f9b7e6a73741974d1f0af890f2c1b545e570e929e606fccf"
+  },
+  "limitations": [
+    "No fifty-hour human playtest or subjective fun-score claim",
+    "Relic balance is checked mechanically and in bounded automated campaigns; broader player evaluation remains needed"
+  ],
+  "setup": {
+    "startupInstructionsDraft": "saved",
+    "publication": "User can review/save/publish in Environment Settings; current runtime is working"
+  }
+}

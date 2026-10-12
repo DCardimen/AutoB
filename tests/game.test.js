@@ -6,7 +6,7 @@ import {
   STARTERS,
   RELIC_SLOTS,
   PERSONAL_RELICS,
-  makeRun,
+  makeRun as legacyMakeRun,
   creature,
   personalRelic,
   equipRelic,
@@ -275,3 +275,5 @@ test("level-5 awakening unlocks an actual third skill and stronger common stats"
   const b = new Battle(r, [creature("mossguard", 5)], 20);
   assert.ok(b.units[0].cooldowns["predator-instinct"]);
 });
+
+function makeRun(seed,ids,options={}){return legacyMakeRun(seed,ids,{...options,rulesVersion:11});}

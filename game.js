@@ -1,3 +1,5 @@
+import {spendCapturers,refundCapture,progressive,capacity,rollIndividual,unlockSlots,routeGraph,graphCanVisit,assignEnemyRelics,CAPTURERS,consumeCapturer,addCapturer,newCasualty,recruitOffer} from './expedition-rules.js';
+import {EXPEDITION_RELICS,routeModifiers,relicStatFactors,compileRelics,relicDamageFactor,relicReduction,relicEvent,relicFatal,relicTick} from './run-relics.js';
 import {equipmentEffects} from './creature-equipment.js';
 import {queueCombatText,advanceCombatTexts} from './combat-text.js';
 import {CORE_SPECIES} from './core-species.js';
@@ -215,7 +217,7 @@ export const RELICS = [
     cost: 135,
   },
 ];
-RELICS.push(...NEW_RELICS);
+RELICS.push(...NEW_RELICS,...EXPEDITION_RELICS);
 export const RELIC_SLOTS = {
   Common: 1,
   Uncommon: 2,
@@ -730,7 +732,8 @@ export function stats(c, team, relics = []) {
     atk *= 0.94;
   }
   const personal = personalEffects(c);
-  const gear=equipmentEffects(c);
+  const gear=equipmentEffects(c),curios=relicStatFactors([...relics,...(c.boundRelics||[])]),genes=c.genes||{};
+  hp *= (genes.hp||1)*curios.hp;atk *= (genes.atk||1)*curios.atk;cd *= (genes.cd||1)*curios.cd;speed *= (genes.speed||1)*curios.speed;
   hp *= personal.health * gear.health;
   atk *= personal.attack * gear.attack;
   cd *= personal.cooldown * gear.cooldown;
@@ -750,10 +753,14 @@ export function stats(c, team, relics = []) {
 export function makeRun(seed = Date.now(), ids = STARTERS, options = {}) {
   const random = rng(seed),
     native = options.native ?? ids.every(id=>!!BY_ID[id].nativeRig),
-    team = ids.slice(0, 6).map((id) => creature(id));
-  while (team.length < 6) team.push(creature((native?NATIVE_STARTERS:STARTERS)[team.length]));
+    rulesVersion=options.rulesVersion??12,teamSize=rulesVersion>=12?2:6,
+    team = ids.slice(0, teamSize).map((id,i) => {const c=creature(id);c.seat=i;c.starter=true;return rulesVersion>=12?rollIndividual(c,seed+i*1179,true):c;});
+  while(team.length<teamSize){const i=team.length,c=creature((native?NATIVE_STARTERS:STARTERS)[i]);c.seat=i;c.starter=true;team.push(rulesVersion>=12?rollIndividual(c,seed+i*1179,true):c);}
   const result = {
     seed,
+    rulesVersion,
+    teamCapacity:teamSize,
+    captureTools:rulesVersion>=12?{scout:5,runic:0,astral:0,mythic:0}:undefined,
     native,
     rosterMode: options.rosterMode || (ids.every(id=>!!BY_ID[id].nativeRig)?"authored":"collection"),
     gearInventory: [],
@@ -789,11 +796,12 @@ export function makeRun(seed = Date.now(), ids = STARTERS, options = {}) {
   };
   const chaos = chaosLevel(result);
   if (chaos >= 3) result.gold = 130;
-  if (chaos >= 7) result.orbs = 4;
+  if (chaos >= 7){result.orbs=4;if(result.captureTools)result.captureTools.scout=4;}
   if (chaos >= 14) result.integrity = 2;
   return result;
 }
 export function generateRoute(run) {
+  if(progressive(run))return routeGraph(run);
   const r = rng(run.seed + run.planet * 9751);
   const options = [
     ["battle", "battle", "event"],
@@ -855,10 +863,8 @@ export function setDeployment(run, index, row, column) {
     return i !== index && d.row === row && d.column === column;
   });
   const previous = run.team[index].deployment;
-  if (other >= 0)
-    run.team[other].deployment =
-      previous || defaultDeployment(run.team[index], index);
-  run.team[index].deployment = { row, column };
+  if (other >= 0){run.team[other].deployment=previous||defaultDeployment(run.team[index],index);delete run.team[other].deploymentPosition;}
+  run.team[index].deployment = { row, column };delete run.team[index].deploymentPosition;
   return true;
 }
 export function defaultDeployment(c, index) {
@@ -881,21 +887,23 @@ export function effectiveSkill(c, id) {
   };
 }
 export function canVisit(run, node) {
+  if(progressive(run)&&run.route?.[0]?.[0]?.children)return graphCanVisit(run,node);
   if (node.depth !== run.depth) return false;
   if (run.depth === 0 || node.type === "boss") return true;
   return Math.abs(node.lane - run.lastLane) <= 1;
 }
 export function enterNode(run, node) {
   if (!canVisit(run, node)) throw new Error("Node is not reachable");
+  if(progressive(run)&&run.route?.[0]?.[0]?.children&&run.depth>0&&!run.route.flat().find(n=>n.id===run.path.at(-1))?.children.includes(node.id))run.warpsUsed=(run.warpsUsed||0)+1;
   run.lastLane = node.lane;
   run.path.push(node.id);
 }
 export function nextNode(run) {
   run.depth++;
-  if (run.depth > 5) {
+  if (run.depth >= (run.route?.length||6)) {
     run.planet++;
     run.depth = 0;
-    run.lastLane = undefined;
+    run.lastLane = undefined;run.warpsUsed=0;
     run.route = null;
     if (run.planet >= PLANETS.length) run.complete = true;
   }
@@ -903,8 +911,8 @@ export function nextNode(run) {
 export function encounter(run, type = "battle", seed = 1) {
   const r = rng(seed),
     p = PLANETS[run.planet],
-    base = 1 + run.planet * 2 + Math.floor(run.depth / 2),
-    n =
+    base = progressive(run)?1+run.planet*2+Math.floor(run.depth/3):1 + run.planet * 2 + Math.floor(run.depth / 2),
+    n = progressive(run)?(run.planet===0&&run.depth<3?(type==="battle"?2+(run.depth>0&&r()<.12?1:0):3):Math.min(6,type==="boss"?3+run.planet:type==="elite"?3+run.planet:2+run.planet+Math.floor(run.depth/3))):
       type === "boss"
         ? 4 + run.planet
         : type === "elite"
@@ -913,13 +921,14 @@ export function encounter(run, type = "battle", seed = 1) {
             ? 4
             : 5;
   const foes = [];
+  const novice=progressive(run)&&run.planet===0&&run.depth<3&&type==="battle",gentleComposition=novice&&r()<.85;
   const scout = run.route?.flat().find((n) => n.seed === seed),
     arch =
       ARCHETYPES.find((a) => a.id === scout?.archetype) ||
       ARCHETYPES[Math.floor(r() * ARCHETYPES.length)];
   const rarityRank = { Common: 0, Uncommon: 1, Rare: 2, Epic: 3, Legendary: 4 };
   const maxRank =
-    run.planet === 0 && run.depth < 2
+    run.planet === 0 && run.depth < 3
       ? 1
       : run.planet === 0
         ? 2
@@ -954,8 +963,8 @@ export function encounter(run, type = "battle", seed = 1) {
         : type === "capture" && i === n - 1 && rare.length
           ? chooseWild(rare)
           : chooseWild(
-              pool.filter((id) => BY_ID[id].role === arch.roles[i]).length
-                ? pool.filter((id) => BY_ID[id].role === arch.roles[i])
+              pool.filter((id) => BY_ID[id].role === (gentleComposition?(i===0?"Guardian":"Striker"):arch.roles[i])).length
+                ? pool.filter((id) => BY_ID[id].role === (gentleComposition?(i===0?"Guardian":"Striker"):arch.roles[i]))
                 : pool,
             );
     const legends = encounterPool.filter((id) => BY_ID[id].rarity === "Legendary");
@@ -967,6 +976,7 @@ export function encounter(run, type = "battle", seed = 1) {
         ? pick(legends, r)
         : id;
     const c = creature(chosen, Math.max(1, base + (type === "elite" ? 1 : 0)));
+    if(progressive(run)){rollIndividual(c,seed+i*741);assignEnemyRelics(run,c,type,seed+i*569);if(novice){c.genes.hp*=.72+run.depth*.04;c.genes.atk*=.70+run.depth*.04;c.encounterTraining="Unseasoned";}}
     c.archetype = arch.id;
     if(run.native)c.terrain=terrainFor(run,seed);
     c.elite = type === "elite";
@@ -1000,7 +1010,7 @@ export function captureChance(run, c) {
       ? Math.max(0, 0.55 - preparation.healthFraction) * 0.4
       : 0;
   const status = preparation.status ? 0.12 : 0;
-  return Math.min(
+  const baseChance=Math.min(
     0.97,
     RARITY[BY_ID[c.id].rarity].catch +
       (run.relics.includes("lens") ? 0.18 : 0) +
@@ -1009,6 +1019,9 @@ export function captureChance(run, c) {
       status +
       (preparation.mode === "mercy" ? 0.08 : 0),
   );
+  if(!progressive(run))return baseChance;
+  const mods=routeModifiers(run),tier=CAPTURERS[preparation.tool||run.captureOrder?.tool||run.selectedCapturer||"scout"]||CAPTURERS.scout;
+  return Math.min(.85,baseChance*.5*tier.mult+(preparation.healthFraction<=.3?(mods.captureBonus||0):0)+(preparation.status?(mods.statusCapture||0):0));
 }
 export function rollCapture(run, c) {
   if (!c || c.boss)
@@ -1018,16 +1031,18 @@ export function rollCapture(run, c) {
     };
   if (run.orbs <= 0) return { success: false, reason: "No capture orbs" };
   if (run.bench.length >= 12) return { success: false, reason: "Bench full" };
-  run.orbs--;
+  if(!consumeCapturer(run,run.selectedCapturer||"scout"))return {success:false,reason:"Selected capturer is unavailable"};
   const success = run.random() < captureChance(run, c);
   if (success) return { success: true, creature: awardCapture(run, c) };
-  return { success: false };
+  const result={success:false,tool:run.selectedCapturer||"scout"};result.refunded=refundCapture(run,result,`manual:${run.planet}:${run.depth}:${c.uid}`,run.seed+run.depth*191);return result;
 }
 export function awardCapture(run, c) {
   const caught = creature(c.id, Math.max(1, c.level));
+  if(progressive(run)){caught.genes=c.genes;caught.nature=c.nature;caught.boundRelics=[...(c.enemyRelics||c.boundRelics||[])];}
   caught.evolution = evolutionStage(c);
   caught.evolutionPath = caught.evolution ? c.evolutionPath : null;
   run.bench.push(caught);
+  if(progressive(run)){const mod=routeModifiers(run);run.gold+=mod.captureGold||0;if(mod.captureXP)run.team.forEach(u=>gainXP(u,mod.captureXP));}
   if (run.relics.includes("hatchery")) {
     run.gold += 20;
     run.team.forEach((u) => gainXP(u, 35));
@@ -1062,6 +1077,7 @@ export function generateShop(run, seed) {
       SPECIES.filter((s) => s.rarity === "Legendary" && (!run.native || run.rosterMode==="collection" || NATIVE_POOLS[run.planet].includes(s.id))),
       r,
     ).id,
+    recruits: progressive(run)?recruitOffer(run,seed+827,[...Array(3)].map((_,i)=>pick(SPECIES.filter(s=>s.rarity!=="Legendary"&&(!run.native||run.rosterMode==="collection"||NATIVE_POOLS[run.planet].includes(s.id))),r).id)):undefined,
     sold: [],
     rerolls: 0,
   };
@@ -1083,7 +1099,7 @@ export function buyCreature(run, id) {
     cost = shopPrice(run, RARITY[s.rarity].cost);
   if (run.gold < cost || run.bench.length >= 12) return false;
   run.gold -= cost;
-  run.bench.push(creature(id, 1 + run.planet * 3));
+  const c=creature(id,1+run.planet*3);if(progressive(run))rollIndividual(c,run.seed+run.gold+run.bench.length*317);run.bench.push(c);
   return true;
 }
 export const CASUALTY_RISK = {
@@ -1094,6 +1110,7 @@ export const CASUALTY_RISK = {
   Legendary: 0.12,
 };
 export function casualtyRisk(run, c) {
+  if(progressive(run))return 1;
   const rarity = BY_ID[c.id]?.rarity;
   return (
     (CASUALTY_RISK[rarity] || 0.65) *
@@ -1130,7 +1147,7 @@ export function deployReserve(run, benchIndex, targetIndex = run.team.length) {
     !Number.isInteger(targetIndex) ||
     targetIndex < 0 ||
     targetIndex > run.team.length ||
-    targetIndex >= 6
+    targetIndex >= capacity(run)
   )
     return false;
   const reserve = run.bench[benchIndex],
@@ -1156,11 +1173,14 @@ export function deployReserve(run, benchIndex, targetIndex = run.team.length) {
           break;
         }
   }
+  reserve.seat=previous?.seat??[...Array(capacity(run)).keys()].find(s=>!run.team.some(c=>c.seat===s));
   reserve.deployment = deployment;
+  if(previous?.deploymentPosition)reserve.deploymentPosition={...previous.deploymentPosition};else delete reserve.deploymentPosition;
   run.team[targetIndex] = reserve;
   return true;
 }
 export function settleDefeat(run, key, seed) {
+  if(progressive(run))return newCasualty(run,key,seed);
   run.defeatLedger ||= {};
   if (run.defeatLedger[key]) return run.defeatLedger[key];
   const r = rng(seed + 731947),
@@ -1223,8 +1243,9 @@ export function rewardBattle(run, type, won, battle = null) {
       const n = gainXP(c, Math.round(xp * personalEffects(c).xp));
       if (n) levels.push(c.id);
     }
-    if (type === "boss") run.orbs += 2;
-    return { gold, xp, levels };
+    if (type === "boss"){if(progressive(run))addCapturer(run,"runic",2);else run.orbs+=2;}
+    const slotsAdded=unlockSlots(run),mods=routeModifiers(run);const bonus=progressive(run)?(type==="battle"?mods.battleGold||0:type==="elite"?Math.round(gold*(mods.eliteGold||0)):Math.round(gold*(mods.bossGold||0)))+(mods.lowGold&&(battle?.startingGold??run.gold-gold)<mods.lowGold?20:0):0;run.gold+=bonus;
+    return { gold:gold+bonus, xp, levels, slotsAdded };
   }
   run.integrity--;
   return {
@@ -1378,7 +1399,7 @@ export function applyEvent(run, event, index) {
   if (!eventAvailable(run, c)) return { ok: false };
   if (c.kind === "gem" || c.kind === "orb-gem") {
     if (c.kind === "gem") run.gold -= c.cost;
-    else run.orbs -= c.cost;
+    else spendCapturers(run,c.cost);
     run.inventory.push(personalRelic(c.gem));
   }
   if (c.kind === "study") {
@@ -1398,10 +1419,10 @@ export function applyEvent(run, event, index) {
     });
   }
   if (c.kind === "life") run.integrity = Math.min(3, run.integrity + c.amount);
-  if (c.kind === "orbs") run.orbs += c.amount;
+  if (c.kind === "orbs") progressive(run)?addCapturer(run,"scout",c.amount):run.orbs+=c.amount;
   if (c.kind === "supplies") {
     run.gold += c.gold;
-    run.orbs += c.orbs;
+    progressive(run)?addCapturer(run,"scout",c.orbs):run.orbs+=c.orbs;
   }
   if (c.kind === "relic") {
     if (run.gold < c.cost || run.relics.includes(c.relic)) return { ok: false };
@@ -1410,7 +1431,7 @@ export function applyEvent(run, event, index) {
   }
   if (c.kind === "trade") {
     if (run.orbs < c.cost || run.bench.length >= 12) return { ok: false };
-    run.orbs -= c.cost;
+    spendCapturers(run,c.cost);
     run.bench.push(creature(c.creature, 1 + run.planet * 3));
   }
   if (c.kind === "risk") {
@@ -1448,7 +1469,8 @@ export function applyEvent(run, event, index) {
 }
 
 export class Battle {
-  constructor(run, foes, seed = 1) {
+  constructor(run, foes, seed = 1, options={}) {
+    this.visuals=options.visuals!==false;
     this.run = run;
     this.native=!!run.native;
     this.growthKey=`${run.planet}:${run.depth}:${seed}:${run.wins}:${run.integrity}`;
@@ -1481,6 +1503,7 @@ export class Battle {
     this.signatureCount = 0;
     this.revived = false;
     this.savedCaptureResult = run.captureReservation?.result || null;
+    this.startingGold=run.gold;
     this.captureResult = null;
     this.capturePlan = run.captureOrder || null;
     this.captureSettled = false;
@@ -1514,8 +1537,9 @@ export class Battle {
     this.teamSyn = synergies(run.team);
     this.foeSyn = synergies(foes);
     const add = (c, side, index, team) => {
-      const st = stats(c, team, side === 0 ? run.relics : []),
+      const st = stats(c, team, side === 0 ? run.relics : c.enemyRelics||[]),
         loadout = loadoutFor(BY_ID[c.id], c.level, c);
+      const opponentRelics=side===1?[...run.relics,...run.team.flatMap(c=>c.boundRelics||[])]:foes.flatMap(c=>[...(c.enemyRelics||[]),...(c.boundRelics||[])]);st.hp*=relicStatFactors(opponentRelics).enemyHP;
       if (side === 1) {
         const diff = DIFFICULTIES[run.difficulty] || DIFFICULTIES.standard;
         st.hp *=
@@ -1647,6 +1671,7 @@ export class Battle {
     run.team.forEach((c, i) => add(c, 0, i, run.team));
     foes.forEach((c, i) => add(c, 1, i, foes));
     for (const [index,u] of this.units.entries()) {
+      compileRelics(this,u);u.maxPoise+=u.curioStats.poise;u.shield+=u.curioStats.shield;
       if(this.native){const position=nativeSpawn(BY_ID[u.id],u,u.side,u.side?index-run.team.length:index);u.x=u.px=position.x;u.y=u.py=position.y;u.nativeHome={...position};initializeNative(u,BY_ID[u.id]);}else if(BY_ID[u.id].nativeRig)initializeNative(u,BY_ID[u.id]);
       if (
         u.side === 1 &&
@@ -1747,7 +1772,7 @@ export class Battle {
   heal(target, amount, source, skillId = null, show = true, scale = 1) {
     if (!target || target.hp <= 0) return;
     const mod = skillId ? linkedSupport(source, skillId) : { healing: 1 };
-    amount *= mod.healing * scale * (nativeEvolution(source).healing||1) * equipmentEffects(source).healing;
+    amount *= mod.healing * scale * (nativeEvolution(source).healing||1) * equipmentEffects(source).healing*(source.curioStats?.healing||1);
     if (source.side === 0 && this.run.relics.includes("seed")) amount *= 1.35;
     const syn = source.side === 0 ? this.teamSyn : this.foeSyn;
     if (syn.grove >= 4) amount *= 1.3;
@@ -1807,6 +1832,7 @@ export class Battle {
     }
     target.hp += real;
     source.healed += real;
+    relicEvent(this,source,"heal",{target,real,excess});
     this.metrics.healing += real;
     if (show && real >= 2) {
       if(this.native)queueCombatText(this,target,real,"heal");else this.effect(target.x, target.y - 44, `+${Math.round(real)}`, "#bada9b");
@@ -1834,6 +1860,7 @@ export class Battle {
   }
   defeat(u, source, skillId) {
     if (u.hp > 0 || u.deathHandled || u.captured) return;
+    if(relicFatal(this,u))return;
     if (
       u.side === 0 &&
       this.run.relics.includes("last-light") &&
@@ -1847,6 +1874,7 @@ export class Battle {
       return;
     }
     u.deathHandled = true;
+    relicEvent(this,u,"death");if(source)relicEvent(this,source,"kill",{target:u});
     u.deathTime = 0;
     u.deathFace = u.face;
     if (source) {
@@ -1923,6 +1951,7 @@ export class Battle {
         });
       }
     }
+    if(kind!=="cost")amount*=relicReduction(this,target,source);
     const blocked = Math.min(
       target.shield,
       amount * (1 - Math.min(0.95, pierce)),
@@ -1937,9 +1966,10 @@ export class Battle {
       !this.captureSettled &&
       !target.boss
     )
-      target.hp = Math.max(target.maxHp * 0.18, target.hp);
+      target.hp = Math.max(target.maxHp*(progressive(this.run)?Math.min(.05,(this.capturePlan.threshold||.35)/2):.18), target.hp);
     const dealt = Math.max(0, old - target.hp);
     target.damageTaken += dealt;
+    if(dealt>0&&!["reflection","cost","status","hazard"].includes(kind))relicEvent(this,target,"hurt",{source,target:source,dealt});
     if(this.native){if(dealt>0)queueCombatText(this,target,dealt,kind==="status"?"status":critical?"crit":"hit");if(blocked>=1)queueCombatText(this,target,blocked,"shield");}
     if (kind === "status") {
       target.statusTaken += dealt;
@@ -2053,7 +2083,8 @@ export class Battle {
       target.slow > 0
     )
       amount *= 1.2;
-    const crit = this.random() < 0.045 + m.crit;
+    amount*=relicDamageFactor(this,source,target,def);
+    const crit = this.random() < 0.045 + m.crit+(source.curioStats?.crit||0);
     if (crit) {
       amount *= 1.65;
       this.metrics.crits++;
@@ -2076,6 +2107,7 @@ export class Battle {
       Math.max(m.pierce, trait === "piercer" ? 0.35 : 0, nativeEvolution(source).pierce||0, def.shieldPierce||0),
       kind, true, crit,
     );
+    if(proc)relicEvent(this,source,"hit",{target,dealt,def,skillId});
     target.flash = 0.12;
     target.hitAnim = 0.22;
     if (kind === "physical" || kind === "projectile") {
@@ -2702,6 +2734,7 @@ export class Battle {
     u.dodgeCooldown = Math.max(1.5, 3.1 - u.dodge * 4 - (u.evade > 0 ? 1 : 0));
     u.stamina -= 30;
     u.rollCount++;
+    relicEvent(this,u,"dodge");
     this.metrics.rolls++;
     this.fx("afterimage", u.x, u.y, "#cfdfd4", { r: 30, ttl: 0.4, max: 0.4 });
   }
@@ -2781,9 +2814,9 @@ export class Battle {
     if (!t) return;
     m.area*=nativeEvolution(u).area||1;
     if(this.native&&u.nativeActor&&!auto&&!echo&&!committed){
-      const key=++this.attackSerial;u.actionId=key;u.actionLock=.68;u.stamina=Math.max(0,u.stamina-10);
-      nativeAction(u,Math.atan2(t.y-u.y,t.x-u.x),.38,.3,{heavy:true,casting:true,skillId:id});
-      this.queue.push({ttl:.38,source:u,target:t,skillId:id,scale,nativeCast:true,actionKey:key});u.intention="Preparing "+def.name;return;
+      const key=++this.attackSerial;u.actionId=key;u.actionLock=.38*(u.curioStats?.channel||1)+.3;u.stamina=Math.max(0,u.stamina-10);
+      nativeAction(u,Math.atan2(t.y-u.y,t.x-u.x),.38*(u.curioStats?.channel||1),.3,{heavy:true,casting:true,skillId:id});
+      this.queue.push({ttl:.38*(u.curioStats?.channel||1),source:u,target:t,skillId:id,scale,nativeCast:true,actionKey:key});u.intention="Preparing "+def.name;return;
     }
     if(u.nativeActor&&!echo&&!committed)nativeAction(u,Math.atan2(t.y-u.y,t.x-u.x),auto?.16:.36,auto?.2:.3,{heavy:!auto});
     this.supportedUse(u, id, echo);
@@ -2804,7 +2837,7 @@ export class Battle {
       u.actionLock = Math.max(u.actionLock, 0.22);
       if(!committed)u.stamina = Math.max(0, u.stamina - 10);
       u.castAnim = 0.65;
-      this.metrics.skills++;u.nativeResolvedSkills++;
+      this.metrics.skills++;u.nativeResolvedSkills++;u.lastRelicCast=this.time;if(!echo)relicEvent(this,u,"cast",{target:t,skillId:id});
       this.say(`${creatureName(u)} uses ${def.name}${echo ? " · Echo" : ""}.`);
       this.effect(u.x, u.y - 67, def.name, color);
       this.fx("cast", u.x, u.y, color, { r: 45, ttl: 0.65, max: 0.65 });
@@ -3298,7 +3331,7 @@ export class Battle {
       this.captureSettled = true;
       return;
     }
-    const threshold = this.capturePlan.mode === "mercy" ? 0.35 : 0.55;
+    const threshold = this.capturePlan.threshold??(this.capturePlan.mode === "mercy" ? .35 : .55);
     if (target.hp > 0 && target.hp / target.maxHp > threshold) return;
     target.capturePreparation = {
       healthFraction: target.hp / target.maxHp,
@@ -3309,12 +3342,15 @@ export class Battle {
         target.slow > 0 ||
         target.bleed > 0,
       mode: this.capturePlan.mode,
+      tool:this.capturePlan.tool||"scout",
     };
     const chance =
         this.savedCaptureResult?.chance ?? captureChance(this.run, target),
       success = this.savedCaptureResult?.success ?? this.random() < chance;
     this.captureSettled = true;
+    if(progressive(this.run))this.captureScene={uid:target.uid,elapsed:0,duration:1.8,success,chance,tool:this.capturePlan.tool||"scout"};
     this.captureResult = {
+      tool:this.capturePlan.tool||"scout",
       success,
       uid: target.uid,
       chance,
@@ -3324,6 +3360,7 @@ export class Battle {
         evolution: target.evolution,
         evolutionPath: target.evolutionPath,
         capturePreparation: target.capturePreparation,
+        genes:target.genes,nature:target.nature,enemyRelics:target.enemyRelics,
       },
     };
     this.fx("capture", target.x, target.y, "#aee8de", {
@@ -3396,7 +3433,9 @@ export class Battle {
     return notes.slice(0, 4);
   }
   step(dt) {
-    if (this.done || !Number.isFinite(dt) || dt <= 0) return;
+    if(!Number.isFinite(dt)||dt<=0)return;
+    if(this.captureScene){this.captureScene.elapsed+=dt;if(this.captureScene.elapsed>=this.captureScene.duration)this.captureScene=null;else dt*=.18;}
+    if(this.done)return;
     this.accumulator += Math.min(dt, 0.1);
     while (this.accumulator + 1e-9 >= 0.04 && !this.done) {
       this.advance(0.04);
@@ -3514,9 +3553,10 @@ export class Battle {
       if(u.nativeKnockdown>0){u.nativeKnockdown=Math.max(0,u.nativeKnockdown-dt);if(!u.nativeKnockdown)u.nativeGetup=.45;}else if(u.nativeGetup>0)u.nativeGetup=Math.max(0,u.nativeGetup-dt);
       u.stamina = Math.min(
         100,
-        u.stamina + dt * (u.actionLock > 0 || u.rollTime > 0 ? 9 : 20),
+        u.stamina + dt * (u.actionLock > 0 || u.rollTime > 0 ? 9 : 20)*(u.curioStats?.regenStamina||1),
       );
       u.poise = Math.max(0, u.poise - dt * 12);
+      relicTick(this,u,dt);
       u.targetTimer -= dt;
       this.reactToThreat(u, dt);
       if (u.regeneration > 0)
@@ -3650,6 +3690,7 @@ export class Battle {
         }
         const movement =
           u.speed * (this.native&&dist>180?1.65:1) *
+          (progressive(this.run)&&this.native&&sp.range>100&&nearestEnemy&&vx*(nearestEnemy.x-u.x)+vy*(nearestEnemy.y-u.y)<-.15?.58:1) *
           (u.slow > 0 ? 0.5 : 1) *
           (u.movementBuff > 0 ? 1.3 : 1) *
           (u.stamina < 20 ? 0.7 : 1);
@@ -3722,7 +3763,7 @@ export class Battle {
       }
     }
     this.metrics.collisions += separateBodies(this.units,this.bounds);
-    for(const u of this.units){if(this.native)confineTerrain(u,this.terrain);if(u.nativeActor)advanceNative(u,dt,this.time);}
+    for(const u of this.units){if(this.native)confineTerrain(u,this.terrain);if(u.nativeActor)advanceNative(u,dt,this.time,this.visuals);}
     for (const strike of this.strikes) {
       const previous=strike.remaining;
       strike.remaining -= dt;
@@ -3739,7 +3780,8 @@ export class Battle {
         q.source.hp > 0 &&
         !this.cancelledAttacks.has(q.actionKey)
       ) {
-        if(q.nativeCast){this.cast(q.source,q.skillId,q.target,q.scale,false,true);q.source.actionId=null;}
+        if(q.relicEcho){this.cast(q.source,q.skillId,q.target,q.scale,true,true);}
+        else if(q.nativeCast){this.cast(q.source,q.skillId,q.target,q.scale,false,true);q.source.actionId=null;}
         else if (q.single) {
           if (q.target?.hp > 0)
             this.hit(

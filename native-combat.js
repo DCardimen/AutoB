@@ -13,6 +13,7 @@ import {advanceCombatTexts} from './combat-text.js';
 export const NATIVE_BOUNDS={left:70,right:930,top:110,bottom:805};
 export function actorId(spec,unit={}){return nativeRigFor(pixelSpec(spec.id)||spec,unit)||(unit.boss?NATIVE_BOSS_RIGS[spec.id]:null);}
 export function nativeSpawn(spec,unit,side,index){
+ if(unit.deploymentPosition)return {...unit.deploymentPosition};
  const d=unit.deployment||{row:index%3,column:index>=3?1:spec.range>100?0:2};
  const position=side===0?{x:[155,230,305][d.column],y:[220,435,650][d.row]+(index>=3?22:-12)}:{x:(spec.range>100?825:710)+(index>=3?28:-25),y:[220,435,650][index%3]+(index>=3?22:-12)};
  const size=creatureWorldScale(pixelSpec(spec.id)||spec,unit),bounds=nativeEntityBounds(pixelSpec(spec.id)||spec,unit,NATIVE_BOUNDS),radius=(spec.bodyRadius||22)*size;return {x:Math.max(bounds.left+radius,Math.min(bounds.right-radius,position.x)),y:Math.max(bounds.top+radius,Math.min(bounds.bottom-radius,position.y))};
@@ -30,7 +31,7 @@ export function nativeAction(u,angle,windup,recovery,options={}){
  u.nativeAction={elapsed:0,windup,duration:windup+recovery,angle,style:options.style||'overhead',charged:!!options.charged,anticipation:options.charged?3:options.heavy?2:1,released:false,...options};
  u.facing=angle;u.nativeActor.facing=angle;u.nativeActor.groundFeet=null;
 }
-export function advanceNative(u,dt,time){
+export function advanceNative(u,dt,time,visuals=true){
  const a=u.nativeActor;if(!a)return;
  const velocity=Math.hypot(u.velocityX,u.velocityY),speed=u.speed||80;
  a.stopTime=Math.max(0,(a.stopTime||0)-dt);a.turnTime=Math.max(0,(a.turnTime||0)-dt);a.turnCooldown=Math.max(0,(a.turnCooldown||0)-dt);
@@ -52,6 +53,7 @@ export function advanceNative(u,dt,time){
  if(u.nativeAction){u.nativeAction.elapsed+=dt;u.nativeAction.released=u.nativeAction.elapsed>=u.nativeAction.windup;if(u.nativeAction.elapsed>=u.nativeAction.duration)u.nativeAction=null;}
  a.action=u.nativeAction;a.casts=!!u.nativeAction?.casting||a.id==='caster'||a.id==='jelly';
  a.deathTime=u.deathTime||0;a.knockdown=u.nativeKnockdown||0;a.getup=u.nativeGetup||0;
+ if(!visuals)return;
  if(a.knockdown>0&&!a.ragdoll)a.ragdoll=createRagdoll(a.id,characterRig(a.id,"hit",.25),{x:-65,y:24});
  if(u.hp>0&&!a.knockdown&&!a.getup)a.ragdoll=null;
  if(u.hp<=0&&!a.ragdoll)a.ragdoll=createRagdoll(a.id,characterRig(a.id,'hit',.2),{x:-60,y:20});

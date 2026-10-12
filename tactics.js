@@ -1,3 +1,4 @@
+import {routeModifiers} from './run-relics.js';
 import { NATIVE_SPECIES, NATIVE_EVOLUTIONS } from './native-content.js';
 // Shared design data. Rules, scouting, tooltips, and reports use the same definitions.
 export const POLICIES = {
@@ -349,7 +350,7 @@ export function chaosLevel(run) {
     : 0;
 }
 export function shopPrice(run, price) {
-  return Math.ceil((price * (chaosLevel(run) >= 6 ? 11 : 10)) / 10);
+  return Math.ceil((price * (1-(routeModifiers(run).discount||0)) * (chaosLevel(run) >= 6 ? 11 : 10)) / 10);
 }
 export function unlockChaos(profile, run) {
   profile.chaosUnlocked = Math.max(

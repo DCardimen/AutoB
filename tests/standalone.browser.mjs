@@ -1,7 +1,7 @@
 import { chromium } from "playwright";
 import assert from "node:assert/strict";
 import fs from "node:fs";
-import { makeRun, generateRoute, encounter, SPECIES } from "../game.js";
+import { makeRun as makeLegacyRun, generateRoute, encounter, SPECIES } from "../game.js";
 const browser = await chromium.launch({
   executablePath: process.env.CHROMIUM_PATH || "/usr/bin/chromium",
   headless: true,
@@ -103,3 +103,5 @@ await browser.close();
 console.log(
   "Standalone browser: evolved new creatures, combat, saves, and gem links pass with zero network requests.",
 );
+
+function makeRun(seed,ids,options={}){return makeLegacyRun(seed,ids,{...options,rulesVersion:11});}

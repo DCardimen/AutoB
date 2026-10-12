@@ -4,7 +4,7 @@ import {createHash} from 'node:crypto';
 import {NATIVE_SPECIES,NATIVE_POOLS,NATIVE_STARTERS,lineageLimit,lineageProgress,settleNativeGrowth} from '../native-content.js';
 import {ROSTER_BATCH} from '../native-batch.js';
 import {nativePosePixels,NATIVE_POSES} from '../native-poses.js';
-import {makeRun,creature,evolutionOffer,evolveCreature,relicSlots,skillDefinition,Battle,stats,encounter,rewardBattle} from '../game.js';
+import {makeRun as legacyMakeRun,creature,evolutionOffer,evolveCreature,relicSlots,skillDefinition,Battle,stats,encounter,rewardBattle} from '../game.js';
 import {starterBudget,unlockChaos,traitFor} from '../tactics.js';
 const hash=p=>createHash('sha256').update(p).digest('hex');
 
@@ -67,3 +67,5 @@ test('new family art stays recognizable across forms and every required pose fit
  }
  assert.equal(new Set(identities).size,12);
 });
+
+function makeRun(seed,ids,options={}){return legacyMakeRun(seed,ids,{...options,rulesVersion:11});}

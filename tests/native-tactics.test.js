@@ -1,6 +1,6 @@
 import {evolutionMechanic} from '../tactics.js';
 import test from 'node:test';import assert from 'node:assert/strict';
-import {makeRun,creature,Battle,BY_ID,eventForRun,EVENTS} from '../game.js';
+import {makeRun as legacyMakeRun,creature,Battle,BY_ID,eventForRun,EVENTS} from '../game.js';
 import {NATIVE_STARTERS} from '../native-content.js';
 import {evaluateOrders,terrainFor,firstTerrainHit,terrainSteering,confineTerrain,orderGoal,chooseOpeningBoon} from '../native-tactics.js';
 import {practiceBattle,practiceResult} from '../practice.js';
@@ -49,3 +49,5 @@ test('an empty expedition cannot start an invalid practice comparison',()=>{cons
 test('the common axe specialist can damage health through a full shield',()=>{const {b}=setup(['brakk'],['aurel']),[u,t]=b.units;t.shield=500;const hp=t.hp;b.hit(t,u.atk*2.2,u,u.id,1,false,'physical');assert.ok(t.hp<hp);assert.ok(t.shield>0);});
 
 test("family evolution tradeoffs are visible before the player commits",()=>{const c=creature("aurel",5);assert.match(evolutionMechanic(c,"Guardian","wild"),/Dawn Reaver.*2×/);assert.match(evolutionMechanic(c,"Guardian","warden"),/Oathkeeper.*20 stamina/);});
+
+function makeRun(seed,ids,options={}){return legacyMakeRun(seed,ids,{...options,rulesVersion:11});}

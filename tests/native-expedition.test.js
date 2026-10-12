@@ -1,5 +1,5 @@
 import test from 'node:test';import assert from 'node:assert/strict';
-import {makeRun,creature,Battle,BY_ID,SPECIES,generateRoute,encounter,evolveCreature,stats,personalRelic,equipRelic,linkRelic,generateShop} from '../game.js';
+import {makeRun as legacyMakeRun,creature,Battle,BY_ID,SPECIES,generateRoute,encounter,evolveCreature,stats,personalRelic,equipRelic,linkRelic,generateShop} from '../game.js';
 import {NATIVE_SPECIES,NATIVE_STARTERS,NATIVE_POOLS,nativeEvolution} from '../native-content.js';
 import {NATIVE_BOUNDS,nativeMuzzle,finishNativeVisuals} from '../native-combat.js';
 function fixture(id='aurel',enemy='brakk'){
@@ -40,3 +40,5 @@ test('family evolution makes distinct tactical changes without dropping gems or 
 test('native battles remain finite and use the expanded courtyard bounds',()=>{
  for(let seed=0;seed<8;seed++){const run=makeRun(seed,NATIVE_STARTERS),b=new Battle(run,encounter(run,'elite',seed),seed);while(!b.done)b.step(.1);assert.ok(b.time<=90.1);assert.ok(b.metrics.skills>0);assert.ok(b.metrics.bladeContacts>0);for(const u of b.units)assert.ok(Number.isFinite(u.x)&&u.y<=NATIVE_BOUNDS.bottom);}
 });
+
+function makeRun(seed,ids,options={}){return legacyMakeRun(seed,ids,{...options,rulesVersion:11});}

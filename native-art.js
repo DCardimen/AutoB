@@ -35,9 +35,9 @@ function actorFor(u,spec){
 export function drawNativeUnit(c,u,spec,x,y,time,pixelScale=3){
  const actor=actorFor(u,spec),sample=spriteSample(actor,time,u.nativeActor?null:{state:'idle',phase:.25});
  let rig=characterRig(actor.id,sample.state,sample.phase,sample.stage,{...sample,stride:actor.stride});rig.cape=sample.cape;
- if(actor.ragdoll)rig=ragdollRig(actor.ragdoll,actor.getup>0?1-actor.getup/.45:0);
+ if(u.deploymentRig)rig=u.deploymentRig;else if(actor.ragdoll)rig=ragdollRig(actor.ragdoll,actor.getup>0?1-actor.getup/.45:0);
  rig.capeMesh=actor.capeMesh;rig=nativeFormRig(spec,u,rig,characterHeight);
- const key=u.id+':'+characterHeight+':'+sample.key+':'+u.evolution+':'+u.evolutionPath+':'+(u.equipment||[]).join(',')+':'+(actor.capeMeshKey||'')+(actor.ragdoll?':'+actor.ragdoll.time.toFixed(4):'');let frame=frames.get(key);if(!frame){frame=renderCharacterFrame(actor.id,rig,sample.angleIndex*Math.PI/4);frames.set(key,frame);if(frames.size>256)frames.delete(frames.keys().next().value);}
+ const key=u.id+':'+characterHeight+':'+sample.key+':'+u.evolution+':'+u.evolutionPath+':'+(u.equipment||[]).join(',')+':'+(actor.capeMeshKey||'')+(actor.ragdoll?':'+actor.ragdoll.time.toFixed(4):'');let frame=u.deploymentRig?null:frames.get(key);if(!frame){frame=renderCharacterFrame(actor.id,rig,sample.angleIndex*Math.PI/4);if(!u.deploymentRig)frames.set(key,frame);if(frames.size>256)frames.delete(frames.keys().next().value);}
  c.imageSmoothingEnabled=false;c.drawImage(frame,Math.round(x-PIVOT.x*pixelScale),Math.round(y-PIVOT.y*pixelScale),CELL*pixelScale,CELL*pixelScale);
 }
 const ring=(c,x,y,r,color,fill)=>{const p=nativeScreen(x,y);c.beginPath();c.ellipse(p.x,p.y,r,r*.58,0,0,Math.PI*2);c.strokeStyle=color;c.lineWidth=2;if(fill){c.fillStyle=fill;c.fill();}c.stroke();};
@@ -65,10 +65,22 @@ export function renderNativeBattle(display,w,h,battle,planet,time,team,foes,spec
   if(battle&&u.side===0&&battle.selectedUid===u.uid){ring(c,u.x,u.y,30,"#c4df99");c.font="11px sans-serif";c.fillStyle="#dbe4b9";c.fillText(u.intention||"Ready",p.x,p.y+36);}
   if(battle?.capturePlan?.uid===u.uid&&!battle.captureSettled)ring(c,u.x,u.y,35,'#e8d385');
  }
+ if(battle?.captureScene)paintCapture(c,battle,species);
  if(battle){
   for(const p of battle.projectiles){const q=nativeScreen(p.x,p.y+14),z=(p.originZ||45)+((p.targetZ??45)-(p.originZ||45))*Math.min(1,p.age/(p.flightTime||p.passTime||1));c.save();c.translate(q.x,q.y-z*characterHeight);c.rotate(Math.atan2(p.vy*.58,p.vx));c.fillStyle=p.nativeArrow?'#e4d7b7':p.color;c.fillRect(p.nativeArrow?-9:-3,-2,p.nativeArrow?13:6,4);c.restore();for(const t of p.trail){const v=nativeScreen(t.x,t.y+14);c.fillStyle=p.color+'66';c.fillRect(v.x-1,v.y-z*characterHeight,3,3);}}
   for(const e of battle.effects){const p=nativeScreen(e.x,e.y);c.save();c.globalAlpha=Math.min(1,e.ttl/(e.max||.45));c.strokeStyle=e.color;c.fillStyle=e.color;c.lineWidth=e.width||3;if(e.type==='text'){c.font='bold 13px sans-serif';c.textAlign='center';c.fillText(e.text,p.x,p.y-55-(1-e.ttl)*20);}else if(e.tx!==undefined){const t=nativeScreen(e.tx,e.ty);c.beginPath();c.moveTo(p.x,p.y-45);c.lineTo(t.x,t.y-45);c.stroke();}else if(['impact','slash','cast','defeat','nova','ring','shield'].includes(e.type)){c.beginPath();c.arc(p.x,p.y-(e.victimUid?nativeBodyHeight(battle.units.find(u=>u.uid===e.victimUid)):40)*characterHeight,e.type==='impact'?10:(e.r||20)*.3,0,Math.PI*2);c.stroke();}c.restore();}
   for(const p of battle.particles){const q=nativeScreen(p.x,p.y);c.fillStyle=p.color;c.globalAlpha=Math.min(1,p.ttl/(p.max||1));c.fillRect(q.x,q.y-30,3,3);}c.globalAlpha=1;
  }
  const pc=pixel.getContext('2d');pc.imageSmoothingEnabled=false;pc.drawImage(scene,0,0,334,218);if(battle)paintCombatTexts(pc,battle,byId,characterHeight);display.imageSmoothingEnabled=false;display.clearRect(0,0,w,h);display.drawImage(pixel,0,0,w,h);
+}
+
+function paintCapture(c,battle,species){
+ const event=battle.captureScene,u=battle.units.find(u=>u.uid===event.uid);if(!u)return;const p=nativeScreen(u.x,u.y),t=event.elapsed,f=t/event.duration,scale=creatureWorldScale(species[u.id],u),color={scout:'#a3e2c5',runic:'#93dbe9',astral:'#caadfa',mythic:'#f8d58c'}[event.tool],z=p.y-nativeBodyHeight(u)*characterHeight/2;
+ c.save();c.translate(p.x,z);const size=24+12*Math.sin(Math.min(1,f*3)*Math.PI/2),shake=f>.35&&f<.8?Math.sin(t*35)*3:0;c.translate(shake,0);c.strokeStyle=color;c.lineWidth=3;c.fillStyle='#10252be0';
+ // An angular, four-wing lattice closes around a shrinking silhouette.
+ if(u.captured&&f<.6){c.save();c.globalAlpha=1-f;c.translate(-p.x,-z);drawNativeUnit(c,{...u,captured:false},species[u.id],p.x,p.y,battle.time,3*scale*(1-f*.9));c.restore();}
+ for(let i=0;i<4;i++){const a=i*Math.PI/2+f*.5,r=size*(f<.3?1+(1-f*3):1);c.save();c.rotate(a);c.beginPath();c.moveTo(r,0);c.lineTo(r+8,-8);c.lineTo(r+15,0);c.lineTo(r+8,8);c.closePath();c.fill();c.stroke();c.restore();}
+ c.beginPath();for(let i=0;i<8;i++){const a=i*Math.PI/4+f*.5,xx=Math.cos(a)*size,yy=Math.sin(a)*size;i?c.lineTo(xx,yy):c.moveTo(xx,yy);}c.closePath();c.stroke();
+ if(f>.8){c.globalAlpha=Math.max(0,1-(f-.8)*4);for(let i=0;i<12;i++){const a=i*Math.PI/6,r=size+(f-.8)*(event.success?35:180);c.fillStyle=color;c.fillRect(Math.cos(a)*r,Math.sin(a)*r,4,4);}}
+ c.globalAlpha=1;c.font='bold 13px sans-serif';c.textAlign='center';c.fillStyle=color;c.fillText(f<.8?'LATTICE LOCK · '+Math.round(event.chance*100)+'%':event.success?'COMPANION CAPTURED':'LATTICE BROKEN',0,-size-18);c.restore();
 }

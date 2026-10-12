@@ -1,6 +1,6 @@
 {
   "name": "starfall-menagerie",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -15,9 +15,10 @@
     "check:godot": "node scripts/check-godot.mjs",
     "export:prototype": "node scripts/export-prototype-sprites.mjs",
     "build:prototype": "node scripts/build-prototype.mjs",
-    "test:native": "npm run build:standalone && node --test tests/native-expedition.test.js tests/native-tactics.test.js tests/native-lineage.test.js && node tests/native-roster.browser.mjs && node tests/grand-forms.browser.mjs && node tests/native-controls.browser.mjs && node tests/native-expedition.browser.mjs && node tests/standalone.browser.mjs && node tests/native-offline.browser.mjs",
+    "test:native": "npm run build:standalone && node --test tests/native-expedition.test.js tests/native-tactics.test.js tests/native-lineage.test.js && node tests/native-roster.browser.mjs && node tests/grand-forms.browser.mjs && node tests/native-controls.browser.mjs && node tests/expedition-v12-campaign.browser.mjs && node tests/standalone.browser.mjs && node tests/native-offline.browser.mjs",
     "test:prototype": "npm run build:prototype && node --test tests/prototype.test.js tests/prototype-rig.test.js tests/prototype-models.test.js tests/prototype-pixels.test.js tests/prototype-combat-v7.test.js && node tests/prototype.browser.mjs",
-    "export:native": "node scripts/export-native-sprites.mjs"
+    "export:native": "node scripts/export-native-sprites.mjs",
+    "test:expedition": "node --test tests/expedition-v12.test.js && node tests/expedition-v12.browser.mjs && node tests/expedition-v12-campaign.browser.mjs && CAMPAIGN_DIFFICULTY=chaos node tests/expedition-v12-campaign.browser.mjs"
   },
   "devDependencies": {
     "esbuild": "0.25.10",

@@ -6,7 +6,7 @@ import {
   PERSONAL_RELICS,
   RELICS,
   EVENTS,
-  makeRun,
+  makeRun as legacyMakeRun,
   creature,
   personalRelic,
   equipRelic,
@@ -64,12 +64,12 @@ function gemBattle(gem, id = "thornstag") {
     21,
   );
 }
-test("every family has a functional specialty; 30 supports and 24 relics have unique IDs", () => {
+test("every family has a functional specialty; 30 supports and 124 relics have unique IDs", () => {
   for (const c of SPECIES) assert.ok(CREATURE_TRAITS[c.id], c.id);
   assert.equal(PERSONAL_RELICS.length, 30);
-  assert.equal(RELICS.length, 24);
+  assert.equal(RELICS.length, 124);
   assert.equal(new Set(PERSONAL_RELICS.map((g) => g.id)).size, 30);
-  assert.equal(new Set(RELICS.map((g) => g.id)).size, 24);
+  assert.equal(new Set(RELICS.map((g) => g.id)).size, 124);
 });
 test("route seeds change layouts, scouting and weather, and repeat deterministically", () => {
   const layouts = new Set();
@@ -460,3 +460,5 @@ test("the final knockout finishes falling without advancing settled combat state
   assert.equal(last.attackAnim, 0);
   assert.deepEqual(dead, before);
 });
+
+function makeRun(seed,ids,options={}){return legacyMakeRun(seed,ids,{...options,rulesVersion:11});}

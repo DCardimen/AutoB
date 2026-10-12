@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   Battle,
-  makeRun,
+  makeRun as legacyMakeRun,
   creature,
   BY_ID,
   casualtyRisk,
@@ -329,3 +329,5 @@ test("protection changes casualty outcomes on matched seeds without changing the
   assert.ok(plainLosses > 150);
   assert.ok(protectedLosses < plainLosses / 3);
 });
+
+function makeRun(seed,ids,options={}){return legacyMakeRun(seed,ids,{...options,rulesVersion:11});}

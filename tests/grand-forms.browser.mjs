@@ -1,5 +1,5 @@
 import {chromium} from 'playwright';import assert from 'node:assert/strict';import fs from 'node:fs';
-import {makeRun,creature,generateRoute,encounter} from '../game.js';import {NATIVE_STARTERS} from '../native-content.js';
+import {makeRun as makeLegacyRun,creature,generateRoute,encounter} from '../game.js';import {NATIVE_STARTERS} from '../native-content.js';
 const base=process.env.BASE_URL||'http://127.0.0.1:3013',b=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||'/usr/bin/chromium',headless:true,args:['--no-sandbox']}),p=await b.newPage({viewport:{width:1440,height:1050}}),report={checks:[],errors:[]};p.on('pageerror',e=>report.errors.push(e.message));p.on('response',r=>{if(r.status()>=400)report.errors.push(r.status()+' '+r.url());});
 try{
  const run=makeRun(351,NATIVE_STARTERS);run.team= ['cogwalker','aurel','solara','nyra','emberhound','ironscolopendra'].map(id=>creature(id,8));run.gold=500;run.route=generateRoute(run);const node=run.route[0][0],{random,...data}=run;
@@ -16,3 +16,5 @@ try{
  await p.evaluate(()=>{const key='starfall-menagerie-v1',s=JSON.parse(localStorage.getItem(key));s.phase='shop';s.run.gold=200;s.node=s.run.route.flat().find(n=>n.type==='shop')||{type:'shop',seed:777};s.shopStock=null;s.foes=[];localStorage.setItem(key,JSON.stringify(s));});await p.reload();await p.clock.runFor(300);const gold=await p.evaluate(()=>starfall.state.run.gold);await p.locator('[data-action="buy-gear-sunsteel-edge"]').click();assert.equal(await p.evaluate(()=>starfall.state.run.gold),gold-85);assert.ok(await p.locator('[data-action="buy-gear-sunsteel-edge"]').isDisabled());await p.reload();await p.clock.runFor(300);assert.ok(await p.locator('[data-action="buy-gear-sunsteel-edge"]').isDisabled());assert.equal(await p.evaluate(()=>starfall.state.run.gearInventory.length),1);report.checks.push('Outpost gear deducts gold exactly once and sold stock persists');
  assert.deepEqual(report.errors,[]);fs.writeFileSync('playtest-artifacts/v11-grand-browser-report.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report));
 }finally{await b.close();}
+
+function makeRun(seed,ids,options={}){return makeLegacyRun(seed,ids,{...options,rulesVersion:11});}

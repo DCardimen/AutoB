@@ -4,7 +4,7 @@ import {NATIVE_SPECIES,PIXEL_SPECIES,pixelSpec,lineageLimit} from '../native-con
 import {nativePosePixels,NATIVE_POSES} from '../native-poses.js';
 import {nativeRigFor,capeSpecification} from '../grand-designs.js';
 import {creatureWorldScale,creatureTypeFactor,BASE_CREATURE_SCALE} from '../native-size.js';
-import {makeRun,creature,Battle,evolveCreature,stats,relicSlots,equipRelic,linkRelic,personalRelic} from '../game.js';
+import {makeRun as legacyMakeRun,creature,Battle,evolveCreature,stats,relicSlots,equipRelic,linkRelic,personalRelic} from '../game.js';
 import {loadoutFor,SKILLS} from '../skills.js';
 import {equipmentSlots,claimEvolutionGear,equipGear,removeGear,buyGear,equipmentEffects} from '../creature-equipment.js';
 import {characterRig} from '../prototype-rig.js';
@@ -63,3 +63,5 @@ test('grandfathered ascended companions retain complete valid loadouts even afte
 test('raised weapons and fallen bodies stay inside cells at both character-height slider limits',()=>{
  for(const spec of PIXEL_SPECIES)for(let evolution=0;evolution<=spec.evolutionLimit;evolution++)for(const state of ['cast','sprint','death'])for(const height of [.85,1.1])for(let dir=0;dir<8;dir++)for(const phase of [.43,.8]){const pixels=nativePosePixels(spec,{id:spec.id,evolution,evolutionPath:'wild'},state,phase,dir,height);assert.equal(pixels.clipped,0,`${spec.id} ${evolution} ${state} ${dir} ${height}`);}
 });
+
+function makeRun(seed,ids,options={}){return legacyMakeRun(seed,ids,{...options,rulesVersion:11});}

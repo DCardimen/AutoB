@@ -22,9 +22,9 @@ await page.route('**/*', route => {
 try {
   await page.clock.install();
   await page.goto(url, { waitUntil: 'networkidle' });
-  assert.match(await page.locator('.local-label').textContent(), /NATIVE EXPEDITION V11/);
+  assert.match(await page.locator('.local-label').textContent(), /NATIVE EXPEDITION V12/);
   assert.equal(await page.evaluate(() => starfall.state.run.native), true);
-  assert.equal(await page.evaluate(() => starfall.state.run.team.length), 6);
+  assert.equal(await page.evaluate(() => starfall.state.run.team.length), 2);
   await page.locator('[data-action="battle"]').click();
   await page.clock.runFor(11000);
   const result = await page.evaluate(() => ({
@@ -39,7 +39,7 @@ try {
   await page.locator('#battle-canvas').screenshot({ path: 'playtest-artifacts/v9-native-offline.png' });
   fs.writeFileSync('playtest-artifacts/v9-native-offline-report.json',
     JSON.stringify({ requests, errors, result }, null, 2));
-  console.log('Fresh native offline expedition: six starters, physical contacts and skills; zero external requests.');
+  console.log('Fresh native offline expedition: two starters, physical contacts and skills; zero external requests.');
 } finally {
   await browser.close();
 }

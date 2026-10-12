@@ -4,7 +4,7 @@ import {
   SPECIES,
   PLANETS,
   creature,
-  makeRun,
+  makeRun as legacyMakeRun,
   stats,
   relicSlots,
   evolutionOffer,
@@ -153,3 +153,5 @@ test("animation states are distinct, deterministic, and freeze at a fixed game t
     spriteBone(idle, 0.85, 100),
   );
 });
+
+function makeRun(seed,ids,options={}){return legacyMakeRun(seed,ids,{...options,rulesVersion:11});}
