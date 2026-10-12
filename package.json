@@ -1,6 +1,6 @@
 {
   "name": "starfall-menagerie",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -15,6 +15,7 @@
     "check:godot": "node scripts/check-godot.mjs",
     "export:prototype": "node scripts/export-prototype-sprites.mjs",
     "build:prototype": "node scripts/build-prototype.mjs",
+    "test:native": "npm run build:standalone && node --test tests/native-expedition.test.js tests/native-tactics.test.js && node tests/native-controls.browser.mjs && node tests/native-expedition.browser.mjs && node tests/standalone.browser.mjs && node tests/native-offline.browser.mjs",
     "test:prototype": "npm run build:prototype && node --test tests/prototype.test.js tests/prototype-rig.test.js tests/prototype-models.test.js tests/prototype-pixels.test.js tests/prototype-combat-v7.test.js && node tests/prototype.browser.mjs"
   },
   "devDependencies": {

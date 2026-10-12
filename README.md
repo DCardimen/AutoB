@@ -1,8 +1,8 @@
-# Starfall Menagerie · Native Expedition v8
+# Starfall Menagerie · Native Expedition v9
 
 A single-player creature-collecting roguelike autobattler with physical arena combat. Explore three planets with six companions, modify individual abilities with support gems, capture permanent starters, and climb twenty Chaos tiers.
 
-**Native Expedition v8 is playable in Starfall-Menagerie.html.** Start a New expedition to use the native pixel roster; existing collections and legacy runs remain compatible. Nine native families, 146 abilities and the native physical renderer are connected to skills, gems, relics, captures, evolution and all three planets. See [native expedition notes](NATIVE-EXPEDITION-V8.md) and [continuation checkpoints](CONTINUATION.md).
+**Native Expedition v9 is playable in Starfall-Menagerie.html.** Start a New expedition to use the native pixel roster; existing collections and legacy runs remain compatible. Nine native families, 146 abilities and the native physical renderer are connected to skills, gems, relics, captures, evolution and all three planets. Formation orders, two conditional rules, solid cover, interruptible cooldown skills, build practice and three opening relic doctrines are now available. See [native expedition notes](NATIVE-EXPEDITION-V9.md) and [continuation checkpoints](CONTINUATION.md).
 
 The next overhaul follows [ROADMAP.md](ROADMAP.md), with eleven playable milestones covering reference-inspired directional animation, a broader fantasy roster, the sixty proposed gameplay improvements, and player testing. [Iteration 1](MILESTONE-1.md) now has a playable nine-body movement prototype: open **Starfall-Training-Glade.html**, or use the Training Glade link in the game footer. Its visual direction awaits review; later roadmap items remain planned.
 
@@ -32,7 +32,7 @@ Keep the file at the same location to retain its browser-local save. Existing co
 
 ## Creature collection and builds
 
-- **60 families / 120 painted forms / 128 named abilities.** Every family has a signature auto-attack, two or three cooldown skills, and a passive specialty. Common shield-breakers, interceptors, cleansers, and dodge counters can earn a place beside rarer creatures.
+- **69 families / 146 named abilities.** The native expedition uses nine animated bodies; the older families retain 120 painted forms. Every family has a signature auto-attack, two or three cooldown skills, and a passive specialty. Common shield-breakers, interceptors, cleansers, and dodge counters can earn a place beside rarer creatures.
 - **30 support gems.** Link a gem to one ability. Fork changes targeting; Cryostasis combines slow and burn into steam; Withering counters healing; Reservoir turns excess healing into shields; Soul Link intercepts damage; other supports create traps, healing fields, cooldown relays, and execution builds. Tradeoffs are stated in the item description. Incompatible skills are disabled, and equipment chooses a valid initial link.
 - **Rarity-scaled sockets.** Common 1, Uncommon 2, Rare 3, Epic 4, Legendary 5. Evolution and ascension add one socket each. Different supports can share a skill; duplicate supports on one creature are prohibited. Relink and unsocket freely between battles.
 - **Behavior-changing evolution.** At level 5, spend 50 gold to choose Wild or Warden. Guardians become retaliators or interceptors; Strikers become executioners or dodge counters; Rangers become artillery or trappers; Supports become curse-weavers or protectors. Level 8 ascension costs 100 gold and strengthens the chosen path. Identity, EXP, and skill links remain intact.

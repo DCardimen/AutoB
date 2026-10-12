@@ -1,0 +1,718 @@
+{
+  "checkpoint": "Native Expedition v9",
+  "applicationVersion": "0.5.0",
+  "branch": "codex/starfall-menagerie",
+  "verifiedAt": "2026-10-12T06:45:41.964Z",
+  "unit": {
+    "tests": 139,
+    "passed": 139,
+    "failed": 0
+  },
+  "nativeCampaign": {
+    "battles": [
+      {
+        "planet": 0,
+        "depth": 0,
+        "won": true,
+        "time": 10.999999999999941,
+        "metrics": {
+          "chargedStrikes": 4,
+          "armorResists": 2,
+          "bladeContacts": 16,
+          "terrainBlocks": 0,
+          "interruptedSkills": 0,
+          "dodges": 10,
+          "skills": 18,
+          "damage": 1485.8029999999962,
+          "healing": 193.90499999999963,
+          "crits": 4,
+          "echoes": 0,
+          "intercepts": 0,
+          "shieldDamage": 215.95000000000007,
+          "wastedHealing": 36.09500000000037,
+          "statusDamage": 197.24479999999662,
+          "hazardDamage": 179.32600000000002,
+          "cleanses": 0,
+          "traitProcs": 0,
+          "captures": 0,
+          "whiffs": 8,
+          "physicalHits": 36,
+          "collisions": 20,
+          "knockbacks": 30,
+          "staggers": 1,
+          "rolls": 13,
+          "blockedProjectiles": 1
+        }
+      },
+      {
+        "planet": 0,
+        "depth": 3,
+        "won": true,
+        "time": 22.559999999999697,
+        "metrics": {
+          "chargedStrikes": 9,
+          "armorResists": 7,
+          "bladeContacts": 31,
+          "terrainBlocks": 1,
+          "interruptedSkills": 0,
+          "dodges": 23,
+          "skills": 43,
+          "damage": 2740.41419999999,
+          "healing": 683.495999999998,
+          "crits": 2,
+          "echoes": 0,
+          "intercepts": 0,
+          "shieldDamage": 219.79999999999922,
+          "wastedHealing": 177.3480000000019,
+          "statusDamage": 360.48000000000116,
+          "hazardDamage": 135.70507999999998,
+          "cleanses": 2,
+          "traitProcs": 0,
+          "captures": 0,
+          "whiffs": 30,
+          "physicalHits": 66,
+          "collisions": 66,
+          "knockbacks": 54,
+          "staggers": 5,
+          "rolls": 36,
+          "blockedProjectiles": 5
+        }
+      },
+      {
+        "planet": 0,
+        "depth": 5,
+        "won": true,
+        "time": 27.399999999999594,
+        "metrics": {
+          "chargedStrikes": 7,
+          "armorResists": 6,
+          "bladeContacts": 27,
+          "terrainBlocks": 5,
+          "interruptedSkills": 1,
+          "dodges": 21,
+          "skills": 48,
+          "damage": 4146.2862649999915,
+          "healing": 1515.5964849999975,
+          "crits": 5,
+          "echoes": 0,
+          "intercepts": 2,
+          "shieldDamage": 955.1439999999988,
+          "wastedHealing": 377.34038399999673,
+          "statusDamage": 289.5743770000131,
+          "hazardDamage": 1141.1359680000003,
+          "cleanses": 3,
+          "traitProcs": 0,
+          "captures": 0,
+          "whiffs": 23,
+          "physicalHits": 74,
+          "collisions": 166,
+          "knockbacks": 65,
+          "staggers": 6,
+          "rolls": 31,
+          "blockedProjectiles": 2,
+          "knockdowns": 3
+        }
+      },
+      {
+        "planet": 1,
+        "depth": 0,
+        "won": true,
+        "time": 7.2400000000000055,
+        "metrics": {
+          "chargedStrikes": 0,
+          "armorResists": 0,
+          "bladeContacts": 9,
+          "terrainBlocks": 0,
+          "interruptedSkills": 1,
+          "dodges": 8,
+          "skills": 21,
+          "damage": 1662.396000000008,
+          "healing": 197.6815999999986,
+          "crits": 0,
+          "echoes": 0,
+          "intercepts": 1,
+          "shieldDamage": 337.73999999999853,
+          "wastedHealing": 105.41840000000138,
+          "statusDamage": 137.95632000000154,
+          "hazardDamage": 380.7332112,
+          "cleanses": 2,
+          "traitProcs": 0,
+          "captures": 0,
+          "whiffs": 13,
+          "physicalHits": 28,
+          "collisions": 4,
+          "knockbacks": 26,
+          "staggers": 5,
+          "rolls": 11,
+          "blockedProjectiles": 3,
+          "knockdowns": 2
+        }
+      },
+      {
+        "planet": 1,
+        "depth": 1,
+        "won": true,
+        "time": 11.439999999999932,
+        "metrics": {
+          "chargedStrikes": 2,
+          "armorResists": 1,
+          "bladeContacts": 12,
+          "terrainBlocks": 6,
+          "interruptedSkills": 2,
+          "dodges": 10,
+          "skills": 30,
+          "damage": 2465.1339999999964,
+          "healing": 487.8956000000003,
+          "crits": 1,
+          "echoes": 0,
+          "intercepts": 2,
+          "shieldDamage": 557.5199999999974,
+          "wastedHealing": 234.60439999999983,
+          "statusDamage": 141.59799999999606,
+          "hazardDamage": 315.76456,
+          "cleanses": 3,
+          "traitProcs": 0,
+          "captures": 0,
+          "whiffs": 11,
+          "physicalHits": 36,
+          "collisions": 40,
+          "knockbacks": 33,
+          "staggers": 11,
+          "rolls": 14,
+          "blockedProjectiles": 3,
+          "knockdowns": 6
+        }
+      },
+      {
+        "planet": 1,
+        "depth": 5,
+        "won": true,
+        "time": 15.439999999999847,
+        "metrics": {
+          "chargedStrikes": 2,
+          "armorResists": 0,
+          "bladeContacts": 9,
+          "terrainBlocks": 22,
+          "interruptedSkills": 1,
+          "dodges": 13,
+          "skills": 37,
+          "damage": 4043.714373760021,
+          "healing": 540.2979600000008,
+          "crits": 2,
+          "echoes": 0,
+          "intercepts": 0,
+          "shieldDamage": 724.3821399999963,
+          "wastedHealing": 129.58697279999924,
+          "statusDamage": 128.0374239999951,
+          "hazardDamage": 1142.073802608002,
+          "cleanses": 1,
+          "traitProcs": 0,
+          "captures": 0,
+          "whiffs": 23,
+          "physicalHits": 35,
+          "collisions": 65,
+          "knockbacks": 33,
+          "staggers": 10,
+          "rolls": 24,
+          "blockedProjectiles": 3,
+          "knockdowns": 5
+        }
+      },
+      {
+        "planet": 2,
+        "depth": 0,
+        "won": true,
+        "time": 9.999999999999963,
+        "metrics": {
+          "chargedStrikes": 0,
+          "armorResists": 0,
+          "bladeContacts": 7,
+          "terrainBlocks": 0,
+          "interruptedSkills": 2,
+          "dodges": 14,
+          "skills": 30,
+          "damage": 2318.1199999999976,
+          "healing": 338.3451999999986,
+          "crits": 1,
+          "echoes": 0,
+          "intercepts": 2,
+          "shieldDamage": 1156.7999999999995,
+          "wastedHealing": 290.7409304960813,
+          "statusDamage": 87.19999999999986,
+          "hazardDamage": 577.3796020000003,
+          "cleanses": 1,
+          "traitProcs": 0,
+          "captures": 0,
+          "whiffs": 23,
+          "physicalHits": 31,
+          "collisions": 33,
+          "knockbacks": 29,
+          "staggers": 9,
+          "rolls": 17,
+          "blockedProjectiles": 3,
+          "knockdowns": 5
+        }
+      },
+      {
+        "planet": 2,
+        "depth": 3,
+        "won": true,
+        "time": 18.399999999999785,
+        "metrics": {
+          "chargedStrikes": 4,
+          "armorResists": 1,
+          "bladeContacts": 12,
+          "terrainBlocks": 16,
+          "interruptedSkills": 2,
+          "dodges": 20,
+          "skills": 56,
+          "damage": 3725.702599999989,
+          "healing": 425.26279999999826,
+          "crits": 3,
+          "echoes": 0,
+          "intercepts": 1,
+          "shieldDamage": 1927.1263999999994,
+          "wastedHealing": 720.9475718400018,
+          "statusDamage": 93.92799999999451,
+          "hazardDamage": 1182.1926079999994,
+          "cleanses": 2,
+          "traitProcs": 0,
+          "captures": 0,
+          "whiffs": 26,
+          "physicalHits": 35,
+          "collisions": 224,
+          "knockbacks": 29,
+          "staggers": 5,
+          "rolls": 29,
+          "blockedProjectiles": 4,
+          "knockdowns": 3
+        }
+      },
+      {
+        "planet": 2,
+        "depth": 5,
+        "won": true,
+        "time": 30.83999999999952,
+        "metrics": {
+          "chargedStrikes": 8,
+          "armorResists": 5,
+          "bladeContacts": 29,
+          "terrainBlocks": 54,
+          "interruptedSkills": 1,
+          "dodges": 36,
+          "skills": 77,
+          "damage": 9911.197241359994,
+          "healing": 2990.669347759987,
+          "crits": 12,
+          "echoes": 0,
+          "intercepts": 2,
+          "shieldDamage": 3325.056950000025,
+          "wastedHealing": 336.6591647999988,
+          "statusDamage": 279.1600000000012,
+          "hazardDamage": 3248.376865131997,
+          "cleanses": 6,
+          "traitProcs": 0,
+          "captures": 0,
+          "whiffs": 39,
+          "physicalHits": 79,
+          "collisions": 168,
+          "knockbacks": 68,
+          "staggers": 17,
+          "rolls": 50,
+          "blockedProjectiles": 2,
+          "knockdowns": 6
+        }
+      }
+    ],
+    "checks": [
+      "Equip three support gems; link and relink a signature auto-attack",
+      "Earned evolutions, new gem sockets and scouted AI policies used during the campaign",
+      "Capture result and permanent collection persist on reload; no second attempt",
+      "Rest changes expedition life or team EXP",
+      "Shop sells support gems and deducts gold",
+      "New expedition retains captures and resets run growth",
+      "390px mobile arena and menagerie have no horizontal overflow",
+      "No browser exceptions or failed HTTP responses"
+    ],
+    "startedAt": "2026-10-12T06:39:17.051Z",
+    "ending": {
+      "complete": true,
+      "wins": 9,
+      "planet": 3,
+      "collection": 13
+    }
+  },
+  "controls": {
+    "checks": [
+      "Formation order and both prioritized rules persist through reload; schema-1 save backup exists",
+      "Baseline and linked comparisons run actual combat and finish without changing the parent expedition",
+      "First victory offers three exclusive build doctrines; chosen relic survives reload without duplication",
+      "Native formation controls fit a 390px mobile screen"
+    ],
+    "errors": []
+  },
+  "regression": {
+    "legacyArena": {
+      "checks": [
+        "Rarity odds, paid hospital and personal drills, save reload and 390px care layout",
+        "Actual boss defeat permanently removes one ally, recovers gems, preserves the family, persists one result and deploys an earned reserve",
+        "A rest offers a free hospital tier instead of another reward",
+        "Rendered arena performs physical hits, body collision, reactive rolls and visible windups; pause freezes physics"
+      ],
+      "casualty": {
+        "lost": true,
+        "id": "brookfin",
+        "uid": "brookfin-mv4uqnva2kmj-16",
+        "name": "Brookfin",
+        "rarity": "Common",
+        "level": 1,
+        "risk": 0.65,
+        "hospital": 0,
+        "training": 0,
+        "key": "p2-5-0:1",
+        "planet": 2,
+        "depth": 5
+      },
+      "physics": {
+        "chargedStrikes": 0,
+        "armorResists": 0,
+        "bladeContacts": 0,
+        "terrainBlocks": 0,
+        "interruptedSkills": 0,
+        "dodges": 2,
+        "skills": 4,
+        "damage": 0,
+        "healing": 0,
+        "crits": 0,
+        "echoes": 0,
+        "intercepts": 0,
+        "shieldDamage": 12.96,
+        "wastedHealing": 0,
+        "statusDamage": 0,
+        "hazardDamage": 0,
+        "cleanses": 0,
+        "traitProcs": 0,
+        "captures": 0,
+        "whiffs": 2,
+        "physicalHits": 1,
+        "collisions": 2,
+        "knockbacks": 1,
+        "staggers": 0,
+        "rolls": 3,
+        "blockedProjectiles": 1
+      },
+      "errors": []
+    },
+    "legacyOffline": {
+      "checks": [
+        "single embedded HTML",
+        "new creature artwork",
+        "Wild evolution",
+        "added socket and preserved gem link",
+        "completed animated combat",
+        "saved reload",
+        "zero external requests"
+      ],
+      "errors": [],
+      "requests": []
+    },
+    "nativeOffline": {
+      "requests": [],
+      "errors": [],
+      "result": {
+        "native": true,
+        "metrics": {
+          "chargedStrikes": 3,
+          "armorResists": 4,
+          "bladeContacts": 13,
+          "terrainBlocks": 0,
+          "interruptedSkills": 1,
+          "dodges": 13,
+          "skills": 18,
+          "damage": 1289.7386800000022,
+          "healing": 154.3520000000001,
+          "crits": 2,
+          "echoes": 0,
+          "intercepts": 2,
+          "shieldDamage": 238.70400000000015,
+          "wastedHealing": 83.24799999999993,
+          "statusDamage": 191.60799999999892,
+          "hazardDamage": 49.58900000000024,
+          "cleanses": 1,
+          "traitProcs": 0,
+          "captures": 0,
+          "whiffs": 11,
+          "physicalHits": 32,
+          "collisions": 93,
+          "knockbacks": 26,
+          "staggers": 1,
+          "rolls": 16,
+          "blockedProjectiles": 0,
+          "knockdowns": 1
+        },
+        "phase": "battle"
+      }
+    },
+    "trainingGlade": {
+      "checks": [
+        "Opening scene shows eight views side by side; all nine characters have eight distinct sprites at one fixed pose phase, with native 64×64 cells; clicking a view opens its close inspection",
+        "Randomized teams have six creatures each; cards match the lineup, and pause/frame stepping preserve simulation control",
+        "Selecting a character and clicking ground produces actual movement in the physical scene",
+        "All nine locomotion profiles travel around the circuits and turn through all eight facings; speed changes work",
+        "Walk/run/sprint pace controls, selected sprint toggle, Shift hold/release, acceleration, stride blending and stamina recovery work",
+        "Eight directional views and seventeen animation states are inspectable, including a close view and death",
+        "Restart changes the actual team composition; charged-strike control survives impact while taking damage, with visible anticipation levels",
+        "Rendered sparring resolves with physical hits, projectile travel, rolls and deaths; optional audio toggles",
+        "390px mobile layout has no horizontal overflow and retains scene and character controls",
+        "Standalone HTML runs combat and pose inspection with zero external requests"
+      ],
+      "errors": [],
+      "screenshots": [
+        "directions-knight.png",
+        "directions-orc.png",
+        "directions-elf.png",
+        "directions-caster.png",
+        "directions-wolf.png",
+        "directions-fox.png",
+        "directions-mech.png",
+        "directions-spider.png",
+        "directions-jelly.png",
+        "prototype-movement.png",
+        "prototype-sprint.png",
+        "prototype-study.png",
+        "prototype-battle.png",
+        "prototype-mobile.png",
+        "directions-mobile.png"
+      ],
+      "pixelPresentation": {
+        "mismatchedBlocks": 0,
+        "nativeArena": [
+          334,
+          218
+        ],
+        "nativeCell": 64,
+        "style": "native 64x64 pixel chibi"
+      },
+      "characterDirectionFrames": {
+        "knight": 8,
+        "orc": 8,
+        "elf": 8,
+        "caster": 8,
+        "wolf": 8,
+        "fox": 8,
+        "mech": 8,
+        "spider": 8,
+        "jelly": 8
+      },
+      "jointCoverage": {
+        "checks": 18048,
+        "gaps": []
+      },
+      "battleRosters": [
+        [
+          "wolf",
+          "orc",
+          "elf",
+          "spider",
+          "mech",
+          "fox"
+        ],
+        [
+          "mech",
+          "wolf",
+          "orc",
+          "fox",
+          "spider",
+          "elf"
+        ]
+      ],
+      "movementDirectionFrames": {
+        "knight": 8,
+        "orc": 8,
+        "elf": 8,
+        "caster": 8,
+        "wolf": 8,
+        "fox": 8,
+        "mech": 8,
+        "spider": 8,
+        "jelly": 8
+      },
+      "rigVersion": 7,
+      "sprint": [
+        {
+          "id": "knight",
+          "active": true,
+          "blend": 0.012243919970661663,
+          "stamina": 59.99999999999904
+        },
+        {
+          "id": "orc",
+          "active": true,
+          "blend": 0.000016824361519855407,
+          "stamina": 59.99999999999904
+        },
+        {
+          "id": "elf",
+          "active": true,
+          "blend": 0.13350653496723608,
+          "stamina": 59.99999999999904
+        },
+        {
+          "id": "caster",
+          "active": true,
+          "blend": 0.861789231392788,
+          "stamina": 59.99999999999904
+        },
+        {
+          "id": "wolf",
+          "active": true,
+          "blend": 0.013430796263974426,
+          "stamina": 59.99999999999904
+        },
+        {
+          "id": "fox",
+          "active": true,
+          "blend": 0.11413044342762386,
+          "stamina": 59.99999999999904
+        },
+        {
+          "id": "mech",
+          "active": true,
+          "blend": 0.0003264550097892008,
+          "stamina": 59.99999999999904
+        },
+        {
+          "id": "spider",
+          "active": true,
+          "blend": 0.27080433923105995,
+          "stamina": 59.99999999999904
+        },
+        {
+          "id": "jelly",
+          "active": true,
+          "blend": 0.6911839803561467,
+          "stamina": 59.99999999999904
+        }
+      ],
+      "directionFrames": 8,
+      "stateFrames": 16,
+      "chargeProtection": {
+        "sameAction": true,
+        "hpLost": 45,
+        "stagger": 0,
+        "knockdown": 0,
+        "impulse": 0,
+        "state": "charge"
+      },
+      "battle": {
+        "time": 53.499999999997605,
+        "metrics": {
+          "hits": 93,
+          "misses": 70,
+          "rolls": 71,
+          "avoided": 42,
+          "interrupts": 0,
+          "projectiles": 93,
+          "contacts": 3120,
+          "knockouts": 8,
+          "charged": 22,
+          "armorResists": 9
+        },
+        "cache": {
+          "frames": 192,
+          "maxFrames": 192,
+          "sourceReady": true,
+          "frameSize": 64,
+          "rasterScale": 1,
+          "rigVersion": 7,
+          "directionalArt": {
+            "columns": 8,
+            "characters": 9,
+            "nativeCell": [
+              64,
+              64
+            ]
+          },
+          "renderer": {
+            "type": "Canvas2D",
+            "artStyle": "native 64x64 pixel chibi",
+            "nativeArena": [
+              334,
+              218
+            ],
+            "nativePortrait": [
+              64,
+              64
+            ],
+            "nearestNeighbor": true,
+            "antialias": false,
+            "facings": 8,
+            "arenaPasses": 1,
+            "drawCalls": 12
+          }
+        }
+      },
+      "offlineExternalRequests": 0,
+      "showcase": {
+        "heroes": 5,
+        "directions": 4,
+        "examples": 12
+      }
+    }
+  },
+  "firstPlanet": {
+    "runs": 36,
+    "policy": "Legal starter team; service-preferring paths; earned gold; Thorn Crown opening; training, legal relic purchase/evolution; no stat/gold grants.",
+    "results": {
+      "story": {
+        "runs": 12,
+        "clears": 12
+      },
+      "standard": {
+        "runs": 12,
+        "clears": 12
+      },
+      "veteran": {
+        "runs": 12,
+        "clears": 7
+      }
+    },
+    "evidence": "native-first-planet-v9.json",
+    "limitation": "One legal policy across 12 seeds per mode; first planet only; not a human win rate or full Chaos calibration."
+  },
+  "preview": {
+    "path": "public/native-expedition-preview.mp4",
+    "seconds": 20,
+    "frames": 600,
+    "fps": 30,
+    "width": 1002,
+    "height": 654,
+    "sha256": "51bb104ac813782ecb2de152c8ced4944bc1f367f58102adc6d89ebc01973304"
+  },
+  "sourceSha256": {
+    "game.js": "59f0b5716c11a1d9663820436f2f5a528f5eb9b08dcc01c918894adad3e2ee20",
+    "app.js": "a4325b602352533cafec4212fd4bc911f18a36a9c03c291d35cfbaea329c4136",
+    "native-content.js": "e12adffd511ab84868673ef4363a0a67c21c80c932d71419357d8fbabc0366ea",
+    "native-combat.js": "0c4721aff78b1c6910fd55d3dbd1c304ea27624d8ed71a9be5b3c47a50cbd0dc",
+    "native-tactics.js": "da8ee2b509f22a4cbb7d9d8cb229816780e07ad8309c2c090ae7cb99276dd247",
+    "native-art.js": "4ab10b8976add23c96502732ad4670d26a5ccf5b4ecf0d3c6b672f6eab583090",
+    "practice.js": "233352a46bce7fcd826544a01dffc550c2060be6a1479de8fd9689577b468bc1",
+    "prototype-sprites.js": "90c02300090c37b721af7a8ad104dda1e9212a2e0dced9deb9444cc53cbd56d3",
+    "tactics.js": "dbf68230308b61ef71f39f20e53f615b672fb20e5ca2a877ea904ca0097ad58d",
+    "styles.css": "19363102a93c6a72c65f24ba543145f7371a13cb8091f859824ff4b84ae09eb5",
+    "Starfall-Menagerie.html": "cc06b4029f900329fd1bcd708a07e7c4a01c0bea901562411747f13e7994b915",
+    "Starfall-Training-Glade.html": "719af096ebfa3e9535d1d0f14adc124d8e45da28c2e90214a5982b1c62e058ef"
+  },
+  "scope": {
+    "implemented": "Native expedition integration and representative portions of roadmap iterations 2–6.",
+    "remaining": [
+      "Defeat replay",
+      "Multiple-build difficulty and Chaos balance",
+      "Mastery and rare-hunt preparation",
+      "Connected route objectives and alternative bosses",
+      "Bespoke evolution and boss art"
+    ],
+    "humanPlaytestHours": 0,
+    "subjectiveFunRating": null
+  }
+}

@@ -1,6 +1,6 @@
 # Starfall Menagerie overhaul roadmap
 
-Status: Native Pixel v7 is accepted as sufficient for the current gameplay pass. Native Expedition v8 integrates the nine finished families with the full expedition. A legal UI campaign clears all three planets. Representative portions of iterations 2, 3 and 5 are implemented; tactical refinement and the remaining roadmap continue. See NATIVE-EXPEDITION-V8.md and CONTINUATION.md.
+Status: Native Pixel v7 is accepted as sufficient for the current gameplay pass. Native Expedition v9 integrates the nine finished families with the full expedition. A legal UI campaign clears all three planets. Representative portions of iterations 2–6 are implemented: nine families with evolution bonuses, formation/cover, conditional AI/intentions, committed skills, build practice and opening doctrines. Defeat replay, broader balance, mastery/hunts, route objectives and boss variants remain planned. See NATIVE-EXPEDITION-V9.md and CONTINUATION.md.
 
 ## Starting point
 
@@ -77,8 +77,8 @@ Initial expansion target: 36 new fantasy families beyond the existing 60, delive
 
 - [ ] **Q05.3** Make powerful skills visibly committed, with interruption windows and meaningful recovery.
 - [ ] **Q09.1** Preview opening movement, attack reach, and protection coverage on deployment.
-- [ ] **Q09.2** Add hold, advance, flank, and escort orders with explicit strengths and vulnerabilities.
-- [ ] **Q09.3** Add arena obstacles and chokepoints that affect navigation, screening, and projectile paths.
+- [x] **Q09.2** Add hold, advance, flank, and escort orders with explicit strengths and vulnerabilities.
+- [x] **Q09.3** Add arena obstacles and chokepoints that affect navigation, screening, and projectile paths.
 - [ ] **Q12.3** Give major knockouts distinctive finish animations without overwhelming ordinary attacks.
 
 **Exit gate:** controlled encounters demonstrate why placement changes an outcome. Bodies, terrain, shots, dashes, and attack geometry must agree with their presentation. Check navigation around obstacles and ensure every encounter can resolve.
@@ -87,10 +87,10 @@ Initial expansion target: 36 new fantasy families beyond the existing 60, delive
 
 - [ ] **Q04.2** Introduce behavioral personalities with useful tradeoffs, such as holding ground or seeking isolated targets.
 - [ ] **Q10.1** Improve threat prediction before creatures spend dodge stamina; account for projectile travel and safe escape paths.
-- [ ] **Q10.2** Allow two conditional orders per creature, with precedence and fallback behavior explained.
+- [x] **Q10.2** Allow two conditional orders per creature, with precedence and fallback behavior explained.
 - [ ] **Q10.3** Coordinate squad healing, control timing, and focus fire to reduce waste.
 - [ ] **Q11.1** Establish a visual hierarchy: lethal telegraphs and interrupts stand out; routine numbers remain quiet.
-- [ ] **Q11.2** Show current intentions for targeting, healing, retreating, and major attacks.
+- [x] **Q11.2** Show current intentions for targeting, healing, retreating, and major attacks.
 - [ ] **Q11.3** Add a short defeat replay that highlights decisive events and counterplay opportunities.
 
 **Exit gate:** AI follows its configured rules in representative scenarios, including conflicting orders and low stamina. A reviewer can explain the decisive cause of a defeat from the presentation and replay. Verify pause, speed changes, and replay do not alter settled outcomes.
@@ -101,7 +101,7 @@ Initial expansion target: 36 new fantasy families beyond the existing 60, delive
 - [ ] **Q05.2** Add deliberate status and positioning combos, including roots into heavy hits and shield breaks into executions.
 - [ ] **Q06.1** Add transformative supports such as orbiting attacks, healing tethers, and returning dashes.
 - [ ] **Q06.2** Define incompatibilities, stacking limits, and meaningful costs for powerful support combinations.
-- [ ] **Q06.3** Add an accessible practice arena with moving, shielded, and clustered targets and before/after comparisons.
+- [x] **Q06.3** Add an accessible practice arena with moving, shielded, and clustered targets and before/after comparisons.
 - [ ] **Q07.1** Add build-defining relics with restrictions that materially change team construction.
 - [ ] **Q07.2** Add relic interactions with weather, formation, and boss conditions.
 
@@ -109,10 +109,10 @@ Initial expansion target: 36 new fantasy families beyond the existing 60, delive
 
 ## Iteration 6 — Make resources and setbacks interesting
 
-- [ ] **Q01.1** Offer a build-defining reward after the first battle.
+- [x] **Q01.1** Offer a build-defining reward after the first battle.
 - [ ] **Q01.3** Add costly recovery opportunities after setbacks, including rescue encounters and replacement recruitment.
 - [ ] **Q02.1** Preview capture penalties, casualty exposure, and purchase-versus-evolution consequences before commitment.
-- [ ] **Q02.2** Add mutually exclusive reward upgrades with different tactical purposes.
+- [x] **Q02.2** Add mutually exclusive reward upgrades with different tactical purposes.
 - [ ] **Q02.3** Identify endangered allies before combat and offer protection at a substantial resource cost.
 - [ ] **Q07.3** Allow sacrificing ordinary relics for a specialized replacement to pivot a struggling build.
 - [ ] **Q08.1** Tune earnings and prices so gear, evolution, recruitment, and protection remain credible alternatives.

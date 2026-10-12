@@ -37,7 +37,7 @@ export function spriteSample(u,time=0,override=null){
     else{stage=phase<0.5?'windup':'recovery';phase=phase<0.5?phase*2:(phase-0.5)*2;}
     count=16;
   }
-  const index=clamp(Math.floor(phase*count),0,count-1),foot=u.transitionFoot,weight=foot&&!override?Math.max(0,1-(time-foot.time)/0.2):0;
+  const index=clamp(Math.floor(phase*count),0,count-1),foot=u.transitionFoot,weight=foot&&!override?Math.max(0,1-(time-foot.time)/(foot.duration||0.2)):0;
   const transition=weight>0&&foot.moving>0.1?{gait:foot.gait%1,weight,motion:Math.min(1,foot.moving/0.5),runBlend:foot.runBlend||0,sprintBlend:foot.sprintBlend||0}:null;
   const motion=override?1:Math.round(clamp((u.moving||0)/0.5,0,1)*8)/8;
   const runBlend=override?(['run','sprint'].includes(state)?1:0):Math.round(clamp(u.runBlend||0,0,1)*12)/12;

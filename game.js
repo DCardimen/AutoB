@@ -1,3 +1,4 @@
+import {evaluateOrders,terrainFor,firstTerrainHit,terrainSteering,confineTerrain,orderGoal} from './native-tactics.js';
 import {NATIVE_BOUNDS,nativeSpawn,initializeNative,nativeAction,advanceNative,nativeBladePoint,nativeHeavy,nativeMuzzle} from './native-combat.js';
 import { NATIVE_SPECIES, NATIVE_STARTERS, NATIVE_POOLS, nativeEvolution } from './native-content.js';
 import { SKILLS, loadoutFor } from "./skills.js";
@@ -741,7 +742,7 @@ export function evolutionStage(c) {
 export function creatureName(c) {
   const s = BY_ID[typeof c === "string" ? c : c.id];
   const stage = typeof c === "string" ? 0 : evolutionStage(c);
-  return stage ? `${stage === 2 ? "Ascendant " : ""}${s.evolvedName}` : s.name;
+  return stage ? `${stage === 2 ? "Ascendant " : ""}${nativeEvolution(c).name||s.evolvedName}` : s.name;
 }
 export function relicSlots(c) {
   return RELIC_SLOTS[BY_ID[c.id].rarity] + evolutionStage(c);
@@ -1315,6 +1316,7 @@ export function encounter(run, type = "battle", seed = 1) {
         : id;
     const c = creature(chosen, Math.max(1, base + (type === "elite" ? 1 : 0)));
     c.archetype = arch.id;
+    if(run.native)c.terrain=terrainFor(run,seed);
     c.elite = type === "elite";
     c.weather = scout?.weather || "clear";
     c.policy =
@@ -1702,7 +1704,23 @@ export function eventAvailable(run, c) {
   if (c.kind === "life" && run.integrity >= 3) return false;
   return true;
 }
+export function eventForRun(run, input) {
+  const original=typeof input==='number'?EVENTS[input]:input;
+  if(!run.native)return original;
+  const event=JSON.parse(JSON.stringify(original));
+  for(const choice of event.choices){
+    if(!choice.creature||BY_ID[choice.creature]?.nativeRig)continue;
+    const old=BY_ID[choice.creature],rank=['Common','Uncommon','Rare','Epic','Legendary'];
+    const candidates=NATIVE_POOLS[run.planet].map(id=>BY_ID[id]).sort((a,b)=>Math.abs(rank.indexOf(a.rarity)-rank.indexOf(old.rarity))*3+(a.role!==old.role?1:0)-(Math.abs(rank.indexOf(b.rarity)-rank.indexOf(old.rarity))*3+(b.role!==old.role?1:0)));
+    const replacement=candidates[0];choice.creature=replacement.id;
+    event.title=event.title.replaceAll(old.name,replacement.name);
+    event.story=`A wounded ${replacement.name} waits near a forgotten camp. Its ${replacement.role.toLowerCase()} specialty could change your team. ${replacement.skillDesc}`;
+    choice.title=choice.title.replaceAll(old.name,replacement.name);choice.desc=`Recruit ${replacement.name} and permanently discover its native family. Existing resource costs and risks apply.`;
+  }
+  return event;
+}
 export function applyEvent(run, event, index) {
+  event=eventForRun(run,event);
   const c = event.choices[index];
   if (!eventAvailable(run, c)) return { ok: false };
   if (c.kind === "gem" || c.kind === "orb-gem") {
@@ -1781,6 +1799,7 @@ export class Battle {
     this.run = run;
     this.native=!!run.native;
     this.bounds=this.native?NATIVE_BOUNDS:undefined;
+    this.terrain=terrainFor(run,seed);
     this.random = rng(seed);
     this.time = 0;
     this.accumulator = 0;
@@ -1812,7 +1831,7 @@ export class Battle {
     this.activeArchetype = foes[0]?.archetype;
     this.damageBySkill = {};
     this.metrics = {
-      chargedStrikes:0, armorResists:0, bladeContacts:0,
+      chargedStrikes:0, armorResists:0, bladeContacts:0, terrainBlocks:0, interruptedSkills:0,
       dodges: 0,
       skills: 0,
       damage: 0,
@@ -1970,7 +1989,7 @@ export class Battle {
     run.team.forEach((c, i) => add(c, 0, i, run.team));
     foes.forEach((c, i) => add(c, 1, i, foes));
     for (const [index,u] of this.units.entries()) {
-      if(this.native){const position=nativeSpawn(BY_ID[u.id],u,u.side,u.side?index-run.team.length:index);u.x=u.px=position.x;u.y=u.py=position.y;u.nativeHome={...position};initializeNative(u,BY_ID[u.id]);}
+      if(this.native){const position=nativeSpawn(BY_ID[u.id],u,u.side,u.side?index-run.team.length:index);u.x=u.px=position.x;u.y=u.py=position.y;u.nativeHome={...position};initializeNative(u,BY_ID[u.id]);}else if(BY_ID[u.id].nativeRig)initializeNative(u,BY_ID[u.id]);
       if (
         u.side === 1 &&
         ((this.chaos >= 9 && BY_ID[u.id].role === "Guardian") ||
@@ -2022,7 +2041,9 @@ export class Battle {
     const taunters = enemies.filter((t) => t.taunt > 0 && distance(t, u) < 250);
     if (taunters.length)
       return taunters.sort((a, b) => distance(a, u) - distance(b, u))[0];
-    const policy = u.policy || "adaptive";
+    const rule=this.native?evaluateOrders(u,this.living(u.side),enemies):null;u.triggeredRule=rule;
+    const policy = ({protect:"guardian",interrupt:"interrupt",breaker:"breaker",execute:"execute"}[rule?.response]) || u.policy || "adaptive";
+    if(policy==="interrupt"){const channel=enemies.filter(e=>e.nativeAction&&!e.nativeAction.released&&!e.nativeAction.charged).sort((a,b)=>distance(a,u)-distance(b,u))[0];if(channel)return channel;}
     if (policy === "healer")
       return enemies.sort(
         (a, b) =>
@@ -2392,7 +2413,7 @@ export class Battle {
       amount,
       source,
       skillId,
-      Math.max(m.pierce, trait === "piercer" ? 0.35 : 0, nativeEvolution(source).pierce||0),
+      Math.max(m.pierce, trait === "piercer" ? 0.35 : 0, nativeEvolution(source).pierce||0, def.shieldPierce||0),
       kind,
     );
     target.flash = 0.12;
@@ -2792,7 +2813,8 @@ export class Battle {
       for(const victim of this.living(1-u.side)){
         if(strike.hitUids.length>=strike.maxTargets)return;
         if(strike.hitUids.includes(victim.uid)||distance(u,victim)>strike.reach+victim.radius+15)continue;
-        if(sweepCircle(start,end,victim,victim.radius+5)===null)continue;
+        const contact=sweepCircle(start,end,victim,victim.radius+5),block=firstTerrainHit(start,end,this.terrain);
+        if(contact===null||(block&&block.t<=contact))continue;
         strike.hitUids.push(victim.uid);this.metrics.bladeContacts++;
         this.hit(victim,u.atk*strike.power,u,strike.skillId,strike.scale*(strike.hitUids.length>1?.65:1),true,'physical');
         if(strike.heavy&&victim.hp>0){victim.bleed=Math.max(victim.bleed,3);victim.bleedSource=u;victim.bleedSkill=strike.skillId;}
@@ -2826,7 +2848,7 @@ export class Battle {
       u.actionId=null;return;
     }
     const targets = this.living(1 - u.side)
-      .filter((e) => strikeContains(strike, e))
+      .filter((e) => strikeContains(strike, e)&&(!this.native||!firstTerrainHit(u,e,this.terrain)))
       .sort((a, b) => distance(a, u) - distance(b, u))
       .slice(0, strike.maxTargets);
     for (let i = 0; i < targets.length; i++) {
@@ -2879,12 +2901,15 @@ export class Battle {
     if (target.poise >= target.maxPoise) {
       target.poise = 0;
       target.stagger = target.boss ? 0.2 : 0.52;
+      if(this.native&&target.nativeActor&&!target.boss&&heavy&&strength>=50){target.nativeKnockdown=.65;target.nativeGetup=0;this.metrics.knockdowns=(this.metrics.knockdowns||0)+1;}
       target.rollTime = 0;
       target.dashMotion = null;
       for (const attack of this.strikes)
         if (attack.source === target && attack.remaining > 0)
           attack.cancelled = true;
       if (target.actionId !== null) this.cancelledAttacks.add(target.actionId);
+      if(this.queue.some(q=>q.nativeCast&&q.source===target&&q.ttl>0))this.metrics.interruptedSkills++;
+      target.nativeAction=null;
       target.actionId = null;
       target.actionLock = target.stagger;
       this.metrics.staggers++;
@@ -2966,6 +2991,7 @@ export class Battle {
       for (const h of this.hazards)
         if (h.environment || h.source.side !== u.side)
           score -= Math.max(0, h.r + 25 - distance(point, h)) * 3;
+      if(this.native&&firstTerrainHit(u,point,this.terrain,u.radius))score-=700;
       if (threat.strike)
         score += strikeContains(threat.strike, point) ? -150 : 100;
       if (threat.projectile) {
@@ -3002,7 +3028,7 @@ export class Battle {
       u.dodgeCooldown > 0 ||
       u.stamina < 30 ||
       u.root > 0 ||
-      u.stagger > 0 ||
+      u.stagger > 0 || u.nativeKnockdown>0 || u.nativeGetup>0 ||
       u.actionLock > 0 ||
       u.rollTime > 0
     )
@@ -3062,7 +3088,8 @@ export class Battle {
   }
   zone(u, t, id, power, radius, delay, scale = 1) {
     const def = SKILLS[id],
-      m = linkedSupport(u, id);
+      m = {...linkedSupport(u, id)};
+    m.area*=nativeEvolution(u).area||1;
     this.hazards.push({
       key: ++this.attackSerial,
       x: t.x,
@@ -3083,7 +3110,7 @@ export class Battle {
       max: delay,
     });
   }
-  cast(u, id, target, scale = 1, echo = false) {
+  cast(u, id, target, scale = 1, echo = false, committed = false) {
     if (u.hp <= 0) return;
     const def = SKILLS[id],
       m = {...linkedSupport(u, id)},
@@ -3091,7 +3118,12 @@ export class Battle {
       t = this.castTarget(u, id, target?.hp > 0 ? target : this.target(u));
     if (!t) return;
     m.area*=nativeEvolution(u).area||1;
-    if(u.nativeActor&&!echo)nativeAction(u,Math.atan2(t.y-u.y,t.x-u.x),auto?.16:.36,auto?.2:.3,{heavy:!auto});
+    if(this.native&&u.nativeActor&&!auto&&!echo&&!committed){
+      const key=++this.attackSerial;u.actionId=key;u.actionLock=.68;u.stamina=Math.max(0,u.stamina-10);
+      nativeAction(u,Math.atan2(t.y-u.y,t.x-u.x),.38,.3,{heavy:true,casting:true,skillId:id});
+      this.queue.push({ttl:.38,source:u,target:t,skillId:id,scale,nativeCast:true,actionKey:key});u.intention="Preparing "+def.name;return;
+    }
+    if(u.nativeActor&&!echo&&!committed)nativeAction(u,Math.atan2(t.y-u.y,t.x-u.x),auto?.16:.36,auto?.2:.3,{heavy:!auto});
     this.supportedUse(u, id, echo);
     const shieldScale =
       scale *
@@ -3108,7 +3140,7 @@ export class Battle {
     u.attackAnim = auto ? 0.32 : 0.2;
     if (!auto) {
       u.actionLock = Math.max(u.actionLock, 0.22);
-      u.stamina = Math.max(0, u.stamina - 10);
+      if(!committed)u.stamina = Math.max(0, u.stamina - 10);
       u.castAnim = 0.65;
       this.metrics.skills++;
       this.say(`${creatureName(u)} uses ${def.name}${echo ? " · Echo" : ""}.`);
@@ -3413,6 +3445,7 @@ export class Battle {
     const def = SKILLS[id],
       enemies = this.living(1 - u.side);
     if (!fallback) return null;
+    if(this.native&&['heal','heal-all','awakening','shield'].includes(def.kind))return this.living(u.side).sort((a,b)=>a.hp/a.maxHp-b.hp/b.maxHp)[0]||fallback;
     if (["blast", "volley", "breath", "chain"].includes(def.kind))
       return (
         enemies.sort(
@@ -3448,7 +3481,7 @@ export class Battle {
       return (
         friends.some(
           (a) =>
-            a.hp < a.maxHp * 0.82 ||
+            a.hp + (this.native?this.queue.filter(q=>q.nativeCast&&q.source.side===u.side&&(SKILLS[q.skillId].kind==="heal-all"||q.target?.uid===a.uid)).reduce((n,q)=>n+(SKILLS[q.skillId].heal||0),0):0) < a.maxHp * 0.82 ||
             (def.cleanse &&
               (a.burn > 0 || a.poison > 0 || a.bleed > 0 || a.root > 0)),
         ) ||
@@ -3659,6 +3692,11 @@ export class Battle {
   reportAdvice() {
     const allies = this.units.filter((a) => a.side === 0),
       notes = [];
+    if(this.native){
+      if(this.metrics.interruptedSkills)notes.push(`${this.metrics.interruptedSkills} cooldown channels were interrupted. Escort fragile casters or pressure enemy channels first.`);
+      if(this.metrics.terrainBlocks)notes.push(`${this.metrics.terrainBlocks} shots stopped at pillars. Flank around cover or use area spells that land over it.`);
+      const threat=this.units.filter(u=>u.side===1).sort((a,b)=>b.damage-a.damage)[0];if(threat?.damage>50)notes.push(`${creatureName(threat)} dealt ${Math.round(threat.damage)} damage. ${BY_ID[threat.id].role==="Ranger"?"Use cover and backline pressure.":BY_ID[threat.id].role==="Support"?"Pressure the caster and deny healing windows.":"Screen your vulnerable allies and save dodge stamina."}`);
+    }
     const status = allies.reduce((n, a) => n + a.statusTaken, 0),
       hazard = allies.reduce((n, a) => n + a.hazardTaken, 0);
     if (status > 80)
@@ -3809,6 +3847,7 @@ export class Battle {
           false,
         );
       if (u.hp <= 0) continue;
+      if(u.nativeKnockdown>0){u.nativeKnockdown=Math.max(0,u.nativeKnockdown-dt);if(!u.nativeKnockdown)u.nativeGetup=.45;}else if(u.nativeGetup>0)u.nativeGetup=Math.max(0,u.nativeGetup-dt);
       u.stamina = Math.min(
         100,
         u.stamina + dt * (u.actionLock > 0 || u.rollTime > 0 ? 9 : 20),
@@ -3908,10 +3947,16 @@ export class Battle {
           vy += ((u.y - f.y) / d) * push;
         }
       }
+      if(this.native){
+        const response=evaluateOrders(u,this.living(u.side),this.living(1-u.side)),goal=orderGoal(u,t,this.living(u.side),this.living(1-u.side),response);
+        u.intention=u.nativeAction?(u.nativeAction.charged?"Bracing a charged strike":"Preparing "+(SKILLS[u.nativeAction.skillId]?.name||"a strike")):u.rollTime>0?"Dodging a committed threat":hazard?"Leaving the danger field":goal?.intent||response?.text||(dist>u.range?"Closing on "+creatureName(t):"Attacking "+creatureName(t));
+        if(goal&&!hazard){const d=distance(u,goal);vx=d>7?(goal.x-u.x)/d*Math.min(1,d/35):0;vy=d>7?(goal.y-u.y)/d*Math.min(1,d/35):0;}
+        if(!u.nativeAction&&Math.hypot(vx,vy)>.05){const safe=terrainSteering(u,{x:u.x+vx*180,y:u.y+vy*180},this.terrain),d=distance(u,safe)||1;if(safe.x!==u.x+vx*180||safe.y!==u.y+vy*180){vx=(safe.x-u.x)/d;vy=(safe.y-u.y)/d;u.intention="Going around a broken pillar";}}
+      }
       u.px = u.x;
       u.py = u.y;
       const rooted = u.root > 0,
-        locked = u.actionLock > 0 || u.stagger > 0;
+        locked = u.actionLock > 0 || u.stagger > 0 || u.nativeKnockdown>0 || u.nativeGetup>0;
       if (u.dashMotion && !rooted && u.stagger <= 0) {
         const dash = u.dashMotion;
         dash.delay -= dt;
@@ -3956,6 +4001,7 @@ export class Battle {
       u.impulseX *= Math.exp(-dt * 9);
       u.impulseY *= Math.exp(-dt * 9);
       confineBody(u,this.bounds);
+      if(this.native)confineTerrain(u,this.terrain);
       u.dustTimer -= dt;
       u.motion = Math.min(
         1,
@@ -3982,6 +4028,7 @@ export class Battle {
         u.dodgeLock <= 0 &&
         u.actionLock <= 0 &&
         u.stagger <= 0 &&
+        !u.nativeKnockdown&&!u.nativeGetup&&
         u.stamina >= 10 &&
         u.hp > 0
       ) {
@@ -3996,6 +4043,7 @@ export class Battle {
         u.attackTimer <= 0 &&
         u.actionLock <= 0 &&
         u.stagger <= 0 &&
+        !u.nativeKnockdown&&!u.nativeGetup&&
         u.stamina >= 8 &&
         dist <= u.range + 12 &&
         (!this.native||!u.nativeActor||Math.abs(Math.atan2(Math.sin(Math.atan2(t.y-u.y,t.x-u.x)-u.facing),Math.cos(Math.atan2(t.y-u.y,t.x-u.x)-u.facing)))<0.5) &&
@@ -4010,7 +4058,7 @@ export class Battle {
       }
     }
     this.metrics.collisions += separateBodies(this.units,this.bounds);
-    if(this.native)for(const u of this.units)advanceNative(u,dt,this.time);
+    for(const u of this.units){if(this.native)confineTerrain(u,this.terrain);if(u.nativeActor)advanceNative(u,dt,this.time);}
     for (const strike of this.strikes) {
       const previous=strike.remaining;
       strike.remaining -= dt;
@@ -4027,7 +4075,8 @@ export class Battle {
         q.source.hp > 0 &&
         !this.cancelledAttacks.has(q.actionKey)
       ) {
-        if (q.single) {
+        if(q.nativeCast){this.cast(q.source,q.skillId,q.target,q.scale,false,true);q.source.actionId=null;}
+        else if (q.single) {
           if (q.target?.hp > 0)
             this.hit(
               q.target,
@@ -4062,7 +4111,8 @@ export class Battle {
         .map((unit) => ({ unit, t: movingBodyHit(p, end, unit, p.radius) }))
         .filter((h) => h.t !== null)
         .sort((a, b) => a.t - b.t);
-      const impact = impacts[0];
+      const impact = impacts[0],blocker=this.native?firstTerrainHit({x:p.x,y:p.y+14},{x:end.x,y:end.y+14},this.terrain,p.radius):null;
+      if(blocker&&(!impact||blocker.t<=impact.t)){p.x+=(end.x-p.x)*blocker.t;p.y+=(end.y-p.y)*blocker.t;p.dead=true;this.metrics.terrainBlocks++;this.fx("impact",p.x,p.y,p.color,{r:18});continue;}
       if (impact) {
         p.x += (end.x - p.x) * impact.t;
         p.y += (end.y - p.y) * impact.t;
@@ -4083,7 +4133,7 @@ export class Battle {
               (e) =>
                 e !== impact.unit &&
                 distance(e, impact.unit) <
-                  def.radius * linkedSupport(p.source, p.skillId).area,
+                  def.radius * linkedSupport(p.source, p.skillId).area * (nativeEvolution(p.source).area||1),
             )
             .forEach((e) =>
               this.hit(

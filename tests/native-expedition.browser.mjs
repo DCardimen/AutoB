@@ -99,7 +99,7 @@ async function advanceBattle() {
   if (result.won) {
     const wins = await page.evaluate(() => starfall.state.run.wins);
     await page
-      .locator(`[data-upgrade="${wins % 3 === 0 ? "gear" : "training"}"]`)
+      .locator(`[data-upgrade="${wins===1?"boon:thorn-crown":wins % 3 === 0 ? "gear" : "training"}"]`)
       .click();
     const capture = page.locator('[data-action="capture"]');
     if ((await capture.count()) && (await capture.isEnabled())) {

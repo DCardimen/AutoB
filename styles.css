@@ -3428,3 +3428,7 @@ footer i {
 /* Native expedition uses the same courtyard proportions as the accepted lab. */
 .native-expedition .arena-viewport { aspect-ratio: 334 / 218; }
 .native-expedition #battle-canvas, .native-expedition .creature-art, .native-expedition .starter-card img { image-rendering: pixelated; }
+
+.native-orders{padding:14px;border:1px solid #82986b44;background:#13221966;border-radius:8px;margin:14px 0}.native-rule{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}.native-rule label{font-size:10px;color:#bdcba7}.native-rule select{display:block;width:100%;max-width:100%;padding:8px;background:#15271c;color:#d7e0c5;border:1px solid #81956b55}.native-orders small{display:block;color:#a4b394;font-size:10px;line-height:1.6}.card-intent{display:block;height:25px;margin:6px 0;color:#bdcaa7;font-size:9px;line-height:1.4;overflow:hidden}@media(max-width:500px){.native-rule{grid-template-columns:1fr}}
+
+#practice-canvas{display:block;width:100%;height:auto;image-rendering:pixelated;border:1px solid #8f9f7655;border-radius:8px;margin-top:16px}.practice-actions{display:flex;gap:10px;flex-wrap:wrap}#practice-results{font-size:11px;color:#c7d6b7}

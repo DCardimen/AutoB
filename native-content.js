@@ -15,7 +15,7 @@ export const NATIVE_POOLS=[['aurel','syl','nyra','rowan','emberhound','runespide
 export const NATIVE_BOSS_RIGS={elderoot:'mech',solwyrm:'wolf',abyssal:'orc'};
 export const NATIVE_ACTIVE_SKILLS=[
  {id:'aurel',name:'Oathwall',kind:'shield',shield:70,taunt:2.5,radius:190,cd:10},
- {id:'brakk',name:'Sundering Rush',kind:'charge',power:2.2,root:0.5,cd:11},
+ {id:'brakk',name:'Sundering Rush',kind:'charge',power:2.2,shieldPierce:0.35,root:0.5,cd:11},
  {id:'syl',name:'Briar Volley',kind:'blast',power:1.6,radius:85,delay:0.8,root:1.4,cd:9},
  {id:'nyra',name:'Silver Sanctuary',kind:'heal',heal:82,cleanse:true,cd:8},
  {id:'emberhound',name:'Packfire Leap',kind:'dash',power:2.2,burn:3,backline:true,cd:8},

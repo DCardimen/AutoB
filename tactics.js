@@ -160,8 +160,8 @@ export function traitFor(c) {
   return TRAITS[CREATURE_TRAITS[c.id] || "battery"];
 }
 export function evolutionMechanic(c, role, path = c.evolutionPath) {
-  const family = c.evolution>0 ? NATIVE_EVOLUTIONS[c.id]?.[path] : null;
-  return (family ? family.name+": "+family.desc+" "+({wild:"Wild role transformation also applies.",warden:"Warden role transformation also applies."}[path]) : "") || (
+  const family = NATIVE_EVOLUTIONS[c.id]?.[path];
+  const common = (
     {
       "Guardian-wild":
         "Ravager: signature casts grant 5s of 30% retaliation; every hit while shielded exposes its target.",
@@ -181,6 +181,7 @@ export function evolutionMechanic(c, role, path = c.evolutionPath) {
         "Lifekeeper: half of excess healing becomes shield; signature casts give nearby allies 4s regeneration.",
     }[role + "-" + path] || "Choose an evolution to reshape your signature."
   );
+  return family ? family.name+": "+family.desc+" "+common : common;
 }
 export const ARCHETYPES = [
   {

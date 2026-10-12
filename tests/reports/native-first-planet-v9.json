@@ -1,0 +1,1136 @@
+{
+  "runs": 36,
+  "policy": "Legal starter team; service-preferring paths; earned gold; Thorn Crown opening; training, legal relic purchase/evolution; no stat/gold grants.",
+  "results": [
+    {
+      "difficulty": "story",
+      "seed": 0,
+      "cleared": true,
+      "wins": 2,
+      "lives": 3,
+      "team": 6,
+      "fights": [
+        {
+          "type": "battle",
+          "won": true,
+          "seconds": 10.759999999999946,
+          "terrainBlocks": 0,
+          "interruptions": 0
+        },
+        {
+          "type": "boss",
+          "won": true,
+          "seconds": 23.559999999999675,
+          "terrainBlocks": 6,
+          "interruptions": 0
+        }
+      ]
+    },
+    {
+      "difficulty": "story",
+      "seed": 1,
+      "cleared": true,
+      "wins": 3,
+      "lives": 3,
+      "team": 6,
+      "fights": [
+        {
+          "type": "battle",
+          "won": true,
+          "seconds": 13.87999999999988,
+          "terrainBlocks": 0,
+          "interruptions": 0
+        },
+        {
+          "type": "capture",
+          "won": true,
+          "seconds": 14.35999999999987,
+          "terrainBlocks": 0,
+          "interruptions": 1
+        },
+        {
+          "type": "boss",
+          "won": true,
+          "seconds": 28.879999999999562,
+          "terrainBlocks": 9,
+          "interruptions": 1
+        }
+      ]
+    },
+    {
+      "difficulty": "story",
+      "seed": 2,
+      "cleared": true,
+      "wins": 3,
+      "lives": 3,
+      "team": 6,
+      "fights": [
+        {
+          "type": "battle",
+          "won": true,
+          "seconds": 11.359999999999934,
+          "terrainBlocks": 0,
+          "interruptions": 1
+        },
+        {
+          "type": "battle",
+          "won": true,
+          "seconds": 23.439999999999678,
+          "terrainBlocks": 12,
+          "interruptions": 0
+        },
+        {
+          "type": "boss",
+          "won": true,
+          "seconds": 33.919999999999455,
+          "terrainBlocks": 26,
+          "interruptions": 0
+        }
+      ]
+    },
+    {
+      "difficulty": "story",
+      "seed": 3,
+      "cleared": true,
+      "wins": 2,
+      "lives": 3,
+      "team": 6,
+      "fights": [
+        {
+          "type": "battle",
+          "won": true,
+          "seconds": 12.799999999999903,
+          "terrainBlocks": 0,
+          "interruptions": 0
+        },
+        {
+          "type": "boss",
+          "won": true,
+          "seconds": 35.91999999999941,
+          "terrainBlocks": 2,
+          "interruptions": 1
+        }
+      ]
+    },
+    {
+      "difficulty": "story",
+      "seed": 4,
+      "cleared": true,
+      "wins": 3,
+      "lives": 3,
+      "team": 6,
+      "fights": [
+        {
+          "type": "battle",
+          "won": true,
+          "seconds": 18.439999999999785,
+          "terrainBlocks": 0,
+          "interruptions": 1
+        },
+        {
+          "type": "battle",
+          "won": true,
+          "seconds": 24.71999999999965,
+          "terrainBlocks": 0,
+          "interruptions": 1
+        },
+        {
+          "type": "boss",
+          "won": true,
+          "seconds": 25.039999999999644,
+          "terrainBlocks": 8,
+          "interruptions": 0
+        }
+      ]
+    },
+    {
+      "difficulty": "story",
+      "seed": 5,
+      "cleared": true,
+      "wins": 3,
+      "lives": 3,
+      "team": 6,
+      "fights": [
+        {
+          "type": "battle",
+          "won": true,
+          "seconds": 11.639999999999928,
+          "terrainBlocks": 0,
+          "interruptions": 1
+        },
+        {
+          "type": "battle",
+          "won": true,
+          "seconds": 24.919999999999646,
+          "terrainBlocks": 12,
+          "interruptions": 1
+        },
+        {
+          "type": "boss",
+          "won": true,
+          "seconds": 16.519999999999825,
+          "terrainBlocks": 1,
+          "interruptions": 1
+        }
+      ]
+    },
+    {
+      "difficulty": "story",
+      "seed": 6,
+      "cleared": true,
+      "wins": 4,
+      "lives": 3,
+      "team": 6,
+      "fights": [
+        {
+          "type": "battle",
+          "won": true,
+          "seconds": 15.359999999999848,
+          "terrainBlocks": 0,
+          "interruptions": 1
+        },
+        {
+          "type": "battle",
+          "won": true,
+          "seconds": 13.679999999999884,
+          "terrainBlocks": 0,
+          "interruptions": 0
+        },
+        {
+          "type": "capture",
+          "won": true,
+          "seconds": 7.680000000000006,
+          "terrainBlocks": 0,
+          "interruptions": 0
+        },
+        {
+          "type": "boss",
+          "won": true,
+          "seconds": 29.359999999999552,
+          "terrainBlocks": 13,
+          "interruptions": 1
+        }
+      ]
+    },
+    {
+      "difficulty": "story",
+      "seed": 7,
+      "cleared": true,
+      "wins": 2,
+      "lives": 3,
+      "team": 6,
+      "fights": [
+        {
+          "type": "battle",
+          "won": true,
+          "seconds": 11.759999999999925,
+          "terrainBlocks": 0,
+          "interruptions": 0
+        },
+        {
+          "type": "boss",
+          "won": true,
+          "seconds": 20.799999999999734,
+          "terrainBlocks": 4,
+          "interruptions": 3
+        }
+      ]
+    },
+    {
+      "difficulty": "story",
+      "seed": 8,
+      "cleared": true,
+      "wins": 3,
+      "lives": 3,
+      "team": 6,
+      "fights": [
+        {
+          "type": "battle",
+          "won": true,
+          "seconds": 15.879999999999837,
+          "terrainBlocks": 0,
+          "interruptions": 0
+        },
+        {
+          "type": "battle",
+          "won": true,
+          "seconds": 20.719999999999736,
+          "terrainBlocks": 4,
+          "interruptions": 0
+        },
+        {
+          "type": "boss",
+          "won": true,
+          "seconds": 21.119999999999727,
+          "terrainBlocks": 4,
+          "interruptions": 1
+        }
+      ]
+    },
+    {
+      "difficulty": "story",
+      "seed": 9,
+      "cleared": true,
+      "wins": 2,
+      "lives": 3,
+      "team": 6,
+      "fights": [
+        {
+          "type": "battle",
+          "won": true,
+          "seconds": 13.279999999999893,
+          "terrainBlocks": 0,
+          "interruptions": 0
+        },
+        {
+          "type": "boss",
+          "won": true,
+          "seconds": 34.879999999999434,
+          "terrainBlocks": 7,
+          "interruptions": 3
+        }
+      ]
+    },
+    {
+      "difficulty": "story",
+      "seed": 10,
+      "cleared": true,
+      "wins": 3,
+      "lives": 3,
+      "team": 6,
+      "fights": [
+        {
+          "type": "battle",
+          "won": true,
+          "seconds": 19.719999999999757,
+          "terrainBlocks": 0,
+          "interruptions": 0
+        },
+        {
+          "type": "capture",
+          "won": true,
+          "seconds": 10.15999999999996,
+          "terrainBlocks": 0,
+          "interruptions": 0
+        },
+        {
+          "type": "boss",
+          "won": true,
+          "seconds": 27.55999999999959,
+          "terrainBlocks": 12,
+          "interruptions": 0
+        }
+      ]
+    },
+    {
+      "difficulty": "story",
+      "seed": 11,
+      "cleared": true,
+      "wins": 3,
+      "lives": 3,
+      "team": 6,
+      "fights": [
+        {
+          "type": "battle",
+          "won": true,
+          "seconds": 13.479999999999889,
+          "terrainBlocks": 0,
+          "interruptions": 0
+        },
+        {
+          "type": "capture",
+          "won": true,
+          "seconds": 16.559999999999825,
+          "terrainBlocks": 0,
+          "interruptions": 1
+        },
+        {
+          "type": "boss",
+          "won": true,
+          "seconds": 33.51999999999946,
+          "terrainBlocks": 3,
+          "interruptions": 1
+        }
+      ]
+    },
+    {
+      "difficulty": "standard",
+      "seed": 0,
+      "cleared": true,
+      "wins": 2,
+      "lives": 3,
+      "team": 6,
+      "fights": [
+        {
+          "type": "battle",
+          "won": true,
+          "seconds": 19.959999999999752,
+          "terrainBlocks": 0,
+          "interruptions": 0
+        },
+        {
+          "type": "boss",
+          "won": true,
+          "seconds": 30.39999999999953,
+          "terrainBlocks": 13,
+          "interruptions": 1
+        }
+      ]
+    },
+    {
+      "difficulty": "standard",
+      "seed": 1,
+      "cleared": true,
+      "wins": 3,
+      "lives": 3,
+      "team": 6,
+      "fights": [
+        {
+          "type": "battle",
+          "won": true,
+          "seconds": 10.719999999999947,
+          "terrainBlocks": 0,
+          "interruptions": 0
+        },
+        {
+          "type": "capture",
+          "won": true,
+          "seconds": 16.199999999999832,
+          "terrainBlocks": 0,
+          "interruptions": 2
+        },
+        {
+          "type": "boss",
+          "won": true,
+          "seconds": 32.83999999999948,
+          "terrainBlocks": 15,
+          "interruptions": 0
+        }
+      ]
+    },
+    {
+      "difficulty": "standard",
+      "seed": 2,
+      "cleared": true,
+      "wins": 2,
+      "lives": 3,
+      "team": 6,
+      "fights": [
+        {
+          "type": "battle",
+          "won": true,
+          "seconds": 15.399999999999848,
+          "terrainBlocks": 0,
+          "interruptions": 2
+        },
+        {
+          "type": "battle",
+          "won": false,
+          "seconds": 90.00000000000287,
+          "terrainBlocks": 80,
+          "interruptions": 2
+        },
+        {
+          "type": "boss",
+          "won": true,
+          "seconds": 90.00000000000287,
+          "terrainBlocks": 37,
+          "interruptions": 0
+        }
+      ]
+    },
+    {
+      "difficulty": "standard",
+      "seed": 3,
+      "cleared": true,
+      "wins": 2,
+      "lives": 3,
+      "team": 6,
+      "fights": [
+        {
+          "type": "battle",
+          "won": true,
+          "seconds": 13.39999999999989,
+          "terrainBlocks": 0,
+          "interruptions": 1
+        },
+        {
+          "type": "boss",
+          "won": true,
+          "seconds": 39.19999999999934,
+          "terrainBlocks": 6,
+          "interruptions": 3
+        }
+      ]
+    },
+    {
+      "difficulty": "standard",
+      "seed": 4,
+      "cleared": true,
+      "wins": 3,
+      "lives": 3,
+      "team": 6,
+      "fights": [
+        {
+          "type": "battle",
+          "won": true,
+          "seconds": 22.3599999999997,
+          "terrainBlocks": 0,
+          "interruptions": 1
+        },
+        {
+          "type": "battle",
+          "won": true,
+          "seconds": 30.159999999999535,
+          "terrainBlocks": 0,
+          "interruptions": 0
+        },
+        {
+          "type": "boss",
+          "won": true,
+          "seconds": 31.599999999999504,
+          "terrainBlocks": 10,
+          "interruptions": 0
+        }
+      ]
+    },
+    {
+      "difficulty": "standard",
+      "seed": 5,
+      "cleared": true,
+      "wins": 3,
+      "lives": 3,
+      "team": 6,
+      "fights": [
+        {
+          "type": "battle",
+          "won": true,
+          "seconds": 13.999999999999877,
+          "terrainBlocks": 0,
+          "interruptions": 0
+        },
+        {
+          "type": "battle",
+          "won": true,
+          "seconds": 22.87999999999969,
+          "terrainBlocks": 16,
+          "interruptions": 0
+        },
+        {
+          "type": "boss",
+          "won": true,
+          "seconds": 27.319999999999595,
+          "terrainBlocks": 1,
+          "interruptions": 1
+        }
+      ]
+    },
+    {
+      "difficulty": "standard",
+      "seed": 6,
+      "cleared": true,
+      "wins": 4,
+      "lives": 3,
+      "team": 6,
+      "fights": [
+        {
+          "type": "battle",
+          "won": true,
+          "seconds": 22.4399999999997,
+          "terrainBlocks": 0,
+          "interruptions": 1
+        },
+        {
+          "type": "battle",
+          "won": true,
+          "seconds": 21.679999999999715,
+          "terrainBlocks": 3,
+          "interruptions": 0
+        },
+        {
+          "type": "capture",
+          "won": true,
+          "seconds": 13.519999999999888,
+          "terrainBlocks": 0,
+          "interruptions": 1
+        },
+        {
+          "type": "boss",
+          "won": true,
+          "seconds": 48.67999999999914,
+          "terrainBlocks": 18,
+          "interruptions": 0
+        }
+      ]
+    },
+    {
+      "difficulty": "standard",
+      "seed": 7,
+      "cleared": true,
+      "wins": 2,
+      "lives": 3,
+      "team": 6,
+      "fights": [
+        {
+          "type": "battle",
+          "won": true,
+          "seconds": 15.199999999999852,
+          "terrainBlocks": 0,
+          "interruptions": 1
+        },
+        {
+          "type": "boss",
+          "won": true,
+          "seconds": 27.759999999999586,
+          "terrainBlocks": 8,
+          "interruptions": 3
+        }
+      ]
+    },
+    {
+      "difficulty": "standard",
+      "seed": 8,
+      "cleared": true,
+      "wins": 2,
+      "lives": 3,
+      "team": 6,
+      "fights": [
+        {
+          "type": "battle",
+          "won": true,
+          "seconds": 18.879999999999775,
+          "terrainBlocks": 0,
+          "interruptions": 0
+        },
+        {
+          "type": "battle",
+          "won": false,
+          "seconds": 37.03999999999939,
+          "terrainBlocks": 12,
+          "interruptions": 4
+        },
+        {
+          "type": "boss",
+          "won": true,
+          "seconds": 33.63999999999946,
+          "terrainBlocks": 13,
+          "interruptions": 0
+        }
+      ]
+    },
+    {
+      "difficulty": "standard",
+      "seed": 9,
+      "cleared": true,
+      "wins": 2,
+      "lives": 3,
+      "team": 6,
+      "fights": [
+        {
+          "type": "battle",
+          "won": true,
+          "seconds": 15.879999999999837,
+          "terrainBlocks": 0,
+          "interruptions": 1
+        },
+        {
+          "type": "boss",
+          "won": true,
+          "seconds": 44.35999999999923,
+          "terrainBlocks": 4,
+          "interruptions": 3
+        }
+      ]
+    },
+    {
+      "difficulty": "standard",
+      "seed": 10,
+      "cleared": true,
+      "wins": 3,
+      "lives": 3,
+      "team": 6,
+      "fights": [
+        {
+          "type": "battle",
+          "won": true,
+          "seconds": 27.799999999999585,
+          "terrainBlocks": 0,
+          "interruptions": 1
+        },
+        {
+          "type": "capture",
+          "won": true,
+          "seconds": 14.679999999999863,
+          "terrainBlocks": 0,
+          "interruptions": 0
+        },
+        {
+          "type": "boss",
+          "won": true,
+          "seconds": 40.55999999999931,
+          "terrainBlocks": 5,
+          "interruptions": 2
+        }
+      ]
+    },
+    {
+      "difficulty": "standard",
+      "seed": 11,
+      "cleared": true,
+      "wins": 3,
+      "lives": 3,
+      "team": 6,
+      "fights": [
+        {
+          "type": "battle",
+          "won": true,
+          "seconds": 13.799999999999882,
+          "terrainBlocks": 0,
+          "interruptions": 1
+        },
+        {
+          "type": "capture",
+          "won": true,
+          "seconds": 18.519999999999783,
+          "terrainBlocks": 0,
+          "interruptions": 1
+        },
+        {
+          "type": "boss",
+          "won": true,
+          "seconds": 29.95999999999954,
+          "terrainBlocks": 4,
+          "interruptions": 0
+        }
+      ]
+    },
+    {
+      "difficulty": "veteran",
+      "seed": 0,
+      "cleared": true,
+      "wins": 2,
+      "lives": 3,
+      "team": 6,
+      "fights": [
+        {
+          "type": "battle",
+          "won": true,
+          "seconds": 15.559999999999844,
+          "terrainBlocks": 0,
+          "interruptions": 0
+        },
+        {
+          "type": "boss",
+          "won": true,
+          "seconds": 40.27999999999932,
+          "terrainBlocks": 17,
+          "interruptions": 1
+        }
+      ]
+    },
+    {
+      "difficulty": "veteran",
+      "seed": 1,
+      "cleared": true,
+      "wins": 3,
+      "lives": 3,
+      "team": 6,
+      "fights": [
+        {
+          "type": "battle",
+          "won": true,
+          "seconds": 13.479999999999889,
+          "terrainBlocks": 0,
+          "interruptions": 0
+        },
+        {
+          "type": "capture",
+          "won": true,
+          "seconds": 18.59999999999978,
+          "terrainBlocks": 0,
+          "interruptions": 1
+        },
+        {
+          "type": "boss",
+          "won": true,
+          "seconds": 50.6399999999991,
+          "terrainBlocks": 11,
+          "interruptions": 1
+        }
+      ]
+    },
+    {
+      "difficulty": "veteran",
+      "seed": 2,
+      "cleared": false,
+      "wins": 1,
+      "lives": 0,
+      "team": 6,
+      "fights": [
+        {
+          "type": "battle",
+          "won": true,
+          "seconds": 19.439999999999763,
+          "terrainBlocks": 0,
+          "interruptions": 4
+        },
+        {
+          "type": "battle",
+          "won": false,
+          "seconds": 49.19999999999913,
+          "terrainBlocks": 25,
+          "interruptions": 1
+        },
+        {
+          "type": "boss",
+          "won": false,
+          "seconds": 76.24000000000072,
+          "terrainBlocks": 68,
+          "interruptions": 0
+        },
+        {
+          "type": "boss",
+          "won": false,
+          "seconds": 76.24000000000072,
+          "terrainBlocks": 68,
+          "interruptions": 0
+        },
+        {
+          "type": "boss",
+          "won": false,
+          "seconds": 76.24000000000072,
+          "terrainBlocks": 68,
+          "interruptions": 0
+        }
+      ]
+    },
+    {
+      "difficulty": "veteran",
+      "seed": 3,
+      "cleared": true,
+      "wins": 2,
+      "lives": 3,
+      "team": 6,
+      "fights": [
+        {
+          "type": "battle",
+          "won": true,
+          "seconds": 12.679999999999906,
+          "terrainBlocks": 0,
+          "interruptions": 1
+        },
+        {
+          "type": "boss",
+          "won": true,
+          "seconds": 41.839999999999286,
+          "terrainBlocks": 9,
+          "interruptions": 2
+        }
+      ]
+    },
+    {
+      "difficulty": "veteran",
+      "seed": 4,
+      "cleared": false,
+      "wins": 1,
+      "lives": 0,
+      "team": 4,
+      "fights": [
+        {
+          "type": "battle",
+          "won": true,
+          "seconds": 24.559999999999654,
+          "terrainBlocks": 0,
+          "interruptions": 1
+        },
+        {
+          "type": "battle",
+          "won": false,
+          "seconds": 26.67999999999961,
+          "terrainBlocks": 0,
+          "interruptions": 2
+        },
+        {
+          "type": "boss",
+          "won": false,
+          "seconds": 88.20000000000259,
+          "terrainBlocks": 17,
+          "interruptions": 3
+        },
+        {
+          "type": "boss",
+          "won": false,
+          "seconds": 48.35999999999915,
+          "terrainBlocks": 12,
+          "interruptions": 1
+        },
+        {
+          "type": "boss",
+          "won": false,
+          "seconds": 48.35999999999915,
+          "terrainBlocks": 12,
+          "interruptions": 1
+        }
+      ]
+    },
+    {
+      "difficulty": "veteran",
+      "seed": 5,
+      "cleared": true,
+      "wins": 3,
+      "lives": 2,
+      "team": 5,
+      "fights": [
+        {
+          "type": "battle",
+          "won": true,
+          "seconds": 19.919999999999753,
+          "terrainBlocks": 0,
+          "interruptions": 0
+        },
+        {
+          "type": "battle",
+          "won": true,
+          "seconds": 30.39999999999953,
+          "terrainBlocks": 8,
+          "interruptions": 0
+        },
+        {
+          "type": "boss",
+          "won": false,
+          "seconds": 90.00000000000287,
+          "terrainBlocks": 13,
+          "interruptions": 1
+        },
+        {
+          "type": "boss",
+          "won": true,
+          "seconds": 53.639999999999034,
+          "terrainBlocks": 14,
+          "interruptions": 1
+        }
+      ]
+    },
+    {
+      "difficulty": "veteran",
+      "seed": 6,
+      "cleared": false,
+      "wins": 3,
+      "lives": 0,
+      "team": 6,
+      "fights": [
+        {
+          "type": "battle",
+          "won": true,
+          "seconds": 14.039999999999877,
+          "terrainBlocks": 0,
+          "interruptions": 1
+        },
+        {
+          "type": "battle",
+          "won": true,
+          "seconds": 25.119999999999642,
+          "terrainBlocks": 0,
+          "interruptions": 1
+        },
+        {
+          "type": "capture",
+          "won": true,
+          "seconds": 14.039999999999877,
+          "terrainBlocks": 0,
+          "interruptions": 0
+        },
+        {
+          "type": "boss",
+          "won": false,
+          "seconds": 90.00000000000287,
+          "terrainBlocks": 99,
+          "interruptions": 0
+        },
+        {
+          "type": "boss",
+          "won": false,
+          "seconds": 90.00000000000287,
+          "terrainBlocks": 99,
+          "interruptions": 0
+        },
+        {
+          "type": "boss",
+          "won": false,
+          "seconds": 90.00000000000287,
+          "terrainBlocks": 99,
+          "interruptions": 0
+        }
+      ]
+    },
+    {
+      "difficulty": "veteran",
+      "seed": 7,
+      "cleared": false,
+      "wins": 1,
+      "lives": 0,
+      "team": 6,
+      "fights": [
+        {
+          "type": "battle",
+          "won": true,
+          "seconds": 21.119999999999727,
+          "terrainBlocks": 0,
+          "interruptions": 1
+        },
+        {
+          "type": "boss",
+          "won": false,
+          "seconds": 75.28000000000057,
+          "terrainBlocks": 35,
+          "interruptions": 2
+        },
+        {
+          "type": "boss",
+          "won": false,
+          "seconds": 75.28000000000057,
+          "terrainBlocks": 35,
+          "interruptions": 2
+        },
+        {
+          "type": "boss",
+          "won": false,
+          "seconds": 75.28000000000057,
+          "terrainBlocks": 35,
+          "interruptions": 2
+        }
+      ]
+    },
+    {
+      "difficulty": "veteran",
+      "seed": 8,
+      "cleared": false,
+      "wins": 1,
+      "lives": 0,
+      "team": 5,
+      "fights": [
+        {
+          "type": "battle",
+          "won": true,
+          "seconds": 25.359999999999637,
+          "terrainBlocks": 0,
+          "interruptions": 1
+        },
+        {
+          "type": "battle",
+          "won": false,
+          "seconds": 27.319999999999595,
+          "terrainBlocks": 13,
+          "interruptions": 2
+        },
+        {
+          "type": "boss",
+          "won": false,
+          "seconds": 90.00000000000287,
+          "terrainBlocks": 78,
+          "interruptions": 0
+        },
+        {
+          "type": "boss",
+          "won": false,
+          "seconds": 56.55999999999897,
+          "terrainBlocks": 26,
+          "interruptions": 1
+        },
+        {
+          "type": "boss",
+          "won": false,
+          "seconds": 56.55999999999897,
+          "terrainBlocks": 26,
+          "interruptions": 1
+        }
+      ]
+    },
+    {
+      "difficulty": "veteran",
+      "seed": 9,
+      "cleared": true,
+      "wins": 2,
+      "lives": 3,
+      "team": 6,
+      "fights": [
+        {
+          "type": "battle",
+          "won": true,
+          "seconds": 16.83999999999982,
+          "terrainBlocks": 0,
+          "interruptions": 1
+        },
+        {
+          "type": "boss",
+          "won": true,
+          "seconds": 36.199999999999406,
+          "terrainBlocks": 6,
+          "interruptions": 4
+        }
+      ]
+    },
+    {
+      "difficulty": "veteran",
+      "seed": 10,
+      "cleared": true,
+      "wins": 3,
+      "lives": 3,
+      "team": 6,
+      "fights": [
+        {
+          "type": "battle",
+          "won": true,
+          "seconds": 30.79999999999952,
+          "terrainBlocks": 0,
+          "interruptions": 0
+        },
+        {
+          "type": "capture",
+          "won": true,
+          "seconds": 18.319999999999787,
+          "terrainBlocks": 0,
+          "interruptions": 0
+        },
+        {
+          "type": "boss",
+          "won": true,
+          "seconds": 38.599999999999355,
+          "terrainBlocks": 15,
+          "interruptions": 0
+        }
+      ]
+    },
+    {
+      "difficulty": "veteran",
+      "seed": 11,
+      "cleared": true,
+      "wins": 3,
+      "lives": 3,
+      "team": 6,
+      "fights": [
+        {
+          "type": "battle",
+          "won": true,
+          "seconds": 12.639999999999906,
+          "terrainBlocks": 0,
+          "interruptions": 1
+        },
+        {
+          "type": "capture",
+          "won": true,
+          "seconds": 20.879999999999733,
+          "terrainBlocks": 0,
+          "interruptions": 1
+        },
+        {
+          "type": "boss",
+          "won": true,
+          "seconds": 90.00000000000287,
+          "terrainBlocks": 6,
+          "interruptions": 0
+        }
+      ]
+    }
+  ]
+}

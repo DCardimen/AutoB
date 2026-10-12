@@ -22,6 +22,8 @@ const entryFiles = new Set([
   "/native-content.js",
   "/native-combat.js",
   "/native-art.js",
+  "/native-tactics.js",
+  "/practice.js",
   "/art.js",
   "/skills.js",
   "/roster.js",

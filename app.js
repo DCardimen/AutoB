@@ -1,3 +1,5 @@
+import {practiceBattle,practiceResult,PRACTICE_SCENARIOS} from './practice.js';
+import {ORDERS,CONDITIONS,RESPONSES,OPENING_BOONS,chooseOpeningBoon} from './native-tactics.js';
 import {finishNativeVisuals} from './native-combat.js';
 import {NATIVE_STARTERS,NATIVE_EVOLUTIONS,NATIVE_SPECIES} from './native-content.js';
 import {
@@ -27,6 +29,7 @@ import {
   buyCreature,
   rewardBattle,
   EVENTS,
+  eventForRun,
   applyEvent,
   Battle,
   PERSONAL_RELICS,
@@ -280,7 +283,7 @@ function render() {
 }
 function updateHeader() {
   document.body.classList.toggle("native-expedition",!!run.native);
-  const version=document.querySelector(".local-label");if(version)version.innerHTML="<i></i> "+(run.native?"NATIVE EXPEDITION V8":"LOCAL SAVE");
+  const version=document.querySelector(".local-label");if(version)version.innerHTML="<i></i> "+(run.native?"NATIVE EXPEDITION V9":"LOCAL SAVE");
   const p = PLANETS[Math.min(run.planet, 2)];
   $("#run-number").textContent = String(profile.runs).padStart(3, "0");
   $("#collection-count").textContent = profile.owned.length;
@@ -339,7 +342,7 @@ function arenaHTML() {
 function creatureCard(u, i) {
   const s = BY_ID[u.id],
     e = ELEMENTS[s.element];
-  return `<button class="creature-card" data-creature="${i}" draggable="${phase !== "battle"}" style="--element:${e.color}" title="${s.name} · ${s.role} · ${s.skill}"><div class="card-top"><span>${String(i + 1).padStart(2, "0")} <span style="margin-left:4px">${s.role.toUpperCase()}</span></span><span class="role-icon">${ROLES[s.role]}</span></div>${image(u, "creature-art")}<strong>${creatureName(u)}${u.level >= 5 ? ' <span class="awakened">✧</span>' : ""}</strong><div class="card-meta"><span class="element-name" style="color:${e.color}">${e.icon} ${e.name}</span><b>Lv. ${u.level}</b></div><div class="mini-skills">${[loadoutFor(s, u.level).auto, ...loadoutFor(s, u.level).active].map((id) => `<span class="mini-ability ${SKILLS[id].auto ? "auto" : ""}" data-unit-skill="${i}:${id}" title="${SKILLS[id].name}: ${SKILLS[id].desc}">${SKILLS[id].auto ? "⌁" : SKILLS[id].icon}<i></i></span>`).join("")}</div><div class="xp-track" title="${u.xp} / ${xpNeeded(u.level)} EXP"><i style="width:${(u.xp / xpNeeded(u.level)) * 100}%"></i></div><div class="card-slots" title="${(u.relics || []).length} of ${relicSlots(u)} personal relic slots filled">${Array.from({ length: relicSlots(u) }, (_, j) => `<span class="${u.relics?.[j] ? "filled" : ""}" style="color:${u.relics?.[j] ? PERSONAL_BY_ID[u.relics[j].id].color : ""}">${u.relics?.[j] ? "◆" : "◇"}</span>`).join("")}<small>${(u.relics || []).length} / ${relicSlots(u)}</small></div><i class="card-health" style="width:0%"></i></button>`;
+  return `<button class="creature-card" data-creature="${i}" draggable="${phase !== "battle"}" style="--element:${e.color}" title="${s.name} · ${s.role} · ${s.skill}"><div class="card-top"><span>${String(i + 1).padStart(2, "0")} <span style="margin-left:4px">${s.role.toUpperCase()}</span></span><span class="role-icon">${ROLES[s.role]}</span></div>${image(u, "creature-art")}<strong>${creatureName(u)}${u.level >= 5 ? ' <span class="awakened">✧</span>' : ""}</strong><div class="card-meta"><span class="element-name" style="color:${e.color}">${e.icon} ${e.name}</span><b>Lv. ${u.level}</b></div><div class="mini-skills">${[loadoutFor(s, u.level).auto, ...loadoutFor(s, u.level).active].map((id) => `<span class="mini-ability ${SKILLS[id].auto ? "auto" : ""}" data-unit-skill="${i}:${id}" title="${SKILLS[id].name}: ${SKILLS[id].desc}">${SKILLS[id].auto ? "⌁" : SKILLS[id].icon}<i></i></span>`).join("")}</div><small class="card-intent" data-intent="${u.uid}">${run.native?(ORDERS[u.order||"advance"]?.name||"Advance"):""}</small><div class="xp-track" title="${u.xp} / ${xpNeeded(u.level)} EXP"><i style="width:${(u.xp / xpNeeded(u.level)) * 100}%"></i></div><div class="card-slots" title="${(u.relics || []).length} of ${relicSlots(u)} personal relic slots filled">${Array.from({ length: relicSlots(u) }, (_, j) => `<span class="${u.relics?.[j] ? "filled" : ""}" style="color:${u.relics?.[j] ? PERSONAL_BY_ID[u.relics[j].id].color : ""}">${u.relics?.[j] ? "◆" : "◇"}</span>`).join("")}<small>${(u.relics || []).length} / ${relicSlots(u)}</small></div><i class="card-health" style="width:0%"></i></button>`;
 }
 function briefingHTML() {
   const type = node?.type || "battle",
@@ -493,6 +496,7 @@ function modal(html, kind = "generic", closable = true) {
   setTimeout(() => first?.focus(), 30);
 }
 function closeModal() {
+  practice=null;
   modalKind = null;
   $("#modal-root").innerHTML = "";
 }
@@ -826,7 +830,7 @@ function openReserves() {
 function openRewards() {
   if (!reward) return;
   const won = reward.won;
-  const upgrades = [
+  let upgrades = [
     {
       id: "training",
       icon: "→",
@@ -854,6 +858,7 @@ function openRewards() {
       desc: "Gain 45 extra gold. Save for a relic that changes everything.",
     },
   ];
+  if(reward.openingBoons??(run.native&&run.wins===1))upgrades=OPENING_BOONS.map(id=>{const relic=RELICS.find(r=>r.id===id);return {id:"boon:"+id,name:relic.name,icon:relic.icon,desc:relic.desc+" Choose one opening doctrine for this expedition."};});
   modal(
     `<div class="result-hero"><span class="result-sigil">${won ? "✧" : "↩"}</span><span class="section-kicker" style="display:block">${won ? "ANOTHER STORY TO TELL" : "LIVE TO FIGHT ANOTHER DAY"}</span><h2>${won ? "The wilds remember you." : "A difficult lesson."}</h2><p>${won ? (node.type === "boss" ? "A world opens its gates. Your next planet awaits." : "Your companions grow stronger. A new path is opening.") : `The team retreats and recovers. ${run.integrity} expedition ${run.integrity === 1 ? "life remains" : "lives remain"}.`}</p><div class="result-summary"><span>◉ +${reward.gold} gold</span><span>✧ +${reward.xp} EXP / creature</span><span>◷ ${Math.floor(reward.time)}s</span></div>${reward.levels?.length ? `<p class="result-levels">LEVEL UP · ${reward.levels.map((id) => BY_ID[id].name).join(" · ")}</p>` : ""}</div>${
       won
@@ -882,6 +887,8 @@ function openRewards() {
 }
 function chooseUpgrade(id) {
   if (upgradeChosen || phase !== "reward" || !reward.won) return;
+  if(id.startsWith("boon:")){if(!(reward.openingBoons??(run.native&&run.wins===1))||!chooseOpeningBoon(run,id.slice(5)))return;}
+  else if(reward.openingBoons??(run.native&&run.wins===1))return;
   if (id === "training")
     run.team.forEach((c) => (c.training = (c.training || 0) + 1));
   if (id === "gear")
@@ -1123,7 +1130,7 @@ function eventDisabled(c) {
   return !eventAvailable(run, c);
 }
 function openEvent() {
-  const e = EVENTS[eventIndex];
+  const e = eventForRun(run,eventIndex);
   modal(
     `<span class="section-kicker">AN UNKNOWN SIGNAL · ${PLANETS[run.planet].name.toUpperCase()}</span><h2>${e.title}.</h2><div class="event-art">${["❋", "✧", "⌛"][eventIndex % 3]}</div><p>${e.story}</p><div class="choice-list">${e.choices.map((c, i) => `<button class="event-choice" data-event="${i}" ${eventDisabled(c) ? "disabled" : ""}><strong>${c.title} <span style="float:right;color:#c1dba5">→</span></strong><p>${c.desc}</p></button>`).join("")}</div><div class="modal-actions">${button("Leave without a bargain →", "leave-event", "ghost")}</div>`,
     "event",
@@ -1132,7 +1139,7 @@ function openEvent() {
 }
 function eventChoose(i) {
   if (phase !== "event") return;
-  const result = applyEvent(run, EVENTS[eventIndex], i);
+  const result = applyEvent(run, eventForRun(run,eventIndex), i);
   if (!result.ok) return;
   if (result.captured) unlock(result.captured);
   toast(result.message);
@@ -1218,7 +1225,7 @@ function openReport() {
     return;
   }
   modal(
-    `<span class="section-kicker">BATTLE REPORT · ${Math.floor(reportBattle.time)} SECONDS</span><h2>${reportBattle.done ? (reportBattle.winner === 0 ? "A hard-earned victory." : "Lessons from the arena.") : "Every companion contributes."}</h2><div class="report-advice">${(battle ? battle.reportAdvice() : lastReport.advice).map((note) => `<p>${note}</p>`).join("")}</div><div class="live-metrics"><span>Skills <b>${reportBattle.metrics.skills}</b></span><span>Dodges <b>${reportBattle.metrics.dodges}</b></span><span>Healing <b>${Math.round(reportBattle.metrics.healing)}</b></span><span>Whiffs <b>${reportBattle.metrics.whiffs || 0}</b></span><span>Staggers <b>${reportBattle.metrics.staggers || 0}</b></span><span>Body blocks <b>${reportBattle.metrics.blockedProjectiles || 0}</b></span></div><div class="modal-list">${reportBattle.units
+    `<span class="section-kicker">BATTLE REPORT · ${Math.floor(reportBattle.time)} SECONDS</span><h2>${reportBattle.done ? (reportBattle.winner === 0 ? "A hard-earned victory." : "Lessons from the arena.") : "Every companion contributes."}</h2><div class="report-advice">${(battle ? battle.reportAdvice() : lastReport.advice).map((note) => `<p>${note}</p>`).join("")}</div><div class="live-metrics"><span>Skills <b>${reportBattle.metrics.skills}</b></span><span>Dodges <b>${reportBattle.metrics.dodges}</b></span><span>Healing <b>${Math.round(reportBattle.metrics.healing)}</b></span><span>Whiffs <b>${reportBattle.metrics.whiffs || 0}</b></span><span>Staggers <b>${reportBattle.metrics.staggers || 0}</b></span><span>Body blocks <b>${reportBattle.metrics.blockedProjectiles || 0}</b></span><span>Cover blocks <b>${reportBattle.metrics.terrainBlocks || 0}</b></span><span>Lost channels <b>${reportBattle.metrics.interruptedSkills || 0}</b></span></div><div class="modal-list">${reportBattle.units
       .filter((u) => u.side === 0)
       .sort((a, b) => b.damage - a.damage)
       .map(
@@ -1266,6 +1273,7 @@ document.addEventListener("click", (e) => {
     setView(el.dataset.view);
     return;
   }
+  if(el.dataset.practice&&modalKind==="practice"){practice=practiceBattle(run,practiceScenario,el.dataset.practice==="baseline");return;}
   if (el.dataset.speed) {
     speed = Number(el.dataset.speed);
     document
@@ -1484,6 +1492,7 @@ document.addEventListener("click", (e) => {
     leaveNode();
     return;
   }
+  if(action==="practice"&&run.native&&phase!=="battle"){openPractice();return;}
   if (action === "formation") {
     openFormation();
     return;
@@ -1629,10 +1638,12 @@ document.addEventListener("keydown", (e) => {
       );
   }
 });
+let practice=null,practiceScenario="shielded",practiceComparisons={};
 let uiTick = 0;
 function frame(now) {
   const dt = Math.min((now - last) / 1000, 0.08);
   last = now;
+  if(practice&&modalKind==="practice"){if(!practice.done)practice.step(dt);else finishNativeVisuals(practice,dt);const pc=$("#practice-canvas");if(pc)renderBattle(pc.getContext("2d"),pc.width,pc.height,practice,Math.min(run.planet,2),practice.time,practice.run.team,[],);const status=$("#practice-status");if(status)status.textContent=practice.done?"Comparison finished. Change a link or run the other comparison.":"Practice · "+practice.time.toFixed(1)+"s";if(practice.done&&!practice.recorded){practice.recorded=true;practiceComparisons[practiceScenario]??={};practiceComparisons[practiceScenario][practice.baseline?"baseline":"linked"]=practiceResult(practice);showPracticeResults();}}
   if (phase === "battle" && battle && !paused) {
     let remaining = dt * speed;
     while (remaining > 0 && !battle.done) {
@@ -1655,6 +1666,7 @@ function frame(now) {
       (battle.finishedVisualTime || 0) + dt,
     );
   }
+  if(battle?.native)battle.selectedUid=run.team[selectedCreature]?.uid;
   if (ctx && canvas)
     renderBattle(
       ctx,
@@ -1700,6 +1712,7 @@ function frame(now) {
             a.querySelector("i").style.height =
               `${(Math.max(0, cd.remaining) / cd.total) * 100}%`;
         }
+        const intent=el.querySelector("[data-intent]");if(intent&&battle.native)intent.textContent=u.hp<=0?"Fallen":u.intention||"Ready";
         el.classList.toggle("fallen", u.hp <= 0);
         el.querySelector(".card-health").style.width =
           `${(u.hp / u.maxHp) * 100}%`;
@@ -1710,6 +1723,7 @@ function frame(now) {
 }
 document.addEventListener("change", (e) => {
   const el = e.target;
+  if(el.id==="practice-scenario"&&PRACTICE_SCENARIOS[el.value]){practiceScenario=el.value;openPractice();return;}
   if (el.id === "chaos-tier") {
     selectedChaos = Math.max(
       1,
@@ -1751,6 +1765,12 @@ document.addEventListener("change", (e) => {
     openRewards();
     return;
   }
+  if(el.matches('[data-native-order],[data-rule-when],[data-rule-do]')&&phase!=='battle'){
+    const formation=modalKind==='formation';
+    if(el.dataset.nativeOrder!==undefined){const i=Number(el.dataset.nativeOrder);if(ORDERS[el.value])run.team[i].order=el.value;}
+    else{const [i,slot]=String(el.dataset.ruleWhen||el.dataset.ruleDo).split(':').map(Number),u=run.team[i];u.rules??=[{when:'none',do:'retreat'},{when:'none',do:'protect'}];u.rules[slot]??={when:'none',do:'retreat'};if(el.dataset.ruleWhen&&CONDITIONS[el.value])u.rules[slot].when=el.value;if(el.dataset.ruleDo&&RESPONSES[el.value])u.rules[slot].do=el.value;selectedCreature=i;}
+    save();render();formation?openFormation():openCreature(selectedCreature);return;
+  }
   if (el.matches("[data-policy]") && phase !== "battle") {
     const i = Number(el.dataset.policy);
     if (POLICIES[el.value]) {
@@ -1783,7 +1803,7 @@ if (phase === "ended") openEnd();
 // Read-only inspection for deterministic playtesting and debugging. No gameplay shortcuts.
 window.starfall = {
   get state() {
-    return { run, phase, node, foes, battle, profile, view: viewName };
+    return { run, phase, node, foes, battle, profile, view: viewName, practice };
   },
 };
 function loadoutHTML(u, index) {
@@ -1816,7 +1836,7 @@ function loadoutHTML(u, index) {
 
 function policyHTML(u, index) {
   const policy = POLICIES[u.policy || "adaptive"] || POLICIES.adaptive;
-  return `<label class="policy-control"><span class="section-kicker">CREATURE AI POLICY</span><select data-policy="${index}" ${phase === "battle" ? "disabled" : ""}>${Object.entries(
+  return nativeOrdersHTML(u,index)+`<label class="policy-control"><span class="section-kicker">CREATURE AI POLICY</span><select data-policy="${index}" ${phase === "battle" ? "disabled" : ""}>${Object.entries(
     POLICIES,
   )
     .map(
@@ -1825,11 +1845,16 @@ function policyHTML(u, index) {
     )
     .join("")}</select><small>${policy.desc}</small></label>`;
 }
+function nativeOrdersHTML(u,index){
+ if(!run.native)return '';
+ const order=u.order||'advance';
+ return `<div class="native-orders"><label class="policy-control">FORMATION ORDER<select data-native-order="${index}" ${phase==='battle'?'disabled':''}>${Object.entries(ORDERS).map(([id,o])=>`<option value="${id}" ${order===id?'selected':''}>${o.name}</option>`).join('')}</select><small>${ORDERS[order]?.desc||ORDERS.advance.desc}</small></label><span class="section-kicker">TWO CONDITIONAL ORDERS · TOP RULE FIRST</span>${[0,1].map(slot=>{const rule=u.rules?.[slot]||{};return `<div class="native-rule"><label>When<select data-rule-when="${index}:${slot}" ${phase==='battle'?'disabled':''}>${Object.entries(CONDITIONS).map(([id,name])=>`<option value="${id}" ${rule.when===id?'selected':''}>${name}</option>`).join('')}</select></label><label>Respond<select data-rule-do="${index}:${slot}" ${phase==='battle'?'disabled':''}>${Object.entries(RESPONSES).map(([id,name])=>`<option value="${id}" ${rule.do===id?'selected':''}>${name}</option>`).join('')}</select></label></div>`;}).join('')}<small>Matching rules override the base AI policy; otherwise the formation order and policy apply. Charged enemies cannot be interrupted.</small></div>`;
+}
 function tacticalHTML() {
   const editable = phase === "prep",
     targets = (foes || []).filter((f) => !f.boss),
     plan = run.captureOrder;
-  return `<section class="tactical-toolbar"><div class="tactical-toolbar-head"><span class="section-kicker">PLAN BEFORE THE GATES OPEN</span>${button("▦ Deployment & AI", "formation", "secondary small", phase === "battle")}${button(`Field care · ${run.fieldHospital || 0}/3`, "field-care", "secondary small", phase === "battle")}${run.team.length < 6 ? button(`Reserves · ${run.team.length}/6`, "reserves", "secondary small", phase === "battle") : ""}${button(profile.reducedMotion ? "Motion: gentle" : "Motion: full", "motion", "ghost small")}</div><p class="arena-legend">Gold bars: stamina · orange bars: poise. Enemy windups show red arcs or lines. Roots stop dodge rolls; stagger interrupts attacks; bleed worsens while moving.</p>${targets.length && editable ? `<div class="capture-planner"><label>TACTICAL CAPTURE<select id="capture-target" ${run.orbs < 1 || run.bench.length >= 12 || run.captureReservation ? "disabled" : ""}><option value="">No capture order</option>${targets.map((f) => `<option value="${f.uid}" ${plan?.uid === f.uid ? "selected" : ""}>${creatureName(f)} · ${BY_ID[f.id].rarity}</option>`).join("")}</select></label><label>APPROACH<select id="capture-mode" ${!plan || run.captureReservation ? "disabled" : ""}><option value="mercy" ${plan?.mode !== "swift" ? "selected" : ""}>Mercy · throw at 35% health</option><option value="swift" ${plan?.mode === "swift" ? "selected" : ""}>Swift · throw at 55% health</option></select></label><p>${plan ? `Reserves 1 orb when battle starts. ${plan.mode === "swift" ? "6%" : "14%"} less team damage until the throw. Weakening and statuses raise odds. Mercy adds another 8 percentage points.` : "Select a wild target to automate a capture during combat. An unprepared attempt is also available after victory."}</p></div>` : ""}${run.captureReservation ? `<p class="reservation-note">Capture orb committed. Reloading preserves the reservation and any resolved result.</p>` : ""}${run.contracts?.length ? `<p class="reservation-note">Contract active: next enemy team gains ${Math.round(run.contracts.reduce((n, c) => n + (c.attack || 0), 0) * 100)}% attack and ${Math.round(run.contracts.reduce((n, c) => n + (c.health || 0), 0) * 100)}% health.</p>` : ""}</section>`;
+  return `<section class="tactical-toolbar"><div class="tactical-toolbar-head"><span class="section-kicker">PLAN BEFORE THE GATES OPEN</span>${button("▦ Deployment & AI", "formation", "secondary small", phase === "battle")}${run.native?button("Build practice", "practice", "secondary small", phase === "battle"||!run.team.length):""}${button(`Field care · ${run.fieldHospital || 0}/3`, "field-care", "secondary small", phase === "battle")}${run.team.length < 6 ? button(`Reserves · ${run.team.length}/6`, "reserves", "secondary small", phase === "battle") : ""}${button(profile.reducedMotion ? "Motion: gentle" : "Motion: full", "motion", "ghost small")}</div><p class="arena-legend">Gold bars: stamina · orange bars: poise. Enemy windups show red arcs or lines. Roots stop dodge rolls; stagger interrupts attacks; bleed worsens while moving. Native charged strikes resist interruption. Pillars block shots; area spells land over cover.</p>${targets.length && editable ? `<div class="capture-planner"><label>TACTICAL CAPTURE<select id="capture-target" ${run.orbs < 1 || run.bench.length >= 12 || run.captureReservation ? "disabled" : ""}><option value="">No capture order</option>${targets.map((f) => `<option value="${f.uid}" ${plan?.uid === f.uid ? "selected" : ""}>${creatureName(f)} · ${BY_ID[f.id].rarity}</option>`).join("")}</select></label><label>APPROACH<select id="capture-mode" ${!plan || run.captureReservation ? "disabled" : ""}><option value="mercy" ${plan?.mode !== "swift" ? "selected" : ""}>Mercy · throw at 35% health</option><option value="swift" ${plan?.mode === "swift" ? "selected" : ""}>Swift · throw at 55% health</option></select></label><p>${plan ? `Reserves 1 orb when battle starts. ${plan.mode === "swift" ? "6%" : "14%"} less team damage until the throw. Weakening and statuses raise odds. Mercy adds another 8 percentage points.` : "Select a wild target to automate a capture during combat. An unprepared attempt is also available after victory."}</p></div>` : ""}${run.captureReservation ? `<p class="reservation-note">Capture orb committed. Reloading preserves the reservation and any resolved result.</p>` : ""}${run.contracts?.length ? `<p class="reservation-note">Contract active: next enemy team gains ${Math.round(run.contracts.reduce((n, c) => n + (c.attack || 0), 0) * 100)}% attack and ${Math.round(run.contracts.reduce((n, c) => n + (c.health || 0), 0) * 100)}% health.</p>` : ""}</section>`;
 }
 function openFormation() {
   if (!run.team.length) {
@@ -1858,6 +1883,16 @@ function openFormation() {
     )}</div>${policyHTML(selected, formationSelection)}<div class="modal-actions">${button("Formation ready →", "close")}</div>`,
     "formation",
   );
+}
+function openPractice(){
+  practice=null;
+  modal(`<span class="section-kicker">BUILD PRACTICE · NO EXPEDITION REWARDS</span><h2>See what your build does.</h2><p>Use your current levels, training, evolution and orders against practice targets that attack gently. Baseline removes gems and expedition relics. Your run, gold, captures and EXP stay intact.</p><label class="policy-control">TARGETS<select id="practice-scenario">${Object.entries(PRACTICE_SCENARIOS).map(([id,name])=>`<option value="${id}" ${practiceScenario===id?'selected':''}>${name}</option>`).join('')}</select></label><div class="practice-actions"><button class="button secondary" data-practice="baseline">Run baseline</button><button class="button" data-practice="linked">Run current build</button></div><canvas id="practice-canvas" width="1002" height="654" aria-label="Current team fighting practice targets"></canvas><p id="practice-status">Choose a comparison to start.</p><div id="practice-results"></div>${button('Return to expedition','close','secondary')}`,'practice');
+  showPracticeResults();
+}
+function showPracticeResults(){
+ const el=$('#practice-results');if(!el)return;
+ const values=practiceComparisons[practiceScenario]||{};
+ el.innerHTML=['baseline','linked'].filter(key=>values[key]).map(key=>{const r=values[key];return `<p><strong>${key==='baseline'?'Baseline':'Current build'}</strong> · ${r.seconds.toFixed(1)}s · ${r.damage} damage · ${r.healing} healing · ${r.shieldDamage} shield damage · ${r.whiffs} misses · ${r.skills} skills</p>`;}).join('');
 }
 function difficultyHTML() {
   const tier = selectedDifficulty === "chaos" ? selectedChaos : 0;
