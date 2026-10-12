@@ -1,9 +1,9 @@
 import {drawNativeFace} from './prototype-faces.js';
-const O='#20272a';
+const O='#192328';
 export function paintGrandPixels(b,rig,at,p,layer){
  if(layer==='body'){
   const body=at(rig.body),mark=rig.pixelMark;
-  if(mark!==undefined){for(let i=0;i<3;i++){const x=body.x+(i-1)*3,y=body.y+(mark%2?i-2:1);if(mark%3===0)b.line({x:x-1,y:y-2},{x:x+1,y:y+1},p.cloth[2]);else if(mark%3===1)b.oval(x,y,1,1,p.hair[2]);else b.outlined([{x,y:y-2},{x:x+1,y},{x,y:y+2},{x:x-1,y}],p.cloth[1]);}}
+  if(mark!==undefined){const x=body.x+(mark%2?2:-2),y=body.y+1;b.rect(x,y,2,2,p.cloth[0]);b.dot(x,y,p.cloth[2]);}
   if(rig.equipment?.includes('reliquary-plate'))for(const s of [-1,1])b.outlined([{x:body.x+s*4,y:body.y-4},{x:body.x+s*8,y:body.y-3},{x:body.x+s*8,y:body.y},{x:body.x+s*4,y:body.y+1}],p.metal[2]);
   if(rig.equipment?.includes('prism-focus')){const q=at(rig.weapon?.tip||rig.head);b.outlined([{x:q.x,y:q.y-3},{x:q.x+2,y:q.y},{x:q.x,y:q.y+3},{x:q.x-2,y:q.y}],p.hair[2]);}
  }

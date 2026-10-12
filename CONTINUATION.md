@@ -40,6 +40,14 @@ Guaranteed run casualties override the old rarity/hospital rescue rolls. Older s
 
 174 unit tests pass, including seventeen V12 scenarios. Twelve late-battle relic fixtures at Chaos 5/10/20 finish with finite state. Browser, offline, migration, roster/equipment, practice/mobile and Training Glade checks pass. See EXPEDITION-V12.md, RELICS-V12.md and tests/reports/expedition-v12.json. First-three-round sample: 40 seeds each for default/prepared policies; first round 37/40 and 38/40 wins, all three 27/40 and 30/40 clears. Standard and Chaos 1 legal Brakk/Nyra campaigns each grow from two to six, clear three worlds, and recover from one boss casualty. No human fifty-hour or fun-score claim. The accepted pixel art/Training Glade remain; next work is the later milestones below, not another rewrite of the completed v11/v12 systems.
 
+## Checkpoint v13 · Sprite Art V2
+
+Application 0.9.0 updates the live renderer and both offline HTML files. Shared integer face clusters, clearer rear/profile views, connected necks, wider clothed torsos and boots, cleaner armor/weapon shading, bow grip alignment, shield foreshortening, cape/face depth correction, broader mechs and readable spider/jelly motion are implemented. Grand forms use cleaner emblems. The main arena draws directly at 668×436 instead of shrinking finished sprites into 334×218; three standard-size source-pixel browser fixtures retain 100% of opaque texels. Health bars use measured sprite bounds. The original calibrated physics rig remains unchanged; an experimental bone retarget affected a campaign and was reverted before release.
+
+177 unit tests pass, including three new face/cluster/connectivity tests. Standard legal UI campaign again clears three worlds with sixteen fights, fifteen wins and one casualty. Deployment/capture/loss/migration, grand forms/equipment/cloth/text, Training Glade, mobile and native/migrated standalone checks pass. Both updated Godot projects import and start: 117 authored variants / 127,296 cells, plus nine lab bodies / 9,792 cells, with no export clipping. Actual eight-direction contact sheets and a sixteen-second normal-speed motion recording were reviewed. See SPRITE-ART-V2.md and tests/reports/sprite-art-v2.json. No human art/fun score is asserted.
+
+Main header: NATIVE EXPEDITION V13 · ART V2. Training header: NATIVE PIXEL V8 · ART V2. Public media: sprite-art-v2-preview.mp4, sprite-art-v2-showcase.png and sprite-art-v2-directions.png. Godot package: public/native-roster-godot-v13.zip. Playable package: playtest-artifacts/Starfall-V13-Art-V2.zip. Existing saves immediately use the revised art; no reset is needed. The active development server for this checkpoint is port 3015, with the new pixel-face-tools.js module allowed. New scripts/tests default to port 3000; override BASE_URL for the active port. Do not rewrite the completed v11/v12 systems or touch the untracked expedition.js.
+
 ## Next work
 
 1. Implement a bounded defeat replay and highlight decisive hits, lost channels and counterplay. Keep settled results and save data unchanged during replay.
@@ -50,8 +58,8 @@ Guaranteed run casualties override the old rarity/hospital rescue rolls. Older s
 
 ## Verification and files
 
-Commands: npm test; npm run build:standalone; BASE_URL=http://127.0.0.1:3014 npm run test:native; BASE_URL=http://127.0.0.1:3014 node tests/prototype.browser.mjs. Start an unused port with PORT=<port> npm start; whitelist changes require a new server. Chromium is /usr/bin/chromium. Godot 4.6.3 uses scripts/check-godot.mjs with writable XDG directories under /tmp.
+Commands: npm test; npm run build:standalone; BASE_URL=http://127.0.0.1:3015 npm run test:art; BASE_URL=http://127.0.0.1:3015 npm run test:native; BASE_URL=http://127.0.0.1:3015 node tests/prototype.browser.mjs. Start an unused port with PORT=<port> npm start; whitelist changes require a new server. Chromium is /usr/bin/chromium. Godot 4.6.3 uses scripts/check-godot.mjs with writable XDG directories under /tmp.
 
-Evidence: tests/reports/expedition-v12.json and tests/reports/grand-forms-v11.json and historical v9/v10 reports. Raw logs/reports/screenshots are under playtest-artifacts/v9-*. Playable artifact: Starfall-Menagerie.html. Video: public/native-expedition-preview.mp4. Package: playtest-artifacts/Starfall-V12.zip. Roster video: public/native-roster-preview.mp4. Godot assets: public/native-roster-godot-v11.zip. Existing untracked expedition.js remains untouched.
+Evidence: tests/reports/sprite-art-v2.json, tests/reports/expedition-v12.json, tests/reports/grand-forms-v11.json and historical v9/v10 reports. Raw logs/reports/screenshots are under playtest-artifacts/. Playable artifact: Starfall-Menagerie.html. Current art media and package paths are in the v13 checkpoint above. Existing untracked expedition.js remains untouched.
 
 The agent cannot read the user's quota percentage or resume itself on a timer. The user can send a new continuation message after usage replenishes; continue from this checkpoint without restarting completed milestones. The current branch is codex/starfall-menagerie.

@@ -4,10 +4,10 @@ import assert from 'node:assert/strict';
 import {chromium} from 'playwright';
 import {optimizeNativePng} from './optimize-native-pngs.mjs';
 import {NATIVE_SPECIES,lineageLimit} from '../native-content.js';
-const output=process.argv[2]||'playtest-artifacts/native-sprites-v11';
+const output=process.argv[2]||'playtest-artifacts/native-sprites-v13';
 fs.mkdirSync(path.join(output,'sprites'),{recursive:true});
 const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||'/usr/bin/chromium',headless:true,args:['--no-sandbox']});
-const manifest={version:11,cell:[64,64],pivot:[32,44],sampling:'nearest',families:[],forms:[]};
+const manifest={version:13,artRevision:2,cell:[64,64],pivot:[32,44],sampling:'nearest',families:[],forms:[]};
 try{
  const page=await browser.newPage();await page.goto((process.env.BASE_URL||'http://127.0.0.1:3013')+'/index.html');await page.waitForFunction(()=>window.nativeRosterLab);
  for(const spec of NATIVE_SPECIES){
@@ -24,7 +24,7 @@ try{
  }
 }finally{await browser.close();}
 fs.writeFileSync(path.join(output,'manifest.json'),JSON.stringify(manifest,null,2)+'\n');
-fs.writeFileSync(path.join(output,'project.godot'),'config_version=5\n[application]\nconfig/name="Starfall Native Roster v11"\nrun/main_scene="res://showcase.tscn"\n[display]\nwindow/size/viewport_width=1002\nwindow/size/viewport_height=654\n[rendering]\nrenderer/rendering_method="gl_compatibility"\ntextures/default_filters/use_nearest_mipmap_filter=false\n');
+fs.writeFileSync(path.join(output,'project.godot'),'config_version=5\n[application]\nconfig/name="Starfall Native Roster v13 · Art v2"\nrun/main_scene="res://showcase.tscn"\n[display]\nwindow/size/viewport_width=1002\nwindow/size/viewport_height=654\n[rendering]\nrenderer/rendering_method="gl_compatibility"\ntextures/default_filters/use_nearest_mipmap_filter=false\n');
 fs.copyFileSync('public/prototype-glade-pixel.png',path.join(output,'environment.png'));
 fs.writeFileSync(path.join(output,'showcase.tscn'),'[gd_scene load_steps=2 format=3]\n[ext_resource type="Script" path="res://showcase.gd" id="1"]\n[node name="Showcase" type="Node2D"]\ntexture_filter = 1\nscript = ExtResource("1")\n');
 fs.writeFileSync(path.join(output,'showcase.gd'),`extends Node2D

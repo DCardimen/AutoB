@@ -25,12 +25,12 @@ function textPixels(c,label,x,y,color,scale){
 export function paintCombatTexts(c,battle,species,height=1){
  for(const t of battle.combatTexts||[]){
   const u=battle.units.find(u=>u.uid===t.uid),spec=species[u?.id];if(!u||!spec)continue;
-  const age=t.max-t.ttl,crit=t.kind==='crit',scale=crit&&age<.18?2:1;
+  const grid=(c.canvas?.width||334)/334,age=t.max-t.ttl,crit=t.kind==='crit',scale=grid*(crit&&age<.18?2:1);
   const label=(t.kind==='heal'?'+':t.kind==='shield'?'B':'')+Math.max(1,Math.round(t.amount))+(crit?'!':'');
   const color={crit:'#fff0a0',heal:'#a7ef9b',shield:'#88ddef',status:'#dfa2f4',hit:u.side?'#fff4cf':'#f7a194'}[t.kind];
-  const x=Math.max(3,Math.min(331-label.length*4*scale,Math.round(u.x/3-label.length*2*scale+(t.stack-1)*7)));
+  const x=Math.max(3*grid,Math.min(331*grid-label.length*4*scale,Math.round(u.x/3*grid-label.length*2*scale+(t.stack-1)*7*grid)));
   const headHeight=110*creatureWorldScale(spec,u)*height;
-  const y=Math.max(4,Math.round((u.y*.58+75-headHeight)/3-9-t.stack*7-age*11-Math.sin(Math.min(1,age/.18)*Math.PI)*2));
+  const y=Math.max(4*grid,Math.round(((u.y*.58+75-headHeight)/3-9-t.stack*7-age*11-Math.sin(Math.min(1,age/.18)*Math.PI)*2)*grid));
   c.globalAlpha=Math.min(1,t.ttl/.22);textPixels(c,label,x,y,color,scale);c.globalAlpha=1;
  }
 }

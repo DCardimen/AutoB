@@ -60,6 +60,7 @@ const entryFiles = new Set([
   "/prototype-dynamics.js",
   "/prototype-pixel-art.js",
   "/prototype-faces.js",
+  "/pixel-face-tools.js",
   "/prototype-export.js",
   "/prototype-sprites.js",
   "/prototype-renderer.js",

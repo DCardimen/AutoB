@@ -5,7 +5,7 @@ import assert from 'node:assert/strict';
 import {PROTOTYPE_CHARACTERS,ANIMATION_STATES} from '../prototype-engine.js';
 const output='godot-sprites';fs.mkdirSync(path.join(output,'sprites'),{recursive:true});
 const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||'/usr/bin/chromium',headless:true,args:['--no-sandbox']});
-const manifest={version:7,cell:[64,64],pivot:[32,44],sampling:'nearest',characters:[]};
+const manifest={version:8,artRevision:2,cell:[64,64],pivot:[32,44],sampling:'nearest',characters:[]};
 try{
  const page=await browser.newPage();await page.clock.install();await page.clock.pauseAt(await page.evaluate(()=>Date.now()+1000));await page.goto((process.env.BASE_URL||'http://127.0.0.1:3007')+'/prototype.html');await page.clock.runFor(100);await page.waitForFunction(()=>prototypeLab.state.artLoaded);
  for(const spec of PROTOTYPE_CHARACTERS){

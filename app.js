@@ -308,7 +308,7 @@ function render() {
 }
 function updateHeader() {
   document.body.classList.toggle("native-expedition",!!run.native);
-  const version=document.querySelector(".local-label");if(version)version.innerHTML="<i></i> "+(run.native?"NATIVE EXPEDITION V12":"LOCAL SAVE");
+  const version=document.querySelector(".local-label");if(version)version.innerHTML="<i></i> "+(run.native?"NATIVE EXPEDITION V13 · ART V2":"LOCAL SAVE");
   const p = PLANETS[Math.min(run.planet, 2)];
   $("#run-number").textContent = String(profile.runs).padStart(3, "0");
   $("#collection-count").textContent = profile.owned.length;
@@ -2035,7 +2035,7 @@ function drawEnemyOverheads(){
  const layer=$("#enemy-overheads");if(!layer||!canvas)return;
  const units=(battle?.units.filter(c=>c.side===1&&c.hp>0&&!c.captured&&battle.captureScene?.uid!==c.uid)||foes.map((c,i)=>({...c,...nativeSpawn(pixelSpec(c.id),c,1,i)}))),rect=canvas.getBoundingClientRect(),placed=[];
  const html=units.map(c=>{
- const scale=c.nativeScale||creatureWorldScale(pixelSpec(c.id),c),width=30+(phase==='prep'&&!c.boss?68:0)+(c.enemyRelics?.length||0)*25,x=Math.max(width/2+5,Math.min(rect.width-width/2-5,c.x/1002*rect.width));let y=Math.max(24,(c.y*.58+75-115*scale)/654*rect.height);
+ const scale=c.nativeScale||creatureWorldScale(pixelSpec(c.id),c),width=30+(phase==='prep'&&!c.boss?68:0)+(c.enemyRelics?.length||0)*25,x=Math.max(width/2+5,Math.min(rect.width-width/2-5,c.x/1002*rect.width));let y=Math.max(24,(c.y*.58+75-127*scale)/654*rect.height-14);
  for(let tries=0;tries<12&&placed.some(p=>Math.abs(p.x-x)<(p.width+width)/2+5&&Math.abs(p.y-y)<25);tries++)y=Math.max(24,y-28)+(y<=24?28*(tries+1):0);
  placed.push({x,y,width});const threshold=run.captureOrder?.threshold||.35,tool=run.captureOrder?.tool||run.selectedCapturer||'scout',chance=c.boss?0:captureChance(run,{...c,capturePreparation:{healthFraction:threshold,mode:run.captureOrder?.mode||'mercy',tool}});
  return `<div class="enemy-head-ui" style="left:${x/rect.width*100}%;top:${y/rect.height*100}%"><button data-enemy-inspect="${c.uid}" aria-label="Inspect ${creatureName(c)}" title="Inspect ${creatureName(c)}">ⓘ</button>${phase==='prep'&&!c.boss?`<button data-enemy-capture="${c.uid}" class="${run.captureOrder?.uid===c.uid?'planned':''}" aria-label="Plan capture of ${creatureName(c)}" title="${Math.round(chance*100)}% at ${Math.round(threshold*100)}% HP">◇ ${Math.round(chance*100)}%</button>`:''}${(c.enemyRelics||[]).map(id=>{const r=RUN_RELIC_BY_ID[id];return `<button data-enemy-inspect="${c.uid}" class="enemy-curio" style="color:${r.color}" title="${r.name}: ${r.desc}" aria-label="${r.name}: ${r.desc}">${r.icon}</button>`;}).join('')}</div>`;

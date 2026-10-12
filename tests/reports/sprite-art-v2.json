@@ -1,0 +1,185 @@
+{
+  "release": {
+    "application": "0.9.0",
+    "nativeExpedition": 13,
+    "trainingGlade": 8,
+    "artRevision": 2,
+    "saveSchema": 5
+  },
+  "scope": {
+    "pixelFamilies": 89,
+    "authoredFamilies": 29,
+    "sharedTemplates": 60,
+    "cell": [
+      64,
+      64
+    ],
+    "directions": 8,
+    "states": 17,
+    "physicsRigChanged": false
+  },
+  "unitTests": {
+    "total": 177,
+    "passed": 177,
+    "failed": 0,
+    "newArtTests": 3,
+    "headConnectivitySamples": 960
+  },
+  "arena": {
+    "grid": [
+      668,
+      436
+    ],
+    "worldCanvas": [
+      1002,
+      654
+    ],
+    "sourcePixelRetention": [
+      {
+        "id": "aurel",
+        "total": 430,
+        "matched": 430,
+        "ratio": 1
+      },
+      {
+        "id": "syl",
+        "total": 370,
+        "matched": 370,
+        "ratio": 1
+      },
+      {
+        "id": "nyra",
+        "total": 395,
+        "matched": 395,
+        "ratio": 1
+      }
+    ],
+    "browserChecks": [
+      "Default-size arena sprites retain more than 99.5% of their opaque source texels, without the former extra shrink",
+      "Eight live directions, seventeen states and mobile layout remain available"
+    ],
+    "errors": []
+  },
+  "browserChecks": [
+    {
+      "fixture": "expedition-v12-browser.json",
+      "checks": [
+        "Two starters, schema-4 backup, above-head inspection, physical head/foot pickup and placement persistence",
+        "Configurable auto-capture, one reserved tool, lattice slow motion, actual cache and exact-once reload",
+        "Mobile arena fits; unseen encounters reveal no type or counterplan",
+        "Chaos enemies expose their actual buff names and effects above their heads",
+        "Defeat removes a starter, destroys its worn items and one relic, shows X, and reload cannot select a second casualty"
+      ],
+      "errors": []
+    },
+    {
+      "fixture": "v11-grand-browser-report.json",
+      "checks": [
+        "Schema-3 backup; evolution grants a real cooldown skill; support link, gear choice and equipped cape persist; removal returns the same gear",
+        "Two earned evolution stages add two equipment slots and two skills; equipment controls fit 390px",
+        "Giant and small bodies fight together with physical blade contacts, live cloth meshes and victim-linked pixel damage text",
+        "Outpost gear deducts gold exactly once and sold stock persists"
+      ],
+      "errors": []
+    }
+  ],
+  "trainingLab": {
+    "checks": [
+      "Opening scene shows eight views side by side; all nine characters have eight distinct sprites at one fixed pose phase, with native 64\u00d764 cells; clicking a view opens its close inspection",
+      "Randomized teams have six creatures each; cards match the lineup, and pause/frame stepping preserve simulation control",
+      "Selecting a character and clicking ground produces actual movement in the physical scene",
+      "All nine locomotion profiles travel around the circuits and turn through all eight facings; speed changes work",
+      "Walk/run/sprint pace controls, selected sprint toggle, Shift hold/release, acceleration, stride blending and stamina recovery work",
+      "Eight directional views and seventeen animation states are inspectable, including a close view and death",
+      "Restart changes the actual team composition; charged-strike control survives impact while taking damage, with visible anticipation levels",
+      "Rendered sparring resolves with physical hits, projectile travel, rolls and deaths; optional audio toggles",
+      "390px mobile layout has no horizontal overflow and retains scene and character controls",
+      "Standalone HTML runs combat and pose inspection with zero external requests"
+    ],
+    "errors": [],
+    "jointCoverage": {
+      "checks": 18048,
+      "gaps": []
+    },
+    "directionFrames": {
+      "knight": 8,
+      "orc": 8,
+      "elf": 8,
+      "caster": 8,
+      "wolf": 8,
+      "fox": 8,
+      "mech": 8,
+      "spider": 8,
+      "jelly": 8
+    },
+    "externalRequests": 0
+  },
+  "legalStandardCampaign": {
+    "seed": 3,
+    "complete": true,
+    "planets": 3,
+    "fights": 16,
+    "wins": 15,
+    "casualties": 1,
+    "openingTeam": 2,
+    "finalTeam": 6,
+    "errors": []
+  },
+  "offline": {
+    "freshNative": "passed",
+    "migratedEmbedded": "passed",
+    "externalRequests": 0,
+    "mode": "Exact embedded HTML served locally; managed browser blocks direct file-origin automation"
+  },
+  "godot": {
+    "version": "4.6.3",
+    "native": {
+      "families": 29,
+      "variants": 117,
+      "cells": 127296,
+      "animationsPerForm": 136,
+      "clippingFailures": 0,
+      "import": "passed",
+      "startup": "passed"
+    },
+    "training": {
+      "actors": 9,
+      "cells": 9792,
+      "animationsPerActor": 136,
+      "clippingFailures": 0,
+      "import": "passed",
+      "startup": "passed"
+    }
+  },
+  "visualReview": {
+    "sheets": [
+      "heroes",
+      "bodies",
+      "grand forms",
+      "running"
+    ],
+    "directionsPerSheet": 8,
+    "videoSeconds": 16,
+    "videoFrames": 480,
+    "videoResolution": [
+      1002,
+      654
+    ],
+    "video": "public/sprite-art-v2-preview.mp4",
+    "showcase": "public/sprite-art-v2-showcase.png",
+    "directionSheet": "public/sprite-art-v2-directions.png"
+  },
+  "artifactSha256": {
+    "Starfall-Menagerie.html": "565cf559ca1833eca3517a89d8ea0e973fcb833cf8012f9d37e34787fb8cb490",
+    "Starfall-Training-Glade.html": "1e200dde591f67b797c894f108427da2f1425899285f779525db9e93fc61f309",
+    "public/sprite-art-v2-preview.mp4": "e9549e4b0b5cc44f4ce4ec73e1fef947621da1303c5dfa89261ee251c1e5bf0e",
+    "public/sprite-art-v2-showcase.png": "f36ecf888cd0d8e3874aa2c5be2417c9d78074b8a31aab17cf43ba622133a048",
+    "public/sprite-art-v2-directions.png": "856d9193905ae571839ecdc1af286d7d04ae72d66122e5e293bd58b24e43d035",
+    "public/native-roster-godot-v13.zip": "9cc25e227ebb3b83e5bbf695af1adb133f278e32cbd9e72ebc2f37cbf8cba25c"
+  },
+  "limitations": [
+    "No human 50-hour playtest or 9/10 art/fun rating is established.",
+    "Exact pixel-retention proof covers the three tested default-size fixtures at the native grid; fractional sizes and browser/mobile scaling can resample.",
+    "Twenty-nine authored anatomy families; sixty additional families share body templates."
+  ]
+}

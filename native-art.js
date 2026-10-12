@@ -17,8 +17,10 @@ export function setCharacterHeight(value){characterHeight=Math.max(.85,Math.min(
 export function getCharacterHeight(){return characterHeight;}
 export function nativePreviewFrame(c,state='idle',phase=.25,dir=1){const key=['preview',c.id,c.evolution,c.evolutionPath,state,phase,dir,characterHeight].join(':');if(!frames.has(key)){const spec=byId[c.id];frames.set(key,renderCharacterFrame(nativeRigFor(spec,c),nativePoseRig(spec,c,state,phase,characterHeight),dir*Math.PI/4));if(frames.size>256)frames.delete(frames.keys().next().value);}return frames.get(key);}
 export const nativeScreen=(x,y)=>({x,y:y*.58+75});
-const scene=document.createElement('canvas');scene.width=1002;scene.height=654;
-const pixel=document.createElement('canvas');pixel.width=334;pixel.height=218;
+export const NATIVE_RENDER_SCALE=2/3;
+export const NATIVE_SPRITE_GRID=[668,436];
+const scene=document.createElement('canvas');scene.width=NATIVE_SPRITE_GRID[0];scene.height=NATIVE_SPRITE_GRID[1];
+const pixel=document.createElement('canvas');pixel.width=NATIVE_SPRITE_GRID[0];pixel.height=NATIVE_SPRITE_GRID[1];
 const backdrop=new Image();backdrop.src='/public/prototype-glade-pixel.png';
 backdrop.addEventListener('load',()=>window.dispatchEvent(new Event('art-ready')));
 const portraits=new Map(),frames=new Map();
@@ -38,11 +40,12 @@ export function drawNativeUnit(c,u,spec,x,y,time,pixelScale=3){
  if(u.deploymentRig)rig=u.deploymentRig;else if(actor.ragdoll)rig=ragdollRig(actor.ragdoll,actor.getup>0?1-actor.getup/.45:0);
  rig.capeMesh=actor.capeMesh;rig=nativeFormRig(spec,u,rig,characterHeight);
  const key=u.id+':'+characterHeight+':'+sample.key+':'+u.evolution+':'+u.evolutionPath+':'+(u.equipment||[]).join(',')+':'+(actor.capeMeshKey||'')+(actor.ragdoll?':'+actor.ragdoll.time.toFixed(4):'');let frame=u.deploymentRig?null:frames.get(key);if(!frame){frame=renderCharacterFrame(actor.id,rig,sample.angleIndex*Math.PI/4);if(!u.deploymentRig)frames.set(key,frame);if(frames.size>256)frames.delete(frames.keys().next().value);}
- c.imageSmoothingEnabled=false;c.drawImage(frame,Math.round(x-PIVOT.x*pixelScale),Math.round(y-PIVOT.y*pixelScale),CELL*pixelScale,CELL*pixelScale);
+ const grid=Math.abs(c.getTransform().a)||1,dx=Math.round((x-PIVOT.x*pixelScale)*grid)/grid,dy=Math.round((y-PIVOT.y*pixelScale)*grid)/grid;
+ c.imageSmoothingEnabled=false;c.drawImage(frame,dx,dy,CELL*pixelScale,CELL*pixelScale);return dy+(frame.spriteTop??0)*pixelScale;
 }
 const ring=(c,x,y,r,color,fill)=>{const p=nativeScreen(x,y);c.beginPath();c.ellipse(p.x,p.y,r,r*.58,0,0,Math.PI*2);c.strokeStyle=color;c.lineWidth=2;if(fill){c.fillStyle=fill;c.fill();}c.stroke();};
 export function renderNativeBattle(display,w,h,battle,planet,time,team,foes,species){
- const c=scene.getContext('2d');c.clearRect(0,0,1002,654);c.imageSmoothingEnabled=false;
+ const c=scene.getContext('2d');c.setTransform(NATIVE_RENDER_SCALE,0,0,NATIVE_RENDER_SCALE,0,0);c.clearRect(0,0,1002,654);c.imageSmoothingEnabled=false;
  if(backdrop.complete&&backdrop.naturalWidth)c.drawImage(backdrop,0,0,1002,654);else{c.fillStyle='#253c31';c.fillRect(0,0,1002,654);}
  if(planet){c.fillStyle=planet===1?'#8e382524':'#3c21523d';c.fillRect(0,0,1002,654);}
  const units=battle?battle.units:[...team.map((u,i)=>({...u,side:0,...nativeSpawn(species[u.id],u,0,i),hp:1,maxHp:1})),...foes.map((u,i)=>({...u,side:1,...nativeSpawn(species[u.id],u,1,i),hp:1,maxHp:1}))];
@@ -55,9 +58,9 @@ export function renderNativeBattle(display,w,h,battle,planet,time,team,foes,spec
  for(const u of [...units,...terrain.map(t=>({...t,pillar:true}))].sort((a,b)=>a.y-b.y)){
   if(u.pillar){const p=nativeScreen(u.x,u.y);c.fillStyle="#10231d77";c.beginPath();c.ellipse(p.x,p.y,u.r+8,14,0,0,Math.PI*2);c.fill();c.fillStyle="#454d47";c.fillRect(p.x-u.r,p.y-50,u.r*2,50);c.fillStyle="#808776";c.fillRect(p.x-u.r*.65,p.y-47,u.r*.35,46);c.fillStyle="#a1a58a";c.beginPath();c.ellipse(p.x,p.y-50,u.r,u.r*.58,0,0,Math.PI*2);c.fill();c.fillStyle="#37493a";for(let i=0;i<5;i++)c.fillRect(p.x-u.r*.6+i*10,p.y-50+(i%2)*8,7,6);continue;}
   const p=nativeScreen(u.x,u.y),spec=species[u.id];if(u.captured)continue;c.fillStyle=u.hp>0?'#0d1b1577':'#0d1b1544';c.beginPath();c.ellipse(p.x,p.y,u.boss?34:23,7,0,0,Math.PI*2);c.fill();
-  const scale=creatureWorldScale(spec,u);drawNativeUnit(c,u,spec,p.x,p.y,battle?battle.time:time,3*scale);
+  const scale=creatureWorldScale(spec,u),visualTop=drawNativeUnit(c,u,spec,p.x,p.y,battle?battle.time:time,3*scale);
   if(u.hp<=0)continue;
-  const width=u.boss?70:42,bar=p.y-({knight:115,orc:100,elf:105,caster:116,wolf:77,fox:112,mech:90,spider:83,jelly:92,serpent:65,flyer:112,crab:80,centipede:75}[actorFor(u,spec).id]||112)*scale*characterHeight*formProfile(spec,u).height;
+  const width=u.boss?70:42,bar=Math.min(visualTop-9,p.y-(({knight:115,orc:100,elf:105,caster:116,wolf:77,fox:112,mech:90,spider:83,jelly:92,serpent:65,flyer:112,crab:80,centipede:75}[actorFor(u,spec).id]||112)+12)*scale*characterHeight*formProfile(spec,u).height);
   c.fillStyle='#12251c';c.fillRect(p.x-width/2-1,bar-1,width+2,6);c.fillStyle=u.side?'#d48976':'#bad79a';c.fillRect(p.x-width/2,bar,width*u.hp/u.maxHp,4);
   if(u.shield>0){c.fillStyle='#99dfe0';c.fillRect(p.x-width/2,bar-4,width*Math.min(1,u.shield/u.maxHp),2);}
   if(battle){c.fillStyle='#e5bf78';c.fillRect(p.x-width/2,bar+8,width*u.stamina/100,2);c.fillStyle="#e5a47d";c.fillRect(p.x-width/2,bar+16,width*Math.min(1,(u.poise||0)/(u.maxPoise||1)),2);const a=u.nativeAction;if(a&&!a.released){c.fillStyle=a.charged?'#aee8ef':'#e2a77a';c.fillRect(p.x-width/2,bar+12,width*a.elapsed/a.windup,2);}const status=['burn','poison','root','slow','stagger','bleed'].filter(k=>u[k]>0);c.font='11px sans-serif';c.fillStyle='#e8d5b4';c.textAlign='center';if(status.length)c.fillText(status.map(k=>({burn:'F',poison:'P',root:'R',slow:'S',stagger:'!',bleed:'B'})[k]).join(' '),p.x,bar-7);}
@@ -71,7 +74,7 @@ export function renderNativeBattle(display,w,h,battle,planet,time,team,foes,spec
   for(const e of battle.effects){const p=nativeScreen(e.x,e.y);c.save();c.globalAlpha=Math.min(1,e.ttl/(e.max||.45));c.strokeStyle=e.color;c.fillStyle=e.color;c.lineWidth=e.width||3;if(e.type==='text'){c.font='bold 13px sans-serif';c.textAlign='center';c.fillText(e.text,p.x,p.y-55-(1-e.ttl)*20);}else if(e.tx!==undefined){const t=nativeScreen(e.tx,e.ty);c.beginPath();c.moveTo(p.x,p.y-45);c.lineTo(t.x,t.y-45);c.stroke();}else if(['impact','slash','cast','defeat','nova','ring','shield'].includes(e.type)){c.beginPath();c.arc(p.x,p.y-(e.victimUid?nativeBodyHeight(battle.units.find(u=>u.uid===e.victimUid)):40)*characterHeight,e.type==='impact'?10:(e.r||20)*.3,0,Math.PI*2);c.stroke();}c.restore();}
   for(const p of battle.particles){const q=nativeScreen(p.x,p.y);c.fillStyle=p.color;c.globalAlpha=Math.min(1,p.ttl/(p.max||1));c.fillRect(q.x,q.y-30,3,3);}c.globalAlpha=1;
  }
- const pc=pixel.getContext('2d');pc.imageSmoothingEnabled=false;pc.drawImage(scene,0,0,334,218);if(battle)paintCombatTexts(pc,battle,byId,characterHeight);display.imageSmoothingEnabled=false;display.clearRect(0,0,w,h);display.drawImage(pixel,0,0,w,h);
+ const pc=pixel.getContext('2d');pc.imageSmoothingEnabled=false;pc.drawImage(scene,0,0,pixel.width,pixel.height);if(battle)paintCombatTexts(pc,battle,byId,characterHeight);display.imageSmoothingEnabled=false;display.clearRect(0,0,w,h);display.drawImage(pixel,0,0,w,h);
 }
 
 function paintCapture(c,battle,species){
