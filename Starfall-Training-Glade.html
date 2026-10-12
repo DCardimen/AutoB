@@ -41,6 +41,8 @@
   // prototype-motion.js
   var TAU = Math.PI * 2;
   var MOTION_PROFILES = {
+    serpent: { sway: 1.1, arm: 0, runArm: 0, sprintArm: 0, landing: 0.25, spine: 0.08 },
+    flyer: { sway: 0.4, arm: 0, runArm: 0, sprintArm: 0, landing: 0.2, spine: 0.025 },
     knight: { sway: 1.1, arm: 5.5, runArm: 9, sprintArm: 12, landing: 1, spine: 0.035 },
     orc: { sway: 1.65, arm: 2.5, runArm: 4, sprintArm: 5, landing: 1.3, spine: 0.025 },
     elf: { sway: 0.9, arm: 6.5, runArm: 10.5, sprintArm: 14, landing: 0.85, spine: 0.045 },
@@ -102,7 +104,9 @@
     fox: { hip: 33, thigh: 16, shin: 16, stance: 7, shoulder: 11, arm: 13, forearm: 13, headW: 44, headH: 38, bodyW: 34, bodyH: 28 },
     mech: { hip: 30, thigh: 16, shin: 18, stance: 11, body: "walker", headW: 35, bodyW: 62 },
     spider: { hip: 21, thigh: 21, shin: 23, stance: 6, body: "arachnid", headW: 30, bodyW: 48 },
-    jelly: { hip: 17, body: "gel", headW: 45, bodyW: 48 }
+    jelly: { hip: 17, body: "gel", headW: 45, bodyW: 48 },
+    serpent: { hip: 10, body: "serpent", headW: 34, bodyW: 50 },
+    flyer: { hip: 29, body: "flyer", headW: 32, bodyW: 30 }
   };
   function projectRig(p, angle) {
     return { x: p.x * Math.cos(angle) - p.y * Math.sin(angle), y: (p.x * Math.sin(angle) + p.y * Math.cos(angle)) * 0.58 - p.z, depth: p.x * Math.sin(angle) + p.y * Math.cos(angle) };
@@ -128,7 +132,7 @@
     return Math.max(0, -ankleZ - bottom);
   }
   function legLayout(id, run2 = 0, sprint2 = 0) {
-    if (id === "jelly") return [];
+    if (["jelly", "serpent", "flyer"].includes(id)) return [];
     if (id === "mech") return Array.from({ length: 6 }, (_, i) => ({ x: (i % 3 - 1) * 14, y: i < 3 ? -11 : 11, footY: i < 3 ? -25 : 25, offset: (i % 3 + (i < 3 ? 0 : 1)) % 2 * 0.5 }));
     if (id === "spider") return Array.from({ length: 8 }, (_, i) => ({ x: (1.5 - i % 4) * 8, y: i < 4 ? -6 : 6, footX: (1.5 - i % 4) * 12, footY: i < 4 ? -32 : 32, offset: (i % 4 + (i < 4 ? 0 : 1)) % 2 * 0.5 + i % 4 * 0.025 }));
     if (id !== "wolf") return [{ x: 0, y: -RIGS[id].stance, offset: 0 }, { x: 0, y: RIGS[id].stance, offset: 0.5 }];
@@ -462,8 +466,21 @@
       body.z = 17 + Math.max(0, Math.sin(phase * TAU2)) * ((moving ? 1 : 0) * (7 + run2 * 4 + sprint2 * 4));
       head.z = body.z + 3;
     }
+    if (id === "serpent") {
+      body.z = 10 - dead * 5;
+      head.x = 17 + (state === "attack" ? Math.sin(phase * Math.PI) * 9 : 0);
+      head.z = 19 - dead * 12;
+    }
+    if (id === "flyer") {
+      body.z = 30 + (moving ? Math.sin(phase * TAU2) * 3 : Math.sin(phase * TAU2) * 1.5) - dead * 20;
+      head.x = 7;
+      head.z = body.z + 15;
+      head.y = body.y * 0.5;
+    }
     const grip = point(head.x + 3, 0, head.z), axis = point(1, 0, 0), weapon = { kind: id === "mech" ? "cannon" : id === "jelly" ? "gel" : "fangs", grip, axis, tip: plus(grip, times(axis, id === "spider" ? 19 : 24)), length: 24, tilt: Math.PI / 2 };
-    return { id, state, phase, stage, dimensions: d, pelvis, body, head, legs, arms: [], weapon, lean, sideLean: 0, torsoYaw: 0, crouch: d.hip - hip, death: dead, squash: id === "jelly" ? dead ? 1 + dead * 1.8 : 1 + Math.sin(phase * TAU2) * 0.2 : 1, tail: point(-18, 0, hip) };
+    const segments = id === "serpent" ? Array.from({ length: 9 }, (_, i) => point(17 - i * 6, Math.sin(phase * TAU2 - i * 0.68) * (moving ? 9 : 3), 6 + Math.sin(phase * TAU2 - i * 0.68) * 1.4)) : null;
+    const flap = Math.sin(phase * TAU2) * (dead ? 0 : 1), wings = id === "flyer" ? [-1, 1].map((side) => [point(-2, side * 5, body.z + 3), point(-10, side * (21 + run2 * 3), body.z + flap * 10), point(-18, side * (37 + run2 * 3), body.z + flap * 20), point(-15, side * 12, body.z - 8)]) : null;
+    return { id, state, phase, stage, dimensions: d, pelvis, body, head, legs, arms: [], weapon, segments, wings, lean, sideLean: 0, torsoYaw: 0, crouch: d.hip - hip, death: dead, squash: id === "jelly" ? dead ? 1 + dead * 1.8 : 1 + Math.sin(phase * TAU2) * 0.2 : 1, tail: point(-18, 0, hip) };
   }
   function weaponContactPath(id, angle, options = {}) {
     const points = [];
@@ -640,6 +657,8 @@
     if (rig.shield) rig.shield = { grip: rig.arms.find((a) => a.side === -1).end };
     rig.tail = { x: rig.pelvis.x - 27, y: rig.pelvis.y, z: rig.pelvis.z + 2 };
     if (d.id === "jelly") rig.squash = 1 + Math.min(1, d.time) * 2 * (1 - recover);
+    if (base.wings) rig.wings = base.wings.map((w) => w.map((q) => ({ ...q, x: q.x + rig.body.x - base.body.x, y: q.y + rig.body.y - base.body.y, z: Math.max(3, q.z + rig.body.z - base.body.z) })));
+    if (base.segments) rig.segments = base.segments.map((q) => ({ ...q, z: Math.max(3, q.z * (1 - rig.death)) }));
     return rig;
   }
   var previewCache = /* @__PURE__ */ new Map();
@@ -701,6 +720,7 @@
   }
   var HERO_IDS = ["knight", "orc", "elf", "caster", "fox"];
   var circuitCenter = (i) => ({ x: 230 + i % 3 * 270, y: 205 + Math.floor(i / 3) * 225 });
+  for (const id of ["serpent", "flyer"]) PROTOTYPE_BY_ID[id] = { id, name: id, mass: 0.8, hp: 250, speed: 100, run: 185, sprint: 235, reach: id === "flyer" ? 250 : 50, damage: 25, windup: 0.3, recovery: 0.3, cooldown: 1.2, radius: 18, stride: 80, ranged: id === "flyer" };
   for (const spec of PROTOTYPE_CHARACTERS) spec.sprint = Math.round(spec.run * (spec.id === "wolf" ? 1.4 : spec.id === "orc" ? 1.3 : 1.35));
   var ANIMATION_STATES = ["idle", "walk", "run", "sprint", "turn", "attack", "slash", "charge", "cast", "dash", "dodge", "hit", "stagger", "knockdown", "getup", "stop", "death"];
   var ANTICIPATION_LEVELS = { 1: { name: "Quick", color: "#e7d39d" }, 2: { name: "Heavy", color: "#eea96e" }, 3: { name: "Charged \xB7 uninterruptible", color: "#aee8ef" } };
@@ -1327,6 +1347,102 @@
     }
   };
 
+  // native-faces.js
+  function drawFamilyFace(b, h, dir, p, rig, views) {
+    const id = rig.design;
+    if (!["dwarf", "goblin", "skeleton", "troll", "minotaur", "serpent", "harpy", "faerie", "bat", "rogue", "frostelf", "phoenix"].includes(id)) return false;
+    const v = views[dir], x = Math.round(h.x), y = Math.round(h.y), back = !v.eyes.length, sign = v.sign, profile = v.view === "profile", dead = rig.death > 0, O = "#20272a";
+    const oval = (x2, y2, rx, ry, c2) => {
+      b.oval(x2, y2, rx + 1, ry + 1, O);
+      b.oval(x2, y2, rx, ry, c2);
+    };
+    const eyes = (color) => {
+      if (back) return;
+      for (const dx of v.eyes) {
+        const xx = x + Math.round(dx * 0.75);
+        b.rect(xx, y, dead ? 2 : 1, dead ? 1 : 2, O);
+        if (!dead) b.dot(xx, y, color);
+      }
+    };
+    const horns = (r = 9) => {
+      for (const s of profile ? [-sign] : [-1, 1]) {
+        b.line({ x: x + s * 5, y: y - 4 }, { x: x + s * r, y: y - 8 }, O, 1);
+        b.line({ x: x + s * 5, y: y - 4 }, { x: x + s * r, y: y - 8 }, p.metal[2]);
+        b.dot(x + s * r, y - 9, p.metal[3]);
+      }
+    };
+    const skin = id === "skeleton" ? p.skin[2] : p.skin[1];
+    oval(x, y, id === "troll" || id === "minotaur" ? 8 : 6, id === "serpent" ? 4 : 7, skin);
+    b.oval(x - 2, y - 3, 3, 2, p.skin[2]);
+    if (id === "skeleton") {
+      if (!back) {
+        for (const dx of v.eyes) b.rect(x + dx - 1, y - 1, 2, 3, O);
+        b.dot(x + sign * 2, y + 2, O);
+        b.rect(x - 3 + sign * 2, y + 4, 6, 1, O);
+        for (const dx of [-2, 0, 2]) b.dot(x + dx + sign * 2, y + 5, p.skin[0]);
+      } else b.line({ x: x - 3, y: y + 2 }, { x: x + 2, y: y - 1 }, p.skin[0]);
+    } else if (id === "serpent" || id === "phoenix") {
+      if (!back) {
+        const nx = x + (profile ? sign * 6 : sign * 3);
+        b.outlined([{ x: nx - sign, y: y + 1 }, { x: nx + (sign || 1) * 5, y: y + 2 }, { x: nx, y: y + 4 }], id === "phoenix" ? p.metal[3] : p.skin[0]);
+        eyes(id === "phoenix" ? "#fff3b9" : "#f3d579");
+      }
+      b.line({ x: x - 3, y: y - 4 }, { x, y: y - 8 }, p.hair[1], 1);
+      b.line({ x, y: y - 8 }, { x: x + 3, y: y - 5 }, p.hair[2]);
+    } else if (id === "bat") {
+      for (const s of profile ? [-sign] : [-1, 1]) b.outlined([{ x: x + s * 4, y: y - 3 }, { x: x + s * 7, y: y - 12 }, { x: x + s * 1, y: y - 6 }], p.skin[0]);
+      if (!back) {
+        eyes("#e7bd7b");
+        oval(x + sign * 3, y + 3, 3, 2, p.skin[0]);
+        for (const dx of [-2, 2]) b.dot(x + dx + sign * 2, y + 5, p.metal[3]);
+      }
+    } else {
+      if (["goblin", "faerie", "frostelf"].includes(id)) for (const s of profile ? [-sign] : [-1, 1]) b.outlined([{ x: x + s * 5, y: y - 1 }, { x: x + s * (id === "goblin" ? 12 : 9), y: y - 3 }, { x: x + s * 6, y: y + 3 }], p.skin[1]);
+      if (id === "minotaur") horns(10);
+      if (id === "rogue") {
+        b.outlined([{ x: x - 7, y: y + 3 }, { x: x - 7, y: y - 4 }, { x: x - 3, y: y - 8 }, { x: x + 3, y: y - 8 }, { x: x + 7, y: y - 4 }, { x: x + 7, y: y + 3 }, { x: x + 4, y: y + 5 }, { x: x + 4, y: y - 2 }, { x: x - 4, y: y - 2 }, { x: x - 4, y: y + 5 }], p.cloth[0]);
+      } else if (id === "dwarf") {
+        b.rect(x - 6, y - 6, 12, 3, p.metal[1]);
+        b.rect(x - 4, y - 7, 8, 1, p.metal[3]);
+      } else if (id === "troll") {
+        b.oval(x, y - 7, 5, 2, p.hair[1]);
+        b.dot(x - 4, y - 8, p.hair[2]);
+      } else {
+        b.oval(x, y - 5, 5, 3, p.hair[1]);
+        b.line({ x: x - 3, y: y - 6 }, { x: x + 2, y: y - 7 }, p.hair[2]);
+      }
+      if (back) {
+        b.oval(x, y + 1, 4, 5, id === "rogue" ? p.cloth[0] : id === "dwarf" ? p.hair[0] : p.hair[1]);
+      } else {
+        eyes(id === "goblin" ? "#f1d77e" : id === "frostelf" ? "#80d1dc" : "#ddcda6");
+        b.dot(x + (profile ? sign * 5 : sign * 2), y + 3, p.skin[0]);
+        b.rect(x - 1 + sign * 2, y + 5, 3, 1, p.skin[0]);
+      }
+      if (id === "dwarf") {
+        b.outlined([{ x: x - 5, y: y + 2 }, { x: x - 2, y: y + 4 }, { x: x + 2, y: y + 4 }, { x: x + 5, y: y + 2 }, { x: x + 4, y: y + 8 }, { x, y: y + 11 }, { x: x - 4, y: y + 8 }], p.hair[1]);
+        b.line({ x: x - 2, y: y + 5 }, { x: x - 1, y: y + 9 }, p.hair[2]);
+        b.line({ x: x + 2, y: y + 5 }, { x: x + 1, y: y + 9 }, p.hair[0]);
+        b.dot(x, y + 9, p.metal[3]);
+      }
+      if (id === "minotaur" && !back) {
+        oval(x + sign * 2, y + 3, 4, 2, p.skin[0]);
+        b.dot(x - 1 + sign * 2, y + 3, O);
+        b.dot(x + 2 + sign * 2, y + 3, O);
+      }
+      if (id === "harpy") b.line({ x, y: y - 7 }, { x: x - sign * 3, y: y - 11 }, p.hair[2], 1);
+    }
+    if (rig.form) {
+      if (rig.formPath === "wild") {
+        horns(rig.form === 2 ? 11 : 8);
+        b.dot(x, y - 9, p.cloth[2]);
+      } else {
+        b.line({ x: x - 5, y: y - 5 }, { x: x + 5, y: y - 5 }, p.metal[2]);
+        b.dot(x, y - 6, p.metal[3]);
+      }
+    }
+    return true;
+  }
+
   // prototype-faces.js
   var FACE_VIEWS = [
     { view: "profile", sign: 1, eyes: [4], nose: 7 },
@@ -1340,6 +1456,7 @@
   ];
   var OUT = "#20272a";
   function drawNativeFace(b, id, center, dir, p, rig) {
+    if (drawFamilyFace(b, center, dir, p, rig, FACE_VIEWS)) return;
     const hx = Math.round(center.x), hy = Math.round(center.y), v = FACE_VIEWS[dir], back = !v.eyes.length, profile = v.view === "profile", quarter = v.view === "quarter", sign = v.sign, dead = rig.death > 0;
     const oval = (x, y, rx2, ry2, c2) => {
       b.oval(x, y, rx2 + 1, ry2 + 1, OUT);
@@ -1519,7 +1636,9 @@
     wolf: { skin: ["#954e31", "#cd7c38", "#edae58"], cloth: ["#642c35", "#a64140", "#dd674d"], metal: ["#5e5541", "#a9a070", "#dbcf9f", "#f3deba"], hair: ["#8f4a31", "#c77a39", "#edab55"] },
     mech: { skin: ["#4e473b", "#9b7043", "#d8a85e"], cloth: ["#36484d", "#647b7b", "#a1ad9b"], metal: ["#3c4549", "#6b797d", "#b4bcac", "#e3d3a5"], hair: ["#354b58", "#63979e", "#a5e6e3"] },
     spider: { skin: ["#2d253f", "#55436b", "#8972a0"], cloth: ["#2b233b", "#50345f", "#8b5496"], metal: ["#483957", "#786089", "#bea1cd", "#e9c7eb"], hair: ["#372844", "#725395", "#c190df"] },
-    jelly: { skin: ["#185674", "#358ca2", "#72c8ce"], cloth: ["#174d68", "#278ba1", "#7ce0df"], metal: ["#356b8c", "#67a9bf", "#a6e8e0", "#e0faf0"], hair: ["#195673", "#428fa8", "#86d9df"] }
+    jelly: { skin: ["#185674", "#358ca2", "#72c8ce"], cloth: ["#174d68", "#278ba1", "#7ce0df"], metal: ["#356b8c", "#67a9bf", "#a6e8e0", "#e0faf0"], hair: ["#195673", "#428fa8", "#86d9df"] },
+    serpent: { skin: ["#244f53", "#498981", "#a2c7a0"], cloth: ["#33476b", "#6989a4", "#abd1d0"], metal: ["#4a787b", "#8eb8b0", "#c6d9bd", "#ecedd0"], hair: ["#274d6f", "#5294b0", "#b0dfd5"] },
+    flyer: { skin: ["#68554b", "#b89a75", "#e2c49b"], cloth: ["#304c61", "#5f92aa", "#b3d9ce"], metal: ["#425970", "#7897a6", "#c5d1c5", "#f0dfae"], hair: ["#52527c", "#9497bd", "#d1d6dc"] }
   };
   var colors = /* @__PURE__ */ new Map();
   function rgba(c2) {
@@ -1627,6 +1746,52 @@
     }
     const sorted = rig.legs.slice().sort((a, c2) => at(a.root).depth - at(c2.root).depth), far = sorted.filter((l) => at(l.root).depth < 0), near = sorted.filter((l) => at(l.root).depth >= 0);
     far.forEach(leg);
+    if (id === "serpent") {
+      for (const [i, q] of [...rig.segments].reverse().entries()) {
+        const t = at(q), r = 2 + Math.min(3, i * 0.4);
+        outlinedOval(t.x, t.y, r, r * 0.65, p.skin[0]);
+        b.oval(t.x - 1, t.y - 1, Math.max(1, r - 1), Math.max(1, r * 0.65 - 1), p.skin[1]);
+        b.dot(t.x, t.y - 2, p.skin[2]);
+      }
+      segment(rig.body, rig.head, 2, p.skin[0], p.skin[1]);
+      drawNativeFace(b, id, head, dir, p, rig);
+      if (rig.form) {
+        for (const s of [-1, 1]) {
+          const q = { x: head.x + s * 6, y: head.y + 3 };
+          b.line(head, q, p.skin[1], 1);
+          if (rig.formPath === "wild") drawNativeFace(b, id, q, dir, p, { ...rig, form: 0 });
+          else b.outlined([{ x: q.x, y: q.y - 3 }, { x: q.x + s * 3, y: q.y }, { x: q.x, y: q.y + 4 }], p.metal[2]);
+        }
+      }
+      b.data.clipped = b.clipped;
+      return b.data;
+    }
+    if (id === "flyer") {
+      for (const wing of rig.wings) {
+        const qs = wing.map(at);
+        b.outlined(qs, p.cloth[0]);
+        b.poly([qs[0], qs[1], qs[2]], p.cloth[1]);
+        b.line(qs[0], qs[2], p.cloth[2]);
+        if (rig.design === "bat") b.line(qs[1], qs[3], p.skin[0]);
+        else for (let i = 0; i < 4; i++) {
+          const t = i / 4;
+          b.line({ x: qs[1].x + (qs[2].x - qs[1].x) * t, y: qs[1].y + (qs[2].y - qs[1].y) * t }, qs[3], p.cloth[2]);
+        }
+      }
+      outlinedOval(body.x, body.y, rig.design === "faerie" ? 3 : 5, 5, p.skin[0]);
+      b.oval(body.x - 1, body.y - 1, 3, 4, p.cloth[1]);
+      segment(rig.body, rig.head, 2, p.skin[0], p.skin[1]);
+      for (const s of [-1, 1]) {
+        b.line({ x: body.x + s * 2, y: body.y + 3 }, { x: body.x + s * 3, y: body.y + 7 }, p.metal[2]);
+        b.dot(body.x + s * 4, body.y + 7, p.metal[3]);
+      }
+      drawNativeFace(b, id, head, dir, p, rig);
+      if (rig.form) {
+        b.outlined([{ x: body.x - 3, y: body.y - 1 }, { x: body.x + 3, y: body.y - 1 }, { x: body.x + 5, y: body.y + 8 }, { x: body.x, y: body.y + 5 }, { x: body.x - 5, y: body.y + 8 }], rig.formPath === "warden" ? p.metal[1] : p.cloth[2]);
+      }
+      b.data.clipped = b.clipped;
+      return b.data;
+    }
     if (["knight", "elf", "caster", "fox"].includes(id)) {
       const wind = rig.cape?.map((v) => typeof v === "number" ? v : v.angle) || [0, 1, 2].map((i) => (moving ? 0.7 : 0.06) + Math.sin(rig.phase * Math.PI * 2 - i * 0.65) * (moving ? 0.2 : 0.04));
       const root = at({ ...rig.body, x: rig.body.x - 5, z: rig.body.z + 6 }), rear = at({ ...rig.pelvis, x: rig.pelvis.x - 12 - (wind[1] || 0) * 12, z: rig.pelvis.z - 7 + (wind[1] || 0) * 9 });
@@ -1656,6 +1821,15 @@
         b.dot(Math.round(x) + FACE_VIEWS[dir].sign * 2, y + 2, p.metal[3]);
       }
       for (let i = 0; i < 3; i++) b.oval(x + (i - 1) * 6, y + ry - 1, 2, 1, p.skin[1]);
+      if (rig.form) {
+        const crownY = y - ry - 2;
+        for (const dx of [-5, 0, 5]) {
+          b.line({ x: x + dx, y: crownY + 2 }, { x: x + dx, y: crownY - 2 }, p.metal[1]);
+          b.dot(x + dx, crownY - 3, p.metal[3]);
+        }
+        if (rig.formPath === "warden") for (const s of [-1, 1]) b.outlined([{ x: x + s * rx, y }, { x: x + s * (rx + 3), y: y + 4 }, { x: x + s * rx, y: y + 7 }], p.cloth[2]);
+        else for (const s of [-1, 1]) outlinedOval(x + s * (rx + 3), y - 3, 2, 2, p.metal[2]);
+      }
       if (rig.state === "cast" || rig.state === "attack") {
         const q = at(rig.weapon.tip);
         outlinedOval(q.x, q.y, 2 + Math.round(rig.phase * 2), 2, p.metal[2]);
@@ -1699,6 +1873,21 @@
           b = torsoBrush2;
         }
       }
+      if (rig.form) {
+        const armor = rig.formPath === "warden";
+        if (id === "mech") {
+          b.outlined([{ x: body.x - 7, y: body.y - 3 }, { x: body.x, y: body.y - 7 }, { x: body.x + 6, y: body.y - 2 }, { x: body.x + 5, y: body.y + 4 }, { x: body.x - 7, y: body.y + 3 }], armor ? p.metal[1] : p.cloth[1]);
+          const q = at(rig.weapon.tip);
+          for (const s of [-1, 1]) b.line({ x: head.x, y: head.y + s * 2 }, { x: q.x, y: q.y + s * (armor ? 2 : 4) }, p.metal[2], 1);
+        } else if (id === "spider") {
+          for (const s of [-1, 1]) b.outlined([{ x: body.x + s * 4, y: body.y - 1 }, { x: body.x + s * 9, y: body.y - 5 }, { x: body.x + s * 7, y: body.y + 2 }], armor ? p.metal[2] : p.cloth[2]);
+          b.line({ x: head.x - 4, y: head.y + 2 }, { x: head.x - 5, y: head.y + 7 }, p.metal[3]);
+          b.line({ x: head.x + 4, y: head.y + 2 }, { x: head.x + 5, y: head.y + 7 }, p.metal[3]);
+        } else {
+          for (let i = -1; i <= 1; i++) b.outlined([{ x: body.x + i * 4 - 2, y: body.y - 3 }, { x: body.x + i * 4, y: body.y - (armor ? 5 : 8) }, { x: body.x + i * 4 + 2, y: body.y - 3 }], armor ? p.metal[1] : p.cloth[2]);
+          b.line({ x: body.x - 5, y: body.y }, { x: body.x + 5, y: body.y }, armor ? p.metal[3] : p.cloth[1], 1);
+        }
+      }
       near.forEach(leg);
       b.data.clipped = b.clipped;
       return b.data;
@@ -1737,6 +1926,15 @@
     }
     b.line({ x: pelvis.x - 4, y: pelvis.y - 1 }, { x: pelvis.x + 4, y: pelvis.y - 1 }, p.metal[0], 1);
     b.rect(pelvis.x - 1, pelvis.y - 2, 2, 2, p.metal[3]);
+    if (rig.design === "skeleton") {
+      for (const dy of [-2, 0, 2]) b.line({ x: body.x - 3, y: body.y + dy }, { x: body.x + 3, y: body.y + dy }, p.skin[2]);
+      b.line({ x: body.x, y: body.y - 3 }, { x: body.x, y: body.y + 3 }, p.skin[0]);
+    }
+    if (rig.form) {
+      const armor = rig.formPath === "warden", r = rig.form === 2 ? 4 : 3;
+      for (const s of [-1, 1]) b.outlined([{ x: body.x + s * 3, y: body.y - 4 }, { x: body.x + s * (3 + r), y: body.y - 3 }, { x: body.x + s * (4 + r), y: body.y }, { x: body.x + s * 3, y: body.y + 1 }], armor ? p.metal[1] : p.cloth[1]);
+      b.line({ x: body.x - 2, y: body.y - 3 }, { x: body.x + 2, y: body.y - 3 }, p.metal[3]);
+    }
     near.forEach(leg);
     rig.arms.filter((a) => at(a.root).depth >= body.depth).forEach(drawArm);
     drawGear("middle");
@@ -1749,6 +1947,10 @@
     const torsoBrush = b;
     if (rig.ragdoll) b = new PixelBrush();
     drawNativeFace(b, id, head, dir, p, rig);
+    if (rig.form && ["knight", "orc", "elf", "caster", "wolf", "fox"].includes(rig.design)) {
+      const armor = rig.formPath === "warden";
+      for (const s of [-1, 1]) b.line({ x: head.x + s * 4, y: head.y - 5 }, { x: head.x + s * (armor ? 7 : 8), y: head.y - (armor ? 7 : 10) }, armor ? p.metal[2] : p.cloth[2], 1);
+    }
     if (rig.ragdoll) {
       torsoBrush.rotated(b, head, headRoll);
       b = torsoBrush;
@@ -1787,7 +1989,14 @@
         const q = (along, across) => ({ x: g.x + tx * along + nx * across, y: g.y + ty * along + ny * across });
         b.line(q(-2, 0), tip, OUT2, 1);
         b.line(q(-2, 0), tip, id === "orc" ? p.cloth[2] : p.metal[2]);
-        if (id === "orc") {
+        if (rig.gear === "hammer" || rig.gear === "club") {
+          const r = rig.gear === "hammer" ? 3 : 2;
+          b.outlined([q(len - 3, -r), q(len + 1, -r), q(len + 2, r), q(len - 3, r)], rig.gear === "hammer" ? p.metal[1] : p.cloth[1]);
+          b.line(q(len - 2, -r), q(len + 1, -r), p.metal[3]);
+        } else if (rig.gear === "knife" || rig.gear === "rapier") {
+          b.line(q(1, 0), tip, p.metal[3], rig.gear === "knife" ? 1 : 0);
+          b.line(q(2, -2), q(2, 2), p.metal[1]);
+        } else if (id === "orc") {
           const blade = (along, across) => ({ x: tip.x + tx * along + nx * across, y: tip.y + ty * along + ny * across });
           b.outlined([blade(-2, -1), blade(-3, -4), blade(0, -5), blade(2, -4), blade(2, 1), blade(0, 2)], p.metal[1]);
           b.line(blade(-2, -4), blade(1, -4), p.metal[3]);

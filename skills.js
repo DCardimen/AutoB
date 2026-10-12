@@ -502,7 +502,7 @@ const elementSkills = {
   void: "soul-siphon",
 };
 export function loadoutFor(species, level = 1) {
-  const ids = [species.id, elementSkills[species.element]];
+  const ids = [species.id, species.secondary || elementSkills[species.element]];
   if (["Rare", "Epic", "Legendary"].includes(species.rarity) || level >= 5)
     ids.push(
       {

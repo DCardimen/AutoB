@@ -15,7 +15,9 @@ page.on("pageerror", (e) => errors.push(e.message));
 page.on("response", (r) => {
   if (r.status() >= 400) errors.push(`HTTP ${r.status()} ${r.url()}`);
 });
-const fixture = makeRun(3,NATIVE_STARTERS);
+const campaignDifficulty=process.env.CAMPAIGN_DIFFICULTY||"standard";
+const fixture = makeRun(3,NATIVE_STARTERS,{difficulty:campaignDifficulty,chaos:1});
+report.difficulty=campaignDifficulty;
 fixture.route = generateRoute(fixture);
 const node = fixture.route[0][0];
 fixture.encounterType = "battle";
@@ -26,7 +28,7 @@ await page.addInitScript(
       localStorage.setItem(
         "starfall-menagerie-v1",
         JSON.stringify({
-          profile: { owned: starters, runs: 1, tutorial: true },
+          profile: { owned: starters, runs: 1, tutorial: true, chaosUnlocked: 1 },
           run: data,
           phase: "prep",
           node,
@@ -356,8 +358,13 @@ report.checks.push(
 assert.deepEqual(errors, []);
 report.checks.push("No browser exceptions or failed HTTP responses");
 report.checks = [...new Set(report.checks)];
+if(campaignDifficulty==='chaos'){
+ assert.ok(await page.evaluate(()=>starfall.state.profile.chaosCleared>=1));
+ await page.locator('#new-run').click();assert.match(await page.locator('.starter-budget').textContent(),/\/ 13 starter points/);await page.locator('[data-action="close"]').first().click();
+ report.checks.push('Full Chaos 1 victory unlocks and persists the thirteen-point starter budget');
+}
 fs.writeFileSync(
-  "playtest-artifacts/native-expedition-browser-report.json",
+  campaignDifficulty==="chaos"?"playtest-artifacts/native-chaos1-browser-report.json":"playtest-artifacts/native-expedition-browser-report.json",
   JSON.stringify(report, null, 2),
 );
 console.log(JSON.stringify(report, null, 2));

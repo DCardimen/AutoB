@@ -1,3 +1,4 @@
+import {drawFamilyFace} from './native-faces.js';
 // Feature positions are authored per facing, never interpolated across a face.
 // +X is forward and +Y is anatomical right; these layouts share that convention.
 export const FACE_VIEWS=[
@@ -13,6 +14,7 @@ export const FACE_VIEWS=[
 export const FACE_IDENTITIES={knight:'gold visor and red crest',orc:'amber eyes, square jaw and ivory tusks',elf:'green eyes, swept blonde fringe and pointed ears',caster:'violet eyes, silver bob and blue circlet',fox:'amber eyes, dark ear tips and cream muzzle',wolf:'brown eyes, folded ears and cream jowls',mech:'single turquoise lens and brass brow',spider:'six violet eyes and paired ivory fangs',jelly:'navy eyes and pearl smile'};
 const OUT='#20272a';
 export function drawNativeFace(b,id,center,dir,p,rig){
+ if(drawFamilyFace(b,center,dir,p,rig,FACE_VIEWS))return;
  const hx=Math.round(center.x),hy=Math.round(center.y),v=FACE_VIEWS[dir],back=!v.eyes.length,profile=v.view==='profile',quarter=v.view==='quarter',sign=v.sign,dead=rig.death>0;
  const oval=(x,y,rx,ry,c)=>{b.oval(x,y,rx+1,ry+1,OUT);b.oval(x,y,rx,ry,c);};
  const eye=(dx,color,far=false)=>{

@@ -35,6 +35,8 @@ export function ragdollRig(d,recover=0){
   if(rig.shield)rig.shield={grip:rig.arms.find(a=>a.side===-1).end};
   rig.tail={x:rig.pelvis.x-27,y:rig.pelvis.y,z:rig.pelvis.z+2};
   if(d.id==='jelly')rig.squash=1+Math.min(1,d.time)*2*(1-recover);
+  if(base.wings)rig.wings=base.wings.map(w=>w.map(q=>({...q,x:q.x+rig.body.x-base.body.x,y:q.y+rig.body.y-base.body.y,z:Math.max(3,q.z+rig.body.z-base.body.z)})));
+  if(base.segments)rig.segments=base.segments.map(q=>({...q,z:Math.max(3,q.z*(1-rig.death))}));
   return rig;
 }
 const previewCache=new Map();

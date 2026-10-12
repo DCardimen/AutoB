@@ -7,8 +7,8 @@ function fixture(id='aurel',enemy='brakk'){
  for(const [i,v]of b.units.entries()){v.x=v.px=350+i*50;v.y=v.py=400;v.attackTimer=999;v.dodgeCooldown=999;v.speed=0;for(const c of Object.values(v.cooldowns))c.remaining=999;}
  return {run,b,u,t};
 }
-test('native runs keep six unique starters and nine complete native family loadouts',()=>{
- assert.equal(NATIVE_SPECIES.length,9);const run=makeRun(1,NATIVE_STARTERS);assert.ok(run.native);assert.equal(new Set(run.team.map(c=>c.id)).size,6);assert.equal(SPECIES.length,69);assert.equal(makeRun(1).native,false);
+test('native runs keep six unique starters and 21 complete native family loadouts',()=>{
+ assert.equal(NATIVE_SPECIES.length,21);const run=makeRun(1,NATIVE_STARTERS);assert.ok(run.native);assert.equal(new Set(run.team.map(c=>c.id)).size,6);assert.equal(SPECIES.length,81);assert.equal(makeRun(1).native,false);
  for(const s of NATIVE_SPECIES){assert.ok(s.nativeRig&&s.evolvedName&&s.trait);assert.ok(NATIVE_POOLS.some(ids=>ids.includes(s.id)));}
 });
 test('native encounters and shops recruit native families, while legacy runs retain their original pools',()=>{

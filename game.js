@@ -1,6 +1,6 @@
 import {evaluateOrders,terrainFor,firstTerrainHit,terrainSteering,confineTerrain,orderGoal} from './native-tactics.js';
 import {NATIVE_BOUNDS,nativeSpawn,initializeNative,nativeAction,advanceNative,nativeBladePoint,nativeHeavy,nativeMuzzle} from './native-combat.js';
-import { NATIVE_SPECIES, NATIVE_STARTERS, NATIVE_POOLS, nativeEvolution } from './native-content.js';
+import { NATIVE_SPECIES, NATIVE_STARTERS, NATIVE_POOLS, nativeEvolution, nativeSkill, nativePool, lineageLimit, lineageProgress, settleNativeGrowth } from './native-content.js';
 import { SKILLS, loadoutFor } from "./skills.js";
 import { EXPANSION_SPECIES } from "./roster.js";
 import {
@@ -748,13 +748,14 @@ export function relicSlots(c) {
   return RELIC_SLOTS[BY_ID[c.id].rarity] + evolutionStage(c);
 }
 export function evolutionOffer(run, c) {
+  const limit=lineageLimit(c), accomplishment=lineageProgress(c);
   const stage = evolutionStage(c),
     level = stage === 0 ? 5 : 8,
     cost = stage === 0 ? 50 : 100;
-  if (stage === 2)
-    return { ready: false, reason: "Fully ascended", level, cost, stage };
-  if (c.level < level)
-    return { ready: false, reason: `Reach level ${level}`, level, cost, stage };
+  if (stage >= limit)
+    return { ready:false, reason:limit===0?"This family arrives in its final form":"Final form reached",level,cost,stage,limit,accomplishment };
+  if (c.level < level && !(accomplishment?.ready && c.level >= accomplishment.minimumLevel))
+    return {ready:false,reason:`Reach level ${level} or complete the family accomplishment at level ${accomplishment?.minimumLevel||level}`,level,cost,stage,limit,accomplishment};
   if (run.gold < cost)
     return {
       ready: false,
@@ -763,7 +764,7 @@ export function evolutionOffer(run, c) {
       cost,
       stage,
     };
-  return { ready: true, reason: "Ready to evolve", level, cost, stage };
+  return {ready:true,reason:"Ready to evolve",level,cost,stage,limit,accomplishment,route:c.level>=level?"level":"accomplishment"};
 }
 export function evolveCreature(run, index, path) {
   const c = run.team[index];
@@ -1132,6 +1133,7 @@ export function makeRun(seed = Date.now(), ids = STARTERS, options = {}) {
     integrity: 3,
     wins: 0,
     kills: 0,
+        nativeResolvedSkills: 0,
     stance: "balanced",
     shop: null,
     complete: false,
@@ -1216,8 +1218,9 @@ export function defaultDeployment(c, index) {
     column: index >= 3 ? 1 : BY_ID[c.id].range > 100 ? 0 : 2,
   };
 }
+export function skillDefinition(c,id){return nativeSkill(c,SKILLS[id]);}
 export function effectiveSkill(c, id) {
-  const def = SKILLS[id],
+  const def = skillDefinition(c,id),
     mod = linkedSupport(c, id);
   return {
     ...def,
@@ -1274,7 +1277,7 @@ export function encounter(run, type = "battle", seed = 1) {
         : run.planet === 1
           ? 3
           : 4;
-  const encounterPool = run.native ? NATIVE_POOLS[run.planet] : p.pool.filter(id=>!BY_ID[id].nativeRig);
+  const encounterPool = run.native ? nativePool(run,type) : p.pool.filter(id=>!BY_ID[id].nativeRig);
   const pool = encounterPool.filter((id) => rarityRank[BY_ID[id].rarity] <= maxRank);
   const weights = {
     Common: 5,
@@ -1403,11 +1406,11 @@ export function generateShop(run, seed) {
     relics,
     personal,
     creature: pick(
-      SPECIES.filter((s) => s.rarity !== "Legendary" && (!run.native || s.nativeRig)),
+      SPECIES.filter((s) => s.rarity !== "Legendary" && (!run.native || NATIVE_POOLS[run.planet].includes(s.id))),
       r,
     ).id,
     legendary: pick(
-      SPECIES.filter((s) => s.rarity === "Legendary" && (!run.native || s.nativeRig)),
+      SPECIES.filter((s) => s.rarity === "Legendary" && (!run.native || NATIVE_POOLS[run.planet].includes(s.id))),
       r,
     ).id,
     sold: [],
@@ -1549,7 +1552,8 @@ export function settleDefeat(run, key, seed) {
   run.defeatLedger[key] = outcome;
   return outcome;
 }
-export function rewardBattle(run, type, won) {
+export function rewardBattle(run, type, won, battle = null) {
+  settleNativeGrowth(run,battle);
   if (won) {
     run.wins++;
     const gold = Math.round(
@@ -1798,6 +1802,7 @@ export class Battle {
   constructor(run, foes, seed = 1) {
     this.run = run;
     this.native=!!run.native;
+    this.growthKey=`${run.planet}:${run.depth}:${seed}:${run.wins}:${run.integrity}`;
     this.bounds=this.native?NATIVE_BOUNDS:undefined;
     this.terrain=terrainFor(run,seed);
     this.random = rng(seed);
@@ -1834,6 +1839,7 @@ export class Battle {
       chargedStrikes:0, armorResists:0, bladeContacts:0, terrainBlocks:0, interruptedSkills:0,
       dodges: 0,
       skills: 0,
+        nativeResolvedSkills: 0,
       damage: 0,
       healing: 0,
       crits: 0,
@@ -1891,7 +1897,7 @@ export class Battle {
       const cooldowns = Object.fromEntries(
         loadout.active.map((id, i) => {
           const total =
-            SKILLS[id].cd * st.cdFactor * linkedSupport(c, id).cooldown;
+            skillDefinition(c,id).cd * st.cdFactor * linkedSupport(c, id).cooldown;
           return [
             id,
             { total, remaining: 1.6 + i * 1.8 + this.random() * 3, casts: 0 },
@@ -1974,6 +1980,7 @@ export class Battle {
         damage: 0,
         healed: 0,
         kills: 0,
+        nativeResolvedSkills: 0,
         flash: 0,
         attackAnim: 0,
         castAnim: 0,
@@ -2333,7 +2340,7 @@ export class Battle {
   }
   hit(target, amount, source, skillId, scale = 1, proc = true, kind = "hit") {
     if (!target || target.hp <= 0) return 0;
-    const def = SKILLS[skillId],
+    const def = skillDefinition(source,skillId),
       m = linkedSupport(source, skillId),
       syn = target.side === 0 ? this.teamSyn : this.foeSyn;
     const trait = CREATURE_TRAITS[source.id],
@@ -2661,7 +2668,7 @@ export class Battle {
   supportedUse(u, id, echo) {
     if (echo) return;
     const m = linkedSupport(u, id),
-      def = SKILLS[id];
+      def = skillDefinition(u,id);
     if (m.blood) u.hp = Math.max(1, u.hp - u.hp * m.blood);
     const friends = this.living(u.side).sort(
         (a, b) => a.hp / a.maxHp - b.hp / b.maxHp,
@@ -2759,7 +2766,7 @@ export class Battle {
   // Attacks commit to a direction; a moved target is never hit by identity alone.
   beginStrike(u, target, id, scale = 1, options = {}) {
     if (!target) return null;
-    const def = SKILLS[id],
+    const def = skillDefinition(u,id),
       m = linkedSupport(u, id),
       dx = target.x - u.x,
       dy = target.y - u.y,
@@ -3048,7 +3055,7 @@ export class Battle {
 
   projectile(u, t, id, power, scale = 1, proc = true, aim = null) {
     if (!t) return;
-    const def = SKILLS[id],
+    const def = skillDefinition(u,id),
       color = def.color || ELEMENTS[BY_ID[u.id].element].color;
     const speed = def.auto ? 410 : 535,
       mark = aim || t,
@@ -3087,7 +3094,7 @@ export class Battle {
     });
   }
   zone(u, t, id, power, radius, delay, scale = 1) {
-    const def = SKILLS[id],
+    const def = skillDefinition(u,id),
       m = {...linkedSupport(u, id)};
     m.area*=nativeEvolution(u).area||1;
     this.hazards.push({
@@ -3112,7 +3119,7 @@ export class Battle {
   }
   cast(u, id, target, scale = 1, echo = false, committed = false) {
     if (u.hp <= 0) return;
-    const def = SKILLS[id],
+    const def = skillDefinition(u,id),
       m = {...linkedSupport(u, id)},
       auto = def.auto,
       t = this.castTarget(u, id, target?.hp > 0 ? target : this.target(u));
@@ -3142,7 +3149,7 @@ export class Battle {
       u.actionLock = Math.max(u.actionLock, 0.22);
       if(!committed)u.stamina = Math.max(0, u.stamina - 10);
       u.castAnim = 0.65;
-      this.metrics.skills++;
+      this.metrics.skills++;u.nativeResolvedSkills++;
       this.say(`${creatureName(u)} uses ${def.name}${echo ? " · Echo" : ""}.`);
       this.effect(u.x, u.y - 67, def.name, color);
       this.fx("cast", u.x, u.y, color, { r: 45, ttl: 0.65, max: 0.65 });
@@ -3240,6 +3247,7 @@ export class Battle {
     } else if (def.kind === "heal-all") {
       friends.forEach((f) => {
         this.heal(f, def.heal, u, id, true, scale);
+        if(def.cleanse)this.cleanse(f);
         if (def.shield)
           f.shield = Math.min(
             f.maxHp * 0.7,
@@ -3442,7 +3450,7 @@ export class Battle {
     }
   }
   castTarget(u, id, fallback) {
-    const def = SKILLS[id],
+    const def = skillDefinition(u,id),
       enemies = this.living(1 - u.side);
     if (!fallback) return null;
     if(this.native&&['heal','heal-all','awakening','shield'].includes(def.kind))return this.living(u.side).sort((a,b)=>a.hp/a.maxHp-b.hp/b.maxHp)[0]||fallback;
@@ -3463,7 +3471,7 @@ export class Battle {
     return fallback;
   }
   shouldCast(u, id) {
-    const def = SKILLS[id],
+    const def = skillDefinition(u,id),
       friends = this.living(u.side),
       enemies = this.living(1 - u.side);
     if (!enemies.length) return false;
@@ -3481,7 +3489,7 @@ export class Battle {
       return (
         friends.some(
           (a) =>
-            a.hp + (this.native?this.queue.filter(q=>q.nativeCast&&q.source.side===u.side&&(SKILLS[q.skillId].kind==="heal-all"||q.target?.uid===a.uid)).reduce((n,q)=>n+(SKILLS[q.skillId].heal||0),0):0) < a.maxHp * 0.82 ||
+            a.hp + (this.native?this.queue.filter(q=>q.nativeCast&&q.source.side===u.side&&(skillDefinition(q.source,q.skillId).kind==="heal-all"||q.target?.uid===a.uid)).reduce((n,q)=>n+(skillDefinition(q.source,q.skillId).heal||0),0):0) < a.maxHp * 0.82 ||
             (def.cleanse &&
               (a.burn > 0 || a.poison > 0 || a.bleed > 0 || a.root > 0)),
         ) ||
@@ -4080,7 +4088,7 @@ export class Battle {
           if (q.target?.hp > 0)
             this.hit(
               q.target,
-              q.source.atk * (q.power ?? SKILLS[q.skillId].power),
+              q.source.atk * (q.power ?? skillDefinition(q.source,q.skillId).power),
               q.source,
               q.skillId,
               q.scale,
@@ -4126,7 +4134,7 @@ export class Battle {
           "projectile",
         );
         if (impact.unit !== p.target) this.metrics.blockedProjectiles++;
-        const def = SKILLS[p.skillId];
+        const def = skillDefinition(p.source,p.skillId);
         if (def.radius)
           this.living(1 - p.source.side)
             .filter(

@@ -1,3 +1,4 @@
+import {nativeFormRig,formProfile} from './native-forms.js';
 import {PROTOTYPE_BY_ID,makePrototypeUnit} from './prototype-engine.js';
 import {characterRig,weaponTipAt,plantFeet,locomotionStride} from './prototype-rig.js';
 import {stepCape,createRagdoll,stepRagdoll} from './prototype-dynamics.js';
@@ -10,7 +11,7 @@ export function nativeSpawn(spec,unit,side,index){
 }
 export function initializeNative(u,spec){
  const id=actorId(spec,u);if(!id)return;
- u.nativeActor=makePrototypeUnit(id,u.side,0,u.x,u.y);u.nativeActor.uid=u.uid;
+ u.nativeActor=makePrototypeUnit(id,u.side,0,u.x,u.y);u.nativeActor.uid=u.uid;u.nativeActor.family=spec;u.nativeActor.stride=formProfile(spec,u).stride||u.nativeActor.stride;
  u.facing=u.side?Math.PI:0;u.meleeCount=0;u.nativeActor.facing=u.facing;u.nativeActor.moveFacing=u.facing;
  u.maxPoise+=(nativeEvolution(u).poise||0);
 }
@@ -51,13 +52,14 @@ export function advanceNative(u,dt,time){
 
 }
 export function nativeBladePoint(u,strike,phase){
- const point=weaponTipAt(u.nativeActor.id,phase,Math.atan2(strike.dy,strike.dx),{swing:strike.style,charged:strike.charged});
+ const rig=nativeFormRig(u.nativeActor.family,u,characterRig(u.nativeActor.id,'attack',phase,'windup',{swing:strike.style,charged:strike.charged})),angle=Math.atan2(strike.dy,strike.dx),tip=rig.weapon?.tip||(u.nativeActor.id==='wolf'?{...rig.head,x:rig.head.x+16,z:rig.head.z-3}:rig.head);
+ const point={x:tip.x*Math.cos(angle)-tip.y*Math.sin(angle),y:tip.x*Math.sin(angle)+tip.y*Math.cos(angle),z:tip.z};
  return {x:u.x+point.x,y:u.y+point.y,z:point.z};
 }
 export function nativeHeavy(u){return ['knight','orc'].includes(u.nativeActor?.id);}
 export function nativeMuzzle(u,target){
  if(!u.nativeActor)return {x:u.x,y:u.y-15,z:45};
- const id=u.nativeActor.id,angle=Math.atan2(target.y-u.y,target.x-u.x),rig=characterRig(id,['caster','jelly'].includes(id)?'cast':'attack',1,'windup');
+ const id=u.nativeActor.id,angle=Math.atan2(target.y-u.y,target.x-u.x),rig=nativeFormRig(u.nativeActor.family,u,characterRig(id,['caster','jelly'].includes(id)?'cast':'attack',1,'windup'));
  const hand=['elf','fox'].includes(id)?rig.weapon.grip:rig.weapon?.tip||rig.head;
  return {x:u.x+hand.x*Math.cos(angle)-hand.y*Math.sin(angle),y:u.y+hand.x*Math.sin(angle)+hand.y*Math.cos(angle)-14,z:hand.z};
 }

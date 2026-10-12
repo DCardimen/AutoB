@@ -18,6 +18,7 @@ export const PROTOTYPE_BY_ID=Object.fromEntries(PROTOTYPE_CHARACTERS.map(x=>[x.i
 for(const spec of PROTOTYPE_CHARACTERS){if(['elf','caster'].includes(spec.id))spec.ranged=true;if(spec.id==='caster')spec.casts=true;}
 export const HERO_IDS=['knight','orc','elf','caster','fox'];
 export const circuitCenter=i=>({x:230+(i%3)*270,y:205+Math.floor(i/3)*225});
+for(const id of ['serpent','flyer'])PROTOTYPE_BY_ID[id]={id,name:id,mass:.8,hp:250,speed:100,run:185,sprint:235,reach:id==='flyer'?250:50,damage:25,windup:.3,recovery:.3,cooldown:1.2,radius:18,stride:80,ranged:id==='flyer'};
 for(const spec of PROTOTYPE_CHARACTERS)spec.sprint=Math.round(spec.run*(spec.id==='wolf'?1.4:spec.id==='orc'?1.3:1.35));
 export const ANIMATION_STATES=['idle','walk','run','sprint','turn','attack','slash','charge','cast','dash','dodge','hit','stagger','knockdown','getup','stop','death'];
 export const ANTICIPATION_LEVELS={1:{name:'Quick',color:'#e7d39d'},2:{name:'Heavy',color:'#eea96e'},3:{name:'Charged · uninterruptible',color:'#aee8ef'}};

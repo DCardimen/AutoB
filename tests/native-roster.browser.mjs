@@ -1,0 +1,36 @@
+import {chromium} from 'playwright';
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import {NATIVE_SPECIES,NATIVE_STARTERS} from '../native-content.js';
+import {makeRun,generateRoute,encounter,creature} from '../game.js';
+const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||'/usr/bin/chromium',headless:true,args:['--no-sandbox']});
+const url=(process.env.BASE_URL||'http://127.0.0.1:3012')+'/index.html',report={checks:[],errors:[]};
+const page=await browser.newPage({viewport:{width:1440,height:1050}});
+page.on('pageerror',e=>report.errors.push(e.message));page.on('response',r=>{if(r.status()>=400)report.errors.push(r.status()+' '+r.url());});
+try{
+ const run=makeRun(19,NATIVE_STARTERS);run.team[0]=creature('brom',3);run.team[0].accomplishments={shielded:180};run.team[1]=creature('grit',8);run.team[2]=creature('solara',8);run.route=generateRoute(run);const node=run.route[0][0],{random,...data}=run;
+ await page.addInitScript(({data,node,foes,owned})=>{if(!localStorage.getItem('starfall-menagerie-v1'))localStorage.setItem('starfall-menagerie-v1',JSON.stringify({version:2,run:data,node,foes,phase:'prep',profile:{owned,runs:1,tutorial:true}}));},{data,node,foes:encounter(run,'battle',node.seed),owned:NATIVE_SPECIES.map(s=>s.id)});
+ await page.clock.install();await page.goto(url);await page.clock.runFor(300);
+ assert.ok(await page.evaluate(()=>localStorage.getItem('starfall-menagerie-v1.backup-v2')));assert.match(await page.locator('.local-label').textContent(),/V10/);
+ const before=await page.evaluate(()=>JSON.stringify(starfall.state.run));await page.locator('[data-character-height]').first().evaluate(el=>{el.value='85';el.dispatchEvent(new Event('input',{bubbles:true}));});
+ assert.equal(await page.evaluate(()=>starfall.state.profile.characterHeight),85);assert.equal(await page.evaluate(()=>JSON.stringify(starfall.state.run)),before);
+ await page.reload();await page.clock.runFor(300);assert.equal(await page.locator('[data-character-height]').first().inputValue(),'85');
+ await page.locator('[data-character-height]').first().evaluate(el=>{el.value='110';el.dispatchEvent(new Event('input',{bubbles:true}));});assert.equal(await page.evaluate(()=>starfall.state.profile.characterHeight),110);
+ report.checks.push('Schema-2 backup, live height slider at 85–110%, reload persistence and unchanged expedition stats');
+ await page.locator('[data-action="roster"]').first().click();assert.equal(await page.locator('[data-roster="family"] option').count(),21);
+ for(const [id,count]of [['solara',1],['grit',2],['brom',3]]){await page.locator('[data-roster="family"]').selectOption(id);assert.equal(await page.locator('[data-roster="form"] option').count(),count);}
+ for(const id of ['nix','zephyr','luma','vesper']){await page.locator('[data-roster="family"]').selectOption(id);await page.locator('[data-roster="state"]').selectOption('run');await page.clock.runFor(500);await page.locator('#roster-canvas').screenshot({path:'playtest-artifacts/v10-'+id+'-directions.png'});}
+ await page.locator('[data-roster="family"]').selectOption('brom');await page.locator('[data-roster="form"]').selectOption('2');await page.locator('[data-roster="path"]').selectOption('warden');await page.clock.runFor(500);await page.locator('#roster-canvas').screenshot({path:'playtest-artifacts/v10-roster-forms.png'});
+ assert.equal(await page.locator('[data-roster="state"] option').count(),17);report.checks.push('All 21 families, 17 poses and eight directions are inspectable; one-, two- and three-form controls obey their limits');
+ await page.locator('[data-action="close"]').first().click();await page.locator('[data-creature="0"]').click();assert.match(await page.locator('.family-info').textContent(),/Habitat/);assert.match(await page.locator('.lineage-progress').textContent(),/180 \/ 180/);
+ await page.locator('[data-equip]').first().click();const link=await page.locator('.gem-link').inputValue();await page.locator('[data-evolve="warden"]').click();await page.clock.runFor(2500);await page.locator('[data-action="evolution-back"]').click();assert.equal(await page.evaluate(()=>starfall.state.run.team[0].evolution),1);assert.equal(await page.locator('.gem-link').inputValue(),link);assert.match(await page.locator('.ability-list').textContent(),/Rootshield Elder/);
+ await page.locator('[data-action="close"]').first().click();await page.reload();await page.clock.runFor(300);assert.equal(await page.evaluate(()=>starfall.state.run.team[0].evolutionPath),'warden');
+ await page.locator('[data-creature="1"]').click();assert.equal(await page.locator('.evolution-form').count(),2);await page.locator('[data-action="close"]').first().click();await page.locator('[data-creature="2"]').click();assert.equal(await page.locator('.evolution-form').count(),1);assert.equal(await page.locator('[data-evolve]').count(),0);assert.match(await page.locator('.evolution-status').textContent(),/final form/);await page.locator('[data-action="close"]').first().click();
+ report.checks.push('Combat route evolves at level 3; support links and the Warden branch persist; final-form phoenix has no evolution purchase');
+ await page.locator('#new-run').click();for(const id of NATIVE_STARTERS)await page.locator(`[data-starter="${id}"]`).click();for(const id of ['solara','cogwalker','aurel','brakk','syl','rowan'])await page.locator(`[data-starter="${id}"]`).click();assert.match(await page.locator('.starter-budget').textContent(),/13 \/ 12/);assert.ok(await page.locator('[data-action="confirm-run"]').isDisabled());
+ await page.locator('[data-action="close"]').first().click();await page.evaluate(()=>{const key='starfall-menagerie-v1',data=JSON.parse(localStorage.getItem(key));data.profile.chaosCleared=1;data.profile.chaosUnlocked=2;localStorage.setItem(key,JSON.stringify(data));});await page.reload();await page.clock.runFor(300);await page.locator('#new-run').click();for(const id of NATIVE_STARTERS)await page.locator(`[data-starter="${id}"]`).click();for(const id of ['solara','cogwalker','aurel','brakk','syl','rowan'])await page.locator(`[data-starter="${id}"]`).click();assert.match(await page.locator('.starter-budget').textContent(),/13 \/ 13/);assert.ok(await page.locator('[data-action="confirm-run"]').isEnabled());
+ await page.locator('[data-action="confirm-run"]').click();assert.equal(await page.evaluate(()=>starfall.state.run.team.length),6);assert.ok(await page.evaluate(()=>starfall.state.run.team.some(c=>c.id==='solara')));assert.ok(await page.evaluate(()=>starfall.state.run.team.every(c=>c.evolution===0)));
+ report.checks.push('A legal six-member 13-point team is blocked before Chaos 1 and can start after loading a saved Chaos 1 completion; run growth resets');
+ await page.setViewportSize({width:390,height:844});await page.locator('[data-action="roster"]').first().click();await page.clock.runFor(500);assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));await page.screenshot({path:'playtest-artifacts/v10-roster-mobile.png',fullPage:true});report.checks.push('Roster and height controls fit a 390px mobile screen');
+ assert.deepEqual(report.errors,[]);fs.writeFileSync('playtest-artifacts/v10-roster-browser-report.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report));
+}finally{await browser.close();}

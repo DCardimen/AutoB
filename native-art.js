@@ -1,3 +1,5 @@
+import {nativeFormRig,formProfile} from './native-forms.js';
+import {nativePoseRig} from './native-poses.js';
 import {NATIVE_SPECIES,NATIVE_BOSS_RIGS} from './native-content.js';
 import {makePrototypeUnit,animationState} from './prototype-engine.js';
 import {spriteSample} from './prototype-sprites.js';
@@ -7,6 +9,10 @@ import {renderCharacterFrame} from './prototype-renderer.js';
 import {PIXEL_PALETTES,PIVOT,CELL} from './prototype-pixel-art.js';
 import {nativeSpawn} from './native-combat.js';
 import {terrainFor} from './native-tactics.js';
+let characterHeight=1;
+export function setCharacterHeight(value){characterHeight=Math.max(.85,Math.min(1.1,Number(value)||1));}
+export function getCharacterHeight(){return characterHeight;}
+export function nativePreviewFrame(c,state='idle',phase=.25,dir=1){const key=['preview',c.id,c.evolution,c.evolutionPath,state,phase,dir,characterHeight].join(':');if(!frames.has(key)){const spec=byId[c.id];frames.set(key,renderCharacterFrame(spec.nativeRig,nativePoseRig(spec,c,state,phase,characterHeight),dir*Math.PI/4));if(frames.size>256)frames.delete(frames.keys().next().value);}return frames.get(key);}
 export const nativeScreen=(x,y)=>({x,y:y*.58+75});
 const scene=document.createElement('canvas');scene.width=1002;scene.height=654;
 const pixel=document.createElement('canvas');pixel.width=334;pixel.height=218;
@@ -27,8 +33,8 @@ export function drawNativeUnit(c,u,spec,x,y,time,pixelScale=3){
  const actor=actorFor(u,spec),sample=spriteSample(actor,time,u.nativeActor?null:{state:'idle',phase:.25});
  let rig=characterRig(actor.id,sample.state,sample.phase,sample.stage,{...sample,stride:actor.stride});rig.cape=sample.cape;
  if(actor.ragdoll)rig=ragdollRig(actor.ragdoll,actor.getup>0?1-actor.getup/.45:0);
- if(u.evolution>0){const palette=PIXEL_PALETTES[actor.id];rig.palette={...palette,cloth:u.evolutionPath==='warden'?['#284b50','#437e86','#97d6c2']:['#643443','#a35458','#e1a66b'],metal:[palette.metal[0],palette.metal[1],u.evolutionPath==='warden'?'#b4eddf':'#efd58c',palette.metal[3]]};rig.evolution=u.evolution;}
- const key=sample.key+':'+u.evolution+':'+u.evolutionPath+(actor.ragdoll?':'+actor.ragdoll.time.toFixed(4):'');let frame=frames.get(key);if(!frame){frame=renderCharacterFrame(actor.id,rig,sample.angleIndex*Math.PI/4);frames.set(key,frame);if(frames.size>256)frames.delete(frames.keys().next().value);}
+ rig=nativeFormRig(spec,u,rig,characterHeight);
+ const key=u.id+':'+characterHeight+':'+sample.key+':'+u.evolution+':'+u.evolutionPath+(actor.ragdoll?':'+actor.ragdoll.time.toFixed(4):'');let frame=frames.get(key);if(!frame){frame=renderCharacterFrame(actor.id,rig,sample.angleIndex*Math.PI/4);frames.set(key,frame);if(frames.size>256)frames.delete(frames.keys().next().value);}
  c.imageSmoothingEnabled=false;c.drawImage(frame,Math.round(x-PIVOT.x*pixelScale),Math.round(y-PIVOT.y*pixelScale),CELL*pixelScale,CELL*pixelScale);
 }
 const ring=(c,x,y,r,color,fill)=>{const p=nativeScreen(x,y);c.beginPath();c.ellipse(p.x,p.y,r,r*.58,0,0,Math.PI*2);c.strokeStyle=color;c.lineWidth=2;if(fill){c.fillStyle=fill;c.fill();}c.stroke();};
@@ -48,7 +54,7 @@ export function renderNativeBattle(display,w,h,battle,planet,time,team,foes,spec
   const p=nativeScreen(u.x,u.y),spec=species[u.id];if(u.captured)continue;c.fillStyle=u.hp>0?'#0d1b1577':'#0d1b1544';c.beginPath();c.ellipse(p.x,p.y,u.boss?34:23,7,0,0,Math.PI*2);c.fill();
   drawNativeUnit(c,u,spec,p.x,p.y,battle?battle.time:time,u.boss?4:3);
   if(u.hp<=0)continue;
-  const width=u.boss?70:42,bar=p.y-({knight:115,orc:100,elf:105,caster:116,wolf:77,fox:112,mech:90,spider:83,jelly:92}[actorFor(u,spec).id])*(u.boss?1.3:1);
+  const width=u.boss?70:42,bar=p.y-({knight:115,orc:100,elf:105,caster:116,wolf:77,fox:112,mech:90,spider:83,jelly:92,serpent:65,flyer:112}[actorFor(u,spec).id])*(u.boss?1.3:1)*characterHeight*formProfile(spec,u).height;
   c.fillStyle='#12251c';c.fillRect(p.x-width/2-1,bar-1,width+2,6);c.fillStyle=u.side?'#d48976':'#bad79a';c.fillRect(p.x-width/2,bar,width*u.hp/u.maxHp,4);
   if(u.shield>0){c.fillStyle='#99dfe0';c.fillRect(p.x-width/2,bar-4,width*Math.min(1,u.shield/u.maxHp),2);}
   if(battle){c.fillStyle='#e5bf78';c.fillRect(p.x-width/2,bar+8,width*u.stamina/100,2);c.fillStyle="#e5a47d";c.fillRect(p.x-width/2,bar+16,width*Math.min(1,(u.poise||0)/(u.maxPoise||1)),2);const a=u.nativeAction;if(a&&!a.released){c.fillStyle=a.charged?'#aee8ef':'#e2a77a';c.fillRect(p.x-width/2,bar+12,width*a.elapsed/a.windup,2);}const status=['burn','poison','root','slow','stagger','bleed'].filter(k=>u[k]>0);c.font='11px sans-serif';c.fillStyle='#e8d5b4';c.textAlign='center';if(status.length)c.fillText(status.map(k=>({burn:'F',poison:'P',root:'R',slow:'S',stagger:'!',bleed:'B'})[k]).join(' '),p.x,bar-7);}
@@ -57,7 +63,7 @@ export function renderNativeBattle(display,w,h,battle,planet,time,team,foes,spec
   if(battle?.capturePlan?.uid===u.uid&&!battle.captureSettled)ring(c,u.x,u.y,35,'#e8d385');
  }
  if(battle){
-  for(const p of battle.projectiles){const q=nativeScreen(p.x,p.y+14),z=(p.originZ||45)+(45-(p.originZ||45))*Math.min(1,p.age/(p.passTime||1));c.save();c.translate(q.x,q.y-z);c.rotate(Math.atan2(p.vy*.58,p.vx));c.fillStyle=p.nativeArrow?'#e4d7b7':p.color;c.fillRect(p.nativeArrow?-9:-3,-2,p.nativeArrow?13:6,4);c.restore();for(const t of p.trail){const v=nativeScreen(t.x,t.y+14);c.fillStyle=p.color+'66';c.fillRect(v.x-1,v.y-z,3,3);}}
+  for(const p of battle.projectiles){const q=nativeScreen(p.x,p.y+14),z=(p.originZ||45)+(45-(p.originZ||45))*Math.min(1,p.age/(p.passTime||1));c.save();c.translate(q.x,q.y-z*characterHeight);c.rotate(Math.atan2(p.vy*.58,p.vx));c.fillStyle=p.nativeArrow?'#e4d7b7':p.color;c.fillRect(p.nativeArrow?-9:-3,-2,p.nativeArrow?13:6,4);c.restore();for(const t of p.trail){const v=nativeScreen(t.x,t.y+14);c.fillStyle=p.color+'66';c.fillRect(v.x-1,v.y-z*characterHeight,3,3);}}
   for(const e of battle.effects){const p=nativeScreen(e.x,e.y);c.save();c.globalAlpha=Math.min(1,e.ttl/(e.max||.45));c.strokeStyle=e.color;c.fillStyle=e.color;c.lineWidth=e.width||3;if(e.type==='text'){c.font='bold 13px sans-serif';c.textAlign='center';c.fillText(e.text,p.x,p.y-55-(1-e.ttl)*20);}else if(e.tx!==undefined){const t=nativeScreen(e.tx,e.ty);c.beginPath();c.moveTo(p.x,p.y-45);c.lineTo(t.x,t.y-45);c.stroke();}else if(['impact','slash','cast','defeat','nova','ring','shield'].includes(e.type)){c.beginPath();c.arc(p.x,p.y-40,e.type==='impact'?10:(e.r||20)*.3,0,Math.PI*2);c.stroke();}c.restore();}
   for(const p of battle.particles){const q=nativeScreen(p.x,p.y);c.fillStyle=p.color;c.globalAlpha=Math.min(1,p.ttl/(p.max||1));c.fillRect(q.x,q.y-30,3,3);}c.globalAlpha=1;
  }

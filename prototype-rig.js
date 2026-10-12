@@ -21,6 +21,8 @@ export const RIGS={
   mech:{hip:30,thigh:16,shin:18,stance:11,body:'walker',headW:35,bodyW:62},
   spider:{hip:21,thigh:21,shin:23,stance:6,body:'arachnid',headW:30,bodyW:48},
   jelly:{hip:17,body:'gel',headW:45,bodyW:48},
+  serpent:{hip:10,body:'serpent',headW:34,bodyW:50},
+  flyer:{hip:29,body:'flyer',headW:32,bodyW:30},
 };
 
 export function projectRig(p,angle){return {x:p.x*Math.cos(angle)-p.y*Math.sin(angle),y:(p.x*Math.sin(angle)+p.y*Math.cos(angle))*0.58-p.z,depth:p.x*Math.sin(angle)+p.y*Math.cos(angle)};}
@@ -53,7 +55,7 @@ export function footSoleLift(id,pitch,ankleZ=3){
   return Math.max(0,-ankleZ-bottom);
 }
 export function legLayout(id,run=0,sprint=0){
-  if(id==='jelly')return [];
+  if(['jelly','serpent','flyer'].includes(id))return [];
   if(id==='mech')return Array.from({length:6},(_,i)=>({x:(i%3-1)*14,y:i<3?-11:11,footY:i<3?-25:25,offset:((i%3+(i<3?0:1))%2)*0.5}));
   if(id==='spider')return Array.from({length:8},(_,i)=>({x:(1.5-i%4)*8,y:i<4?-6:6,footX:(1.5-i%4)*12,footY:i<4?-32:32,offset:((i%4+(i<4?0:1))%2)*0.5+(i%4)*0.025}));
   if(id!=='wolf')return [{x:0,y:-RIGS[id].stance,offset:0},{x:0,y:RIGS[id].stance,offset:0.5}];
@@ -239,8 +241,12 @@ function creatureRig(id,state,phase,stage,options){
     return {...solved,index:i,side:l.y,front:l.x>0,foot:{...foot,position:target,ground,soleLift:lift,angle:options.feet?.[i]?.angle||0}};
   });
   if(id==='jelly'){body.z=17+Math.max(0,Math.sin(phase*TAU))*((moving?1:0)*(7+run*4+sprint*4));head.z=body.z+3;}
+  if(id==='serpent'){body.z=10-dead*5;head.x=17+(state==='attack'?Math.sin(phase*Math.PI)*9:0);head.z=19-dead*12;}
+  if(id==='flyer'){body.z=30+(moving?Math.sin(phase*TAU)*3:Math.sin(phase*TAU)*1.5)-dead*20;head.x=7;head.z=body.z+15;head.y=body.y*.5;}
   const grip=point(head.x+3,0,head.z),axis=point(1,0,0),weapon={kind:id==='mech'?'cannon':id==='jelly'?'gel':'fangs',grip,axis,tip:plus(grip,times(axis,id==='spider'?19:24)),length:24,tilt:Math.PI/2};
-  return {id,state,phase,stage,dimensions:d,pelvis,body,head,legs,arms:[],weapon,lean,sideLean:0,torsoYaw:0,crouch:d.hip-hip,death:dead,squash:id==='jelly'?(dead?1+dead*1.8:1+Math.sin(phase*TAU)*0.2):1,tail:point(-18,0,hip)};
+  const segments=id==='serpent'?Array.from({length:9},(_,i)=>point(17-i*6,Math.sin(phase*TAU-i*.68)*(moving?9:3),6+Math.sin(phase*TAU-i*.68)*1.4)):null;
+  const flap=Math.sin(phase*TAU)*(dead?0:1),wings=id==='flyer'?[-1,1].map(side=>[point(-2,side*5,body.z+3),point(-10,side*(21+run*3),body.z+flap*10),point(-18,side*(37+run*3),body.z+flap*20),point(-15,side*12,body.z-8)]):null;
+  return {id,state,phase,stage,dimensions:d,pelvis,body,head,legs,arms:[],weapon,segments,wings,lean,sideLean:0,torsoYaw:0,crouch:d.hip-hip,death:dead,squash:id==='jelly'?(dead?1+dead*1.8:1+Math.sin(phase*TAU)*0.2):1,tail:point(-18,0,hip)};
 }
 
 export function weaponContactPath(id,angle,options={}){

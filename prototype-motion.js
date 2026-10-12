@@ -2,6 +2,8 @@
 // these curves supply landing compression, support-side balance and spine rhythm.
 const TAU=Math.PI*2;
 export const MOTION_PROFILES={
+  serpent:{sway:1.1,arm:0,runArm:0,sprintArm:0,landing:.25,spine:.08},
+  flyer:{sway:.4,arm:0,runArm:0,sprintArm:0,landing:.2,spine:.025},
   knight:{sway:1.1,arm:5.5,runArm:9,sprintArm:12,landing:1,spine:0.035},
   orc:{sway:1.65,arm:2.5,runArm:4,sprintArm:5,landing:1.3,spine:0.025},
   elf:{sway:0.9,arm:6.5,runArm:10.5,sprintArm:14,landing:0.85,spine:0.045},

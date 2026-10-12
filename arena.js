@@ -6,14 +6,14 @@ export function bodyProperties(species, unit = {}) {
     ["golem", "turtle", "bear", "rhino"].includes(species.shape) ||
     species.role === "Guardian";
   return {
-    radius: unit.boss ? 29 : heavy ? 22 : 17,
+    radius: unit.boss ? 29 : species.bodyRadius ?? (heavy ? 22 : 17),
     mass: unit.boss
       ? 5.5
-      : species.nativeRig ? ({knight:1.9,orc:2.6,elf:.8,caster:1,wolf:1.15,fox:.9,mech:3.4,spider:.7,jelly:.55}[species.nativeRig]) : heavy
+      : species.mass ?? (species.nativeRig ? ({knight:1.9,orc:2.6,elf:.8,caster:1,wolf:1.15,fox:.9,mech:3.4,spider:.7,jelly:.55,serpent:.8,flyer:.6}[species.nativeRig]) : heavy
         ? 2.2
         : species.role === "Striker"
           ? 1.2
-          : 0.9,
+          : 0.9),
     maxPoise: unit.boss ? 115 : heavy ? 70 : 42,
   };
 }

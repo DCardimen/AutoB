@@ -1,6 +1,6 @@
 # Starfall Menagerie overhaul roadmap
 
-Status: Native Pixel v7 is accepted as sufficient for the current gameplay pass. Native Expedition v9 integrates the nine finished families with the full expedition. A legal UI campaign clears all three planets. Representative portions of iterations 2–6 are implemented: nine families with evolution bonuses, formation/cover, conditional AI/intentions, committed skills, build practice and opening doctrines. Defeat replay, broader balance, mastery/hunts, route objectives and boss variants remain planned. See NATIVE-EXPEDITION-V9.md and CONTINUATION.md.
+Status: Native Pixel v7 is accepted as sufficient for the current gameplay pass. Native Expedition v10 releases the first twelve-family production batch, bringing the native roster to 21 families integrated with the full expedition. A legal UI campaign clears all three planets. Representative portions of iterations 2–6 are implemented: nine families with evolution bonuses, formation/cover, conditional AI/intentions, committed skills, build practice and opening doctrines. Defeat replay, broader balance, mastery/hunts, route objectives and boss variants remain planned. Family lineages, combat accomplishments, habitats, distinct forms and serpent/flyer locomotion are implemented for released native families. See MILESTONE-2.md and CONTINUATION.md.
 
 ## Starting point
 
@@ -60,16 +60,18 @@ Connected Rigs v4 replaces the cropped-image anatomy with five welded skinned mo
 
 ## Iteration 2 — Expand identities, body types, and evolution
 
+**v10 production checkpoint:** twelve new families are released, for 21 native families and 85 visual form variants. All eight iteration-2 requirements below are implemented for the released native batch; the full expansion target still has fifteen families remaining, and legacy animal conversion is ongoing. See [batch evidence and limitations](MILESTONE-2.md).
+
 Initial expansion target: 36 new fantasy families beyond the existing 60, delivered in reviewed batches of roughly six to twelve. Adjust batch size to measured asset quality and effort. Cover humans, elves, orcs, dwarves, goblins, undead, trolls, minotaurs, constructs, and other distinct bodies. Bring existing animals into the same visual language over successive batches.
 
-- [ ] **Q03.3** Give lower-rarity specialists exclusive useful tools rather than making rarity a universal replacement rule.
-- [ ] **Q04.1** Give each family a defining mechanic that changes its tactical role.
-- [ ] **Q04.3** Establish family-specific habitats and recruitment conditions, visible in the collection.
-- [ ] **Q13.2** Build separate locomotion sets for humanoids, heavy bodies, quadrupeds, insects, serpents, and flyers.
-- [ ] **Q13.3** Differentiate families and evolved forms through silhouette, equipment, anatomy, and scale.
-- [ ] **Q14.1** Replace generic evolution branches with family-specific tactical transformations.
-- [ ] **Q14.2** Add combat accomplishment routes to evolution, with progress shown before commitment.
-- [ ] **Q14.3** Change appearance, movement, signature attack, and team function together when evolving.
+- [x] **Q03.3** Give lower-rarity specialists exclusive useful tools rather than making rarity a universal replacement rule.
+- [x] **Q04.1** Give each family a defining mechanic that changes its tactical role.
+- [x] **Q04.3** Establish family-specific habitats and recruitment conditions, visible in the collection.
+- [x] **Q13.2** Build separate locomotion sets for humanoids, heavy bodies, quadrupeds, insects, serpents, and flyers.
+- [x] **Q13.3** Differentiate families and evolved forms through silhouette, equipment, anatomy, and scale.
+- [x] **Q14.1** Replace generic evolution branches with family-specific tactical transformations.
+- [x] **Q14.2** Add combat accomplishment routes to evolution, with progress shown before commitment.
+- [x] **Q14.3** Change appearance, movement, signature attack, and team function together when evolving.
 
 **Exit gate:** every released family has complete required animations, valid skills, a discoverable habitat, and functional evolution. Check recognition at arena scale and on mobile. Retain only draft status for unfinished families.
 

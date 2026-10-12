@@ -12,6 +12,8 @@ export const PIXEL_PALETTES={
  mech:{skin:['#4e473b','#9b7043','#d8a85e'],cloth:['#36484d','#647b7b','#a1ad9b'],metal:['#3c4549','#6b797d','#b4bcac','#e3d3a5'],hair:['#354b58','#63979e','#a5e6e3']},
  spider:{skin:['#2d253f','#55436b','#8972a0'],cloth:['#2b233b','#50345f','#8b5496'],metal:['#483957','#786089','#bea1cd','#e9c7eb'],hair:['#372844','#725395','#c190df']},
  jelly:{skin:['#185674','#358ca2','#72c8ce'],cloth:['#174d68','#278ba1','#7ce0df'],metal:['#356b8c','#67a9bf','#a6e8e0','#e0faf0'],hair:['#195673','#428fa8','#86d9df']},
+ serpent:{skin:['#244f53','#498981','#a2c7a0'],cloth:['#33476b','#6989a4','#abd1d0'],metal:['#4a787b','#8eb8b0','#c6d9bd','#ecedd0'],hair:['#274d6f','#5294b0','#b0dfd5']},
+ flyer:{skin:['#68554b','#b89a75','#e2c49b'],cloth:['#304c61','#5f92aa','#b3d9ce'],metal:['#425970','#7897a6','#c5d1c5','#f0dfae'],hair:['#52527c','#9497bd','#d1d6dc']},
 };
 const colors=new Map();function rgba(c){if(!colors.has(c))colors.set(c,[parseInt(c.slice(1,3),16),parseInt(c.slice(3,5),16),parseInt(c.slice(5,7),16),255]);return colors.get(c);}
 class PixelBrush{
@@ -35,6 +37,19 @@ export function paintCharacterPixels(id,rig,angle){
  function leg(l){segment(l.root,l.joint,id==='orc'?2:id==='mech'?1.7:1,p.skin[0],p.skin[1]);segment(l.joint,l.hock||l.end,id==='orc'?1.7:1,id==='knight'||id==='mech'?p.metal[1]:p.skin[1],p.metal[2]);if(l.hock)segment(l.hock,l.end,0.7,p.skin[0],p.skin[1]);const f=at(l.end);outlinedOval(f.x+0.5,f.y, id==='spider'?1:id==='mech'?2.3:2,id==='spider'?0.6:1,id==='wolf'?p.metal[3]:p.metal[0]);b.dot(f.x+1,f.y-1,p.metal[2]);}
  const sorted=rig.legs.slice().sort((a,c)=>at(a.root).depth-at(c.root).depth),far=sorted.filter(l=>at(l.root).depth<0),near=sorted.filter(l=>at(l.root).depth>=0);
  far.forEach(leg);
+ if(id==='serpent'){
+  for(const [i,q]of [...rig.segments].reverse().entries()){const t=at(q),r=2+Math.min(3,i*.4);outlinedOval(t.x,t.y,r,r*.65,p.skin[0]);b.oval(t.x-1,t.y-1,Math.max(1,r-1),Math.max(1,r*.65-1),p.skin[1]);b.dot(t.x,t.y-2,p.skin[2]);}
+  segment(rig.body,rig.head,2,p.skin[0],p.skin[1]);drawNativeFace(b,id,head,dir,p,rig);
+  if(rig.form){for(const s of [-1,1]){const q={x:head.x+s*6,y:head.y+3};b.line(head,q,p.skin[1],1);if(rig.formPath==='wild')drawNativeFace(b,id,q,dir,p,{...rig,form:0});else b.outlined([{x:q.x,y:q.y-3},{x:q.x+s*3,y:q.y},{x:q.x,y:q.y+4}],p.metal[2]);}}
+  b.data.clipped=b.clipped;return b.data;
+ }
+ if(id==='flyer'){
+  for(const wing of rig.wings){const qs=wing.map(at);b.outlined(qs,p.cloth[0]);b.poly([qs[0],qs[1],qs[2]],p.cloth[1]);b.line(qs[0],qs[2],p.cloth[2]);if(rig.design==='bat')b.line(qs[1],qs[3],p.skin[0]);else for(let i=0;i<4;i++){const t=i/4;b.line({x:qs[1].x+(qs[2].x-qs[1].x)*t,y:qs[1].y+(qs[2].y-qs[1].y)*t},qs[3],p.cloth[2]);}}
+  outlinedOval(body.x,body.y,rig.design==='faerie'?3:5,5,p.skin[0]);b.oval(body.x-1,body.y-1,3,4,p.cloth[1]);segment(rig.body,rig.head,2,p.skin[0],p.skin[1]);
+  for(const s of [-1,1]){b.line({x:body.x+s*2,y:body.y+3},{x:body.x+s*3,y:body.y+7},p.metal[2]);b.dot(body.x+s*4,body.y+7,p.metal[3]);}
+  drawNativeFace(b,id,head,dir,p,rig);if(rig.form){b.outlined([{x:body.x-3,y:body.y-1},{x:body.x+3,y:body.y-1},{x:body.x+5,y:body.y+8},{x:body.x,y:body.y+5},{x:body.x-5,y:body.y+8}],rig.formPath==='warden'?p.metal[1]:p.cloth[2]);}
+  b.data.clipped=b.clipped;return b.data;
+ }
  // Cloth panels are attached at the shoulders. Spring state from the simulation
  // adds delayed lift and lateral swing; the preview uses the same gait rhythm.
  if(['knight','elf','caster','fox'].includes(id)){
@@ -49,6 +64,7 @@ export function paintCharacterPixels(id,rig,angle){
    if(!dead){const pearl=at({...rig.body,x:rig.body.x+8,z:rig.body.z+1});b.oval(pearl.x,pearl.y,2,1,p.skin[0]);b.dot(pearl.x-1,pearl.y-1,p.metal[2]);}
    if(!back&&!dead){for(const dx of FACE_VIEWS[dir].eyes){b.rect(Math.round(x)+dx,y-2,1,2,OUT);b.dot(Math.round(x)+dx,y-3,p.metal[3]);}b.dot(Math.round(x)+FACE_VIEWS[dir].sign*2,y+2,p.metal[3]);}
    for(let i=0;i<3;i++)b.oval(x+(i-1)*6,y+ry-1,2,1,p.skin[1]);
+   if(rig.form){const crownY=y-ry-2;for(const dx of [-5,0,5]){b.line({x:x+dx,y:crownY+2},{x:x+dx,y:crownY-2},p.metal[1]);b.dot(x+dx,crownY-3,p.metal[3]);}if(rig.formPath==='warden')for(const s of [-1,1])b.outlined([{x:x+s*rx,y:y},{x:x+s*(rx+3),y:y+4},{x:x+s*rx,y:y+7}],p.cloth[2]);else for(const s of [-1,1])outlinedOval(x+s*(rx+3),y-3,2,2,p.metal[2]);}
    if(rig.state==='cast'||rig.state==='attack'){const q=at(rig.weapon.tip);outlinedOval(q.x,q.y,2+Math.round(rig.phase*2),2,p.metal[2]);b.dot(q.x-1,q.y-1,p.metal[3]);}
    b.data.clipped=b.clipped;return b.data;
  }
@@ -72,6 +88,12 @@ export function paintCharacterPixels(id,rig,angle){
      drawNativeFace(b,id,head,dir,p,rig);
      if(rig.ragdoll){torsoBrush.rotated(b,head,headRoll);b=torsoBrush;}
    }
+   if(rig.form){
+     const armor=rig.formPath==='warden';
+     if(id==='mech'){b.outlined([{x:body.x-7,y:body.y-3},{x:body.x,y:body.y-7},{x:body.x+6,y:body.y-2},{x:body.x+5,y:body.y+4},{x:body.x-7,y:body.y+3}],armor?p.metal[1]:p.cloth[1]);const q=at(rig.weapon.tip);for(const s of [-1,1])b.line({x:head.x,y:head.y+s*2},{x:q.x,y:q.y+s*(armor?2:4)},p.metal[2],1);}
+     else if(id==='spider'){for(const s of [-1,1])b.outlined([{x:body.x+s*4,y:body.y-1},{x:body.x+s*9,y:body.y-5},{x:body.x+s*7,y:body.y+2}],armor?p.metal[2]:p.cloth[2]);b.line({x:head.x-4,y:head.y+2},{x:head.x-5,y:head.y+7},p.metal[3]);b.line({x:head.x+4,y:head.y+2},{x:head.x+5,y:head.y+7},p.metal[3]);}
+     else{for(let i=-1;i<=1;i++)b.outlined([{x:body.x+i*4-2,y:body.y-3},{x:body.x+i*4,y:body.y-(armor?5:8)},{x:body.x+i*4+2,y:body.y-3}],armor?p.metal[1]:p.cloth[2]);b.line({x:body.x-5,y:body.y},{x:body.x+5,y:body.y},armor?p.metal[3]:p.cloth[1],1);}
+   }
    near.forEach(leg);b.data.clipped=b.clipped;return b.data;
  }
  function drawArm(arm){segment(arm.root,arm.joint,id==='orc'?2:1.2,id==='knight'?p.metal[1]:id==='orc'?p.skin[1]:p.cloth[1],id==='knight'?p.metal[2]:p.cloth[2]);segment(arm.joint,arm.end,1,id==='knight'?p.metal[0]:p.skin[0],p.skin[1]);const h=at(arm.end);outlinedOval(h.x,h.y,1.2,1.2,id==='knight'?p.metal[2]:p.skin[1]);}
@@ -86,12 +108,15 @@ export function paintCharacterPixels(id,rig,angle){
  if(id==='knight'){b.outlined([{x:body.x-2,y:body.y-2},{x:body.x+2,y:body.y-2},{x:pelvis.x+2,y:pelvis.y+3},{x:pelvis.x-2,y:pelvis.y+3}],p.cloth[1]);b.line({x:body.x,y:body.y},{x:body.x,y:body.y+3},p.metal[3]);}
  if(id==='caster'){b.outlined([{x:body.x-4,y:body.y},{x:body.x+4,y:body.y},{x:pelvis.x+6,y:pelvis.y+5},{x:pelvis.x-6,y:pelvis.y+5}],p.cloth[1]);b.line({x:body.x-1,y:body.y},{x:pelvis.x-2,y:pelvis.y+4},p.cloth[2]);b.line({x:pelvis.x-5,y:pelvis.y+4},{x:pelvis.x+5,y:pelvis.y+4},p.metal[3]);}
  b.line({x:pelvis.x-4,y:pelvis.y-1},{x:pelvis.x+4,y:pelvis.y-1},p.metal[0],1);b.rect(pelvis.x-1,pelvis.y-2,2,2,p.metal[3]);
+ if(rig.design==='skeleton'){for(const dy of [-2,0,2])b.line({x:body.x-3,y:body.y+dy},{x:body.x+3,y:body.y+dy},p.skin[2]);b.line({x:body.x,y:body.y-3},{x:body.x,y:body.y+3},p.skin[0]);}
+ if(rig.form){const armor=rig.formPath==='warden',r=rig.form===2?4:3;for(const s of [-1,1])b.outlined([{x:body.x+s*3,y:body.y-4},{x:body.x+s*(3+r),y:body.y-3},{x:body.x+s*(4+r),y:body.y},{x:body.x+s*3,y:body.y+1}],armor?p.metal[1]:p.cloth[1]);b.line({x:body.x-2,y:body.y-3},{x:body.x+2,y:body.y-3},p.metal[3]);}
  near.forEach(leg);
  rig.arms.filter(a=>at(a.root).depth>=body.depth).forEach(drawArm);
  drawGear('middle');
  if(id==='fox'){const tail=at({...rig.pelvis,x:rig.pelvis.x-12,y:Math.sin(rig.phase*Math.PI*2)*6,z:rig.pelvis.z-4});b.line({x:pelvis.x,y:pelvis.y+2},tail,OUT,3);b.line({x:pelvis.x,y:pelvis.y+2},tail,p.skin[1],2);b.oval(tail.x,tail.y,2,2,p.metal[3]);}
  const torsoBrush=b;if(rig.ragdoll)b=new PixelBrush();
  drawNativeFace(b,id,head,dir,p,rig);
+ if(rig.form&&['knight','orc','elf','caster','wolf','fox'].includes(rig.design)){const armor=rig.formPath==='warden';for(const s of [-1,1])b.line({x:head.x+s*4,y:head.y-5},{x:head.x+s*(armor?7:8),y:head.y-(armor?7:10)},armor?p.metal[2]:p.cloth[2],1);}
  if(rig.ragdoll){torsoBrush.rotated(b,head,headRoll);b=torsoBrush;}
  drawGear('near');
  b.data.clipped=b.clipped;return b.data;
@@ -111,7 +136,11 @@ function drawGearPart(b,id,rig,angle,p,at,outlinedOval,weapon,shield){
      const dx=tip.x-g.x,dy=tip.y-g.y,len=Math.hypot(dx,dy)||1,tx=dx/len,ty=dy/len,nx=-ty,ny=tx;
      const q=(along,across)=>({x:g.x+tx*along+nx*across,y:g.y+ty*along+ny*across});
      b.line(q(-2,0),tip,OUT,1);b.line(q(-2,0),tip,id==='orc'?p.cloth[2]:p.metal[2]);
-     if(id==='orc'){
+     if(rig.gear==='hammer'||rig.gear==='club'){
+       const r=rig.gear==='hammer'?3:2;b.outlined([q(len-3,-r),q(len+1,-r),q(len+2,r),q(len-3,r)],rig.gear==='hammer'?p.metal[1]:p.cloth[1]);b.line(q(len-2,-r),q(len+1,-r),p.metal[3]);
+     }else if(rig.gear==='knife'||rig.gear==='rapier'){
+       b.line(q(1,0),tip,p.metal[3],rig.gear==='knife'?1:0);b.line(q(2,-2),q(2,2),p.metal[1]);
+     }else if(id==='orc'){
        const blade=(along,across)=>({x:tip.x+tx*along+nx*across,y:tip.y+ty*along+ny*across});
        b.outlined([blade(-2,-1),blade(-3,-4),blade(0,-5),blade(2,-4),blade(2,1),blade(0,2)],p.metal[1]);b.line(blade(-2,-4),blade(1,-4),p.metal[3]);
      }else{b.line(q(2,-2),q(2,2),p.metal[3]);b.line(q(3,0),tip,p.metal[2]);b.dot(tip.x,tip.y,p.metal[3]);}
