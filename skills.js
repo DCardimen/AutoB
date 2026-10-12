@@ -1,4 +1,5 @@
-import { NATIVE_ACTIVE_SKILLS, NATIVE_AUTO_SKILLS } from './native-content.js';
+import {evolutionSkillIds} from './evolution-skills.js';
+import { NATIVE_ACTIVE_SKILLS, NATIVE_AUTO_SKILLS, NATIVE_FORM_SKILLS } from './native-content.js';
 import { EXPANSION_ACTIVE_SKILLS, EXPANSION_AUTO_SKILLS } from "./roster.js";
 // 128 abilities: 60 signature auto-attacks + 68 active cooldown skills.
 export const ACTIVE_SKILLS = [
@@ -477,7 +478,7 @@ const autoData = [
     "A thin pressure jet pierces the enemy line.",
   ],
 ];
-ACTIVE_SKILLS.push(...EXPANSION_ACTIVE_SKILLS, ...NATIVE_ACTIVE_SKILLS);
+ACTIVE_SKILLS.push(...EXPANSION_ACTIVE_SKILLS, ...NATIVE_ACTIVE_SKILLS, ...NATIVE_FORM_SKILLS);
 export const AUTO_SKILLS = autoData.map(
   ([species, name, kind, params, desc]) => ({
     id: "auto-" + species,
@@ -501,7 +502,7 @@ const elementSkills = {
   storm: "overcharge",
   void: "soul-siphon",
 };
-export function loadoutFor(species, level = 1) {
+export function loadoutFor(species, level = 1, creature = null) {
   const ids = [species.id, species.secondary || elementSkills[species.element]];
   if (["Rare", "Epic", "Legendary"].includes(species.rarity) || level >= 5)
     ids.push(
@@ -512,5 +513,5 @@ export function loadoutFor(species, level = 1) {
         Ranger: "astral-salvo",
       }[species.role],
     );
-  return { auto: "auto-" + species.id, active: ids };
+  return { auto: "auto-" + species.id, active: [...ids,...evolutionSkillIds(creature)] };
 }

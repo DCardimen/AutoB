@@ -1,0 +1,10 @@
+// Lossless container recompression: the inflated PNG stream stays byte-for-byte identical.
+import fs from 'node:fs';import path from 'node:path';import {deflateSync,inflateSync} from 'node:zlib';import {fileURLToPath} from 'node:url';
+const table=Array.from({length:256},(_,n)=>{for(let i=0;i<8;i++)n=n&1?0xedb88320^(n>>>1):n>>>1;return n>>>0;});
+function crc(bytes){let c=0xffffffff;for(const byte of bytes)c=table[(c^byte)&255]^(c>>>8);return (c^0xffffffff)>>>0;}
+function chunk(type,data){const out=Buffer.alloc(data.length+12);out.writeUInt32BE(data.length,0);out.write(type,4);data.copy(out,8);out.writeUInt32BE(crc(out.subarray(4,-4)),out.length-4);return out;}
+export function optimizeNativePng(file){
+ const before=fs.readFileSync(file);if(!before.subarray(0,8).equals(Buffer.from([137,80,78,71,13,10,26,10])))throw Error('Invalid PNG '+file);const chunks=[],streams=[];for(let offset=8;offset<before.length;){const length=before.readUInt32BE(offset),end=offset+12+length,type=before.toString('ascii',offset+4,offset+8);if(end>before.length)throw Error('Invalid PNG chunk');chunks.push({type,bytes:before.subarray(offset,end)});if(type==='IDAT')streams.push(before.subarray(offset+8,end-4));offset=end;}
+ const raw=inflateSync(Buffer.concat(streams)),compressed=deflateSync(raw,{level:9});if(!inflateSync(compressed).equals(raw))throw Error('PNG recompression changed its pixel stream');let written=false;const after=Buffer.concat([before.subarray(0,8),...chunks.flatMap(c=>c.type==='IDAT'?(written?[]:(written=true,[chunk('IDAT',compressed)])):[c.bytes])]);if(after.length<before.length)fs.writeFileSync(file,after);return {before:before.length,after:Math.min(before.length,after.length)};
+}
+if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)){const folder=process.argv[2]||'playtest-artifacts/native-sprites-v11/sprites';let before=0,after=0,count=0;for(const file of fs.readdirSync(folder).filter(f=>f.endsWith('.png'))){const result=optimizeNativePng(path.join(folder,file));before+=result.before;after+=result.after;count++;}console.log(JSON.stringify({files:count,before,after,lossless:true}));}

@@ -16,7 +16,7 @@ export const EXPANSION_SPECIES = [
     skillDesc: "220% attack · burn 3s · evade 1s.",
     cd: 8,
     power: 2.2,
-    artSheet: "expansion-a",
+    artSheet: "native",
     artIndex: 0,
   },
   {
@@ -35,7 +35,7 @@ export const EXPANSION_SPECIES = [
     skillDesc: "170% attack · 105 area radius · 105 shield nearby · burn 3s.",
     cd: 11,
     power: 1.7,
-    artSheet: "expansion-a",
+    artSheet: "native",
     artIndex: 1,
   },
   {
@@ -54,7 +54,7 @@ export const EXPANSION_SPECIES = [
     skillDesc: "heal 35 HP for every ally · haste 2s.",
     cd: 11,
     power: 1,
-    artSheet: "expansion-a",
+    artSheet: "native",
     artIndex: 2,
   },
   {
@@ -73,7 +73,7 @@ export const EXPANSION_SPECIES = [
     skillDesc: "270% attack · burn 3s · pierces enemies in its path.",
     cd: 10,
     power: 2.7,
-    artSheet: "expansion-a",
+    artSheet: "native",
     artIndex: 3,
   },
   {
@@ -92,7 +92,7 @@ export const EXPANSION_SPECIES = [
     skillDesc: "200% attack · 75 area radius · root 1s.",
     cd: 9,
     power: 2,
-    artSheet: "expansion-a",
+    artSheet: "native",
     artIndex: 4,
   },
   {
@@ -111,7 +111,7 @@ export const EXPANSION_SPECIES = [
     skillDesc: "220 area radius · 72 shield nearby · taunt 2.5s.",
     cd: 11,
     power: 1,
-    artSheet: "expansion-a",
+    artSheet: "native",
     artIndex: 5,
   },
   {
@@ -130,7 +130,7 @@ export const EXPANSION_SPECIES = [
     skillDesc: "heal 78 HP for the weakest ally · cleanse burn and poison.",
     cd: 8,
     power: 1,
-    artSheet: "expansion-a",
+    artSheet: "native",
     artIndex: 6,
   },
   {
@@ -149,7 +149,7 @@ export const EXPANSION_SPECIES = [
     skillDesc: "250% attack · poison 5s · root 1s.",
     cd: 9,
     power: 2.5,
-    artSheet: "expansion-a",
+    artSheet: "native",
     artIndex: 7,
   },
   {
@@ -168,7 +168,7 @@ export const EXPANSION_SPECIES = [
     skillDesc: "220% attack · slow 2s · evade 1s.",
     cd: 8,
     power: 2.2,
-    artSheet: "expansion-a",
+    artSheet: "native",
     artIndex: 8,
   },
   {
@@ -187,7 +187,7 @@ export const EXPANSION_SPECIES = [
     skillDesc: "78 shield for all allies · slow 2s.",
     cd: 12,
     power: 1,
-    artSheet: "expansion-a",
+    artSheet: "native",
     artIndex: 9,
   },
   {
@@ -206,7 +206,7 @@ export const EXPANSION_SPECIES = [
     skillDesc: "heal 38 HP for every ally · 20 shield for all allies.",
     cd: 12,
     power: 1,
-    artSheet: "expansion-a",
+    artSheet: "native",
     artIndex: 10,
   },
   {
@@ -225,7 +225,7 @@ export const EXPANSION_SPECIES = [
     skillDesc: "140% attack · 3 targets · slow 2s.",
     cd: 9,
     power: 1.4,
-    artSheet: "expansion-a",
+    artSheet: "native",
     artIndex: 11,
   },
   {
@@ -244,7 +244,7 @@ export const EXPANSION_SPECIES = [
     skillDesc: "210% attack · evade 2s.",
     cd: 7,
     power: 2.1,
-    artSheet: "expansion-a",
+    artSheet: "native",
     artIndex: 12,
   },
   {
@@ -263,7 +263,7 @@ export const EXPANSION_SPECIES = [
     skillDesc: "210% attack · 90 area radius · knockback.",
     cd: 11,
     power: 2.1,
-    artSheet: "expansion-a",
+    artSheet: "native",
     artIndex: 13,
   },
   {
@@ -282,7 +282,7 @@ export const EXPANSION_SPECIES = [
     skillDesc: "heal 34 HP for every ally · haste 3s.",
     cd: 11,
     power: 1,
-    artSheet: "expansion-a",
+    artSheet: "native",
     artIndex: 14,
   },
   {
@@ -301,7 +301,7 @@ export const EXPANSION_SPECIES = [
     skillDesc: "180% attack · 3 targets · slow 1s.",
     cd: 10,
     power: 1.8,
-    artSheet: "expansion-a",
+    artSheet: "native",
     artIndex: 15,
   },
   {
@@ -320,7 +320,7 @@ export const EXPANSION_SPECIES = [
     skillDesc: "240% attack · 10% lifesteal · ambush the backline.",
     cd: 9,
     power: 2.4,
-    artSheet: "expansion-a",
+    artSheet: "native",
     artIndex: 16,
   },
   {
@@ -339,7 +339,7 @@ export const EXPANSION_SPECIES = [
     skillDesc: "150% attack · 100 area radius · 115 shield nearby · knockback.",
     cd: 11,
     power: 1.5,
-    artSheet: "expansion-a",
+    artSheet: "native",
     artIndex: 17,
   },
   {
@@ -358,7 +358,7 @@ export const EXPANSION_SPECIES = [
     skillDesc: "120% attack · heal 70 HP for the weakest ally · poison 3s.",
     cd: 10,
     power: 1.2,
-    artSheet: "expansion-a",
+    artSheet: "native",
     artIndex: 18,
   },
   {
@@ -378,7 +378,7 @@ export const EXPANSION_SPECIES = [
       "230% attack · 95 area radius · root 2s · detonates after 0.85s.",
     cd: 10,
     power: 2.3,
-    artSheet: "expansion-a",
+    artSheet: "native",
     artIndex: 19,
   },
   {
@@ -397,7 +397,7 @@ export const EXPANSION_SPECIES = [
     skillDesc: "230% attack · 105 area radius · burn 3s.",
     cd: 12,
     power: 2.3,
-    artSheet: "expansion-b",
+    artSheet: "native",
     artIndex: 0,
   },
   {
@@ -416,7 +416,7 @@ export const EXPANSION_SPECIES = [
     skillDesc: "145% attack · 4 targets · burn 3s.",
     cd: 10,
     power: 1.45,
-    artSheet: "expansion-b",
+    artSheet: "native",
     artIndex: 1,
   },
   {
@@ -435,7 +435,7 @@ export const EXPANSION_SPECIES = [
     skillDesc: "165% attack · burn 4s · 2 hits.",
     cd: 9,
     power: 1.65,
-    artSheet: "expansion-b",
+    artSheet: "native",
     artIndex: 2,
   },
   {
@@ -455,7 +455,7 @@ export const EXPANSION_SPECIES = [
       "heal 65 HP for every ally · 30 shield for all allies · haste 3s.",
     cd: 14,
     power: 1,
-    artSheet: "expansion-b",
+    artSheet: "native",
     artIndex: 3,
   },
   {
@@ -474,7 +474,7 @@ export const EXPANSION_SPECIES = [
     skillDesc: "245 area radius · 85 shield nearby · taunt 3s.",
     cd: 12,
     power: 1,
-    artSheet: "expansion-b",
+    artSheet: "native",
     artIndex: 4,
   },
   {
@@ -493,7 +493,7 @@ export const EXPANSION_SPECIES = [
     skillDesc: "290% attack · root 1.4s · evade 1s.",
     cd: 9,
     power: 2.9,
-    artSheet: "expansion-b",
+    artSheet: "native",
     artIndex: 5,
   },
   {
@@ -512,7 +512,7 @@ export const EXPANSION_SPECIES = [
     skillDesc: "140% attack · 4 targets · root 0.7s.",
     cd: 11,
     power: 1.4,
-    artSheet: "expansion-b",
+    artSheet: "native",
     artIndex: 6,
   },
   {
@@ -532,7 +532,7 @@ export const EXPANSION_SPECIES = [
       "160% attack · 190 area radius · restore 12% team HP · 38 shield for all allies.",
     cd: 14,
     power: 1.6,
-    artSheet: "expansion-b",
+    artSheet: "native",
     artIndex: 7,
   },
   {
@@ -551,7 +551,7 @@ export const EXPANSION_SPECIES = [
     skillDesc: "78 shield for all allies · slow 3s.",
     cd: 12,
     power: 1,
-    artSheet: "expansion-b",
+    artSheet: "native",
     artIndex: 8,
   },
   {
@@ -570,7 +570,7 @@ export const EXPANSION_SPECIES = [
     skillDesc: "heal 48 HP for every ally · 32 shield for all allies.",
     cd: 12,
     power: 1,
-    artSheet: "expansion-b",
+    artSheet: "native",
     artIndex: 9,
   },
   {
@@ -589,7 +589,7 @@ export const EXPANSION_SPECIES = [
     skillDesc: "280% attack · slow 2s · 20% lifesteal.",
     cd: 10,
     power: 2.8,
-    artSheet: "expansion-b",
+    artSheet: "native",
     artIndex: 10,
   },
   {
@@ -608,7 +608,7 @@ export const EXPANSION_SPECIES = [
     skillDesc: "330% attack · 125 area radius · slow 3s.",
     cd: 13,
     power: 3.3,
-    artSheet: "expansion-b",
+    artSheet: "native",
     artIndex: 11,
   },
   {
@@ -627,7 +627,7 @@ export const EXPANSION_SPECIES = [
     skillDesc: "240% attack · 100 area radius · root 0.8s.",
     cd: 11,
     power: 2.4,
-    artSheet: "expansion-b",
+    artSheet: "native",
     artIndex: 12,
   },
   {
@@ -646,7 +646,7 @@ export const EXPANSION_SPECIES = [
     skillDesc: "270% attack · evade 2s · ambush the backline.",
     cd: 8,
     power: 2.7,
-    artSheet: "expansion-b",
+    artSheet: "native",
     artIndex: 13,
   },
   {
@@ -665,7 +665,7 @@ export const EXPANSION_SPECIES = [
     skillDesc: "170% attack · 4 targets.",
     cd: 11,
     power: 1.7,
-    artSheet: "expansion-b",
+    artSheet: "native",
     artIndex: 14,
   },
   {
@@ -685,7 +685,7 @@ export const EXPANSION_SPECIES = [
       "heal 55 HP for every ally · 20 shield for all allies · haste 4s.",
     cd: 13,
     power: 1,
-    artSheet: "expansion-b",
+    artSheet: "native",
     artIndex: 15,
   },
   {
@@ -704,7 +704,7 @@ export const EXPANSION_SPECIES = [
     skillDesc: "180% attack · 200 area radius · 55 shield for all allies.",
     cd: 12,
     power: 1.8,
-    artSheet: "expansion-b",
+    artSheet: "native",
     artIndex: 16,
   },
   {
@@ -723,7 +723,7 @@ export const EXPANSION_SPECIES = [
     skillDesc: "160% attack · heal 90 HP for the weakest ally · poison 4s.",
     cd: 11,
     power: 1.6,
-    artSheet: "expansion-b",
+    artSheet: "native",
     artIndex: 17,
   },
   {
@@ -742,7 +742,7 @@ export const EXPANSION_SPECIES = [
     skillDesc: "300% attack · 18% lifesteal · ambush the backline.",
     cd: 9,
     power: 3,
-    artSheet: "expansion-b",
+    artSheet: "native",
     artIndex: 18,
   },
   {
@@ -762,7 +762,7 @@ export const EXPANSION_SPECIES = [
       "350% attack · 125 area radius · poison 3s · detonates after 1.15s.",
     cd: 13,
     power: 3.5,
-    artSheet: "expansion-b",
+    artSheet: "native",
     artIndex: 19,
   },
 ];

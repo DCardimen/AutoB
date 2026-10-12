@@ -1,5 +1,8 @@
+import {equipmentEffects} from './creature-equipment.js';
+import {queueCombatText,advanceCombatTexts} from './combat-text.js';
+import {CORE_SPECIES} from './core-species.js';
 import {evaluateOrders,terrainFor,firstTerrainHit,terrainSteering,confineTerrain,orderGoal} from './native-tactics.js';
-import {NATIVE_BOUNDS,nativeSpawn,initializeNative,nativeAction,advanceNative,nativeBladePoint,nativeHeavy,nativeMuzzle} from './native-combat.js';
+import {NATIVE_BOUNDS,nativeSpawn,initializeNative,nativeAction,advanceNative,nativeBladePoint,nativeHeavy,nativeMuzzle,nativeBodyHeight} from './native-combat.js';
 import { NATIVE_SPECIES, NATIVE_STARTERS, NATIVE_POOLS, nativeEvolution, nativeSkill, nativePool, lineageLimit, lineageProgress, settleNativeGrowth } from './native-content.js';
 import { SKILLS, loadoutFor } from "./skills.js";
 import { EXPANSION_SPECIES } from "./roster.js";
@@ -57,364 +60,7 @@ export const ELEMENTS = {
     description: "2: +12% lifesteal · 4: execute below 20% HP",
   },
 };
-export const SPECIES = [
-  {
-    id: "cinderfox",
-    name: "Cinderfox",
-    element: "ember",
-    role: "Striker",
-    rarity: "Common",
-    shape: "fox",
-    hp: 210,
-    atk: 26,
-    speed: 77,
-    range: 37,
-    skill: "Solar pounce",
-    skillDesc:
-      "Leap at the weakest enemy for 2.4× attack. Leaves a burning trail.",
-    cd: 8,
-    power: 2.4,
-  },
-  {
-    id: "mossguard",
-    name: "Mossguard",
-    element: "grove",
-    role: "Guardian",
-    rarity: "Common",
-    shape: "golem",
-    hp: 380,
-    atk: 19,
-    speed: 44,
-    range: 39,
-    skill: "Living bulwark",
-    skillDesc:
-      "Grant nearby allies a 60 HP shield and taunt enemies for 3 seconds.",
-    cd: 10,
-    power: 1,
-  },
-  {
-    id: "brookfin",
-    name: "Brookfin",
-    element: "tide",
-    role: "Support",
-    rarity: "Common",
-    shape: "fish",
-    hp: 235,
-    atk: 17,
-    speed: 64,
-    range: 142,
-    skill: "Mending current",
-    skillDesc: "Heal the most wounded ally for 70 HP. Removes burn.",
-    cd: 8,
-    power: 1,
-  },
-  {
-    id: "voltwing",
-    name: "Voltwing",
-    element: "storm",
-    role: "Ranger",
-    rarity: "Common",
-    shape: "bird",
-    hp: 190,
-    atk: 24,
-    speed: 80,
-    range: 166,
-    skill: "Chain lightning",
-    skillDesc: "Strike three enemies for 1.6× attack each. Has a short windup.",
-    cd: 9,
-    power: 1.6,
-  },
-  {
-    id: "pyrehorn",
-    name: "Pyrehorn",
-    element: "ember",
-    role: "Guardian",
-    rarity: "Uncommon",
-    shape: "rhino",
-    hp: 350,
-    atk: 23,
-    speed: 48,
-    range: 44,
-    skill: "Seismic charge",
-    skillDesc: "Charge into the enemy frontline, dealing 2× attack in an area.",
-    cd: 11,
-    power: 2,
-  },
-  {
-    id: "bloomkin",
-    name: "Bloomkin",
-    element: "grove",
-    role: "Support",
-    rarity: "Uncommon",
-    shape: "sprite",
-    hp: 215,
-    atk: 16,
-    speed: 69,
-    range: 137,
-    skill: "Wild bloom",
-    skillDesc:
-      "Heal all living allies for 35 HP and hasten attacks for 3 seconds.",
-    cd: 12,
-    power: 1,
-  },
-  {
-    id: "glacier",
-    name: "Glacier",
-    element: "tide",
-    role: "Guardian",
-    rarity: "Rare",
-    shape: "golem",
-    hp: 435,
-    atk: 24,
-    speed: 41,
-    range: 43,
-    skill: "Glacial prism",
-    skillDesc: "Shield the team for 85 HP. Slow nearby enemies for 4 seconds.",
-    cd: 12,
-    power: 1,
-  },
-  {
-    id: "thornstag",
-    name: "Thornstag",
-    element: "grove",
-    role: "Striker",
-    rarity: "Rare",
-    shape: "stag",
-    hp: 270,
-    atk: 31,
-    speed: 79,
-    range: 42,
-    skill: "Briar lance",
-    skillDesc: "Root the weakest enemy, striking for 3× attack.",
-    cd: 9,
-    power: 3,
-  },
-  {
-    id: "nightmaw",
-    name: "Nightmaw",
-    element: "void",
-    role: "Striker",
-    rarity: "Rare",
-    shape: "cat",
-    hp: 265,
-    atk: 32,
-    speed: 91,
-    range: 38,
-    skill: "Shadow step",
-    skillDesc: "Dash behind a ranged enemy and strike for 3× attack.",
-    cd: 8,
-    power: 3,
-  },
-  {
-    id: "sparkhare",
-    name: "Sparkhare",
-    element: "storm",
-    role: "Striker",
-    rarity: "Uncommon",
-    shape: "rabbit",
-    hp: 205,
-    atk: 27,
-    speed: 99,
-    range: 37,
-    skill: "Static rush",
-    skillDesc:
-      "Dash through the nearest enemy for 2.5× attack and gain evasion.",
-    cd: 7,
-    power: 2.5,
-  },
-  {
-    id: "solwyrm",
-    name: "Solwyrm",
-    element: "ember",
-    role: "Ranger",
-    rarity: "Epic",
-    shape: "dragon",
-    hp: 305,
-    atk: 36,
-    speed: 62,
-    range: 175,
-    skill: "Sunfire breath",
-    skillDesc:
-      "Breathe a wide cone of fire for 3× attack. Burns all targets hit.",
-    cd: 11,
-    power: 3,
-  },
-  {
-    id: "lunacrest",
-    name: "Lunacrest",
-    element: "tide",
-    role: "Support",
-    rarity: "Epic",
-    shape: "fox",
-    hp: 285,
-    atk: 23,
-    speed: 73,
-    range: 157,
-    skill: "Lunar tide",
-    skillDesc: "Heal every ally for 55 HP and grant a 40 HP shield.",
-    cd: 11,
-    power: 1,
-  },
-  {
-    id: "astralisk",
-    name: "Astralisk",
-    element: "void",
-    role: "Ranger",
-    rarity: "Epic",
-    shape: "dragon",
-    hp: 280,
-    atk: 37,
-    speed: 70,
-    range: 180,
-    skill: "Void rupture",
-    skillDesc: "Create a delayed singularity, dealing 3× attack in an area.",
-    cd: 10,
-    power: 3,
-  },
-  {
-    id: "tempest",
-    name: "Tempest",
-    element: "storm",
-    role: "Ranger",
-    rarity: "Rare",
-    shape: "bird",
-    hp: 235,
-    atk: 31,
-    speed: 85,
-    range: 174,
-    skill: "Storm volley",
-    skillDesc: "Mark an area, then strike everyone inside for 2.8× attack.",
-    cd: 9,
-    power: 2.8,
-  },
-  {
-    id: "duskcap",
-    name: "Duskcap",
-    element: "void",
-    role: "Support",
-    rarity: "Uncommon",
-    shape: "mushroom",
-    hp: 245,
-    atk: 20,
-    speed: 53,
-    range: 140,
-    skill: "Dream spores",
-    skillDesc: "Heal the weakest ally for 60 HP and poison the nearest enemy.",
-    cd: 9,
-    power: 1,
-  },
-  {
-    id: "flintback",
-    name: "Flintback",
-    element: "ember",
-    role: "Guardian",
-    rarity: "Rare",
-    shape: "turtle",
-    hp: 440,
-    atk: 22,
-    speed: 36,
-    range: 41,
-    skill: "Molten shell",
-    skillDesc: "Gain a 120 HP shield and burn nearby enemies.",
-    cd: 11,
-    power: 1,
-  },
-  {
-    id: "elderoot",
-    name: "Elderoot",
-    element: "grove",
-    role: "Guardian",
-    rarity: "Legendary",
-    shape: "stag",
-    hp: 510,
-    atk: 31,
-    speed: 53,
-    range: 48,
-    skill: "Ancient awakening",
-    skillDesc:
-      "Restore 15% team HP, shield all allies, and strike a nearby enemy.",
-    cd: 13,
-    power: 2,
-  },
-  {
-    id: "starborn",
-    name: "Starborn",
-    element: "storm",
-    role: "Striker",
-    rarity: "Legendary",
-    shape: "cat",
-    hp: 370,
-    atk: 43,
-    speed: 105,
-    range: 42,
-    skill: "Event horizon",
-    skillDesc:
-      "Dash toward the weakest enemy and strike twice for 2.4× attack.",
-    cd: 10,
-    power: 4.8,
-  },
-  {
-    id: "abyssal",
-    name: "Abyssal",
-    element: "void",
-    role: "Guardian",
-    rarity: "Legendary",
-    shape: "golem",
-    hp: 520,
-    atk: 33,
-    speed: 46,
-    range: 49,
-    skill: "Gravity well",
-    skillDesc:
-      "Shield allies for 100 HP and draw a devastating pulse through enemies.",
-    cd: 13,
-    power: 2.5,
-  },
-  {
-    id: "coralisk",
-    name: "Coralisk",
-    element: "tide",
-    role: "Ranger",
-    rarity: "Uncommon",
-    shape: "dragon",
-    hp: 245,
-    atk: 25,
-    speed: 65,
-    range: 155,
-    skill: "Pressure jet",
-    skillDesc: "Pierce a line of enemies for 2.3× attack.",
-    cd: 8,
-    power: 2.3,
-  },
-];
-const originalEvolutionNames = [
-  "Embermane",
-  "Mosswarden",
-  "Tideweaver",
-  "Stormplume",
-  "Inferhorn",
-  "Floracrown",
-  "Frosttitan",
-  "Briarhart",
-  "Umbrapanther",
-  "Arcbound",
-  "Heliodrake",
-  "Moonsovereign",
-  "Voidseraph",
-  "Tempestlord",
-  "Dreamsage",
-  "Magmabastion",
-  "Yggrahart",
-  "Celestiger",
-  "Abyssarch",
-  "Coralwyrm",
-];
-SPECIES.forEach((s, i) => {
-  s.artSheet = "creatures";
-  s.artIndex = i;
-  s.evolvedName = originalEvolutionNames[i];
-});
-SPECIES.push(...EXPANSION_SPECIES, ...NATIVE_SPECIES);
+export const SPECIES = [...CORE_SPECIES, ...EXPANSION_SPECIES, ...NATIVE_SPECIES];
 export const BY_ID = Object.fromEntries(SPECIES.map((s) => [s.id, s]));
 export const STARTERS = [
   "cinderfox",
@@ -864,7 +510,7 @@ export function equipRelic(run, creatureIndex, itemUid) {
   if (!c || index < 0 || (c.relics || []).length >= relicSlots(c)) return false;
   const item = run.inventory[index];
   if ((c.relics || []).some((r) => r.id === item.id)) return false;
-  const loadout = loadoutFor(BY_ID[c.id], c.level);
+  const loadout = loadoutFor(BY_ID[c.id], c.level, c);
   const link = [c.id, loadout.auto, ...loadout.active].find((id) =>
     canSupport(item.id, id),
   );
@@ -990,7 +636,7 @@ export function linkRelic(run, creatureIndex, slot, skillId) {
   const c = run.team[creatureIndex],
     item = c?.relics?.[slot];
   if (!item) return false;
-  const loadout = loadoutFor(BY_ID[c.id], c.level);
+  const loadout = loadoutFor(BY_ID[c.id], c.level, c);
   if (
     ![loadout.auto, ...loadout.active].includes(skillId) ||
     !canSupport(item.id, skillId)
@@ -1084,10 +730,11 @@ export function stats(c, team, relics = []) {
     atk *= 0.94;
   }
   const personal = personalEffects(c);
-  hp *= personal.health;
-  atk *= personal.attack;
-  cd *= personal.cooldown;
-  speed *= personal.speed * (nativeEvolution(c).speed || 1);
+  const gear=equipmentEffects(c);
+  hp *= personal.health * gear.health;
+  atk *= personal.attack * gear.attack;
+  cd *= personal.cooldown * gear.cooldown;
+  speed *= personal.speed * gear.speed * (nativeEvolution(c).speed || 1);
   dodge += personal.dodge;
   return {
     hp: Math.round(hp),
@@ -1108,6 +755,8 @@ export function makeRun(seed = Date.now(), ids = STARTERS, options = {}) {
   const result = {
     seed,
     native,
+    rosterMode: options.rosterMode || (ids.every(id=>!!BY_ID[id].nativeRig)?"authored":"collection"),
+    gearInventory: [],
     difficulty: DIFFICULTIES[options.difficulty]
       ? options.difficulty
       : "standard",
@@ -1277,7 +926,7 @@ export function encounter(run, type = "battle", seed = 1) {
         : run.planet === 1
           ? 3
           : 4;
-  const encounterPool = run.native ? nativePool(run,type) : p.pool.filter(id=>!BY_ID[id].nativeRig);
+  const encounterPool = run.native && run.rosterMode!=="collection" ? nativePool(run,type) : p.pool.filter(id=>!BY_ID[id].nativeRig);
   const pool = encounterPool.filter((id) => rarityRank[BY_ID[id].rarity] <= maxRank);
   const weights = {
     Common: 5,
@@ -1406,11 +1055,11 @@ export function generateShop(run, seed) {
     relics,
     personal,
     creature: pick(
-      SPECIES.filter((s) => s.rarity !== "Legendary" && (!run.native || NATIVE_POOLS[run.planet].includes(s.id))),
+      SPECIES.filter((s) => s.rarity !== "Legendary" && (!run.native || run.rosterMode==="collection" || NATIVE_POOLS[run.planet].includes(s.id))),
       r,
     ).id,
     legendary: pick(
-      SPECIES.filter((s) => s.rarity === "Legendary" && (!run.native || NATIVE_POOLS[run.planet].includes(s.id))),
+      SPECIES.filter((s) => s.rarity === "Legendary" && (!run.native || run.rosterMode==="collection" || NATIVE_POOLS[run.planet].includes(s.id))),
       r,
     ).id,
     sold: [],
@@ -1710,7 +1359,7 @@ export function eventAvailable(run, c) {
 }
 export function eventForRun(run, input) {
   const original=typeof input==='number'?EVENTS[input]:input;
-  if(!run.native)return original;
+  if(!run.native || run.rosterMode==="collection")return original;
   const event=JSON.parse(JSON.stringify(original));
   for(const choice of event.choices){
     if(!choice.creature||BY_ID[choice.creature]?.nativeRig)continue;
@@ -1817,6 +1466,8 @@ export class Battle {
     this.attackSerial = 0;
     this.cancelledAttacks = new Set();
     this.effects = [];
+    this.combatTexts = [];
+    this.textSerial = 0;
     this.particles = [];
     this.hazards = [];
     this.queue = [];
@@ -1864,7 +1515,7 @@ export class Battle {
     this.foeSyn = synergies(foes);
     const add = (c, side, index, team) => {
       const st = stats(c, team, side === 0 ? run.relics : []),
-        loadout = loadoutFor(BY_ID[c.id], c.level);
+        loadout = loadoutFor(BY_ID[c.id], c.level, c);
       if (side === 1) {
         const diff = DIFFICULTIES[run.difficulty] || DIFFICULTIES.standard;
         st.hp *=
@@ -2096,7 +1747,7 @@ export class Battle {
   heal(target, amount, source, skillId = null, show = true, scale = 1) {
     if (!target || target.hp <= 0) return;
     const mod = skillId ? linkedSupport(source, skillId) : { healing: 1 };
-    amount *= mod.healing * scale * (nativeEvolution(source).healing||1);
+    amount *= mod.healing * scale * (nativeEvolution(source).healing||1) * equipmentEffects(source).healing;
     if (source.side === 0 && this.run.relics.includes("seed")) amount *= 1.35;
     const syn = source.side === 0 ? this.teamSyn : this.foeSyn;
     if (syn.grove >= 4) amount *= 1.3;
@@ -2158,7 +1809,7 @@ export class Battle {
     source.healed += real;
     this.metrics.healing += real;
     if (show && real >= 2) {
-      this.effect(target.x, target.y - 44, `+${Math.round(real)}`, "#bada9b");
+      if(this.native)queueCombatText(this,target,real,"heal");else this.effect(target.x, target.y - 44, `+${Math.round(real)}`, "#bada9b");
       this.fx("heal", target.x, target.y, "#badf92", {
         r: 36,
         ttl: 0.7,
@@ -2234,6 +1885,7 @@ export class Battle {
     pierce = 0,
     kind = "hit",
     intercept = true,
+    critical = false,
   ) {
     if (!target || target.hp <= 0) return 0;
     if (intercept && kind === "hit") {
@@ -2288,6 +1940,7 @@ export class Battle {
       target.hp = Math.max(target.maxHp * 0.18, target.hp);
     const dealt = Math.max(0, old - target.hp);
     target.damageTaken += dealt;
+    if(this.native){if(dealt>0)queueCombatText(this,target,dealt,kind==="status"?"status":critical?"crit":"hit");if(blocked>=1)queueCombatText(this,target,blocked,"shield");}
     if (kind === "status") {
       target.statusTaken += dealt;
       this.metrics.statusDamage += dealt;
@@ -2421,7 +2074,7 @@ export class Battle {
       source,
       skillId,
       Math.max(m.pierce, trait === "piercer" ? 0.35 : 0, nativeEvolution(source).pierce||0, def.shieldPierce||0),
-      kind,
+      kind, true, crit,
     );
     target.flash = 0.12;
     target.hitAnim = 0.22;
@@ -2435,14 +2088,14 @@ export class Battle {
       );
     }
     const color = def.color || ELEMENTS[BY_ID[source.id].element].color;
-    this.effect(
+    if(!this.native)this.effect(
       target.x + (this.random() - 0.5) * 16,
       target.y - 45,
       dealt > 0 ? `${crit ? "✦ " : ""}${Math.round(dealt)}` : "BLOCK",
       crit ? "#fff0b3" : target.side === 0 ? "#eeb6a7" : "#f3e5c7",
     );
     this.burst(target.x, target.y - 10, color, crit ? 11 : 4, crit ? 110 : 60);
-    this.fx("impact", target.x, target.y - 8, color, { r: crit ? 35 : 23 });
+    this.fx("impact", target.x, target.y - 8, color, { r: crit ? 35 : 23, victimUid:target.uid });
     if (crit || !def.auto) this.shake = Math.min(4, this.shake + 1.1);
     this.audioEvents.push({
       type: crit ? "crit" : def.auto ? "hit" : "skill",
@@ -2786,7 +2439,7 @@ export class Battle {
       skillId: id,
       dx: dx / length,
       dy: dy / length,
-      reach: options.reach ?? Math.max(48, u.range),
+      reach: options.reach ?? Math.max(this.native?24:48, u.range),
       arc: options.arc ?? (def.kind === "cleave" ? 1.02 : 0.48),
       beam: !!options.beam,
       width: options.width || 12,
@@ -2820,7 +2473,7 @@ export class Battle {
       for(const victim of this.living(1-u.side)){
         if(strike.hitUids.length>=strike.maxTargets)return;
         if(strike.hitUids.includes(victim.uid)||distance(u,victim)>strike.reach+victim.radius+15)continue;
-        const contact=sweepCircle(start,end,victim,victim.radius+5),block=firstTerrainHit(start,end,this.terrain);
+        const contact=sweepCircle(start,end,victim,victim.radius+Math.max(2,5*(u.nativeScale||1))),block=firstTerrainHit(start,end,this.terrain);
         if(contact===null||(block&&block.t<=contact))continue;
         strike.hitUids.push(victim.uid);this.metrics.bladeContacts++;
         this.hit(victim,u.atk*strike.power,u,strike.skillId,strike.scale*(strike.hitUids.length>1?.65:1),true,'physical');
@@ -3080,6 +2733,8 @@ export class Battle {
       prevX: muzzle.x,
       prevY: muzzle.y,
       originZ:muzzle.z,
+      targetZ:this.native?nativeBodyHeight(t):45,
+      flightTime:length/speed,
       nativeArrow:this.native&&["elf","fox"].includes(u.nativeActor?.id),
       target: t,
       source: u,
@@ -3754,6 +3409,7 @@ export class Battle {
     dt = Math.min(dt, 0.1);
     this.time += dt;
     this.shake = Math.max(0, this.shake - dt * 9);
+    advanceCombatTexts(this,dt);
     this.effects = this.effects.filter((e) => (e.ttl -= dt) > 0);
     for (const p of this.particles) {
       p.ttl -= dt;

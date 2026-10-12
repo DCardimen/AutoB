@@ -1,8 +1,12 @@
+import {paintGrandPixels} from './grand-pixels.js';
+import {paintCapeMesh} from './native-cloth.js';
 import {projectRig,characterRig} from './prototype-rig.js';
 import {drawNativeFace,FACE_VIEWS} from './prototype-faces.js';
 export const CELL=64,PIVOT={x:32,y:44},PIXEL_WORLD=3;
 const OUT='#20272a';
 export const PIXEL_PALETTES={
+ crab:{skin:['#496b63','#7daca0','#c6d9be'],cloth:['#385c69','#5b95aa','#a9d1db'],metal:['#324d52','#668d8c','#b0c8bd','#e5e0b9'],hair:['#364c58','#638e99','#abd5ce']},
+ centipede:{skin:['#3b454e','#6f8f96','#b7d0c4'],cloth:['#4d4540','#9b8054','#d2ba76'],metal:['#37434b','#6c8790','#b3b9b2','#e0daba'],hair:['#43516d','#87acba','#d0e5d9']},
  knight:{skin:['#845e48','#c78d62','#f0c48c'],cloth:['#662936','#a33b42','#e05b4d'],metal:['#495966','#8796a0','#c3c8ae','#f0e1b1'],hair:['#7d2332','#bc3c40','#ec694e']},
  orc:{skin:['#3e5736','#6e913f','#a2bc57'],cloth:['#40352f','#75533b','#ad794a'],metal:['#374650','#788a8c','#bcc3aa','#e0d5a8'],hair:['#222c2d','#374337','#536049']},
  elf:{skin:['#976c50','#d5a479','#f4d3a1'],cloth:['#203d37','#397653','#71a467'],metal:['#48534d','#899882','#c9cba1','#edd698'],hair:['#95703d','#c8a153','#f0cc7a']},
@@ -17,8 +21,8 @@ export const PIXEL_PALETTES={
 };
 const colors=new Map();function rgba(c){if(!colors.has(c))colors.set(c,[parseInt(c.slice(1,3),16),parseInt(c.slice(3,5),16),parseInt(c.slice(5,7),16),255]);return colors.get(c);}
 class PixelBrush{
- constructor(){this.data=new Uint8ClampedArray(CELL*CELL*4);this.clipped=0;}
- dot(x,y,c){x=Math.round(x);y=Math.round(y);if(x<0||y<0||x>=CELL||y>=CELL){this.clipped++;return;}this.data.set(rgba(c),(y*CELL+x)*4);}
+ constructor(){this.data=new Uint8ClampedArray(CELL*CELL*4);this.clipped=0;this.data.clipSamples=[];}
+ dot(x,y,c){x=Math.round(x);y=Math.round(y);if(x<0||y<0||x>=CELL||y>=CELL){this.clipped++;if(this.data.clipSamples.length<12)this.data.clipSamples.push({x,y,c});return;}this.data.set(rgba(c),(y*CELL+x)*4);}
  rect(x,y,w,h,c){for(let j=Math.round(y);j<Math.round(y+h);j++)for(let i=Math.round(x);i<Math.round(x+w);i++)this.dot(i,j,c);}
  oval(x,y,rx,ry,c){for(let j=Math.floor(y-ry);j<=Math.ceil(y+ry);j++)for(let i=Math.floor(x-rx);i<=Math.ceil(x+rx);i++)if(((i-x)/(rx||1))**2+((j-y)/(ry||1))**2<=1)this.dot(i,j,c);}
  line(a,b,c,r=0){let x=Math.round(a.x),y=Math.round(a.y),tx=Math.round(b.x),ty=Math.round(b.y),dx=Math.abs(tx-x),sx=x<tx?1:-1,dy=-Math.abs(ty-y),sy=y<ty?1:-1,err=dx+dy;for(let k=0;k<160;k++){this.oval(x,y,r||0.6,r||0.6,c);if(x===tx&&y===ty)break;const e=2*err;if(e>=dy){err+=dy;x+=sx;}if(e<=dx){err+=dx;y+=sy;}}}
@@ -29,7 +33,7 @@ class PixelBrush{
 export function spritePoint(p,angle){const s=projectRig(p,angle);return {x:PIVOT.x+s.x/PIXEL_WORLD,y:PIVOT.y+s.y/PIXEL_WORLD,depth:s.depth};}
 export function paintCharacterPixels(id,rig,angle){
  let b=new PixelBrush();const p=rig.palette||PIXEL_PALETTES[id],dir=((Math.round(angle/(Math.PI/4))%8)+8)%8,front=dir===2,back=!FACE_VIEWS[dir].eyes.length,side=FACE_VIEWS[dir].sign,at=q=>spritePoint(q,angle);
- const body=at(rig.body),pelvis=at(rig.pelvis),head=at(rig.head),moving=['walk','run','sprint','turn','stop'].includes(rig.state),dead=rig.death>0;
+ rig.dir=dir;rig.back=back;const body=at(rig.body),pelvis=at(rig.pelvis),head=at(rig.head),moving=['walk','run','sprint','turn','stop'].includes(rig.state),dead=rig.death>0;
  const bind=rig.ragdoll?characterRig(id,'idle',0):null;let headRoll=0;if(bind){const h=at(bind.head),c=at(bind.body),rest=Math.atan2(h.x-c.x,-(h.y-c.y)),current=Math.atan2(head.x-body.x,-(head.y-body.y));headRoll=Math.round(Math.atan2(Math.sin(current-rest),Math.cos(current-rest))/(Math.PI/12))*(Math.PI/12);}
  if(rig.state==='idle')head.y+=Math.round(Math.sin(rig.phase*Math.PI*2)*0.7);
  function outlinedOval(x,y,rx,ry,color){b.oval(x,y,rx+1,ry+1,OUT);b.oval(x,y,rx,ry,color);}
@@ -37,22 +41,29 @@ export function paintCharacterPixels(id,rig,angle){
  function leg(l){segment(l.root,l.joint,id==='orc'?2:id==='mech'?1.7:1,p.skin[0],p.skin[1]);segment(l.joint,l.hock||l.end,id==='orc'?1.7:1,id==='knight'||id==='mech'?p.metal[1]:p.skin[1],p.metal[2]);if(l.hock)segment(l.hock,l.end,0.7,p.skin[0],p.skin[1]);const f=at(l.end);outlinedOval(f.x+0.5,f.y, id==='spider'?1:id==='mech'?2.3:2,id==='spider'?0.6:1,id==='wolf'?p.metal[3]:p.metal[0]);b.dot(f.x+1,f.y-1,p.metal[2]);}
  const sorted=rig.legs.slice().sort((a,c)=>at(a.root).depth-at(c.root).depth),far=sorted.filter(l=>at(l.root).depth<0),near=sorted.filter(l=>at(l.root).depth>=0);
  far.forEach(leg);
+ paintGrandPixels(b,rig,at,p,"far");paintCapeMesh(b,rig,at,p,"far");
+ if(id==='crab'||id==='centipede'){
+  const segments=rig.segments||[rig.body];for(const q of segments){const a=at(q);outlinedOval(a.x,a.y,id==='crab'?9:4.5,id==='crab'?6:4,p.skin[0]);b.oval(a.x-1,a.y-1,id==='crab'?7:3.5,id==='crab'?4:3,p.skin[1]);b.line({x:a.x-3,y:a.y-2},{x:a.x+2,y:a.y-2},p.skin[2]);}
+  if(id==='crab')for(const side of [-1,1]){const root={...rig.body,x:rig.body.x+7,y:side*11},end={...root,x:root.x+22+Math.sin(rig.phase*6.28)*3,y:side*22,z:root.z-3};segment(root,end,2,p.skin[0],p.skin[1]);const q=at(end);b.outlined([{x:q.x-3,y:q.y-3},{x:q.x+3,y:q.y-5},{x:q.x+5,y:q.y+1},{x:q.x,y:q.y+3},{x:q.x-3,y:q.y}],p.skin[1]);b.line({x:q.x,y:q.y-2},{x:q.x+3,y:q.y+1},p.skin[0]);}
+  drawNativeFace(b,id,head,dir,p,rig);paintGrandPixels(b,rig,at,p,'body');near.forEach(leg);paintGrandPixels(b,rig,at,p,'head');paintCapeMesh(b,rig,at,p,'near');b.data.clipped=b.clipped;return b.data;
+ }
  if(id==='serpent'){
   for(const [i,q]of [...rig.segments].reverse().entries()){const t=at(q),r=2+Math.min(3,i*.4);outlinedOval(t.x,t.y,r,r*.65,p.skin[0]);b.oval(t.x-1,t.y-1,Math.max(1,r-1),Math.max(1,r*.65-1),p.skin[1]);b.dot(t.x,t.y-2,p.skin[2]);}
-  segment(rig.body,rig.head,2,p.skin[0],p.skin[1]);drawNativeFace(b,id,head,dir,p,rig);
+  segment(rig.body,rig.head,2,p.skin[0],p.skin[1]);paintGrandPixels(b,rig,at,p,'body');drawNativeFace(b,id,head,dir,p,rig);
   if(rig.form){for(const s of [-1,1]){const q={x:head.x+s*6,y:head.y+3};b.line(head,q,p.skin[1],1);if(rig.formPath==='wild')drawNativeFace(b,id,q,dir,p,{...rig,form:0});else b.outlined([{x:q.x,y:q.y-3},{x:q.x+s*3,y:q.y},{x:q.x,y:q.y+4}],p.metal[2]);}}
-  b.data.clipped=b.clipped;return b.data;
+  paintGrandPixels(b,rig,at,p,'head');paintCapeMesh(b,rig,at,p,'near');b.data.clipped=b.clipped;return b.data;
  }
  if(id==='flyer'){
   for(const wing of rig.wings){const qs=wing.map(at);b.outlined(qs,p.cloth[0]);b.poly([qs[0],qs[1],qs[2]],p.cloth[1]);b.line(qs[0],qs[2],p.cloth[2]);if(rig.design==='bat')b.line(qs[1],qs[3],p.skin[0]);else for(let i=0;i<4;i++){const t=i/4;b.line({x:qs[1].x+(qs[2].x-qs[1].x)*t,y:qs[1].y+(qs[2].y-qs[1].y)*t},qs[3],p.cloth[2]);}}
+  if(rig.grand)for(const wing of rig.wings){const qs=wing.map(at);for(let i=1;i<=3;i++){const t=i/4;b.line({x:qs[0].x+(qs[1].x-qs[0].x)*t,y:qs[0].y+(qs[1].y-qs[0].y)*t},{x:qs[3].x+(qs[2].x-qs[3].x)*t,y:qs[3].y+(qs[2].y-qs[3].y)*t},p.metal[2],1);}}
   outlinedOval(body.x,body.y,rig.design==='faerie'?3:5,5,p.skin[0]);b.oval(body.x-1,body.y-1,3,4,p.cloth[1]);segment(rig.body,rig.head,2,p.skin[0],p.skin[1]);
   for(const s of [-1,1]){b.line({x:body.x+s*2,y:body.y+3},{x:body.x+s*3,y:body.y+7},p.metal[2]);b.dot(body.x+s*4,body.y+7,p.metal[3]);}
-  drawNativeFace(b,id,head,dir,p,rig);if(rig.form){b.outlined([{x:body.x-3,y:body.y-1},{x:body.x+3,y:body.y-1},{x:body.x+5,y:body.y+8},{x:body.x,y:body.y+5},{x:body.x-5,y:body.y+8}],rig.formPath==='warden'?p.metal[1]:p.cloth[2]);}
-  b.data.clipped=b.clipped;return b.data;
+  paintGrandPixels(b,rig,at,p,'body');drawNativeFace(b,id,head,dir,p,rig);if(rig.form){b.outlined([{x:body.x-3,y:body.y-1},{x:body.x+3,y:body.y-1},{x:body.x+5,y:body.y+8},{x:body.x,y:body.y+5},{x:body.x-5,y:body.y+8}],rig.formPath==='warden'?p.metal[1]:p.cloth[2]);}
+  paintGrandPixels(b,rig,at,p,'head');paintCapeMesh(b,rig,at,p,'near');b.data.clipped=b.clipped;return b.data;
  }
  // Cloth panels are attached at the shoulders. Spring state from the simulation
  // adds delayed lift and lateral swing; the preview uses the same gait rhythm.
- if(['knight','elf','caster','fox'].includes(id)){
+ if(!rig.capeMesh&&['knight','elf','caster','fox'].includes(id)){
    const wind=(rig.cape?.map(v=>typeof v==='number'?v:v.angle)||[0,1,2].map(i=>(moving?0.7:0.06)+Math.sin(rig.phase*Math.PI*2-i*0.65)*(moving?0.2:0.04)));
    const root=at({...rig.body,x:rig.body.x-5,z:rig.body.z+6}),rear=at({...rig.pelvis,x:rig.pelvis.x-12-(wind[1]||0)*12,z:rig.pelvis.z-7+(wind[1]||0)*9});
    for(let i=0;i<3;i++){const dx=(i-1)*3,tip={x:rear.x+dx+(wind[i]||0)*Math.sin(angle)*4,y:rear.y+(i===1?2:0)};b.outlined([{x:root.x+dx-2,y:root.y},{x:root.x+dx+2,y:root.y},{x:tip.x+2,y:tip.y},{x:tip.x-2,y:tip.y}],p.cloth[i===1?1:0]);b.line({x:root.x+dx,y:root.y+2},{x:tip.x,y:tip.y-1},p.cloth[2]);}
@@ -66,7 +77,7 @@ export function paintCharacterPixels(id,rig,angle){
    for(let i=0;i<3;i++)b.oval(x+(i-1)*6,y+ry-1,2,1,p.skin[1]);
    if(rig.form){const crownY=y-ry-2;for(const dx of [-5,0,5]){b.line({x:x+dx,y:crownY+2},{x:x+dx,y:crownY-2},p.metal[1]);b.dot(x+dx,crownY-3,p.metal[3]);}if(rig.formPath==='warden')for(const s of [-1,1])b.outlined([{x:x+s*rx,y:y},{x:x+s*(rx+3),y:y+4},{x:x+s*rx,y:y+7}],p.cloth[2]);else for(const s of [-1,1])outlinedOval(x+s*(rx+3),y-3,2,2,p.metal[2]);}
    if(rig.state==='cast'||rig.state==='attack'){const q=at(rig.weapon.tip);outlinedOval(q.x,q.y,2+Math.round(rig.phase*2),2,p.metal[2]);b.dot(q.x-1,q.y-1,p.metal[3]);}
-   b.data.clipped=b.clipped;return b.data;
+   paintGrandPixels(b,rig,at,p,'head');paintCapeMesh(b,rig,at,p,'near');b.data.clipped=b.clipped;return b.data;
  }
  if(id==='mech'||id==='spider'||id==='wolf'){
    const rx=id==='wolf'?Math.hypot((27+(rig.spine||0))*Math.cos(angle),14*Math.sin(angle))/3:7,ry=id==='wolf'?4+Math.abs(Math.sin(angle))*2:5;
@@ -94,7 +105,7 @@ export function paintCharacterPixels(id,rig,angle){
      else if(id==='spider'){for(const s of [-1,1])b.outlined([{x:body.x+s*4,y:body.y-1},{x:body.x+s*9,y:body.y-5},{x:body.x+s*7,y:body.y+2}],armor?p.metal[2]:p.cloth[2]);b.line({x:head.x-4,y:head.y+2},{x:head.x-5,y:head.y+7},p.metal[3]);b.line({x:head.x+4,y:head.y+2},{x:head.x+5,y:head.y+7},p.metal[3]);}
      else{for(let i=-1;i<=1;i++)b.outlined([{x:body.x+i*4-2,y:body.y-3},{x:body.x+i*4,y:body.y-(armor?5:8)},{x:body.x+i*4+2,y:body.y-3}],armor?p.metal[1]:p.cloth[2]);b.line({x:body.x-5,y:body.y},{x:body.x+5,y:body.y},armor?p.metal[3]:p.cloth[1],1);}
    }
-   near.forEach(leg);b.data.clipped=b.clipped;return b.data;
+   paintGrandPixels(b,rig,at,p,'body');near.forEach(leg);paintGrandPixels(b,rig,at,p,'head');paintCapeMesh(b,rig,at,p,'near');b.data.clipped=b.clipped;return b.data;
  }
  function drawArm(arm){segment(arm.root,arm.joint,id==='orc'?2:1.2,id==='knight'?p.metal[1]:id==='orc'?p.skin[1]:p.cloth[1],id==='knight'?p.metal[2]:p.cloth[2]);segment(arm.joint,arm.end,1,id==='knight'?p.metal[0]:p.skin[0],p.skin[1]);const h=at(arm.end);outlinedOval(h.x,h.y,1.2,1.2,id==='knight'?p.metal[2]:p.skin[1]);}
  function gearLayer(grip){const depth=at(grip).depth;return depth<body.depth-0.5?'far':depth<head.depth?'middle':'near';}
@@ -113,13 +124,14 @@ export function paintCharacterPixels(id,rig,angle){
  near.forEach(leg);
  rig.arms.filter(a=>at(a.root).depth>=body.depth).forEach(drawArm);
  drawGear('middle');
- if(id==='fox'){const tail=at({...rig.pelvis,x:rig.pelvis.x-12,y:Math.sin(rig.phase*Math.PI*2)*6,z:rig.pelvis.z-4});b.line({x:pelvis.x,y:pelvis.y+2},tail,OUT,3);b.line({x:pelvis.x,y:pelvis.y+2},tail,p.skin[1],2);b.oval(tail.x,tail.y,2,2,p.metal[3]);}
+ if(id==='fox'&&!rig.grand?.tailFan){const tail=at({...rig.pelvis,x:rig.pelvis.x-12,y:Math.sin(rig.phase*Math.PI*2)*6,z:rig.pelvis.z-4});b.line({x:pelvis.x,y:pelvis.y+2},tail,OUT,3);b.line({x:pelvis.x,y:pelvis.y+2},tail,p.skin[1],2);b.oval(tail.x,tail.y,2,2,p.metal[3]);}
+ paintGrandPixels(b,rig,at,p,'body');paintCapeMesh(b,rig,at,p,'near');
  const torsoBrush=b;if(rig.ragdoll)b=new PixelBrush();
  drawNativeFace(b,id,head,dir,p,rig);
  if(rig.form&&['knight','orc','elf','caster','wolf','fox'].includes(rig.design)){const armor=rig.formPath==='warden';for(const s of [-1,1])b.line({x:head.x+s*4,y:head.y-5},{x:head.x+s*(armor?7:8),y:head.y-(armor?7:10)},armor?p.metal[2]:p.cloth[2],1);}
  if(rig.ragdoll){torsoBrush.rotated(b,head,headRoll);b=torsoBrush;}
  drawGear('near');
- b.data.clipped=b.clipped;return b.data;
+ paintGrandPixels(b,rig,at,p,'head');paintCapeMesh(b,rig,at,p,'near');b.data.clipped=b.clipped;return b.data;
 }
 function drawGearPart(b,id,rig,angle,p,at,outlinedOval,weapon,shield){
  if(weapon&&rig.weapon){
@@ -136,7 +148,9 @@ function drawGearPart(b,id,rig,angle,p,at,outlinedOval,weapon,shield){
      const dx=tip.x-g.x,dy=tip.y-g.y,len=Math.hypot(dx,dy)||1,tx=dx/len,ty=dy/len,nx=-ty,ny=tx;
      const q=(along,across)=>({x:g.x+tx*along+nx*across,y:g.y+ty*along+ny*across});
      b.line(q(-2,0),tip,OUT,1);b.line(q(-2,0),tip,id==='orc'?p.cloth[2]:p.metal[2]);
-     if(rig.gear==='hammer'||rig.gear==='club'){
+     if(rig.gear==='cannon'){b.line(g,tip,OUT,3);b.line(g,tip,p.metal[1],2);b.line(g,tip,p.metal[2],1);b.oval(tip.x,tip.y,2,2,p.cloth[2]);}
+     else if(['royal-hammer','great-axe','sunblade','moonblade','branch-club','gauntlet'].includes(rig.gear)){b.outlined([q(2,-2),q(len-2,-4),q(len+2,0),q(len-2,4),q(2,2)],p.metal[1]);b.line(q(3,-1),tip,p.metal[3],1);if(rig.gear==='great-axe'||rig.gear==='royal-hammer')b.outlined([q(len-5,-6),q(len+2,-6),q(len+4,5),q(len-5,5)],p.metal[2]);}
+     else if(rig.gear==='hammer'||rig.gear==='club'){
        const r=rig.gear==='hammer'?3:2;b.outlined([q(len-3,-r),q(len+1,-r),q(len+2,r),q(len-3,r)],rig.gear==='hammer'?p.metal[1]:p.cloth[1]);b.line(q(len-2,-r),q(len+1,-r),p.metal[3]);
      }else if(rig.gear==='knife'||rig.gear==='rapier'){
        b.line(q(1,0),tip,p.metal[3],rig.gear==='knife'?1:0);b.line(q(2,-2),q(2,2),p.metal[1]);

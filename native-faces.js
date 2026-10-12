@@ -1,11 +1,23 @@
 // Pixel-authored family faces. Rear views never retain front-facing features.
 export function drawFamilyFace(b,h,dir,p,rig,views){
- const id=rig.design;if(!['dwarf','goblin','skeleton','troll','minotaur','serpent','harpy','faerie','bat','rogue','frostelf','phoenix'].includes(id))return false;
+ let id=['leviathan','stormwyrm','nightdragon'].includes(rig.grand?.motif)?'drake':rig.grand?.motif==='lich'?'skeleton':rig.design;if(!['dwarf','goblin','skeleton','troll','minotaur','serpent','harpy','faerie','bat','rogue','frostelf','phoenix','crab','beetle','centipede','lion','bear','stag','drake','moth'].includes(id))return false;
  const v=views[dir],x=Math.round(h.x),y=Math.round(h.y),back=!v.eyes.length,sign=v.sign,profile=v.view==='profile',dead=rig.death>0,O='#20272a';
  const oval=(x,y,rx,ry,c)=>{b.oval(x,y,rx+1,ry+1,O);b.oval(x,y,rx,ry,c);};
  const eyes=(color)=>{if(back)return;for(const dx of v.eyes){const xx=x+Math.round(dx*.75);b.rect(xx,y,dead?2:1,dead?1:2,O);if(!dead)b.dot(xx,y,color);}};
  const horns=(r=9)=>{for(const s of profile?[-sign]:[-1,1]){b.line({x:x+s*5,y:y-4},{x:x+s*r,y:y-8},O,1);b.line({x:x+s*5,y:y-4},{x:x+s*r,y:y-8},p.metal[2]);b.dot(x+s*r,y-9,p.metal[3]);}};
  const skin=id==='skeleton'?p.skin[2]:p.skin[1];
+ if(['crab','beetle','centipede'].includes(id)){
+  oval(x,y,5,4,p.skin[0]);b.oval(x-1,y-1,4,3,p.skin[1]);if(!back){for(const dx of profile?[sign*3]:[-3,3]){b.rect(x+dx,y-1,2,2,p.metal[3]);b.dot(x+dx,y+1,O);}b.line({x:x-2,y:y+3},{x:x+2,y:y+3},p.skin[2]);}for(const side of [-1,1])b.line({x:x+side*3,y:y-3},{x:x+side*6,y:y-8},p.hair[2]);return true;
+ }
+ if(['lion','bear','stag','drake'].includes(id)){
+  if(id==='lion'){b.oval(x,y,8,7,p.hair[0]);for(const s of [-1,1])b.oval(x+s*6,y+2,2,4,p.hair[1]);}
+  oval(x,y,6,5,skin);b.oval(x-1,y-2,3,2,p.skin[2]);for(const s of profile?[-sign]:[-1,1])oval(x+s*5,y-5,2,2,p.skin[0]);
+  if(!back){eyes('#f2da98');oval(x+sign*3,y+3,profile?3:4,2,p.metal[2]);b.dot(x+sign*4,y+2,O);}
+  if(id==='stag'||id==='drake')horns(id==='stag'?11:9);return true;
+ }
+ if(id==='moth'){
+  oval(x,y,4,5,skin);if(!back)eyes('#fff1c7');for(const s of [-1,1])b.line({x:x+s*2,y:y-4},{x:x+s*6,y:y-10},p.hair[1],1);return true;
+ }
  oval(x,y,id==='troll'||id==='minotaur'?8:6,id==='serpent'?4:7,skin);b.oval(x-2,y-3,3,2,p.skin[2]);
  if(id==='skeleton'){
   if(!back){for(const dx of v.eyes)b.rect(x+dx-1,y-1,2,3,O);b.dot(x+sign*2,y+2,O);b.rect(x-3+sign*2,y+4,6,1,O);for(const dx of [-2,0,2])b.dot(x+dx+sign*2,y+5,p.skin[0]);}else b.line({x:x-3,y:y+2},{x:x+2,y:y-1},p.skin[0]);

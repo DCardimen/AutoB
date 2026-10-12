@@ -19,14 +19,14 @@ import {
 } from "../game.js";
 import { creaturePose, spriteBone } from "../animation.js";
 
-test("all 81 families have valid lineages, art cells, and an encounter habitat", () => {
-  assert.equal(SPECIES.length, 81);
-  assert.equal(new Set(SPECIES.map((s) => s.id)).size, 81);
-  assert.equal(new Set(SPECIES.map((s) => s.evolvedName)).size, 81);
+test("all 89 families have valid lineages, art cells, and an encounter habitat", () => {
+  assert.equal(SPECIES.length, 89);
+  assert.equal(new Set(SPECIES.map((s) => s.id)).size, 89);
+  assert.equal(new Set(SPECIES.map((s) => s.evolvedName)).size, 89);
   const available = new Set(PLANETS.flatMap((p) => [...p.pool, p.boss]));
   for (const s of SPECIES) {
     if(s.evolutionLimit!==0)assert.ok(s.evolvedName !== s.name);else assert.equal(s.evolvedName,s.name);
-    assert.ok(s.artIndex >= 0 && s.artIndex < (s.nativeRig?21:20));
+    assert.ok(s.artIndex >= 0 && s.artIndex < (s.nativeRig?29:20));
     assert.ok(available.has(s.id), s.id + " cannot be encountered");
   }
 });

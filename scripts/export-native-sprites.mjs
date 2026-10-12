@@ -2,18 +2,19 @@ import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
 import {chromium} from 'playwright';
+import {optimizeNativePng} from './optimize-native-pngs.mjs';
 import {NATIVE_SPECIES,lineageLimit} from '../native-content.js';
-const output=process.argv[2]||'playtest-artifacts/native-sprites-v10';
+const output=process.argv[2]||'playtest-artifacts/native-sprites-v11';
 fs.mkdirSync(path.join(output,'sprites'),{recursive:true});
 const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||'/usr/bin/chromium',headless:true,args:['--no-sandbox']});
-const manifest={version:10,cell:[64,64],pivot:[32,44],sampling:'nearest',families:[],forms:[]};
+const manifest={version:11,cell:[64,64],pivot:[32,44],sampling:'nearest',families:[],forms:[]};
 try{
- const page=await browser.newPage();await page.goto((process.env.BASE_URL||'http://127.0.0.1:3012')+'/index.html');await page.waitForFunction(()=>window.nativeRosterLab);
+ const page=await browser.newPage();await page.goto((process.env.BASE_URL||'http://127.0.0.1:3013')+'/index.html');await page.waitForFunction(()=>window.nativeRosterLab);
  for(const spec of NATIVE_SPECIES){
   const limit=lineageLimit({id:spec.id});manifest.families.push({id:spec.id,name:spec.name,rig:spec.nativeRig,design:spec.nativeDesign,totalLineageForms:limit+1,habitat:spec.habitat,accomplishment:spec.accomplishment});
   for(let stage=0;stage<=limit;stage++)for(const branch of stage?['wild','warden']:['wild']){
    const atlas=await page.evaluate(({id,branch,stage})=>nativeRosterLab.exportAtlas(id,branch,stage),{id:spec.id,branch,stage});assert.deepEqual(atlas.issues,[],spec.id+' '+branch+' '+stage);
-   const key=spec.id+'-'+(stage?branch+'-'+stage:'base');fs.writeFileSync(path.join(output,'sprites',key+'.png'),Buffer.from(atlas.image.split(',')[1],'base64'));
+   const key=spec.id+'-'+(stage?branch+'-'+stage:'base');fs.writeFileSync(path.join(output,'sprites',key+'.png'),Buffer.from(atlas.image.split(',')[1],'base64'));optimizeNativePng(path.join(output,'sprites',key+'.png'));
    const frames=atlas.animations.reduce((n,a)=>n+a.frames.length,0),lines=[`[gd_resource type="SpriteFrames" load_steps=${frames+2} format=3]`,'',`[ext_resource type="Texture2D" path="res://sprites/${key}.png" id="1"]`,''];let index=0;
    for(const animation of atlas.animations)for(const f of animation.frames)lines.push(`[sub_resource type="AtlasTexture" id="Frame_${index++}"]`,'atlas = ExtResource("1")',`region = Rect2(${f.x}, ${f.y}, 64, 64)`,'');
    lines.push('[resource]','animations = [');index=0;
@@ -23,7 +24,7 @@ try{
  }
 }finally{await browser.close();}
 fs.writeFileSync(path.join(output,'manifest.json'),JSON.stringify(manifest,null,2)+'\n');
-fs.writeFileSync(path.join(output,'project.godot'),'config_version=5\n[application]\nconfig/name="Starfall Native Roster v10"\nrun/main_scene="res://showcase.tscn"\n[display]\nwindow/size/viewport_width=1002\nwindow/size/viewport_height=654\n[rendering]\nrenderer/rendering_method="gl_compatibility"\ntextures/default_filters/use_nearest_mipmap_filter=false\n');
+fs.writeFileSync(path.join(output,'project.godot'),'config_version=5\n[application]\nconfig/name="Starfall Native Roster v11"\nrun/main_scene="res://showcase.tscn"\n[display]\nwindow/size/viewport_width=1002\nwindow/size/viewport_height=654\n[rendering]\nrenderer/rendering_method="gl_compatibility"\ntextures/default_filters/use_nearest_mipmap_filter=false\n');
 fs.copyFileSync('public/prototype-glade-pixel.png',path.join(output,'environment.png'));
 fs.writeFileSync(path.join(output,'showcase.tscn'),'[gd_scene load_steps=2 format=3]\n[ext_resource type="Script" path="res://showcase.gd" id="1"]\n[node name="Showcase" type="Node2D"]\ntexture_filter = 1\nscript = ExtResource("1")\n');
 fs.writeFileSync(path.join(output,'showcase.gd'),`extends Node2D

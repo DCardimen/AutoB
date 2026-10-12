@@ -30,11 +30,11 @@ import {
 } from "../game.js";
 import { ACTIVE_SKILLS, AUTO_SKILLS, SKILLS, loadoutFor } from "../skills.js";
 
-test("182 distinct abilities, a unique auto per species, and rarity-scaled active loadouts", () => {
-  assert.equal(Object.keys(SKILLS).length, 182);
-  assert.equal(AUTO_SKILLS.length, 81);
-  assert.equal(ACTIVE_SKILLS.length, 101);
-  assert.equal(new Set(Object.values(SKILLS).map((s) => s.name)).size, 182);
+test("562 named abilities, a unique auto per species, and rarity-scaled active loadouts", () => {
+  assert.equal(Object.keys(SKILLS).length, 562);
+  assert.equal(AUTO_SKILLS.length, 89);
+  assert.equal(ACTIVE_SKILLS.length, 473);
+  assert.equal(new Set(Object.values(SKILLS).map((s) => s.name)).size, 562);
   for (const s of SPECIES) {
     const l = loadoutFor(s);
     assert.equal(SKILLS[l.auto].species, s.id);
@@ -138,9 +138,10 @@ test("Fortification on an auto-attack shields its wearer and no teammate", () =>
 });
 test("every active skill has an executable combat effect", () => {
   for (const def of ACTIVE_SKILLS) {
-    const species = SPECIES.find((s) => loadoutFor(s).active.includes(def.id));
+    const species = def.evolutionSkill ? BY_ID[def.species] : SPECIES.find((s) => loadoutFor(s).active.includes(def.id));
     const r = makeRun(15);
     r.team[0] = creature(species.id);
+    if(def.evolutionSkill){r.team[0].evolution=def.stage;r.team[0].evolutionPath=def.path;}
     const b = new Battle(
       r,
       [

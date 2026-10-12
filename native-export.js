@@ -1,8 +1,8 @@
-import {NATIVE_SPECIES,lineageLimit} from './native-content.js';
+import {PIXEL_SPECIES,lineageLimit} from './native-content.js';
 import {NATIVE_POSES,nativePosePixels} from './native-poses.js';
 import {DIRECTIONS,FRAME_COUNTS,LOOP_STATES,FPS} from './prototype-export.js';
 export function exportNativeAtlas(id,path='wild',stage=0){
- const spec=NATIVE_SPECIES.find(s=>s.id===id);if(!spec)throw new Error('Unknown released native family');
+ const spec=PIXEL_SPECIES.find(s=>s.id===id);if(!spec)throw new Error('Unknown released native family');
  if(!['wild','warden'].includes(path)||!Number.isInteger(stage)||stage<0||stage>lineageLimit({id}))throw new Error('Invalid family form');
  const canvas=document.createElement('canvas'),columns=16;canvas.width=columns*64;canvas.height=Math.ceil(NATIVE_POSES.length*8*FRAME_COUNTS/columns)*64;
  const ctx=canvas.getContext('2d'),animations=[],issues=[];let index=0;

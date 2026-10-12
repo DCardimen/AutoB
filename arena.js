@@ -65,7 +65,7 @@ export function strikeContains(strike, unit) {
   );
 }
 export function confineBody(unit, bounds = ARENA_BOUNDS) {
-  const b = bounds,
+  const b = unit.entityBounds || bounds,
     r = unit.radius || 17;
   const x = limit(unit.x, b.left + r, b.right - r),
     y = limit(unit.y, b.top + r, b.bottom - r);

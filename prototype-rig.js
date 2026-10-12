@@ -21,6 +21,8 @@ export const RIGS={
   mech:{hip:30,thigh:16,shin:18,stance:11,body:'walker',headW:35,bodyW:62},
   spider:{hip:21,thigh:21,shin:23,stance:6,body:'arachnid',headW:30,bodyW:48},
   jelly:{hip:17,body:'gel',headW:45,bodyW:48},
+  crab:{hip:21,thigh:17,shin:18,stance:8,body:'crab',headW:30,bodyW:54},
+  centipede:{hip:18,thigh:14,shin:17,stance:8,body:'centipede',headW:30,bodyW:60},
   serpent:{hip:10,body:'serpent',headW:34,bodyW:50},
   flyer:{hip:29,body:'flyer',headW:32,bodyW:30},
 };
@@ -56,6 +58,8 @@ export function footSoleLift(id,pitch,ankleZ=3){
 }
 export function legLayout(id,run=0,sprint=0){
   if(['jelly','serpent','flyer'].includes(id))return [];
+  if(id==='centipede')return Array.from({length:12},(_,i)=>({x:(i%6-2.5)*8,y:i<6?-7:7,footY:i<6?-24:24,offset:(i%6)*.13+(i<6?0:.5)}));
+  if(id==='crab')return Array.from({length:8},(_,i)=>({x:(i%4-1.5)*8,y:i<4?-8:8,footY:i<4?-29:29,offset:(i%4)*.1+(i<4?0:.5)}));
   if(id==='mech')return Array.from({length:6},(_,i)=>({x:(i%3-1)*14,y:i<3?-11:11,footY:i<3?-25:25,offset:((i%3+(i<3?0:1))%2)*0.5}));
   if(id==='spider')return Array.from({length:8},(_,i)=>({x:(1.5-i%4)*8,y:i<4?-6:6,footX:(1.5-i%4)*12,footY:i<4?-32:32,offset:((i%4+(i<4?0:1))%2)*0.5+(i%4)*0.025}));
   if(id!=='wolf')return [{x:0,y:-RIGS[id].stance,offset:0},{x:0,y:RIGS[id].stance,offset:0.5}];
@@ -243,8 +247,9 @@ function creatureRig(id,state,phase,stage,options){
   if(id==='jelly'){body.z=17+Math.max(0,Math.sin(phase*TAU))*((moving?1:0)*(7+run*4+sprint*4));head.z=body.z+3;}
   if(id==='serpent'){body.z=10-dead*5;head.x=17+(state==='attack'?Math.sin(phase*Math.PI)*9:0);head.z=19-dead*12;}
   if(id==='flyer'){body.z=30+(moving?Math.sin(phase*TAU)*3:Math.sin(phase*TAU)*1.5)-dead*20;head.x=7;head.z=body.z+15;head.y=body.y*.5;}
+  if(id==='centipede'){head.x=30;body.x=0;}
   const grip=point(head.x+3,0,head.z),axis=point(1,0,0),weapon={kind:id==='mech'?'cannon':id==='jelly'?'gel':'fangs',grip,axis,tip:plus(grip,times(axis,id==='spider'?19:24)),length:24,tilt:Math.PI/2};
-  const segments=id==='serpent'?Array.from({length:9},(_,i)=>point(17-i*6,Math.sin(phase*TAU-i*.68)*(moving?9:3),6+Math.sin(phase*TAU-i*.68)*1.4)):null;
+  const segments=id==='centipede'?Array.from({length:7},(_,i)=>point(23-i*8,Math.sin(phase*TAU-i*.7)*2,body.z)):id==='serpent'?Array.from({length:9},(_,i)=>point(17-i*6,Math.sin(phase*TAU-i*.68)*(moving?9:3),6+Math.sin(phase*TAU-i*.68)*1.4)):null;
   const flap=Math.sin(phase*TAU)*(dead?0:1),wings=id==='flyer'?[-1,1].map(side=>[point(-2,side*5,body.z+3),point(-10,side*(21+run*3),body.z+flap*10),point(-18,side*(37+run*3),body.z+flap*20),point(-15,side*12,body.z-8)]):null;
   return {id,state,phase,stage,dimensions:d,pelvis,body,head,legs,arms:[],weapon,segments,wings,lean,sideLean:0,torsoYaw:0,crouch:d.hip-hip,death:dead,squash:id==='jelly'?(dead?1+dead*1.8:1+Math.sin(phase*TAU)*0.2):1,tail:point(-18,0,hip)};
 }
@@ -267,11 +272,11 @@ export function weaponTipAt(id,phase,angle,options={}){
 // changing velocity does not drag a supporting boot across the courtyard.
 export function plantFeet(u,dt){
   if(u.hp<=0||u.roll||u.stagger>0||u.knockdown>0||u.getup>0){u.groundFeet=null;return;}
-  const speed=Math.hypot(u.vx,u.vy),moving=speed>4&&!u.action;
+  const rigScale=u.rigScale||1,speed=Math.hypot(u.vx,u.vy),moving=speed>4&&!u.action;
   const motion=bound((u.moving||0)/0.5,0,1),runBlend=u.runBlend||0,sprintBlend=u.sprintBlend||0;
   const rig=characterRig(u.id,moving?(sprintBlend>0.35?'sprint':runBlend>0.4?'run':'walk'):'idle',u.gait%1,'',{stride:u.stride,motion,runBlend,sprintBlend,acceleration:u.acceleration,movementAngle:Math.atan2(Math.sin(u.moveFacing-u.facing),Math.cos(u.moveFacing-u.facing))});
   const layout=legLayout(u.id,runBlend,sprintBlend),stride=locomotionStride(u.stride,runBlend,sprintBlend,u.id);
-  const world=p=>({x:u.x+p.x*Math.cos(u.facing)-p.y*Math.sin(u.facing),y:u.y+p.x*Math.sin(u.facing)+p.y*Math.cos(u.facing)});
+  const world=p=>({x:u.x+rigScale*(p.x*Math.cos(u.facing)-p.y*Math.sin(u.facing)),y:u.y+rigScale*(p.x*Math.sin(u.facing)+p.y*Math.cos(u.facing))});
   if(!u.groundFeet)u.groundFeet=rig.legs.map(leg=>({...world(leg.end),z:leg.end.z-leg.foot.soleLift,angle:u.facing,planted:leg.foot.planted,serial:0}));
   for(let i=0;i<rig.legs.length;i++){
     const leg=rig.legs[i],f=u.groundFeet[i],goal=world(leg.end),phase=((u.gait+layout[i].offset)%1+1)%1;
@@ -290,7 +295,7 @@ export function plantFeet(u,dt){
     }else{
       f.settling=null;
       if(f.planted){f.start={x:f.x,y:f.y};f.planted=false;}
-      const duty=leg.foot.duty,t=bound((phase-duty)/(1-duty),0,1),remaining=(1-phase)*stride/speed;
+      const duty=leg.foot.duty,t=bound((phase-duty)/(1-duty),0,1),remaining=(1-phase)*stride*rigScale/speed;
       const half=stride*duty/2,base=layout[i].x;
       const lateral=layout[i].footY??leg.side,local=point((layout[i].footX??base)+half,lateral,0),landing=world(local);
       landing.x+=u.vx*remaining;landing.y+=u.vy*remaining;
@@ -299,7 +304,7 @@ export function plantFeet(u,dt){
     const root=world(leg.root),reach=leg.upper+leg.lower-0.2;
     const hockOffset=leg.hock?world(minus(leg.hock,leg.end)):null;
     const targetX=f.x+(hockOffset?hockOffset.x-u.x:0),targetY=f.y+(hockOffset?hockOffset.y-u.y:0),targetZ=f.z+footSoleLift(u.id,leg.foot.pitch,f.z)+(leg.hock?leg.hock.z-leg.end.z:0);
-    if(Math.hypot(targetX-root.x,targetY-root.y,targetZ-leg.root.z)>reach){
+    if(Math.hypot((targetX-root.x)/rigScale,(targetY-root.y)/rigScale,targetZ-leg.root.z)>reach){
       // A collision or sharp reversal can force a support change. Replant it
       // explicitly rather than lengthening a shin to keep an impossible anchor.
       f.x=goal.x;f.y=goal.y;f.z=leg.end.z-leg.foot.soleLift;f.angle=u.facing;f.serial++;
@@ -310,7 +315,7 @@ export function plantFeet(u,dt){
 export function localFootContacts(u){
   if(!u.groundFeet)return null;
   return u.groundFeet.map(f=>{
-    const x=f.x-u.x,y=f.y-u.y;
+    const x=(f.x-u.x)/(u.rigScale||1),y=(f.y-u.y)/(u.rigScale||1);
     return {x:x*Math.cos(u.facing)+y*Math.sin(u.facing),y:-x*Math.sin(u.facing)+y*Math.cos(u.facing),z:f.z,angle:Math.atan2(Math.sin(f.angle-u.facing),Math.cos(f.angle-u.facing))};
   });
 }

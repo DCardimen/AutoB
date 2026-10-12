@@ -6,11 +6,11 @@ import {build} from 'esbuild';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const mime={'.png':'image/png','.woff2':'font/woff2'};
 const asset=file=>'data:'+mime[path.extname(file)]+';base64,'+fs.readFileSync(path.join(root,file)).toString('base64');
-const atlasNames=['creatures','expansion-a','expansion-b','evolved-creatures','evolved-expansion-a','evolved-expansion-b','arena','prototype-glade-pixel'];
+const atlasNames=['prototype-glade-pixel'];
 const assets=Object.fromEntries(atlasNames.map(name=>[name+'.png',asset('public/'+name+'.png')]));
 const css=fs.readFileSync(path.join(root,'styles.css'),'utf8').replace(/url\("(\/public\/[^"\)]+)"\)/g,(_,file)=>'url("'+asset(file.slice(1))+'")');
 const bundle=await build({entryPoints:[path.join(root,'app.js')],bundle:true,write:false,format:'iife',target:'es2020',plugins:[{name:'offline-art',setup(b){b.onLoad({filter:/(?:art|native-art)\.js$/},args=>{
- let contents=fs.readFileSync(args.path,'utf8').replace('sheet.src = `/public/${name}.png`;','sheet.src = embeddedAssets[name + ".png"];').replace('arenaArt.src = "/public/arena.png";','arenaArt.src = embeddedAssets["arena.png"];').replace("backdrop.src='/public/prototype-glade-pixel.png';",'backdrop.src=embeddedAssets["prototype-glade-pixel.png"];');return {contents,loader:'js',resolveDir:path.dirname(args.path)};
+ let contents=fs.readFileSync(args.path,'utf8').replace("backdrop.src='/public/prototype-glade-pixel.png';",'backdrop.src=embeddedAssets["prototype-glade-pixel.png"];');return {contents,loader:'js',resolveDir:path.dirname(args.path)};
 });}}]});
 const js='const embeddedAssets='+JSON.stringify(assets)+';\n'+bundle.outputFiles[0].text;
 new vm.Script(js);if(/<\/script/i.test(js))throw new Error('Unsafe script embedding');

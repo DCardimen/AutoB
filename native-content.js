@@ -1,3 +1,6 @@
+import {GRAND_BATCH,GRAND_ACTIVE_SKILLS,GRAND_AUTO_SKILLS} from './native-batch-two.js';
+import {LEGACY_PIXEL_SPECIES} from './pixel-legacy.js';
+import {buildEvolutionSkills} from './evolution-skills.js';
 import {ROSTER_BATCH,BATCH_ACTIVE_SKILLS,BATCH_AUTO_SKILLS,BATCH_EVOLUTIONS} from './native-batch.js';
 // Released native families. The unrelated expedition.js draft stays untouched.
 export const NATIVE_SPECIES = [
@@ -11,7 +14,7 @@ export const NATIVE_SPECIES = [
  {id:'runespider',name:'Runespider',evolvedName:'Venom Matriarch',nativeRig:'spider',element:'void',role:'Striker',rarity:'Rare',shape:'spider',hp:245,atk:29,speed:102,range:48,cd:9,trait:'poisoner',habitat:2,skill:'Silken Ambush',skillDesc:'A physical ambush applies poison and binds an isolated victim.'},
  {id:'moonjelly',name:'Moonjelly',evolvedName:'Lunar Sovereign',nativeRig:'jelly',element:'tide',role:'Support',rarity:'Legendary',shape:'jelly',hp:330,atk:25,speed:76,range:220,cd:11,trait:'overflow',habitat:2,skill:'Pearl Tide',skillDesc:'Heal the whole team and create a short haste window.'},
 ].map((s,i)=>({...s,artSheet:'native',artIndex:i,power:1,personality:['disciplined','opportunist','territorial'][i%3]}));
-NATIVE_SPECIES.push(...ROSTER_BATCH);
+NATIVE_SPECIES.push(...ROSTER_BATCH,...GRAND_BATCH);
 for(const s of NATIVE_SPECIES){
  s.evolutionLimit??=({brakk:1,emberhound:1,rowan:1,cogwalker:1}[s.id]??2);
  s.accomplishment??={key:s.role==='Support'?'healed':s.role==='Guardian'?'shielded':s.role==='Ranger'?'skills':'damage',target:s.role==='Support'?240:s.role==='Guardian'?160:s.role==='Ranger'?8:500};
@@ -22,7 +25,7 @@ Object.assign(NATIVE_SPECIES.find(s=>s.id==='grit'),{hp:185,atk:21});
 Object.assign(NATIVE_SPECIES.find(s=>s.id==='morrow'),{hp:205,atk:23});
 export const NATIVE_STARTERS=['aurel','brakk','syl','nyra','emberhound','rowan'];
 export const NATIVE_POOLS=[['aurel','syl','nyra','rowan','emberhound','runespider','moonjelly'],['brakk','emberhound','aurel','rowan','cogwalker','nyra','runespider'],['runespider','cogwalker','moonjelly','nyra','aurel','brakk','syl']];
-for(const s of ROSTER_BATCH)NATIVE_POOLS[s.habitat].push(s.id);
+for(const s of [...ROSTER_BATCH,...GRAND_BATCH])NATIVE_POOLS[s.habitat].push(s.id);
 export const NATIVE_BOSS_RIGS={elderoot:'mech',solwyrm:'wolf',abyssal:'orc'};
 export const NATIVE_ACTIVE_SKILLS=[
  {id:'aurel',name:'Oathwall',kind:'shield',shield:70,taunt:2.5,radius:190,cd:10},
@@ -35,11 +38,11 @@ export const NATIVE_ACTIVE_SKILLS=[
  {id:'runespider',name:'Silken Ambush',kind:'dash',power:2,poison:5,root:0.7,backline:true,cd:9},
  {id:'moonjelly',name:'Pearl Tide',kind:'heal-all',heal:42,haste:2.5,cd:11},
 ].map(s=>({...s,icon:'✦',desc:NATIVE_SPECIES.find(c=>c.id===s.id).skillDesc}));
-NATIVE_ACTIVE_SKILLS.push(...BATCH_ACTIVE_SKILLS);
+NATIVE_ACTIVE_SKILLS.push(...BATCH_ACTIVE_SKILLS,...GRAND_ACTIVE_SKILLS);
 export const NATIVE_AUTO_SKILLS=[
  ['aurel','Oathblade','melee',{power:1}],['brakk','Ironjaw Cleave','cleave',{power:1.1,radius:55}],['syl','Thornshaft','bolt',{power:1.05}],['nyra','Silver Spark','bolt',{power:0.85,heal:4}],['emberhound','Packfire Bite','melee',{power:1,burn:1.5}],['rowan','Moontrail Arrow','bolt',{power:1,slow:0.7}],['cogwalker','Brass Cannon','bolt',{power:1.05,radius:35}],['runespider','Venom Fang','melee',{power:0.95,poison:2}],['moonjelly','Pearl Globule','bolt',{power:0.9,heal:5}],
 ].map(([species,name,kind,params])=>({id:'auto-'+species,species,name,kind,...params,auto:true,icon:'⌁',desc:'Signature '+name.toLowerCase()+'. '+(params.poison?'Poison punishes exposed targets.':params.heal?'Also restores a small amount of allied health.':params.burn?'Leaves a burning wound.':'Uses a committed attack or an aimed physical projectile.')}));
-NATIVE_AUTO_SKILLS.push(...BATCH_AUTO_SKILLS);
+NATIVE_AUTO_SKILLS.push(...BATCH_AUTO_SKILLS,...GRAND_AUTO_SKILLS);
 export const NATIVE_EVOLUTIONS={
  aurel:{wild:{name:'Dawn Reaver',desc:'Charged sword strikes deal 2× attack.',chargeDamage:2},warden:{name:'Oathkeeper',desc:'Charged strikes cost 20 stamina, making room for more dodges.',chargeCost:20}},
  brakk:{wild:{name:'Ironjaw Berserker',desc:'Charged axe strikes deal 2.05× attack.',chargeDamage:2.05},warden:{name:'Ironjaw Defender',desc:'+24 poise capacity; hold through heavier impacts.',poise:24}},
@@ -87,3 +90,9 @@ export function settleNativeGrowth(run,battle){
  }
  return true;
 }
+
+export const PIXEL_SPECIES=[...LEGACY_PIXEL_SPECIES,...NATIVE_SPECIES];
+const pixelRegistry=Object.fromEntries(PIXEL_SPECIES.map(s=>[s.id,s]));
+export function pixelSpec(s){return pixelRegistry[typeof s==='string'?s:s.id]||s;}
+export const NATIVE_FORM_SKILLS=buildEvolutionSkills(PIXEL_SPECIES);
+for(const s of GRAND_BATCH)if(s.evolutionLimit)NATIVE_EVOLUTIONS[s.id]={wild:{name:s.name+' Ravager',desc:'A grand, armored transformation with an exclusive cooldown skill.',speed:1.1},warden:{name:s.name+' Sovereign',desc:'A grand guardian transformation with a new protective cooldown skill.',poise:25}};

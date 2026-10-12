@@ -2,6 +2,8 @@
 // these curves supply landing compression, support-side balance and spine rhythm.
 const TAU=Math.PI*2;
 export const MOTION_PROFILES={
+  crab:{sway:.3,arm:0,runArm:0,sprintArm:0,landing:.5,spine:.02},
+  centipede:{sway:.4,arm:0,runArm:0,sprintArm:0,landing:.3,spine:.03},
   serpent:{sway:1.1,arm:0,runArm:0,sprintArm:0,landing:.25,spine:.08},
   flyer:{sway:.4,arm:0,runArm:0,sprintArm:0,landing:.2,spine:.025},
   knight:{sway:1.1,arm:5.5,runArm:9,sprintArm:12,landing:1,spine:0.035},

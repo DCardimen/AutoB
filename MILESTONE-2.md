@@ -1,3 +1,7 @@
+# Current continuation · v11
+
+The next eight-family batch, pixel conversion, grand evolution forms, size system, equipment and cloth changes are documented in [GRAND-FORMS-V11.md](GRAND-FORMS-V11.md). The notes below record the prior v10 checkpoint.
+
 # Milestone 2 · Native roster production batch · v10
 
 Open **Starfall-Menagerie.html**. The header reads **NATIVE EXPEDITION V10** for a native run. **Roster & forms** is available in the arena toolbar and menagerie, so this batch can be inspected without first capturing every family. **New expedition** switches an older legacy run to the native roster while retaining the permanent collection.
