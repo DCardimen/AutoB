@@ -1,6 +1,6 @@
 # Third-party notices
 
-The Training Glade bundles Three.js 0.180.0, including BufferGeometryUtils and SkeletonUtils. Its MIT license is also included in the JavaScript bundle and standalone HTML.
+The repository uses Three.js 0.180.0, including BufferGeometryUtils and SkeletonUtils, for reference-model checks. Its MIT license is retained here and in the standalone build. Native Pixel v6 renders the game with Canvas 2D.
 
 The MIT License
 

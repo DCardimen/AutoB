@@ -6,8 +6,8 @@ function fixture(source='knight',target='orc',gap=50){
   arena.units=[a,b];return {arena,a,b};
 }
 function advance(arena,seconds){for(let i=0;i<Math.round(seconds*120);i++)arena.step(1/120);}
-test('five prototype bodies have distinct mass, stride, and weapon profiles; direction and projection round-trip',()=>{
-  assert.equal(PROTOTYPE_CHARACTERS.length,5);assert.equal(new Set(PROTOTYPE_CHARACTERS.map(c=>c.weapon)).size,5);
+test('nine prototype bodies have distinct mass, stride, and weapon profiles; direction and projection round-trip',()=>{
+  assert.equal(PROTOTYPE_CHARACTERS.length,9);assert.equal(new Set(PROTOTYPE_CHARACTERS.map(c=>c.weapon)).size,9);
   for(let turns=-5;turns<=5;turns++)for(let i=0;i<8;i++)assert.equal(directionalFrame(i*Math.PI/4+turns*Math.PI*2),i);
   const p=screenToGround(...Object.values(groundToScreen(300,470)));assert.ok(Math.abs(p.x-300)<1e-9&&Math.abs(p.y-470)<1e-9);
 });

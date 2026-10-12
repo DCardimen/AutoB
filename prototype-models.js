@@ -334,7 +334,7 @@ export function poseCharacterModel(model,rig){
   if(model.weapon&&rig.weapon){
     model.weapon.position.copy(V(rig.weapon.grip));model.weapon.quaternion.setFromUnitVectors(Z,V(rig.weapon.axis));
     model.weapon.quaternion.multiply(new T.Quaternion().setFromAxisAngle(Z,rig.weapon.roll||0));
-    if(model.string){const draw=rig.bowString?.draw||0;model.string.geometry.setFromPoints([new T.Vector3(0,0,25),new T.Vector3(-draw*24,0,0),new T.Vector3(0,0,-25)]);model.nocked.visible=draw>0.05&&rig.stage==='windup';}
+    if(model.string){const draw=rig.bowString?.draw||0;model.string.geometry.setFromPoints([new T.Vector3(0,0,25),new T.Vector3(-draw*18,0,0),new T.Vector3(0,0,-25)]);model.nocked.visible=draw>0.05&&rig.stage==='windup';}
     if(model.shield){model.shield.position.copy(V(rig.shield.grip));model.shield.rotation.z=-0.25;}
   }
   model.root.updateMatrixWorld(true);model.skin.skeleton.update();

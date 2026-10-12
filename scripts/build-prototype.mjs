@@ -12,4 +12,4 @@ js=js.replaceAll('</script','<\\/script');new vm.Script(js);
 const html=fs.readFileSync('prototype.html','utf8').replace('<link rel="stylesheet" href="prototype.css">','<style>'+fs.readFileSync('prototype.css','utf8')+'</style>')
   .replace('<script src="public/prototype-bundle.js"></script>','<script>'+js+'</script>').replaceAll('href="index.html"','href="Starfall-Menagerie.html"');
 fs.writeFileSync('Starfall-Training-Glade.html',html);
-console.log(`Built connected-rig Training Glade: ${(Buffer.byteLength(html)/1024/1024).toFixed(2)} MiB, zero remote dependencies.`);
+console.log(`Built native-pixel Training Glade: ${(Buffer.byteLength(html)/1024/1024).toFixed(2)} MiB, zero remote dependencies.`);

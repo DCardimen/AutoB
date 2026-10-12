@@ -16,3 +16,7 @@
 .sprint-meter progress{width:88px;height:6px;accent-color:var(--gold)}
 .sprint-meter progress::-webkit-progress-bar{background:#112018;border-radius:3px}
 .sprint-meter progress::-webkit-progress-value{background:var(--gold);border-radius:3px}
+
+.sprite-showcase{margin-top:24px;border:1px solid var(--line);padding:18px;border-radius:7px;background:#14241e}.sprite-showcase canvas{display:block;width:100%;height:auto;image-rendering:pixelated;margin:14px 0 24px}.sprite-showcase .section-line{flex-wrap:wrap;gap:8px}#character-cards{grid-template-columns:repeat(3,1fr)}@media(max-width:540px){#character-cards{grid-template-columns:repeat(2,1fr)}.sprite-showcase{padding:10px}}
+
+#roster-select{max-width:210px;font-size:11px}.scene-header{gap:8px;flex-wrap:wrap}@media(max-width:540px){#roster-select{max-width:180px}}

@@ -6,9 +6,11 @@ The next overhaul follows [ROADMAP.md](ROADMAP.md), with eleven playable milesto
 
 The prototype opens with an **8 directions** comparison. Choose a companion to see all eight views; click one to inspect it closely. Watch the [normal-speed preview](public/prototype-preview.mp4) for walking, running, sprinting, combat and a fall, or inspect the [current pixel glade](public/prototype-pixel-world.png).
 
-**Pixel Chibi v5** builds on v4's five connected skinned models with broad expressive heads, compact bodies, shorter sturdy limbs, brighter colors and matching hair/armor details. Physical weapon poses follow the revised anatomy. The creatures and newly drawn forest courtyard share a 32-bit-era pixel style, stepped shading, earthy colors, warm lighting and a crisp two-pixel grid. The [five-pass chibi movement plan](CHIBI-MOTION-PLAN.md) specifies the remaining work and review gates for bringing every movement category to at least 9/10.
+**Native Pixel v6** uses original 64×64 sprites with shorter limbs and crisp nearest-neighbor enlargement. The five heroes have four-view and animation showcases. Ember remains a four-legged hound; a fox ranger, six-legged brass walker, eight-legged spider and moon jelly bring the prototype to nine body types. Running, cape flow, direction changes, fast braking, physical dodges, death ragdolls and heavy-hit knockdown/get-up motion are implemented.
 
-Open **Starfall-Training-Glade.html** in Chrome or Edge; no installation is needed to play. It requires WebGL2. Choose **Movement → Sprint**, toggle the selected companion’s Sprint control, or hold Shift with the arena focused. Look for **PIXEL CHIBI V5** in the header. Developers must run `npm run build:prototype` after prototype source edits to regenerate the local bundle and offline HTML. Automated checks do not establish a 9/10 score.
+Open **Starfall-Training-Glade.html** in Chrome, Edge or Firefox and look for **NATIVE PIXEL V6**. Select companions from the dropdown beside the scene controls or the cards. Choose **Movement → Run/Sprint**, or inspect the new states in **Pose study**. The game works offline with Canvas 2D.
+
+[Native v6 details](NATIVE-PIXEL-V6.md) cover controls, physics and validation. [godot-sprites/project.godot](godot-sprites/project.godot) opens a Godot 4 demo with nine PNG sheets and SpriteFrames resources: 8,640 exact 64×64 cells, eight facings and 120 animations per actor. Use `npm run export:prototype` to regenerate assets and `npm run check:godot` to validate import/startup. Rebuild the offline HTML with `npm run build:prototype` after source edits. The [movement plan](CHIBI-MOTION-PLAN.md) keeps 9/10 visual targets separate from automated checks.
 
 ## Play
 

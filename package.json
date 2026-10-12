@@ -12,8 +12,10 @@
     "test:balance": "node tests/balance.mjs",
     "build:standalone": "node scripts/build-standalone.mjs",
     "test:standalone": "npm run build:standalone && node tests/standalone.browser.mjs",
+    "check:godot": "node scripts/check-godot.mjs",
+    "export:prototype": "node scripts/export-prototype-sprites.mjs",
     "build:prototype": "node scripts/build-prototype.mjs",
-    "test:prototype": "npm run build:prototype && node --test tests/prototype.test.js tests/prototype-rig.test.js tests/prototype-models.test.js && node tests/prototype.browser.mjs"
+    "test:prototype": "npm run build:prototype && node --test tests/prototype.test.js tests/prototype-rig.test.js tests/prototype-models.test.js tests/prototype-pixels.test.js && node tests/prototype.browser.mjs"
   },
   "devDependencies": {
     "esbuild": "0.25.10",

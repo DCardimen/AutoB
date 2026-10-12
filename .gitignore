@@ -1,3 +1,6 @@
 node_modules/
 playtest-artifacts/
 *.log
+
+godot-sprites/.godot/
+godot-sprites/**/*.import

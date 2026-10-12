@@ -1,0 +1,10 @@
+config_version=5
+[application]
+config/name="Starfall · Native Pixel Showcase"
+run/main_scene="res://showcase.tscn"
+[display]
+window/size/viewport_width=1002
+window/size/viewport_height=654
+[rendering]
+renderer/rendering_method="gl_compatibility"
+textures/default_filters/use_nearest_mipmap_filter=false

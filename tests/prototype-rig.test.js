@@ -11,7 +11,7 @@ test('sideways dodges lead with the correct foot and tilt toward their actual es
   }
 });
 test('humanoid travel uses brisk walk cadence and longer running/sprinting strides',()=>{
-  for(const spec of PROTOTYPE_CHARACTERS.filter(s=>s.id!=='wolf')){
+  for(const spec of PROTOTYPE_CHARACTERS.filter(s=>['knight','orc','elf','caster','fox'].includes(s.id))){
     const walkSteps=120*spec.speed/spec.stride;assert.ok(walkSteps>=100&&walkSteps<=180);
     assert.ok(locomotionStride(spec.stride,1,1,spec.id)>spec.stride*1.7);
     const sprintSteps=120*spec.sprint/locomotionStride(spec.stride,1,1,spec.id);assert.ok(sprintSteps>=160&&sprintSteps<=260);
@@ -114,7 +114,7 @@ test('walking and running blend continuously and clear the ground during swing',
 test('the archer draws the animated bowstring with the same hand that holds it',()=>{
   for(let i=20;i<=100;i++){
     const rig=characterRig('elf','attack',i/100,'windup'),w=rig.weapon,hand=rig.arms.find(a=>a.side===1).end;
-    const pull={x:w.grip.x-rig.bowString.draw*24,y:w.grip.y,z:w.grip.z};
+    const pull={x:w.grip.x-rig.bowString.draw*18,y:w.grip.y,z:w.grip.z};
     assert.ok(dist(hand,pull)<1e-8);
   }
 });

@@ -1,6 +1,6 @@
 # Starfall Menagerie overhaul roadmap
 
-Status: iteration 1 has a playable implementation; its visual direction awaits user review before roster expansion. Iterations 2–11 remain planned.
+Status: iteration 1 has a playable Native Pixel v6 implementation with nine anatomies; its visual direction awaits user review before roster expansion. Iterations 2–11 remain planned.
 
 ## Starting point
 
@@ -24,7 +24,7 @@ The uploaded **Dimraeth Early Access trailer** remains the movement reference. T
 
 | Iteration | Playable milestone | Exit evidence |
 |---|---|---|
-| 1 | Five-character visual and movement prototype | Normal-speed movement and combat clips compared with the reference |
+| 1 | Representative visual and movement prototype with nine anatomies | Normal-speed movement and combat clips compared with the reference |
 | 2 | Roster production pipeline and distinctive evolutions | Reviewed batches with different silhouettes, mechanics, and movement |
 | 3 | Formation, terrain, and physical attack refinement | Matched encounters demonstrate placement and contact consequences |
 | 4 | Conditional AI, readable intent, and defeat explanations | Decisions can be understood in live combat and replay |

@@ -1,11 +1,11 @@
 {
   "checks": [
-    "Opening scene shows eight views side by side; all five characters have eight distinct sprites at one fixed pose phase, with five connected skinned models; clicking a view opens its close inspection",
-    "Five complete character portraits and a ten-body scene; pause and frame stepping preserve simulation control",
+    "Opening scene shows eight views side by side; all nine characters have eight distinct sprites at one fixed pose phase, with native 64\u00d764 cells; clicking a view opens its close inspection",
+    "Nine complete character portraits and an eighteen-body scene; pause and frame stepping preserve simulation control",
     "Selecting a character and clicking ground produces actual movement in the physical scene",
-    "All five locomotion profiles travel around the circuits and turn through all eight facings; speed changes work",
+    "All nine locomotion profiles travel around the circuits and turn through all eight facings; speed changes work",
     "Walk/run/sprint pace controls, selected sprint toggle, Shift hold/release, acceleration, stride blending and stamina recovery work",
-    "Eight directional views and twelve animation states are inspectable, including a close view and death",
+    "Eight directional views and fifteen animation states are inspectable, including a close view and death",
     "Rendered sparring resolves with physical hits, projectile travel, rolls and deaths; optional audio toggles",
     "390px mobile layout has no horizontal overflow and retains scene and character controls",
     "Standalone HTML runs combat and pose inspection with zero external requests"
@@ -17,6 +17,10 @@
     "directions-elf.png",
     "directions-caster.png",
     "directions-wolf.png",
+    "directions-fox.png",
+    "directions-mech.png",
+    "directions-spider.png",
+    "directions-jelly.png",
     "prototype-movement.png",
     "prototype-sprint.png",
     "prototype-study.png",
@@ -27,20 +31,25 @@
   "pixelPresentation": {
     "mismatchedBlocks": 0,
     "nativeArena": [
-      500,
-      325
+      334,
+      218
     ],
-    "style": "32-bit pixel fantasy"
+    "nativeCell": 64,
+    "style": "native 64x64 pixel chibi"
   },
   "characterDirectionFrames": {
     "knight": 8,
     "orc": 8,
     "elf": 8,
     "caster": 8,
-    "wolf": 8
+    "wolf": 8,
+    "fox": 8,
+    "mech": 8,
+    "spider": 8,
+    "jelly": 8
   },
   "jointCoverage": {
-    "checks": 9792,
+    "checks": 18048,
     "gaps": []
   },
   "movementDirectionFrames": {
@@ -48,169 +57,210 @@
     "orc": 8,
     "elf": 8,
     "caster": 8,
-    "wolf": 8
+    "wolf": 8,
+    "fox": 8,
+    "mech": 8,
+    "spider": 8,
+    "jelly": 8
   },
-  "rigVersion": 5,
+  "rigVersion": 6,
   "sprint": [
     {
       "id": "knight",
       "active": true,
-      "blend": 0.0023596924617445827,
+      "blend": 0.012243919970661663,
       "stamina": 59.99999999999904
     },
     {
       "id": "orc",
       "active": true,
-      "blend": 1.5888404754459378e-05,
+      "blend": 1.6824361519855407e-05,
       "stamina": 59.99999999999904
     },
     {
       "id": "elf",
       "active": true,
-      "blend": 0.8082262422293642,
+      "blend": 0.13350653496723608,
       "stamina": 59.99999999999904
     },
     {
       "id": "caster",
       "active": true,
-      "blend": 0.9568266878647426,
+      "blend": 0.861789231392788,
       "stamina": 59.99999999999904
     },
     {
       "id": "wolf",
       "active": true,
-      "blend": 0.3007163799047651,
+      "blend": 0.013430796263974426,
+      "stamina": 59.99999999999904
+    },
+    {
+      "id": "fox",
+      "active": true,
+      "blend": 0.11413044342762386,
+      "stamina": 59.99999999999904
+    },
+    {
+      "id": "mech",
+      "active": true,
+      "blend": 0.0003264550097892008,
+      "stamina": 59.99999999999904
+    },
+    {
+      "id": "spider",
+      "active": true,
+      "blend": 0.27080433923105995,
+      "stamina": 59.99999999999904
+    },
+    {
+      "id": "jelly",
+      "active": true,
+      "blend": 0.6911839803561467,
       "stamina": 59.99999999999904
     }
   ],
   "directionFrames": 8,
-  "stateFrames": 12,
+  "stateFrames": 14,
   "battle": {
-    "time": 54.50833333333088,
+    "time": 49.49999999999783,
     "metrics": {
-      "hits": 84,
-      "misses": 48,
-      "rolls": 62,
-      "avoided": 37,
+      "hits": 148,
+      "misses": 81,
+      "rolls": 91,
+      "avoided": 47,
       "interrupts": 1,
-      "projectiles": 28,
-      "contacts": 5400,
-      "knockouts": 6
+      "projectiles": 142,
+      "contacts": 8592,
+      "knockouts": 12
     },
     "cache": {
       "frames": 192,
       "maxFrames": 192,
       "sourceReady": true,
-      "frameSize": 256,
-      "rasterScale": 0.5,
-      "rigVersion": 5,
+      "frameSize": 64,
+      "rasterScale": 1,
+      "rigVersion": 6,
       "directionalArt": {
         "columns": 8,
-        "characters": 5,
-        "connectedModels": 5
+        "characters": 9,
+        "nativeCell": [
+          64,
+          64
+        ]
       },
       "renderer": {
-        "type": "WebGL2",
-        "artStyle": "32-bit pixel fantasy",
+        "type": "Canvas2D",
+        "artStyle": "native 64x64 pixel chibi",
         "nativeArena": [
-          500,
-          325
+          334,
+          218
         ],
         "nativePortrait": [
-          128,
-          128
+          64,
+          64
         ],
         "nearestNeighbor": true,
         "antialias": false,
-        "models": [
-          {
-            "id": "knight",
-            "skinned": true,
-            "vertices": 5326,
-            "bones": 15,
-            "triangles": 10648
-          },
-          {
-            "id": "orc",
-            "skinned": true,
-            "vertices": 6418,
-            "bones": 15,
-            "triangles": 12832
-          },
-          {
-            "id": "elf",
-            "skinned": true,
-            "vertices": 5352,
-            "bones": 15,
-            "triangles": 10704
-          },
-          {
-            "id": "caster",
-            "skinned": true,
-            "vertices": 5236,
-            "bones": 15,
-            "triangles": 10468
-          },
-          {
-            "id": "wolf",
-            "skinned": true,
-            "vertices": 6571,
-            "bones": 17,
-            "triangles": 13148
-          }
-        ],
-        "continuousFacing": true,
-        "paintedViewCropping": false,
+        "facings": 8,
         "arenaPasses": 1,
-        "drawCalls": 674,
-        "instances": 48
+        "drawCalls": 18
       }
     }
   },
   "offlineExternalRequests": 0,
+  "showcase": {
+    "heroes": 5,
+    "directions": 4,
+    "examples": 12
+  },
   "rules": {
-    "passed": 105,
+    "passed": 111,
     "failed": 0,
-    "prototypeChecks": 38
+    "prototypeChecks": 44
   },
   "preview": {
     "file": "public/prototype-preview.mp4",
-    "bytes": 14121329,
-    "sha256": "96c8df6c8ef9a41d2721ac0f7186d65ed84f2dab83e3199956c7c8ba7ee7ced9",
-    "durationSeconds": 42,
+    "bytes": 9887189,
+    "sha256": "67302dec67f0e6f7a6ebfd8828a5aa35aa06551adee211fd96655a313676f2b3",
+    "durationSeconds": 60,
     "fps": 30,
-    "width": 1000,
-    "height": 650,
+    "width": 1002,
+    "height": 654,
     "clock": "Paused browser clock; each encoded frame advances simulation by 1/30 second."
   },
   "standalone": {
     "file": "Starfall-Training-Glade.html",
-    "bytes": 6110867,
-    "sha256": "4e1269f9dd62090a5c481b7e11602fe74b2bf0850942842742fe1e4bd177af47"
+    "bytes": 4880940,
+    "sha256": "2968a009f1583a57f510a6b040a465890115be9443cb12cfed4c6a864317b941"
   },
   "art": {
-    "style": "32-bit-era pixel fantasy chibi",
-    "arenaNativeResolution": [
-      500,
-      325
+    "style": "Original native 64x64 pixel chibi",
+    "renderer": "Canvas2D",
+    "spriteCell": [
+      64,
+      64
     ],
-    "displayResolution": [
-      1000,
-      650
+    "pivot": [
+      32,
+      44
     ],
-    "portraitNativeResolution": [
-      128,
-      128
+    "nativeArena": [
+      334,
+      218
     ],
-    "background": {
-      "file": "public/prototype-glade-pixel.png",
-      "bytes": 3550026,
-      "sha256": "044f9ca835b82e19b0c9bdba12dc82edad2e361dc481126b91dcd65f67cbb8d6"
+    "display": [
+      1002,
+      654
+    ],
+    "sampling": "nearest; uniform 3x world grid, 2x focus zoom",
+    "binarySpriteAlpha": true,
+    "exportedCells": 8640,
+    "clippedExportCells": 0,
+    "creatures": {
+      "heroes": [
+        "knight",
+        "orc",
+        "elf",
+        "caster",
+        "fox"
+      ],
+      "houndLegs": 4,
+      "walkerLegs": 6,
+      "spiderLegs": 8,
+      "jellyLegs": 0
     },
-    "backgroundProvenance": "Image-generation redraw of the existing original prototype glade, retaining its playable composition.",
-    "characters": "Original procedural skinned models, connected anatomy, chibi proportions, stepped shading, nearest-neighbor sampling and one-pixel contours.",
-    "coherence": "Scenery, characters, shadows and combat effects share the world pixel grid; close inspection magnifies it."
+    "conceptBoard": {
+      "file": "public/prototype-concept-v6.png",
+      "bytes": 2850500,
+      "sha256": "3e495ef02015ad56aa19bae3eb2cb3cf4636461fcfa8309f320c9b79b8c83569"
+    }
   },
-  "scope": "Iteration 1 Pixel Chibi v5: first art/proportion pass of CHIBI-MOTION-PLAN.md. Five original connected models have larger expressive heads, compact bodies, shorter reachable limbs, matching head details and revised weapon carry poses. The redrawn glade and characters share a pixel presentation. Movement refinement passes 2\u20135 remain planned. Automated checks do not establish human playtime or a 9/10 visual or fun score.",
-  "offlineValidation": "Exact embedded HTML served as one intercepted document; all other requests blocked. Managed browser policy blocks file navigation."
+  "godot": {
+    "versionTested": "4.6.3",
+    "importPassed": true,
+    "resourceValidationPassed": true,
+    "demoStartupPassed": true,
+    "actors": 9,
+    "animationsPerActor": 120,
+    "animations": 1080,
+    "frames": 8640,
+    "spriteCell": [
+      64,
+      64
+    ],
+    "pivot": [
+      32,
+      44
+    ],
+    "project": "godot-sprites/project.godot",
+    "archive": {
+      "file": "playtest-artifacts/Starfall-Godot-Sprites-V6.zip",
+      "bytes": 6838988,
+      "sha256": "90035ba17ea0c656da6282c0ff536a9b36cfb9d0f3e9a461069e4255b9fffbef"
+    },
+    "physicsScope": "Exported falls are baked from the physical solver. Live particle and cloth simulation run in the browser prototype; the Godot project demonstrates sprite animations and movement."
+  },
+  "scope": "Native Pixel v6 movement prototype: nine anatomies, shorter limbs, distance-driven run/sprint, cape springs, stepped turns, fast braking, physical dodges, gravity/constraint/floor ragdolls, heavy-hit knockdown and get-up transitions. Five hero four-view showcase and twelve animation examples. Main six-creature expedition integration remains a later milestone. These checks do not establish human playtime or 9/10 visual/fun scores.",
+  "offlineValidation": "Exact embedded HTML served as one intercepted document, with every other request blocked; managed browser file navigation is unavailable."
 }
