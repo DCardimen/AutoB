@@ -1,7 +1,7 @@
 extends Node2D
 const IDS = ["knight", "orc", "elf", "caster", "wolf", "fox", "mech", "spider", "jelly"]
 const DIRECTIONS = ["e", "se", "s", "sw", "w", "nw", "n", "ne"]
-const STATES = ["idle", "walk", "run", "sprint", "turn", "stop", "attack", "cast", "dash", "dodge", "hit", "stagger", "knockdown", "getup", "death"]
+const STATES = ["idle", "walk", "run", "sprint", "turn", "stop", "attack", "slash", "charge", "cast", "dash", "dodge", "hit", "stagger", "knockdown", "getup", "death"]
 var actors: Array[Node2D] = []
 var sprites: Array[AnimatedSprite2D] = []
 var selected: int = 0
@@ -41,7 +41,7 @@ func _ready() -> void:
  status.add_theme_color_override("font_color", Color("eee2be"))
  layer.add_child(status)
  _status()
- print("Loaded 9 native 64x64 SpriteFrames resources, 120 animations each.")
+ print("Loaded 9 native 64x64 SpriteFrames resources, 136 animations each.")
 func _status() -> void:
  status.text = "1–9: select  ·  arrows: move  ·  Shift: sprint  ·  Space: next pose  ·  Q/E: facing\n" + IDS[selected] + "  |  " + STATES[state_index] + "  |  " + DIRECTIONS[direction]
 func _unhandled_key_input(event: InputEvent) -> void:

@@ -19,7 +19,7 @@ export function spriteSample(u,time=0,override=null){
   let phase=0,stage='',count=['walk','run','sprint'].includes(state)?16:12;
   if(override)phase=override.phase;
   else if(['walk','run','sprint'].includes(state))phase=((u.gait%1)+1)%1;
-  else if(state==='attack'||state==='cast'){
+  else if(['attack','slash','charge','cast'].includes(state)){
     const a=u.action;
     if(a&&!a.released){stage='windup';phase=a.elapsed/a.windup;count=16;}
     else{stage='recovery';phase=a?(a.elapsed-a.windup)/(a.duration-a.windup):0;count=16;}
@@ -32,7 +32,7 @@ export function spriteSample(u,time=0,override=null){
   else if(state==='stop')phase=1-u.stopTime/0.24;
   else if(state==='turn')phase=u.turnTime>0?1-u.turnTime/0.32:time%1;
   else phase=time*0.65%1;
-  if(override&&(state==='attack'||state==='cast')){
+  if(override&&['attack','slash','charge','cast'].includes(state)){
     if(override.stage)stage=override.stage;
     else{stage=phase<0.5?'windup':'recovery';phase=phase<0.5?phase*2:(phase-0.5)*2;}
     count=16;
@@ -47,8 +47,9 @@ export function spriteSample(u,time=0,override=null){
   const movementAngle=override?0:Math.round(Math.atan2(Math.sin((u.moveFacing??u.facing)-u.facing),Math.cos((u.moveFacing??u.facing)-u.facing))*8)/8;
   const rollAngle=u.roll?Math.atan2(u.roll.dy,u.roll.dx)-(u.facing||0):state==='dodge'?Math.PI/2:0;
   const cape=override?null:u.cape?.map(p=>Math.round(p.angle*8)/8);
-  const key=[u.id,state,angleIndex,stage,index,motion,runBlend,sprintBlend,acceleration,movementAngle,rollAngle,transition?transition.gait+':'+transition.weight:'',feet?JSON.stringify(feet):'',cape?cape.join(','):''].join(':');
-  return {state,dir,angleIndex,index,phase:['walk','run','sprint'].includes(state)?index/count:index/(count-1),stage,transition,motion,runBlend,sprintBlend,acceleration,movementAngle,rollAngle,feet,cape,key};
+  const swing=state==='slash'?'side':u.action?.style||'overhead',charged=state==='charge',anticipation=u.action?.anticipation||(charged?3:u.id==='orc'?2:1);
+  const key=[u.id,state,angleIndex,stage,index,motion,runBlend,sprintBlend,acceleration,movementAngle,rollAngle,swing,anticipation,transition?transition.gait+':'+transition.weight:'',feet?JSON.stringify(feet):'',cape?cape.join(','):''].join(':');
+  return {state,dir,angleIndex,index,phase:['walk','run','sprint'].includes(state)?index/count:index/(count-1),stage,transition,motion,runBlend,sprintBlend,acceleration,movementAngle,rollAngle,feet,cape,swing,charged,anticipation,key};
 }
 export function drawPrototypeSprite(c,u,x,y,time=0,scale=1,override=null){
   if(!spritesReady())return;
@@ -63,7 +64,7 @@ export function drawPrototypeSprite(c,u,x,y,time=0,scale=1,override=null){
   const drawScale=scale*PIXEL_WORLD;
   c.drawImage(frame,Math.round(x-FRAME_SIZE*drawScale/2),Math.round(y-ROOT_Y*drawScale),FRAME_SIZE*drawScale,FRAME_SIZE*drawScale);c.restore();
 }
-export function spriteCacheStats(){return {frames:frames.size,maxFrames:MAX_FRAMES,sourceReady:spritesReady(),frameSize:FRAME_SIZE,rasterScale:RASTER_SCALE,rigVersion:6,directionalArt:{columns:8,characters:PROTOTYPE_CHARACTERS.length,nativeCell:[64,64]},renderer:characterRendererStats()};}
+export function spriteCacheStats(){return {frames:frames.size,maxFrames:MAX_FRAMES,sourceReady:spritesReady(),frameSize:FRAME_SIZE,rasterScale:RASTER_SCALE,rigVersion:7,directionalArt:{columns:8,characters:PROTOTYPE_CHARACTERS.length,nativeCell:[64,64]},renderer:characterRendererStats()};}
 export function prototypeDirectionFrames(id,state='idle',phase=0.25){
   return Array.from({length:8},(_,dir)=>{const canvas=document.createElement('canvas');canvas.width=FRAME_SIZE;canvas.height=FRAME_SIZE;drawPrototypeSprite(canvas.getContext('2d'),{id,facing:dir*Math.PI/4,hp:1,gait:0},FRAME_SIZE/2,ROOT_Y,0,1/PIXEL_WORLD,{state,phase});return canvas.toDataURL();});
 }

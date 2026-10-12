@@ -2,10 +2,10 @@ import {chromium} from 'playwright';
 import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
-import {PROTOTYPE_CHARACTERS} from '../prototype-engine.js';
+import {PROTOTYPE_CHARACTERS,ANIMATION_STATES} from '../prototype-engine.js';
 const output='godot-sprites';fs.mkdirSync(path.join(output,'sprites'),{recursive:true});
 const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||'/usr/bin/chromium',headless:true,args:['--no-sandbox']});
-const manifest={version:6,cell:[64,64],pivot:[32,44],sampling:'nearest',characters:[]};
+const manifest={version:7,cell:[64,64],pivot:[32,44],sampling:'nearest',characters:[]};
 try{
  const page=await browser.newPage();await page.clock.install();await page.clock.pauseAt(await page.evaluate(()=>Date.now()+1000));await page.goto((process.env.BASE_URL||'http://127.0.0.1:3007')+'/prototype.html');await page.clock.runFor(100);await page.waitForFunction(()=>prototypeLab.state.artLoaded);
  for(const spec of PROTOTYPE_CHARACTERS){
@@ -26,7 +26,7 @@ fs.writeFileSync(path.join(output,'showcase.tscn'),`[gd_scene load_steps=2 forma
 fs.writeFileSync(path.join(output,'showcase.gd'),`extends Node2D
 const IDS = ["knight", "orc", "elf", "caster", "wolf", "fox", "mech", "spider", "jelly"]
 const DIRECTIONS = ["e", "se", "s", "sw", "w", "nw", "n", "ne"]
-const STATES = ["idle", "walk", "run", "sprint", "turn", "stop", "attack", "cast", "dash", "dodge", "hit", "stagger", "knockdown", "getup", "death"]
+const STATES = ["idle", "walk", "run", "sprint", "turn", "stop", "attack", "slash", "charge", "cast", "dash", "dodge", "hit", "stagger", "knockdown", "getup", "death"]
 var actors: Array[Node2D] = []
 var sprites: Array[AnimatedSprite2D] = []
 var selected: int = 0
@@ -66,7 +66,7 @@ func _ready() -> void:
  status.add_theme_color_override("font_color", Color("eee2be"))
  layer.add_child(status)
  _status()
- print("Loaded 9 native 64x64 SpriteFrames resources, 120 animations each.")
+ print("Loaded 9 native 64x64 SpriteFrames resources, ${ANIMATION_STATES.length*8} animations each.")
 func _status() -> void:
  status.text = "1–9: select  ·  arrows: move  ·  Shift: sprint  ·  Space: next pose  ·  Q/E: facing\\n" + IDS[selected] + "  |  " + STATES[state_index] + "  |  " + DIRECTIONS[direction]
 func _unhandled_key_input(event: InputEvent) -> void:

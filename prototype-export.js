@@ -5,10 +5,10 @@ import {paintCharacterPixels,CELL} from './prototype-pixel-art.js';
 export const DIRECTIONS=['e','se','s','sw','w','nw','n','ne'];
 export const FRAME_COUNTS=8;
 export const LOOP_STATES=['idle','walk','run','sprint','turn'];
-export const FPS={idle:6,walk:10,run:14,sprint:18,turn:12,attack:12,cast:10,dash:24,dodge:24,hit:30,stagger:18,knockdown:10,getup:18,stop:24,death:10};
+export const FPS={idle:6,walk:10,run:14,sprint:18,turn:12,attack:12,slash:12,charge:6,cast:10,dash:24,dodge:24,hit:30,stagger:18,knockdown:10,getup:18,stop:24,death:10};
 export function exportPixels(id,state,phase,dir){
  const spec=PROTOTYPE_BY_ID[id];let stage='',time=phase;
- if(['attack','cast'].includes(state)){const split=spec.windup/(spec.windup+spec.recovery);stage=phase<split?'windup':'recovery';time=phase<split?phase/split:(phase-split)/(1-split);}
+ if(['attack','slash','charge','cast'].includes(state)){const windup=state==='charge'?Math.max(0.85,spec.windup*2.4):spec.windup,recovery=spec.recovery*(state==='charge'?1.15:1),split=windup/(windup+recovery);stage=phase<split?'windup':'recovery';time=phase<split?phase/split:(phase-split)/(1-split);}
  const rig=['death','knockdown','getup'].includes(state)?previewRagdoll(id,phase,state==='getup'):characterRig(id,state,time,stage,{stride:spec.stride});
  return paintCharacterPixels(id,rig,dir*Math.PI/4);
 }

@@ -5,7 +5,7 @@ test('all exported poses have exact 64px cells, binary alpha and no clipped draw
  let frames=0;for(const {id}of PROTOTYPE_CHARACTERS)for(const state of ANIMATION_STATES)for(let dir=0;dir<8;dir++)for(let i=0;i<8;i++){
   const p=exportPixels(id,state,i/(LOOP_STATES.includes(state)?8:7),dir);assert.equal(p.length,64*64*4);assert.equal(p.clipped,0,`${id} ${state} ${dir} ${i} must fit without cropping`);
   let opaque=0;for(let j=3;j<p.length;j+=4){assert.ok(p[j]===0||p[j]===255,'sprite edges must contain no antialiased pixels');if(p[j])opaque++;}assert.ok(opaque>20);frames++;
- }assert.equal(frames,8640);
+ }assert.equal(frames,PROTOTYPE_CHARACTERS.length*ANIMATION_STATES.length*64);
 });
 test('every creature has eight identifiable facings and distinct run, turn, stop and dodge poses',()=>{
  const hash=p=>createHash('sha256').update(p).digest('hex');

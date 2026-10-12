@@ -52,7 +52,7 @@ test('final deaths keep falling after combat settles, without further hits',()=>
 });
 test('prototype battle outcomes and contact times do not depend on display frame interval',()=>{
   const results=[1/120,1/60,1/30,0.1].map(dt=>{
-    const a=new PrototypeArena();while(!a.done&&a.time<90)a.step(dt);
+    const a=new PrototypeArena('battle',{seed:73107});while(!a.done&&a.time<90)a.step(dt);
     assert.equal(a.done,true);return {winner:a.winner,metrics:a.metrics,contacts:a.events.filter(e=>e.type==='contact').map(e=>[e.time,e.damage,e.uid,e.targetUid]),hp:a.units.map(u=>u.hp)};
   });for(const r of results.slice(1))assert.deepEqual(r,results[0]);
 });

@@ -15,7 +15,7 @@ export const MOTION_PROFILES={
 const walk=[[0,0.45],[0.12,-0.65],[0.3,0.35],[0.5,0.45],[0.62,-0.65],[0.8,0.35],[1,0.45]];
 const run=[[0,0.5],[0.1,-1.1],[0.32,0.4],[0.47,1.4],[0.5,0.5],[0.6,-1.1],[0.82,0.4],[0.97,1.4],[1,0.5]];
 const sprint=[[0,0.5],[0.1,-1.2],[0.24,-0.2],[0.43,1.55],[0.5,0.5],[0.6,-1.2],[0.74,-0.2],[0.93,1.55],[1,0.5]];
-const gallop=[[0,-0.55],[0.18,-1.3],[0.4,1.1],[0.65,2.3],[0.85,0.15],[1,-0.55]];
+const gallop=[[0,-0.6],[0.12,-1.2],[0.28,0.1],[0.45,1.6],[0.5,-0.7],[0.62,-1.1],[0.78,0.4],[0.95,2],[1,-0.6]];
 export function samplePoseTrack(track,phase){
   const p=((phase%1)+1)%1;
   for(let i=1;i<track.length;i++)if(p<=track[i][0]){const a=track[i-1],b=track[i],t=(p-a[0])/(b[0]-a[0]),s=t*t*(3-2*t);return a[1]+(b[1]-a[1])*s;}
@@ -27,5 +27,6 @@ export function locomotionPose(id,phase,runBlend=0,sprintBlend=0){
   if(id==='wolf')bob=bob*(1-sprintBlend)+samplePoseTrack(gallop,phase)*sprintBlend;
   else bob=bob*(1-sprintBlend)+samplePoseTrack(sprint,phase)*sprintBlend;
   return {bob:bob*p.landing,sway:-wave*p.sway,arm:Math.cos(phase*TAU)*arm,
-    yaw:wave*(p.spine+runBlend*0.025),pitch:id==='wolf'?Math.sin(phase*TAU+0.5)*sprintBlend*0.035:0};
+    yaw:wave*(p.spine+runBlend*0.025),pitch:id==='wolf'?Math.sin(phase*TAU+0.5)*sprintBlend*0.045:0,
+    spine:id==='wolf'?Math.cos(phase*TAU)*sprintBlend*4:0};
 }

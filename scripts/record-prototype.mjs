@@ -27,22 +27,19 @@ try{
   async function focus(on){if(await page.evaluate(()=>prototypeLab.state.focusView)!==on)await page.locator('#focus-view').click();}
   const select=async id=>{const index=['knight','orc','elf','caster','wolf','fox','mech','spider','jelly'].indexOf(id);await page.locator(`[data-select="0-${id}-${index}"]`).click();};
   await page.locator('[data-scene="directions"]').click();
-  for(const id of ['knight','wolf']){await select(id);await capture(2,'Native 64×64 · eight directions');}
-  await page.locator('[data-scene="movement"]').click();await page.locator('[data-pace="walk"]').click();await capture(3,'Nine bodies · walking and stable support');
-  await page.locator('[data-pace="run"]').click();await capture(3,'Running · shorter limbs, longer drive');
-  await select('knight');await page.locator('[data-pace="sprint"]').click();await focus(true);await capture(4,'Sprint · physical acceleration and cape lag');
-  await page.locator('[data-pace="walk"]').click();await capture(2,'Fast stop · braking and planted recovery');
-  await focus(false);let box=await page.locator('#prototype-canvas').boundingBox();await page.mouse.click(box.x+800*box.width/1002,box.y+400*box.height/654);await focus(true);await capture(2,'Change direction · turn, step, continue');
-  await select('wolf');await page.locator('[data-pace="sprint"]').click();await capture(4,'Four-legged hound · trot and gallop');
-  await page.locator('[data-scene="study"]').click();await select('mech');await page.locator('[data-pose="run"]').click();await page.locator('#pose-facing').selectOption('1');await capture(4,'Six-legged walker · alternating tripods');
-  await select('spider');await capture(4,'Eight-legged spider · coordinated scuttle');
-  await select('jelly');await capture(2,'Jelly · squash, hop and reform');await page.locator('[data-pose="cast"]').click();await capture(2,'Jelly · channel and release');
-  await select('caster');await page.locator('[data-pose="run"]').click();await capture(3,'Silver-haired mage · flowing cape');
-  await focus(false);await page.locator('[data-scene="battle"]').click();await select('knight');await page.clock.runFor(800);await page.locator('#order-dodge').click();await capture(4,'Physical dodge · displacement without immunity');
-  await page.locator('[data-scene="study"]').click();await focus(true);
-  for(const [id,state,seconds,label]of [['knight','attack',2,'Sword · windup, contact and recovery'],['elf','attack',2,'Rogue · aimed bow draw and release'],['caster','cast',1,'Mage · channel and release']]){await select(id);await page.locator(`[data-pose="${state}"]`).click();await capture(seconds,label);}
-  await focus(false);await page.locator('[data-scene="battle"]').click();await capture(6,'Live sparring · impacts, recoil and dodging');
-  await page.locator('[data-scene="study"]').click();await select('orc');await focus(true);await page.locator('[data-pose="knockdown"]').click();await capture(2,'Knockdown study · constrained ragdoll');await page.locator('[data-pose="getup"]').click();await capture(2,'Get-up study · recover into the standing pose');
-  await page.locator('[data-pose="death"]').click();await capture(4,'Death study · gravity, joints and floor contact');
+  for(const id of ['knight','orc','elf','caster','fox']){await select(id);await capture(2,'V7 · distinct faces across eight directions');}
+  await select('wolf');await capture(2,'Hound · folded ears and four planted paws');
+  await page.locator('[data-scene="movement"]').click();await page.locator('[data-pace="run"]').click();await capture(3,'Nine bodies · readable running rhythms');
+  await select('wolf');await focus(true);
+  for(const [pace,seconds,label] of [['walk',3,'Hound · flat paws and low swing lift'],['run',3,'Hound · diagonal trot support'],['sprint',4,'Hound · paired gallop and spine flex']]){await page.locator(`[data-pace="${pace}"]`).click();await capture(seconds,label);}
+  await page.locator('[data-scene="study"]').click();
+  for(const [id,state,dir,label]of [['knight','attack','0','Overhead · right-hand grip and low guard'],['knight','slash','6','Side slash · right hand in the rear view'],['orc','attack','1','Axe overhead · both fists on one handle'],['orc','slash','5','Axe side slash · depth-aware rear view']]){await select(id);await page.locator(`[data-pose="${state}"]`).click();await page.locator('#pose-facing').selectOption(dir);await capture(2,label);}
+  await select('caster');await page.locator('[data-pose="cast"]').click();await page.locator('#pose-facing').selectOption('1');await capture(2,'Mage · silver bob, circlet and held staff');
+  await select('knight');await page.locator('[data-pose="stop"]').click();await capture(2,'Fast stop · compressed support and recovery');
+  await focus(false);await page.locator('[data-scene="battle"]').click();await capture(8,'Random teams of six · alternating strikes');
+  await page.locator('#restart').click();await capture(6,'Restart · a fresh six-creature composition');
+  await page.locator('[data-scene="study"]').click();await select('knight');await focus(true);await page.locator('#pose-facing').selectOption('2');await page.locator('[data-pose="charge"]').click();await capture(3,'Charged strike study · long, braced anticipation');
+  await select('wolf');await page.locator('[data-pose="sprint"]').click();await page.locator('#pose-facing').selectOption('0');await capture(3,'Hound gallop study · front and rear paw pairs');
+  await select('orc');await page.locator('[data-pose="death"]').click();await capture(3,'Ragdoll · connected limbs and gravity');
   encoder.stdin.end();await finished;console.log(`Recorded 60 seconds at normal speed: ${output}`);
 }finally{await browser.close();if(!encoder.stdin.destroyed)encoder.stdin.destroy();}

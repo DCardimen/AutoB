@@ -1,4 +1,5 @@
 import {projectRig,characterRig} from './prototype-rig.js';
+import {drawNativeFace,FACE_VIEWS} from './prototype-faces.js';
 export const CELL=64,PIVOT={x:32,y:44},PIXEL_WORLD=3;
 const OUT='#20272a';
 export const PIXEL_PALETTES={
@@ -25,7 +26,7 @@ class PixelBrush{
 }
 export function spritePoint(p,angle){const s=projectRig(p,angle);return {x:PIVOT.x+s.x/PIXEL_WORLD,y:PIVOT.y+s.y/PIXEL_WORLD,depth:s.depth};}
 export function paintCharacterPixels(id,rig,angle){
- let b=new PixelBrush();const p=PIXEL_PALETTES[id],dir=((Math.round(angle/(Math.PI/4))%8)+8)%8,front=Math.sin(angle)>0.2,back=Math.sin(angle)<-0.35,side=Math.cos(angle),at=q=>spritePoint(q,angle);
+ let b=new PixelBrush();const p=PIXEL_PALETTES[id],dir=((Math.round(angle/(Math.PI/4))%8)+8)%8,front=dir===2,back=!FACE_VIEWS[dir].eyes.length,side=FACE_VIEWS[dir].sign,at=q=>spritePoint(q,angle);
  const body=at(rig.body),pelvis=at(rig.pelvis),head=at(rig.head),moving=['walk','run','sprint','turn','stop'].includes(rig.state),dead=rig.death>0;
  const bind=rig.ragdoll?characterRig(id,'idle',0):null;let headRoll=0;if(bind){const h=at(bind.head),c=at(bind.body),rest=Math.atan2(h.x-c.x,-(h.y-c.y)),current=Math.atan2(head.x-body.x,-(head.y-body.y));headRoll=Math.round(Math.atan2(Math.sin(current-rest),Math.cos(current-rest))/(Math.PI/12))*(Math.PI/12);}
  if(rig.state==='idle')head.y+=Math.round(Math.sin(rig.phase*Math.PI*2)*0.7);
@@ -46,38 +47,38 @@ export function paintCharacterPixels(id,rig,angle){
    outlinedOval(x,y,rx,ry,p.skin[0]);b.oval(x-1,y-1,Math.max(1,rx-1),Math.max(1,ry-1),p.skin[1]);b.oval(x-2,y-3,Math.max(1,rx-3),Math.max(1,ry-4),p.skin[2]);
    b.line({x:x-rx+3,y:y-ry+4},{x:x-rx+5,y:y-ry+2},p.metal[3],1);b.oval(x+3,y-ry+4,1,1,p.metal[2]);
    if(!dead){const pearl=at({...rig.body,x:rig.body.x+8,z:rig.body.z+1});b.oval(pearl.x,pearl.y,2,1,p.skin[0]);b.dot(pearl.x-1,pearl.y-1,p.metal[2]);}
-   if(!back&&!dead){b.rect(x-3+side*2,y-2,1,3,OUT);b.rect(x+2+side*2,y-2,1,3,OUT);b.dot(x,y+2,p.metal[3]);}
+   if(!back&&!dead){for(const dx of FACE_VIEWS[dir].eyes){b.rect(Math.round(x)+dx,y-2,1,2,OUT);b.dot(Math.round(x)+dx,y-3,p.metal[3]);}b.dot(Math.round(x)+FACE_VIEWS[dir].sign*2,y+2,p.metal[3]);}
    for(let i=0;i<3;i++)b.oval(x+(i-1)*6,y+ry-1,2,1,p.skin[1]);
    if(rig.state==='cast'||rig.state==='attack'){const q=at(rig.weapon.tip);outlinedOval(q.x,q.y,2+Math.round(rig.phase*2),2,p.metal[2]);b.dot(q.x-1,q.y-1,p.metal[3]);}
    b.data.clipped=b.clipped;return b.data;
  }
  if(id==='mech'||id==='spider'||id==='wolf'){
-   const rx=id==='wolf'?8:7,ry=id==='wolf'?4:5;
+   const rx=id==='wolf'?Math.hypot((27+(rig.spine||0))*Math.cos(angle),14*Math.sin(angle))/3:7,ry=id==='wolf'?4+Math.abs(Math.sin(angle))*2:5;
    outlinedOval(body.x,body.y,rx,ry,id==='mech'?p.metal[0]:p.skin[0]);b.oval(body.x-1,body.y-1,rx-1,ry-1,p.skin[1]);b.oval(body.x-3,body.y-2,rx-3,Math.max(1,ry-3),p.skin[2]);
    if(id==='mech'){
      b.outlined([{x:body.x-6,y:body.y-4},{x:body.x+4,y:body.y-5},{x:body.x+7,y:body.y},{x:body.x+4,y:body.y+5},{x:body.x-6,y:body.y+3}],p.skin[1]);
      b.line({x:body.x-5,y:body.y-3},{x:body.x+2,y:body.y-4},p.skin[2]);
      for(const dx of [-4,3])for(const dy of [-2,2])b.dot(body.x+dx,body.y+dy,p.metal[3]);
      const muzzle=at(rig.weapon.tip),grip=at(rig.weapon.grip);b.line(grip,muzzle,OUT,2);b.line(grip,muzzle,p.metal[1],1);b.dot(muzzle.x,muzzle.y,p.hair[2]);
-     outlinedOval(head.x,head.y,4,4,p.metal[0]);b.oval(head.x-1,head.y-1,3,3,p.hair[1]);b.oval(head.x-1,head.y-2,1.5,1.5,p.hair[2]);b.dot(head.x-2,head.y-3,p.metal[3]);
+     drawNativeFace(b,id,head,dir,p,rig);
      const antenna=at({...rig.body,z:rig.body.z+20});b.line({x:body.x,y:body.y-5},antenna,p.metal[1]);b.dot(antenna.x,antenna.y,p.skin[2]);
    }else if(id==='spider'){
-     outlinedOval(head.x,head.y,5,4,p.skin[0]);b.oval(head.x-1,head.y-1,4,3,p.skin[1]);
-     if(!back&&!dead)for(const dx of [-3,-1,1,3]){b.dot(head.x+dx+side,head.y-1,p.hair[2]);if(Math.abs(dx)===1)b.dot(head.x+dx+side,head.y,p.metal[3]);}
-     for(const dx of [-2,2]){b.line({x:head.x+dx,y:head.y+2},{x:head.x+dx+side*2,y:head.y+5},OUT,1);b.dot(head.x+dx+side*2,head.y+4,p.metal[2]);}
+     drawNativeFace(b,id,head,dir,p,rig);
      b.outlined([{x:body.x,y:body.y-4},{x:body.x+2,y:body.y-1},{x:body.x,y:body.y+2},{x:body.x-2,y:body.y-1}],p.hair[1]);b.dot(body.x,body.y-1,p.hair[2]);
    }else{
      const tail=at(rig.tail),tip=at({...rig.tail,x:rig.tail.x-15,y:Math.sin(rig.phase*Math.PI*2)*6,z:rig.tail.z+5});b.line(tail,tip,OUT,2);b.line(tail,tip,p.skin[1],1);b.oval(tip.x,tip.y,2,1,p.metal[3]);
+     segment({...rig.body,x:rig.body.x+15,z:rig.body.z+3},rig.head,2.5,p.skin[0],p.skin[1]);
      const torsoBrush=b;if(rig.ragdoll)b=new PixelBrush();
-     outlinedOval(head.x,head.y,6,dead?3:5,p.skin[1]);b.oval(head.x-2,head.y-2,3,2,p.skin[2]);
-     const nose=at({...rig.head,x:rig.head.x+16,z:rig.head.z-3});b.line({x:head.x,y:head.y+2},nose,p.metal[3],2);b.oval(nose.x,nose.y,1.5,1,OUT);
-     for(const sign of [-1,1])b.outlined([{x:head.x+sign*4,y:head.y-3},{x:head.x+sign*5,y:head.y-10},{x:head.x+sign*1,y:head.y-5}],p.skin[0]);
-     if(!back&&!dead){b.dot(head.x+side*4-1,head.y-2,p.metal[3]);b.dot(head.x+side*4,head.y-2,OUT);if(front)b.dot(head.x-3,head.y-1,OUT);}
-     b.line({x:head.x-4,y:head.y+4},{x:head.x+4,y:head.y+4},p.cloth[1],1);b.dot(head.x+2,ySafe(head.y+5),p.metal[3]);
+     drawNativeFace(b,id,head,dir,p,rig);
      if(rig.ragdoll){torsoBrush.rotated(b,head,headRoll);b=torsoBrush;}
    }
    near.forEach(leg);b.data.clipped=b.clipped;return b.data;
  }
+ function drawArm(arm){segment(arm.root,arm.joint,id==='orc'?2:1.2,id==='knight'?p.metal[1]:id==='orc'?p.skin[1]:p.cloth[1],id==='knight'?p.metal[2]:p.cloth[2]);segment(arm.joint,arm.end,1,id==='knight'?p.metal[0]:p.skin[0],p.skin[1]);const h=at(arm.end);outlinedOval(h.x,h.y,1.2,1.2,id==='knight'?p.metal[2]:p.skin[1]);}
+ function gearLayer(grip){const depth=at(grip).depth;return depth<body.depth-0.5?'far':depth<head.depth?'middle':'near';}
+ function drawGear(layer){drawGearPart(b,id,rig,angle,p,at,outlinedOval,rig.weapon&&gearLayer(rig.weapon.grip)===layer,rig.shield&&gearLayer(rig.shield.grip)===layer);}
+ rig.arms.filter(a=>at(a.root).depth<body.depth).forEach(drawArm);
+ drawGear('far');
  // Compact human torsos, stout boots and connected short forearms.
  outlinedOval(body.x,body.y, id==='orc'?6:4.5,5,p.cloth[0]);b.oval(body.x-1,body.y-1,id==='orc'?5:3.5,4,id==='knight'?p.metal[1]:p.cloth[1]);
  b.line({x:body.x-3,y:body.y-3},{x:body.x+2,y:body.y-3},id==='knight'?p.metal[3]:p.cloth[2]);
@@ -86,39 +87,17 @@ export function paintCharacterPixels(id,rig,angle){
  if(id==='caster'){b.outlined([{x:body.x-4,y:body.y},{x:body.x+4,y:body.y},{x:pelvis.x+6,y:pelvis.y+5},{x:pelvis.x-6,y:pelvis.y+5}],p.cloth[1]);b.line({x:body.x-1,y:body.y},{x:pelvis.x-2,y:pelvis.y+4},p.cloth[2]);b.line({x:pelvis.x-5,y:pelvis.y+4},{x:pelvis.x+5,y:pelvis.y+4},p.metal[3]);}
  b.line({x:pelvis.x-4,y:pelvis.y-1},{x:pelvis.x+4,y:pelvis.y-1},p.metal[0],1);b.rect(pelvis.x-1,pelvis.y-2,2,2,p.metal[3]);
  near.forEach(leg);
- for(const arm of rig.arms){segment(arm.root,arm.joint,id==='orc'?2:1.2,id==='knight'?p.metal[1]:id==='orc'?p.skin[1]:p.cloth[1],id==='knight'?p.metal[2]:p.cloth[2]);segment(arm.joint,arm.end,1,id==='knight'?p.metal[0]:p.skin[0],p.skin[1]);const h=at(arm.end);outlinedOval(h.x,h.y,1.5,1.4,id==='knight'?p.metal[2]:p.skin[1]);}
+ rig.arms.filter(a=>at(a.root).depth>=body.depth).forEach(drawArm);
+ drawGear('middle');
  if(id==='fox'){const tail=at({...rig.pelvis,x:rig.pelvis.x-12,y:Math.sin(rig.phase*Math.PI*2)*6,z:rig.pelvis.z-4});b.line({x:pelvis.x,y:pelvis.y+2},tail,OUT,3);b.line({x:pelvis.x,y:pelvis.y+2},tail,p.skin[1],2);b.oval(tail.x,tail.y,2,2,p.metal[3]);}
  const torsoBrush=b;if(rig.ragdoll)b=new PixelBrush();
- const hx=head.x,hy=head.y,rx=id==='orc'?9:id==='fox'?8:7.5,ry=8-3*(rig.death||0);
- outlinedOval(hx,hy,rx,ry,id==='knight'?p.metal[0]:p.skin[0]);b.oval(hx-1,hy-1,rx-1,ry-1,id==='knight'?p.metal[1]:p.skin[1]);b.oval(hx-2,hy-3,rx-3,Math.max(1,ry-4),id==='knight'?p.metal[2]:p.skin[2]);
- const faceX=hx+side*2.5;
- if(id==='knight'){
-   if(!back){b.rect(faceX-5,hy-1,10,3,OUT);b.dot(faceX-3,hy,p.metal[3]);if(front)b.dot(faceX+2,hy,p.metal[3]);b.line({x:faceX,y:hy-2},{x:faceX,y:hy+5},p.metal[3]);for(const dx of [-3,3])b.dot(faceX+dx,hy+4,p.metal[0]);}
-   b.line({x:hx-4,y:hy-5},{x:hx+3,y:hy-6},p.metal[3]);
-   const wave=Math.round(Math.sin(rig.phase*Math.PI*2)* (moving?2:0.4));b.outlined([{x:hx-1,y:hy-7},{x:hx+2,y:hy-12},{x:hx+5+wave,y:hy-16},{x:hx+6+wave,y:hy-11},{x:hx+1,y:hy-9}],p.hair[1]);b.line({x:hx+2,y:hy-12},{x:hx+4+wave,y:hy-14},p.hair[2]);
- }else if(id==='orc'){
-   for(const sign of [-1,1])b.outlined([{x:hx+sign*7,y:hy-3},{x:hx+sign*12,y:hy-3},{x:hx+sign*9,y:hy+1}],p.skin[1]);
-   b.rect(hx-2,hy-10,4,4,p.hair[0]);b.dot(hx,hy-10,p.hair[1]);
- }else if(id==='fox'){
-   for(const sign of [-1,1]){b.outlined([{x:hx+sign*7,y:hy-4},{x:hx+sign*7,y:hy-14},{x:hx+sign*2,y:hy-7}],p.skin[0]);b.line({x:hx+sign*6,y:hy-7},{x:hx+sign*6,y:hy-11},p.skin[2]);}
-   b.oval(faceX,hy+3,6,3,p.metal[3]);b.oval(faceX+side*3,hy+1,1,1,OUT);
-   const tail=at({...rig.pelvis,x:rig.pelvis.x-12,y:Math.sin(rig.phase*Math.PI*2)*6,z:rig.pelvis.z-4});b.line({x:pelvis.x,y:pelvis.y+2},tail,OUT,3);b.line({x:pelvis.x,y:pelvis.y+2},tail,p.skin[1],2);b.oval(tail.x,tail.y,2,2,p.metal[3]);
- }else{
-   // Angular hair clusters and a side fringe keep face and identity readable.
-   b.outlined([{x:hx-rx+1,y:hy},{x:hx-rx+1,y:hy-5},{x:hx-3,y:hy-9},{x:hx+3,y:hy-9},{x:hx+rx-1,y:hy-5},{x:hx+rx-1,y:hy-1},{x:hx+3,y:hy-4},{x:hx,y:hy-3},{x:hx-3,y:hy-5}],p.hair[1]);
-   b.line({x:hx-4,y:hy-6},{x:hx+2,y:hy-7},p.hair[2]);b.line({x:hx+4,y:hy-5},{x:hx+5,y:hy+4},p.hair[0],1);
-   if(back)b.oval(hx,hy+2,rx-1,ry-2,p.hair[1]);
-   if(id==='elf'){for(const sign of [-1,1])b.line({x:hx+sign*6,y:hy},{x:hx+sign*11,y:hy-1},p.skin[2],0);const tip={x:hx-side*5+(side||1)*(rig.death||0)*7,y:hy+10-7*(rig.death||0)+Math.round(Math.sin(rig.phase*Math.PI*2)* (moving?2:0))};b.line({x:hx-side*5,y:hy+3},tip,p.hair[0],1);b.dot(tip.x,tip.y,p.hair[2]);}
- }
- if(!back&&id!=='knight'&&!dead){
-   if(front){for(const dx of [-3,3]){b.rect(faceX+dx-1,hy-1,2,2,OUT);b.dot(faceX+dx-1,hy-1,p.metal[3]);b.line({x:faceX+dx-1,y:hy-3},{x:faceX+dx,y:hy-3},id==='orc'?p.skin[0]:p.hair[0]);}}
-   else{b.rect(faceX+side*3,hy-1,2,2,OUT);b.dot(faceX+side*3,hy-1,p.metal[3]);}
-   if(id==='orc'){b.line({x:faceX-3,y:hy+4},{x:faceX+3,y:hy+4},p.skin[0]);for(const dx of [-4,4])b.line({x:faceX+dx,y:hy+5},{x:faceX+dx,y:hy+2},p.metal[3]);}
-   else if(id!=='fox'){b.dot(faceX,hy+3,p.skin[0]);b.dot(faceX-4,hy+2,'#b87868');}
- }
- if(dead&&!back){b.line({x:faceX-4,y:hy},{x:faceX-2,y:hy+1},OUT);b.line({x:faceX+2,y:hy},{x:faceX+4,y:hy+1},OUT);}
+ drawNativeFace(b,id,head,dir,p,rig);
  if(rig.ragdoll){torsoBrush.rotated(b,head,headRoll);b=torsoBrush;}
- if(rig.weapon){
+ drawGear('near');
+ b.data.clipped=b.clipped;return b.data;
+}
+function drawGearPart(b,id,rig,angle,p,at,outlinedOval,weapon,shield){
+ if(weapon&&rig.weapon){
    const g=at(rig.weapon.grip),tip=at(rig.weapon.tip);
    if(['elf','fox'].includes(id)){
      const top=at({...rig.weapon.grip,z:rig.weapon.grip.z+24}),bottom=at({...rig.weapon.grip,z:rig.weapon.grip.z-24}),mid={x:g.x+Math.cos(angle)*3,y:g.y+Math.sin(angle)*1.5};
@@ -129,12 +108,15 @@ export function paintCharacterPixels(id,rig,angle){
      b.line(g,tip,OUT,1);b.line(g,tip,p.metal[1]);b.outlined([{x:tip.x,y:tip.y-3},{x:tip.x+2,y:tip.y},{x:tip.x,y:tip.y+3},{x:tip.x-2,y:tip.y}], '#68bccf');b.dot(tip.x-1,tip.y-1,'#d3f2e5');
      if(rig.state==='cast'){const q=Math.round(rig.phase*3);for(const dx of [-4-q,4+q])b.dot(tip.x+dx,tip.y-2,'#a393e9');b.dot(tip.x,tip.y-2-Math.min(2,q),'#dfd9f7');}
    }else{
-     b.line(g,tip,OUT,1.3);b.line(g,tip,p.metal[1],0.5);b.line({x:g.x-1,y:g.y-1},{x:tip.x-1,y:tip.y-1},p.metal[3]);
-     if(id==='orc')b.outlined([{x:tip.x-4,y:tip.y-2},{x:tip.x+2,y:tip.y-3},{x:tip.x+4,y:tip.y+1},{x:tip.x-2,y:tip.y+3}],p.metal[1]);
-     else b.line({x:g.x-2,y:g.y},{x:g.x+2,y:g.y},p.metal[2]);
+     const dx=tip.x-g.x,dy=tip.y-g.y,len=Math.hypot(dx,dy)||1,tx=dx/len,ty=dy/len,nx=-ty,ny=tx;
+     const q=(along,across)=>({x:g.x+tx*along+nx*across,y:g.y+ty*along+ny*across});
+     b.line(q(-2,0),tip,OUT,1);b.line(q(-2,0),tip,id==='orc'?p.cloth[2]:p.metal[2]);
+     if(id==='orc'){
+       const blade=(along,across)=>({x:tip.x+tx*along+nx*across,y:tip.y+ty*along+ny*across});
+       b.outlined([blade(-2,-1),blade(-3,-4),blade(0,-5),blade(2,-4),blade(2,1),blade(0,2)],p.metal[1]);b.line(blade(-2,-4),blade(1,-4),p.metal[3]);
+     }else{b.line(q(2,-2),q(2,2),p.metal[3]);b.line(q(3,0),tip,p.metal[2]);b.dot(tip.x,tip.y,p.metal[3]);}
    }
+   for(const hand of rig.arms.filter(a=>a.side===(rig.weapon.hand==='left'?-1:1)||id==='orc')){const h=at(hand.end);outlinedOval(h.x,h.y,1.2,1.2,id==='knight'?p.metal[1]:p.skin[1]);b.dot(h.x-1,h.y-1,id==='knight'?p.metal[3]:p.skin[2]);}
  }
- if(rig.shield){const q=at(rig.shield.grip);b.outlined([{x:q.x-4,y:q.y-4},{x:q.x+4,y:q.y-4},{x:q.x+4,y:q.y+2},{x:q.x,y:q.y+5},{x:q.x-4,y:q.y+2}],p.metal[2]);b.poly([{x:q.x-3,y:q.y-3},{x:q.x+3,y:q.y-3},{x:q.x+3,y:q.y+1},{x:q.x,y:q.y+4},{x:q.x-3,y:q.y+1}],p.cloth[1]);b.line({x:q.x,y:q.y-2},{x:q.x,y:q.y+2},p.metal[3]);b.line({x:q.x-2,y:q.y},{x:q.x+2,y:q.y},p.metal[3]);}
- b.data.clipped=b.clipped;return b.data;
+ if(shield&&rig.shield){const q=at(rig.shield.grip);b.outlined([{x:q.x-4,y:q.y-4},{x:q.x+4,y:q.y-4},{x:q.x+4,y:q.y+2},{x:q.x,y:q.y+5},{x:q.x-4,y:q.y+2}],p.metal[2]);b.poly([{x:q.x-3,y:q.y-3},{x:q.x+3,y:q.y-3},{x:q.x+3,y:q.y+1},{x:q.x,y:q.y+4},{x:q.x-3,y:q.y+1}],p.cloth[1]);b.line({x:q.x,y:q.y-2},{x:q.x,y:q.y+2},p.metal[3]);b.line({x:q.x-2,y:q.y},{x:q.x+2,y:q.y},p.metal[3]);}
 }
-function ySafe(y){return Math.min(62,y);}

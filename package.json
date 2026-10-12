@@ -15,7 +15,7 @@
     "check:godot": "node scripts/check-godot.mjs",
     "export:prototype": "node scripts/export-prototype-sprites.mjs",
     "build:prototype": "node scripts/build-prototype.mjs",
-    "test:prototype": "npm run build:prototype && node --test tests/prototype.test.js tests/prototype-rig.test.js tests/prototype-models.test.js tests/prototype-pixels.test.js && node tests/prototype.browser.mjs"
+    "test:prototype": "npm run build:prototype && node --test tests/prototype.test.js tests/prototype-rig.test.js tests/prototype-models.test.js tests/prototype-pixels.test.js tests/prototype-combat-v7.test.js && node tests/prototype.browser.mjs"
   },
   "devDependencies": {
     "esbuild": "0.25.10",

@@ -5,7 +5,7 @@ func _initialize() -> void:
  var total: int = 0
  for character in manifest.characters:
   var frames: SpriteFrames = load("res://" + character.id + ".tres")
-  assert(frames.get_animation_names().size() == 120)
+  assert(frames.get_animation_names().size() == character.animations.size())
   for clip in character.animations:
    assert(frames.has_animation(clip.name))
    assert(frames.get_frame_count(clip.name) == 8)
@@ -20,6 +20,6 @@ func _initialize() -> void:
     assert(texture.region.end.x <= texture.atlas.get_width())
     assert(texture.region.end.y <= texture.atlas.get_height())
     total += 1
- assert(total == 8640)
- print("Validated 8640 Godot AtlasTexture cells, 1080 named animations, loop flags and frame rates.")
+ assert(total == 9792)
+ print("Validated 9792 Godot AtlasTexture cells, 1224 named animations, loop flags and frame rates.")
  quit(0)

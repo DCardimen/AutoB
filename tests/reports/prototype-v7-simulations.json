@@ -1,0 +1,1806 @@
+{
+  "seeds": 50,
+  "completed": 50,
+  "results": [
+    {
+      "seed": 0,
+      "rosters": [
+        [
+          "knight",
+          "fox",
+          "jelly",
+          "wolf",
+          "mech",
+          "spider"
+        ],
+        [
+          "mech",
+          "elf",
+          "spider",
+          "knight",
+          "wolf",
+          "caster"
+        ]
+      ],
+      "done": true,
+      "winner": 0,
+      "seconds": 55.3999999999975,
+      "metrics": {
+        "hits": 100,
+        "misses": 61,
+        "rolls": 56,
+        "avoided": 35,
+        "interrupts": 2,
+        "projectiles": 115,
+        "contacts": 3509,
+        "knockouts": 8,
+        "charged": 16,
+        "armorResists": 18
+      }
+    },
+    {
+      "seed": 1,
+      "rosters": [
+        [
+          "caster",
+          "knight",
+          "jelly",
+          "orc",
+          "spider",
+          "fox"
+        ],
+        [
+          "knight",
+          "spider",
+          "orc",
+          "jelly",
+          "fox",
+          "wolf"
+        ]
+      ],
+      "done": true,
+      "winner": 1,
+      "seconds": 34.1999999999987,
+      "metrics": {
+        "hits": 76,
+        "misses": 50,
+        "rolls": 50,
+        "avoided": 31,
+        "interrupts": 0,
+        "projectiles": 62,
+        "contacts": 2116,
+        "knockouts": 7,
+        "charged": 20,
+        "armorResists": 15
+      }
+    },
+    {
+      "seed": 2,
+      "rosters": [
+        [
+          "caster",
+          "orc",
+          "fox",
+          "elf",
+          "jelly",
+          "spider"
+        ],
+        [
+          "caster",
+          "mech",
+          "spider",
+          "knight",
+          "wolf",
+          "fox"
+        ]
+      ],
+      "done": true,
+      "winner": 1,
+      "seconds": 69.60000000000146,
+      "metrics": {
+        "hits": 94,
+        "misses": 95,
+        "rolls": 80,
+        "avoided": 55,
+        "interrupts": 0,
+        "projectiles": 131,
+        "contacts": 10398,
+        "knockouts": 9,
+        "charged": 19,
+        "armorResists": 10
+      }
+    },
+    {
+      "seed": 3,
+      "rosters": [
+        [
+          "elf",
+          "caster",
+          "fox",
+          "spider",
+          "jelly",
+          "orc"
+        ],
+        [
+          "knight",
+          "caster",
+          "spider",
+          "orc",
+          "elf",
+          "jelly"
+        ]
+      ],
+      "done": true,
+      "winner": 0,
+      "seconds": 63.99999999999701,
+      "metrics": {
+        "hits": 85,
+        "misses": 64,
+        "rolls": 52,
+        "avoided": 39,
+        "interrupts": 4,
+        "projectiles": 106,
+        "contacts": 1987,
+        "knockouts": 10,
+        "charged": 14,
+        "armorResists": 11
+      }
+    },
+    {
+      "seed": 4,
+      "rosters": [
+        [
+          "orc",
+          "spider",
+          "wolf",
+          "knight",
+          "mech",
+          "fox"
+        ],
+        [
+          "elf",
+          "spider",
+          "wolf",
+          "knight",
+          "jelly",
+          "fox"
+        ]
+      ],
+      "done": true,
+      "winner": 0,
+      "seconds": 32.09999999999882,
+      "metrics": {
+        "hits": 64,
+        "misses": 44,
+        "rolls": 41,
+        "avoided": 22,
+        "interrupts": 2,
+        "projectiles": 44,
+        "contacts": 5927,
+        "knockouts": 6,
+        "charged": 20,
+        "armorResists": 9
+      }
+    },
+    {
+      "seed": 5,
+      "rosters": [
+        [
+          "jelly",
+          "wolf",
+          "knight",
+          "orc",
+          "fox",
+          "mech"
+        ],
+        [
+          "caster",
+          "jelly",
+          "fox",
+          "wolf",
+          "orc",
+          "elf"
+        ]
+      ],
+      "done": true,
+      "winner": 1,
+      "seconds": 58.29999999999733,
+      "metrics": {
+        "hits": 92,
+        "misses": 80,
+        "rolls": 80,
+        "avoided": 55,
+        "interrupts": 1,
+        "projectiles": 95,
+        "contacts": 2707,
+        "knockouts": 8,
+        "charged": 24,
+        "armorResists": 11
+      }
+    },
+    {
+      "seed": 6,
+      "rosters": [
+        [
+          "mech",
+          "wolf",
+          "orc",
+          "elf",
+          "spider",
+          "jelly"
+        ],
+        [
+          "caster",
+          "knight",
+          "spider",
+          "jelly",
+          "orc",
+          "wolf"
+        ]
+      ],
+      "done": true,
+      "winner": 0,
+      "seconds": 35.199999999998646,
+      "metrics": {
+        "hits": 87,
+        "misses": 40,
+        "rolls": 45,
+        "avoided": 22,
+        "interrupts": 2,
+        "projectiles": 48,
+        "contacts": 4818,
+        "knockouts": 7,
+        "charged": 25,
+        "armorResists": 19
+      }
+    },
+    {
+      "seed": 7,
+      "rosters": [
+        [
+          "orc",
+          "mech",
+          "spider",
+          "jelly",
+          "elf",
+          "wolf"
+        ],
+        [
+          "orc",
+          "caster",
+          "knight",
+          "mech",
+          "wolf",
+          "fox"
+        ]
+      ],
+      "done": true,
+      "winner": 0,
+      "seconds": 72.40000000000369,
+      "metrics": {
+        "hits": 89,
+        "misses": 65,
+        "rolls": 60,
+        "avoided": 38,
+        "interrupts": 0,
+        "projectiles": 89,
+        "contacts": 7218,
+        "knockouts": 8,
+        "charged": 21,
+        "armorResists": 13
+      }
+    },
+    {
+      "seed": 8,
+      "rosters": [
+        [
+          "fox",
+          "spider",
+          "jelly",
+          "mech",
+          "elf",
+          "wolf"
+        ],
+        [
+          "elf",
+          "caster",
+          "orc",
+          "jelly",
+          "spider",
+          "mech"
+        ]
+      ],
+      "done": true,
+      "winner": 1,
+      "seconds": 44.99999999999809,
+      "metrics": {
+        "hits": 86,
+        "misses": 78,
+        "rolls": 72,
+        "avoided": 55,
+        "interrupts": 0,
+        "projectiles": 147,
+        "contacts": 1791,
+        "knockouts": 7,
+        "charged": 6,
+        "armorResists": 9
+      }
+    },
+    {
+      "seed": 9,
+      "rosters": [
+        [
+          "caster",
+          "fox",
+          "orc",
+          "mech",
+          "spider",
+          "elf"
+        ],
+        [
+          "fox",
+          "knight",
+          "mech",
+          "elf",
+          "spider",
+          "jelly"
+        ]
+      ],
+      "done": true,
+      "winner": 0,
+      "seconds": 49.099999999997856,
+      "metrics": {
+        "hits": 91,
+        "misses": 75,
+        "rolls": 59,
+        "avoided": 33,
+        "interrupts": 0,
+        "projectiles": 141,
+        "contacts": 5768,
+        "knockouts": 7,
+        "charged": 9,
+        "armorResists": 10
+      }
+    },
+    {
+      "seed": 10,
+      "rosters": [
+        [
+          "wolf",
+          "fox",
+          "elf",
+          "caster",
+          "orc",
+          "knight"
+        ],
+        [
+          "spider",
+          "wolf",
+          "elf",
+          "jelly",
+          "knight",
+          "mech"
+        ]
+      ],
+      "done": true,
+      "winner": 1,
+      "seconds": 59.499999999997264,
+      "metrics": {
+        "hits": 96,
+        "misses": 73,
+        "rolls": 68,
+        "avoided": 49,
+        "interrupts": 0,
+        "projectiles": 78,
+        "contacts": 3888,
+        "knockouts": 8,
+        "charged": 30,
+        "armorResists": 16
+      }
+    },
+    {
+      "seed": 11,
+      "rosters": [
+        [
+          "spider",
+          "knight",
+          "elf",
+          "mech",
+          "jelly",
+          "orc"
+        ],
+        [
+          "fox",
+          "jelly",
+          "orc",
+          "mech",
+          "wolf",
+          "spider"
+        ]
+      ],
+      "done": true,
+      "winner": 0,
+      "seconds": 40.79999999999833,
+      "metrics": {
+        "hits": 70,
+        "misses": 51,
+        "rolls": 49,
+        "avoided": 28,
+        "interrupts": 1,
+        "projectiles": 82,
+        "contacts": 1812,
+        "knockouts": 7,
+        "charged": 12,
+        "armorResists": 9
+      }
+    },
+    {
+      "seed": 12,
+      "rosters": [
+        [
+          "wolf",
+          "orc",
+          "caster",
+          "fox",
+          "spider",
+          "knight"
+        ],
+        [
+          "elf",
+          "mech",
+          "caster",
+          "wolf",
+          "orc",
+          "knight"
+        ]
+      ],
+      "done": true,
+      "winner": 0,
+      "seconds": 69.30000000000122,
+      "metrics": {
+        "hits": 88,
+        "misses": 73,
+        "rolls": 61,
+        "avoided": 32,
+        "interrupts": 2,
+        "projectiles": 77,
+        "contacts": 8655,
+        "knockouts": 8,
+        "charged": 27,
+        "armorResists": 11
+      }
+    },
+    {
+      "seed": 13,
+      "rosters": [
+        [
+          "caster",
+          "fox",
+          "elf",
+          "spider",
+          "knight",
+          "orc"
+        ],
+        [
+          "fox",
+          "mech",
+          "elf",
+          "caster",
+          "spider",
+          "knight"
+        ]
+      ],
+      "done": true,
+      "winner": 0,
+      "seconds": 44.49999999999812,
+      "metrics": {
+        "hits": 88,
+        "misses": 57,
+        "rolls": 54,
+        "avoided": 27,
+        "interrupts": 0,
+        "projectiles": 109,
+        "contacts": 6000,
+        "knockouts": 8,
+        "charged": 10,
+        "armorResists": 7
+      }
+    },
+    {
+      "seed": 14,
+      "rosters": [
+        [
+          "wolf",
+          "mech",
+          "orc",
+          "caster",
+          "fox",
+          "knight"
+        ],
+        [
+          "wolf",
+          "elf",
+          "orc",
+          "jelly",
+          "spider",
+          "knight"
+        ]
+      ],
+      "done": true,
+      "winner": 1,
+      "seconds": 41.59999999999828,
+      "metrics": {
+        "hits": 93,
+        "misses": 33,
+        "rolls": 47,
+        "avoided": 23,
+        "interrupts": 1,
+        "projectiles": 58,
+        "contacts": 7283,
+        "knockouts": 8,
+        "charged": 21,
+        "armorResists": 12
+      }
+    },
+    {
+      "seed": 15,
+      "rosters": [
+        [
+          "elf",
+          "jelly",
+          "caster",
+          "mech",
+          "wolf",
+          "spider"
+        ],
+        [
+          "caster",
+          "elf",
+          "fox",
+          "orc",
+          "mech",
+          "spider"
+        ]
+      ],
+      "done": true,
+      "winner": 1,
+      "seconds": 52.89999999999764,
+      "metrics": {
+        "hits": 79,
+        "misses": 85,
+        "rolls": 74,
+        "avoided": 40,
+        "interrupts": 0,
+        "projectiles": 121,
+        "contacts": 5747,
+        "knockouts": 7,
+        "charged": 14,
+        "armorResists": 5
+      }
+    },
+    {
+      "seed": 16,
+      "rosters": [
+        [
+          "jelly",
+          "fox",
+          "mech",
+          "wolf",
+          "orc",
+          "spider"
+        ],
+        [
+          "wolf",
+          "caster",
+          "mech",
+          "jelly",
+          "knight",
+          "spider"
+        ]
+      ],
+      "done": true,
+      "winner": 0,
+      "seconds": 39.89999999999838,
+      "metrics": {
+        "hits": 78,
+        "misses": 50,
+        "rolls": 48,
+        "avoided": 26,
+        "interrupts": 1,
+        "projectiles": 68,
+        "contacts": 6414,
+        "knockouts": 6,
+        "charged": 19,
+        "armorResists": 5
+      }
+    },
+    {
+      "seed": 17,
+      "rosters": [
+        [
+          "mech",
+          "caster",
+          "knight",
+          "spider",
+          "jelly",
+          "orc"
+        ],
+        [
+          "jelly",
+          "knight",
+          "orc",
+          "mech",
+          "elf",
+          "wolf"
+        ]
+      ],
+      "done": true,
+      "winner": 1,
+      "seconds": 36.99999999999854,
+      "metrics": {
+        "hits": 75,
+        "misses": 57,
+        "rolls": 44,
+        "avoided": 30,
+        "interrupts": 0,
+        "projectiles": 76,
+        "contacts": 3836,
+        "knockouts": 7,
+        "charged": 17,
+        "armorResists": 12
+      }
+    },
+    {
+      "seed": 18,
+      "rosters": [
+        [
+          "jelly",
+          "knight",
+          "mech",
+          "caster",
+          "wolf",
+          "fox"
+        ],
+        [
+          "mech",
+          "caster",
+          "knight",
+          "elf",
+          "jelly",
+          "orc"
+        ]
+      ],
+      "done": true,
+      "winner": 1,
+      "seconds": 64.9999999999978,
+      "metrics": {
+        "hits": 86,
+        "misses": 73,
+        "rolls": 72,
+        "avoided": 46,
+        "interrupts": 0,
+        "projectiles": 82,
+        "contacts": 2250,
+        "knockouts": 10,
+        "charged": 25,
+        "armorResists": 8
+      }
+    },
+    {
+      "seed": 19,
+      "rosters": [
+        [
+          "knight",
+          "orc",
+          "caster",
+          "wolf",
+          "spider",
+          "fox"
+        ],
+        [
+          "knight",
+          "spider",
+          "mech",
+          "fox",
+          "wolf",
+          "caster"
+        ]
+      ],
+      "done": true,
+      "winner": 0,
+      "seconds": 36.39999999999858,
+      "metrics": {
+        "hits": 86,
+        "misses": 43,
+        "rolls": 52,
+        "avoided": 36,
+        "interrupts": 0,
+        "projectiles": 71,
+        "contacts": 4853,
+        "knockouts": 7,
+        "charged": 18,
+        "armorResists": 15
+      }
+    },
+    {
+      "seed": 20,
+      "rosters": [
+        [
+          "jelly",
+          "mech",
+          "orc",
+          "fox",
+          "wolf",
+          "knight"
+        ],
+        [
+          "fox",
+          "jelly",
+          "knight",
+          "spider",
+          "orc",
+          "wolf"
+        ]
+      ],
+      "done": true,
+      "winner": 1,
+      "seconds": 42.799999999998214,
+      "metrics": {
+        "hits": 93,
+        "misses": 63,
+        "rolls": 61,
+        "avoided": 43,
+        "interrupts": 1,
+        "projectiles": 76,
+        "contacts": 5076,
+        "knockouts": 8,
+        "charged": 23,
+        "armorResists": 12
+      }
+    },
+    {
+      "seed": 21,
+      "rosters": [
+        [
+          "spider",
+          "jelly",
+          "wolf",
+          "knight",
+          "mech",
+          "elf"
+        ],
+        [
+          "wolf",
+          "caster",
+          "spider",
+          "fox",
+          "mech",
+          "knight"
+        ]
+      ],
+      "done": true,
+      "winner": 1,
+      "seconds": 43.999999999998145,
+      "metrics": {
+        "hits": 78,
+        "misses": 60,
+        "rolls": 47,
+        "avoided": 33,
+        "interrupts": 0,
+        "projectiles": 85,
+        "contacts": 8797,
+        "knockouts": 7,
+        "charged": 18,
+        "armorResists": 12
+      }
+    },
+    {
+      "seed": 22,
+      "rosters": [
+        [
+          "mech",
+          "elf",
+          "wolf",
+          "spider",
+          "caster",
+          "orc"
+        ],
+        [
+          "caster",
+          "mech",
+          "knight",
+          "wolf",
+          "spider",
+          "fox"
+        ]
+      ],
+      "done": true,
+      "winner": 0,
+      "seconds": 55.49999999999749,
+      "metrics": {
+        "hits": 98,
+        "misses": 71,
+        "rolls": 50,
+        "avoided": 38,
+        "interrupts": 1,
+        "projectiles": 112,
+        "contacts": 1673,
+        "knockouts": 8,
+        "charged": 18,
+        "armorResists": 12
+      }
+    },
+    {
+      "seed": 23,
+      "rosters": [
+        [
+          "knight",
+          "elf",
+          "fox",
+          "mech",
+          "wolf",
+          "orc"
+        ],
+        [
+          "orc",
+          "jelly",
+          "caster",
+          "fox",
+          "spider",
+          "mech"
+        ]
+      ],
+      "done": true,
+      "winner": 0,
+      "seconds": 44.99999999999809,
+      "metrics": {
+        "hits": 78,
+        "misses": 56,
+        "rolls": 60,
+        "avoided": 33,
+        "interrupts": 0,
+        "projectiles": 79,
+        "contacts": 3011,
+        "knockouts": 6,
+        "charged": 17,
+        "armorResists": 9
+      }
+    },
+    {
+      "seed": 24,
+      "rosters": [
+        [
+          "mech",
+          "wolf",
+          "caster",
+          "orc",
+          "spider",
+          "knight"
+        ],
+        [
+          "orc",
+          "elf",
+          "knight",
+          "fox",
+          "caster",
+          "spider"
+        ]
+      ],
+      "done": true,
+      "winner": 0,
+      "seconds": 72.20000000000353,
+      "metrics": {
+        "hits": 88,
+        "misses": 82,
+        "rolls": 65,
+        "avoided": 43,
+        "interrupts": 2,
+        "projectiles": 98,
+        "contacts": 2798,
+        "knockouts": 9,
+        "charged": 23,
+        "armorResists": 12
+      }
+    },
+    {
+      "seed": 25,
+      "rosters": [
+        [
+          "orc",
+          "fox",
+          "caster",
+          "mech",
+          "jelly",
+          "knight"
+        ],
+        [
+          "elf",
+          "fox",
+          "spider",
+          "knight",
+          "wolf",
+          "caster"
+        ]
+      ],
+      "done": true,
+      "winner": 1,
+      "seconds": 47.899999999997924,
+      "metrics": {
+        "hits": 92,
+        "misses": 70,
+        "rolls": 60,
+        "avoided": 40,
+        "interrupts": 1,
+        "projectiles": 121,
+        "contacts": 779,
+        "knockouts": 8,
+        "charged": 14,
+        "armorResists": 11
+      }
+    },
+    {
+      "seed": 26,
+      "rosters": [
+        [
+          "orc",
+          "spider",
+          "jelly",
+          "fox",
+          "wolf",
+          "knight"
+        ],
+        [
+          "spider",
+          "mech",
+          "knight",
+          "wolf",
+          "caster",
+          "fox"
+        ]
+      ],
+      "done": true,
+      "winner": 0,
+      "seconds": 45.399999999998066,
+      "metrics": {
+        "hits": 89,
+        "misses": 59,
+        "rolls": 58,
+        "avoided": 38,
+        "interrupts": 1,
+        "projectiles": 65,
+        "contacts": 4680,
+        "knockouts": 8,
+        "charged": 26,
+        "armorResists": 13
+      }
+    },
+    {
+      "seed": 27,
+      "rosters": [
+        [
+          "elf",
+          "jelly",
+          "spider",
+          "wolf",
+          "caster",
+          "fox"
+        ],
+        [
+          "mech",
+          "elf",
+          "caster",
+          "jelly",
+          "knight",
+          "spider"
+        ]
+      ],
+      "done": true,
+      "winner": 1,
+      "seconds": 42.69999999999822,
+      "metrics": {
+        "hits": 74,
+        "misses": 69,
+        "rolls": 50,
+        "avoided": 28,
+        "interrupts": 0,
+        "projectiles": 110,
+        "contacts": 2052,
+        "knockouts": 7,
+        "charged": 10,
+        "armorResists": 6
+      }
+    },
+    {
+      "seed": 28,
+      "rosters": [
+        [
+          "jelly",
+          "spider",
+          "fox",
+          "knight",
+          "mech",
+          "elf"
+        ],
+        [
+          "spider",
+          "jelly",
+          "orc",
+          "fox",
+          "mech",
+          "wolf"
+        ]
+      ],
+      "done": true,
+      "winner": 1,
+      "seconds": 45.09999999999808,
+      "metrics": {
+        "hits": 66,
+        "misses": 52,
+        "rolls": 42,
+        "avoided": 30,
+        "interrupts": 0,
+        "projectiles": 62,
+        "contacts": 9024,
+        "knockouts": 6,
+        "charged": 18,
+        "armorResists": 7
+      }
+    },
+    {
+      "seed": 29,
+      "rosters": [
+        [
+          "wolf",
+          "caster",
+          "mech",
+          "fox",
+          "elf",
+          "orc"
+        ],
+        [
+          "elf",
+          "fox",
+          "spider",
+          "mech",
+          "orc",
+          "caster"
+        ]
+      ],
+      "done": true,
+      "winner": 0,
+      "seconds": 61.599999999997145,
+      "metrics": {
+        "hits": 101,
+        "misses": 75,
+        "rolls": 76,
+        "avoided": 45,
+        "interrupts": 1,
+        "projectiles": 155,
+        "contacts": 3026,
+        "knockouts": 9,
+        "charged": 7,
+        "armorResists": 7
+      }
+    },
+    {
+      "seed": 30,
+      "rosters": [
+        [
+          "orc",
+          "knight",
+          "fox",
+          "elf",
+          "wolf",
+          "mech"
+        ],
+        [
+          "elf",
+          "spider",
+          "fox",
+          "knight",
+          "mech",
+          "jelly"
+        ]
+      ],
+      "done": true,
+      "winner": 0,
+      "seconds": 39.69999999999839,
+      "metrics": {
+        "hits": 78,
+        "misses": 65,
+        "rolls": 59,
+        "avoided": 35,
+        "interrupts": 1,
+        "projectiles": 94,
+        "contacts": 4616,
+        "knockouts": 6,
+        "charged": 15,
+        "armorResists": 8
+      }
+    },
+    {
+      "seed": 31,
+      "rosters": [
+        [
+          "jelly",
+          "knight",
+          "spider",
+          "orc",
+          "fox",
+          "mech"
+        ],
+        [
+          "orc",
+          "jelly",
+          "elf",
+          "spider",
+          "fox",
+          "knight"
+        ]
+      ],
+      "done": true,
+      "winner": 1,
+      "seconds": 52.39999999999767,
+      "metrics": {
+        "hits": 76,
+        "misses": 58,
+        "rolls": 51,
+        "avoided": 33,
+        "interrupts": 2,
+        "projectiles": 81,
+        "contacts": 6471,
+        "knockouts": 7,
+        "charged": 17,
+        "armorResists": 10
+      }
+    },
+    {
+      "seed": 32,
+      "rosters": [
+        [
+          "elf",
+          "wolf",
+          "orc",
+          "mech",
+          "knight",
+          "spider"
+        ],
+        [
+          "spider",
+          "wolf",
+          "mech",
+          "elf",
+          "orc",
+          "jelly"
+        ]
+      ],
+      "done": true,
+      "winner": 0,
+      "seconds": 51.49999999999772,
+      "metrics": {
+        "hits": 84,
+        "misses": 54,
+        "rolls": 48,
+        "avoided": 31,
+        "interrupts": 1,
+        "projectiles": 66,
+        "contacts": 6627,
+        "knockouts": 8,
+        "charged": 23,
+        "armorResists": 15
+      }
+    },
+    {
+      "seed": 33,
+      "rosters": [
+        [
+          "knight",
+          "spider",
+          "mech",
+          "jelly",
+          "orc",
+          "wolf"
+        ],
+        [
+          "orc",
+          "spider",
+          "jelly",
+          "mech",
+          "fox",
+          "knight"
+        ]
+      ],
+      "done": true,
+      "winner": 0,
+      "seconds": 58.29999999999733,
+      "metrics": {
+        "hits": 81,
+        "misses": 50,
+        "rolls": 67,
+        "avoided": 38,
+        "interrupts": 1,
+        "projectiles": 40,
+        "contacts": 3972,
+        "knockouts": 8,
+        "charged": 30,
+        "armorResists": 11
+      }
+    },
+    {
+      "seed": 34,
+      "rosters": [
+        [
+          "jelly",
+          "wolf",
+          "mech",
+          "fox",
+          "orc",
+          "knight"
+        ],
+        [
+          "wolf",
+          "mech",
+          "caster",
+          "elf",
+          "knight",
+          "fox"
+        ]
+      ],
+      "done": true,
+      "winner": 0,
+      "seconds": 66.19999999999875,
+      "metrics": {
+        "hits": 113,
+        "misses": 77,
+        "rolls": 83,
+        "avoided": 61,
+        "interrupts": 0,
+        "projectiles": 145,
+        "contacts": 2370,
+        "knockouts": 10,
+        "charged": 14,
+        "armorResists": 10
+      }
+    },
+    {
+      "seed": 35,
+      "rosters": [
+        [
+          "elf",
+          "fox",
+          "wolf",
+          "spider",
+          "mech",
+          "knight"
+        ],
+        [
+          "spider",
+          "jelly",
+          "caster",
+          "wolf",
+          "fox",
+          "orc"
+        ]
+      ],
+      "done": true,
+      "winner": 1,
+      "seconds": 49.19999999999785,
+      "metrics": {
+        "hits": 80,
+        "misses": 71,
+        "rolls": 56,
+        "avoided": 36,
+        "interrupts": 5,
+        "projectiles": 72,
+        "contacts": 7350,
+        "knockouts": 7,
+        "charged": 26,
+        "armorResists": 10
+      }
+    },
+    {
+      "seed": 36,
+      "rosters": [
+        [
+          "spider",
+          "knight",
+          "fox",
+          "caster",
+          "orc",
+          "jelly"
+        ],
+        [
+          "spider",
+          "knight",
+          "fox",
+          "mech",
+          "caster",
+          "orc"
+        ]
+      ],
+      "done": true,
+      "winner": 0,
+      "seconds": 51.7999999999977,
+      "metrics": {
+        "hits": 79,
+        "misses": 60,
+        "rolls": 46,
+        "avoided": 25,
+        "interrupts": 1,
+        "projectiles": 95,
+        "contacts": 7595,
+        "knockouts": 6,
+        "charged": 12,
+        "armorResists": 12
+      }
+    },
+    {
+      "seed": 37,
+      "rosters": [
+        [
+          "orc",
+          "elf",
+          "jelly",
+          "fox",
+          "knight",
+          "spider"
+        ],
+        [
+          "orc",
+          "wolf",
+          "knight",
+          "mech",
+          "fox",
+          "jelly"
+        ]
+      ],
+      "done": true,
+      "winner": 0,
+      "seconds": 44.09999999999814,
+      "metrics": {
+        "hits": 89,
+        "misses": 48,
+        "rolls": 51,
+        "avoided": 34,
+        "interrupts": 0,
+        "projectiles": 95,
+        "contacts": 4150,
+        "knockouts": 7,
+        "charged": 13,
+        "armorResists": 13
+      }
+    },
+    {
+      "seed": 38,
+      "rosters": [
+        [
+          "wolf",
+          "fox",
+          "caster",
+          "knight",
+          "elf",
+          "orc"
+        ],
+        [
+          "spider",
+          "orc",
+          "fox",
+          "elf",
+          "wolf",
+          "mech"
+        ]
+      ],
+      "done": true,
+      "winner": 0,
+      "seconds": 40.499999999998344,
+      "metrics": {
+        "hits": 76,
+        "misses": 44,
+        "rolls": 44,
+        "avoided": 21,
+        "interrupts": 1,
+        "projectiles": 76,
+        "contacts": 2632,
+        "knockouts": 7,
+        "charged": 15,
+        "armorResists": 13
+      }
+    },
+    {
+      "seed": 39,
+      "rosters": [
+        [
+          "orc",
+          "jelly",
+          "spider",
+          "fox",
+          "elf",
+          "wolf"
+        ],
+        [
+          "orc",
+          "jelly",
+          "wolf",
+          "knight",
+          "caster",
+          "spider"
+        ]
+      ],
+      "done": true,
+      "winner": 1,
+      "seconds": 53.79999999999759,
+      "metrics": {
+        "hits": 74,
+        "misses": 72,
+        "rolls": 54,
+        "avoided": 31,
+        "interrupts": 1,
+        "projectiles": 64,
+        "contacts": 5633,
+        "knockouts": 7,
+        "charged": 26,
+        "armorResists": 14
+      }
+    },
+    {
+      "seed": 40,
+      "rosters": [
+        [
+          "caster",
+          "wolf",
+          "jelly",
+          "orc",
+          "knight",
+          "elf"
+        ],
+        [
+          "orc",
+          "caster",
+          "elf",
+          "wolf",
+          "fox",
+          "knight"
+        ]
+      ],
+      "done": true,
+      "winner": 1,
+      "seconds": 53.5999999999976,
+      "metrics": {
+        "hits": 89,
+        "misses": 84,
+        "rolls": 66,
+        "avoided": 49,
+        "interrupts": 1,
+        "projectiles": 93,
+        "contacts": 3041,
+        "knockouts": 8,
+        "charged": 27,
+        "armorResists": 12
+      }
+    },
+    {
+      "seed": 41,
+      "rosters": [
+        [
+          "elf",
+          "knight",
+          "mech",
+          "jelly",
+          "spider",
+          "wolf"
+        ],
+        [
+          "fox",
+          "spider",
+          "elf",
+          "jelly",
+          "mech",
+          "knight"
+        ]
+      ],
+      "done": true,
+      "winner": 0,
+      "seconds": 87.0000000000153,
+      "metrics": {
+        "hits": 115,
+        "misses": 126,
+        "rolls": 90,
+        "avoided": 59,
+        "interrupts": 0,
+        "projectiles": 182,
+        "contacts": 11167,
+        "knockouts": 11,
+        "charged": 19,
+        "armorResists": 9
+      }
+    },
+    {
+      "seed": 42,
+      "rosters": [
+        [
+          "fox",
+          "caster",
+          "knight",
+          "spider",
+          "jelly",
+          "orc"
+        ],
+        [
+          "elf",
+          "knight",
+          "caster",
+          "spider",
+          "jelly",
+          "mech"
+        ]
+      ],
+      "done": true,
+      "winner": 1,
+      "seconds": 53.19999999999762,
+      "metrics": {
+        "hits": 94,
+        "misses": 39,
+        "rolls": 56,
+        "avoided": 25,
+        "interrupts": 2,
+        "projectiles": 69,
+        "contacts": 2301,
+        "knockouts": 9,
+        "charged": 21,
+        "armorResists": 10
+      }
+    },
+    {
+      "seed": 43,
+      "rosters": [
+        [
+          "caster",
+          "mech",
+          "orc",
+          "wolf",
+          "spider",
+          "fox"
+        ],
+        [
+          "fox",
+          "spider",
+          "knight",
+          "elf",
+          "caster",
+          "wolf"
+        ]
+      ],
+      "done": true,
+      "winner": 0,
+      "seconds": 36.89999999999855,
+      "metrics": {
+        "hits": 78,
+        "misses": 55,
+        "rolls": 54,
+        "avoided": 34,
+        "interrupts": 0,
+        "projectiles": 72,
+        "contacts": 5663,
+        "knockouts": 6,
+        "charged": 20,
+        "armorResists": 6
+      }
+    },
+    {
+      "seed": 44,
+      "rosters": [
+        [
+          "wolf",
+          "knight",
+          "elf",
+          "mech",
+          "jelly",
+          "orc"
+        ],
+        [
+          "wolf",
+          "mech",
+          "knight",
+          "caster",
+          "jelly",
+          "fox"
+        ]
+      ],
+      "done": true,
+      "winner": 0,
+      "seconds": 41.899999999998265,
+      "metrics": {
+        "hits": 76,
+        "misses": 54,
+        "rolls": 48,
+        "avoided": 29,
+        "interrupts": 2,
+        "projectiles": 78,
+        "contacts": 2890,
+        "knockouts": 7,
+        "charged": 16,
+        "armorResists": 8
+      }
+    },
+    {
+      "seed": 45,
+      "rosters": [
+        [
+          "elf",
+          "fox",
+          "wolf",
+          "spider",
+          "orc",
+          "knight"
+        ],
+        [
+          "fox",
+          "knight",
+          "mech",
+          "caster",
+          "elf",
+          "orc"
+        ]
+      ],
+      "done": true,
+      "winner": 1,
+      "seconds": 54.29999999999756,
+      "metrics": {
+        "hits": 95,
+        "misses": 61,
+        "rolls": 56,
+        "avoided": 30,
+        "interrupts": 2,
+        "projectiles": 105,
+        "contacts": 4833,
+        "knockouts": 9,
+        "charged": 16,
+        "armorResists": 7
+      }
+    },
+    {
+      "seed": 46,
+      "rosters": [
+        [
+          "fox",
+          "mech",
+          "orc",
+          "knight",
+          "caster",
+          "spider"
+        ],
+        [
+          "wolf",
+          "knight",
+          "mech",
+          "fox",
+          "elf",
+          "orc"
+        ]
+      ],
+      "done": true,
+      "winner": 1,
+      "seconds": 37.39999999999852,
+      "metrics": {
+        "hits": 70,
+        "misses": 59,
+        "rolls": 44,
+        "avoided": 27,
+        "interrupts": 1,
+        "projectiles": 79,
+        "contacts": 2572,
+        "knockouts": 6,
+        "charged": 15,
+        "armorResists": 12
+      }
+    },
+    {
+      "seed": 47,
+      "rosters": [
+        [
+          "elf",
+          "mech",
+          "fox",
+          "jelly",
+          "spider",
+          "orc"
+        ],
+        [
+          "orc",
+          "fox",
+          "elf",
+          "caster",
+          "knight",
+          "wolf"
+        ]
+      ],
+      "done": true,
+      "winner": 1,
+      "seconds": 31.999999999998824,
+      "metrics": {
+        "hits": 78,
+        "misses": 43,
+        "rolls": 46,
+        "avoided": 22,
+        "interrupts": 0,
+        "projectiles": 78,
+        "contacts": 2047,
+        "knockouts": 6,
+        "charged": 13,
+        "armorResists": 8
+      }
+    },
+    {
+      "seed": 48,
+      "rosters": [
+        [
+          "jelly",
+          "orc",
+          "knight",
+          "spider",
+          "mech",
+          "wolf"
+        ],
+        [
+          "spider",
+          "jelly",
+          "mech",
+          "elf",
+          "knight",
+          "orc"
+        ]
+      ],
+      "done": true,
+      "winner": 1,
+      "seconds": 43.59999999999817,
+      "metrics": {
+        "hits": 86,
+        "misses": 50,
+        "rolls": 48,
+        "avoided": 33,
+        "interrupts": 0,
+        "projectiles": 69,
+        "contacts": 3088,
+        "knockouts": 7,
+        "charged": 21,
+        "armorResists": 15
+      }
+    },
+    {
+      "seed": 49,
+      "rosters": [
+        [
+          "knight",
+          "jelly",
+          "orc",
+          "wolf",
+          "caster",
+          "mech"
+        ],
+        [
+          "elf",
+          "wolf",
+          "spider",
+          "orc",
+          "knight",
+          "caster"
+        ]
+      ],
+      "done": true,
+      "winner": 1,
+      "seconds": 59.299999999997276,
+      "metrics": {
+        "hits": 82,
+        "misses": 54,
+        "rolls": 59,
+        "avoided": 38,
+        "interrupts": 3,
+        "projectiles": 34,
+        "contacts": 2641,
+        "knockouts": 9,
+        "charged": 31,
+        "armorResists": 12
+      }
+    }
+  ]
+}

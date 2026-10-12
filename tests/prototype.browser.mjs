@@ -13,7 +13,7 @@ await page.clock.pauseAt(await page.evaluate(()=>Date.now()+1000));
 await page.goto(base+'/prototype.html');await page.clock.runFor(100);await page.waitForFunction(()=>window.prototypeLab?.state.artLoaded);
 assert.equal(await page.locator('.character-card').count(),9);
 assert.equal(await page.evaluate(()=>prototypeLab.state.mode),'directions');
-assert.equal(await page.evaluate(()=>prototypeLab.state.cache.rigVersion),6);
+assert.equal(await page.evaluate(()=>prototypeLab.state.cache.rigVersion),7);
 report.pixelPresentation=await page.evaluate(()=>{
  const canvas=document.querySelector('#prototype-canvas'),p=canvas.getContext('2d').getImageData(0,0,1002,654).data;let mismatchedBlocks=0;
  for(let y=0;y<654;y+=3)for(let x=0;x<1002;x+=3){const base=(y*1002+x)*4;let mismatch=false;for(let dy=0;dy<3;dy++)for(let dx=0;dx<3;dx++)for(let ch=0;ch<4;ch++)if(p[((y+dy)*1002+x+dx)*4+ch]!==p[base+ch])mismatch=true;if(mismatch)mismatchedBlocks++;}
@@ -62,20 +62,24 @@ assert.equal(await page.evaluate(()=>prototypeLab.state.focusView),true);
 await page.locator('#focus-view').click();
 addCheck('Opening scene shows eight views side by side; all nine characters have eight distinct sprites at one fixed pose phase, with native 64×64 cells; clicking a view opens its close inspection');
 await page.locator('[data-scene="battle"]').click();
-assert.equal(await page.evaluate(()=>prototypeLab.state.arena.units.length),18);
+assert.equal(await page.evaluate(()=>prototypeLab.state.arena.units.length),12);
 await page.locator('#play-pause').click();
 const frozen=await page.evaluate(()=>prototypeLab.state.arena.time);await page.clock.runFor(800);
 assert.equal(await page.evaluate(()=>prototypeLab.state.arena.time),frozen);
 await page.locator('#frame-step').click();assert.ok(await page.evaluate(()=>prototypeLab.state.arena.time)>frozen);
-addCheck('Nine complete character portraits and an eighteen-body scene; pause and frame stepping preserve simulation control');
-await page.locator('[data-select="0-elf-2"]').click();
+assert.equal(await page.locator('.character-card').count(),6);
+report.battleRosters=await page.evaluate(()=>prototypeLab.state.arena.rosters);
+addCheck('Randomized teams have six creatures each; cards match the lineup, and pause/frame stepping preserve simulation control');
+const orderUid=await page.evaluate(()=>prototypeLab.state.arena.units.find(u=>u.side===0).uid);
+await page.locator(`[data-select="${orderUid}"]`).click();
 let box=await page.locator('#prototype-canvas').boundingBox();
 await page.mouse.click(box.x+350*box.width/1002,box.y+510*box.height/654);
 const order=await page.evaluate(()=>prototypeLab.state.arena.units.find(u=>u.uid===prototypeLab.state.selected).order);
 assert.ok(Math.abs(order.x-350)<1&&Math.abs(order.y-750)<2);
-const before=await page.evaluate(()=>prototypeLab.state.arena.units.find(u=>u.uid===prototypeLab.state.selected).x);
+const before=await page.evaluate(()=>{const u=prototypeLab.state.arena.units.find(u=>u.uid===prototypeLab.state.selected);return {x:u.x,y:u.y};});
 await page.locator('#play-pause').click();await page.clock.runFor(1000);
-assert.ok(await page.evaluate(()=>prototypeLab.state.arena.units.find(u=>u.uid===prototypeLab.state.selected).x)>before+20);
+const afterOrder=await page.evaluate(()=>{const u=prototypeLab.state.arena.units.find(u=>u.uid===prototypeLab.state.selected);return {x:u.x,y:u.y};});
+assert.ok(Math.hypot(afterOrder.x-before.x,afterOrder.y-before.y)>30,'the selected creature must physically travel toward its ground order');
 addCheck('Selecting a character and clicking ground produces actual movement in the physical scene');
 await page.locator('[data-scene="movement"]').click();await page.clock.runFor(2500);
 const movement=await page.evaluate(()=>prototypeLab.state.arena.units.map(u=>({travel:u.travel,gait:u.gait,dir:Math.round(u.facing/(Math.PI/4))})));
@@ -129,7 +133,7 @@ for(let dir=0;dir<8;dir++){
 }
 assert.equal(hashes.size,8);
 const stateFrames=new Set();
-for(const state of ['idle','walk','run','sprint','turn','attack','cast','dash','dodge','hit','stagger','knockdown','getup','stop','death']){
+for(const state of ['idle','walk','run','sprint','turn','attack','slash','charge','cast','dash','dodge','hit','stagger','knockdown','getup','stop','death']){
   await page.locator(`[data-pose="${state}"]`).click();for(let i=0;i<6;i++)await page.locator('#frame-step').click();
   assert.equal(await page.evaluate(()=>prototypeLab.sample.state),state);
   const data=await page.locator('#prototype-canvas').evaluate(c=>c.toDataURL());stateFrames.add(createHash('sha256').update(data).digest('hex'));
@@ -137,8 +141,25 @@ for(const state of ['idle','walk','run','sprint','turn','attack','cast','dash','
 assert.ok(stateFrames.size>=13);report.directionFrames=hashes.size;report.stateFrames=stateFrames.size;
 await page.locator('[data-pose="attack"]').click();for(let i=0;i<4;i++)await page.locator('#frame-step').click();
 await page.screenshot({path:'playtest-artifacts/prototype-study.png',fullPage:true});report.screenshots.push('prototype-study.png');
-addCheck('Eight directional views and fifteen animation states are inspectable, including a close view and death');
-await page.locator('#focus-view').click();await page.locator('[data-scene="battle"]').click();await page.locator('#play-pause').click();
+addCheck('Eight directional views and seventeen animation states are inspectable, including a close view and death');
+await page.locator('#focus-view').click();await page.locator('[data-scene="battle"]').click();
+const oldComposition=await page.evaluate(()=>prototypeLab.state.arena.rosters.map(ids=>ids.slice().sort().join(',')).join('|'));
+await page.locator('#restart').click();
+assert.notEqual(await page.evaluate(()=>prototypeLab.state.arena.rosters.map(ids=>ids.slice().sort().join(',')).join('|')),oldComposition);
+assert.equal(await page.locator('.character-card').count(),6);assert.equal(await page.locator('#roster-select option').count(),6);
+const chargeUid=await page.evaluate(()=>{
+ const arena=prototypeLab.state.arena,u=arena.units.find(u=>u.side===0&&!u.ranged),enemy=arena.units.find(u=>u.side===1);
+ arena.units=[u,enemy];arena.mode='study';
+ for(const [i,a]of arena.units.entries()){a.x=350+i*45;a.y=350;a.px=a.x;a.py=a.y;a.facing=i?Math.PI:0;a.hp=a.maxHp;a.action=null;a.vx=0;a.vy=0;a.ix=0;a.iy=0;a.stagger=0;a.hitTime=0;a.knockdown=0;a.getup=0;a.stamina=100;}
+ return u.uid;
+});
+await page.locator(`[data-select="${chargeUid}"]`).click();await page.clock.runFor(150);
+await page.locator('#order-charge').click();assert.equal(await page.evaluate(()=>prototypeLab.state.arena.units[0].action.charged),true);
+report.chargeProtection=await page.evaluate(()=>{const a=prototypeLab.state.arena,u=a.units[0],hp=u.hp,action=u.action;a.hit(u,a.units[1],45);return {sameAction:u.action===action,hpLost:hp-u.hp,stagger:u.stagger,knockdown:u.knockdown,impulse:Math.hypot(u.ix,u.iy),state:prototypeLab.sample.state};});
+assert.equal(report.chargeProtection.sameAction,true);assert.equal(report.chargeProtection.hpLost,45);assert.equal(report.chargeProtection.stagger,0);assert.equal(report.chargeProtection.knockdown,0);assert.equal(report.chargeProtection.impulse,0);assert.equal(report.chargeProtection.state,'charge');
+await page.clock.runFor(100);assert.match(await page.locator('#anticipation-status').textContent(),/Charged/);
+addCheck('Restart changes the actual team composition; charged-strike control survives impact while taking damage, with visible anticipation levels');
+await page.locator('[data-scene="battle"]').click();await page.locator('#play-pause').click();
 await page.clock.runFor(8500);
 const liveMetrics=await page.evaluate(()=>({...prototypeLab.state.arena.metrics}));assert.ok(liveMetrics.hits>0&&liveMetrics.rolls>0&&liveMetrics.projectiles>0);
 await page.screenshot({path:'playtest-artifacts/prototype-battle.png',fullPage:true});report.screenshots.push('prototype-battle.png');

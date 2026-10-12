@@ -19,7 +19,19 @@ for(const spec of PROTOTYPE_CHARACTERS){if(['elf','caster'].includes(spec.id))sp
 export const HERO_IDS=['knight','orc','elf','caster','fox'];
 export const circuitCenter=i=>({x:230+(i%3)*270,y:205+Math.floor(i/3)*225});
 for(const spec of PROTOTYPE_CHARACTERS)spec.sprint=Math.round(spec.run*(spec.id==='wolf'?1.4:spec.id==='orc'?1.3:1.35));
-export const ANIMATION_STATES=['idle','walk','run','sprint','turn','attack','cast','dash','dodge','hit','stagger','knockdown','getup','stop','death'];
+export const ANIMATION_STATES=['idle','walk','run','sprint','turn','attack','slash','charge','cast','dash','dodge','hit','stagger','knockdown','getup','stop','death'];
+export const ANTICIPATION_LEVELS={1:{name:'Quick',color:'#e7d39d'},2:{name:'Heavy',color:'#eea96e'},3:{name:'Charged · uninterruptible',color:'#aee8ef'}};
+export const TEAM_SIZE=6;
+let previousComposition='';
+function seededRandom(seed){let n=seed>>>0;return ()=>{n=(n+0x6d2b79f5)>>>0;let t=Math.imul(n^(n>>>15),1|n);t^=t+Math.imul(t^(t>>>7),61|t);return ((t^(t>>>14))>>>0)/4294967296;};}
+export function battleRosters(seed){
+  const random=seededRandom(seed),shuffle=values=>{const a=values.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+  return [0,1].map(()=>{
+    const melee=shuffle(PROTOTYPE_CHARACTERS.filter(s=>!s.ranged)),ranged=shuffle(PROTOTYPE_CHARACTERS.filter(s=>s.ranged));
+    const chosen=[...melee.slice(0,2),...ranged.slice(0,2)],remaining=shuffle([...melee.slice(2),...ranged.slice(2)]);
+    return shuffle([...chosen,...remaining.slice(0,TEAM_SIZE-chosen.length)]).map(s=>s.id);
+  });
+}
 export const ARENA_LIMITS={left:70,right:930,top:110,bottom:805};
 export const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
 export const distance=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
@@ -38,17 +50,18 @@ export function makePrototypeUnit(id,side=0,index=0,x=200,y=300){
     gait:0.25,travel:0,moving:0,runBlend:0,sprintBlend:0,acceleration:0,sprintRequested:false,sprintActive:false,sprintExhausted:false,moveFacing:side?Math.PI:0,aimFacing:null,action:null,actionSerial:0,attackCooldown:0.25+index*0.12,
     stamina:100,poise:0,stagger:0,hitTime:0,roll:null,dodgeCooldown:0.7+index*0.1,
     deathTime:0,knockdown:0,getup:0,stopTime:0,turnTime:0,turnCooldown:0,turning:0,target:null,manualUntil:0,order:null,intention:'ready',
-    hits:0,misses:0,damageDealt:0,dodges:0,interrupts:0,lastState:'idle'};
+    attackCount:0,chargeRequested:false,hits:0,misses:0,damageDealt:0,dodges:0,interrupts:0,lastState:'idle'};
 }
 export function actionProgress(u){return u.action?clamp(u.action.elapsed/u.action.duration,0,1):0;}
 export function animationState(u){
   if(u.hp<=0)return 'death';
   if(u.knockdown>0)return 'knockdown';
   if(u.getup>0)return 'getup';
+  if(u.action?.charged)return 'charge';
   if(u.stagger>0)return 'stagger';
   if(u.hitTime>0)return 'hit';
   if(u.roll)return u.roll.kind;
-  if(u.action)return u.casts?'cast':'attack';
+  if(u.action)return u.casts?'cast':u.action.style==='side'?'slash':'attack';
   if(u.stopTime>0)return 'stop';
   if(u.turnTime>0)return 'turn';
   if(u.sprintBlend>0.35)return 'sprint';
@@ -62,14 +75,21 @@ export function meleeConnects(source,target,angle,reach,arc=0.68){
   return d<=reach+target.radius&&d>0&&(dx*Math.cos(angle)+dy*Math.sin(angle))/d>=Math.cos(arc+Math.asin(Math.min(0.6,target.radius/d)));
 }
 export class PrototypeArena {
-  constructor(mode='battle'){
+  constructor(mode='battle',options={}){
     this.mode=mode;this.locomotion='auto';this.time=0;this.accumulator=0;this.alpha=0;this.done=false;this.winner=null;
     this.units=[];this.projectiles=[];this.particles=[];this.effects=[];this.audio=[];this.events=[];
-    this.shake=0;this.serial=0;this.metrics={hits:0,misses:0,rolls:0,avoided:0,interrupts:0,projectiles:0,contacts:0,knockouts:0};
+    this.shake=0;this.serial=0;this.metrics={hits:0,misses:0,rolls:0,avoided:0,interrupts:0,projectiles:0,contacts:0,knockouts:0,charged:0,armorResists:0};
+    this.seed=options.seed??Math.floor(Math.random()*4294967296);
+    this.rosters=mode==='battle'?battleRosters(this.seed):[PROTOTYPE_CHARACTERS.map(s=>s.id)];
+    if(mode==='battle'&&options.seed===undefined){
+      const composition=()=>this.rosters.map(ids=>ids.slice().sort().join(',')).join('|');
+      while(composition()===previousComposition){this.seed=(this.seed+1)>>>0;this.rosters=battleRosters(this.seed);}
+      previousComposition=composition();
+    }
     for(let side=0;side<(mode==='battle'?2:1);side++)
-      PROTOTYPE_CHARACTERS.forEach((s,i)=>{
-        const x=mode==='battle'?(side?760:240)+(Math.floor(i/3)*(side?-65:65)):circuitCenter(i).x;
-        const y=mode==='battle'?170+(i%3)*210:circuitCenter(i).y;
+      this.rosters[side].forEach((id,i)=>{
+        const s=PROTOTYPE_BY_ID[id],x=mode==='battle'?(side?760:240)+(Math.floor(i/3)*(side?-65:65)):circuitCenter(i).x;
+        const y=mode==='battle'?205+(i%3)*200:circuitCenter(i).y;
         const u=makePrototypeUnit(s.id,side,i,x,y);
         if(mode==='movement'){
           u.trackPhase=i*0.4;u.x=circuitCenter(i).x+Math.cos(u.trackPhase)*45;u.y=circuitCenter(i).y+Math.sin(u.trackPhase)*90;u.px=u.x;u.py=u.y;
@@ -102,15 +122,25 @@ export class PrototypeArena {
     if(Math.hypot(u.vx,u.vy)>30&&Math.abs(angleDelta(u.moveFacing,Math.atan2(point.y-u.y,point.x-u.x)))>0.7){u.turnTime=0.32;u.turnCooldown=0.5;}
     u.order={x:clamp(point.x,85,915),y:clamp(point.y,130,785)};u.manualUntil=this.time+6;return true;
   }
-  attack(u,target){
-    if(!u||!target||u.hp<=0||target.hp<=0||u.action||u.roll||u.stagger>0||u.knockdown>0||u.getup>0||u.stamina<10)return false;
+  attack(u,target,options={}){
+    const charged=Boolean(!u?.ranged&&(options.charged??(u?.chargeRequested||((u?.attackCount+1)%3===0)))),cost=charged?28:10;
+    if(!u||!target||u.hp<=0||target.hp<=0||u.action||u.roll||u.stagger>0||u.knockdown>0||u.getup>0||u.stamina<cost)return false;
     const angle=Math.atan2(target.y-u.y,target.x-u.x);
     u.aimFacing=angle;
     if(Math.abs(angleDelta(u.facing,angle))>0.5)return false;
     u.transitionFoot={gait:u.gait,moving:u.moving,runBlend:u.runBlend,sprintBlend:u.sprintBlend,time:this.time};
-    u.action={elapsed:0,windup:u.windup,duration:u.windup+u.recovery,angle,aim:{x:target.x,y:target.y},targetUid:target.uid,targetDodges:target.dodges,released:false,impactHold:0,hitUids:[],key:++this.serial};
-    u.stamina-=10;u.intention=u.casts?'channeling':u.ranged?'aiming a projectile':'committed strike';
-    this.event('windup',u,{targetUid:target.uid,angle});return true;
+    u.attackCount++;u.chargeRequested=false;
+    const style=['knight','orc'].includes(u.id)&&u.attackCount%2===0?'side':'overhead',windup=charged?Math.max(0.85,u.windup*2.4):u.windup,recovery=u.recovery*(charged?1.15:1),anticipation=charged?3:u.id==='orc'||u.casts||u.id==='mech'?2:1;
+    u.action={elapsed:0,windup,duration:windup+recovery,style,charged,anticipation,damage:u.damage*(charged?1.7:1),angle,aim:{x:target.x,y:target.y},targetUid:target.uid,targetDodges:target.dodges,released:false,impactHold:0,hitUids:[],key:++this.serial};
+    u.stamina-=cost;u.intention=charged?'bracing an uninterruptible charged strike':u.casts?'channeling':u.ranged?'aiming a projectile':'committed '+style+' strike';
+    if(charged)this.metrics.charged++;
+    this.event('windup',u,{targetUid:target.uid,angle,style,charged,anticipation});return true;
+  }
+  chargeAttack(u,target){
+    if(!u||!target||u.ranged||u.hp<=0||target.hp<=0||u.action||u.stamina<28)return false;
+    u.chargeRequested=true;u.aimFacing=Math.atan2(target.y-u.y,target.x-u.x);
+    if(distance(u,target)<=u.reach)this.attack(u,target,{charged:true});
+    return true;
   }
   roll(u,angle,kind='dodge'){
     if(!u||u.hp<=0||u.action||u.roll||u.stagger>0||u.knockdown>0||u.getup>0||u.stamina<30||u.dodgeCooldown>0)return false;
@@ -120,20 +150,20 @@ export class PrototypeArena {
   hit(target,source,damage,kind='melee',contactHeight=null,contactPoint=null){
     if(target.hp<=0)return;
     const dx=target.x-source.x,dy=target.y-source.y,d=Math.hypot(dx,dy)||1;
-    const path=kind==='melee'?weaponContactPath(source.id,0):null;
+    const protectedCharge=Boolean(target.action?.charged),path=kind==='melee'?weaponContactPath(source.id,0,{swing:source.action?.style,charged:source.action?.charged}):null;
     const arc=path?path.slice(1).reduce((sum,p,i)=>sum+Math.hypot(p.x-path[i].x,p.y-path[i].y),0):0;
     const weaponMass=source.id==='orc'?3.4:source.id==='knight'?1.5:1;
     const impulse=kind==='spell'?65:kind==='melee'?clamp(arc/(source.windup*0.28)*weaponMass*0.035,75,230):80;
     const force=impulse/target.mass;
     if(kind==='melee'&&source.action)source.action.impactHold=source.id==='orc'?0.055:0.032;
-    target.ix+=dx/d*force;target.iy+=dy/d*force;target.hitTime=0.13;
-    target.poise+=damage*(source.id==='orc'?1.05:0.62);
+    if(protectedCharge){target.poise=0;target.hitTime=0;this.metrics.armorResists++;this.event('armor',target,{sourceUid:source.uid});}
+    else{target.ix+=dx/d*force;target.iy+=dy/d*force;target.hitTime=0.13;target.poise+=damage*(source.id==='orc'?1.05:0.62);}
     if(target.poise>50+target.mass*15){
       target.poise=0;target.stagger=0.46;
       if(target.action&&!target.action.released){target.action=null;target.interrupts++;this.metrics.interrupts++;this.event('interrupt',target,{sourceUid:source.uid});}
       target.roll=null;
     }
-    if(kind==='melee'&&source.mass>2&&damage>=45&&target.stagger>0&&target.hp>damage){target.knockdown=0.65;target.getup=0;target.ragdoll=createRagdoll(target.id,characterRig(target.id,'hit',0.25),impactImpulse(target));target.action=null;target.roll=null;this.event('knockdown',target,{sourceUid:source.uid});}
+    if(!protectedCharge&&kind==='melee'&&source.mass>2&&damage>=45&&target.stagger>0&&target.hp>damage){target.knockdown=0.65;target.getup=0;target.ragdoll=createRagdoll(target.id,characterRig(target.id,'hit',0.25),impactImpulse(target));target.action=null;target.roll=null;this.event('knockdown',target,{sourceUid:source.uid});}
     target.hp=Math.max(0,target.hp-damage);source.hits++;source.damageDealt+=damage;this.metrics.hits++;
     this.event('contact',source,{targetUid:target.uid,damage,kind,point:contactPoint,targetPosition:{x:target.x,y:target.y,radius:target.radius}});
     this.effects.push({kind:'impact',x:contactPoint?.x??target.x,y:contactPoint?.y??target.y,z:contactHeight??(source.id==='wolf'?28:52),age:0,duration:0.26,color:source.color,heavy:source.id==='orc'});
@@ -149,7 +179,7 @@ export class PrototypeArena {
   }
   swingContact(u,from,to){
     const a=u.action;if(!a||u.ranged||to<0.72||from>=1)return;
-    const before=weaponTipAt(u.id,Math.max(0.72,from),a.angle),after=weaponTipAt(u.id,Math.min(1,to),a.angle);
+    const options={swing:a.style,charged:a.charged,anticipation:a.anticipation},before=weaponTipAt(u.id,Math.max(0.72,from),a.angle,options),after=weaponTipAt(u.id,Math.min(1,to),a.angle,options);
     const start={x:u.x+before.x,y:u.y+before.y},end={x:u.x+after.x,y:u.y+after.y},limit=u.id==='orc'?2:1;
     for(const target of this.living(1-u.side)){
       if(a.hitUids.length>=limit)break;
@@ -157,7 +187,7 @@ export class PrototypeArena {
       const fraction=sweepCircle(start,end,target,target.radius+(u.id==='orc'?8:4));
       if(fraction===null)continue;
       const contact={x:start.x+(end.x-start.x)*fraction,y:start.y+(end.y-start.y)*fraction,z:before.z+(after.z-before.z)*fraction};
-      a.hitUids.push(target.uid);this.hit(target,u,u.damage,'melee',contact.z,contact);
+      a.hitUids.push(target.uid);this.hit(target,u,a.damage,'melee',contact.z,contact);
     }
   }
   release(u){

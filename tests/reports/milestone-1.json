@@ -1,11 +1,12 @@
 {
   "checks": [
     "Opening scene shows eight views side by side; all nine characters have eight distinct sprites at one fixed pose phase, with native 64\u00d764 cells; clicking a view opens its close inspection",
-    "Nine complete character portraits and an eighteen-body scene; pause and frame stepping preserve simulation control",
+    "Randomized teams have six creatures each; cards match the lineup, and pause/frame stepping preserve simulation control",
     "Selecting a character and clicking ground produces actual movement in the physical scene",
     "All nine locomotion profiles travel around the circuits and turn through all eight facings; speed changes work",
     "Walk/run/sprint pace controls, selected sprint toggle, Shift hold/release, acceleration, stride blending and stamina recovery work",
-    "Eight directional views and fifteen animation states are inspectable, including a close view and death",
+    "Eight directional views and seventeen animation states are inspectable, including a close view and death",
+    "Restart changes the actual team composition; charged-strike control survives impact while taking damage, with visible anticipation levels",
     "Rendered sparring resolves with physical hits, projectile travel, rolls and deaths; optional audio toggles",
     "390px mobile layout has no horizontal overflow and retains scene and character controls",
     "Standalone HTML runs combat and pose inspection with zero external requests"
@@ -52,6 +53,24 @@
     "checks": 18048,
     "gaps": []
   },
+  "battleRosters": [
+    [
+      "spider",
+      "fox",
+      "wolf",
+      "jelly",
+      "knight",
+      "elf"
+    ],
+    [
+      "jelly",
+      "spider",
+      "fox",
+      "knight",
+      "mech",
+      "elf"
+    ]
+  ],
   "movementDirectionFrames": {
     "knight": 8,
     "orc": 8,
@@ -63,76 +82,86 @@
     "spider": 8,
     "jelly": 8
   },
-  "rigVersion": 6,
+  "rigVersion": 7,
   "sprint": [
     {
       "id": "knight",
       "active": true,
-      "blend": 0.012243919970661663,
+      "blend": 0.010436947914613698,
       "stamina": 59.99999999999904
     },
     {
       "id": "orc",
       "active": true,
-      "blend": 1.6824361519855407e-05,
+      "blend": 1.4507417254541237e-05,
       "stamina": 59.99999999999904
     },
     {
       "id": "elf",
       "active": true,
-      "blend": 0.13350653496723608,
+      "blend": 0.13477674770291975,
       "stamina": 59.99999999999904
     },
     {
       "id": "caster",
       "active": true,
-      "blend": 0.861789231392788,
+      "blend": 0.859172226323673,
       "stamina": 59.99999999999904
     },
     {
       "id": "wolf",
       "active": true,
-      "blend": 0.013430796263974426,
+      "blend": 0.011632924922549595,
       "stamina": 59.99999999999904
     },
     {
       "id": "fox",
       "active": true,
-      "blend": 0.11413044342762386,
+      "blend": 0.10886674699256639,
       "stamina": 59.99999999999904
     },
     {
       "id": "mech",
       "active": true,
-      "blend": 0.0003264550097892008,
+      "blend": 0.00029448163326231496,
       "stamina": 59.99999999999904
     },
     {
       "id": "spider",
       "active": true,
-      "blend": 0.27080433923105995,
+      "blend": 0.29824484957507563,
       "stamina": 59.99999999999904
     },
     {
       "id": "jelly",
       "active": true,
-      "blend": 0.6911839803561467,
+      "blend": 0.7097952548213369,
       "stamina": 59.99999999999904
     }
   ],
   "directionFrames": 8,
-  "stateFrames": 14,
+  "stateFrames": 16,
+  "chargeProtection": {
+    "sameAction": true,
+    "hpLost": 45,
+    "stagger": 0,
+    "knockdown": 0,
+    "impulse": 0,
+    "state": "charge"
+  },
   "battle": {
-    "time": 49.49999999999783,
+    "time": 47.48333333333128,
     "metrics": {
-      "hits": 148,
-      "misses": 81,
-      "rolls": 91,
-      "avoided": 47,
-      "interrupts": 1,
-      "projectiles": 142,
-      "contacts": 8592,
-      "knockouts": 12
+      "hits": 84,
+      "misses": 62,
+      "rolls": 66,
+      "avoided": 44,
+      "interrupts": 0,
+      "projectiles": 97,
+      "contacts": 2509,
+      "knockouts": 7,
+      "charged": 15,
+      "armorResists": 7
     },
     "cache": {
       "frames": 192,
@@ -140,7 +169,7 @@
       "sourceReady": true,
       "frameSize": 64,
       "rasterScale": 1,
-      "rigVersion": 6,
+      "rigVersion": 7,
       "directionalArt": {
         "columns": 8,
         "characters": 9,
@@ -164,7 +193,7 @@
         "antialias": false,
         "facings": 8,
         "arenaPasses": 1,
-        "drawCalls": 18
+        "drawCalls": 12
       }
     }
   },
@@ -175,14 +204,14 @@
     "examples": 12
   },
   "rules": {
-    "passed": 111,
+    "passed": 118,
     "failed": 0,
-    "prototypeChecks": 44
+    "prototypeChecks": 51
   },
   "preview": {
     "file": "public/prototype-preview.mp4",
-    "bytes": 9887189,
-    "sha256": "67302dec67f0e6f7a6ebfd8828a5aa35aa06551adee211fd96655a313676f2b3",
+    "bytes": 9033714,
+    "sha256": "9e9dfcd062737a8cd9678d72cad0608005b020ac6ec2b711407bcf73c071c7a5",
     "durationSeconds": 60,
     "fps": 30,
     "width": 1002,
@@ -191,8 +220,8 @@
   },
   "standalone": {
     "file": "Starfall-Training-Glade.html",
-    "bytes": 4880940,
-    "sha256": "2968a009f1583a57f510a6b040a465890115be9443cb12cfed4c6a864317b941"
+    "bytes": 4895321,
+    "sha256": "f23dc2085950bc483cbb8351f268c8a61ea4353c322c54a987d195f9e18273b5"
   },
   "art": {
     "style": "Original native 64x64 pixel chibi",
@@ -215,7 +244,7 @@
     ],
     "sampling": "nearest; uniform 3x world grid, 2x focus zoom",
     "binarySpriteAlpha": true,
-    "exportedCells": 8640,
+    "exportedCells": 9792,
     "clippedExportCells": 0,
     "creatures": {
       "heroes": [
@@ -242,9 +271,9 @@
     "resourceValidationPassed": true,
     "demoStartupPassed": true,
     "actors": 9,
-    "animationsPerActor": 120,
-    "animations": 1080,
-    "frames": 8640,
+    "animationsPerActor": 136,
+    "animations": 1224,
+    "frames": 9792,
     "spriteCell": [
       64,
       64
@@ -255,12 +284,39 @@
     ],
     "project": "godot-sprites/project.godot",
     "archive": {
-      "file": "playtest-artifacts/Starfall-Godot-Sprites-V6.zip",
-      "bytes": 6838988,
-      "sha256": "90035ba17ea0c656da6282c0ff536a9b36cfb9d0f3e9a461069e4255b9fffbef"
+      "file": "playtest-artifacts/Starfall-Godot-Sprites-V7.zip",
+      "bytes": 7042349,
+      "sha256": "eb2c61b2a82ee6f7d1a2b99f9cabeb8362bb87b2ea057a21b03573958253bb90"
     },
     "physicsScope": "Exported falls are baked from the physical solver. Live particle and cloth simulation run in the browser prototype; the Godot project demonstrates sprite animations and movement."
   },
-  "scope": "Native Pixel v6 movement prototype: nine anatomies, shorter limbs, distance-driven run/sprint, cape springs, stepped turns, fast braking, physical dodges, gravity/constraint/floor ragdolls, heavy-hit knockdown and get-up transitions. Five hero four-view showcase and twelve animation examples. Main six-creature expedition integration remains a later milestone. These checks do not establish human playtime or 9/10 visual/fun scores.",
-  "offlineValidation": "Exact embedded HTML served as one intercepted document, with every other request blocked; managed browser file navigation is unavailable."
+  "scope": "Native Pixel v7 movement prototype: per-facing identities, depth-aware right-hand gear and rigid two-hand axe grips, flat-paw canine gait, randomized teams of six, alternating overhead/side melee, three anticipation tiers and damage-vulnerable uninterruptible charged strikes; nine anatomies, shorter limbs, distance-driven run/sprint, cape springs, stepped turns, fast braking, physical dodges, gravity/constraint/floor ragdolls, heavy-hit knockdown and get-up transitions. Five hero four-view showcase and twelve animation examples. Main six-creature expedition integration remains a later milestone. These checks do not establish human playtime or 9/10 visual/fun scores.",
+  "offlineValidation": "Exact embedded HTML served as one intercepted document, with every other request blocked; managed browser file navigation is unavailable.",
+  "battleSimulation": {
+    "seeds": 50,
+    "completed": 50,
+    "simulatedSeconds": 2511.0999999999353,
+    "maxBattleSeconds": 87.0000000000153,
+    "chargedStrikes": 931,
+    "resistedImpacts": 541,
+    "evidence": {
+      "file": "tests/reports/prototype-v7-simulations.json",
+      "bytes": 33028,
+      "sha256": "0f96ee205edfe651f20bf933d62e817f5740a4f6632f769156efda930f83549a"
+    }
+  },
+  "combatContract": {
+    "teamSize": 6,
+    "totalBattleCreatures": 12,
+    "anticipationLevels": 3,
+    "chargeCost": 28,
+    "chargeDamageMultiplier": 1.7,
+    "chargeStillTakesDamage": true,
+    "oneHandedGrip": "anatomical right",
+    "axeHands": 2,
+    "alternatingStyles": [
+      "overhead",
+      "side"
+    ]
+  }
 }
