@@ -1,3 +1,5 @@
+import {finishNativeVisuals} from './native-combat.js';
+import {NATIVE_STARTERS,NATIVE_EVOLUTIONS,NATIVE_SPECIES} from './native-content.js';
 import {
   ELEMENTS,
   SPECIES,
@@ -98,6 +100,7 @@ let saved;
 try {
   saved = JSON.parse(localStorage.getItem(STORE));
 } catch {}
+if(saved?.version===1){try{if(!localStorage.getItem(STORE+".backup-v1"))localStorage.setItem(STORE+".backup-v1",JSON.stringify(saved));}catch{}}
 let profile = {
   owned: [...STARTERS],
   runs: 1,
@@ -116,7 +119,7 @@ let profile = {
 if (profile.victories > 0)
   profile.chaosUnlocked = Math.max(1, profile.chaosUnlocked || 0);
 profile.owned = [
-  ...new Set([...STARTERS, ...profile.owned.filter((id) => BY_ID[id])]),
+  ...new Set([...STARTERS, ...NATIVE_STARTERS, ...profile.owned.filter((id) => BY_ID[id])]),
 ];
 let run,
   phase,
@@ -132,7 +135,7 @@ let run,
   shopStock = null,
   eventIndex = 0,
   filter = "all",
-  starterSelection = [...STARTERS],
+  starterSelection = [...NATIVE_STARTERS],
   speed = 1,
   paused = false,
   canvas = null,
@@ -168,7 +171,7 @@ if (
   shopStock = saved.shopStock;
   eventIndex = saved.eventIndex || 0;
   if (phase === "map") viewName = "map";
-} else freshRun(STARTERS, false);
+} else freshRun(NATIVE_STARTERS, false);
 run.inventory ??= [];
 run.fieldHospital ??= 0;
 run.fallen ??= [];
@@ -203,7 +206,7 @@ function save() {
     localStorage.setItem(
       STORE,
       JSON.stringify({
-        version: 1,
+        version: 2,
         profile,
         run: data,
         phase,
@@ -273,8 +276,11 @@ function render() {
     resizeCanvas();
   }
   if (viewName === "arena") bindDrag();
+  if(ctx&&canvas)renderBattle(ctx,canvas.width,canvas.height,battle,Math.min(run.planet,2),performance.now()/1000,run.team,foes||[]);
 }
 function updateHeader() {
+  document.body.classList.toggle("native-expedition",!!run.native);
+  const version=document.querySelector(".local-label");if(version)version.innerHTML="<i></i> "+(run.native?"NATIVE EXPEDITION V8":"LOCAL SAVE");
   const p = PLANETS[Math.min(run.planet, 2)];
   $("#run-number").textContent = String(profile.runs).padStart(3, "0");
   $("#collection-count").textContent = profile.owned.length;
@@ -1148,7 +1154,7 @@ function openStarters(reset = true) {
     return;
   }
   if (reset) {
-    starterSelection = [...STARTERS];
+    starterSelection = [...NATIVE_STARTERS];
     selectedDifficulty = run.difficulty || "standard";
     selectedChaos = Math.max(
       1,
@@ -1642,11 +1648,13 @@ function frame(now) {
       for (const event of events) soundscape.event(event);
     } else battle.audioEvents = [];
   }
-  if (battle?.done && !paused)
+  if (battle?.done && !paused) {
+    finishNativeVisuals(battle,dt);
     battle.finishedVisualTime = Math.min(
       2,
       (battle.finishedVisualTime || 0) + dt,
     );
+  }
   if (ctx && canvas)
     renderBattle(
       ctx,

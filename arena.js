@@ -9,7 +9,7 @@ export function bodyProperties(species, unit = {}) {
     radius: unit.boss ? 29 : heavy ? 22 : 17,
     mass: unit.boss
       ? 5.5
-      : heavy
+      : species.nativeRig ? ({knight:1.9,orc:2.6,elf:.8,caster:1,wolf:1.15,fox:.9,mech:3.4,spider:.7,jelly:.55}[species.nativeRig]) : heavy
         ? 2.2
         : species.role === "Striker"
           ? 1.2
@@ -64,8 +64,8 @@ export function strikeContains(strike, unit) {
     cosine >= Math.cos(strike.arc + Math.asin(Math.min(0.7, radius / distance)))
   );
 }
-export function confineBody(unit) {
-  const b = ARENA_BOUNDS,
+export function confineBody(unit, bounds = ARENA_BOUNDS) {
+  const b = bounds,
     r = unit.radius || 17;
   const x = limit(unit.x, b.left + r, b.right - r),
     y = limit(unit.y, b.top + r, b.bottom - r);
@@ -80,7 +80,7 @@ export function confineBody(unit) {
   unit.x = x;
   unit.y = y;
 }
-export function separateBodies(units) {
+export function separateBodies(units, bounds = ARENA_BOUNDS) {
   const alive = units.filter((u) => u.hp > 0 && !u.captured);
   let contacts = 0;
   for (let pass = 0; pass < 4; pass++) {
@@ -113,8 +113,8 @@ export function separateBodies(units) {
           b.velocityX = (b.velocityX || 0) + nx * impulse * wb;
           b.velocityY = (b.velocityY || 0) + ny * impulse * wb;
         }
-        confineBody(a);
-        confineBody(b);
+        confineBody(a, bounds);
+        confineBody(b, bounds);
       }
   }
   return contacts;

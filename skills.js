@@ -1,3 +1,4 @@
+import { NATIVE_ACTIVE_SKILLS, NATIVE_AUTO_SKILLS } from './native-content.js';
 import { EXPANSION_ACTIVE_SKILLS, EXPANSION_AUTO_SKILLS } from "./roster.js";
 // 128 abilities: 60 signature auto-attacks + 68 active cooldown skills.
 export const ACTIVE_SKILLS = [
@@ -476,7 +477,7 @@ const autoData = [
     "A thin pressure jet pierces the enemy line.",
   ],
 ];
-ACTIVE_SKILLS.push(...EXPANSION_ACTIVE_SKILLS);
+ACTIVE_SKILLS.push(...EXPANSION_ACTIVE_SKILLS, ...NATIVE_ACTIVE_SKILLS);
 export const AUTO_SKILLS = autoData.map(
   ([species, name, kind, params, desc]) => ({
     id: "auto-" + species,
@@ -489,7 +490,7 @@ export const AUTO_SKILLS = autoData.map(
     ...params,
   }),
 );
-AUTO_SKILLS.push(...EXPANSION_AUTO_SKILLS);
+AUTO_SKILLS.push(...EXPANSION_AUTO_SKILLS, ...NATIVE_AUTO_SKILLS);
 export const SKILLS = Object.fromEntries(
   [...ACTIVE_SKILLS, ...AUTO_SKILLS].map((s) => [s.id, s]),
 );

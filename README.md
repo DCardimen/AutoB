@@ -1,6 +1,8 @@
-# Starfall Menagerie · Physical Arena Update 0.4.0
+# Starfall Menagerie · Native Expedition v8
 
 A single-player creature-collecting roguelike autobattler with physical arena combat. Explore three planets with six companions, modify individual abilities with support gems, capture permanent starters, and climb twenty Chaos tiers.
+
+**Native Expedition v8 is playable in Starfall-Menagerie.html.** Start a New expedition to use the native pixel roster; existing collections and legacy runs remain compatible. Nine native families, 146 abilities and the native physical renderer are connected to skills, gems, relics, captures, evolution and all three planets. See [native expedition notes](NATIVE-EXPEDITION-V8.md) and [continuation checkpoints](CONTINUATION.md).
 
 The next overhaul follows [ROADMAP.md](ROADMAP.md), with eleven playable milestones covering reference-inspired directional animation, a broader fantasy roster, the sixty proposed gameplay improvements, and player testing. [Iteration 1](MILESTONE-1.md) now has a playable nine-body movement prototype: open **Starfall-Training-Glade.html**, or use the Training Glade link in the game footer. Its visual direction awaits review; later roadmap items remain planned.
 

@@ -1,6 +1,6 @@
 # Starfall Menagerie overhaul roadmap
 
-Status: iteration 1 has a playable Native Pixel v6 implementation with nine anatomies; its visual direction awaits user review before roster expansion. Iterations 2–11 remain planned.
+Status: Native Pixel v7 is accepted as sufficient for the current gameplay pass. Native Expedition v8 integrates the nine finished families with the full expedition. A legal UI campaign clears all three planets. Representative portions of iterations 2, 3 and 5 are implemented; tactical refinement and the remaining roadmap continue. See NATIVE-EXPEDITION-V8.md and CONTINUATION.md.
 
 ## Starting point
 

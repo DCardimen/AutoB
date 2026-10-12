@@ -1,3 +1,4 @@
+import { NATIVE_SPECIES, NATIVE_EVOLUTIONS } from './native-content.js';
 // Shared design data. Rules, scouting, tooltips, and reports use the same definitions.
 export const POLICIES = {
   adaptive: {
@@ -154,11 +155,13 @@ Object.assign(CREATURE_TRAITS, {
   trenchfang: "duelist",
   leviacrown: "marksman",
 });
+Object.assign(CREATURE_TRAITS,Object.fromEntries(NATIVE_SPECIES.map(s=>[s.id,s.trait])));
 export function traitFor(c) {
   return TRAITS[CREATURE_TRAITS[c.id] || "battery"];
 }
 export function evolutionMechanic(c, role, path = c.evolutionPath) {
-  return (
+  const family = c.evolution>0 ? NATIVE_EVOLUTIONS[c.id]?.[path] : null;
+  return (family ? family.name+": "+family.desc+" "+({wild:"Wild role transformation also applies.",warden:"Warden role transformation also applies."}[path]) : "") || (
     {
       "Guardian-wild":
         "Ravager: signature casts grant 5s of 30% retaliation; every hit while shielded exposes its target.",

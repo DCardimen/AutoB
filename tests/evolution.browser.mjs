@@ -56,7 +56,7 @@ await page.addInitScript(
 );
 await page.goto((process.env.BASE_URL || "http://127.0.0.1:3000"), { waitUntil: "networkidle" });
 await page.locator('[data-view="collection"]').click();
-assert.equal(await page.locator("[data-codex]").count(), 60);
+assert.equal(await page.locator("[data-codex]").count(), 69);
 await page.locator('[data-view="arena"]').click();
 await page.locator('[data-creature="0"]').click();
 assert.equal(await page.locator(".evolution-form").count(), 3);
@@ -155,7 +155,7 @@ fs.writeFileSync(
   JSON.stringify(
     {
       checks: [
-        "60 codex entries",
+        "69 codex entries",
         "Wild evolution and ascension",
         "Warden evolution",
         "new sockets and preserved auto-attack gem link",

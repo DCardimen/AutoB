@@ -26,7 +26,7 @@ class PixelBrush{
 }
 export function spritePoint(p,angle){const s=projectRig(p,angle);return {x:PIVOT.x+s.x/PIXEL_WORLD,y:PIVOT.y+s.y/PIXEL_WORLD,depth:s.depth};}
 export function paintCharacterPixels(id,rig,angle){
- let b=new PixelBrush();const p=PIXEL_PALETTES[id],dir=((Math.round(angle/(Math.PI/4))%8)+8)%8,front=dir===2,back=!FACE_VIEWS[dir].eyes.length,side=FACE_VIEWS[dir].sign,at=q=>spritePoint(q,angle);
+ let b=new PixelBrush();const p=rig.palette||PIXEL_PALETTES[id],dir=((Math.round(angle/(Math.PI/4))%8)+8)%8,front=dir===2,back=!FACE_VIEWS[dir].eyes.length,side=FACE_VIEWS[dir].sign,at=q=>spritePoint(q,angle);
  const body=at(rig.body),pelvis=at(rig.pelvis),head=at(rig.head),moving=['walk','run','sprint','turn','stop'].includes(rig.state),dead=rig.death>0;
  const bind=rig.ragdoll?characterRig(id,'idle',0):null;let headRoll=0;if(bind){const h=at(bind.head),c=at(bind.body),rest=Math.atan2(h.x-c.x,-(h.y-c.y)),current=Math.atan2(head.x-body.x,-(head.y-body.y));headRoll=Math.round(Math.atan2(Math.sin(current-rest),Math.cos(current-rest))/(Math.PI/12))*(Math.PI/12);}
  if(rig.state==='idle')head.y+=Math.round(Math.sin(rig.phase*Math.PI*2)*0.7);

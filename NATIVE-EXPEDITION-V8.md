@@ -1,0 +1,15 @@
+# Native Expedition v8
+
+The accepted pixel creatures now fight in the actual expedition. Open **Starfall-Menagerie.html**. Existing runs and collections load intact; use **New expedition** to start with Aurel, Brakk, Syl, Nyra, Emberhound and Rowan. The header reads **NATIVE EXPEDITION V8** for native runs. The Training Glade remains available as the separate animation lab.
+
+Nine released native families bring the full collection to 69 families and 146 named abilities. Their signature auto-attacks and two/three cooldown skills work with existing support gems, relics, EXP, training, captures, reserves, casualty protection, shops, difficulty and Chaos. Native expedition encounter/shop pools use the finished native roster; legacy expedition encounter pools stay available. Bosses use representative native bodies while retaining their phase mechanics. The unrelated expedition.js roster draft remains untouched.
+
+Native battles use the forest courtyard, all eight facings, flat-paw dog gaits, cape springs, physical dodge displacement, and constrained death falls. A sword/axe/bite/fang connects through the animated weapon-tip sweep. Knight/orc strikes alternate side and overhead; every third basic melee strike can charge for 28 total stamina and 1.7× damage, resisting impact/stun/root while still taking damage. Arrows and bolts originate at the held weapon. Gems and relics still modify the actual hit, rather than a separate demo calculation.
+
+Each native family has two evolution choices with a distinct bonus: charged damage or cheaper charges, poise resilience, shield penetration, increased reach, movement, wider blasts, longer poison, brief roots or healing. The existing Wild/Warden role transformations also apply. Evolved sprites preserve anatomy while changing equipment/cloth color. Full bespoke evolved silhouettes remain future art work.
+
+Save schema 2 preserves all existing data and adds native run flags. A schema-1 save is backed up once under **starfall-menagerie-v1.backup-v1** before being rewritten. Captures, rewards and purchases retain their existing settlement rules. No new dependencies are needed; the standalone builder uses the pinned esbuild dependency to include all code, artwork and fonts.
+
+Validation: **125 tests pass**. A legal browser-driven native starter campaign clears all three planets with nine wins, purchases, linked gems, captures, evolved companions, persistent reloads and reset growth on a new run. The legacy fixture in the rebuilt offline HTML passes with zero external requests. Native rules checks cover blade contact/misses, linked damage, charge protection, weapon-origin projectiles, settled falls, native encounter pools and family evolution. These are technical/simulation checks, not human playtime or a fun score.
+
+Next: hold/advance/flank/escort orders, two conditional orders per creature, solid pillars that affect movement/shots, visible tactical intentions, and committed skill channels. Then add an accessible build practice encounter, early build-defining rewards and more detailed defeat analysis.

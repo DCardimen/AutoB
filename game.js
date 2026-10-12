@@ -1,6 +1,9 @@
+import {NATIVE_BOUNDS,nativeSpawn,initializeNative,nativeAction,advanceNative,nativeBladePoint,nativeHeavy,nativeMuzzle} from './native-combat.js';
+import { NATIVE_SPECIES, NATIVE_STARTERS, NATIVE_POOLS, nativeEvolution } from './native-content.js';
 import { SKILLS, loadoutFor } from "./skills.js";
 import { EXPANSION_SPECIES } from "./roster.js";
 import {
+  sweepCircle,
   bodyProperties,
   movingBodyHit,
   strikeContains,
@@ -410,7 +413,7 @@ SPECIES.forEach((s, i) => {
   s.artIndex = i;
   s.evolvedName = originalEvolutionNames[i];
 });
-SPECIES.push(...EXPANSION_SPECIES);
+SPECIES.push(...EXPANSION_SPECIES, ...NATIVE_SPECIES);
 export const BY_ID = Object.fromEntries(SPECIES.map((s) => [s.id, s]));
 export const STARTERS = [
   "cinderfox",
@@ -482,7 +485,7 @@ export const PLANETS = [
   },
 ];
 // Every new family is encounterable on at least one planet and recruitable at shops.
-for (const s of EXPANSION_SPECIES) {
+for (const s of [...EXPANSION_SPECIES, ...NATIVE_SPECIES]) {
   const planet =
     s.element === "grove" || s.element === "tide"
       ? 0
@@ -1082,7 +1085,7 @@ export function stats(c, team, relics = []) {
   hp *= personal.health;
   atk *= personal.attack;
   cd *= personal.cooldown;
-  speed *= personal.speed;
+  speed *= personal.speed * (nativeEvolution(c).speed || 1);
   dodge += personal.dodge;
   return {
     hp: Math.round(hp),
@@ -1091,16 +1094,18 @@ export function stats(c, team, relics = []) {
     cdFactor: cd / SKILLS[s.id].cd,
     speed,
     dodge,
-    range: s.range,
+    range: s.range + (nativeEvolution(c).range || 0),
     personal,
   };
 }
 export function makeRun(seed = Date.now(), ids = STARTERS, options = {}) {
   const random = rng(seed),
+    native = options.native ?? ids.every(id=>!!BY_ID[id].nativeRig),
     team = ids.slice(0, 6).map((id) => creature(id));
-  while (team.length < 6) team.push(creature(STARTERS[team.length]));
+  while (team.length < 6) team.push(creature((native?NATIVE_STARTERS:STARTERS)[team.length]));
   const result = {
     seed,
+    native,
     difficulty: DIFFICULTIES[options.difficulty]
       ? options.difficulty
       : "standard",
@@ -1268,7 +1273,8 @@ export function encounter(run, type = "battle", seed = 1) {
         : run.planet === 1
           ? 3
           : 4;
-  const pool = p.pool.filter((id) => rarityRank[BY_ID[id].rarity] <= maxRank);
+  const encounterPool = run.native ? NATIVE_POOLS[run.planet] : p.pool.filter(id=>!BY_ID[id].nativeRig);
+  const pool = encounterPool.filter((id) => rarityRank[BY_ID[id].rarity] <= maxRank);
   const weights = {
     Common: 5,
     Uncommon: 4,
@@ -1286,7 +1292,7 @@ export function encounter(run, type = "battle", seed = 1) {
     return available.at(-1);
   };
   for (let i = 0; i < n; i++) {
-    const rare = p.pool.filter((id) =>
+    const rare = encounterPool.filter((id) =>
       ["Rare", "Epic", "Legendary"].includes(BY_ID[id].rarity),
     );
     const id =
@@ -1299,7 +1305,7 @@ export function encounter(run, type = "battle", seed = 1) {
                 ? pool.filter((id) => BY_ID[id].role === arch.roles[i])
                 : pool,
             );
-    const legends = p.pool.filter((id) => BY_ID[id].rarity === "Legendary");
+    const legends = encounterPool.filter((id) => BY_ID[id].rarity === "Legendary");
     const chosen =
       type === "capture" &&
       i === n - 1 &&
@@ -1395,11 +1401,11 @@ export function generateShop(run, seed) {
     relics,
     personal,
     creature: pick(
-      SPECIES.filter((s) => s.rarity !== "Legendary"),
+      SPECIES.filter((s) => s.rarity !== "Legendary" && (!run.native || s.nativeRig)),
       r,
     ).id,
     legendary: pick(
-      SPECIES.filter((s) => s.rarity === "Legendary"),
+      SPECIES.filter((s) => s.rarity === "Legendary" && (!run.native || s.nativeRig)),
       r,
     ).id,
     sold: [],
@@ -1773,6 +1779,8 @@ export function applyEvent(run, event, index) {
 export class Battle {
   constructor(run, foes, seed = 1) {
     this.run = run;
+    this.native=!!run.native;
+    this.bounds=this.native?NATIVE_BOUNDS:undefined;
     this.random = rng(seed);
     this.time = 0;
     this.accumulator = 0;
@@ -1804,6 +1812,7 @@ export class Battle {
     this.activeArchetype = foes[0]?.archetype;
     this.damageBySkill = {};
     this.metrics = {
+      chargedStrikes:0, armorResists:0, bladeContacts:0,
       dodges: 0,
       skills: 0,
       damage: 0,
@@ -1960,7 +1969,8 @@ export class Battle {
     };
     run.team.forEach((c, i) => add(c, 0, i, run.team));
     foes.forEach((c, i) => add(c, 1, i, foes));
-    for (const u of this.units) {
+    for (const [index,u] of this.units.entries()) {
+      if(this.native){const position=nativeSpawn(BY_ID[u.id],u,u.side,u.side?index-run.team.length:index);u.x=u.px=position.x;u.y=u.py=position.y;u.nativeHome={...position};initializeNative(u,BY_ID[u.id]);}
       if (
         u.side === 1 &&
         ((this.chaos >= 9 && BY_ID[u.id].role === "Guardian") ||
@@ -2058,7 +2068,7 @@ export class Battle {
   heal(target, amount, source, skillId = null, show = true, scale = 1) {
     if (!target || target.hp <= 0) return;
     const mod = skillId ? linkedSupport(source, skillId) : { healing: 1 };
-    amount *= mod.healing * scale;
+    amount *= mod.healing * scale * (nativeEvolution(source).healing||1);
     if (source.side === 0 && this.run.relics.includes("seed")) amount *= 1.35;
     const syn = source.side === 0 ? this.teamSyn : this.foeSyn;
     if (syn.grove >= 4) amount *= 1.3;
@@ -2382,7 +2392,7 @@ export class Battle {
       amount,
       source,
       skillId,
-      Math.max(m.pierce, trait === "piercer" ? 0.35 : 0),
+      Math.max(m.pierce, trait === "piercer" ? 0.35 : 0, nativeEvolution(source).pierce||0),
       kind,
     );
     target.flash = 0.12;
@@ -2439,14 +2449,14 @@ export class Battle {
       if (def.poison || m.poison || source.archetype === "venom") {
         target.poison = Math.max(
           target.poison,
-          (def.poison || m.poison || 2) +
+          (def.poison || m.poison || 2) + (nativeEvolution(source).poison||0) +
             (this.weather === "pollen" ? 1 : 0) +
             (source.side === 1 && this.chaos >= 4 ? 1 : 0),
         );
         target.poisonSource = source;
         target.poisonSkill = skillId;
       }
-      target.root = Math.max(target.root, def.root || 0, m.root || 0);
+      if(!target.nativeAction?.charged)target.root = Math.max(target.root, def.root || 0, m.root || 0, nativeEvolution(source).root||0);
       target.slow = Math.max(target.slow, def.slow || 0, m.chill || 0);
       target.exposed = Math.max(
         target.exposed,
@@ -2735,7 +2745,12 @@ export class Battle {
       length = Math.hypot(dx, dy) || 1;
     const heavy =
       def.kind === "cleave" || def.kind === "charge" || u.mass > 1.8;
-    const windup = options.windup ?? (def.auto ? (heavy ? 0.3 : 0.22) : 0.36);
+    const nativeMelee=this.native&&u.nativeActor&&!options.beam;
+    if(nativeMelee&&def.auto)u.meleeCount++;
+    const chargeCost=nativeEvolution(u).chargeCost||28;
+    const charged=nativeMelee&&def.auto&&u.meleeCount%3===0&&u.stamina>=chargeCost-8;
+    if(charged){u.stamina-=chargeCost-8;this.metrics.chargedStrikes++;}
+    const windup = charged ? 0.95 : options.windup ?? (def.auto ? (heavy ? 0.3 : 0.22) : 0.36);
     const strike = {
       key: ++this.attackSerial,
       source: u,
@@ -2756,6 +2771,7 @@ export class Battle {
         options.maxTargets ??
         (def.auto ? 1 + (def.radius ? 1 : 0) + m.targets : 1 + m.targets),
       heavy,
+      nativeMelee, charged, style:nativeHeavy(u)&&u.meleeCount%2===0?'side':'overhead',hitUids:[],
       targetRoll: target.rollCount,
       cancelled: false,
     };
@@ -2765,7 +2781,23 @@ export class Battle {
     u.attackDuration = windup + strike.recovery;
     u.attackAnim = u.attackDuration;
     u.face = strike.dx >= 0 ? 1 : -1;
+    if(nativeMelee){if(charged)strike.power*=nativeEvolution(u).chargeDamage||1.7;nativeAction(u,Math.atan2(strike.dy,strike.dx),windup,strike.recovery,{style:strike.style,charged,heavy});}
     return strike;
+  }
+  nativeContact(strike,from,to){
+    if(!strike.nativeMelee||strike.cancelled||strike.source.hp<=0||to<.72||from>=1)return;
+    const u=strike.source,begin=Math.max(.72,from),endPhase=Math.min(1,to);
+    for(let i=0;i<4;i++){
+      const start=nativeBladePoint(u,strike,begin+(endPhase-begin)*i/4),end=nativeBladePoint(u,strike,begin+(endPhase-begin)*(i+1)/4);
+      for(const victim of this.living(1-u.side)){
+        if(strike.hitUids.length>=strike.maxTargets)return;
+        if(strike.hitUids.includes(victim.uid)||distance(u,victim)>strike.reach+victim.radius+15)continue;
+        if(sweepCircle(start,end,victim,victim.radius+5)===null)continue;
+        strike.hitUids.push(victim.uid);this.metrics.bladeContacts++;
+        this.hit(victim,u.atk*strike.power,u,strike.skillId,strike.scale*(strike.hitUids.length>1?.65:1),true,'physical');
+        if(strike.heavy&&victim.hp>0){victim.bleed=Math.max(victim.bleed,3);victim.bleedSource=u;victim.bleedSkill=strike.skillId;}
+      }
+    }
   }
   registerEvade(unit, source, key) {
     if (!unit || unit.hp <= 0 || unit.lastEvadeKey === key) return;
@@ -2789,6 +2821,10 @@ export class Battle {
       ttl: 0.22,
       max: 0.22,
     });
+    if(strike.nativeMelee){
+      if(!strike.hitUids.length){this.metrics.whiffs++;this.effect(u.x+strike.dx*strike.reach,u.y+strike.dy*strike.reach,'MISS','#b9b1a0');if(strike.target?.rollCount>strike.targetRoll)this.registerEvade(strike.target,u,strike.key);}
+      u.actionId=null;return;
+    }
     const targets = this.living(1 - u.side)
       .filter((e) => strikeContains(strike, e))
       .sort((a, b) => distance(a, u) - distance(b, u))
@@ -2825,6 +2861,7 @@ export class Battle {
   }
   applyImpact(target, source, strength, heavy) {
     if (target.hp <= 0) return;
+    if(target.nativeAction?.charged){this.metrics.armorResists++;target.poise=0;target.hitAnim=0;return;}
     const dx = target.x - source.x,
       dy = target.y - source.y,
       d = Math.hypot(dx, dy) || 1;
@@ -2921,7 +2958,7 @@ export class Battle {
           y: u.y + dy * rollDistance,
         };
       let score = 0;
-      if (point.x < 80 || point.x > 920 || point.y < 115 || point.y > 435)
+      if (point.x < 80 || point.x > 920 || point.y < (this.native?130:115) || point.y > (this.native?780:435))
         score -= 600;
       for (const other of this.living(u.side))
         if (other !== u)
@@ -2992,8 +3029,9 @@ export class Battle {
       flight = Math.min(0.22, distance(u, mark) / speed);
     const tx = mark.x + (mark.velocityX || 0) * flight,
       ty = mark.y - 14 + (mark.velocityY || 0) * flight;
-    const dx = tx - u.x,
-      dy = ty - (u.y - 14),
+    const muzzle=this.native?nativeMuzzle(u,mark):{x:u.x,y:u.y-15,z:45};
+    const dx = tx - (this.native?muzzle.x:u.x),
+      dy = ty - (this.native?muzzle.y:u.y-14),
       length = Math.hypot(dx, dy) || 1;
     this.projectiles.push({
       key: ++this.attackSerial,
@@ -3004,10 +3042,12 @@ export class Battle {
       radius: def.auto ? 4 : 7,
       targetRoll: t.rollCount,
       passTime: length / speed + 0.3,
-      x: u.x,
-      y: u.y - 15,
-      prevX: u.x,
-      prevY: u.y - 15,
+      x: muzzle.x,
+      y: muzzle.y,
+      prevX: muzzle.x,
+      prevY: muzzle.y,
+      originZ:muzzle.z,
+      nativeArrow:this.native&&["elf","fox"].includes(u.nativeActor?.id),
       target: t,
       source: u,
       skillId: id,
@@ -3046,10 +3086,12 @@ export class Battle {
   cast(u, id, target, scale = 1, echo = false) {
     if (u.hp <= 0) return;
     const def = SKILLS[id],
-      m = linkedSupport(u, id),
+      m = {...linkedSupport(u, id)},
       auto = def.auto,
       t = this.castTarget(u, id, target?.hp > 0 ? target : this.target(u));
     if (!t) return;
+    m.area*=nativeEvolution(u).area||1;
+    if(u.nativeActor&&!echo)nativeAction(u,Math.atan2(t.y-u.y,t.x-u.x),auto?.16:.36,auto?.2:.3,{heavy:!auto});
     this.supportedUse(u, id, echo);
     const shieldScale =
       scale *
@@ -3898,7 +3940,7 @@ export class Battle {
           u.dashMotion = null;
         }
         const movement =
-          u.speed *
+          u.speed * (this.native&&dist>180?1.65:1) *
           (u.slow > 0 ? 0.5 : 1) *
           (u.movementBuff > 0 ? 1.3 : 1) *
           (u.stamina < 20 ? 0.7 : 1);
@@ -3913,7 +3955,7 @@ export class Battle {
       u.y += u.impulseY * dt;
       u.impulseX *= Math.exp(-dt * 9);
       u.impulseY *= Math.exp(-dt * 9);
-      confineBody(u);
+      confineBody(u,this.bounds);
       u.dustTimer -= dt;
       u.motion = Math.min(
         1,
@@ -3956,6 +3998,7 @@ export class Battle {
         u.stagger <= 0 &&
         u.stamina >= 8 &&
         dist <= u.range + 12 &&
+        (!this.native||!u.nativeActor||Math.abs(Math.atan2(Math.sin(Math.atan2(t.y-u.y,t.x-u.x)-u.facing),Math.cos(Math.atan2(t.y-u.y,t.x-u.x)-u.facing)))<0.5) &&
         u.dodgeLock <= 0 &&
         u.hp > 0
       ) {
@@ -3966,9 +4009,12 @@ export class Battle {
         this.cast(u, u.loadout.auto, t);
       }
     }
-    this.metrics.collisions += separateBodies(this.units);
+    this.metrics.collisions += separateBodies(this.units,this.bounds);
+    if(this.native)for(const u of this.units)advanceNative(u,dt,this.time);
     for (const strike of this.strikes) {
+      const previous=strike.remaining;
       strike.remaining -= dt;
+      if(strike.nativeMelee)this.nativeContact(strike,1-previous/strike.total,1-strike.remaining/strike.total);
       if (strike.remaining <= 0) this.resolveStrike(strike);
     }
     this.strikes = this.strikes.filter(
@@ -4061,7 +4107,7 @@ export class Battle {
           p.evadeRecorded = true;
           this.registerEvade(p.target, p.source, `shot-${p.key}`);
         }
-        if (p.ttl <= 0 || p.x < 25 || p.x > 975 || p.y < 45 || p.y > 490) {
+        if (p.ttl <= 0 || p.x < 25 || p.x > 975 || p.y < (this.native?80:45) || p.y > (this.native?840:490)) {
           p.dead = true;
           this.metrics.whiffs++;
         }

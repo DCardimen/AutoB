@@ -1,3 +1,4 @@
+import {nativePortrait,renderNativeBattle,drawNativeUnit} from './native-art.js';
 import { BY_ID, ELEMENTS, evolutionStage } from "./game.js";
 import {
   creaturePose,
@@ -76,6 +77,7 @@ export function drawCreature(
 ) {
   const s = BY_ID[id],
     p = PALETTE[s.element];
+  if(s.nativeRig){drawNativeUnit(c,{...unit,id,facing:unit.facing??(face>0?Math.PI/4:Math.PI*3/4)},s,x,y,time,3*size/34);return;}
   const stage = evolutionStage(unit);
   const evolvedSheet = atlases[`evolved-${s.artSheet}`];
   const spriteSheet =
@@ -907,6 +909,7 @@ export function drawCreature(
 }
 const iconCache = new Map();
 export function creatureImage(input) {
+  const native = nativePortrait(typeof input === 'string'?{id:input}:input);if(native)return native;
   const unit = typeof input === "string" ? { id: input } : input;
   const id = unit.id,
     key = `${id}:${evolutionStage(unit)}:${unit.evolutionPath || ""}`;
@@ -1154,6 +1157,7 @@ export function renderBattle(
   previewTeam,
   previewFoes,
 ) {
+  if(battle?.native||(!battle&&previewTeam.length&&previewTeam.every(u=>BY_ID[u.id].nativeRig))){renderNativeBattle(c,w,h,battle,planet,time,previewTeam,previewFoes,BY_ID);return;}
   drawArena(c, w, h, planet, time);
   c.save();
   c.scale(w / 1000, h / 560);

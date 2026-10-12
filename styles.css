@@ -3424,3 +3424,7 @@ footer i {
     flex-wrap: wrap;
   }
 }
+
+/* Native expedition uses the same courtyard proportions as the accepted lab. */
+.native-expedition .arena-viewport { aspect-ratio: 334 / 218; }
+.native-expedition #battle-canvas, .native-expedition .creature-art, .native-expedition .starter-card img { image-rendering: pixelated; }

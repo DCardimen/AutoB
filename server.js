@@ -19,6 +19,9 @@ const entryFiles = new Set([
   "/styles.css",
   "/app.js",
   "/game.js",
+  "/native-content.js",
+  "/native-combat.js",
+  "/native-art.js",
   "/art.js",
   "/skills.js",
   "/roster.js",
@@ -38,6 +41,7 @@ const entryFiles = new Set([
   "/prototype-faces.js",
   "/prototype-export.js",
   "/prototype-sprites.js",
+  "/prototype-renderer.js",
   "/Starfall-Training-Glade.html",
 ]);
 http

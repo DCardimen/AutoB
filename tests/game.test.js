@@ -30,11 +30,11 @@ import {
 } from "../game.js";
 import { ACTIVE_SKILLS, AUTO_SKILLS, SKILLS, loadoutFor } from "../skills.js";
 
-test("128 distinct abilities, a unique auto per species, and rarity-scaled active loadouts", () => {
-  assert.equal(Object.keys(SKILLS).length, 128);
-  assert.equal(AUTO_SKILLS.length, 60);
-  assert.equal(ACTIVE_SKILLS.length, 68);
-  assert.equal(new Set(Object.values(SKILLS).map((s) => s.name)).size, 128);
+test("146 distinct abilities, a unique auto per species, and rarity-scaled active loadouts", () => {
+  assert.equal(Object.keys(SKILLS).length, 146);
+  assert.equal(AUTO_SKILLS.length, 69);
+  assert.equal(ACTIVE_SKILLS.length, 77);
+  assert.equal(new Set(Object.values(SKILLS).map((s) => s.name)).size, 146);
   for (const s of SPECIES) {
     const l = loadoutFor(s);
     assert.equal(SKILLS[l.auto].species, s.id);

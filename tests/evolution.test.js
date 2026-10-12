@@ -19,10 +19,10 @@ import {
 } from "../game.js";
 import { creaturePose, spriteBone } from "../animation.js";
 
-test("all 60 families have named evolutions, atlas cells, and an encounter habitat", () => {
-  assert.equal(SPECIES.length, 60);
-  assert.equal(new Set(SPECIES.map((s) => s.id)).size, 60);
-  assert.equal(new Set(SPECIES.map((s) => s.evolvedName)).size, 60);
+test("all 69 families have named evolutions, atlas cells, and an encounter habitat", () => {
+  assert.equal(SPECIES.length, 69);
+  assert.equal(new Set(SPECIES.map((s) => s.id)).size, 69);
+  assert.equal(new Set(SPECIES.map((s) => s.evolvedName)).size, 69);
   const available = new Set(PLANETS.flatMap((p) => [...p.pool, p.boss]));
   for (const s of SPECIES) {
     assert.ok(s.evolvedName !== s.name);
