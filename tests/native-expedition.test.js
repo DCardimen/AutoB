@@ -4,7 +4,8 @@ import {NATIVE_SPECIES,NATIVE_STARTERS,NATIVE_POOLS,nativeEvolution} from '../na
 import {NATIVE_BOUNDS,nativeMuzzle,finishNativeVisuals} from '../native-combat.js';
 function fixture(id='aurel',enemy='brakk'){
  const run=makeRun(731,NATIVE_STARTERS);run.team=[creature(id,3)];const b=new Battle(run,[creature(enemy,3)],731),u=b.units[0],t=b.units[1];
- for(const [i,v]of b.units.entries()){v.x=v.px=350+i*27;v.y=v.py=400;v.attackTimer=999;v.dodgeCooldown=999;v.speed=0;for(const c of Object.values(v.cooldowns))c.remaining=999;}
+ const contactSpacing=27*u.nativeScale/.5;
+ for(const [i,v]of b.units.entries()){v.x=v.px=350+i*contactSpacing;v.y=v.py=400;v.attackTimer=999;v.dodgeCooldown=999;v.speed=0;for(const c of Object.values(v.cooldowns))c.remaining=999;}
  return {run,b,u,t};
 }
 test('native runs keep six unique starters and 29 complete native family loadouts',()=>{
@@ -29,7 +30,7 @@ test('native charged strikes withstand impact while taking damage, including let
  b.damageUnit(u,99999,t,t.loadout.auto);assert.equal(u.hp,0);
 });
 test('native projectiles start at held weapons and ragdolls keep settling after a win',()=>{
- const {b,u,t}=fixture('syl');const muzzle=nativeMuzzle(u,t);b.projectile(u,t,u.loadout.auto,1);assert.equal(b.projectiles[0].x,muzzle.x);assert.equal(b.projectiles[0].y,muzzle.y);assert.ok(b.projectiles[0].originZ>15);
+ const {b,u,t}=fixture('syl');const muzzle=nativeMuzzle(u,t);b.projectile(u,t,u.loadout.auto,1);assert.equal(b.projectiles[0].x,muzzle.x);assert.equal(b.projectiles[0].y,muzzle.y);assert.equal(b.projectiles[0].originZ,muzzle.z);assert.ok(b.projectiles[0].originZ>30*u.nativeScale);
  b.damageUnit(t,99999,u,u.loadout.auto);b.step(.04);assert.ok(b.done);finishNativeVisuals(b,1/30);const time=t.nativeActor.ragdoll.time;finishNativeVisuals(b,1/30);assert.ok(t.nativeActor.ragdoll.time>time);
 });
 test('family evolution makes distinct tactical changes without dropping gems or identity',()=>{

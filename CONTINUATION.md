@@ -8,6 +8,14 @@ There are 41 source anatomies × three developmental stages × eight views, feed
 
 Released branch: codex/starfall-menagerie. The codex/authored-art-v3-wip branch retains the recovery history. Old checkpoint reports below are historical. Continue the later gameplay roadmap, not another restart of this completed sprite pass. Current local server is http://127.0.0.1:3022. Set BASE_URL, CHROMIUM_PATH and GODOT_PATH for the host; local tools are Node 24, Chrome and Godot 4.6.2.
 
+## Latest adjustment · smaller arena sprites
+
+The user requested default sprites at 30% of their previous size, with larger types capped at 150% of the new default. native-size.js now uses a .15 world baseline (previously .5) and .7–1.5 type factors, including evolved and ascendant forms. Rendering, hitboxes, melee reach, weapon points, cloth and deployment anchors share the scale. Ground shadows follow body scale, and the roster states the 150% cap. Inspection portraits and equal-cell art previews remain close-up views.
+
+The size change is applied on top of the completed V14 commit 758abf5 on codex/authored-art-v3-wip. The newer V14 artwork and animation changes are preserved. Starfall-Menagerie.html is rebuilt for the adjustment. The released branch is not modified by this change. Targeted size, physical contacts, deployment, capture/loss and offline checks validate the size adjustment; historical visual scores and source-pixel-retention reports are not new reviews of the smaller rendering. Do not edit, stage or delete the pre-existing untracked expedition.js draft.
+
+Validation after integration: 39 relevant unit checks passed, plus the grand-form/equipment browser suite, deployment/capture/loss/mobile suite and fresh offline battle. No browser page errors; offline combat uses zero external requests. The playable public/Starfall-V14-Art-V3.zip now contains the exact rebuilt main HTML and a size-update note; its CRC and embedded HTML were verified.
+
 ## Checkpoint v8
 
 Native expedition integration is implemented. Open Starfall-Menagerie.html and start a New expedition for the six native starters; existing legacy saves remain valid. Nine native families, 69 total families, 146 skills, native courtyard rendering/weapon contacts, charge protection, held-weapon projectiles, family evolution bonuses and save schema-1 backup are connected to the full expedition.

@@ -58,8 +58,8 @@ export function renderNativeBattle(display,w,h,battle,planet,time,team,foes,spec
  const terrain=battle?.terrain||foes[0]?.terrain||[];
  for(const u of [...units,...terrain.map(t=>({...t,pillar:true}))].sort((a,b)=>a.y-b.y)){
   if(u.pillar){const p=nativeScreen(u.x,u.y);c.fillStyle="#10231d77";c.beginPath();c.ellipse(p.x,p.y,u.r+8,14,0,0,Math.PI*2);c.fill();c.fillStyle="#454d47";c.fillRect(p.x-u.r,p.y-50,u.r*2,50);c.fillStyle="#808776";c.fillRect(p.x-u.r*.65,p.y-47,u.r*.35,46);c.fillStyle="#a1a58a";c.beginPath();c.ellipse(p.x,p.y-50,u.r,u.r*.58,0,0,Math.PI*2);c.fill();c.fillStyle="#37493a";for(let i=0;i<5;i++)c.fillRect(p.x-u.r*.6+i*10,p.y-50+(i%2)*8,7,6);continue;}
-  const p=nativeScreen(u.x,u.y),spec=species[u.id];if(u.captured)continue;c.fillStyle=u.hp>0?'#0d1b1577':'#0d1b1544';c.beginPath();c.ellipse(p.x,p.y,u.boss?34:23,7,0,0,Math.PI*2);c.fill();
-  const scale=creatureWorldScale(spec,u),visualTop=drawNativeUnit(c,u,spec,p.x,p.y,battle?battle.time:time,3*scale);
+  const p=nativeScreen(u.x,u.y),spec=species[u.id],scale=creatureWorldScale(spec,u);if(u.captured)continue;c.fillStyle=u.hp>0?'#0d1b1577':'#0d1b1544';c.beginPath();c.ellipse(p.x,p.y,(u.boss?68:46)*scale,14*scale,0,0,Math.PI*2);c.fill();
+  const visualTop=drawNativeUnit(c,u,spec,p.x,p.y,battle?battle.time:time,3*scale);
   if(u.hp<=0)continue;
   const width=u.boss?70:42,bar=Math.min(visualTop-9,p.y-(({knight:115,orc:100,elf:105,caster:116,wolf:77,fox:112,mech:90,spider:83,jelly:92,serpent:65,flyer:112,crab:80,centipede:75}[actorFor(u,spec).id]||112)+12)*scale*characterHeight*formProfile(spec,u).height);
   c.fillStyle='#12251c';c.fillRect(p.x-width/2-1,bar-1,width+2,6);c.fillStyle=u.side?'#d48976':'#bad79a';c.fillRect(p.x-width/2,bar,width*u.hp/u.maxHp,4);
