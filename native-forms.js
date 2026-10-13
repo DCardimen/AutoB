@@ -1,6 +1,7 @@
 import {grandDesign,nativeRigFor,capeSpecification} from './grand-designs.js';
 import {previewCape} from './native-cloth.js';
 import {PIXEL_PALETTES} from './prototype-pixel-art.js';
+import {characterRig} from './prototype-rig.js';
 const rgb=(a,b,c)=>[a,b,c];
 // Stable anatomy and equipment profiles used by both art and weapon contacts.
 export const NATIVE_DESIGNS={
@@ -51,10 +52,12 @@ export function nativeFormRig(spec,c,source,height=1){
  rig.design=spec.nativeDesign;rig.form=design.stage;rig.formPath=c.evolutionPath;rig.gear=grand.gear||design.gear;rig.flyerDesign=spec.nativeDesign;
  if(design.stage){const colors={ember:['#582b33','#aa4d3e','#ebac62'],grove:['#2b4939','#5e8a52','#bfd087'],tide:['#283e62','#5b8caa','#bbdce0'],storm:['#45365f','#8a70b3','#ddc4e9'],void:['#322841','#725189','#cda4ce']};rig.palette.cloth=colors[spec.element]||rig.palette.cloth;}
  rig.id=nativeRigFor(spec,c);rig.grand=c.evolution?grand:null;if(grand.gear==='gauntlet')rig.shield=null;rig.pixelMark=spec.pixelMark;rig.equipment=c.equipment||[];
+ rig.artVariant=spec.pixelConverted?spec.id:null;rig.artRecolor=Boolean(spec.pixelConverted||c.evolution||c.equipment?.length);
+ const bind=characterRig(rig.id,'idle',.25);rig.artBind={head:point(bind.head),body:point(bind.body),pelvis:point(bind.pelvis),legs:bind.legs.map(l=>({...l,end:point(l.end)})),arms:bind.arms.map(a=>({...a,end:point(a.end)})),weapon:bind.weapon?{grip:point(bind.weapon.grip),tip:point(bind.weapon.tip)}:null};rig.artScale={width:design.width,height:design.height*height};
  if(rig.grand&&rig.wings)rig.wings=rig.wings.map(wing=>wing.map(p=>({...p,y:p.y*1.12,x:p.x*.95})));
  if(rig.equipment.includes('sunsteel-edge'))rig.palette.metal=['#6a5140','#b69053','#eacb7e','#fff0bc'];
  if(grand.rig==='orc'&&['runetitan','scarabking'].includes(grand.motif))rig.palette.skin=rig.palette.metal.slice(0,3);
- const cloth=capeSpecification(spec,c);if(cloth){rig.capeMesh=(source.capeMesh||previewCape(source,cloth)).map(col=>col.map(point));}else rig.capeMesh=null;
+ const cloth=capeSpecification(spec,c);if(cloth){rig.capeMesh=(source.capeMesh||previewCape(source,cloth)).map(col=>col.map(point));rig.artCapeBind=previewCape(bind,cloth).map(col=>col.map(point));}else rig.capeMesh=null;
  if(c.equipment?.includes('mooncloth-mantle'))rig.palette.cloth=['#38284d','#7d5596','#c7a5d3'];
  if(spec.nativeDesign==='drake'&&!c.evolution)rig.grand={motif:'drake',wings:true};
  return rig;

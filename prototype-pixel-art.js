@@ -2,8 +2,10 @@ import {paintGrandPixels} from './grand-pixels.js';
 import {paintCapeMesh} from './native-cloth.js';
 import {projectRig,characterRig} from './prototype-rig.js';
 import {drawNativeFace,FACE_VIEWS} from './prototype-faces.js';
+import {paintAuthoredTorso,paintFairyWings,paintFairyBody} from './authored-pixel-art.js';
+import {paintAtlasCharacter} from './authored-sprite-renderer.js';
 export const CELL=64,PIVOT={x:32,y:44},PIXEL_WORLD=3;
-export const SPRITE_ART_REVISION=2;
+export const SPRITE_ART_REVISION=3;
 const OUT='#192328';
 export const PIXEL_PALETTES={
  crab:{skin:['#496b63','#7daca0','#c6d9be'],cloth:['#385c69','#5b95aa','#a9d1db'],metal:['#324d52','#668d8c','#b0c8bd','#e5e0b9'],hair:['#364c58','#638e99','#abd5ce']},
@@ -35,8 +37,15 @@ export function spritePoint(p,angle){const s=projectRig(p,angle);return {x:PIVOT
 export function paintCharacterPixels(id,rig,angle){
  let b=new PixelBrush();const p=rig.palette||PIXEL_PALETTES[id],dir=((Math.round(angle/(Math.PI/4))%8)+8)%8,front=dir===2,back=!FACE_VIEWS[dir].eyes.length,side=FACE_VIEWS[dir].sign,at=q=>spritePoint(q,angle);
  rig.dir=dir;rig.back=back;const body=at(rig.body),pelvis=at(rig.pelvis),head=at(rig.head),moving=['walk','run','sprint','turn','stop'].includes(rig.state),dead=rig.death>0;
+ if(paintAtlasCharacter(b,id,rig,at)){
+  const art=b;const farArt=new PixelBrush();paintGrandPixels(farArt,rig,at,p,'far');paintCapeMesh(farArt,rig,at,p,'far');
+  for(let i=0;i<art.data.length;i+=4)if(art.data[i+3])farArt.data.set(art.data.subarray(i,i+4),i);b=farArt;
+  paintGrandPixels(b,rig,at,p,'body');paintGrandPixels(b,rig,at,p,'head');
+  if(art.data.contactGear)drawGearPart(b,id,rig,angle,p,at,(x,y,rx,ry,color)=>{b.oval(x,y,rx+1,ry+1,OUT);b.oval(x,y,rx,ry,color);},true,false);
+  b.data.clipped=b.clipped;b.data.artIdentity=art.data.artIdentity;b.data.artFit=art.data.artFit;return b.data;
+ }
  const bind=rig.ragdoll?characterRig(id,'idle',0):null;let headRoll=0;if(bind){const h=at(bind.head),c=at(bind.body),rest=Math.atan2(h.x-c.x,-(h.y-c.y)),current=Math.atan2(head.x-body.x,-(head.y-body.y));headRoll=Math.round(Math.atan2(Math.sin(current-rest),Math.cos(current-rest))/(Math.PI/12))*(Math.PI/12);}
- if(['knight','orc','elf','caster','fox'].includes(id)){if(rig.ragdoll){const dx=head.x-body.x,dy=head.y-body.y,len=Math.hypot(dx,dy)||1;head.x+=dx/len*2;head.y+=dy/len*2;}else head.y-=2;}
+ if(['knight','orc','elf','caster','fox'].includes(id)){const lift=id==='knight'?7:8;if(rig.ragdoll){const dx=head.x-body.x,dy=head.y-body.y,len=Math.hypot(dx,dy)||1;head.x+=dx/len*lift;head.y+=dy/len*lift;}else head.y-=lift;}
  if(rig.state==='idle')head.y+=Math.round(Math.sin(rig.phase*Math.PI*2)*0.7);
  function outlinedOval(x,y,rx,ry,color){b.oval(x,y,rx+1,ry+1,OUT);b.oval(x,y,rx,ry,color);}
  function segment(a,c,width,color,highlight){const x=at(a),y=at(c);b.line(x,y,OUT,width+1);b.line(x,y,color,width);if(highlight)b.line({x:x.x-1,y:x.y-1},{x:y.x-1,y:y.y-1},highlight,0);}
@@ -66,6 +75,11 @@ export function paintCharacterPixels(id,rig,angle){
   paintGrandPixels(b,rig,at,p,'head');paintCapeMesh(b,rig,at,p,'near');b.data.clipped=b.clipped;return b.data;
  }
  if(id==='flyer'){
+  if(rig.design==='faerie'){
+   paintFairyWings(b,rig,at,p);paintFairyBody(b,rig,at,p);paintGrandPixels(b,rig,at,p,'body');
+   const fairyHead={x:head.x,y:head.y-9,depth:head.depth};segment(rig.body,rig.head,1.5,p.skin[0],p.skin[1]);drawNativeFace(b,id,fairyHead,dir,p,rig);
+   paintGrandPixels(b,rig,at,p,'head');paintCapeMesh(b,rig,at,p,'near');b.data.clipped=b.clipped;return b.data;
+  }
   for(const wing of rig.wings){const qs=wing.map(at);b.outlined(qs,p.cloth[0]);b.poly([qs[0],qs[1],qs[2]],p.cloth[1]);b.line(qs[0],qs[2],p.cloth[2]);if(rig.design==='bat')b.line(qs[1],qs[3],p.skin[0]);else for(let i=0;i<4;i++){const t=i/4;b.line({x:qs[1].x+(qs[2].x-qs[1].x)*t,y:qs[1].y+(qs[2].y-qs[1].y)*t},qs[3],p.cloth[2]);}}
   if(rig.grand)for(const wing of rig.wings){const qs=wing.map(at);for(let i=1;i<=3;i++){const t=i/4;b.line({x:qs[0].x+(qs[1].x-qs[0].x)*t,y:qs[0].y+(qs[1].y-qs[0].y)*t},{x:qs[3].x+(qs[2].x-qs[3].x)*t,y:qs[3].y+(qs[2].y-qs[3].y)*t},p.metal[2],1);}}
   outlinedOval(body.x,body.y,rig.design==='faerie'?3:5,5,p.skin[0]);b.oval(body.x-1,body.y-1,3,4,p.cloth[1]);segment(rig.body,rig.head,2,p.skin[0],p.skin[1]);
@@ -131,7 +145,9 @@ export function paintCharacterPixels(id,rig,angle){
  function drawGear(layer){drawGearPart(b,id,rig,angle,p,at,outlinedOval,rig.weapon&&gearLayer(rig.weapon.grip)===layer,rig.shield&&gearLayer(rig.shield.grip)===layer);}
  rig.arms.filter(a=>at(a.root).depth<body.depth).forEach(drawArm);
  drawGear('far');
- segment(rig.body,rig.head,1.4,p.skin[0],p.skin[1]);
+ near.forEach(leg);
+ b.line(body,head,OUT,2);b.line(body,head,p.skin[0],1.3);b.line({x:body.x-1,y:body.y-1},{x:head.x-1,y:head.y},p.skin[1]);
+ if(!paintAuthoredTorso(b,id,body,pelvis,dir,p,rig)){
  // A substantial jacket/cuirass sits between the attached jaw and short legs.
  const width=id==='orc'?8:id==='knight'?6.5:5.8;
  b.outlined([{x:body.x-width+1,y:body.y-4},{x:body.x-3,y:body.y-6},{x:body.x+3,y:body.y-6},{x:body.x+width-1,y:body.y-4},{x:body.x+width,y:body.y+2},{x:pelvis.x+width-1,y:pelvis.y+2},{x:pelvis.x-width+1,y:pelvis.y+2},{x:body.x-width,y:body.y+2}],id==='orc'?p.skin[0]:id==='knight'?p.metal[0]:p.cloth[0]);
@@ -144,8 +160,8 @@ export function paintCharacterPixels(id,rig,angle){
  if(id==='elf'||id==='fox'){b.line({x:body.x-4,y:body.y-3},{x:pelvis.x+3,y:pelvis.y+1},'#75563a',1);b.line({x:body.x-3,y:body.y-3},{x:pelvis.x+3,y:pelvis.y},'#b09257');if(!back)b.outlined([{x:pelvis.x+3,y:pelvis.y},{x:pelvis.x+6,y:pelvis.y},{x:pelvis.x+6,y:pelvis.y+3},{x:pelvis.x+3,y:pelvis.y+3}],'#805c3d');}
  b.line({x:pelvis.x-5,y:pelvis.y},{x:pelvis.x+5,y:pelvis.y},'#342e28',1);b.rect(pelvis.x-1,pelvis.y-1,2,2,p.metal[2]);
  if(rig.design==='skeleton'){for(const dy of [-2,0,2])b.line({x:body.x-3,y:body.y+dy},{x:body.x+3,y:body.y+dy},p.skin[2]);b.line({x:body.x,y:body.y-3},{x:body.x,y:body.y+3},p.skin[0]);}
+ }
  if(rig.form){const armor=rig.formPath==='warden',r=rig.form===2?4:3;for(const s of [-1,1])b.outlined([{x:body.x+s*3,y:body.y-4},{x:body.x+s*(3+r),y:body.y-3},{x:body.x+s*(4+r),y:body.y},{x:body.x+s*3,y:body.y+1}],armor?p.metal[1]:p.cloth[1]);b.line({x:body.x-2,y:body.y-3},{x:body.x+2,y:body.y-3},p.metal[3]);}
- near.forEach(leg);
  rig.arms.filter(a=>at(a.root).depth>=body.depth).forEach(drawArm);
  drawGear('middle');
  if(id==='fox'&&!rig.grand?.tailFan){const tail=at({...rig.pelvis,x:rig.pelvis.x-12,y:Math.sin(rig.phase*Math.PI*2)*6,z:rig.pelvis.z-4});b.line({x:pelvis.x,y:pelvis.y+2},tail,OUT,3);b.line({x:pelvis.x,y:pelvis.y+2},tail,p.skin[1],2);b.oval(tail.x,tail.y,2,2,p.metal[3]);}

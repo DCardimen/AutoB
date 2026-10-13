@@ -1,4 +1,5 @@
 import {drawFamilyFace} from './native-faces.js';
+import {paintAuthoredFace} from './authored-pixel-art.js';
 import {FACE_OUTLINE as OUT,faceShape,faceEyes,hairShape} from './pixel-face-tools.js';
 // A facing owns its features. Rear views never borrow front-facing eyes.
 export const FACE_VIEWS=[
@@ -13,6 +14,7 @@ export const FACE_VIEWS=[
 ];
 export const FACE_IDENTITIES={knight:'gold visor and red crest',orc:'amber eyes, square jaw and ivory tusks',elf:'green eyes, swept blonde fringe and pointed ears',caster:'violet eyes, silver bob and blue circlet',fox:'amber eyes, dark ear tips and cream muzzle',wolf:'brown eyes, folded ears and cream jowls',mech:'single turquoise lens and brass brow',spider:'six violet eyes and paired ivory fangs',jelly:'navy eyes and pearl smile'};
 export function drawNativeFace(b,id,center,dir,p,rig){
+ if(paintAuthoredFace(b,id,center,dir,p,rig))return;
  if(drawFamilyFace(b,center,dir,p,rig,FACE_VIEWS))return;
  const x=Math.round(center.x),y=Math.round(center.y),v=FACE_VIEWS[dir],back=!v.eyes.length,profile=v.view==='profile',quarter=v.view==='quarter',s=v.sign,dead=rig.death>0;
  const oval=(x,y,rx,ry,c)=>{b.oval(x,y,rx+1,ry+1,OUT);b.oval(x,y,rx,ry,c);},eyes=color=>faceEyes(b,x,y,v,color,p,rig.state,rig.death);

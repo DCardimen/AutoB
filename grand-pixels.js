@@ -1,4 +1,5 @@
 import {drawNativeFace} from './prototype-faces.js';
+import {paintAtlasHead} from './authored-sprite-renderer.js';
 const O='#192328';
 export function paintGrandPixels(b,rig,at,p,layer){
  if(layer==='body'){
@@ -7,7 +8,8 @@ export function paintGrandPixels(b,rig,at,p,layer){
   if(rig.equipment?.includes('reliquary-plate'))for(const s of [-1,1])b.outlined([{x:body.x+s*4,y:body.y-4},{x:body.x+s*8,y:body.y-3},{x:body.x+s*8,y:body.y},{x:body.x+s*4,y:body.y+1}],p.metal[2]);
   if(rig.equipment?.includes('prism-focus')){const q=at(rig.weapon?.tip||rig.head);b.outlined([{x:q.x,y:q.y-3},{x:q.x+2,y:q.y},{x:q.x,y:q.y+3},{x:q.x-2,y:q.y}],p.hair[2]);}
  }
- const g=rig.grand;if(!g)return;const h=at(rig.head),body=at(rig.body),stage=rig.form||1,light=p.metal[3],gold=p.cloth[2];
+ const g=rig.grand;if(!g)return;const h=rig.artAnchors?{...rig.artAnchors.head}:at(rig.head),body=rig.artAnchors?{...rig.artAnchors.body}:at(rig.body),stage=rig.form||1,light=p.metal[3],gold=p.cloth[2];
+ if(rig.artAnchors){h.y=Math.max(g.crest==='hat'?19:16,h.y);body.y=Math.min(46,body.y);}
  if(layer==='far'){
   if(stage===2&&!rig.ragdoll){for(const side of [-1,1]){const q=at({...rig.body,x:rig.body.x-26,y:side*49,z:rig.body.z+22});q.y=Math.min(52,q.y);b.outlined([{x:q.x,y:q.y-4},{x:q.x+3,y:q.y},{x:q.x,y:q.y+4},{x:q.x-3,y:q.y}],p.cloth[1]);b.dot(q.x,q.y,light);b.line(q,{x:q.x,y:q.y+8},gold);}}
   if(g.halo){const r=stage===2?12:10,pts=Array.from({length:8},(_,i)=>({x:h.x+Math.cos(i*Math.PI/4)*r,y:h.y+Math.sin(i*Math.PI/4)*r*.7-2}));for(let i=0;i<8;i++){b.line(pts[i],pts[(i+1)%8],O,1);b.line(pts[i],pts[(i+1)%8],light);}for(const q of pts)b.dot(q.x,q.y,gold);}
@@ -23,11 +25,11 @@ export function paintGrandPixels(b,rig,at,p,layer){
   if(stage===2){for(const s of [-1,1])b.outlined([{x:body.x+s*5,y:body.y-4},{x:body.x+s*11,y:body.y-8},{x:body.x+s*10,y:body.y+3},{x:body.x+s*4,y:body.y+8}],p.cloth[1]);b.line({x:body.x,y:body.y},{x:body.x,y:body.y+11},light,1);}
   if(!['hydra','cerberus','spiderqueen','solarlion'].includes(g.motif)){
    b.outlined([{x:body.x-7,y:body.y-6},{x:body.x+7,y:body.y-6},{x:body.x+9,y:body.y+2},{x:body.x+5,y:body.y+6},{x:body.x-5,y:body.y+6},{x:body.x-9,y:body.y+2}],p.metal[0]);
-   b.poly([{x:body.x-5,y:body.y-4},{x:body.x+5,y:body.y-4},{x:body.x+6,y:body.y+2},{x:body.x,y:body.y+5},{x:body.x-6,y:body.y+2}],p.metal[1]);b.line({x:body.x-4,y:body.y-4},{x:body.x+4,y:body.y-4},light);b.outlined([{x:body.x,y:body.y-3},{x:body.x+2,y:body.y},{x:body.x,y:body.y+3},{x:body.x-2,y:body.y}],gold);b.dot(body.x,body.y-1,light);
+   b.poly([{x:body.x-5,y:body.y-4},{x:body.x+5,y:body.y-4},{x:body.x+6,y:body.y+2},{x:body.x,y:body.y+5},{x:body.x-6,y:body.y+2}],p.metal[1]);b.poly([{x:body.x-5,y:body.y-3},{x:body.x-1,y:body.y-4},{x:body.x,y:body.y+3},{x:body.x-4,y:body.y+1}],p.metal[2]);b.line({x:body.x-4,y:body.y-4},{x:body.x+4,y:body.y-4},light);b.line({x:body.x+4,y:body.y-1},{x:body.x+3,y:body.y+3},p.metal[0]);for(const dx of [-5,5])b.dot(body.x+dx,body.y,p.metal[3]);b.outlined([{x:body.x,y:body.y-3},{x:body.x+2,y:body.y},{x:body.x,y:body.y+3},{x:body.x-2,y:body.y}],gold);b.dot(body.x,body.y-1,light);
   }else{for(let i=-2;i<=2;i++)b.outlined([{x:body.x+i*3-2,y:body.y-2},{x:body.x+i*3,y:body.y-8-Math.abs(i)},{x:body.x+i*3+2,y:body.y+1}],p.cloth[1]);}
  }
  if(layer==='head'){
-  if(g.extraHeads){for(const side of g.extraHeads===4?[-1.8,-.8,.8,1.8]:[-1,1]){const q=at({...rig.head,x:rig.head.x-7,y:rig.head.y+side*18,z:rig.head.z-3}),root=at({...rig.body,x:rig.body.x+10,z:rig.body.z+3});b.line(root,q,O,2);b.line(root,q,p.skin[1],1);drawNativeFace(b,rig.id,q,rig.dir,p,{...rig,grand:null,form:0});}}
+  if(g.extraHeads){for(const side of g.extraHeads===4?[-1.8,-.8,.8,1.8]:[-1,1]){const q=at({...rig.head,x:rig.head.x-7,y:rig.head.y+side*18,z:rig.head.z-3}),root=at({...rig.body,x:rig.body.x+10,z:rig.body.z+3});b.line(root,q,O,2);b.line(root,q,p.skin[1],1);if(!paintAtlasHead(b,rig.id,rig,q))drawNativeFace(b,rig.id,q,rig.dir,p,{...rig,grand:null,form:0});}}
   if(g.crest==='crown'||g.crest==='reactor'||g.crest==='pearl'){
    const y=h.y-7;b.outlined([{x:h.x-8,y},{x:h.x-8,y:y-6},{x:h.x-4,y:y-2},{x:h.x,y:y-8},{x:h.x+4,y:y-2},{x:h.x+8,y:y-6},{x:h.x+8,y},{x:h.x-8,y}],p.metal[1]);b.line({x:h.x-6,y:y-1},{x:h.x+6,y:y-1},light);for(const dx of [-5,0,5])b.dot(h.x+dx,y-2,gold);
   }else if(g.crest==='horns'||g.crest==='antlers'||g.crest==='fins')for(const side of [-1,1]){

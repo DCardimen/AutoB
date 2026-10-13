@@ -1,0 +1,51 @@
+{
+  "checkpoint": "unfinished Authored Art V3 recovery",
+  "branch": "codex/authored-art-v3-wip",
+  "releasedV13Commit": "eb63e005067e4ba5b0232b1418cc264cb6a86c57",
+  "releaseReady": false,
+  "visualTargetMet": false,
+  "sourceIdentities": 29,
+  "directionalViewsPerIdentity": 8,
+  "pixelCell": [
+    64,
+    64
+  ],
+  "newWeaponlessSourcesImported": false,
+  "lastTargetedRun": {
+    "command": "node --test tests/prototype-pixels.test.js tests/sprite-art-v2.test.js",
+    "passed": 7,
+    "failed": 2,
+    "failures": [
+      "Art V2 revision/iris expectations require meaningful updates for the new art.",
+      "Tiny idle phase changes alter the pixel buffer; rendering stability needs correction."
+    ],
+    "scope": "Intermediate run; final suites, browser checks, campaigns and Godot exports remain unrun for V3."
+  },
+  "remaining": [
+    "Import and inspect weaponless atlases with correct row boundaries.",
+    "Finish hand/weapon anchors, depth layers and connected animation.",
+    "Fix idle shimmer and refine expressions, wings, tails, ragdolls and grand forms.",
+    "Complete six-parameter visual review; rework scores below 9/10.",
+    "Rebuild both HTML files and bundle; validate browser, offline, campaign and Godot outputs."
+  ],
+  "preservedUntrackedFile": {
+    "path": "expedition.js",
+    "sha256": "a4c0ad756a781f8f223e34c1f9cd22d79e9fe47bff81d8ee951f47a16d987ea1",
+    "stage": false
+  },
+  "sha256": {
+    "public/authored-characters-source.png": "b5749617e34a98e1718621ee1ef50bf732060285744a70f55798f4189c39e4b8",
+    "public/authored-bodies-source.png": "d7f9607ca8c29d690612ce4f69ffd5a97034fc16684a28efc43a37595fee3b02",
+    "public/authored-families-source.png": "e90908c45312effdd565fd9e40fb552b6cf1a0058d8a0c1be2ccf65373126b6d",
+    "public/authored-characters-weaponless-source.png": "21f46ad3b581fbbe80841dbade99e3fbc68aa80603f2e7ff5fcf9e73ac015f38",
+    "public/authored-bodies-weaponless-source.png": "b6a4cdb7efb0699a7f0e3a0759072db1adf19235a6eab40cdbee5142952ca7cf",
+    "public/authored-families-weaponless-source.png": "be0df87c2267f4551e1ca3514d90256113b9045d21c0f0466f79db2f4a2c8675",
+    "authored-sprite-renderer.js": "00a6a8518bf00ddd99e63ff2980534dd246129d89c8bec56b74aa8a637f8d402",
+    "authored-sprite-data.js": "105cc0bfa094a682ff81310b1053d50494e1dd18a16eadeb71fe439dcd75a6fa",
+    "authored-body-data.js": "5921fdd666620eb2ca6e1f3015ce7986be650753c6e12ebbebdb0912ecbfc1f9",
+    "authored-family-data.js": "60d4646526e95f89b27d8276cca7ddf146ff23ec821259f1f1d03899a8d904e9",
+    "scripts/import-authored-sprites.mjs": "431e13156865153032dc49437bc351bc5952be5cc7ea5a96c8d4323b4b8bb78e"
+  },
+  "reviewArchive": "public/art-v3-recovery-evidence.zip",
+  "handoff": "ART-V3-HANDOFF.md"
+}

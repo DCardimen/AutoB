@@ -3,7 +3,7 @@ const prefix=process.env.ART_PREFIX||'sprites-v2',browser=await chromium.launch(
 page.on('pageerror',e=>errors.push(e.message));
 try{
  await page.goto(process.env.BASE_URL||'http://127.0.0.1:3000');await page.waitForFunction(()=>window.starfall);
- for(const [name,ids,state,forms]of [['heroes',['aurel','brakk','syl','nyra','rowan'],'idle',false],['bodies',['emberhound','cogwalker','runespider','moonjelly','mireclaw','ironscolopendra','tarka','brom','nix'],'idle',false],['forms',['aurel','nyra','emberhound','cogwalker','moonjelly'],'idle',true],['motions',['aurel','brakk','syl','nyra','rowan'],'run',false]]){
+ for(const [name,ids,state,forms]of [['benchmarks',['aurel','grit','luma'],'idle',false],['heroes',['aurel','brakk','syl','nyra','rowan'],'idle',false],['bodies',['emberhound','cogwalker','runespider','moonjelly','mireclaw','ironscolopendra','tarka','brom','nix'],'idle',false],['forms',['aurel','nyra','emberhound','cogwalker','moonjelly'],'idle',true],['motions',['aurel','brakk','syl','nyra','rowan'],'run',false]]){
   const result=await page.evaluate(async({ids,state,forms})=>{
    const {nativePosePixels}=await import('./native-poses.js'),{pixelSpec,lineageLimit}=await import('./native-content.js');let canvas=document.querySelector('#review-sheet');if(!canvas){canvas=document.createElement('canvas');canvas.id='review-sheet';document.body.replaceChildren(canvas);document.body.style.margin='0';}
    canvas.width=1536;canvas.height=ids.length*224;const ctx=canvas.getContext('2d');ctx.fillStyle='#152328';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.imageSmoothingEnabled=false;const small=document.createElement('canvas');small.width=small.height=64;const sc=small.getContext('2d'),issues=[];
