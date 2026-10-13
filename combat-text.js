@@ -25,7 +25,7 @@ function textPixels(c,label,x,y,color,scale){
 export function paintCombatTexts(c,battle,species,height=1){
  for(const t of battle.combatTexts||[]){
   const u=battle.units.find(u=>u.uid===t.uid),spec=species[u?.id];if(!u||!spec)continue;
-  const grid=(c.canvas?.width||334)/334,age=t.max-t.ttl,crit=t.kind==='crit',scale=grid*(crit&&age<.18?2:1);
+  const grid=(c.canvas?.width||334)/334,age=t.max-t.ttl,crit=t.kind==='crit',scale=Math.max(1,Math.round(grid*(battle.tuning?.damageTextSize??100)/100*(crit&&age<.18?2:1)));
   const label=(t.kind==='heal'?'+':t.kind==='shield'?'B':t.kind==='armor'?'A':'')+Math.max(1,Math.round(t.amount))+(crit?'!':'');
   const color={crit:'#fff0a0',heal:'#a7ef9b',shield:'#88ddef',armor:'#b5c9ed',status:'#dfa2f4',hit:u.side?'#fff4cf':'#f7a194'}[t.kind];
   const x=Math.max(3*grid,Math.min(331*grid-label.length*4*scale,Math.round(u.x/3*grid-label.length*2*scale+(t.stack-1)*7*grid)));

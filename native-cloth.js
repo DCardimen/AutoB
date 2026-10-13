@@ -12,7 +12,7 @@ export function stepPhysicalCape(actor,rig,spec,dt){
  const scale=actor.rigScale||1,baseX=actor.x/scale,baseY=actor.y/scale,cos=Math.cos(actor.facing),sin=Math.sin(actor.facing),world=p=>({x:baseX+p.x*cos-p.y*sin,y:baseY+p.x*sin+p.y*cos,z:p.z});
  const rest=previewCape({...rig,state:'idle',phase:0},spec),stamp=spec.width+':'+spec.length;
  if(actor.capeCloth?.stamp!==stamp)actor.capeCloth={stamp,grid:rest.map(col=>col.map(p=>{const q=world(p);return {...q,px:q.x,py:q.y,pz:q.z};}))};
- const grid=actor.capeCloth.grid,drive=limit(Math.hypot(actor.vx,actor.vy)/(actor.run||150),0,1.5),wind=actor.gait*6.28,fx=-cos*(28+drive*130),fy=-sin*(28+drive*130);
+ const flow=actor.capeMotion??1,grid=actor.capeCloth.grid,drive=limit(Math.hypot(actor.vx,actor.vy)/(actor.run||150),0,1.5)*flow,wind=actor.gait*6.28,fx=-cos*(28*flow+drive*130),fy=-sin*(28*flow+drive*130);
  for(let col=0;col<spec.columns;col++)for(let row=1;row<spec.rows;row++){
   const p=grid[col][row],x=p.x,y=p.y,z=p.z,t=row/(spec.rows-1),flutter=Math.sin(wind-row*.75+col*.45)*drive*50;
   p.x+=(p.x-p.px)*Math.pow(.92,dt*120)+(fx-sin*flutter)*dt*dt;p.y+=(p.y-p.py)*Math.pow(.92,dt*120)+(fy+cos*flutter)*dt*dt;p.z+=(p.z-p.pz)*Math.pow(.92,dt*120)+(-230+drive*45)*dt*dt;p.px=x;p.py=y;p.pz=z;
