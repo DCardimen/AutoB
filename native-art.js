@@ -1,3 +1,4 @@
+import {interpolatedNativeUnit} from './native-motion.js';
 import {activeAilments} from './status-ailments.js';
 import {nativeFormRig,formProfile} from './native-forms.js';
 import {nativePoseRig} from './native-poses.js';
@@ -36,12 +37,16 @@ function actorFor(u,spec){
  return {...actor,hp:u.hp??1,facing:u.facing??actor.facing,evolution:u.evolution||0,evolutionPath:u.evolutionPath};
 }
 export function drawNativeUnit(c,u,spec,x,y,time,pixelScale=3){
- const actor=actorFor(u,spec),sample=spriteSample(actor,time,u.nativeActor?null:{state:'idle',phase:.25});
- const posePhase=sample.state==='idle'?Math.round(sample.phase*16)/16:sample.phase;
- let rig=characterRig(actor.id,sample.state,posePhase,sample.stage,{...sample,stride:actor.stride});rig.cape=sample.cape;
- if(u.deploymentRig)rig=u.deploymentRig;else if(actor.ragdoll)rig=ragdollRig(actor.ragdoll,actor.getup>0?1-actor.getup/.45:0);
- rig.capeMesh=actor.capeMesh;rig=nativeFormRig(spec,u,rig,characterHeight);
- const key=u.id+':'+characterHeight+':'+sample.key+':'+u.evolution+':'+u.evolutionPath+':'+(u.equipment||[]).join(',')+':'+(actor.capeMeshKey||'')+(actor.ragdoll?':'+actor.ragdoll.time.toFixed(4):'');let frame=u.deploymentRig?null:frames.get(key);if(!frame){frame=renderCharacterFrame(actor.id,rig,sample.angleIndex*Math.PI/4);if(!u.deploymentRig)frames.set(key,frame);if(frames.size>256)frames.delete(frames.keys().next().value);}
+ const actor=actorFor(u,spec),sample=spriteSample(actor,time,u.nativeActor?null:{state:'idle',phase:(time*.38+((u.seat||0)*.137))%1});
+ const key=u.id+':'+characterHeight+':'+sample.key+':'+u.evolution+':'+u.evolutionPath+':'+(u.equipment||[]).join(',')+':'+(actor.capeMeshKey||'')+(actor.ragdoll?':'+actor.ragdoll.time.toFixed(4):'');
+ let frame=u.deploymentRig?null:frames.get(key);
+ if(!frame){
+  const posePhase=sample.state==='idle'?Math.round(sample.phase*16)/16:sample.phase;
+  let rig=characterRig(actor.id,sample.state,posePhase,sample.stage,{...sample,stride:actor.stride});rig.cape=sample.cape;
+  if(u.deploymentRig)rig=u.deploymentRig;else if(actor.ragdoll)rig=ragdollRig(actor.ragdoll,actor.getup>0?1-actor.getup/.45:0);
+  rig.capeMesh=actor.capeMesh;rig=nativeFormRig(spec,u,rig,characterHeight);
+  frame=renderCharacterFrame(actor.id,rig,sample.angleIndex*Math.PI/4);if(!u.deploymentRig)frames.set(key,frame);if(frames.size>256)frames.delete(frames.keys().next().value);
+ }
  const grid=Math.abs(c.getTransform().a)||1,dx=Math.round((x-PIVOT.x*pixelScale)*grid)/grid,dy=Math.round((y-PIVOT.y*pixelScale)*grid)/grid;
  c.imageSmoothingEnabled=false;c.drawImage(frame,dx,dy,CELL*pixelScale,CELL*pixelScale);return dy+(frame.spriteTop??0)*pixelScale;
 }
@@ -50,7 +55,7 @@ export function renderNativeBattle(display,w,h,battle,planet,time,team,foes,spec
  const c=scene.getContext('2d');c.setTransform(NATIVE_RENDER_SCALE,0,0,NATIVE_RENDER_SCALE,0,0);c.clearRect(0,0,1002,654);c.imageSmoothingEnabled=false;
  if(backdrop.complete&&backdrop.naturalWidth)c.drawImage(backdrop,0,0,1002,654);else{c.fillStyle='#253c31';c.fillRect(0,0,1002,654);}
  if(planet){c.fillStyle=planet===1?'#8e382524':'#3c21523d';c.fillRect(0,0,1002,654);}
- const units=battle?battle.units:[...team.map((u,i)=>({...u,side:0,...nativeSpawn(species[u.id],u,0,i),hp:1,maxHp:1})),...foes.map((u,i)=>({...u,side:1,...nativeSpawn(species[u.id],u,1,i),hp:1,maxHp:1}))];
+ const units=battle?battle.units.map(u=>battle.done?u:interpolatedNativeUnit(u,battle.renderAlpha)):[...team.map((u,i)=>({...u,side:0,...nativeSpawn(species[u.id],u,0,i),hp:1,maxHp:1})),...foes.map((u,i)=>({...u,side:1,...nativeSpawn(species[u.id],u,1,i),hp:1,maxHp:1}))];
  if(battle){
   for(const f of battle.fields)ring(c,f.x,f.y,f.r,'#a3d8b277','#88c7a119');
   for(const h of battle.hazards){ring(c,h.x,h.y,h.r,h.source.side?'#f48d72':'#b2d998',h.source.side?'#d763492e':'#8ac47422');const p=nativeScreen(h.x,h.y);c.fillStyle='#f1d2b5';c.font='14px sans-serif';c.textAlign='center';c.fillText(h.ttl.toFixed(1)+'s',p.x,p.y);}
@@ -60,6 +65,7 @@ export function renderNativeBattle(display,w,h,battle,planet,time,team,foes,spec
  for(const u of [...units,...terrain.map(t=>({...t,pillar:true}))].sort((a,b)=>a.y-b.y)){
   if(u.pillar){const p=nativeScreen(u.x,u.y);c.fillStyle="#10231d77";c.beginPath();c.ellipse(p.x,p.y,u.r+8,14,0,0,Math.PI*2);c.fill();c.fillStyle="#454d47";c.fillRect(p.x-u.r,p.y-50,u.r*2,50);c.fillStyle="#808776";c.fillRect(p.x-u.r*.65,p.y-47,u.r*.35,46);c.fillStyle="#a1a58a";c.beginPath();c.ellipse(p.x,p.y-50,u.r,u.r*.58,0,0,Math.PI*2);c.fill();c.fillStyle="#37493a";for(let i=0;i<5;i++)c.fillRect(p.x-u.r*.6+i*10,p.y-50+(i%2)*8,7,6);continue;}
   const p=nativeScreen(u.x,u.y),spec=species[u.id],scale=creatureWorldScale(spec,u);if(u.captured)continue;c.fillStyle=u.hp>0?'#0d1b1577':'#0d1b1544';c.beginPath();c.ellipse(p.x,p.y,(u.boss?68:46)*scale,14*scale,0,0,Math.PI*2);c.fill();
+  if(spec.rarity==='Legendary'){ring(c,u.x,u.y,20*scale+6,'#edce85aa','#e5c67716');for(let i=0;i<4;i++){const a=i*Math.PI/2+time*.6;c.fillStyle=i%2?'#fff0bd':'#d9b363';c.fillRect(Math.round(p.x+Math.cos(a)*(20*scale+6)),Math.round(p.y+Math.sin(a)*(12*scale+4)),2,2);}}
   const visualTop=drawNativeUnit(c,u,spec,p.x,p.y,battle?battle.time:time,3*scale);
   if(u.hp<=0)continue;
   const width=u.boss?58:30,bar=Math.min(visualTop-9,p.y-(({knight:115,orc:100,elf:105,caster:116,wolf:77,fox:112,mech:90,spider:83,jelly:92,serpent:65,flyer:112,crab:80,centipede:75}[actorFor(u,spec).id]||112)+12)*scale*characterHeight*formProfile(spec,u).height);

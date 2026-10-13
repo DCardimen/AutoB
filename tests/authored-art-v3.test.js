@@ -43,8 +43,8 @@ function component(pixels,start){const seen=new Set([start]),queue=[start];for(l
 test('visible hands remain joined to shoulders at the actual weapon and shield grips',()=>{
  for(const id of ['aurel','brakk','syl','nyra','rowan','grit','brom','tarka'])for(const evolution of [0,1,2])for(const state of ['idle','walk','run','attack','cast'])for(const phase of [.25,.8])for(let dir=0;dir<8;dir++){
   const spec=pixelSpec(id),c={id,evolution,evolutionPath:'wild'},rig=nativePoseRig(spec,c,state,phase),angle=dir*Math.PI/4,pixels=paintCharacterPixels(nativeRigFor(spec,c),rig,angle);
-  for(const arm of rig.arms){const end=spritePoint(arm.end,angle),root=rig.artArmRoots[arm.side],start=opaqueNear(pixels,end),goal=opaqueNear(pixels,root);assert.ok(start>=0&&goal>=0,`${id} ${evolution} ${state} ${dir}: visible arm endpoints`);assert.ok(component(pixels,start).has(goal),`${id} ${state} ${dir}: connected shoulder/hand`);}
-  for(const held of [rig.weapon,rig.shield].filter(Boolean))assert.ok(opaqueNear(pixels,spritePoint(held.grip,angle))>=0,id+' held grip');
+  for(const arm of rig.arms){const end=rig.artProject(arm.end),root=rig.artArmRoots[arm.side],start=opaqueNear(pixels,end),goal=opaqueNear(pixels,root);assert.ok(start>=0&&goal>=0,`${id} ${evolution} ${state} ${dir}: visible arm endpoints`);const connected=component(pixels,start);assert.ok(connected.has(goal),`${id} ${state} ${dir}: connected shoulder/hand`);const torso=opaqueNear(pixels,rig.artAnchors.body);assert.ok(torso>=0&&connected.has(torso),`${id} ${evolution} ${state} ${dir}: arm connected to torso`);}
+  for(const held of [rig.weapon,rig.shield].filter(Boolean))assert.ok(opaqueNear(pixels,(held===rig.shield?rig.artShieldProject(held.grip):rig.artProject(held.grip)))>=0,id+' held grip');
  }
 });
 test('hair and textured cape move independently while the face and body pose remain fixed',()=>{

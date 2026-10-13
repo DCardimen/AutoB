@@ -16,14 +16,14 @@ function poseFrame(spec,state,phase,angle,stage='',options={}){
 }
 export function spriteSample(u,time=0,override=null){
   const state=override?.state||animationState(u),dir=override?directionalFrame(u.facing||0):(u.spriteDirection??directionalFrame(u.facing||0)),angleIndex=dir;
-  let phase=0,stage='',count=['walk','run','sprint'].includes(state)?16:12;
+  let phase=0,stage='',count=['walk','run','sprint'].includes(state)?32:24;
   if(override)phase=override.phase;
   else if(['walk','run','sprint'].includes(state))phase=((u.gait%1)+1)%1;
   else if(['attack','slash','charge','cast'].includes(state)){
     const a=u.action;
-    if(a&&!a.released){stage='windup';phase=a.elapsed/a.windup;count=16;}
-    else{stage='recovery';phase=a?(a.elapsed-a.windup)/(a.duration-a.windup):0;count=16;}
-  }else if(state==='death'){phase=Math.min(1,u.deathTime/0.95);count=16;}
+    if(a&&!a.released){stage='windup';phase=a.elapsed/a.windup;count=32;}
+    else{stage='recovery';phase=a?(a.elapsed-a.windup)/(a.duration-a.windup):0;count=32;}
+  }else if(state==='death'){phase=Math.min(1,u.deathTime/0.95);count=32;}
   else if(state==='dodge'||state==='dash')phase=u.roll?u.roll.elapsed/u.roll.duration:0;
   else if(state==='hit')phase=1-u.hitTime/0.13;
   else if(state==='stagger')phase=1-u.stagger/0.46;
@@ -35,7 +35,7 @@ export function spriteSample(u,time=0,override=null){
   if(override&&['attack','slash','charge','cast'].includes(state)){
     if(override.stage)stage=override.stage;
     else{stage=phase<0.5?'windup':'recovery';phase=phase<0.5?phase*2:(phase-0.5)*2;}
-    count=16;
+    count=32;
   }
   const index=clamp(Math.floor(phase*count),0,count-1),foot=u.transitionFoot,weight=foot&&!override?Math.max(0,1-(time-foot.time)/(foot.duration||0.2)):0;
   const transition=weight>0&&foot.moving>0.1?{gait:foot.gait%1,weight,motion:Math.min(1,foot.moving/0.5),runBlend:foot.runBlend||0,sprintBlend:foot.sprintBlend||0}:null;

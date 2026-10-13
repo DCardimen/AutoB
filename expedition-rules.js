@@ -1,3 +1,4 @@
+import {initializeCompanion} from './wearer-relics.js';
 import {rollEnemyGearDrop} from './equipment-loot.js';
 import {CREATURE_GEAR} from './creature-equipment.js';
 import {rng,creature,BY_ID,stats,RELICS,PERSONAL_BY_ID} from './game.js';
@@ -40,5 +41,5 @@ export function makeLoot(run,type,foes,seed){const r=rng(seed+155171),drops=[],m
 export function claimLoot(run,cache){run.lootLedger??={};if(!cache||cache.claimed||run.lootLedger[cache.key])return false;for(const d of cache.drops){if(d.kind==='capturer')addCapturer(run,d.tier);if(d.kind==='gold')run.gold+=d.amount;if(d.kind==='relic'&&!run.relics.includes(d.relic))run.relics.push(d.relic);if(d.kind==='gear')run.gearInventory.push({uid:d.id,id:d.gear,rarity:d.rarity,quality:d.quality,sourceId:d.sourceId,sourceName:d.sourceName,sourceLevel:d.sourceLevel});}cache.claimed=true;run.lootLedger[cache.key]=true;return true;}
 export function lootName(d){return d.kind==='capturer'?CAPTURERS[d.tier].name:d.kind==='relic'?RELICS.find(r=>r.id===d.relic)?.name:d.kind==='gold'?d.amount+' gold':d.gear.split('-').map(s=>s[0].toUpperCase()+s.slice(1)).join(' ');}
 export function recruitPrice(run,c){return shopPrice(run,(c.baseMarketCost||c.marketCost)*(1-(routeModifiers(run).recruitDiscount||0)));}
-export function recruitOffer(run,seed,ids){const r=rng(seed);return ids.map((id,i)=>{const c=rollIndividual(creature(id,Math.max(1,1+run.planet*2+(expeditionDepth(run)?Math.floor(run.depth/3):0))),seed+i*991);if(expeditionDepth(run))c.balanceVersion=15;c.marketCost=({Common:65,Uncommon:95,Rare:140,Epic:205,Legendary:290})[BY_ID[id].rarity];c.baseMarketCost=c.marketCost;c.marketCost=recruitPrice(run,c);return c;});}
-export function buyRecruit(run,c){if(!c||c.recruited||run.gold<recruitPrice(run,c)||run.bench.length>=12)return false;run.gold-=recruitPrice(run,c);c.recruited=true;run.bench.push(c);return true;}
+export function recruitOffer(run,seed,ids){const r=rng(seed);return ids.map((id,i)=>{const c=rollIndividual(creature(id,Math.max(1,1+run.planet*2+(expeditionDepth(run)?Math.floor(run.depth/3):0))),seed+i*991);initializeCompanion(run,c);c.marketCost=({Common:65,Uncommon:95,Rare:140,Epic:205,Legendary:290})[BY_ID[id].rarity];c.baseMarketCost=c.marketCost;c.marketCost=recruitPrice(run,c);return c;});}
+export function buyRecruit(run,c){if(!c||c.recruited||run.gold<recruitPrice(run,c)||run.bench.length>=12)return false;run.gold-=recruitPrice(run,c);c.recruited=true;initializeCompanion(run,c);run.bench.push(c);return true;}

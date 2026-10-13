@@ -136,7 +136,7 @@ export function characterRig(id,state='idle',phase=0,stage='',options={}){
     if(options.swing==='side')torsoYaw=stage==='recovery'?0.38*(1-ease(phase)):-0.42*ease(phase/0.72)+0.8*swing;
     if(options.charged){const brace=stage==='windup'&&phase<0.72?ease(phase/0.72):stage==='recovery'?1-ease(phase):1-ease((phase-0.72)/0.28);crouch+=brace*3;lean-=brace*0.035;}
   }
-  if(state==='attack'&&bow){crouch=1.5*(stage==='windup'?ease(phase):1-ease(phase));shift=1.2;}
+  if(state==='attack'&&bow){crouch=5.5*(stage==='windup'?ease(phase/.55):1-ease(phase/.7));shift=-2.5*(stage==='windup'?ease(phase):1-ease(phase/.6));sideLean=-.08*(stage==='windup'?ease(phase):1-ease(phase));}
   if(state==='attack'&&wolf){
     const swing=ease((phase-0.72)/0.28);
     shift=stage==='recovery'?5*(1-ease(phase)):phase<0.72?-3*ease(phase/0.72):-3+8*swing;
@@ -196,8 +196,9 @@ export function characterRig(id,state='idle',phase=0,stage='',options={}){
     }
     if(bow&&state==='attack'){
       const raise=stage==='windup'?ease(phase/0.2):1-ease(Math.max(0,(phase-0.25)/0.75));
-      const pull=stage==='windup'?ease((phase-0.2)/0.8):1-ease(Math.min(1,phase*6));
+      const pull=stage==='windup'?ease((phase-0.15)/0.72):1-ease(Math.min(1,phase*9));
       left=mix(left,point(18,-7,hipHeight+19),raise);
+      if(stage==='recovery')right.z+=Math.sin(Math.min(1,phase/.35)*Math.PI)*3;
       right=mix(right,point(left.x-pull*18,left.y,left.z),raise);bowString={draw:pull,distance:18};tilt=0;
     }
     if(state==='cast'&&!heavy){

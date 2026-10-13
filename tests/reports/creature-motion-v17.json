@@ -1,0 +1,129 @@
+{
+  "version": "0.13.0",
+  "rulesVersion": 17,
+  "saveSchema": 7,
+  "branch": "codex/creature-motion-v17",
+  "baseCommit": "ddc57f32524e18401cc1ef4e0447ddcd1607a75d",
+  "generatedAt": "2026-10-13T22:14:19.296880+00:00",
+  "unit": {
+    "tests": 228,
+    "pass": 228,
+    "fail": 0,
+    "command": "npm test"
+  },
+  "browser": {
+    "v17": {
+      "checks": [
+        "Pregame AI controls update actual policy without opening a modal; target lines and original-save backup appear",
+        "Pregame canvas visibly changes while creatures idle",
+        "A reserve dragged onto the team replaces the creature, preserves both individuals, and refreshes AI previews",
+        "Whole-creature relic loadout has no skill-link selectors; outside tap closes creature panels",
+        "Repeated starter selection retains page and dialog scroll; outside tap closes selection",
+        "Three distinct planetary previews work and encounter nodes have enough room without changing route legality",
+        "Real simulated battle creates persistent EXP rows, seven head-to-head comparisons and charts; metric selection retains scroll and dismissed rewards can be reopened",
+        "Automatic capture visibly counts down after lattice break, uses highlighted tools and respects the three-throw limit",
+        "Deployment controls, reserve tray, planet chart and previews fit 320px and 390px screens",
+        "All six pregame AI selectors remain separate on 320px, 900px and 1440px layouts",
+        "Exact rebuilt single-file game contains the new controls and planet art with zero external asset requests"
+      ],
+      "errors": []
+    },
+    "v15": {
+      "checks": [
+        "Two-point starter budget rejects Legendary picks and supports one two-point companion in two available places",
+        "Quick method/HP selection persists; one tool is reserved; live and reward success notices appear; post-match capture is absent; exactly two rewards",
+        "Lethal damage genuinely prevents capture and produces an explicit failure message",
+        "Real gear/gem drag/drop preserves ownership; skill ordering persists; tabbed loadouts, ailment hover help and outside dismissal work",
+        "Enemy-side relic summary and full equipment are inspectable; shops present exactly two costly relics",
+        "Eligible companions have a visible shining evolution notification",
+        "UI V2 fits 320/390/768px, uses reachable bottom navigation and tabbed bottom sheets, and dismisses by tapping outside",
+        "Choosing the occasional equipment reward grants one character-wide item, persists across reload, and cannot be claimed twice",
+        "Mobile star chart and menagerie fit the viewport and remain accessible through bottom navigation"
+      ],
+      "errors": []
+    },
+    "v16": {
+      "checks": [
+        "Upper-right Settings exposes 13 live sliders, grouped size preview changes, physics resize together, preferences survive reload, tuning pauses and resumes combat, reset restores defaults",
+        "Visible equipment pack below companions supports real drag to a creature, transfer between creatures and return to pack without duplication",
+        "Failed planned capture can be retried with highlighted Runic/Astral tools via overhead and physical opponent clicks; exactly three attempts spend stock and remain capped after reload",
+        "Live countdown enters enrage at 30s, shows exact healing tier/multiplier and next decay, and stops with pause",
+        "A real simulated battle produces graph tabs, team comparison, accurate kill timeline, illustrated loot reveal, one-time collection and a persistent recap after reload",
+        "Settings, range inputs, recap charts and loot fit 320px and 390px screens",
+        "The exact rebuilt single-file game supports settings and battle recap with only its initial HTML request and zero external asset requests"
+      ],
+      "errors": []
+    }
+  },
+  "browserGroups": 27,
+  "renderSweep": {
+    "poses": 17088,
+    "clipped": 0,
+    "sourceCell": [
+      64,
+      64
+    ]
+  },
+  "godot": {
+    "import": "passed",
+    "assets": "passed",
+    "run": "passed"
+  },
+  "artifacts": {
+    "Starfall-Menagerie.html": {
+      "bytes": 13881825,
+      "sha256": "a00a413d42637358129f28fdc9e7a49dc6edafad1c82ed63a595e52b5797d3f2"
+    },
+    "Starfall-Training-Glade.html": {
+      "bytes": 13138793,
+      "sha256": "c4d49eb23a7007823e3a16de802f5d8eb30f33922e2639190a3c12274338d32a"
+    },
+    "public/creature-motion-v17-team.png": {
+      "bytes": 2222059,
+      "sha256": "5b2d7710d0c41f0ff1950b649b5461b56a2acb7c55a6b8526e63defb03716ef4"
+    },
+    "public/creature-motion-v17-planets.png": {
+      "bytes": 692999,
+      "sha256": "b876cebd01a07388df196b3f97e05901a61a34a1fd35bcabe82c22a1b536eb7e"
+    },
+    "public/creature-motion-v17-recap.png": {
+      "bytes": 1204963,
+      "sha256": "e30c2c6eb0f615044d85f954e1943f8e5143d28145bce7ae3655647bd24877ef"
+    },
+    "public/creature-motion-v17-directions.png": {
+      "bytes": 291858,
+      "sha256": "9da7d88d719e44b21efb995ff4890784a8b08b661be6c3d3425b6e4788dceba5"
+    },
+    "public/creature-motion-v17-preview.webm": {
+      "bytes": 1804636,
+      "sha256": "137502853b51f465a2790e50c94f90333bfe578e3ab057621e2b1a8deac1368f"
+    }
+  },
+  "sourceSHA256": {
+    "app.js": "cd2ba36b249ae150946a8ac1075683790a76857abc4afd9623f7cba5a4d52483",
+    "game.js": "eaf539c4b3fa05ea7198ae28cbb6a7f1890524c2ff29666871b976e40601d81a",
+    "authored-sprite-renderer.js": "9da4aa65e651010ebf535f352c6b42d147b79418b99e8e5f2a4bbaff2ad57d53",
+    "native-motion.js": "56d7ef34a0ab173e1275220fc6ed6ae39da8857e1fa1b404983a17dbbaeb57d9",
+    "native-art.js": "51147fd1ec9cf883717ebd22e77127dde6afcde4471d1ad4b32c0fe0a476176b",
+    "native-forms.js": "f98aca14f8cb87b45752745fe97098c2889d91c4d1ed9de2628ed005deccafd4",
+    "prototype-pixel-art.js": "c403d49523c224783cfc6b1d71fc00ca114ee6791f485087fac13fd97b7f14b8",
+    "prototype-rig.js": "cedb595a3b9cabd421a80fb91932434c2cdc98b8e53f3422a448608d8e530b80",
+    "prototype-sprites.js": "b6151579716e63b060065c9ce852da86558029835c5fff730475cc7ae8ee7646",
+    "wearer-relics.js": "609ba86ca15750c2ca2a29512f9bdfa3da2dab5b1176a5999d7e9cfd65d587c9",
+    "planet-ui.js": "138e8c543ebb38fc1af83b51970df25f9d5a1ed66cef6c5cc42d987088028c05",
+    "battle-summary.js": "b1189b73482801a58b1394d81da7f2cd15f800b2e0c6ebb6c73759ed91ce3daf",
+    "creature-equipment.js": "e9953bf002e22b301ec744c217bfd2d5e56d213223bf36de888cac4129dd9cb1",
+    "run-relics.js": "d4beea673c44131ebf1cd5fce42b44a64da5e6b92889b7bf23ea382aa1f4a381",
+    "loadout-interactions.js": "a138ed9fc6eecbeaf72ecd20a0721d95d5131047df1f290771db70417dbdb536",
+    "expedition-rules.js": "f68cb726b2435592fee09d6c063ca765051e5bfd96193579f570ceae27dde1b4",
+    "styles.css": "5bf375fdcee9a51d7a4b1122d34f2a289c83d76262dc0fb237cbb1de7967838a"
+  },
+  "preservedUntrackedDraft": {
+    "path": "expedition.js",
+    "sha256": "a4c0ad756a781f8f223e34c1f9cd22d79e9fe47bff81d8ee951f47a16d987ea1"
+  },
+  "limitations": [
+    "No fifty-hour human playtest or numerical fun rating claimed.",
+    "Long Chaos campaigns and balance require further player playtesting."
+  ]
+}
