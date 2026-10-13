@@ -25,6 +25,7 @@ import {
   PLANETS,
   RELICS,
   rng,
+  shuffled,
   pick,
   creature,
   xpNeeded,
@@ -777,9 +778,9 @@ function openReserves() {
 function rewardOptions(){
  if(reward.relicChoices?.length)return reward.relicChoices.map(id=>{const r=RELICS.find(r=>r.id===id);return {id:'relic:'+id,name:r.name,icon:r.icon,desc:relicDescription(r)};});
  const random=rng(node.seed+run.wins*91);
- if(reward.openingBoons??(run.native&&run.wins===1))return OPENING_BOONS.slice().sort(()=>random()-.5).slice(0,2).map(id=>{const r=RELICS.find(r=>r.id===id);return {id:'boon:'+id,name:r.name,icon:r.icon,desc:relicDescription(r)};});
+ if(reward.openingBoons??(run.native&&run.wins===1))return shuffled(OPENING_BOONS,random).slice(0,2).map(id=>{const r=RELICS.find(r=>r.id===id);return {id:'boon:'+id,name:r.name,icon:r.icon,desc:relicDescription(r)};});
  const options=[{id:'training',icon:'✧',name:'Focused practice',desc:'Every deployed companion gains one training rank: +3.5% base growth.'},{id:'gear',icon:'◈',name:reward.equipmentReward?GEAR_BY_ID[reward.equipmentReward].name:PERSONAL_BY_ID[reward.personalRelic||'quick-shard'].name,desc:reward.equipmentReward?equipmentDescription(GEAR_BY_ID[reward.equipmentReward]):'One support gem for a skill socket. Equipment traits affect the whole character.'},{id:'orbs',icon:'◇',name:'Another chance',desc:'Gain one Scout Prism. Lower health improves capture odds, with real knockout risk.'},{id:'gold',icon:'◉',name:'Save for a build',desc:'Gain 25 gold toward a costly relic or recruitment.'}];
- return options.sort(()=>random()-.5).slice(0,2);
+ return shuffled(options,random).slice(0,2);
 }
 function captureOutcomeHTML(){const result=reward?.tacticalCapture||run.captureReservation?.result;return result?`<div class="capture-outcome ${result.success?'success':'failed'}" role="status"><strong>${result.success?'✧ CAPTURE SUCCESSFUL':'✕ CAPTURE FAILED'}</strong><p>${result.success?`${BY_ID[result.creature.id].name} joined your reserves and permanent collection.`:result.reason||'The lattice broke. The selected capturer was spent.'}</p></div>`:'';}
 function openRewards(){
@@ -2076,7 +2077,7 @@ function prepareLoadoutDragging(){
  document.querySelectorAll('.personal-inventory').forEach(el=>el.dataset.packDrop='true');
 }
 function dropTarget(el){const pack=el?.closest('[data-pack-drop]');if(pack)return {pack:true};const skill=el?.closest('[data-skill-drop]');if(skill)return {index:Number(skill.dataset.index),skill:skill.dataset.skillDrop};const unit=el?.closest('[data-loadout-drop]'),gear=el?.closest('[data-gear-slot]');return unit&&unit.dataset.loadoutDrop!=='null'?{index:Number(unit.dataset.loadoutDrop),...(gear?{gearSlot:Number(gear.dataset.gearSlot)}:{})}:null;}
-function finishLoadoutDrop(payload,target){if(!target||phase==='battle')return false;if(!applyLoadoutDrop(run,payload,target)){toast('That loadout cannot accept this item or skill. Check space and compatibility.');return false;}save();render();if(modalKind==='creature'||modalKind==='detail')openCreature(selectedCreature);else if(modalKind==='pack')openPack();toast(payload.kind==='skill'?'Cooldown priority changed. The first ready skill is considered first.':'Loadout updated.');return true;}
+function finishLoadoutDrop(payload,target){if(!target||phase==='battle')return false;if(!applyLoadoutDrop(run,payload,target)){toast('That loadout cannot accept this item or skill. Check space and compatibility.');return false;}save();render();if(modalKind==='creature'||modalKind==='detail')openCreature(selectedCreature);else if(modalKind==='pack')openPack();const refreshed=$('.modal');if(refreshed)refreshed.classList.add('loadout-updated');toast(payload.kind==='skill'?'Cooldown priority changed. The first ready skill is considered first.':'Loadout updated.');return true;}
 let loadoutDrag=null;
 document.addEventListener('dragstart',e=>{const el=e.target.closest('[data-drag-payload]');if(!el||phase==='battle')return;loadoutDrag=JSON.parse(el.dataset.dragPayload);e.dataTransfer.setData('application/x-starfall-loadout',el.dataset.dragPayload);e.dataTransfer.effectAllowed='move';el.classList.add('dragging');});
 document.addEventListener('dragover',e=>{if(loadoutDrag&&dropTarget(e.target)){e.preventDefault();e.dataTransfer.dropEffect='move';}});

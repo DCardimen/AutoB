@@ -3483,6 +3483,9 @@ footer i {
 .ui-v2 .skill-gem-tray{padding:14px;border:1px solid #62764d;border-radius:13px;background:#273b29;margin:14px 0}.ui-v2 .skill-gem-tray>div{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.ui-v2 .skill-gem-tray .loadout-draggable{padding:8px 10px;border:1px solid #a09c67;border-radius:9px;background:#3b4830;color:#e2dfb1;font-size:11px;min-height:36px}.ui-v2 .gear-grid small,.ui-v2 .inventory-item small{font-size:12px;line-height:1.65}
 .ui-v2 .enemy-build-banner{position:relative!important;inset:auto!important;max-width:none!important;display:flex;align-items:center;flex-wrap:wrap;gap:9px;margin:0;padding:11px 16px!important;border:0;border-top:1px solid #52613d55;border-bottom:1px solid #60714a66;background:#233627}.ui-v2 .enemy-build-banner strong{font-size:9px;margin:0}.ui-v2 .enemy-build-banner div{display:flex;flex-wrap:wrap;gap:7px}.ui-v2 .enemy-build-banner button{min-height:30px;padding:5px 8px;font-size:10px;border-radius:8px}.ui-v2 .enemy-build-banner button span{display:inline!important;max-width:none!important}.ui-v2 .enemy-build-banner small{margin:0;font-size:9px}
 @media(max-width:820px){.ui-v2 .enemy-build-banner{padding:9px 12px!important;gap:6px}.ui-v2 .enemy-build-banner strong{width:100%;font-size:8px}.ui-v2 .enemy-build-banner button{font-size:9px;min-height:29px;padding:5px 7px}.ui-v2 .enemy-build-banner small{display:none}}
+
+.ui-v2 .modal.loadout-updated,.ui-v2 .modal.loadout-updated .detail-pane{animation:none}
+@media(prefers-reduced-motion:reduce){.ui-v2 .modal,.ui-v2 .detail-pane,.ui-v2 .loot-drop{animation:none}.ui-v2 *{scroll-behavior:auto}}
 </style>
   </head>
   <body class="ui-v2">
@@ -12049,6 +12052,14 @@ footer i {
   function pick(arr, r) {
     return arr[Math.floor(r() * arr.length)];
   }
+  function shuffled(items, random) {
+    const result = [...items];
+    for (let i = result.length - 1; i > 0; i--) {
+      const j = Math.floor(random() * (i + 1));
+      [result[i], result[j]] = [result[j], result[i]];
+    }
+    return result;
+  }
   var serial = 0;
   var sessionId = Date.now().toString(36) + Math.floor(Math.random() * 1e6).toString(36);
   function creature(id, level = 1) {
@@ -13143,9 +13154,9 @@ footer i {
           st.hp *= diff.health * (this.chaos >= 11 ? 1.1 : 1) * (c.elite && this.chaos >= 1 ? 1.12 : 1);
           if ((run3.rulesVersion || 0) >= 15) {
             const progress = run3.planet * 8 + run3.depth;
-            st.hp *= 1.04 + progress * 0.035 + this.chaos * 0.014;
-            st.atk *= 1.02 + progress * 0.02 + this.chaos * 0.012;
-            st.cdFactor *= 1 - Math.min(0.2, progress * 9e-3 + this.chaos * 3e-3);
+            st.hp *= 1.04 + progress * 0.02 + this.chaos * 0.014;
+            st.atk *= 1.02 + progress * 0.0125 + this.chaos * 0.012;
+            st.cdFactor *= 1 - Math.min(0.15, progress * 6e-3 + this.chaos * 3e-3);
           }
           st.atk *= diff.attack * (c.boss && this.chaos >= 16 ? 1.12 : 1);
           for (const contract of run3.contracts || []) {
@@ -16588,12 +16599,12 @@ footer i {
       return { id: "relic:" + id, name: r.name, icon: r.icon, desc: relicDescription(r) };
     });
     const random = rng(node.seed + run2.wins * 91);
-    if (reward.openingBoons ?? (run2.native && run2.wins === 1)) return OPENING_BOONS.slice().sort(() => random() - 0.5).slice(0, 2).map((id) => {
+    if (reward.openingBoons ?? (run2.native && run2.wins === 1)) return shuffled(OPENING_BOONS, random).slice(0, 2).map((id) => {
       const r = RELICS.find((r2) => r2.id === id);
       return { id: "boon:" + id, name: r.name, icon: r.icon, desc: relicDescription(r) };
     });
     const options = [{ id: "training", icon: "\u2727", name: "Focused practice", desc: "Every deployed companion gains one training rank: +3.5% base growth." }, { id: "gear", icon: "\u25C8", name: reward.equipmentReward ? GEAR_BY_ID[reward.equipmentReward].name : PERSONAL_BY_ID[reward.personalRelic || "quick-shard"].name, desc: reward.equipmentReward ? equipmentDescription(GEAR_BY_ID[reward.equipmentReward]) : "One support gem for a skill socket. Equipment traits affect the whole character." }, { id: "orbs", icon: "\u25C7", name: "Another chance", desc: "Gain one Scout Prism. Lower health improves capture odds, with real knockout risk." }, { id: "gold", icon: "\u25C9", name: "Save for a build", desc: "Gain 25 gold toward a costly relic or recruitment." }];
-    return options.sort(() => random() - 0.5).slice(0, 2);
+    return shuffled(options, random).slice(0, 2);
   }
   function captureOutcomeHTML() {
     const result = reward?.tacticalCapture || run2.captureReservation?.result;
@@ -18159,6 +18170,8 @@ footer i {
     render();
     if (modalKind === "creature" || modalKind === "detail") openCreature(selectedCreature);
     else if (modalKind === "pack") openPack();
+    const refreshed = $(".modal");
+    if (refreshed) refreshed.classList.add("loadout-updated");
     toast(payload.kind === "skill" ? "Cooldown priority changed. The first ready skill is considered first." : "Loadout updated.");
     return true;
   }

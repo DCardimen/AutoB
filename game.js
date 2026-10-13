@@ -356,6 +356,11 @@ export function rng(seed) {
 export function pick(arr, r) {
   return arr[Math.floor(r() * arr.length)];
 }
+export function shuffled(items, random) {
+  const result=[...items];
+  for(let i=result.length-1;i>0;i--){const j=Math.floor(random()*(i+1));[result[i],result[j]]=[result[j],result[i]];}
+  return result;
+}
 let serial = 0;
 const sessionId =
   Date.now().toString(36) + Math.floor(Math.random() * 1e6).toString(36);
