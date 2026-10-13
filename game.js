@@ -1831,6 +1831,7 @@ export class Battle {
       u.mass*=Math.max(.5,next)/Math.max(.5,old);
       u.entityBounds=nativeEntityBounds(BY_ID[u.id],u,NATIVE_BOUNDS,this.tuning);
       u.nativeActor.rigScale=next;u.nativeActor.capeCloth=null;u.nativeActor.groundFeet=null;
+      for(const strike of this.strikes)if(strike.source===u&&strike.nativeMelee)strike.reach*=ratio;
       confineBody(u,this.bounds);
     }
   }
@@ -3818,7 +3819,7 @@ export class Battle {
         }else{const smoothing=1-Math.exp(-dt*14);u.velocityX+=(vx*movement*factor-u.velocityX)*smoothing;u.velocityY+=(vy*movement*factor-u.velocityY)*smoothing;}
         u.x += u.velocityX * dt;
         u.y += u.velocityY * dt;
-        if((this.run.rulesVersion||0)>=15&&Math.hypot(u.velocityX,u.velocityY)>u.speed*1.85)u.stamina=Math.max(0,u.stamina-dt*24);
+        if((this.run.rulesVersion||0)>=15&&Math.hypot(u.velocityX,u.velocityY)>u.speed*this.tuning.movementSpeed/100*1.85)u.stamina=Math.max(0,u.stamina-dt*24);
       }
       u.x += u.impulseX * dt;
       u.y += u.impulseY * dt;

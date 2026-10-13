@@ -1,8 +1,8 @@
 {
   "version": "Arena Feel V16 / 0.12.0",
   "unit": {
-    "tests": 139,
-    "passed": 139,
+    "tests": 140,
+    "passed": 140,
     "failed": 0,
     "command": "node --test tests/enrage-tuning.test.js tests/expedition-v15.test.js tests/native-tactics.test.js tests/arena.test.js tests/expedition-v12.test.js tests/game.test.js tests/overhaul.test.js tests/native-expedition.test.js tests/native-lineage.test.js"
   },
@@ -37,7 +37,7 @@
     "Full Chaos campaign difficulty was not re-certified; V15 Chaos-1 policy failure remains historical evidence."
   ],
   "sourceSha256": {
-    "game.js": "af4356b68a2ca3c864f2e4d7c9da370b034c30f09f367a1c0851b2dc8f38b712",
+    "game.js": "6cfaeca23b015f3a112ff98a8640aba89e56cfd3e9aeafffcd025f3253daf247",
     "app.js": "9f6beb258acd180017b6576bb39e6069f571e0080aa0c79416ead61f3b782d78",
     "styles.css": "3722588c607532eb756c3abc9be0b4843e2303c368f622858afd02bd0f81d4d3",
     "battle-enrage.js": "858c65f5d32e44fd6ee5a8a32db8eff4f103e8e2b261d024f4f9a96d32c457ce",
@@ -52,6 +52,6 @@
     "creature-equipment.js": "c29c37cb2dddb3f04cb49b4e778bc257e9ab4525afd1cea60bf3b0f04f464674",
     "expedition-rules.js": "fbc1a248c0db061b45b33b140976747c4311d3ce76578fc1c93d73a838c12cd0",
     "loadout-interactions.js": "f4e417f0d0003fbb87b9fa7220d480174a4bc0d218253d5ff0ceec0738793f06",
-    "Starfall-Menagerie.html": "c1ec3d5066dc50c67acc456ee064e691eb3b2b2de3a27dd0e83eae1237615f69"
+    "Starfall-Menagerie.html": "4be90ba58904135b9d623c3b92af82e3226e0ce31a474f5436671753c97bc8b5"
   }
 }

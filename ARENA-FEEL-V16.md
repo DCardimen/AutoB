@@ -53,7 +53,7 @@ Every result shows per-creature damage, kills, healing and mitigation. Interacti
 
 ## Validation
 
-139 related Node tests passed. Seven V16 browser groups and nine V15 regression browser groups passed, with no page errors. Checks cover enrage tiers/timers/poses, symmetric damage/healing, capture rarity and health, three-attempt stock/reload limits, actual opponent clicks, equipment transfer and quality preservation, seeded rarity-dependent loot, graph/timeline data, live settings, 320/390px screens, and the exact rebuilt standalone HTML. The standalone requests only its initial HTML and no external artwork, fonts or modules. See `tests/reports/arena-feel-v16.json`.
+140 related Node tests passed. Seven V16 browser groups and nine V15 regression browser groups passed, with no page errors. Checks cover enrage tiers/timers/poses, symmetric damage/healing, capture rarity and health, three-attempt stock/reload limits, actual opponent clicks, equipment transfer and quality preservation, seeded rarity-dependent loot, graph/timeline data, live settings, 320/390px screens, and the exact rebuilt standalone HTML. The standalone requests only its initial HTML and no external artwork, fonts or modules. See `tests/reports/arena-feel-v16.json`.
 
 These are automated functional and simulated combat checks, not a fifty-hour human playtest or a measured 9/10 fun rating. The previous V15 full-campaign Chaos-1 policy failure remains historical evidence; campaign difficulty has not been re-certified by this update.
 

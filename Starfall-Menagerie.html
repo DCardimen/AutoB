@@ -13608,6 +13608,7 @@ footer i {
         u.nativeActor.rigScale = next;
         u.nativeActor.capeCloth = null;
         u.nativeActor.groundFeet = null;
+        for (const strike of this.strikes) if (strike.source === u && strike.nativeMelee) strike.reach *= ratio;
         confineBody(u, this.bounds);
       }
     }
@@ -15312,7 +15313,7 @@ footer i {
           }
           u.x += u.velocityX * dt;
           u.y += u.velocityY * dt;
-          if ((this.run.rulesVersion || 0) >= 15 && Math.hypot(u.velocityX, u.velocityY) > u.speed * 1.85) u.stamina = Math.max(0, u.stamina - dt * 24);
+          if ((this.run.rulesVersion || 0) >= 15 && Math.hypot(u.velocityX, u.velocityY) > u.speed * this.tuning.movementSpeed / 100 * 1.85) u.stamina = Math.max(0, u.stamina - dt * 24);
         }
         u.x += u.impulseX * dt;
         u.y += u.impulseY * dt;
