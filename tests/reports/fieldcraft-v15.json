@@ -1958,5 +1958,8 @@
       "result": "Seed-3 role-aware policy lost on the first planet; the full-clear assertion failed. No browser errors. Chaos victory/point unlock is covered by unit tests, not a completed V15 campaign."
     }
   ],
-  "pullRequest": "https://github.com/DCardimen/AutoB/pull/2"
+  "pullRequest": "https://github.com/DCardimen/AutoB/pull/3",
+  "recoveryPullRequest": "https://github.com/DCardimen/AutoB/pull/2",
+  "branch": "codex/fieldcraft-v15-verified",
+  "verifiedSourceCommit": "58087d16f63a678b8b40d78bae2afaef117ce595"
 }

@@ -2,7 +2,7 @@
 
 ## Current change · V15 Fieldcraft / UI V2 / application 0.11.0
 
-Fresh feature branch: **codex/expedition-depth-v15**, based on 94640a3. The remote released branch merged the sprite-size adjustment at 57254ee. This task does not push or deploy the released branch. Read FIELDCRAFT-V15.md and tests/reports/fieldcraft-v15.json before continuation.
+First feature branch: codex/expedition-depth-v15, based on 94640a3. PR #2 merged its recovery checkpoint at released commit 82c35e8. The verified follow-up is on **codex/fieldcraft-v15-verified**, NEW PR #3: https://github.com/DCardimen/AutoB/pull/3. The earlier sprite-size merge was 57254ee. This task does not push or deploy the released branch. Read FIELDCRAFT-V15.md and tests/reports/fieldcraft-v15.json before continuation.
 
 Implemented: two starter points and up to two bodies; earned third place after two wins; preselected-only captures with at most half previous odds and a stronger health curve; lethal capture risk and clear results; 100 new character-wide equipment effects / 106 total; three equipment places plus one per form; armor with diminishing returns; coherent full enemy sets and visible relic builds; twelve new AI relics / 136 total; two-choice rewards and shops; expensive relics; sharp full-grid arena rendering; tiny-scale spacing, steering, bounded gait cadence and facing hysteresis; blocker removal; status bars/text/help; evolution-ready shine; desktop/touch drag/drop; outside-dismissable tabbed creature screens; mobile bottom navigation and a full UI V2 theme.
 
@@ -14,7 +14,7 @@ Reward choices use a deterministic Fisher–Yates shuffle. Rapid loadout refresh
 
 The early outpost graph now has an ordinary third-room route, and purchased recruits match local encounter level. This was added after legal routing samples exposed unavoidable early rare-hunt pressure and underleveled recruits. Player item/relic strength remains reduced and later enemy builds stronger. No fifty-hour human playtest or objective 9/10 fun claim is established.
 
-Git push and PR creation work through the current platform authentication/proxy. NEW PR #2: https://github.com/DCardimen/AutoB/pull/2, targeting codex/starfall-menagerie. This task did not reuse PR #1. An earlier API/network diagnosis was superseded by successful gh pr create; do not ask the user for a token or network change based only on stale metadata. Future requested changes still require a fresh branch and NEW PR. Never bypass the network proxy.
+Git push and PR creation work through the current platform authentication/proxy. PR #2 merged before the final package was pushed. The final follow-up uses a fresh branch and NEW PR #3: https://github.com/DCardimen/AutoB/pull/3, targeting codex/starfall-menagerie. This task did not reuse PR #1. An earlier API/network diagnosis was superseded by successful gh pr create; do not ask the user for a token or network change based only on stale metadata. Future requested changes still require a fresh branch and NEW PR. Never bypass the network proxy.
 
 ## Previous release · V14 / Art V3 / application 0.10.0
 
@@ -90,4 +90,4 @@ Commands: npm test; npm run build:standalone; BASE_URL=http://127.0.0.1:3015 npm
 
 Evidence: tests/reports/sprite-art-v2.json, tests/reports/expedition-v12.json, tests/reports/grand-forms-v11.json and historical v9/v10 reports. Raw logs/reports/screenshots are under playtest-artifacts/. Playable artifact: Starfall-Menagerie.html. Current art media and package paths are in the v13 checkpoint above. Existing untracked expedition.js remains untouched.
 
-The agent cannot read the user's quota percentage or resume itself on a timer. The user can send a new continuation message after usage replenishes; continue from this checkpoint without restarting completed milestones. The current development branch is codex/expedition-depth-v15; the released branch remains codex/starfall-menagerie.
+The agent cannot read the user's quota percentage or resume itself on a timer. The user can send a new continuation message after usage replenishes; continue from this checkpoint without restarting completed milestones. The current development branch is codex/fieldcraft-v15-verified; the released branch remains codex/starfall-menagerie.
