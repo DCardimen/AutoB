@@ -1,6 +1,20 @@
 # Development continuation
 
-## Current release · V14 / Art V3 / application 0.10.0
+## Current change · V15 Fieldcraft / UI V2 / application 0.11.0
+
+Fresh feature branch: **codex/expedition-depth-v15**, based on 94640a3. The remote released branch merged the sprite-size adjustment at 57254ee. This task does not push or deploy the released branch. Read FIELDCRAFT-V15.md and tests/reports/fieldcraft-v15.json before continuation.
+
+Implemented: two starter points and up to two bodies; earned third place after two wins; preselected-only captures with at most half previous odds and a stronger health curve; lethal capture risk and clear results; 100 new character-wide equipment effects / 106 total; three equipment places plus one per form; armor with diminishing returns; coherent full enemy sets and visible relic builds; twelve new AI relics / 136 total; two-choice rewards and shops; expensive relics; sharp full-grid arena rendering; tiny-scale spacing, steering, bounded gait cadence and facing hysteresis; blocker removal; status bars/text/help; evolution-ready shine; desktop/touch drag/drop; outside-dismissable tabbed creature screens; mobile bottom navigation and a full UI V2 theme.
+
+Schema 6 backs up schemas 1–5. Existing teams and capacities remain; New expedition enforces the two-point start. Completed Art V3, 89 pixel families, physical weapon grips and requested .15 baseline / .7–1.5 type sizes remain. No sprite master repaint or new Godot exports were needed. The pre-existing untracked expedition.js is unchanged and excluded from commits.
+
+Development server for this task: port 3024 with the V15 modules whitelisted. Run PORT=3024 npm start on a free port when resuming; do not assume saved processes survive. Core checks: npm test; BASE_URL=http://127.0.0.1:3024 npm run test:fieldcraft; node scripts/review-fieldcraft-v15.mjs; npm run build:standalone; BASE_URL=http://127.0.0.1:3024 node tests/standalone.browser.mjs. Review/campaign scripts honor BASE_URL / CHROMIUM_PATH. Read the current evidence for passed, failed and unrun campaign outcomes; older V14 campaign/art scores do not rate V15 gameplay.
+
+The early outpost graph now has an ordinary third-room route, and purchased recruits match local encounter level. This was added after legal routing samples exposed unavoidable early rare-hunt pressure and underleveled recruits. Player item/relic strength remains reduced and later enemy builds stronger. No fifty-hour human playtest or objective 9/10 fun claim is established.
+
+GitHub HTTPS Git access works. GitHub API access is destination-blocked in this cloud environment, so PR creation may need the saved api.github.com network addition reviewed/saved and the environment published. Use the new branch and create a NEW PR; do not reuse PR #1. Never bypass the network proxy. The saved environment draft is distinct from live runtime policy.
+
+## Previous release · V14 / Art V3 / application 0.10.0
 
 The recovered sprite overhaul is complete. Read SPRITE-ART-V3.md and tests/reports/sprite-art-v3.json for artwork provenance, visual review, implementation and validation. Both offline HTML games are rebuilt. Playable packages and final review media are in public/.
 
@@ -74,4 +88,4 @@ Commands: npm test; npm run build:standalone; BASE_URL=http://127.0.0.1:3015 npm
 
 Evidence: tests/reports/sprite-art-v2.json, tests/reports/expedition-v12.json, tests/reports/grand-forms-v11.json and historical v9/v10 reports. Raw logs/reports/screenshots are under playtest-artifacts/. Playable artifact: Starfall-Menagerie.html. Current art media and package paths are in the v13 checkpoint above. Existing untracked expedition.js remains untouched.
 
-The agent cannot read the user's quota percentage or resume itself on a timer. The user can send a new continuation message after usage replenishes; continue from this checkpoint without restarting completed milestones. The current branch is codex/starfall-menagerie.
+The agent cannot read the user's quota percentage or resume itself on a timer. The user can send a new continuation message after usage replenishes; continue from this checkpoint without restarting completed milestones. The current development branch is codex/expedition-depth-v15; the released branch remains codex/starfall-menagerie.

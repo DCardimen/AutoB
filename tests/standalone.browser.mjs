@@ -50,10 +50,13 @@ await page.addInitScript(
 );
 await page.goto(url, { waitUntil: "networkidle" });
 await page.locator('[data-creature="0"]').click();
+await page.locator('[data-detail-tab="equipment"]').click();
 await page.locator("[data-equip]").first().click();
 await page.locator(".gem-link").selectOption("auto-ashpup");
+await page.locator('[data-detail-tab="overview"]').click();
 await page.locator('[data-evolve="wild"]').click();
 await page.locator('[data-action="evolution-back"]').click();
+await page.locator('[data-detail-tab="equipment"]').click();
 assert.equal(await page.locator(".relic-slot").count(), 2);
 await page.locator('[data-action="close"]').first().click();
 await page.clock.install();

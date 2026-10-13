@@ -360,7 +360,7 @@ export function unlockChaos(profile, run) {
   if (chaosLevel(run))
     profile.chaosCleared = Math.max(profile.chaosCleared || 0, chaosLevel(run));
 }
-export function starterBudget(profile={}) { return 12 + ((profile.chaosCleared||0)>=1 ? 1 : 0); }
+export function starterBudget(profile={}) { return 2 + [1,4,8,12,16,20].filter(tier=>(profile.chaosCleared||0)>=tier).length; }
 export function starterPoints(rarity, bond = 0) {
   const cost = { Common: 1, Uncommon: 2, Rare: 3, Epic: 4, Legendary: 6 }[
     rarity

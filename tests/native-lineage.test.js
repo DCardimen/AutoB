@@ -51,11 +51,11 @@ test('a genuine retry after a defeat earns fresh accomplishments while repeated 
  const endured=run.team[0].accomplishments.damageTaken;const second=new Battle(run,[creature('tarka',8)],9);while(!second.done)second.step(.1);rewardBattle(run,'boss',false,second);
  assert.ok(run.team[0].accomplishments.damageTaken>endured);const total=run.team[0].accomplishments.damageTaken;assert.equal(settleNativeGrowth(run,second),false);assert.equal(run.team[0].accomplishments.damageTaken,total);
 });
-test('Chaos 1 completion permanently grants exactly one starter point and later clears do not stack it',()=>{
- const profile={};assert.equal(starterBudget(profile),12);unlockChaos(profile,makeRun(1));assert.equal(starterBudget(profile),12);
- unlockChaos(profile,makeRun(1,undefined,{difficulty:'chaos',chaos:1}));assert.equal(starterBudget(profile),13);
- unlockChaos(profile,makeRun(1,undefined,{difficulty:'chaos',chaos:1}));assert.equal(starterBudget(profile),13);
- unlockChaos(profile,makeRun(1,undefined,{difficulty:'chaos',chaos:20}));assert.equal(starterBudget(JSON.parse(JSON.stringify(profile))),13);
+test('Chaos 1 grants the third starter point once; milestone clears unlock later points',()=>{
+ const profile={};assert.equal(starterBudget(profile),2);unlockChaos(profile,makeRun(1));assert.equal(starterBudget(profile),2);
+ unlockChaos(profile,makeRun(1,undefined,{difficulty:'chaos',chaos:1}));assert.equal(starterBudget(profile),3);
+ unlockChaos(profile,makeRun(1,undefined,{difficulty:'chaos',chaos:1}));assert.equal(starterBudget(profile),3);
+ unlockChaos(profile,makeRun(1,undefined,{difficulty:'chaos',chaos:20}));assert.equal(starterBudget(JSON.parse(JSON.stringify(profile))),8);
 });
 test('new family art stays recognizable across forms and every required pose fits its 64-pixel cell',()=>{
  const identities=[];

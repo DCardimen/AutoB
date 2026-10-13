@@ -1,0 +1,75 @@
+{
+  "release": "V15 Fieldcraft / UI V2 checkpoint",
+  "applicationVersion": "0.11.0",
+  "saveSchema": 6,
+  "status": "implementation and validation in progress; not a 9/10 certification",
+  "unitChecks": {
+    "fullRun": {
+      "passed": 196,
+      "failed": 0,
+      "log": "autob-v15-final-suite.log"
+    },
+    "latestAffectedChecks": {
+      "passed": 91,
+      "failed": 0,
+      "log": "autob-v15-core-release.log"
+    }
+  },
+  "browser": {
+    "checks": [
+      "Two-point starter budget rejects Legendary picks and supports one two-point companion in two available places",
+      "Quick method/HP selection persists; one tool is reserved; live and reward success notices appear; post-match capture is absent; exactly two rewards",
+      "Lethal damage genuinely prevents capture and produces an explicit failure message",
+      "Real gear/gem drag/drop preserves ownership; skill ordering persists; tabbed loadouts, ailment hover help and outside dismissal work",
+      "Enemy-side relic summary and full equipment are inspectable; shops present exactly two costly relics",
+      "Eligible companions have a visible shining evolution notification",
+      "UI V2 fits 320/390/768px, uses reachable bottom navigation and tabbed bottom sheets, and dismisses by tapping outside",
+      "Mobile star chart and menagerie fit the viewport and remain accessible through bottom navigation"
+    ],
+    "errors": []
+  },
+  "review": {
+    "checks": [
+      "Real Chromium touch input transfers held equipment between companions without duplication",
+      "Exact embedded V15 HTML completes native combat and saves/reloads with zero external requests"
+    ],
+    "errors": [],
+    "externalRequests": [],
+    "motion": {
+      "fps": 30,
+      "seconds": 12,
+      "speed": 1,
+      "source": "actual expedition battle, unchanged inputs"
+    }
+  },
+  "firstRoomControlledSample": [
+    {
+      "prepared": false,
+      "wins": 30,
+      "timeouts": 1,
+      "seconds": 1199.6399999999849,
+      "count": 32,
+      "mean": 37.5
+    },
+    {
+      "prepared": true,
+      "wins": 29,
+      "timeouts": 1,
+      "seconds": 1202.8399999999865,
+      "count": 32,
+      "mean": 37.6
+    }
+  ],
+  "knownFailures": [
+    "New equipment reward browser fixture predicts different choices in Node and Chromium because reward choices use a random sort comparator; replace with a deterministic shuffle and rerun.",
+    "Current seeded legal bot campaigns do not clear all three planets under the harder balance. Some policies clear planet one and lose on planet two; no full-campaign win rate or 9/10 fun score established."
+  ],
+  "remaining": [
+    "Finish reward selection determinism and browser coverage",
+    "Finish balance review",
+    "Rebuild final standalone and create V15 playable ZIP",
+    "Push final updates and open a new PR when GitHub API destination access is available"
+  ],
+  "art": "Completed V14 Art V3 masters preserved; renderer/motion/UI updated",
+  "limits": "Automated fixtures are not fifty hours of human play. Mobile input is emulated Chromium touch."
+}
