@@ -3829,10 +3829,12 @@ footer i {
   }
 
   // native-size.js
-  var BASE_CREATURE_SCALE = 0.5;
+  var BASE_CREATURE_SCALE = 0.15;
+  var MIN_CREATURE_TYPE_FACTOR = 0.7;
+  var MAX_CREATURE_TYPE_FACTOR = 1.5;
   var sizes = { aurel: 1, brakk: 1.3, syl: 1, nyra: 1, emberhound: 1, rowan: 0.95, cogwalker: 2.5, runespider: 1.2, moonjelly: 2, brom: 0.9, grit: 0.7, morrow: 1, grum: 2, tarka: 1.7, nix: 0.9, zephyr: 1.15, luma: 0.7, vesper: 1.1, sable: 1, eira: 1.05, solara: 2 };
   function creatureTypeFactor(spec, c = {}) {
-    return Math.max(0.7, Math.min(4, (spec.bodySize || sizes[spec.id] || 1) * (c.evolution ? c.evolution === 2 ? 1.65 : 1.35 : 1)));
+    return Math.max(MIN_CREATURE_TYPE_FACTOR, Math.min(MAX_CREATURE_TYPE_FACTOR, (spec.bodySize || sizes[spec.id] || 1) * (c.evolution ? c.evolution === 2 ? 1.65 : 1.35 : 1)));
   }
   function creatureWorldScale(spec, c = {}) {
     return BASE_CREATURE_SCALE * creatureTypeFactor(spec, c);
@@ -15094,13 +15096,13 @@ footer i {
         for (let i = 0; i < 5; i++) c.fillRect(p2.x - u.r * 0.6 + i * 10, p2.y - 50 + i % 2 * 8, 7, 6);
         continue;
       }
-      const p = nativeScreen(u.x, u.y), spec = species[u.id];
+      const p = nativeScreen(u.x, u.y), spec = species[u.id], scale = creatureWorldScale(spec, u);
       if (u.captured) continue;
       c.fillStyle = u.hp > 0 ? "#0d1b1577" : "#0d1b1544";
       c.beginPath();
-      c.ellipse(p.x, p.y, u.boss ? 34 : 23, 7, 0, 0, Math.PI * 2);
+      c.ellipse(p.x, p.y, (u.boss ? 68 : 46) * scale, 14 * scale, 0, 0, Math.PI * 2);
       c.fill();
-      const scale = creatureWorldScale(spec, u), visualTop = drawNativeUnit(c, u, spec, p.x, p.y, battle2 ? battle2.time : time, 3 * scale);
+      const visualTop = drawNativeUnit(c, u, spec, p.x, p.y, battle2 ? battle2.time : time, 3 * scale);
       if (u.hp <= 0) continue;
       const width = u.boss ? 70 : 42, bar = Math.min(visualTop - 9, p.y - (({ knight: 115, orc: 100, elf: 105, caster: 116, wolf: 77, fox: 112, mech: 90, spider: 83, jelly: 92, serpent: 65, flyer: 112, crab: 80, centipede: 75 }[actorFor(u, spec).id] || 112) + 12) * scale * characterHeight * formProfile(spec, u).height);
       c.fillStyle = "#12251c";
@@ -17180,7 +17182,7 @@ footer i {
   function openRoster() {
     const s = BY_ID[rosterFamily], limit4 = lineageLimit({ id: rosterFamily });
     rosterForm = Math.min(rosterForm, limit4);
-    modal(`<span class="section-kicker">ROSTER ATELIER \xB7 ${PIXEL_SPECIES.length} PIXEL FAMILIES</span><h2>Meet their many forms.</h2><div class="roster-controls"><label>Family<select data-roster="family">${PIXEL_SPECIES.map((s2) => `<option value="${s2.id}" ${s2.id === rosterFamily ? "selected" : ""}>${s2.name} \xB7 ${s2.rarity}</option>`).join("")}</select></label><label>Motion<select data-roster="state">${NATIVE_POSES.map((state) => `<option value="${state}" ${state === rosterState ? "selected" : ""}>${state}</option>`).join("")}</select></label><label>Form<select data-roster="form">${Array.from({ length: limit4 + 1 }, (_, i) => `<option value="${i}" ${i === rosterForm ? "selected" : ""}>${i === 0 ? "Base" : i === 1 ? "Evolved" : "Ascendant"}</option>`).join("")}</select></label>${limit4 ? `<label>Branch<select data-roster="path"><option value="wild" ${rosterPath === "wild" ? "selected" : ""}>Wild</option><option value="warden" ${rosterPath === "warden" ? "selected" : ""}>Warden</option></select></label>` : ""}</div>${heightControl()}<canvas id="roster-canvas" width="768" height="360" aria-label="Eight directional views of the selected creature animation"></canvas>${familyInfo({ id: rosterFamily })}<p>${s.skillDesc || "Retained collection family, rebuilt with the pixel animation rig."}</p><p class="muted">All forms use 64 \xD7 64 cells and eight directions. Arena scale: 50% baseline \xD7 ${Math.round(creatureTypeFactor(pixelSpec(s.id), { evolution: rosterForm }) * 100)}% creature size. The atelier shows each form at equal cell size for a fair visual comparison. Previewing a form does not unlock or evolve it in your expedition.</p>${button("Return to expedition", "close", "secondary")}`, "roster");
+    modal(`<span class="section-kicker">ROSTER ATELIER \xB7 ${PIXEL_SPECIES.length} PIXEL FAMILIES</span><h2>Meet their many forms.</h2><div class="roster-controls"><label>Family<select data-roster="family">${PIXEL_SPECIES.map((s2) => `<option value="${s2.id}" ${s2.id === rosterFamily ? "selected" : ""}>${s2.name} \xB7 ${s2.rarity}</option>`).join("")}</select></label><label>Motion<select data-roster="state">${NATIVE_POSES.map((state) => `<option value="${state}" ${state === rosterState ? "selected" : ""}>${state}</option>`).join("")}</select></label><label>Form<select data-roster="form">${Array.from({ length: limit4 + 1 }, (_, i) => `<option value="${i}" ${i === rosterForm ? "selected" : ""}>${i === 0 ? "Base" : i === 1 ? "Evolved" : "Ascendant"}</option>`).join("")}</select></label>${limit4 ? `<label>Branch<select data-roster="path"><option value="wild" ${rosterPath === "wild" ? "selected" : ""}>Wild</option><option value="warden" ${rosterPath === "warden" ? "selected" : ""}>Warden</option></select></label>` : ""}</div>${heightControl()}<canvas id="roster-canvas" width="768" height="360" aria-label="Eight directional views of the selected creature animation"></canvas>${familyInfo({ id: rosterFamily })}<p>${s.skillDesc || "Retained collection family, rebuilt with the pixel animation rig."}</p><p class="muted">All forms use 64 \xD7 64 cells and eight directions. Arena size: ${Math.round(creatureTypeFactor(pixelSpec(s.id), { evolution: rosterForm }) * 100)}% of the default, capped at ${MAX_CREATURE_TYPE_FACTOR * 100}%. The atelier shows each form at equal cell size for a fair visual comparison. Previewing a form does not unlock or evolve it in your expedition.</p>${button("Return to expedition", "close", "secondary")}`, "roster");
     drawRoster(performance.now() / 1e3);
   }
   function drawRoster(time) {
