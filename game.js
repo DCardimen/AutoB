@@ -1,4 +1,7 @@
 import {starterPoints} from './tactics.js';
+import {enrageAt,actionElapsed} from './battle-enrage.js';
+import {getTuning,normalizeTuning} from './tuning.js';
+import {creatureWorldScale,nativeEntityBounds} from './native-size.js';
 import {itemStrength} from './item-effects.js';
 import {tacticalTarget,tacticalMove} from './ai-relics.js';
 import {spendCapturers,refundCapture,progressive,capacity,rollIndividual,unlockSlots,routeGraph,graphCanVisit,assignEnemyRelics,CAPTURERS,consumeCapturer,addCapturer,newCasualty,recruitOffer} from './expedition-rules.js';
@@ -1046,9 +1049,15 @@ export function captureChance(run, c) {
   const mods=routeModifiers(run),tier=CAPTURERS[preparation.tool||run.captureOrder?.tool||run.selectedCapturer||"scout"]||CAPTURERS.scout;
   const former=Math.min(.85,baseChance*.5*tier.mult+(preparation.healthFraction<=.3?(mods.captureBonus||0):0)+(preparation.status?(mods.statusCapture||0):0));
   if((run.rulesVersion||0)<15)return former;
-  const health=Math.max(0,Math.min(1,preparation.healthFraction??1));
-  // Half the old odds, then make the remaining health a substantial gamble.
-  return Math.min(.42,former*.5*(.2+.8*Math.pow(1-health,1.8)));
+  const health=Math.max(0,Math.min(1,preparation.healthFraction??.25));
+  // Scout Prism, Mercy mode and the default 25% HP threshold are the baseline.
+  const rarity=BY_ID[c.id].rarity, easy=['Common','Uncommon'].includes(rarity);
+  const baseline={Common:.90,Uncommon:.85,Rare:.25,Epic:.22,Legendary:.08}[rarity];
+  const hp=health;
+  if(hp>=1||c.boss)return 0;
+  const healthFactor=easy?(hp<=.35?1+(.25-hp)*.6:.94*Math.pow((1-hp)/.65,1.8)):Math.pow((1-hp)/.75,1.8);
+  const bonus=((run.relics.includes('lens')?.06:0)+(run.encounterType==='capture'?.04:0)+(preparation.status?.04:0)+(hp<=.3?(mods.captureBonus||0):0)+(preparation.status?(mods.statusCapture||0):0))*Math.min(1,(1-hp)/.75);
+  return Math.min(easy?.99:rarity==='Legendary'?.30:.70,(baseline*healthFactor*tier.mult+bonus)*(preparation.mode==='swift'?.94:1));
 }
 export function rollCapture(run, c) {
   if((run.rulesVersion||0)>=15)return {success:false,reason:"Captures must be selected before battle. Defeated creatures cannot be captured."};
@@ -1067,7 +1076,7 @@ export function rollCapture(run, c) {
 export function awardCapture(run, c) {
   const caught = creature(c.id, Math.max(1, c.level));
   if((run.rulesVersion||0)>=15)caught.balanceVersion=15;
-  if(progressive(run)){caught.genes=c.genes;caught.nature=c.nature;caught.boundRelics=[...(c.enemyRelics||c.boundRelics||[])];caught.equipment=[...(c.equipment||[])];caught.equipmentQuality=c.equipmentQuality;}
+  if(progressive(run)){caught.genes=c.genes;caught.nature=c.nature;caught.boundRelics=[...(c.enemyRelics||c.boundRelics||[])];caught.equipment=[...(c.equipment||[])];caught.equipmentQuality=1;caught.equipmentRolls=caught.equipment.map((id,i)=>({...c.equipmentRolls?.[i],id,quality:(c.equipmentRolls?.[i]?.quality??1)*(c.equipmentQuality??1)}));}
   caught.evolution = evolutionStage(c);
   caught.evolutionPath = caught.evolution ? c.evolutionPath : null;
   run.bench.push(caught);
@@ -1503,6 +1512,8 @@ export function applyEvent(run, event, index) {
 export class Battle {
   constructor(run, foes, seed = 1, options={}) {
     this.visuals=options.visuals!==false;
+    this.tuning=normalizeTuning(options.tuning||getTuning());
+    this.enrageAnnounced=false;
     this.run = run;
     this.native=!!run.native;
     this.growthKey=`${run.planet}:${run.depth}:${seed}:${run.wins}:${run.integrity}`;
@@ -1526,6 +1537,7 @@ export class Battle {
     this.hazards = [];
     this.queue = [];
     this.log = [];
+    this.killLedger = [];
     this.shake = 0;
     this.fields = [];
     this.audioEvents = [];
@@ -1539,6 +1551,8 @@ export class Battle {
     this.captureResult = null;
     this.capturePlan = run.captureOrder || null;
     this.captureSettled = false;
+    this.captureAttempts=run.captureReservation?.attempts||(this.savedCaptureResult?1:0);
+    this.captureHistory=[...(run.captureReservation?.history||[])];
     this.activeArchetype = foes[0]?.archetype;
     this.damageBySkill = {};
     this.metrics = {
@@ -1707,7 +1721,8 @@ export class Battle {
     foes.forEach((c, i) => add(c, 1, i, foes));
     for (const [index,u] of this.units.entries()) {
       compileRelics(this,u);u.maxPoise+=u.curioStats.poise;u.shield+=u.curioStats.shield;
-      if(this.native){const position=nativeSpawn(BY_ID[u.id],u,u.side,u.side?index-run.team.length:index);u.x=u.px=position.x;u.y=u.py=position.y;u.nativeHome={...position};initializeNative(u,BY_ID[u.id]);}else if(BY_ID[u.id].nativeRig)initializeNative(u,BY_ID[u.id]);
+      u.tuning=this.tuning;
+      if(this.native){const position=nativeSpawn(BY_ID[u.id],u,u.side,u.side?index-run.team.length:index);u.x=u.px=position.x;u.y=u.py=position.y;u.nativeHome={...position};initializeNative(u,BY_ID[u.id],this.tuning);}else if(BY_ID[u.id].nativeRig)initializeNative(u,BY_ID[u.id],this.tuning);
       if (
         u.side === 1 &&
         ((this.chaos >= 9 && BY_ID[u.id].role === "Guardian") ||
@@ -1805,6 +1820,21 @@ export class Battle {
       )[0];
     return enemies.sort((a, b) => distance(a, u) - distance(b, u))[0];
   }
+  get enrage(){return enrageAt((this.run.rulesVersion||0)>=15?this.time:0);}
+  setTuning(values){
+    this.tuning=normalizeTuning(values);
+    for(const u of this.units){
+      u.tuning=this.tuning;
+      if(!u.nativeActor)continue;
+      const next=creatureWorldScale(BY_ID[u.id],u,this.tuning),old=u.nativeScale,ratio=next/old;
+      u.nativeScale=next;u.radius*=ratio;if(BY_ID[u.id].range<=100)u.range*=ratio;
+      u.mass*=Math.max(.5,next)/Math.max(.5,old);
+      u.entityBounds=nativeEntityBounds(BY_ID[u.id],u,NATIVE_BOUNDS,this.tuning);
+      u.nativeActor.rigScale=next;u.nativeActor.capeCloth=null;u.nativeActor.groundFeet=null;
+      for(const strike of this.strikes)if(strike.source===u&&strike.nativeMelee)strike.reach*=ratio;
+      confineBody(u,this.bounds);
+    }
+  }
   heal(target, amount, source, skillId = null, show = true, scale = 1) {
     if (!target || target.hp <= 0) return;
     const mod = skillId ? linkedSupport(source, skillId) : { healing: 1 };
@@ -1821,6 +1851,7 @@ export class Battle {
       if (this.run.relics.includes("spore-network")) amount *= 0.9;
       if (this.run.relics.includes("last-light")) amount *= 0.9;
     }
+    amount *= this.enrage.healing;
     const real = Math.min(amount, target.maxHp - target.hp);
     const excess = Math.max(0, amount - real);
     source.excessHealing += excess;
@@ -1910,6 +1941,7 @@ export class Battle {
       return;
     }
     u.deathHandled = true;
+    this.killLedger.push({time:this.time,sourceUid:source?.uid||null,targetUid:u.uid,skillId:skillId||null});
     relicEvent(this,u,"death");if(source)relicEvent(this,source,"kill",{target:u});
     u.deathTime = 0;
     u.deathFace = u.face;
@@ -1952,6 +1984,8 @@ export class Battle {
     critical = false,
   ) {
     if (!target || target.hp <= 0) return 0;
+    // Interception and relic reflection already derive from an amplified hit.
+    if(!['cost','intercept','reflection'].includes(kind))amount*=this.enrage.damage;
     if (intercept && kind === "hit") {
       const guard = this.living(target.side).find(
         (g) =>
@@ -1987,14 +2021,16 @@ export class Battle {
         });
       }
     }
-    if(kind!=="cost")amount*=relicReduction(this,target,source);
-    if((this.run.rulesVersion||0)>=15&&!['status','cost','reflection'].includes(kind)){const reduction=armorReduction((target.armor||0)+(target.armorBuffTime>0?target.armorBuff||0:0),target.role);const prevented=amount*reduction;amount*=1-reduction;this.metrics.armorPrevented=(this.metrics.armorPrevented||0)+prevented;}
+    let prevented=0;
+    if(kind!=="cost"){const before=amount;amount*=relicReduction(this,target,source);prevented+=Math.max(0,before-amount);}
+    if((this.run.rulesVersion||0)>=15&&!['status','cost','reflection'].includes(kind)){const reduction=armorReduction((target.armor||0)+(target.armorBuffTime>0?target.armorBuff||0:0),target.role);const armor=amount*reduction;amount*=1-reduction;prevented+=armor;this.metrics.armorPrevented=(this.metrics.armorPrevented||0)+armor;}
     const blocked = Math.min(
       target.shield,
       amount * (1 - Math.min(0.95, pierce)),
     );
     target.shield -= blocked;
     target.shieldAbsorbed += blocked;
+    target.damageMitigated=(target.damageMitigated||0)+prevented+blocked;
     this.metrics.shieldDamage += blocked;
     const old = target.hp;
     target.hp = Math.max(0, target.hp - (amount - blocked));
@@ -2018,7 +2054,7 @@ export class Battle {
       target.hazardTaken += dealt;
       this.metrics.hazardDamage += dealt;
     }
-    if (source) {
+    if (source&&kind!=="cost") {
       source.damage += dealt;
       this.metrics.damage += dealt;
       this.damageBySkill[skillId] = (this.damageBySkill[skillId] || 0) + dealt;
@@ -2622,7 +2658,7 @@ export class Battle {
       BY_ID[target.id].role === "Guardian" &&
       (target.policy === "guardian" || target.fortify > 0);
     const force =
-      (Math.min(175, 35 + strength * 1.1) * (braced ? 0.55 : 1)) /
+      (Math.min(175, 35 + strength * 1.1) * (braced ? 0.55 : 1) * this.tuning.knockback/100) /
       (target.mass || 1);
     target.impulseX += (dx / d || source.face) * force;
     target.impulseY += (dy / d) * force;
@@ -3364,6 +3400,25 @@ export class Battle {
       time: this.time,
     });
   }
+  recordCapture(result){
+    result.attempt=this.savedCaptureResult?(this.savedCaptureResult.attempt||this.captureAttempts||1):++this.captureAttempts;
+    if(!this.captureHistory.some(r=>r.attempt===result.attempt))this.captureHistory.push(result);
+    this.captureResult=result;
+  }
+  retryCapture(uid,tool){
+    if(this.done||!this.capturePlan||!this.captureSettled||!this.captureResult||this.captureResult.success)return {ok:false,reason:'Retries are available after a planned capture fails, during combat.'};
+    if(this.captureAttempts>=3)return {ok:false,reason:'All three capture attempts have been used this round.'};
+    const target=this.units.find(u=>u.uid===uid&&u.side===1&&!u.boss&&u.hp>0&&!u.captured);
+    if(!target)return {ok:false,reason:'Choose a living, non-boss opponent.'};
+    if(target.hp>=target.maxHp)return {ok:false,reason:'Weaken this opponent first. Full-health capture chance is 0%.'};
+    if(this.run.bench.length>=12)return {ok:false,reason:'Your reserves are full.'};
+    if(!CAPTURERS[tool]||!consumeCapturer(this.run,tool))return {ok:false,reason:'That capturer is unavailable.'};
+    this.capturePlan={...this.capturePlan,uid,tool,threshold:1};
+    this.run.captureOrder={...this.capturePlan};
+    this.savedCaptureResult=null;this.captureSettled=false;
+    this.run.captureReservation={...this.run.captureReservation,uid,tool,result:null,attempts:this.captureAttempts,history:[...this.captureHistory]};
+    this.attemptCapture();return {ok:true,result:this.captureResult};
+  }
   attemptCapture() {
     if (!this.capturePlan || this.captureSettled) return;
     const target = this.units.find(
@@ -3378,6 +3433,7 @@ export class Battle {
     if(target.hp<=0&&(this.run.rulesVersion||0)>=15){
       this.captureSettled=true;
       this.captureResult={uid:target.uid,tool:this.capturePlan.tool||'scout',success:false,chance:0,reason:'Knocked out before the capturer could lock on.',creature:{id:target.id,level:target.level}};
+      this.recordCapture(this.captureResult);
       this.say(`${creatureName(target)} was knocked out before capture. The committed capturer is lost.`);
       return;
     }
@@ -3408,9 +3464,10 @@ export class Battle {
         evolution: target.evolution,
         evolutionPath: target.evolutionPath,
         capturePreparation: target.capturePreparation,
-        genes:target.genes,nature:target.nature,enemyRelics:target.enemyRelics,equipment:[...(target.equipment||[])],equipmentQuality:target.equipmentQuality,
+        genes:target.genes,nature:target.nature,enemyRelics:target.enemyRelics,equipment:[...(target.equipment||[])],equipmentRolls:target.equipmentRolls,equipmentQuality:target.equipmentQuality,
       },
     };
+    this.recordCapture(this.captureResult);
     this.fx("capture", target.x, target.y, "#aee8de", {
       r: 90,
       ttl: 1.4,
@@ -3494,7 +3551,14 @@ export class Battle {
   advance(dt) {
     if (this.done) return;
     dt = Math.min(dt, 0.1);
+    const previousTime=this.time;
     this.time += dt;
+    const actionDt=(this.run.rulesVersion||0)>=15?actionElapsed(previousTime,this.time):dt;
+    if(this.enrage.active&&!this.enrageAnnounced){
+      this.enrageAnnounced=true;this.metrics.enrageTriggered=1;
+      this.say('ENRAGE · Both teams deal 3× damage, heal 3× and act 1.5× faster. Healing fades every 5s.');
+      this.effect(500,180,'ENRAGE','#ffb56e');this.shake=Math.max(this.shake,3);
+    }
     this.shake = Math.max(0, this.shake - dt * 9);
     advanceCombatTexts(this,dt);
     this.effects = this.effects.filter((e) => (e.ttl -= dt) > 0);
@@ -3566,7 +3630,7 @@ export class Battle {
         "stagger",
         "bleed",
       ])
-        u[k] = Math.max(0, u[k] - dt);
+        u[k] = Math.max(0, u[k] - (['attackAnim','castAnim','actionLock','dodgeCooldown'].includes(k)?actionDt:dt));
       u.statusWard=Math.max(0,(u.statusWard||0)-dt);u.armorBuffTime=Math.max(0,(u.armorBuffTime||0)-dt);
       if(u.statusWard>0)for(const ailment of ['burn','poison','bleed','root','slow','stagger','wither','exposed','weakened'])u[ailment]=0;
       if (u.burn > 0)
@@ -3617,11 +3681,11 @@ export class Battle {
           .forEach((a) => this.heal(a, a.maxHp * 0.02 * dt, u, null, false));
       const syn = u.side === 0 ? this.teamSyn : this.foeSyn;
       if (syn.grove >= 2 && u.hp > 0)
-        u.hp = Math.min(u.maxHp, u.hp + u.maxHp * 0.01 * dt);
-      u.attackTimer -= dt * (u.haste > 0 ? 1.4 : 1);
+        this.heal(u,u.maxHp*.01*dt,u,null,false);
+      u.attackTimer -= actionDt * (u.haste > 0 ? 1.4 : 1);
       for (const cooldown of Object.values(u.cooldowns))
-        cooldown.remaining -= dt;
-      if (u.boss) this.bossMechanic(u, dt);
+        cooldown.remaining -= actionDt;
+      if (u.boss) this.bossMechanic(u, actionDt);
       const forced = this.living(1 - u.side).some(
         (e) => e.taunt > 0 && distance(e, u) < 250,
       );
@@ -3715,11 +3779,11 @@ export class Battle {
         locked = u.actionLock > 0 || u.stagger > 0 || u.nativeKnockdown>0 || u.nativeGetup>0;
       if (u.dashMotion && !rooted && u.stagger <= 0) {
         const dash = u.dashMotion;
-        dash.delay -= dt;
+        dash.delay -= actionDt;
         if (dash.delay <= 0 && dash.remaining > 0) {
           const travel = Math.min(dt, dash.remaining);
-          u.velocityX = dash.x * dash.speed;
-          u.velocityY = dash.y * dash.speed;
+          u.velocityX = dash.x * dash.speed * this.tuning.movementSpeed/100;
+          u.velocityY = dash.y * dash.speed * this.tuning.movementSpeed/100;
           u.x += u.velocityX * travel;
           u.y += u.velocityY * travel;
           dash.remaining -= travel;
@@ -3729,7 +3793,7 @@ export class Battle {
         }
         if (dash.remaining <= 0) u.dashMotion = null;
       } else if (u.rollTime > 0 && !rooted && u.stagger <= 0) {
-        const speed = u.mass > 1.8 || (u.balanceVersion>=15&&u.role==='Guardian') ? 225 : 300;
+        const speed = (u.mass > 1.8 || (u.balanceVersion>=15&&u.role==='Guardian') ? 225 : 300) * this.tuning.movementSpeed/100;
         u.velocityX = u.rollX * speed;
         u.velocityY = u.rollY * speed;
         u.x += u.velocityX * dt;
@@ -3741,7 +3805,7 @@ export class Battle {
           u.dashMotion = null;
         }
         const movement =
-          u.speed * (this.native&&dist>320&&u.stamina>55&&(this.run.rulesVersion||0)>=15?2.15:this.native&&dist>180?1.65:1) *
+          u.speed * this.tuning.movementSpeed/100 * (this.native&&dist>320&&u.stamina>55&&(this.run.rulesVersion||0)>=15?2.15:this.native&&dist>180?1.65:1) *
           (progressive(this.run)&&this.native&&sp.range>100&&nearestEnemy&&vx*(nearestEnemy.x-u.x)+vy*(nearestEnemy.y-u.y)<-.15?.58:1) *
           (u.slow > 0 ? 0.5 : 1) *
           (u.movementBuff > 0 ? 1.3 : 1) *
@@ -3750,12 +3814,12 @@ export class Battle {
         if((this.run.rulesVersion||0)>=15&&this.native){
           const length=Math.hypot(vx,vy);if(length>1){vx/=length;vy/=length;}
           const previous=Math.hypot(u.velocityX,u.velocityY),turn=previous>8&&length>.1?Math.abs(Math.atan2(Math.sin(Math.atan2(vy,vx)-Math.atan2(u.velocityY,u.velocityX)),Math.cos(Math.atan2(vy,vx)-Math.atan2(u.velocityY,u.velocityX)))):0;
-          const corner=1-.3*Math.sin(Math.min(Math.PI/2,turn)),tx=vx*movement*factor*corner,ty=vy*movement*factor*corner,dx=tx-u.velocityX,dy=ty-u.velocityY,change=Math.hypot(dx,dy),limit=(Math.hypot(tx,ty)<previous?600:390)*dt,blend=Math.min(1,limit/(change||1));
+          const corner=1-.3*Math.sin(Math.min(Math.PI/2,turn)),tx=vx*movement*factor*corner,ty=vy*movement*factor*corner,dx=tx-u.velocityX,dy=ty-u.velocityY,change=Math.hypot(dx,dy),limit=(Math.hypot(tx,ty)<previous?600*this.tuning.braking/100:390*this.tuning.acceleration/100)*dt,blend=Math.min(1,limit/(change||1));
           u.velocityX+=dx*blend;u.velocityY+=dy*blend;
         }else{const smoothing=1-Math.exp(-dt*14);u.velocityX+=(vx*movement*factor-u.velocityX)*smoothing;u.velocityY+=(vy*movement*factor-u.velocityY)*smoothing;}
         u.x += u.velocityX * dt;
         u.y += u.velocityY * dt;
-        if((this.run.rulesVersion||0)>=15&&Math.hypot(u.velocityX,u.velocityY)>u.speed*1.85)u.stamina=Math.max(0,u.stamina-dt*24);
+        if((this.run.rulesVersion||0)>=15&&Math.hypot(u.velocityX,u.velocityY)>u.speed*this.tuning.movementSpeed/100*1.85)u.stamina=Math.max(0,u.stamina-dt*24);
       }
       u.x += u.impulseX * dt;
       u.y += u.impulseY * dt;
@@ -3819,10 +3883,10 @@ export class Battle {
       }
     }
     this.metrics.collisions += separateBodies(this.units,this.bounds);
-    for(const u of this.units){if(this.native)confineTerrain(u,this.terrain);if(u.nativeActor)advanceNative(u,dt,this.time,this.visuals);}
+    for(const u of this.units){if(this.native)confineTerrain(u,this.terrain);if(u.nativeActor)advanceNative(u,dt,this.time,this.visuals,actionDt);}
     for (const strike of this.strikes) {
       const previous=strike.remaining;
-      strike.remaining -= dt;
+      strike.remaining -= actionDt;
       if(strike.nativeMelee)this.nativeContact(strike,1-previous/strike.total,1-strike.remaining/strike.total);
       if (strike.remaining <= 0) this.resolveStrike(strike);
     }
@@ -3830,7 +3894,7 @@ export class Battle {
       (s) => s.remaining > 0 && !s.cancelled && s.source.hp > 0,
     );
     for (const q of this.queue) {
-      q.ttl -= dt;
+      q.ttl -= actionDt;
       if (
         q.ttl <= 0 &&
         q.source.hp > 0 &&
@@ -3974,6 +4038,7 @@ export class Battle {
               }
             : null,
         };
+        this.recordCapture(this.captureResult);
       }
       this.done = true;
       const a = this.living(0),

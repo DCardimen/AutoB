@@ -1,6 +1,6 @@
 {
   "name": "starfall-menagerie",
-  "version": "0.11.0",
+  "version": "0.12.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -21,6 +21,7 @@
     "export:native": "node scripts/export-native-sprites.mjs",
     "import:art": "node scripts/import-all-authored.mjs",
     "record:art": "node scripts/record-sprite-art-v3.mjs",
+    "test:arena-feel": "node --test tests/enrage-tuning.test.js tests/expedition-v15.test.js && node tests/arena-feel.browser.mjs",
     "test:fieldcraft": "node --test tests/expedition-v15.test.js && node tests/expedition-v15.browser.mjs",
     "test:expedition": "node --test tests/expedition-v12.test.js && node tests/expedition-v12.browser.mjs && node tests/expedition-v12-campaign.browser.mjs && CAMPAIGN_DIFFICULTY=chaos node tests/expedition-v12-campaign.browser.mjs"
   },

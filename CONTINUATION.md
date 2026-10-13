@@ -1,3 +1,13 @@
+# Current continuation · Arena Feel V16 / application 0.12.0
+
+Read ARENA-FEEL-V16.md and tests/reports/arena-feel-v16.json. Current work is on a fresh codex/battle-enrage branch from 865621c; a NEW PR targets codex/starfall-menagerie. Preserve the pre-existing untracked expedition.js without changing, staging or deleting it (SHA256 a4c0ad756a781f8f223e34c1f9cd22d79e9fe47bff81d8ee951f47a16d987ea1). Every future request needs a fresh branch and new PR.
+
+Implemented: symmetric enrage at 30 combat seconds (damage/healing ×3, action speed ×1.5, healing loses 20 percentage points every 5s to zero at 55s); easy lower-tier captures and hard Rare+ baselines; full HP has zero capture chance; two paid manual retries after the initial planned throw (three total, persisted); upper-right Settings with 13 live sliders including base/small/large size; visible equipment slots and pack with gear swaps preserving item rolls; opponent-rarity equipment drop rates and quality; richer ground/reward loot; saved combat charts and source/victim/skill knockout timeline. Existing Art V3, ownership and team growth remain. Stored enemy-wide gear quality migrates to item quality without changing effective strength.
+
+Verification: 140 related unit tests, seven V16 browser groups and nine V15 browser groups pass; 320/390px UI and the exact embedded HTML pass without external asset requests. Published media and the offline ZIP are in public/. No new fifty-hour human test, 9/10 fun rating or Chaos campaign certification is claimed. Historical V15 Chaos-1 failure remains recorded below.
+
+Git fetch via the cloud Git proxy returned the old e36ea70 branch snapshot even though authenticated GitHub API reports codex/starfall-menagerie at PR #3 merge d90c5f8045441dfb35392766eb954243caef2516. Use gh's explicit JSON/API fields to verify published refs. Do not rebase onto that stale Git snapshot or bypass the proxy. GitHub publication must be checked against the pushed commit SHA.
+
 # Development continuation
 
 ## Current change · V15 Fieldcraft / UI V2 / application 0.11.0

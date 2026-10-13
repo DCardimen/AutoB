@@ -1,4 +1,4 @@
-import {equipGear,removeGear,equipmentSlots} from './creature-equipment.js';
+import {equipGear,removeGear,equipmentSlots,GEAR_BY_ID} from './creature-equipment.js';
 import {equipRelic,unequipRelic,linkRelic,relicSlots,canSupport,BY_ID} from './game.js';
 import {loadoutFor} from './skills.js';
 export function applyLoadoutDrop(run,payload,target){
@@ -12,11 +12,15 @@ export function applyLoadoutDrop(run,payload,target){
   order.splice(i,1);order.splice(j,0,payload.id);c.skillOrder=order;return true;
  }
  if(payload.kind==='gear'){
-  const replace=Number.isInteger(target.gearSlot)&&target.gearSlot>=0&&target.gearSlot<(c.equipment||[]).length;
+  if(equipmentSlots(c)<=0)return false;
+  let slot=target.gearSlot;
+  if(!Number.isInteger(slot)&&(c.equipment||[]).length>=equipmentSlots(c))slot=Math.max(0,c.equipment.findIndex(id=>GEAR_BY_ID[id]?.slot===GEAR_BY_ID[payload.id]?.slot));
+  const replace=Number.isInteger(slot)&&slot>=0&&slot<(c.equipment||[]).length;
   if(from===c||c.equipment?.includes(payload.id)||((c.equipment||[]).length>=equipmentSlots(c)&&!replace))return false;
   if(!from&&!run.gearInventory?.some(g=>g.uid===payload.uid&&g.id===payload.id))return false;
   if(from&&from.equipment?.[payload.slot]!==payload.id)return false;
-  if(replace)removeGear(run,Number(target.index),target.gearSlot);
+  if(replace&&from){const displaced=c.equipment[slot];if(from.equipment.includes(displaced))return false;c.equipmentRolls??=c.equipment.map(()=>null);from.equipmentRolls??=from.equipment.map(()=>null);[c.equipmentRolls[slot],from.equipmentRolls[payload.slot]]=[from.equipmentRolls[payload.slot],c.equipmentRolls[slot]];c.equipment[slot]=payload.id;from.equipment[payload.slot]=displaced;return true;}
+  if(replace)removeGear(run,Number(target.index),slot);
   if(from){if(from.equipment?.[payload.slot]!==payload.id)return false;removeGear(run,payload.fromIndex,payload.slot);return equipGear(run,Number(target.index),run.gearInventory.at(-1).uid);}
   return equipGear(run,Number(target.index),payload.uid);
  }
