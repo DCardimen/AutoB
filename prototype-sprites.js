@@ -15,7 +15,7 @@ function poseFrame(spec,state,phase,angle,stage='',options={}){
   return renderCharacterFrame(spec.id,['death','knockdown','getup'].includes(state)?previewRagdoll(spec.id,phase,state==='getup'):rig,angle);
 }
 export function spriteSample(u,time=0,override=null){
-  const state=override?.state||animationState(u),dir=directionalFrame(u.facing||0),angleIndex=dir;
+  const state=override?.state||animationState(u),dir=override?directionalFrame(u.facing||0):(u.spriteDirection??directionalFrame(u.facing||0)),angleIndex=dir;
   let phase=0,stage='',count=['walk','run','sprint'].includes(state)?16:12;
   if(override)phase=override.phase;
   else if(['walk','run','sprint'].includes(state))phase=((u.gait%1)+1)%1;

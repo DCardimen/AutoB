@@ -210,9 +210,9 @@ test("capture consumes exactly one orb and never proceeds without an orb or benc
 });
 test("gold is scarce: purchases cannot overspend or duplicate expedition relics", () => {
   const r = makeRun(10);
-  r.gold = 144;
+  r.gold = 219;
   assert.equal(buyRelic(r, "clock"), false);
-  r.gold = 145;
+  r.gold = 220;
   assert.ok(buyRelic(r, "clock"));
   assert.equal(r.gold, 0);
   assert.equal(buyRelic(r, "clock"), false);

@@ -64,12 +64,12 @@ function gemBattle(gem, id = "thornstag") {
     21,
   );
 }
-test("every family has a functional specialty; 30 supports and 124 relics have unique IDs", () => {
+test("every family has a functional specialty; 30 supports and 136 relics have unique IDs", () => {
   for (const c of SPECIES) assert.ok(CREATURE_TRAITS[c.id], c.id);
   assert.equal(PERSONAL_RELICS.length, 30);
-  assert.equal(RELICS.length, 124);
+  assert.equal(RELICS.length, 136);
   assert.equal(new Set(PERSONAL_RELICS.map((g) => g.id)).size, 30);
-  assert.equal(new Set(RELICS.map((g) => g.id)).size, 124);
+  assert.equal(new Set(RELICS.map((g) => g.id)).size, 136);
 });
 test("route seeds change layouts, scouting and weather, and repeat deterministically", () => {
   const layouts = new Set();
@@ -248,7 +248,7 @@ test("Legendary shop contracts use real gold and bench space; Chaos shop prices 
   run.gold = shopPrice(run, 290);
   assert.ok(buyCreature(run, "elderoot"));
   assert.equal(run.gold, 0);
-  run.gold = shopPrice(run, 145);
+  run.gold = shopPrice(run, 220);
   assert.ok(buyRelic(run, "clock"));
   assert.equal(run.gold, 0);
 });

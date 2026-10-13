@@ -15,7 +15,7 @@ export function evaluateOrders(u,allies,enemies){
  return null;
 }
 export function terrainFor(run,seed){
- if(!run.native||run.depth===0||(run.encounterType!=='boss'&&seed%3===0))return [];
+ if((run.rulesVersion||0)>=15||!run.native||run.depth===0||(run.encounterType!=='boss'&&seed%3===0))return [];
  const shift=(seed%5-2)*12;
  return [{id:'north-pillar',x:478+shift,y:305,r:34},{id:'south-pillar',x:554-shift,y:594,r:38}];
 }
@@ -35,6 +35,6 @@ export function orderGoal(u,target,allies,enemies,response){
  if(response?.response==='retreat'&&nearest)return {x:u.x+(u.x-nearest.x)*3,y:u.y+(u.y-nearest.y)*3,intent:'Retreating · low health'};
  if((u.order==='escort'||response?.response==='protect')&&allies.length){const ally=allies.slice().sort((a,b)=>a.hp/a.maxHp-b.hp/b.maxHp)[0],threat=enemies.slice().sort((a,b)=>Math.hypot(a.x-ally.x,a.y-ally.y)-Math.hypot(b.x-ally.x,b.y-ally.y))[0];if(ally!==u&&threat){const d=Math.hypot(threat.x-ally.x,threat.y-ally.y)||1;return {x:ally.x+(threat.x-ally.x)/d*65,y:ally.y+(threat.y-ally.y)/d*65,intent:'Escorting '+ally.id};}}
  if(u.order==='hold'&&u.nativeHome&&Math.hypot(target.x-u.nativeHome.x,target.y-u.nativeHome.y)>105+(u.range||50))return {...u.nativeHome,intent:'Holding the deployment lane'};
- if(u.order==='flank'&&Math.hypot(target.x-u.x,target.y-u.y)>u.range+10&&Math.hypot(target.x-u.x,target.y-u.y)<230)return {x:target.x+(u.side?35:-35),y:target.y+(u.y<target.y?-70:70),intent:'Flanking the occupied front'};
+ if(u.order==='flank'&&Math.hypot(target.x-u.x,target.y-u.y)>u.range+10&&Math.hypot(target.x-u.x,target.y-u.y)<230)return {x:target.x+(u.side?35:-35)*(u.balanceVersion>=15?u.nativeScale||.15:1),y:target.y+(u.y<target.y?-70:70)*(u.balanceVersion>=15?u.nativeScale||.15:1),intent:'Flanking the occupied front'};
  return null;
 }
