@@ -308,7 +308,7 @@ function render() {
 }
 function updateHeader() {
   document.body.classList.toggle("native-expedition",!!run.native);
-  const version=document.querySelector(".local-label");if(version)version.innerHTML="<i></i> "+(run.native?"NATIVE EXPEDITION V13 · ART V2":"LOCAL SAVE");
+  const version=document.querySelector(".local-label");if(version)version.innerHTML="<i></i> "+(run.native?"NATIVE EXPEDITION V14 · ART V3":"LOCAL SAVE");
   const p = PLANETS[Math.min(run.planet, 2)];
   $("#run-number").textContent = String(profile.runs).padStart(3, "0");
   $("#collection-count").textContent = profile.owned.length;

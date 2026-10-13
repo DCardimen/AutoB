@@ -22,7 +22,7 @@ await page.route('**/*', route => {
 try {
   await page.clock.install();
   await page.goto(url, { waitUntil: 'networkidle' });
-  assert.match(await page.locator('.local-label').textContent(), /NATIVE EXPEDITION V13/);
+  assert.match(await page.locator('.local-label').textContent(), /NATIVE EXPEDITION V14/);
   assert.equal(await page.evaluate(() => starfall.state.run.native), true);
   assert.equal(await page.evaluate(() => starfall.state.run.team.length), 2);
   await page.locator('[data-action="battle"]').click();

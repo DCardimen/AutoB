@@ -1,0 +1,86 @@
+{
+  "release": "V14 / Art V3",
+  "applicationVersion": "0.10.0",
+  "saveSchema": 5,
+  "sourceAnatomies": 41,
+  "developmentalStages": 3,
+  "directions": 8,
+  "collectionFamilies": 89,
+  "nativeGameplayFamilies": 29,
+  "provenance": "AI-generated bitmap masters; deterministic indexed imports; rig-driven animation and separate equipment",
+  "unitTests": {
+    "passed": 182,
+    "failed": 0,
+    "log": "v14-final-tests.log"
+  },
+  "nativeExport": {
+    "families": 29,
+    "variants": 117,
+    "cells": 127296
+  },
+  "trainingExport": {
+    "actors": 9,
+    "cells": 9792
+  },
+  "sourceRetention": {
+    "aurel": [
+      864,
+      864
+    ],
+    "syl": [
+      1007,
+      1007
+    ],
+    "nyra": [
+      1053,
+      1053
+    ]
+  },
+  "campaigns": {
+    "standard": {
+      "seed": 3,
+      "worlds": 3,
+      "fights": 15
+    },
+    "chaos1": {
+      "seed": 3,
+      "worlds": 3,
+      "fights": 15
+    }
+  },
+  "motionPreview": {
+    "seconds": 18,
+    "fps": 30,
+    "frames": 540
+  },
+  "visualSelfReview": {
+    "chibiProportions": 9,
+    "facesPersonality": 9,
+    "clothingEquipment": 9,
+    "shadingColor": 9,
+    "creatureIndividuality": 9,
+    "environmentFit": 9
+  },
+  "reviewCaveat": "Subjective self-review, not user acceptance or automated art scoring. Related legacy entries share templates and some paired views mirror. Animation uses deformation, not bespoke action sheets.",
+  "sourceHashes": {
+    "authored-bodies-apex-source.png": "4f799fb33d35240ffc1231f25b511e0e6b311ab1373c54ba5543dce8c7823d78",
+    "authored-bodies-juvenile-source.png": "a402fa5088b53430a79c3eaa3705f72a20f327c2d7f44352c8d5a9cb7e7e8c97",
+    "authored-bodies-mature-source.png": "548a59525c88f36850576c9a383fc366e675e033e812ae5b36f06899be0b2b58",
+    "authored-bodies-source.png": "d7f9607ca8c29d690612ce4f69ffd5a97034fc16684a28efc43a37595fee3b02",
+    "authored-bodies-weaponless-source.png": "b6a4cdb7efb0699a7f0e3a0759072db1adf19235a6eab40cdbee5142952ca7cf",
+    "authored-characters-apex-source.png": "56fa8efa8c096b00d4ba1195b270cb56961a5e9dc4ffdd8f6328370ef6e524e7",
+    "authored-characters-juvenile-source.png": "536b3d1cb80cb35d9c6f5cf21b9ea78092d96ba7504d7b95219f5bb0b6e4609a",
+    "authored-characters-mature-source.png": "94dc5804ff1c8ace4edcc9ab6ee3e0f9cb0e4cc8d8da82f3ce91e076e085718b",
+    "authored-characters-source.png": "b5749617e34a98e1718621ee1ef50bf732060285744a70f55798f4189c39e4b8",
+    "authored-characters-weaponless-source.png": "21f46ad3b581fbbe80841dbade99e3fbc68aa80603f2e7ff5fcf9e73ac015f38",
+    "authored-dwarf-lineage-source.png": "3f8175d2829393a96c8ca66820c9f7c3c3a6df0467dea88c96c885cd91e701a7",
+    "authored-families-apex-source.png": "c80f0eab983c82ac70c590d22b69e8363996a61d12d93847d384b4a5bba5a81e",
+    "authored-families-juvenile-source.png": "939e145e5f4bf0d8034fbff3a221e988442da4ca3e23ae4fd8691b65c9e9a707",
+    "authored-families-mature-source.png": "29cef04307aa88e8b892c47b37c1e4b70fe90f2c44774c4896c708465187cf98",
+    "authored-families-source.png": "e90908c45312effdd565fd9e40fb552b6cf1a0058d8a0c1be2ccf65373126b6d",
+    "authored-families-weaponless-source.png": "be0df87c2267f4551e1ca3514d90256113b9045d21c0f0466f79db2f4a2c8675",
+    "authored-legacy-apex-source.png": "20278f3ba3d3216b5e5ab7a0fceca003d35e8ef004f4ae870e1246193aedfa1a",
+    "authored-legacy-juvenile-source.png": "3dc3cd01d9279c349f22320b69b80f971de7d4df1d5069e39b3f880900501013",
+    "authored-legacy-mature-source.png": "b2f7a1f51538766a05249aa2141444db1f78169a541a4256177bd7c29d2a63b9"
+  }
+}

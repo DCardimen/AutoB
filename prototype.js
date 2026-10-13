@@ -248,7 +248,9 @@ document.addEventListener('visibilitychange',()=>{last=performance.now();});
 function frame(now){
   const dt=Math.min(0.05,(now-last)/1000);last=now;
   if(!artLoaded&&spritesReady()&&backdrop.complete&&backdrop.naturalWidth){artLoaded=true;$('#loading').hidden=true;makeCards();updateUI();}
+  const wasDone=arena.done;
   if(!paused&&artLoaded&&!document.hidden)arena.step(dt*speed);
+  if(!wasDone&&arena.done)updateUI();
   const events=arena.audio.splice(0);if(sounding)for(const event of events)sound.event(event);
   render();renderShowcase();uiClock+=dt;if(uiClock>0.1){updateUI();uiClock=0;}
   requestAnimationFrame(frame);

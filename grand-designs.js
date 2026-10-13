@@ -21,6 +21,9 @@ export function grandDesign(spec,c={}){
  const generic=spec.nativeRig==='wolf'?{motif:'cerberus',extraHeads:2,crest:'horns'}:spec.nativeRig==='jelly'?{rig:'flyer',motif:'leviathan',wings:true,halo:true}:spec.nativeRig==='mech'?{rig:'orc',motif:'runetitan',gear:'cannon',cape:true}:spec.nativeRig==='serpent'?{motif:'hydra',extraHeads:2,crest:'fins'}:spec.nativeRig==='flyer'?{motif:'stormphoenix',wings:true,crest:'flame'}:{motif:'spiderqueen',wings:true,crest:'crown'};
  const d={rig:spec.nativeRig,...(styles[spec.id]||generic),stage:c.evolution,path:c.evolutionPath};
  if(c.evolution===2){const rigs={moonjelly:'serpent',brom:'mech',stormdrake:'serpent',frostursa:'orc',runespider:'centipede',luma:'flyer'};d.rig=rigs[spec.id]||d.rig;d.ascendant=true;d.wings=d.wings||['oracle','lich','forgeking','bearking','worldtree'].includes(d.motif);if(d.extraHeads)d.extraHeads=4;if(['leviathan','stormwyrm'].includes(d.motif))d.extraHeads=2;}
+ // Evolution develops the same species anatomy. Never turn a bear, beetle,
+ // or walker into a humanoid rig or manufacture extra heads as an upgrade.
+ d.rig=spec.nativeRig;delete d.extraHeads;
  return d;
 }
 export function nativeRigFor(spec,c={}){return grandDesign(spec,c).rig;}

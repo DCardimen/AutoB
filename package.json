@@ -1,6 +1,6 @@
 {
   "name": "starfall-menagerie",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -19,6 +19,8 @@
     "test:native": "npm run build:standalone && node --test tests/native-expedition.test.js tests/native-tactics.test.js tests/native-lineage.test.js && node tests/native-roster.browser.mjs && node tests/grand-forms.browser.mjs && node tests/native-controls.browser.mjs && node tests/expedition-v12-campaign.browser.mjs && node tests/standalone.browser.mjs && node tests/native-offline.browser.mjs",
     "test:prototype": "npm run build:prototype && node --test tests/prototype.test.js tests/prototype-rig.test.js tests/prototype-models.test.js tests/prototype-pixels.test.js tests/prototype-combat-v7.test.js && node tests/prototype.browser.mjs",
     "export:native": "node scripts/export-native-sprites.mjs",
+    "import:art": "node scripts/import-all-authored.mjs",
+    "record:art": "node scripts/record-sprite-art-v3.mjs",
     "test:expedition": "node --test tests/expedition-v12.test.js && node tests/expedition-v12.browser.mjs && node tests/expedition-v12-campaign.browser.mjs && CAMPAIGN_DIFFICULTY=chaos node tests/expedition-v12-campaign.browser.mjs"
   },
   "devDependencies": {

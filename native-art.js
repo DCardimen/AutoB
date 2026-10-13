@@ -36,7 +36,8 @@ function actorFor(u,spec){
 }
 export function drawNativeUnit(c,u,spec,x,y,time,pixelScale=3){
  const actor=actorFor(u,spec),sample=spriteSample(actor,time,u.nativeActor?null:{state:'idle',phase:.25});
- let rig=characterRig(actor.id,sample.state,sample.phase,sample.stage,{...sample,stride:actor.stride});rig.cape=sample.cape;
+ const posePhase=sample.state==='idle'?Math.round(sample.phase*16)/16:sample.phase;
+ let rig=characterRig(actor.id,sample.state,posePhase,sample.stage,{...sample,stride:actor.stride});rig.cape=sample.cape;
  if(u.deploymentRig)rig=u.deploymentRig;else if(actor.ragdoll)rig=ragdollRig(actor.ragdoll,actor.getup>0?1-actor.getup/.45:0);
  rig.capeMesh=actor.capeMesh;rig=nativeFormRig(spec,u,rig,characterHeight);
  const key=u.id+':'+characterHeight+':'+sample.key+':'+u.evolution+':'+u.evolutionPath+':'+(u.equipment||[]).join(',')+':'+(actor.capeMeshKey||'')+(actor.ragdoll?':'+actor.ragdoll.time.toFixed(4):'');let frame=u.deploymentRig?null:frames.get(key);if(!frame){frame=renderCharacterFrame(actor.id,rig,sample.angleIndex*Math.PI/4);if(!u.deploymentRig)frames.set(key,frame);if(frames.size>256)frames.delete(frames.keys().next().value);}

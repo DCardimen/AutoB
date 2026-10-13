@@ -11,7 +11,7 @@ try{
  const run=makeRun(19,NATIVE_STARTERS);run.team[0]=creature('brom',3);run.team[0].accomplishments={shielded:180};run.team[1]=creature('grit',8);run.team[2]=creature('solara',8);run.route=generateRoute(run);const node=run.route[0][0],{random,...data}=run;
  await page.addInitScript(({data,node,foes,owned})=>{if(!localStorage.getItem('starfall-menagerie-v1'))localStorage.setItem('starfall-menagerie-v1',JSON.stringify({version:2,run:data,node,foes,phase:'prep',profile:{owned,runs:1,tutorial:true}}));},{data,node,foes:encounter(run,'battle',node.seed),owned:NATIVE_SPECIES.map(s=>s.id)});
  await page.clock.install();await page.goto(url);await page.clock.runFor(300);
- assert.ok(await page.evaluate(()=>localStorage.getItem('starfall-menagerie-v1.backup-v2')));assert.match(await page.locator('.local-label').textContent(),/V13/);
+ assert.ok(await page.evaluate(()=>localStorage.getItem('starfall-menagerie-v1.backup-v2')));assert.match(await page.locator('.local-label').textContent(),/V14/);
  const before=await page.evaluate(()=>JSON.stringify(starfall.state.run));await page.locator('[data-character-height]').first().evaluate(el=>{el.value='85';el.dispatchEvent(new Event('input',{bubbles:true}));});
  assert.equal(await page.evaluate(()=>starfall.state.profile.characterHeight),85);assert.equal(await page.evaluate(()=>JSON.stringify(starfall.state.run)),before);
  await page.reload();await page.clock.runFor(300);assert.equal(await page.locator('[data-character-height]').first().inputValue(),'85');

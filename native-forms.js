@@ -5,6 +5,9 @@ import {characterRig} from './prototype-rig.js';
 const rgb=(a,b,c)=>[a,b,c];
 // Stable anatomy and equipment profiles used by both art and weapon contacts.
 export const NATIVE_DESIGNS={
+ feralfox:{height:.9,width:.95,stride:90},cat:{height:.86,width:.94,stride:95},rabbit:{height:.78,width:.75,stride:85},rodent:{height:.7,width:.65,stride:75},
+ rhino:{height:1.08,width:1.22,stride:60},turtle:{height:.72,width:1.08,stride:45},owl:{height:.9,width:1.08,stride:75,gear:'feathers'},
+ fish:{height:.88,width:1.05,stride:74},mushroom:{height:.85,width:1,stride:40},clam:{height:.8,width:1.2,stride:35},squid:{height:1,width:.9,stride:70},mantis:{height:1,width:1,stride:80},
  crab:{height:.9,width:1.1,stride:55,gear:'claws',skin:rgb('#496b63','#7daca0','#c6d9be'),cloth:rgb('#385c69','#5b95aa','#a9d1db'),hair:rgb('#364c58','#638e99','#abd5ce')},
  beetle:{height:1,width:1.05,stride:55,gear:'horn',skin:rgb('#332d42','#65516e','#a69baf'),cloth:rgb('#3d3751','#766386','#b59cbf'),hair:rgb('#344a55','#719eae','#a7dedb')},
  lion:{height:1.04,width:1.05,stride:79,skin:rgb('#77432c','#ba7c38','#ebbd66'),cloth:rgb('#713436','#b35439','#f0ae55'),hair:rgb('#744226','#af7134','#e4b258')},
@@ -48,8 +51,9 @@ export function nativeFormRig(spec,c,source,height=1){
  if(rig.wings)rig.wings=rig.wings.map(w=>w.map(point));
  if(rig.segments)rig.segments=rig.segments.map(point);
  rig.palette={...palette,...spec.pixelPalette,...Object.fromEntries(['skin','cloth','hair'].filter(k=>design[k]).map(k=>[k,design[k]]))};
+ if(spec.pixelConverted)rig.palette={...rig.palette,...spec.pixelPalette};
  if(design.stage){rig.palette.metal=c.evolutionPath==='wild'?['#453c3c','#9a7d58','#dab775','#fff0b1']:['#314b58','#699299','#bad5d0','#f0f2d5'];rig.palette.cloth=c.evolutionPath==='wild'?['#562e3f','#a75550','#eab66d']:['#293e68','#6178a1','#b1d5de'];}
- rig.design=spec.nativeDesign;rig.form=design.stage;rig.formPath=c.evolutionPath;rig.gear=grand.gear||design.gear;rig.flyerDesign=spec.nativeDesign;
+ rig.design=spec.nativeDesign;rig.artSpecies=spec.nativeDesign||spec.nativeRig;rig.form=design.stage;rig.artStage=design.stage?(spec.evolutionLimit===1?2:design.stage):0;rig.formPath=c.evolutionPath;rig.gear=grand.gear||design.gear;rig.flyerDesign=spec.nativeDesign;
  if(design.stage){const colors={ember:['#582b33','#aa4d3e','#ebac62'],grove:['#2b4939','#5e8a52','#bfd087'],tide:['#283e62','#5b8caa','#bbdce0'],storm:['#45365f','#8a70b3','#ddc4e9'],void:['#322841','#725189','#cda4ce']};rig.palette.cloth=colors[spec.element]||rig.palette.cloth;}
  rig.id=nativeRigFor(spec,c);rig.grand=c.evolution?grand:null;if(grand.gear==='gauntlet')rig.shield=null;rig.pixelMark=spec.pixelMark;rig.equipment=c.equipment||[];
  rig.artVariant=spec.pixelConverted?spec.id:null;rig.artRecolor=Boolean(spec.pixelConverted||c.evolution||c.equipment?.length);
