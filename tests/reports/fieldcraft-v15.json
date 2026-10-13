@@ -2,7 +2,7 @@
   "release": "V15 Fieldcraft / UI V2 checkpoint",
   "applicationVersion": "0.11.0",
   "saveSchema": 6,
-  "status": "implementation and validation in progress; not a 9/10 certification",
+  "status": "UI V2 and Fieldcraft implemented; current functional checks pass; human quality rating not established",
   "unitChecks": {
     "fullRun": {
       "passed": 196,
@@ -12,7 +12,7 @@
     "latestAffectedChecks": {
       "passed": 91,
       "failed": 0,
-      "log": "autob-v15-core-release.log"
+      "log": "autob-v15-core-final.log"
     }
   },
   "browser": {
@@ -24,6 +24,7 @@
       "Enemy-side relic summary and full equipment are inspectable; shops present exactly two costly relics",
       "Eligible companions have a visible shining evolution notification",
       "UI V2 fits 320/390/768px, uses reachable bottom navigation and tabbed bottom sheets, and dismisses by tapping outside",
+      "Choosing the occasional equipment reward grants one character-wide item, persists across reload, and cannot be claimed twice",
       "Mobile star chart and menagerie fit the viewport and remain accessible through bottom navigation"
     ],
     "errors": []
@@ -60,16 +61,1905 @@
       "mean": 37.6
     }
   ],
-  "knownFailures": [
-    "New equipment reward browser fixture predicts different choices in Node and Chromium because reward choices use a random sort comparator; replace with a deterministic shuffle and rerun.",
-    "Current seeded legal bot campaigns do not clear all three planets under the harder balance. Some policies clear planet one and lose on planet two; no full-campaign win rate or 9/10 fun score established."
-  ],
+  "knownFailures": [],
   "remaining": [
-    "Finish reward selection determinism and browser coverage",
-    "Finish balance review",
-    "Rebuild final standalone and create V15 playable ZIP",
-    "Push final updates and open a new PR when GitHub API destination access is available"
+    "Broader legal policy sampling across Chaos; the attempted Chaos 1 campaign did not clear",
+    "Broader human gameplay and real-device performance review"
   ],
   "art": "Completed V14 Art V3 masters preserved; renderer/motion/UI updated",
-  "limits": "Automated fixtures are not fifty hours of human play. Mobile input is emulated Chromium touch."
+  "limits": "Automated fixtures are not fifty hours of human play. Mobile input is emulated Chromium touch.",
+  "campaigns": {
+    "story": {
+      "seed": 3,
+      "difficulty": "story",
+      "battles": [
+        {
+          "planet": 0,
+          "depth": 0,
+          "type": "battle",
+          "winner": 0,
+          "team": 2,
+          "capacity": 2,
+          "levels": [
+            1,
+            1
+          ],
+          "capture": false,
+          "creatures": [
+            {
+              "id": "aurel",
+              "evolution": 0,
+              "gear": [
+                "reliquary-plate"
+              ]
+            },
+            {
+              "id": "syl",
+              "evolution": 0,
+              "gear": [
+                "sunsteel-edge"
+              ]
+            }
+          ],
+          "enemyRelics": 2
+        },
+        {
+          "planet": 0,
+          "depth": 1,
+          "type": "battle",
+          "winner": 0,
+          "team": 2,
+          "capacity": 3,
+          "levels": [
+            2,
+            2
+          ],
+          "capture": false,
+          "creatures": [
+            {
+              "id": "aurel",
+              "evolution": 0,
+              "gear": [
+                "reliquary-plate"
+              ]
+            },
+            {
+              "id": "syl",
+              "evolution": 0,
+              "gear": [
+                "sunsteel-edge"
+              ]
+            }
+          ],
+          "enemyRelics": 2
+        },
+        {
+          "planet": 0,
+          "depth": 2,
+          "type": "battle",
+          "winner": 0,
+          "team": 2,
+          "capacity": 3,
+          "levels": [
+            3,
+            3
+          ],
+          "capture": false,
+          "creatures": [
+            {
+              "id": "aurel",
+              "evolution": 0,
+              "gear": [
+                "reliquary-plate"
+              ]
+            },
+            {
+              "id": "syl",
+              "evolution": 0,
+              "gear": [
+                "sunsteel-edge"
+              ]
+            }
+          ],
+          "enemyRelics": 3
+        },
+        {
+          "planet": 0,
+          "depth": 4,
+          "type": "battle",
+          "winner": 0,
+          "team": 3,
+          "capacity": 3,
+          "levels": [
+            4,
+            4,
+            2
+          ],
+          "capture": false,
+          "creatures": [
+            {
+              "id": "aurel",
+              "evolution": 1,
+              "gear": [
+                "reliquary-plate",
+                "sunsteel-edge"
+              ]
+            },
+            {
+              "id": "syl",
+              "evolution": 1,
+              "gear": [
+                "sunsteel-edge"
+              ]
+            },
+            {
+              "id": "crownstag",
+              "evolution": 0,
+              "gear": [
+                "sunsteel-edge"
+              ]
+            }
+          ],
+          "enemyRelics": 6
+        },
+        {
+          "planet": 0,
+          "depth": 7,
+          "type": "boss",
+          "winner": 0,
+          "team": 3,
+          "capacity": 4,
+          "levels": [
+            5,
+            5,
+            4
+          ],
+          "capture": false,
+          "creatures": [
+            {
+              "id": "aurel",
+              "evolution": 1,
+              "gear": [
+                "reliquary-plate",
+                "sunsteel-edge"
+              ]
+            },
+            {
+              "id": "syl",
+              "evolution": 1,
+              "gear": [
+                "sunsteel-edge"
+              ]
+            },
+            {
+              "id": "crownstag",
+              "evolution": 0,
+              "gear": [
+                "sunsteel-edge"
+              ]
+            }
+          ],
+          "enemyRelics": 12
+        },
+        {
+          "planet": 1,
+          "depth": 0,
+          "type": "battle",
+          "winner": 0,
+          "team": 3,
+          "capacity": 4,
+          "levels": [
+            6,
+            6,
+            5
+          ],
+          "capture": false,
+          "creatures": [
+            {
+              "id": "aurel",
+              "evolution": 1,
+              "gear": [
+                "reliquary-plate",
+                "sunsteel-edge",
+                "stoneheart-plate"
+              ]
+            },
+            {
+              "id": "syl",
+              "evolution": 1,
+              "gear": [
+                "sunsteel-edge"
+              ]
+            },
+            {
+              "id": "crownstag",
+              "evolution": 0,
+              "gear": [
+                "sunsteel-edge"
+              ]
+            }
+          ],
+          "enemyRelics": 9
+        },
+        {
+          "planet": 1,
+          "depth": 1,
+          "type": "battle",
+          "winner": 0,
+          "team": 3,
+          "capacity": 4,
+          "levels": [
+            6,
+            6,
+            5
+          ],
+          "capture": true,
+          "creatures": [
+            {
+              "id": "aurel",
+              "evolution": 2,
+              "gear": [
+                "reliquary-plate",
+                "sunsteel-edge",
+                "stoneheart-plate",
+                "windstep-boots"
+              ]
+            },
+            {
+              "id": "syl",
+              "evolution": 2,
+              "gear": [
+                "sunsteel-edge"
+              ]
+            },
+            {
+              "id": "crownstag",
+              "evolution": 0,
+              "gear": [
+                "sunsteel-edge"
+              ]
+            }
+          ],
+          "enemyRelics": 9
+        },
+        {
+          "planet": 1,
+          "depth": 2,
+          "type": "battle",
+          "winner": 0,
+          "team": 4,
+          "capacity": 5,
+          "levels": [
+            7,
+            7,
+            6,
+            3
+          ],
+          "capture": false,
+          "creatures": [
+            {
+              "id": "aurel",
+              "evolution": 2,
+              "gear": [
+                "reliquary-plate",
+                "sunsteel-edge",
+                "stoneheart-plate",
+                "windstep-boots"
+              ]
+            },
+            {
+              "id": "syl",
+              "evolution": 2,
+              "gear": [
+                "sunsteel-edge"
+              ]
+            },
+            {
+              "id": "crownstag",
+              "evolution": 1,
+              "gear": [
+                "sunsteel-edge"
+              ]
+            },
+            {
+              "id": "rowan",
+              "evolution": 0,
+              "gear": [
+                "storm-conductor",
+                "stoneheart-plate",
+                "battery-orb"
+              ]
+            }
+          ],
+          "enemyRelics": 9
+        },
+        {
+          "planet": 1,
+          "depth": 4,
+          "type": "capture",
+          "winner": 0,
+          "team": 5,
+          "capacity": 5,
+          "levels": [
+            7,
+            7,
+            6,
+            4,
+            4
+          ],
+          "capture": false,
+          "creatures": [
+            {
+              "id": "aurel",
+              "evolution": 2,
+              "gear": [
+                "reliquary-plate",
+                "sunsteel-edge",
+                "stoneheart-plate",
+                "windstep-boots"
+              ]
+            },
+            {
+              "id": "syl",
+              "evolution": 2,
+              "gear": [
+                "sunsteel-edge"
+              ]
+            },
+            {
+              "id": "crownstag",
+              "evolution": 1,
+              "gear": [
+                "sunsteel-edge"
+              ]
+            },
+            {
+              "id": "rowan",
+              "evolution": 0,
+              "gear": [
+                "storm-conductor",
+                "stoneheart-plate",
+                "battery-orb"
+              ]
+            },
+            {
+              "id": "rowan",
+              "evolution": 0,
+              "gear": [
+                "sunsteel-edge"
+              ]
+            }
+          ],
+          "enemyRelics": 16
+        },
+        {
+          "planet": 1,
+          "depth": 5,
+          "type": "battle",
+          "winner": 0,
+          "team": 5,
+          "capacity": 5,
+          "levels": [
+            8,
+            8,
+            7,
+            5,
+            5
+          ],
+          "capture": false,
+          "creatures": [
+            {
+              "id": "aurel",
+              "evolution": 2,
+              "gear": [
+                "reliquary-plate",
+                "sunsteel-edge",
+                "stoneheart-plate",
+                "windstep-boots"
+              ]
+            },
+            {
+              "id": "syl",
+              "evolution": 2,
+              "gear": [
+                "sunsteel-edge"
+              ]
+            },
+            {
+              "id": "crownstag",
+              "evolution": 1,
+              "gear": [
+                "sunsteel-edge"
+              ]
+            },
+            {
+              "id": "rowan",
+              "evolution": 1,
+              "gear": [
+                "storm-conductor",
+                "stoneheart-plate",
+                "battery-orb",
+                "sunsteel-edge"
+              ]
+            },
+            {
+              "id": "rowan",
+              "evolution": 0,
+              "gear": [
+                "sunsteel-edge"
+              ]
+            }
+          ],
+          "enemyRelics": 16
+        },
+        {
+          "planet": 1,
+          "depth": 7,
+          "type": "boss",
+          "winner": 0,
+          "team": 5,
+          "capacity": 6,
+          "levels": [
+            8,
+            8,
+            8,
+            6,
+            6
+          ],
+          "capture": true,
+          "creatures": [
+            {
+              "id": "aurel",
+              "evolution": 2,
+              "gear": [
+                "reliquary-plate",
+                "sunsteel-edge",
+                "stoneheart-plate",
+                "windstep-boots"
+              ]
+            },
+            {
+              "id": "syl",
+              "evolution": 2,
+              "gear": [
+                "sunsteel-edge"
+              ]
+            },
+            {
+              "id": "crownstag",
+              "evolution": 1,
+              "gear": [
+                "sunsteel-edge"
+              ]
+            },
+            {
+              "id": "rowan",
+              "evolution": 1,
+              "gear": [
+                "storm-conductor",
+                "stoneheart-plate",
+                "battery-orb",
+                "sunsteel-edge"
+              ]
+            },
+            {
+              "id": "rowan",
+              "evolution": 1,
+              "gear": [
+                "sunsteel-edge"
+              ]
+            }
+          ],
+          "enemyRelics": 20
+        },
+        {
+          "planet": 2,
+          "depth": 0,
+          "type": "battle",
+          "winner": 0,
+          "team": 6,
+          "capacity": 6,
+          "levels": [
+            9,
+            9,
+            8,
+            7,
+            7,
+            5
+          ],
+          "capture": false,
+          "creatures": [
+            {
+              "id": "aurel",
+              "evolution": 2,
+              "gear": [
+                "reliquary-plate",
+                "sunsteel-edge",
+                "stoneheart-plate",
+                "windstep-boots"
+              ]
+            },
+            {
+              "id": "syl",
+              "evolution": 2,
+              "gear": [
+                "sunsteel-edge"
+              ]
+            },
+            {
+              "id": "crownstag",
+              "evolution": 2,
+              "gear": [
+                "sunsteel-edge"
+              ]
+            },
+            {
+              "id": "rowan",
+              "evolution": 1,
+              "gear": [
+                "storm-conductor",
+                "stoneheart-plate",
+                "battery-orb",
+                "sunsteel-edge"
+              ]
+            },
+            {
+              "id": "rowan",
+              "evolution": 1,
+              "gear": [
+                "sunsteel-edge"
+              ]
+            },
+            {
+              "id": "zephyr",
+              "evolution": 1,
+              "gear": [
+                "venom-sabre",
+                "bramble-coat",
+                "plague-siphon",
+                "serpent-reservoir"
+              ]
+            }
+          ],
+          "enemyRelics": 20
+        },
+        {
+          "planet": 2,
+          "depth": 1,
+          "type": "battle",
+          "winner": 0,
+          "team": 6,
+          "capacity": 6,
+          "levels": [
+            9,
+            9,
+            9,
+            7,
+            7,
+            6
+          ],
+          "capture": false,
+          "creatures": [
+            {
+              "id": "aurel",
+              "evolution": 2,
+              "gear": [
+                "reliquary-plate",
+                "sunsteel-edge",
+                "stoneheart-plate",
+                "windstep-boots"
+              ]
+            },
+            {
+              "id": "syl",
+              "evolution": 2,
+              "gear": [
+                "sunsteel-edge"
+              ]
+            },
+            {
+              "id": "crownstag",
+              "evolution": 2,
+              "gear": [
+                "sunsteel-edge"
+              ]
+            },
+            {
+              "id": "rowan",
+              "evolution": 1,
+              "gear": [
+                "storm-conductor",
+                "stoneheart-plate",
+                "battery-orb",
+                "sunsteel-edge"
+              ]
+            },
+            {
+              "id": "rowan",
+              "evolution": 1,
+              "gear": [
+                "sunsteel-edge"
+              ]
+            },
+            {
+              "id": "zephyr",
+              "evolution": 1,
+              "gear": [
+                "venom-sabre",
+                "bramble-coat",
+                "plague-siphon",
+                "serpent-reservoir"
+              ]
+            }
+          ],
+          "enemyRelics": 20
+        },
+        {
+          "planet": 2,
+          "depth": 2,
+          "type": "battle",
+          "winner": 0,
+          "team": 6,
+          "capacity": 6,
+          "levels": [
+            10,
+            10,
+            9,
+            8,
+            8,
+            6
+          ],
+          "capture": false,
+          "creatures": [
+            {
+              "id": "aurel",
+              "evolution": 2,
+              "gear": [
+                "reliquary-plate",
+                "sunsteel-edge",
+                "stoneheart-plate",
+                "windstep-boots"
+              ]
+            },
+            {
+              "id": "syl",
+              "evolution": 2,
+              "gear": [
+                "sunsteel-edge"
+              ]
+            },
+            {
+              "id": "crownstag",
+              "evolution": 2,
+              "gear": [
+                "sunsteel-edge"
+              ]
+            },
+            {
+              "id": "rowan",
+              "evolution": 1,
+              "gear": [
+                "storm-conductor",
+                "stoneheart-plate",
+                "battery-orb",
+                "sunsteel-edge"
+              ]
+            },
+            {
+              "id": "rowan",
+              "evolution": 1,
+              "gear": [
+                "sunsteel-edge"
+              ]
+            },
+            {
+              "id": "zephyr",
+              "evolution": 1,
+              "gear": [
+                "venom-sabre",
+                "bramble-coat",
+                "plague-siphon",
+                "serpent-reservoir"
+              ]
+            }
+          ],
+          "enemyRelics": 20
+        },
+        {
+          "planet": 2,
+          "depth": 7,
+          "type": "boss",
+          "winner": 0,
+          "team": 6,
+          "capacity": 6,
+          "levels": [
+            11,
+            11,
+            10,
+            9,
+            9,
+            8
+          ],
+          "capture": false,
+          "creatures": [
+            {
+              "id": "aurel",
+              "evolution": 2,
+              "gear": [
+                "reliquary-plate",
+                "sunsteel-edge",
+                "stoneheart-plate",
+                "windstep-boots"
+              ]
+            },
+            {
+              "id": "syl",
+              "evolution": 2,
+              "gear": [
+                "sunsteel-edge"
+              ]
+            },
+            {
+              "id": "crownstag",
+              "evolution": 2,
+              "gear": [
+                "sunsteel-edge"
+              ]
+            },
+            {
+              "id": "rowan",
+              "evolution": 1,
+              "gear": [
+                "storm-conductor",
+                "stoneheart-plate",
+                "battery-orb",
+                "sunsteel-edge"
+              ]
+            },
+            {
+              "id": "rowan",
+              "evolution": 1,
+              "gear": [
+                "sunsteel-edge"
+              ]
+            },
+            {
+              "id": "zephyr",
+              "evolution": 1,
+              "gear": [
+                "venom-sabre",
+                "bramble-coat",
+                "plague-siphon",
+                "serpent-reservoir"
+              ]
+            }
+          ],
+          "enemyRelics": 25
+        }
+      ],
+      "shops": [
+        {
+          "before": {
+            "gold": 286,
+            "capacity": 3
+          },
+          "after": {
+            "gold": 146,
+            "capacity": 3,
+            "bench": 1
+          }
+        },
+        {
+          "before": {
+            "gold": 98,
+            "capacity": 5
+          },
+          "after": {
+            "gold": 33,
+            "capacity": 5,
+            "bench": 1
+          }
+        },
+        {
+          "before": {
+            "gold": 94,
+            "capacity": 5
+          },
+          "after": {
+            "gold": 94,
+            "capacity": 5,
+            "bench": 0
+          }
+        },
+        {
+          "before": {
+            "gold": 189,
+            "capacity": 6
+          },
+          "after": {
+            "gold": 124,
+            "capacity": 6,
+            "bench": 1
+          }
+        },
+        {
+          "before": {
+            "gold": 124,
+            "capacity": 6
+          },
+          "after": {
+            "gold": 124,
+            "capacity": 6,
+            "bench": 1
+          }
+        },
+        {
+          "before": {
+            "gold": 124,
+            "capacity": 6
+          },
+          "after": {
+            "gold": 124,
+            "capacity": 6,
+            "bench": 1
+          }
+        }
+      ],
+      "checks": [
+        "Earned slot and reward survive reload",
+        "Legal two-starter campaign clears three planets with no grants or combat overrides"
+      ],
+      "errors": [],
+      "complete": true,
+      "integrity": 3,
+      "fallen": 0
+    },
+    "standard": {
+      "seed": 3,
+      "difficulty": "standard",
+      "battles": [
+        {
+          "planet": 0,
+          "depth": 0,
+          "type": "battle",
+          "winner": 0,
+          "team": 2,
+          "capacity": 2,
+          "levels": [
+            1,
+            1
+          ],
+          "capture": true,
+          "creatures": [
+            {
+              "id": "aurel",
+              "evolution": 0,
+              "gear": [
+                "reliquary-plate"
+              ]
+            },
+            {
+              "id": "syl",
+              "evolution": 0,
+              "gear": [
+                "sunsteel-edge"
+              ]
+            }
+          ],
+          "enemyRelics": 2
+        },
+        {
+          "planet": 0,
+          "depth": 1,
+          "type": "battle",
+          "winner": 0,
+          "team": 2,
+          "capacity": 3,
+          "levels": [
+            2,
+            2
+          ],
+          "capture": false,
+          "creatures": [
+            {
+              "id": "aurel",
+              "evolution": 0,
+              "gear": [
+                "reliquary-plate"
+              ]
+            },
+            {
+              "id": "syl",
+              "evolution": 0,
+              "gear": [
+                "sunsteel-edge"
+              ]
+            }
+          ],
+          "enemyRelics": 2
+        },
+        {
+          "planet": 0,
+          "depth": 2,
+          "type": "battle",
+          "winner": 0,
+          "team": 3,
+          "capacity": 3,
+          "levels": [
+            3,
+            3,
+            2
+          ],
+          "capture": false,
+          "creatures": [
+            {
+              "id": "aurel",
+              "evolution": 0,
+              "gear": [
+                "reliquary-plate"
+              ]
+            },
+            {
+              "id": "syl",
+              "evolution": 0,
+              "gear": [
+                "sunsteel-edge"
+              ]
+            },
+            {
+              "id": "grit",
+              "evolution": 0,
+              "gear": [
+                "frost-rapier",
+                "smoke-mail",
+                "winter-lens"
+              ]
+            }
+          ],
+          "enemyRelics": 3
+        },
+        {
+          "planet": 0,
+          "depth": 4,
+          "type": "battle",
+          "winner": 0,
+          "team": 3,
+          "capacity": 3,
+          "levels": [
+            4,
+            4,
+            2
+          ],
+          "capture": false,
+          "creatures": [
+            {
+              "id": "aurel",
+              "evolution": 1,
+              "gear": [
+                "reliquary-plate",
+                "sunsteel-edge"
+              ]
+            },
+            {
+              "id": "syl",
+              "evolution": 1,
+              "gear": [
+                "sunsteel-edge"
+              ]
+            },
+            {
+              "id": "crownstag",
+              "evolution": 0,
+              "gear": [
+                "sunsteel-edge"
+              ]
+            }
+          ],
+          "enemyRelics": 6
+        },
+        {
+          "planet": 0,
+          "depth": 7,
+          "type": "boss",
+          "winner": 0,
+          "team": 3,
+          "capacity": 4,
+          "levels": [
+            5,
+            5,
+            4
+          ],
+          "capture": false,
+          "creatures": [
+            {
+              "id": "aurel",
+              "evolution": 1,
+              "gear": [
+                "reliquary-plate",
+                "sunsteel-edge"
+              ]
+            },
+            {
+              "id": "syl",
+              "evolution": 1,
+              "gear": [
+                "sunsteel-edge"
+              ]
+            },
+            {
+              "id": "crownstag",
+              "evolution": 0,
+              "gear": [
+                "sunsteel-edge"
+              ]
+            }
+          ],
+          "enemyRelics": 12
+        },
+        {
+          "planet": 1,
+          "depth": 0,
+          "type": "battle",
+          "winner": 0,
+          "team": 4,
+          "capacity": 4,
+          "levels": [
+            6,
+            6,
+            5,
+            2
+          ],
+          "capture": false,
+          "creatures": [
+            {
+              "id": "aurel",
+              "evolution": 1,
+              "gear": [
+                "reliquary-plate",
+                "sunsteel-edge",
+                "stoneheart-plate"
+              ]
+            },
+            {
+              "id": "syl",
+              "evolution": 1,
+              "gear": [
+                "sunsteel-edge"
+              ]
+            },
+            {
+              "id": "crownstag",
+              "evolution": 0,
+              "gear": [
+                "sunsteel-edge"
+              ]
+            },
+            {
+              "id": "grit",
+              "evolution": 0,
+              "gear": [
+                "frost-rapier",
+                "smoke-mail",
+                "winter-lens"
+              ]
+            }
+          ],
+          "enemyRelics": 9
+        },
+        {
+          "planet": 1,
+          "depth": 1,
+          "type": "battle",
+          "winner": 0,
+          "team": 4,
+          "capacity": 4,
+          "levels": [
+            6,
+            6,
+            5,
+            3
+          ],
+          "capture": false,
+          "creatures": [
+            {
+              "id": "aurel",
+              "evolution": 2,
+              "gear": [
+                "reliquary-plate",
+                "sunsteel-edge",
+                "stoneheart-plate",
+                "windstep-boots"
+              ]
+            },
+            {
+              "id": "syl",
+              "evolution": 2,
+              "gear": [
+                "sunsteel-edge"
+              ]
+            },
+            {
+              "id": "crownstag",
+              "evolution": 0,
+              "gear": [
+                "sunsteel-edge"
+              ]
+            },
+            {
+              "id": "grit",
+              "evolution": 0,
+              "gear": [
+                "frost-rapier",
+                "smoke-mail",
+                "winter-lens"
+              ]
+            }
+          ],
+          "enemyRelics": 9
+        },
+        {
+          "planet": 1,
+          "depth": 2,
+          "type": "battle",
+          "winner": 0,
+          "team": 4,
+          "capacity": 5,
+          "levels": [
+            7,
+            7,
+            6,
+            4
+          ],
+          "capture": false,
+          "creatures": [
+            {
+              "id": "aurel",
+              "evolution": 2,
+              "gear": [
+                "reliquary-plate",
+                "sunsteel-edge",
+                "stoneheart-plate",
+                "windstep-boots"
+              ]
+            },
+            {
+              "id": "syl",
+              "evolution": 2,
+              "gear": [
+                "sunsteel-edge"
+              ]
+            },
+            {
+              "id": "crownstag",
+              "evolution": 1,
+              "gear": [
+                "sunsteel-edge"
+              ]
+            },
+            {
+              "id": "grit",
+              "evolution": 0,
+              "gear": [
+                "frost-rapier",
+                "smoke-mail",
+                "winter-lens"
+              ]
+            }
+          ],
+          "enemyRelics": 9
+        },
+        {
+          "planet": 1,
+          "depth": 4,
+          "type": "capture",
+          "winner": 0,
+          "team": 5,
+          "capacity": 5,
+          "levels": [
+            7,
+            7,
+            6,
+            5,
+            4
+          ],
+          "capture": false,
+          "creatures": [
+            {
+              "id": "aurel",
+              "evolution": 2,
+              "gear": [
+                "reliquary-plate",
+                "sunsteel-edge",
+                "stoneheart-plate",
+                "windstep-boots"
+              ]
+            },
+            {
+              "id": "syl",
+              "evolution": 2,
+              "gear": [
+                "sunsteel-edge"
+              ]
+            },
+            {
+              "id": "crownstag",
+              "evolution": 1,
+              "gear": [
+                "sunsteel-edge"
+              ]
+            },
+            {
+              "id": "grit",
+              "evolution": 0,
+              "gear": [
+                "frost-rapier",
+                "smoke-mail",
+                "winter-lens"
+              ]
+            },
+            {
+              "id": "rowan",
+              "evolution": 0,
+              "gear": [
+                "sunsteel-edge"
+              ]
+            }
+          ],
+          "enemyRelics": 16
+        },
+        {
+          "planet": 1,
+          "depth": 5,
+          "type": "battle",
+          "winner": 0,
+          "team": 5,
+          "capacity": 5,
+          "levels": [
+            8,
+            8,
+            7,
+            6,
+            5
+          ],
+          "capture": false,
+          "creatures": [
+            {
+              "id": "aurel",
+              "evolution": 2,
+              "gear": [
+                "reliquary-plate",
+                "sunsteel-edge",
+                "stoneheart-plate",
+                "windstep-boots"
+              ]
+            },
+            {
+              "id": "syl",
+              "evolution": 2,
+              "gear": [
+                "sunsteel-edge"
+              ]
+            },
+            {
+              "id": "crownstag",
+              "evolution": 2,
+              "gear": [
+                "sunsteel-edge"
+              ]
+            },
+            {
+              "id": "grit",
+              "evolution": 0,
+              "gear": [
+                "frost-rapier",
+                "smoke-mail",
+                "winter-lens"
+              ]
+            },
+            {
+              "id": "rowan",
+              "evolution": 0,
+              "gear": [
+                "sunsteel-edge"
+              ]
+            }
+          ],
+          "enemyRelics": 16
+        },
+        {
+          "planet": 1,
+          "depth": 7,
+          "type": "boss",
+          "winner": 0,
+          "team": 5,
+          "capacity": 6,
+          "levels": [
+            8,
+            8,
+            8,
+            7,
+            6
+          ],
+          "capture": false,
+          "creatures": [
+            {
+              "id": "aurel",
+              "evolution": 2,
+              "gear": [
+                "reliquary-plate",
+                "sunsteel-edge",
+                "stoneheart-plate",
+                "windstep-boots"
+              ]
+            },
+            {
+              "id": "syl",
+              "evolution": 2,
+              "gear": [
+                "sunsteel-edge"
+              ]
+            },
+            {
+              "id": "crownstag",
+              "evolution": 2,
+              "gear": [
+                "sunsteel-edge"
+              ]
+            },
+            {
+              "id": "grit",
+              "evolution": 0,
+              "gear": [
+                "frost-rapier",
+                "smoke-mail",
+                "winter-lens"
+              ]
+            },
+            {
+              "id": "rowan",
+              "evolution": 0,
+              "gear": [
+                "sunsteel-edge"
+              ]
+            }
+          ],
+          "enemyRelics": 20
+        },
+        {
+          "planet": 2,
+          "depth": 0,
+          "type": "battle",
+          "winner": 0,
+          "team": 5,
+          "capacity": 6,
+          "levels": [
+            9,
+            9,
+            8,
+            7,
+            7
+          ],
+          "capture": false,
+          "creatures": [
+            {
+              "id": "aurel",
+              "evolution": 2,
+              "gear": [
+                "reliquary-plate",
+                "sunsteel-edge",
+                "stoneheart-plate",
+                "windstep-boots"
+              ]
+            },
+            {
+              "id": "syl",
+              "evolution": 2,
+              "gear": [
+                "sunsteel-edge"
+              ]
+            },
+            {
+              "id": "crownstag",
+              "evolution": 2,
+              "gear": [
+                "sunsteel-edge"
+              ]
+            },
+            {
+              "id": "grit",
+              "evolution": 1,
+              "gear": [
+                "frost-rapier",
+                "smoke-mail",
+                "winter-lens",
+                "sunsteel-edge"
+              ]
+            },
+            {
+              "id": "rowan",
+              "evolution": 1,
+              "gear": [
+                "sunsteel-edge"
+              ]
+            }
+          ],
+          "enemyRelics": 20
+        },
+        {
+          "planet": 2,
+          "depth": 1,
+          "type": "battle",
+          "winner": 0,
+          "team": 5,
+          "capacity": 6,
+          "levels": [
+            9,
+            9,
+            9,
+            8,
+            7
+          ],
+          "capture": false,
+          "creatures": [
+            {
+              "id": "aurel",
+              "evolution": 2,
+              "gear": [
+                "reliquary-plate",
+                "sunsteel-edge",
+                "stoneheart-plate",
+                "windstep-boots"
+              ]
+            },
+            {
+              "id": "syl",
+              "evolution": 2,
+              "gear": [
+                "sunsteel-edge"
+              ]
+            },
+            {
+              "id": "crownstag",
+              "evolution": 2,
+              "gear": [
+                "sunsteel-edge"
+              ]
+            },
+            {
+              "id": "grit",
+              "evolution": 1,
+              "gear": [
+                "frost-rapier",
+                "smoke-mail",
+                "winter-lens",
+                "sunsteel-edge"
+              ]
+            },
+            {
+              "id": "rowan",
+              "evolution": 1,
+              "gear": [
+                "sunsteel-edge"
+              ]
+            }
+          ],
+          "enemyRelics": 20
+        },
+        {
+          "planet": 2,
+          "depth": 2,
+          "type": "battle",
+          "winner": 0,
+          "team": 5,
+          "capacity": 6,
+          "levels": [
+            10,
+            10,
+            9,
+            8,
+            8
+          ],
+          "capture": true,
+          "creatures": [
+            {
+              "id": "aurel",
+              "evolution": 2,
+              "gear": [
+                "reliquary-plate",
+                "sunsteel-edge",
+                "stoneheart-plate",
+                "windstep-boots"
+              ]
+            },
+            {
+              "id": "syl",
+              "evolution": 2,
+              "gear": [
+                "sunsteel-edge"
+              ]
+            },
+            {
+              "id": "crownstag",
+              "evolution": 2,
+              "gear": [
+                "sunsteel-edge"
+              ]
+            },
+            {
+              "id": "grit",
+              "evolution": 1,
+              "gear": [
+                "frost-rapier",
+                "smoke-mail",
+                "winter-lens",
+                "sunsteel-edge"
+              ]
+            },
+            {
+              "id": "rowan",
+              "evolution": 1,
+              "gear": [
+                "sunsteel-edge"
+              ]
+            }
+          ],
+          "enemyRelics": 20
+        },
+        {
+          "planet": 2,
+          "depth": 7,
+          "type": "boss",
+          "winner": 0,
+          "team": 6,
+          "capacity": 6,
+          "levels": [
+            11,
+            11,
+            10,
+            9,
+            9,
+            6
+          ],
+          "capture": false,
+          "creatures": [
+            {
+              "id": "aurel",
+              "evolution": 2,
+              "gear": [
+                "reliquary-plate",
+                "sunsteel-edge",
+                "stoneheart-plate",
+                "windstep-boots"
+              ]
+            },
+            {
+              "id": "syl",
+              "evolution": 2,
+              "gear": [
+                "sunsteel-edge"
+              ]
+            },
+            {
+              "id": "crownstag",
+              "evolution": 2,
+              "gear": [
+                "sunsteel-edge"
+              ]
+            },
+            {
+              "id": "grit",
+              "evolution": 1,
+              "gear": [
+                "frost-rapier",
+                "smoke-mail",
+                "winter-lens",
+                "sunsteel-edge"
+              ]
+            },
+            {
+              "id": "rowan",
+              "evolution": 1,
+              "gear": [
+                "sunsteel-edge"
+              ]
+            },
+            {
+              "id": "nyra",
+              "evolution": 1,
+              "gear": [
+                "frostfire-edge",
+                "rageplate",
+                "ember-reactor",
+                "sunsteel-edge"
+              ]
+            }
+          ],
+          "enemyRelics": 25
+        }
+      ],
+      "shops": [
+        {
+          "before": {
+            "gold": 286,
+            "capacity": 3
+          },
+          "after": {
+            "gold": 146,
+            "capacity": 3,
+            "bench": 1
+          }
+        },
+        {
+          "before": {
+            "gold": 98,
+            "capacity": 5
+          },
+          "after": {
+            "gold": 33,
+            "capacity": 5,
+            "bench": 1
+          }
+        },
+        {
+          "before": {
+            "gold": 44,
+            "capacity": 5
+          },
+          "after": {
+            "gold": 44,
+            "capacity": 5,
+            "bench": 0
+          }
+        },
+        {
+          "before": {
+            "gold": 189,
+            "capacity": 6
+          },
+          "after": {
+            "gold": 124,
+            "capacity": 6,
+            "bench": 2
+          }
+        },
+        {
+          "before": {
+            "gold": 124,
+            "capacity": 6
+          },
+          "after": {
+            "gold": 124,
+            "capacity": 6,
+            "bench": 2
+          }
+        },
+        {
+          "before": {
+            "gold": 124,
+            "capacity": 6
+          },
+          "after": {
+            "gold": 124,
+            "capacity": 6,
+            "bench": 2
+          }
+        }
+      ],
+      "checks": [
+        "Earned slot and reward survive reload",
+        "Legal two-starter campaign clears three planets with no grants or combat overrides"
+      ],
+      "errors": [],
+      "complete": true,
+      "integrity": 3,
+      "fallen": 0
+    },
+    "chaos1": {
+      "seed": 3,
+      "difficulty": "chaos",
+      "battles": [
+        {
+          "planet": 0,
+          "depth": 0,
+          "type": "battle",
+          "winner": 0,
+          "team": 2,
+          "capacity": 2,
+          "levels": [
+            1,
+            1
+          ],
+          "capture": true,
+          "creatures": [
+            {
+              "id": "aurel",
+              "evolution": 0,
+              "gear": [
+                "reliquary-plate"
+              ]
+            },
+            {
+              "id": "syl",
+              "evolution": 0,
+              "gear": [
+                "sunsteel-edge"
+              ]
+            }
+          ],
+          "enemyRelics": 2
+        },
+        {
+          "planet": 0,
+          "depth": 1,
+          "type": "battle",
+          "winner": 0,
+          "team": 2,
+          "capacity": 3,
+          "levels": [
+            2,
+            2
+          ],
+          "capture": false,
+          "creatures": [
+            {
+              "id": "aurel",
+              "evolution": 0,
+              "gear": [
+                "reliquary-plate"
+              ]
+            },
+            {
+              "id": "syl",
+              "evolution": 0,
+              "gear": [
+                "sunsteel-edge"
+              ]
+            }
+          ],
+          "enemyRelics": 2
+        },
+        {
+          "planet": 0,
+          "depth": 2,
+          "type": "battle",
+          "winner": 1,
+          "team": 2,
+          "capacity": 3,
+          "levels": [
+            2,
+            1
+          ],
+          "capture": false,
+          "creatures": [
+            {
+              "id": "aurel",
+              "evolution": 0,
+              "gear": [
+                "reliquary-plate"
+              ]
+            },
+            {
+              "id": "grit",
+              "evolution": 0,
+              "gear": [
+                "frost-rapier",
+                "smoke-mail",
+                "winter-lens"
+              ]
+            }
+          ],
+          "enemyRelics": 3
+        },
+        {
+          "planet": 0,
+          "depth": 4,
+          "type": "battle",
+          "winner": 1,
+          "team": 2,
+          "capacity": 3,
+          "levels": [
+            1,
+            2
+          ],
+          "capture": false,
+          "creatures": [
+            {
+              "id": "grit",
+              "evolution": 0,
+              "gear": [
+                "frost-rapier",
+                "smoke-mail",
+                "winter-lens"
+              ]
+            },
+            {
+              "id": "crownstag",
+              "evolution": 0
+            }
+          ],
+          "enemyRelics": 6
+        },
+        {
+          "planet": 0,
+          "depth": 7,
+          "type": "boss",
+          "winner": 1,
+          "team": 1,
+          "capacity": 3,
+          "levels": [
+            2
+          ],
+          "capture": false,
+          "creatures": [
+            {
+              "id": "grit",
+              "evolution": 0,
+              "gear": [
+                "frost-rapier",
+                "smoke-mail",
+                "winter-lens"
+              ]
+            }
+          ],
+          "enemyRelics": 12
+        },
+        {
+          "planet": 0,
+          "depth": 7,
+          "type": "boss",
+          "winner": 1,
+          "team": 0,
+          "capacity": 3,
+          "levels": [],
+          "capture": false,
+          "creatures": [],
+          "enemyRelics": 12
+        }
+      ],
+      "shops": [
+        {
+          "before": {
+            "gold": 250,
+            "capacity": 3
+          },
+          "after": {
+            "gold": 110,
+            "capacity": 3,
+            "bench": 1
+          }
+        }
+      ],
+      "checks": [
+        "Earned slot and reward survive reload"
+      ],
+      "errors": [],
+      "complete": false,
+      "integrity": 0,
+      "fallen": 4
+    }
+  },
+  "historicalInvestigations": [
+    "Several earlier nonadaptive bot policies failed on the first or second planet; current role-aware legal Explorer and Standard policies cleared three planets. These are small deterministic samples, not a population win rate.",
+    "Reward selection used an inconsistent random comparator; replaced by Fisher\u2013Yates shuffle and verified with the equipment reward browser scenario.",
+    "Loadout refresh replayed modal entrance animation; rapid subsequent dragging was unstable. Drop refresh now skips entrance animation and the immediate transfer browser scenario passes."
+  ],
+  "sourceHashes": {
+    "game.js": "e98fdc18561531545e9d39b716fa77b18a8ea306b16f3bf601b8b7c19b15d25c",
+    "app.js": "5ff6dd77bfee3a265878b734923bbd9a71520d4bcd70d910103acbd088faf213",
+    "equipment-catalog.js": "7402fdcb9d438cd3f958241b290763acaec805294e9d3158bb3f690c599fee28",
+    "styles.css": "7194c914ab64d40822f839c094fbbee83454abd82ddeef1d829487c950e483b7",
+    "Starfall-Menagerie.html": "d646c9062a5354e3988763b610c0afb39510c55b2287bab9e8fd5e17ca1d4aa5",
+    "Starfall-Training-Glade.html": "3e8542b66e5c165c757ab9b0a27999bde42599ad9bb024c698575b812d52c208"
+  },
+  "preservedDraftSHA256": "a4c0ad756a781f8f223e34c1f9cd22d79e9fe47bff81d8ee951f47a16d987ea1",
+  "failedChecks": [
+    {
+      "command": "CAMPAIGN_DIFFICULTY=chaos node tests/expedition-v15-campaign.browser.mjs",
+      "result": "Seed-3 role-aware policy lost on the first planet; the full-clear assertion failed. No browser errors. Chaos victory/point unlock is covered by unit tests, not a completed V15 campaign."
+    }
+  ],
+  "pullRequest": "https://github.com/DCardimen/AutoB/pull/3",
+  "recoveryPullRequest": "https://github.com/DCardimen/AutoB/pull/2",
+  "branch": "codex/fieldcraft-v15-verified",
+  "verifiedSourceCommit": "58087d16f63a678b8b40d78bae2afaef117ce595"
 }
