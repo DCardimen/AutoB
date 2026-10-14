@@ -28,13 +28,13 @@ for(const offline of [false,true]){
  assert.equal(await page.evaluate(()=>starfall.state.phase),'reward');await page.clock.runFor(3000);
  if(!await page.locator('[data-upgrade]').count())await page.locator('[data-action="reward"]').click();
  await page.locator('[data-upgrade]').first().click();
- const loot=page.locator('[data-action="claim-loot"]');if(await loot.count())await loot.click();
+ const loot=page.locator('[data-action="claim-loot"]');if(await loot.count()){await loot.click();await page.clock.runFor(2000);}
  await page.locator('[data-action="continue"]').click();
  assert.equal(await page.evaluate(()=>starfall.state.phase),'map');
  assert.ok(await page.locator('.biome-route').evaluate(el=>getComputedStyle(el).backgroundImage.includes('world-0')||getComputedStyle(el).backgroundImage.includes('blob:')));
  await page.screenshot({path:'playtest-artifacts/field-'+(offline?'offline':'source')+'-route.png',fullPage:true});
  const available=page.locator('.route-node.available[data-node]');assert.ok(await available.count());
- await available.first().click();assert.equal(await page.evaluate(()=>starfall.state.phase),'map');await page.locator('[data-field-scout]').click();assert.ok(await page.locator('.modal[aria-label="route-scout"]').isVisible());await page.locator('[data-action="close"]').first().click();await page.locator('[data-field-enter]').click();assert.ok(['prep','shop','event','rest'].includes(await page.evaluate(()=>starfall.state.phase)));
+ await available.first().click();await page.clock.runFor(1200);await page.locator('.field-journey:not([data-field-phase="map"])').waitFor();assert.ok(['prep','shop','event','rest'].includes(await page.evaluate(()=>starfall.state.phase)));
  if(await page.locator('.modal-close').count())await page.locator('.modal-close').first().click();
  await page.reload();assert.ok(await page.locator('.field-world.current').isVisible());
 

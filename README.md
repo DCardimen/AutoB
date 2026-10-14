@@ -1,8 +1,12 @@
+# Chaos, relics and combat update
+
+Three starter points plus one per cleared Chaos tier; a third starting companion at Chaos 3. Adds 30 relics, 50 equipment types, speed and stamina stats, temporary captured allies, weakest-first and click-to-focus targeting, varied opening encounters and new combat effects. Relics are retained after companion deaths. See [changes and play instructions](CHAOS-COMBAT.md).
+
 **Melee weapon and arm polish · Art 6:** Complete connected arms, original weapon silhouettes and readable carry poses; phone AI controls moved below the creatures. See [the changes and validation](MELEE-WEAPONS.md). After pulling, run `npm ci` and `npm start`, or `npm run build:standalone` for the updated offline game.
 
 **Reference field UI:** Illustrated route scene and encounter sheet, matching menus, mobile combat layout and original vector artwork. See [UI notes and build instructions](FIELD-UI-V3.md). Run `npm ci` and `npm start` to play the latest source after pulling. For the updated offline game, run `npm run build:standalone`, or use the **Starfall-Reference-UI** Actions artifact.
 
-# Starfall Menagerie · V17.1 palette fix
+# Previous release · V17.1 palette fix
 
 A single-player creature-collecting roguelike autobattler with physical arena combat. Start with two companions and grow a team of six across three planets, build individual companions with personal relics and equipment, capture permanent starters, and climb twenty Chaos tiers.
 

@@ -1,6 +1,7 @@
 import {snapshotNativeMotion} from './native-motion.js';
 import {WEARER_BY_ID,WEARER_RELICS,wearerStats,initializeCompanion} from './wearer-relics.js';
-import {starterPoints} from './tactics.js';
+import {starterPoints,starterBudget,starterSlots} from './tactics.js';
+import {dodgeStyle} from './combat-expansion.js';
 import {enrageAt,actionElapsed} from './battle-enrage.js';
 import {getTuning,normalizeTuning} from './tuning.js';
 import {creatureWorldScale,nativeEntityBounds} from './native-size.js';
@@ -772,24 +773,30 @@ export function stats(c, team, relics = []) {
     speed,
     dodge,
     range: s.range + (nativeEvolution(c).range || 0),
+    attackSpeed:curios.attackSpeed*gear.attackSpeed/((s.role==='Guardian'?1.55:1.3)*linkedSupport(c,loadoutFor(s,c.level,c).auto).attackSpeed),
+    actionSpeed:curios.actionSpeed*gear.actionSpeed,
+    staminaRecharge:((c.balanceVersion||0)>=17?({Striker:26,Ranger:22,Support:20,Guardian:15}[s.role]||20):20)*curios.regenStamina*gear.regenStamina,
+    dashCooldown:curios.dashCooldown*gear.dashCooldown,
+    dodgeStyle:(c.balanceVersion||0)>=17?dodgeStyle(s):'roll',
     personal,
   };
 }
 export function makeRun(seed = Date.now(), ids = STARTERS, options = {}) {
   const random = rng(seed),
     native = options.native ?? ids.every(id=>!!BY_ID[id].nativeRig),
-    rulesVersion=options.rulesVersion??17,teamSize=rulesVersion>=15?Math.max(1,Math.min(2,ids.length)):rulesVersion>=12?2:6,
+    rulesVersion=options.rulesVersion??17,teamSize=rulesVersion>=15?Math.max(1,Math.min(starterSlots(options),ids.length)):rulesVersion>=12?2:6,
     team = ids.slice(0, teamSize).map((id,i) => {const c=creature(id);c.seat=i;c.starter=true;return rulesVersion>=12?rollIndividual(c,seed+i*1179,true):c;});
   while(team.length<teamSize){const i=team.length,c=creature((native?NATIVE_STARTERS:STARTERS)[i]);c.seat=i;c.starter=true;team.push(rulesVersion>=12?rollIndividual(c,seed+i*1179,true):c);}
   if(rulesVersion>=15){
-    const budget=Math.max(2,Math.min(8,options.starterBudget??2));
+    const budget=Math.max(3,Math.min(23,options.starterBudget??starterBudget(options)));
     if(team.reduce((points,c)=>points+starterPoints(BY_ID[c.id].rarity,options.starterBonds?.[c.id]||0),0)>budget)throw new Error('Starting companions exceed the starter point budget.');
   }
   if(rulesVersion>=15)team.forEach((c,i)=>{c.balanceVersion=rulesVersion;c.equipment=[i===0?'reliquary-plate':'sunsteel-edge'];});
   const result = {
     seed,
     rulesVersion,
-    teamCapacity:rulesVersion>=12?2:teamSize,
+    teamCapacity:rulesVersion>=12?Math.max(teamSize,starterSlots(options)):teamSize,
+    chaosCleared:Math.max(0,Math.min(20,options.chaosCleared||0)),
     captureTools:rulesVersion>=12?{scout:5,runic:0,astral:0,mythic:0}:undefined,
     native,
     rosterMode: options.rosterMode || (ids.every(id=>!!BY_ID[id].nativeRig)?"authored":"collection"),
@@ -824,7 +831,11 @@ export function makeRun(seed = Date.now(), ids = STARTERS, options = {}) {
     shop: null,
     complete: false,
   };
+  // Seeded independently: the opening relic never changes the route RNG stream.
+  const opening=EXPEDITION_RELICS[Math.floor(rng(seed+807731)()*EXPEDITION_RELICS.length)];
+  if(rulesVersion>=17){result.relics=[opening.id];result.startingRelic=opening.id;}
   const chaos = chaosLevel(result);
+  if(chaos>=3)result.teamCapacity=Math.max(3,result.teamCapacity);
   if (chaos >= 3) result.gold = 130;
   if (chaos >= 7){result.orbs=4;if(result.captureTools)result.captureTools.scout=4;}
   if (chaos >= 14) result.integrity = 2;
@@ -957,16 +968,9 @@ export function encounter(run, type = "battle", seed = 1) {
       ARCHETYPES.find((a) => a.id === scout?.archetype) ||
       ARCHETYPES[Math.floor(r() * ARCHETYPES.length)];
   const rarityRank = { Common: 0, Uncommon: 1, Rare: 2, Epic: 3, Legendary: 4 };
-  const maxRank =
-    run.planet === 0 && run.depth < 3
-      ? 1
-      : run.planet === 0
-        ? 2
-        : run.planet === 1
-          ? 3
-          : 4;
-  const encounterPool = run.native && run.rosterMode!=="collection" ? nativePool(run,type) : p.pool.filter(id=>!BY_ID[id].nativeRig);
-  const pool = encounterPool.filter((id) => rarityRank[BY_ID[id].rarity] <= maxRank);
+  const encounterPool = (run.rulesVersion||0)>=17?SPECIES.filter(s=>!s.boss).map(s=>s.id):run.native&&run.rosterMode!=='collection'?nativePool(run,type):p.pool.filter(id=>!BY_ID[id].nativeRig);
+  const maxRank=run.planet===0&&run.depth<3?1:run.planet===0?2:run.planet===1?3:4;
+  const pool = (run.rulesVersion||0)>=17?encounterPool:encounterPool.filter(id=>rarityRank[BY_ID[id].rarity]<=maxRank);
   const weights = {
     Common: 5,
     Uncommon: 4,
@@ -975,10 +979,12 @@ export function encounter(run, type = "battle", seed = 1) {
     Legendary: 0.4,
   };
   const chooseWild = (available) => {
+    if((run.rulesVersion||0)>=17&&novice&&r()<.45)available=pool;
+    if((run.rulesVersion||0)>=17){const fresh=available.filter(id=>!foes.some(c=>c.id===id));if(fresh.length)available=fresh;}
     let roll =
-      r() * available.reduce((sum, id) => sum + weights[BY_ID[id].rarity], 0);
+      r() * available.reduce((sum, id) => sum + (weights[BY_ID[id].rarity]*(novice&&rarityRank[BY_ID[id].rarity]>1?.32:1)), 0);
     for (const id of available) {
-      roll -= weights[BY_ID[id].rarity];
+      roll -= weights[BY_ID[id].rarity]*(novice&&rarityRank[BY_ID[id].rarity]>1?.32:1);
       if (roll <= 0) return id;
     }
     return available.at(-1);
@@ -1007,7 +1013,7 @@ export function encounter(run, type = "battle", seed = 1) {
         : id;
     const c = creature(chosen, Math.max(1, base + (type === "elite" ? 1 : 0)));
     if(progressive(run)){rollIndividual(c,seed+i*741);assignEnemyRelics(run,c,type,seed+((run.rulesVersion||0)>=15?0:i*569));if(novice){c.genes.hp*=((run.rulesVersion||0)>=15?.78:.72)+run.depth*.04;c.genes.atk*=((run.rulesVersion||0)>=15?.73:.70)+run.depth*.04;c.encounterTraining="Unseasoned";}}
-    c.balanceVersion=run.rulesVersion;
+    c.balanceVersion=run.rulesVersion;c.role=BY_ID[c.id].role;
     c.archetype = arch.id;
     if(run.native)c.terrain=terrainFor(run,seed);
     c.elite = type === "elite";
@@ -1624,7 +1630,7 @@ export class Battle {
       const cooldowns = Object.fromEntries(
         loadout.active.map((id, i) => {
           const total =
-            skillDefinition(c,id).cd * st.cdFactor * linkedSupport(c, id).cooldown;
+            skillDefinition(c,id).cd * st.cdFactor * linkedSupport(c, id).cooldown * (['dash','charge'].includes(skillDefinition(c,id).kind)?st.dashCooldown:1);
           return [
             id,
             { total, remaining: 1.6 + i * 1.8 + this.random() * 3, casts: 0 },
@@ -1778,6 +1784,9 @@ export class Battle {
     const taunters = enemies.filter((t) => t.taunt > 0 && distance(t, u) < 250);
     if (taunters.length)
       return taunters.sort((a, b) => distance(a, u) - distance(b, u))[0];
+    const focus=u.side===0?enemies.find(e=>e.uid===this.focusUid&&this.time<this.focusUntil):null;
+    if(focus&&distance(u,focus)<=Math.max(300,u.range*1.5))return focus;
+    if((u.side===0&&this.run.stance==='weakest')||u.policy==='weakest')return enemies.sort((a,b)=>a.hp-b.hp||distance(a,u)-distance(b,u))[0];
     if(u.policy==='nearest')return enemies.sort((a,b)=>distance(a,u)-distance(b,u))[0];
     const tactical=tacticalTarget(this,u,enemies);if(tactical)return tactical;
     const rule=this.native?evaluateOrders(u,this.living(u.side),enemies):null;u.triggeredRule=rule;
@@ -1824,6 +1833,12 @@ export class Battle {
           (b.hp / b.maxHp + distance(b, u) / 600),
       )[0];
     return enemies.sort((a, b) => distance(a, u) - distance(b, u))[0];
+  }
+  focusEnemy(uid){
+    const enemy=this.living(1).find(u=>u.uid===uid);if(!enemy||this.done)return false;
+    this.focusUid=uid;this.focusUntil=this.time+8;
+    this.living(0).forEach(u=>u.targetTimer=0);
+    this.effect(enemy.x,enemy.y-55,'FOCUS · 8s','#f4cf7e');return true;
   }
   get enrage(){return enrageAt((this.run.rulesVersion||0)>=15?this.time:0);}
   setTuning(values){
@@ -2208,6 +2223,7 @@ export class Battle {
     );
     this.burst(target.x, target.y - 10, color, crit ? 11 : 4, crit ? 110 : 60);
     this.fx("impact", target.x, target.y - 8, color, { r: crit ? 35 : 23, victimUid:target.uid });
+    if(dealt>0&&this.run.rulesVersion>=17&&this.visuals&&!this.reducedMotion)this.hitPause=Math.max(this.hitPause||0,crit?.055:.025);
     if (crit || !def.auto) this.shake = Math.min(4, this.shake + 1.1);
     this.audioEvents.push({
       type: crit ? "crit" : def.auto ? "hit" : "skill",
@@ -2812,8 +2828,18 @@ export class Battle {
     u.rollTime = 0.25;
     u.dodgeAnim = 0.32;
     u.dodgeLock = 0.28;
-    u.dodgeCooldown = Math.max(1.5, 3.1 - u.dodge * 4 - (u.evade > 0 ? 1 : 0));
+    u.dodgeCooldown = (this.run.rulesVersion||0)>=17?Math.max(.45,(3.1-u.dodge*4-(u.evade>0?1:0))*u.dashCooldown):Math.max(1.5,3.1-u.dodge*4-(u.evade>0?1:0));
     u.stamina -= 30;
+    if(u.dodgeStyle==='blink'){
+      const from={x:u.x,y:u.y},length=65;
+      const to={x:u.x+direction.x*length,y:u.y+direction.y*length};
+      if(!this.native||!firstTerrainHit(u,to,this.terrain,u.radius)){u.x=to.x;u.y=to.y;confineBody(u,this.bounds);}
+      u.rollTime=0;u.velocityX=u.velocityY=0;
+      this.fx('blink',from.x,from.y,'#cdb0ff',{r:40,ttl:.45,max:.45});
+      this.fx('blink',u.x,u.y,'#cdb0ff',{r:40,ttl:.45,max:.45});
+    }else if(u.dodgeStyle==='barrel'){
+      u.barrelHits=new Set();u.shield+=u.maxHp*.025;
+    }
     u.rollCount++;
     relicEvent(this,u,"dodge");
     this.metrics.rolls++;
@@ -3419,7 +3445,7 @@ export class Battle {
     const target=this.units.find(u=>u.uid===uid&&u.side===1&&!u.boss&&u.hp>0&&!u.captured);
     if(!target)return {ok:false,reason:'Choose a living, non-boss opponent.'};
     if(target.hp>=target.maxHp)return {ok:false,reason:'Weaken this opponent first. Full-health capture chance is 0%.'};
-    if(this.run.bench.length>=12)return {ok:false,reason:'Your reserves are full.'};
+    if((this.run.rulesVersion||0)<17&&this.run.bench.length>=12)return {ok:false,reason:'Your reserves are full.'};
     if(!CAPTURERS[tool]||!consumeCapturer(this.run,tool))return {ok:false,reason:'That capturer is unavailable.'};
     this.autoRetryAt=null;this.autoRetryBlocked=null;
     this.capturePlan={...this.capturePlan,uid,tool,threshold:1};
@@ -3472,7 +3498,7 @@ export class Battle {
         this.savedCaptureResult?.chance ?? captureChance(this.run, target),
       success = this.savedCaptureResult?.success ?? this.random() < chance;
     this.captureSettled = true;
-    if(progressive(this.run))this.captureScene={uid:target.uid,elapsed:0,duration:1.8,success,chance,tool:this.capturePlan.tool||"scout"};
+    if(progressive(this.run))this.captureScene={uid:target.uid,elapsed:0,duration:(this.run.rulesVersion||0)>=17?2.4:1.8,success,chance,tool:this.capturePlan.tool||"scout"};
     this.captureResult = {
       tool:this.capturePlan.tool||"scout",
       success,
@@ -3501,8 +3527,28 @@ export class Battle {
       success ? "#aee8de" : "#eeaa8b",
     );
     if (success) {
-      target.hp = 0;
-      target.captured = true;
+      if((this.run.rulesVersion||0)<17){target.hp=0;target.captured=true;}else{
+      // The battle copy changes allegiance; persistent roster recruitment is separate.
+      target.roundAlly=true;target.originalSide=1;target.side=0;target.captured=false;
+      target.hp=Math.max(target.hp,target.maxHp*.45);
+      target.burn=target.poison=target.bleed=target.root=target.slow=target.wither=0;
+      target.targetMemory=null;target.targetTimer=0;target.nativeAction=null;target.dashMotion=null;
+      target.actionLock=0;target.actionId=null;target.attackTimer=.15;
+      if(target.nativeActor)target.nativeActor.side=0;
+      for(const a of this.strikes)if(a.source===target)a.cancelled=true;
+      this.queue=this.queue.filter(q=>q.source!==target&&q.target!==target);
+      this.projectiles=this.projectiles.filter(p=>p.source!==target);
+      const converted=stats(target,this.living(0),this.run.relics);
+      const healthFraction=target.hp/target.maxHp;
+      target.maxHp=converted.hp;target.hp=converted.hp*healthFraction;
+      for(const key of ['atk','armor','attackSpeed','actionSpeed','staminaRecharge','dashCooldown','speed','dodge','cdFactor'])target[key]=converted[key];
+      for(const [id,cd]of Object.entries(target.cooldowns)){
+        const total=skillDefinition(target,id).cd*converted.cdFactor*linkedSupport(target,id).cooldown*(['dash','charge'].includes(skillDefinition(target,id).kind)?converted.dashCooldown:1);
+        cd.remaining*=total/cd.total;cd.total=total;
+      }
+      compileRelics(this,target);
+      this.living(1).forEach(u=>{u.targetMemory=null;u.targetTimer=0;});
+      }
       this.metrics.captures++;
     }
     this.say(
@@ -3559,6 +3605,7 @@ export class Battle {
   }
   step(dt) {
     if(!Number.isFinite(dt)||dt<=0)return;
+    if(this.hitPause>0&&this.visuals&&!this.reducedMotion){this.hitPause=Math.max(0,this.hitPause-dt);return;}
     if(this.captureScene){this.captureScene.elapsed+=dt;if(this.captureScene.elapsed>=this.captureScene.duration){const failed=!this.captureScene.success;this.captureScene=null;if(failed)this.scheduleCaptureRetry();}else dt*=.18;}
     if(this.done)return;
     this.accumulator += Math.min(dt, 0.1);
@@ -3652,7 +3699,7 @@ export class Battle {
         "stagger",
         "bleed",
       ])
-        u[k] = Math.max(0, u[k] - (['attackAnim','castAnim','actionLock','dodgeCooldown'].includes(k)?actionDt:dt));
+        u[k] = Math.max(0, u[k] - (['attackAnim','castAnim','actionLock'].includes(k)?actionDt*u.actionSpeed:k==='dodgeCooldown'?actionDt:dt));
       u.statusWard=Math.max(0,(u.statusWard||0)-dt);u.armorBuffTime=Math.max(0,(u.armorBuffTime||0)-dt);
       if(u.statusWard>0)for(const ailment of ['burn','poison','bleed','root','slow','stagger','wither','exposed','weakened'])u[ailment]=0;
       if (u.burn > 0)
@@ -3689,7 +3736,7 @@ export class Battle {
       if(u.nativeKnockdown>0){u.nativeKnockdown=Math.max(0,u.nativeKnockdown-dt);if(!u.nativeKnockdown)u.nativeGetup=.45;}else if(u.nativeGetup>0)u.nativeGetup=Math.max(0,u.nativeGetup-dt);
       u.stamina = Math.min(
         100,
-        u.stamina + dt * (u.actionLock > 0 || u.rollTime > 0 ? 9 : 20)*(u.curioStats?.regenStamina||1)*(equipmentEffects(u).regenStamina||1),
+        u.stamina + dt * u.staminaRecharge*(u.actionLock > 0 || u.rollTime > 0 ? .45 : 1),
       );
       u.poise = Math.max(0, u.poise - dt * 12);
       relicTick(this,u,dt);
@@ -3704,9 +3751,9 @@ export class Battle {
       const syn = u.side === 0 ? this.teamSyn : this.foeSyn;
       if (syn.grove >= 2 && u.hp > 0)
         this.heal(u,u.maxHp*.01*dt,u,null,false);
-      u.attackTimer -= actionDt * (u.haste > 0 ? 1.4 : 1);
+      u.attackTimer -= actionDt*u.actionSpeed * (u.haste > 0 ? 1.4 : 1);
       for (const cooldown of Object.values(u.cooldowns))
-        cooldown.remaining -= actionDt;
+        cooldown.remaining -= actionDt*u.actionSpeed;
       if (u.boss) this.bossMechanic(u, actionDt);
       const forced = this.living(1 - u.side).some(
         (e) => e.taunt > 0 && distance(e, u) < 250,
@@ -3714,7 +3761,7 @@ export class Battle {
       if (
         u.targetTimer <= 0 ||
         !u.targetMemory ||
-        u.targetMemory.hp <= 0 ||
+        u.targetMemory.hp <= 0 || u.targetMemory.side===u.side ||
         forced
       ) {
         u.targetMemory = this.target(u);
@@ -3815,11 +3862,12 @@ export class Battle {
         }
         if (dash.remaining <= 0) u.dashMotion = null;
       } else if (u.rollTime > 0 && !rooted && u.stagger <= 0) {
-        const speed = (u.mass > 1.8 || (u.balanceVersion>=15&&u.role==='Guardian') ? 225 : 300) * this.tuning.movementSpeed/100;
+        const speed = ((this.run.rulesVersion||0)>=17?({barrel:350,sidestep:370,roll:300}[u.dodgeStyle]||300):(u.mass>1.8||u.balanceVersion>=15&&u.role==='Guardian'?225:300)) * this.tuning.movementSpeed/100;
         u.velocityX = u.rollX * speed;
         u.velocityY = u.rollY * speed;
         u.x += u.velocityX * dt;
         u.y += u.velocityY * dt;
+        if(u.dodgeStyle==='barrel')for(const enemy of this.living(1-u.side)){if(distance(u,enemy)<u.radius+enemy.radius+14&&!u.barrelHits?.has(enemy.uid)){u.barrelHits??=new Set();u.barrelHits.add(enemy.uid);this.hit(enemy,u.atk*.35,u,u.loadout.auto,1,false,'physical');}}
         u.rollTime = Math.max(0, u.rollTime - dt);
       } else {
         if (rooted) {
@@ -3898,17 +3946,16 @@ export class Battle {
         u.hp > 0
       ) {
         u.attackTimer =
-          (sp.role === "Guardian" ? 1.55 : 1.3) *
-          linkedSupport(u, u.loadout.auto).attackSpeed;
+          1/u.attackSpeed;
         u.stamina -= 8;
         this.cast(u, u.loadout.auto, t);
       }
     }
     this.metrics.collisions += separateBodies(this.units,this.bounds);
-    for(const u of this.units){if(this.native)confineTerrain(u,this.terrain);if(u.nativeActor)advanceNative(u,dt,this.time,this.visuals,actionDt);}
+    for(const u of this.units){if(this.native)confineTerrain(u,this.terrain);if(u.nativeActor)advanceNative(u,dt,this.time,this.visuals,actionDt*u.actionSpeed);}
     for (const strike of this.strikes) {
       const previous=strike.remaining;
-      strike.remaining -= actionDt;
+      strike.remaining -= actionDt*strike.source.actionSpeed;
       if(strike.nativeMelee)this.nativeContact(strike,1-previous/strike.total,1-strike.remaining/strike.total);
       if (strike.remaining <= 0) this.resolveStrike(strike);
     }
@@ -3916,7 +3963,7 @@ export class Battle {
       (s) => s.remaining > 0 && !s.cancelled && s.source.hp > 0,
     );
     for (const q of this.queue) {
-      q.ttl -= actionDt;
+      q.ttl -= actionDt*(q.source.actionSpeed||1);
       if (
         q.ttl <= 0 &&
         q.source.hp > 0 &&
@@ -4042,7 +4089,7 @@ export class Battle {
     this.attemptCapture();
     if (this.audioEvents.length > 20)
       this.audioEvents = this.audioEvents.slice(-20);
-    if (!this.living(0).length || !this.living(1).length || this.time >= 90) {
+    if (!this.captureScene&&(!this.living(0).length || !this.living(1).length || this.time >= 90)) {
       if (this.capturePlan && !this.captureSettled) {
         const target = this.units.find((u) => u.uid === this.capturePlan.uid);
         this.captureSettled = true;
@@ -4069,9 +4116,9 @@ export class Battle {
         ? 1
         : !b.length
           ? 0
-          : a.reduce((s, u) => s + u.hp / u.maxHp, 0) / this.run.team.length >=
+          : a.reduce((s, u) => s + u.hp / u.maxHp, 0) / this.units.filter(u=>u.side===0).length >=
               b.reduce((s, u) => s + u.hp / u.maxHp, 0) /
-                (this.units.length - this.run.team.length)
+                this.units.filter(u=>u.side===1).length
             ? 0
             : 1;
       this.say(

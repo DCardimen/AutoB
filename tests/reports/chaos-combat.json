@@ -1,0 +1,27 @@
+{
+  "gameplay_tests": {
+    "passed": 108,
+    "failed": 0,
+    "command": "node --test tests/chaos-combat.test.js tests/creature-motion-v17.test.js tests/expedition-v15.test.js tests/expedition-v12.test.js tests/enrage-tuning.test.js tests/overhaul.test.js"
+  },
+  "legacy_game_and_evolution_tests": {
+    "passed": 35,
+    "failed": 0
+  },
+  "chaos_progression_regression": "passed",
+  "browser": {
+    "checks": [
+      "Character stats, visible equipment effects, weakest-first, live stamina, and click-to-focus work in browser",
+      "Epic capture changes allegiance immediately and leaves the persistent bench unchanged",
+      "Legendary choice UI persists one slot sacrifice and exactly one chosen companion after reload",
+      "390px character/equipment menus fit; Chaos 3 selection exposes three companions and six points",
+      "Selected stage zooms and transitions to arena preparation",
+      "Loot visibly flies into totals, then settles gold/equipment exactly once",
+      "Rebuilt offline game includes the new gameplay and UI"
+    ],
+    "errors": []
+  },
+  "existing_field_ui": "Source and offline passed at 320, 390, 768 and 1440 pixels; offline made zero external requests.",
+  "standalone": "Rebuilt successfully, 24.1 MiB.",
+  "local_art_validation": "The broad run exercised existing art and rig tests. Two exhaustive unchanged sprite boundary sweeps were excluded locally; full npm test remains enabled in CI."
+}
