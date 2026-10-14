@@ -1,7 +1,5 @@
 name: Build and verify field UI
 on:
-  push:
-    branches: [codex/uploaded-ui-art]
   pull_request:
     branches: [codex/starfall-menagerie]
 permissions:
