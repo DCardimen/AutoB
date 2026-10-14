@@ -1,3 +1,5 @@
+import {movementPace,steerMovement} from './movement-tuning.js';
+import {assignEliteModifier,applyEliteStats,eliteModifierForSeed} from './elite-modifiers.js';
 import {rollStarterGear} from './starter-equipment.js';
 import {snapshotNativeMotion} from './native-motion.js';
 import {WEARER_BY_ID,WEARER_RELICS,wearerStats,initializeCompanion} from './wearer-relics.js';
@@ -765,7 +767,7 @@ export function stats(c, team, relics = []) {
   cd *= personal.cooldown * gear.cooldown;
   speed *= personal.speed * gear.speed * (nativeEvolution(c).speed || 1);
   dodge += personal.dodge;
-  return {
+  return applyEliteStats({
     armor:c.balanceVersion>=15?({Guardian:34,Striker:12,Ranger:7,Support:9}[s.role]||10)+Math.max(0,c.level-1)*1.5+gear.armor+personal.armor*100:0,
     hp: Math.round(hp+gear.hpFlat),
     atk: Math.round(atk+gear.atkFlat),
@@ -781,7 +783,7 @@ export function stats(c, team, relics = []) {
     dashCooldown:curios.dashCooldown*gear.dashCooldown,
     dodgeStyle:(c.balanceVersion||0)>=17?dodgeStyle(s):'roll',
     personal,
-  };
+  },c);
 }
 export function makeRun(seed = Date.now(), ids = STARTERS, options = {}) {
   const random = rng(seed),
@@ -889,7 +891,7 @@ export function encounterInfo(run, node) {
   const arch =
     ARCHETYPES.find((a) => a.id === node?.archetype) || ARCHETYPES[0];
   const weather = WEATHER.find((w) => w.id === node?.weather) || WEATHER[0];
-  return { arch, weather, boss: BOSS_GUIDES[Math.min(2, run.planet)] };
+  return { arch, weather, boss: BOSS_GUIDES[Math.min(2, run.planet)], eliteModifier:node?.type==="elite"?eliteModifierForSeed(node.seed):null };
 }
 export function setDeployment(run, index, row, column) {
   if (
@@ -1042,6 +1044,7 @@ export function encounter(run, type = "battle", seed = 1) {
     if((run.rulesVersion||0)>=15)enemyEquipment(c,seed+i*431,run.planet*8+run.depth,chaosLevel(run));
     foes.push(c);
   }
+  if(type==="elite")assignEliteModifier(foes,seed,BY_ID);
   return foes;
 }
 export function captureChance(run, c) {
@@ -1092,6 +1095,7 @@ export function awardCapture(run, c) {
   const caught = creature(c.id, Math.max(1, c.level));
   if((run.rulesVersion||0)>=15)caught.balanceVersion=run.rulesVersion;
   if(progressive(run)){caught.genes=c.genes;caught.nature=c.nature;caught.boundRelics=[...(c.enemyRelics||c.boundRelics||[])];caught.equipment=[...(c.equipment||[])];caught.equipmentQuality=1;caught.equipmentRolls=caught.equipment.map((id,i)=>({...c.equipmentRolls?.[i],id,quality:(c.equipmentRolls?.[i]?.quality??1)*(c.equipmentQuality??1)}));}
+  if(c.eliteModifier)caught.eliteModifier=c.eliteModifier;
   caught.evolution = evolutionStage(c);
   caught.evolutionPath = caught.evolution ? c.evolutionPath : null;
   run.bench.push(caught);
@@ -3542,6 +3546,7 @@ export class Battle {
         level: target.level,
         evolution: target.evolution,
         evolutionPath: target.evolutionPath,
+        eliteModifier:target.eliteModifier,
         capturePreparation: target.capturePreparation,
         genes:target.genes,nature:target.nature,enemyRelics:target.enemyRelics,equipment:[...(target.equipment||[])],equipmentRolls:target.equipmentRolls,equipmentQuality:target.equipmentQuality,
       },
@@ -3909,17 +3914,15 @@ export class Battle {
           u.dashMotion = null;
         }
         const movement =
-          u.speed * this.tuning.movementSpeed/100 * (this.native&&dist>320&&u.stamina>55&&(this.run.rulesVersion||0)>=15?2.15:this.native&&dist>180?1.65:1) *
+          u.speed * this.tuning.movementSpeed/100 * (this.native?movementPace(dist,u.stamina,this.tuning,(this.run.rulesVersion||0)>=15):1) *
           (progressive(this.run)&&this.native&&sp.range>100&&nearestEnemy&&vx*(nearestEnemy.x-u.x)+vy*(nearestEnemy.y-u.y)<-.15?.58:1) *
           (u.slow > 0 ? 0.5 : 1) *
           (u.movementBuff > 0 ? 1.3 : 1) *
           (u.stamina < 20 ? 0.7 : 1);
         const factor=rooted||locked?0:1;
         if((this.run.rulesVersion||0)>=15&&this.native){
-          const length=Math.hypot(vx,vy);if(length>1){vx/=length;vy/=length;}
-          const previous=Math.hypot(u.velocityX,u.velocityY),turn=previous>8&&length>.1?Math.abs(Math.atan2(Math.sin(Math.atan2(vy,vx)-Math.atan2(u.velocityY,u.velocityX)),Math.cos(Math.atan2(vy,vx)-Math.atan2(u.velocityY,u.velocityX)))):0;
-          const corner=1-.3*Math.sin(Math.min(Math.PI/2,turn)),tx=vx*movement*factor*corner,ty=vy*movement*factor*corner,dx=tx-u.velocityX,dy=ty-u.velocityY,change=Math.hypot(dx,dy),limit=(Math.hypot(tx,ty)<previous?600*this.tuning.braking/100:390*this.tuning.acceleration/100)*dt,blend=Math.min(1,limit/(change||1));
-          u.velocityX+=dx*blend;u.velocityY+=dy*blend;
+          const velocity=steerMovement(u.velocityX,u.velocityY,vx,vy,movement,factor,dt,this.tuning);
+          u.velocityX=velocity.x;u.velocityY=velocity.y;
         }else{const smoothing=1-Math.exp(-dt*14);u.velocityX+=(vx*movement*factor-u.velocityX)*smoothing;u.velocityY+=(vy*movement*factor-u.velocityY)*smoothing;}
         u.x += u.velocityX * dt;
         u.y += u.velocityY * dt;

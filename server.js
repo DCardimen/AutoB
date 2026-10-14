@@ -16,6 +16,9 @@ const types = {
   ".woff2": "font/woff2",
 };
 const entryFiles = new Set([
+  "/movement-tuning.js",
+  "/settings-movement-preview.js",
+  "/elite-modifiers.js",
   "/index.html",
   "/styles.css",
   "/field-ui.css",
