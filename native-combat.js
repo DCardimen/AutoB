@@ -37,13 +37,13 @@ export function advanceNative(u,dt,time,visuals=true,actionDt=dt){
  const a=u.nativeActor;if(!a)return;
  const velocity=Math.hypot(u.velocityX,u.velocityY),speed=u.speed||80;
  a.stopTime=Math.max(0,(a.stopTime||0)-dt);a.turnTime=Math.max(0,(a.turnTime||0)-dt);a.turnCooldown=Math.max(0,(a.turnCooldown||0)-dt);
- if((a.previousSpeed||0)>35&&velocity<(a.previousSpeed||0)*.65&&!u.nativeAction)a.stopTime=.24;
+ if((a.previousSpeed||0)>35&&(velocity<35||velocity<(a.previousSpeed||0)*.65)&&!u.nativeAction)a.stopTime=.24;
  a.acceleration=Math.max(-1,Math.min(1,(velocity-(a.previousSpeed||0))/(dt*390)));a.previousSpeed=velocity;u.nativeClock=time;
  a.hp=u.hp;a.x=u.x;a.y=u.y;a.vx=u.velocityX;a.vy=u.velocityY;a.ix=u.impulseX;a.iy=u.impulseY;
- const tuning=u.tuning||{},movement=(tuning.movementSpeed??100)/100,gaitPace=(tuning.gaitPace??100)/100,turnSpeed=(tuning.turnSpeed??100)/100;
+ const tuning=u.tuning||{},movement=(tuning.movementSpeed??100)/100,gaitPace=(tuning.gaitPace??100)/100,turnSpeed=(tuning.turnSpeed??100)/100,gaitBlend=(tuning.gaitBlendSpeed??100)/100;
  a.speed=speed*movement;a.run=a.speed*1.65;a.sprint=a.speed*2.15;a.stamina=u.stamina;a.capeMotion=(tuning.capeMotion??100)/100;
- a.runBlend+=(Math.max(0,Math.min(1,(velocity-speed)/(a.run-speed)))-a.runBlend)*Math.min(1,dt*10);
- a.sprintBlend+=(Math.max(0,Math.min(1,(velocity-a.run)/(a.sprint-a.run)))-a.sprintBlend)*Math.min(1,dt*10);
+ a.runBlend+=(Math.max(0,Math.min(1,(velocity-a.speed)/(a.run-a.speed)))-a.runBlend)*Math.min(1,dt*10*gaitBlend);
+ a.sprintBlend+=(Math.max(0,Math.min(1,(velocity-a.run)/(a.sprint-a.run)))-a.sprintBlend)*Math.min(1,dt*10*gaitBlend);
  const change=(target)=>Math.atan2(Math.sin(target-u.facing),Math.cos(target-u.facing));
  const target=u.nativeAction?.angle??(velocity>4?Math.atan2(u.velocityY,u.velocityX):u.targetMemory?Math.atan2(u.targetMemory.y-u.y,u.targetMemory.x-u.x):u.facing);
  const turn=change(target);if(Math.abs(turn)>.9&&a.turnCooldown<=0&&!u.nativeAction){a.turnTime=.32;a.turnCooldown=.6;}u.facing+=Math.max(-dt*6*turnSpeed,Math.min(dt*6*turnSpeed,turn));a.facing=u.facing;
@@ -53,7 +53,7 @@ export function advanceNative(u,dt,time,visuals=true,actionDt=dt){
  const distance=Math.hypot(u.x-(u.px??u.x),u.y-(u.py??u.y)),stride=locomotionStride(a.stride,a.runBlend,a.sprintBlend,a.id)*Math.max(.55,u.nativeScale||1);
  // A small world sprite must not run through ten pose cycles every second.
  if(!u.nativeAction&&!a.roll&&u.stagger<=0&&u.hp>0)a.gait+=gaitPace*Math.min(distance/stride,dt*(2.4+a.runBlend*.6+a.sprintBlend*.6));
- a.moving+=( (u.actionLock>0?0:Math.min(1,velocity/(a.run||1)))-a.moving)*(1-Math.exp(-dt*12));
+ a.moving+=( (u.actionLock>0?0:Math.min(1,velocity/(a.run||1)))-a.moving)*(1-Math.exp(-dt*12*gaitBlend));
  a.hitTime=u.nativeAction?.charged?0:Math.min(.13,u.hitAnim||0);a.stagger=u.stagger||0;
  a.roll=u.rollTime>0?{kind:u.dodgeStyle==='barrel'||u.dodgeStyle==='sidestep'?'dash':'dodge',elapsed:.25-u.rollTime,duration:.25,dx:u.rollX,dy:u.rollY}:u.dashMotion?{kind:'dash',elapsed:Math.max(0,u.dashDuration-u.dashAnim),duration:u.dashDuration,dx:u.dashMotion.x,dy:u.dashMotion.y}:null;
  if(u.stagger>0&&!u.nativeAction?.charged)u.nativeAction=null;
