@@ -1,3 +1,4 @@
+import {rollStarterGear} from './starter-equipment.js';
 import {snapshotNativeMotion} from './native-motion.js';
 import {WEARER_BY_ID,WEARER_RELICS,wearerStats,initializeCompanion} from './wearer-relics.js';
 import {starterPoints,starterBudget,starterSlots} from './tactics.js';
@@ -766,15 +767,16 @@ export function stats(c, team, relics = []) {
   dodge += personal.dodge;
   return {
     armor:c.balanceVersion>=15?({Guardian:34,Striker:12,Ranger:7,Support:9}[s.role]||10)+Math.max(0,c.level-1)*1.5+gear.armor+personal.armor*100:0,
-    hp: Math.round(hp),
-    atk: Math.round(atk),
+    hp: Math.round(hp+gear.hpFlat),
+    atk: Math.round(atk+gear.atkFlat),
     cd: cd * linkedSupport(c, c.id).cooldown,
     cdFactor: cd / SKILLS[s.id].cd,
-    speed,
+    speed:speed+gear.speedFlat,
+    hpRegen:gear.hpRegen,
     dodge,
     range: s.range + (nativeEvolution(c).range || 0),
     attackSpeed:curios.attackSpeed*gear.attackSpeed/((s.role==='Guardian'?1.55:1.3)*linkedSupport(c,loadoutFor(s,c.level,c).auto).attackSpeed),
-    actionSpeed:curios.actionSpeed*gear.actionSpeed,
+    actionSpeed:curios.actionSpeed*gear.actionSpeed+gear.actionSpeedFlat,
     staminaRecharge:((c.balanceVersion||0)>=17?({Striker:26,Ranger:22,Support:20,Guardian:15}[s.role]||20):20)*curios.regenStamina*gear.regenStamina,
     dashCooldown:curios.dashCooldown*gear.dashCooldown,
     dodgeStyle:(c.balanceVersion||0)>=17?dodgeStyle(s):'roll',
@@ -800,7 +802,8 @@ export function makeRun(seed = Date.now(), ids = STARTERS, options = {}) {
     captureTools:rulesVersion>=12?{scout:5,runic:0,astral:0,mythic:0}:undefined,
     native,
     rosterMode: options.rosterMode || (ids.every(id=>!!BY_ID[id].nativeRig)?"authored":"collection"),
-    gearInventory: [],
+    gearInventory: rulesVersion>=17?rollStarterGear(seed):[],
+    starterGearVersion:rulesVersion>=17?1:undefined,
     difficulty: DIFFICULTIES[options.difficulty]
       ? options.difficulty
       : "standard",
@@ -816,7 +819,7 @@ export function makeRun(seed = Date.now(), ids = STARTERS, options = {}) {
     team,
     bench: [],
     relics: [],
-    inventory: ["scorch-fang", "ward-stone", "quick-shard"].map(personalRelic),
+    inventory: rulesVersion>=17?[]:["scorch-fang", "ward-stone", "quick-shard"].map(personalRelic),
     gold: 160,
     orbs: 5,
     planet: 0,
@@ -1639,7 +1642,7 @@ export class Battle {
       );
       this.units.push({
         ...c,
-        balanceVersion:run.rulesVersion,role:BY_ID[c.id].role,
+        balanceVersion:run.rulesVersion,role:BY_ID[c.id].role,element:BY_ID[c.id].element,
         ...st,
         ...bodyProperties(BY_ID[c.id], c),
         maxHp: st.hp,
@@ -3541,7 +3544,7 @@ export class Battle {
       const converted=stats(target,this.living(0),this.run.relics);
       const healthFraction=target.hp/target.maxHp;
       target.maxHp=converted.hp;target.hp=converted.hp*healthFraction;
-      for(const key of ['atk','armor','attackSpeed','actionSpeed','staminaRecharge','dashCooldown','speed','dodge','cdFactor'])target[key]=converted[key];
+      for(const key of ['atk','armor','attackSpeed','actionSpeed','staminaRecharge','dashCooldown','speed','hpRegen','dodge','cdFactor'])target[key]=converted[key];
       for(const [id,cd]of Object.entries(target.cooldowns)){
         const total=skillDefinition(target,id).cd*converted.cdFactor*linkedSupport(target,id).cooldown*(['dash','charge'].includes(skillDefinition(target,id).kind)?converted.dashCooldown:1);
         cd.remaining*=total/cd.total;cd.total=total;
@@ -3625,7 +3628,7 @@ export class Battle {
     const actionDt=(this.run.rulesVersion||0)>=15?actionElapsed(previousTime,this.time):dt;
     if(this.enrage.active&&!this.enrageAnnounced){
       this.enrageAnnounced=true;this.metrics.enrageTriggered=1;
-      this.say('ENRAGE · Both teams deal 3× damage, heal 3× and act 1.5× faster. Healing fades every 5s.');
+      this.say('ENRAGE RISING - Each second: +4% damage, +1% action speed, -1 percentage point of healing. Both teams ramp gradually.');
       this.effect(500,180,'ENRAGE','#ffb56e');this.shake=Math.max(this.shake,3);
     }
     this.shake = Math.max(0, this.shake - dt * 9);
@@ -3739,6 +3742,7 @@ export class Battle {
         u.stamina + dt * u.staminaRecharge*(u.actionLock > 0 || u.rollTime > 0 ? .45 : 1),
       );
       u.poise = Math.max(0, u.poise - dt * 12);
+      if(u.hpRegen>0)this.heal(u,u.hpRegen*dt,u,null,false);
       relicTick(this,u,dt);
       u.targetTimer -= dt;
       this.reactToThreat(u, dt);

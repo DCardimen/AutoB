@@ -1,3 +1,4 @@
+import {relicBuildSummary} from './relic-design.js';
 import {BY_ID,creatureName} from './game.js';
 import {SKILLS} from './skills.js';
 import {activeAilments} from './status-ailments.js';
@@ -46,7 +47,7 @@ export function updateLiveRoster(root,battle,{side=0,selectedUid=null,image}){
     }
     const ailments=activeAilments(u),condition=card.querySelector('[data-hud-condition]');
     condition.textContent=u.hp<=0?'KNOCKED OUT':ailments.length?ailments.map(a=>`${a.name} ${a.remaining.toFixed(1)}s`).join(' · '):u.roundAlly?'Fighting for you this round':u.intention||'Ready';
-    condition.title=condition.textContent;
+    const build=relicBuildSummary(u);if(build&&u.hp>0)condition.textContent=build+' - '+condition.textContent;condition.title=condition.textContent;
     const focus=card.querySelector('[data-enemy-focus]');if(focus){focus.disabled=u.hp<=0;focus.classList.toggle('selected',battle.focusUid===u.uid&&battle.time<battle.focusUntil);}
   }
 }

@@ -52,6 +52,8 @@ const entryFiles = new Set([
   "/combat-expansion.js",
   "/combat-feedback.js",
   "/live-roster.js",
+  "/starter-equipment.js",
+  "/relic-design.js",
 
   "/native-forms.js",
   "/leg-volume.js",

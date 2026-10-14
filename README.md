@@ -1,5 +1,7 @@
 # Chaos, relics and combat update
 
+Latest update: three randomized Common starter equipment pieces appear beneath the creatures; eight original build-around relics add resource banks and team interactions. Enrage ramps continuously after 30 seconds with live damage, healing and action modifiers. See [relic research and current rules](RELIC-DESIGN.md).
+
 Three starter points plus one per cleared Chaos tier; a third starting companion at Chaos 3. Adds 30 relics, 50 equipment types, speed and stamina stats, temporary captured allies, weakest-first and click-to-focus targeting, varied opening encounters and new combat effects. Relics are retained after companion deaths. See [changes and play instructions](CHAOS-COMBAT.md).
 
 **Melee weapon and arm polish · Art 6:** Complete connected arms, original weapon silhouettes and readable carry poses; phone AI controls moved below the creatures. See [the changes and validation](MELEE-WEAPONS.md). After pulling, run `npm ci` and `npm start`, or `npm run build:standalone` for the updated offline game.

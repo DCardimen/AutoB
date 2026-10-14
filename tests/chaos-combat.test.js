@@ -161,7 +161,7 @@ test('round-only captures remain available when permanent reserves are full',()=
 });
 
 test('loot settlement remains idempotent after the collection animation',()=>{
-  const r=fresh(),gold=r.gold,cache={key:'test',drops:[{id:'coin',kind:'gold',amount:30},{id:'sword',kind:'gear',gear:'tempo-rapier'}]};
-  assert.ok(claimLoot(r,cache));assert.equal(r.gold,gold+30);assert.equal(r.gearInventory.length,1);
-  assert.equal(claimLoot(r,cache),false);assert.equal(r.gold,gold+30);assert.equal(r.gearInventory.length,1);
+  const r=fresh(),gold=r.gold,gearCount=r.gearInventory.length,cache={key:'test',drops:[{id:'coin',kind:'gold',amount:30},{id:'sword',kind:'gear',gear:'tempo-rapier'}]};
+  assert.ok(claimLoot(r,cache));assert.equal(r.gold,gold+30);assert.equal(r.gearInventory.length,gearCount+1);
+  assert.equal(claimLoot(r,cache),false);assert.equal(r.gold,gold+30);assert.equal(r.gearInventory.length,gearCount+1);
 });

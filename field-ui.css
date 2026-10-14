@@ -580,6 +580,11 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
 .live-unit-card:has(.live-focus-button) .live-vital-label { padding-right:47px; }
 .ui-v3[data-phase=battle][data-screen=arena] #app { padding-bottom:200px; }
 .ui-v3 .arena-viewport { scroll-margin-top:85px; }
+.ui-v3 .enrage-strip { flex-wrap:wrap; gap:7px 12px; }
+.enrage-live-values { display:flex; flex-wrap:wrap; gap:7px; margin-left:auto; }
+.enrage-live-values span { padding:4px 7px; border:1px solid #6b7c61; border-radius:5px; color:#f0deb1; font-size:11px; font-variant-numeric:tabular-nums; white-space:nowrap; background:#102b2e; }
+.ui-v3 .enrage-strip #enrage-details { flex-basis:100%; color:#bed0bc; font-size:10px; }
+.ui-v3 .enrage-strip .enrage-progress { flex-basis:100%; }
 @media(max-width:600px) {
  .ui-v3 .live-roster { left:4px; right:4px; padding:6px 6px calc(5px + env(safe-area-inset-bottom)); }
  .live-roster-head>small { font-size:8px; max-width:80px; text-align:right; }
