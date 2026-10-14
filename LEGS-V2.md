@@ -22,4 +22,6 @@ The review covered 41 anatomy families across juvenile, mature and apex forms, e
 
 The source and offline browser checks exercise twelve live creatures, both-team stride changes, animation, reset, 320/390px layouts and zero external offline dependencies. The settings suite verifies all 19 sliders, saved values and five-second creature rotation. The Training Glade suite checks directions, locomotion, sprint/stamina, pose inspection, combat and offline operation.
 
+The full repository audit also passed all 170,136 combat-pose renders and 24,288 character-height-limit renders. The art regression fixture now expects renderer revision 11; all three checks in that file pass.
+
 Rebuild with `npm run build:standalone` and `npm run build:prototype`. Legacy offline HTML filenames and save identifiers remain compatible. Run the visual review with `node scripts/review-legs-v2.mjs final` against the local server; it writes enlarged sheets under `playtest-artifacts/` and regenerates the motion preview.
