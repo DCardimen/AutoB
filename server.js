@@ -18,6 +18,8 @@ const types = {
 const entryFiles = new Set([
   "/index.html",
   "/styles.css",
+  "/field-ui.css",
+  "/field-ui.js",
   "/app.js",
   "/game.js",
   "/wearer-relics.js",

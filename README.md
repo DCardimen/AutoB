@@ -1,3 +1,5 @@
+**Reference field UI:** Illustrated route scene and encounter sheet, matching menus, mobile combat layout and original vector artwork. See [UI notes and build instructions](FIELD-UI-V3.md). Run `npm ci` and `npm start` to play the latest source after pulling. For the updated offline game, run `npm run build:standalone`, or use the **Starfall-Reference-UI** Actions artifact.
+
 # Starfall Menagerie · V17.1 palette fix
 
 A single-player creature-collecting roguelike autobattler with physical arena combat. Start with two companions and grow a team of six across three planets, build individual companions with personal relics and equipment, capture permanent starters, and climb twenty Chaos tiers.
@@ -26,7 +28,7 @@ Open **Starfall-Training-Glade.html** in Chrome, Edge or Firefox and look for **
 
 ## Play
 
-Download this branch with **Code → Download ZIP**, extract it, and open **Starfall-Menagerie.html** in Chrome or Firefox. The HTML embeds all code, artwork, audio synthesis, and fonts. It needs no installation, server, or internet connection.
+After pulling this UI branch, run `npm ci` and `npm start`, then open http://localhost:3000. To play offline, first run `npm run build:standalone` and open **Starfall-Menagerie.html** in Chrome or Firefox, or extract the tested **Starfall-Reference-UI** GitHub Actions artifact. The rebuilt HTML embeds all code, artwork, audio synthesis, and fonts and needs no server or internet connection. Tracked older generated packages are historical; rebuilding includes the latest source changes.
 
 Keep the file at the same location to retain its browser-local save. Existing collections are preserved on the same browser origin. New runs use the new route generator; an existing run keeps its saved route.
 

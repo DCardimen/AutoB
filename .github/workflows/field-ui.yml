@@ -1,0 +1,51 @@
+name: Build and verify field UI
+on:
+  pull_request:
+    branches: [codex/starfall-menagerie]
+permissions:
+  contents: read
+concurrency:
+  group: field-ui-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  field-ui:
+    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref || github.ref_name }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npm run build:standalone
+      - run: npx playwright install --with-deps chromium
+      - name: Start the game
+        run: |
+          npm start > /tmp/field-server.log 2>&1 &
+          for attempt in {1..30}; do
+            if curl --fail --silent http://127.0.0.1:3000 > /dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/field-server.log
+          exit 1
+      - run: node tests/field-ui.browser.mjs
+      - name: Package the playable offline game
+        run: |
+          python3 - <<'PY'
+          import zipfile
+          with zipfile.ZipFile('public/Starfall-Reference-UI.zip', 'w', zipfile.ZIP_DEFLATED) as z:
+              z.write('Starfall-Menagerie.html')
+              z.writestr('README.txt', 'Extract and open Starfall-Menagerie.html in Chrome, Firefox, or Edge. The complete game, fonts, and three world paintings are embedded. Keep the same file location to retain the device save.\n')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Starfall-Reference-UI
+          path: |
+            Starfall-Menagerie.html
+            public/Starfall-Reference-UI.zip
+            playtest-artifacts/field-*.png
+            tests/reports/field-ui-v3.json
