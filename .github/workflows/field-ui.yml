@@ -40,6 +40,7 @@ jobs:
       - run: node tests/capture-recruitment.browser.mjs
       - run: node tests/creature-anatomy.browser.mjs
       - run: node tests/arena-elite.browser.mjs
+      - run: node tests/settings-movement.browser.mjs
       - run: node scripts/review-creature-anatomy.mjs
       - run: node scripts/review-melee-weapons.mjs
       - run: node scripts/review-natural-carry.mjs
@@ -90,4 +91,6 @@ jobs:
             playtest-artifacts/arena-ui-*.png
             playtest-artifacts/arena-elite-*.png
             playtest-artifacts/arena-elite-browser.json
+            playtest-artifacts/settings-movement-*.png
+            playtest-artifacts/settings-movement-browser.json
             RELIC-DESIGN.md

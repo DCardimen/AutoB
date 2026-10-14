@@ -1,5 +1,7 @@
 # Chaos, relics and combat update
 
+Settings now rotate randomized small, regular and large examples every five seconds. Eighteen sliders include five movement-pattern controls for direction changes, corner slowdown, run/sprint distances and animation transitions. Examples demonstrate the same movement rules as combat.
+
 Arena controls and both rosters now sit inside the supplied blue/gold UI frame. Elite encounters have one seeded mutation from 50 variants; captured individuals keep their mutation, nature and genes for future starter selection. See [arena UI and elite hunting](ARENA-ELITES.md).
 
 Multi-legged creatures now have solid shaded leg models, and natural attack animations include canine bites, mantis scythes, claws, pincers and horn attacks. See [creature anatomy](CREATURE-ANATOMY.md) and the [animation preview](public/creature-anatomy-preview.webm).

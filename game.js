@@ -1,3 +1,4 @@
+import {movementPace,steerMovement} from './movement-tuning.js';
 import {assignEliteModifier,applyEliteStats,eliteModifierForSeed} from './elite-modifiers.js';
 import {rollStarterGear} from './starter-equipment.js';
 import {snapshotNativeMotion} from './native-motion.js';
@@ -3913,17 +3914,15 @@ export class Battle {
           u.dashMotion = null;
         }
         const movement =
-          u.speed * this.tuning.movementSpeed/100 * (this.native&&dist>320&&u.stamina>55&&(this.run.rulesVersion||0)>=15?2.15:this.native&&dist>180?1.65:1) *
+          u.speed * this.tuning.movementSpeed/100 * (this.native?movementPace(dist,u.stamina,this.tuning,(this.run.rulesVersion||0)>=15):1) *
           (progressive(this.run)&&this.native&&sp.range>100&&nearestEnemy&&vx*(nearestEnemy.x-u.x)+vy*(nearestEnemy.y-u.y)<-.15?.58:1) *
           (u.slow > 0 ? 0.5 : 1) *
           (u.movementBuff > 0 ? 1.3 : 1) *
           (u.stamina < 20 ? 0.7 : 1);
         const factor=rooted||locked?0:1;
         if((this.run.rulesVersion||0)>=15&&this.native){
-          const length=Math.hypot(vx,vy);if(length>1){vx/=length;vy/=length;}
-          const previous=Math.hypot(u.velocityX,u.velocityY),turn=previous>8&&length>.1?Math.abs(Math.atan2(Math.sin(Math.atan2(vy,vx)-Math.atan2(u.velocityY,u.velocityX)),Math.cos(Math.atan2(vy,vx)-Math.atan2(u.velocityY,u.velocityX)))):0;
-          const corner=1-.3*Math.sin(Math.min(Math.PI/2,turn)),tx=vx*movement*factor*corner,ty=vy*movement*factor*corner,dx=tx-u.velocityX,dy=ty-u.velocityY,change=Math.hypot(dx,dy),limit=(Math.hypot(tx,ty)<previous?600*this.tuning.braking/100:390*this.tuning.acceleration/100)*dt,blend=Math.min(1,limit/(change||1));
-          u.velocityX+=dx*blend;u.velocityY+=dy*blend;
+          const velocity=steerMovement(u.velocityX,u.velocityY,vx,vy,movement,factor,dt,this.tuning);
+          u.velocityX=velocity.x;u.velocityY=velocity.y;
         }else{const smoothing=1-Math.exp(-dt*14);u.velocityX+=(vx*movement*factor-u.velocityX)*smoothing;u.velocityY+=(vy*movement*factor-u.velocityY)*smoothing;}
         u.x += u.velocityX * dt;
         u.y += u.velocityY * dt;
