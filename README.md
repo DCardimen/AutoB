@@ -1,6 +1,8 @@
-# Starfall Menagerie · Arena Feel V16 · UI V2
+# Starfall Menagerie · Creature Motion V17
 
-A single-player creature-collecting roguelike autobattler with physical arena combat. Start with two companions and grow a team of six across three planets, modify individual abilities with support gems, capture permanent starters, and climb twenty Chaos tiers.
+A single-player creature-collecting roguelike autobattler with physical arena combat. Start with two companions and grow a team of six across three planets, build individual companions with personal relics and equipment, capture permanent starters, and climb twenty Chaos tiers.
+
+**Creature Motion V17 is playable in Starfall-Menagerie.html.** See [V17 changes](CREATURE-MOTION-V17.md), [movement preview](public/creature-motion-v17-preview.webm), [planet chart](public/creature-motion-v17-planets.png), [team controls](public/creature-motion-v17-team.png), [EXP and team comparison](public/creature-motion-v17-recap.png), and [offline package](public/Starfall-V17-Creature-Motion.zip). V17 adds interpolated movement, shared hand/weapon attachments, crouched bow attacks, idle motion on every family, whole-creature personal relics, wearer-only equipment, automatic capture retries, a reserve tray, AI target previews, biome maps and menus that keep your scroll position.
 
 **Arena Feel V16 is playable in Starfall-Menagerie.html.** See [V16 rules and validation](ARENA-FEEL-V16.md), [Settings preview](public/arena-feel-v16-settings.png), [battle recap](public/arena-feel-v16-recap.png), [mobile recap](public/arena-feel-v16-mobile.png), and [offline package](public/Starfall-V16-Arena-Feel.zip). V16 adds 30-second enrage, accessible early captures with two retries, thirteen live tuning sliders, visible equipment transfers, opponent-based loot rarity and quality, and per-creature combat charts and knockout timelines.
 

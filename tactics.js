@@ -2,6 +2,7 @@ import {routeModifiers} from './run-relics.js';
 import { NATIVE_SPECIES, NATIVE_EVOLUTIONS } from './native-content.js';
 // Shared design data. Rules, scouting, tooltips, and reports use the same definitions.
 export const POLICIES = {
+  nearest:{name:"Nearest enemy",desc:"Focus the closest enemy. Taunts still take priority."},
   adaptive: {
     name: "Adaptive",
     desc: "Heal only wounded allies; save control for threats; aim areas at clusters.",
@@ -12,7 +13,7 @@ export const POLICIES = {
   },
   breaker: {
     name: "Break armor",
-    desc: "Focus shielded enemies and bosses. Useful with shield-breaking supports.",
+    desc: "Focus shielded enemies and bosses. Useful with shield-breaking equipment.",
   },
   guardian: {
     name: "Protect",

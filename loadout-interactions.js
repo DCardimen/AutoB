@@ -1,7 +1,14 @@
+import {capacity} from './expedition-rules.js';
 import {equipGear,removeGear,equipmentSlots,GEAR_BY_ID} from './creature-equipment.js';
 import {equipRelic,unequipRelic,linkRelic,relicSlots,canSupport,BY_ID} from './game.js';
 import {loadoutFor} from './skills.js';
 export function applyLoadoutDrop(run,payload,target){
+ if(payload.kind==='reserve'){
+  if(target.pack)return false;const j=run.bench.findIndex(c=>c.uid===payload.uid),i=Number(target.index);if(j<0)return false;
+  if(target.seat!==undefined){const seat=Number(target.seat);if(!Number.isInteger(seat)||seat<0||seat>=capacity(run)||run.team.some(c=>c.seat===seat)||run.team.length>=capacity(run))return false;const c=run.bench.splice(j,1)[0];c.seat=seat;delete c.placement;run.team.push(c);return true;}
+  if(!run.team[i])return false;const old=run.team[i],seat=old.seat;[run.team[i],run.bench[j]]=[run.bench[j],old];run.team[i].seat=seat;
+  if(old.placement)run.team[i].placement={...old.placement};else delete run.team[i].placement;delete old.placement;return true;
+ }
  const c=run.team[Number(target.index)],from=run.team[payload.fromIndex];
  if(target.pack){if(payload.kind==='gear'&&from)return removeGear(run,payload.fromIndex,payload.slot);if(payload.kind==='gem'&&from)return unequipRelic(run,payload.fromIndex,payload.slot);return false;}
  if(!c)return false;
@@ -25,6 +32,7 @@ export function applyLoadoutDrop(run,payload,target){
   return equipGear(run,Number(target.index),payload.uid);
  }
  if(payload.kind==='gem'){
+  if((run.rulesVersion||0)>=17){if(target.skill||from===c||c.relics?.some(g=>g.id===payload.id)||(c.relics||[]).length>=relicSlots(c))return false;if(from){if(from.relics?.[payload.slot]?.uid!==payload.uid)return false;unequipRelic(run,payload.fromIndex,payload.slot);}return equipRelic(run,Number(target.index),payload.uid);}
   const loadout=loadoutFor(BY_ID[c.id],c.level,c),skills=[loadout.auto,...loadout.active];
   if(target.skill&&(!skills.includes(target.skill)||!canSupport(payload.id,target.skill)))return false;
   if(from===c)return target.skill?linkRelic(run,Number(target.index),payload.slot,target.skill):false;

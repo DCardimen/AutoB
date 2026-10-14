@@ -1,3 +1,15 @@
+# Current continuation · Creature Motion V17 / application 0.13.0
+
+Read CREATURE-MOTION-V17.md and tests/reports/creature-motion-v17.json first. Current feature branch: `codex/creature-motion-v17`, based on V16 `ddc57f32524e18401cc1ef4e0447ddcd1607a75d`. V16 PR #4 merged; this task opens a NEW PR targeting `codex/starfall-menagerie`. Every future request requires a fresh branch and PR. Do not push directly to the released branch.
+
+Implemented: separate arm/leg sections and shared hand/weapon coordinates; compact artwork-matched weapons; unchanged hair palette; crouched bow draw/release/recovery; 32 pose samples; presentation interpolation between deterministic 40 ms steps; idle motion on all 89 families; initialized armor/equipment on all recruit paths; 30 whole-creature personal relics replacing skill supports; wearer-only equipment benefits; optional automatic capture retries three combat seconds after failure; reserve drag/swap and vacancy deployment; overhead AI selectors and actual target previews; opening team comparison; illustrated planet/biome chart; postbattle EXP and side-by-side results; scroll retention and outside/Escape dismissal. Saves migrate to schema 7/rules 17 with a schema-6 backup.
+
+Runtime entry points: `Starfall-Menagerie.html` and `Starfall-Training-Glade.html`, rebuilt from current source. The ZIP and motion/screenshot evidence are in public/. Use a fresh server after changing the explicit module whitelist in server.js. Current validation server was port 3031; do not assume it survives. See the JSON report for final test counts and artifact hashes. Previous failures from development runs are superseded only by the checks recorded there.
+
+Preserve the pre-existing untracked expedition.js draft without editing, staging or deleting it. SHA256: a4c0ad756a781f8f223e34c1f9cd22d79e9fe47bff81d8ee951f47a16d987ea1. No fifty-hour human playtest or numerical fun score is claimed. Historical Chaos-1 campaign concerns below remain unresolved by this presentation/UI pass.
+
+---
+
 # Current continuation · Arena Feel V16 / application 0.12.0
 
 Read ARENA-FEEL-V16.md and tests/reports/arena-feel-v16.json. Current work is on a fresh codex/battle-enrage branch from 865621c; a NEW PR targets codex/starfall-menagerie. Preserve the pre-existing untracked expedition.js without changing, staging or deleting it (SHA256 a4c0ad756a781f8f223e34c1f9cd22d79e9fe47bff81d8ee951f47a16d987ea1). Every future request needs a fresh branch and new PR.

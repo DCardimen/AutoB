@@ -5,7 +5,7 @@ import {drawNativeFace,FACE_VIEWS} from './prototype-faces.js';
 import {paintAuthoredTorso,paintFairyWings,paintFairyBody} from './authored-pixel-art.js';
 import {paintAtlasCharacter} from './authored-sprite-renderer.js';
 export const CELL=64,PIVOT={x:32,y:44},PIXEL_WORLD=3;
-export const SPRITE_ART_REVISION=3;
+export const SPRITE_ART_REVISION=4;
 const OUT='#192328';
 export const PIXEL_PALETTES={
  crab:{skin:['#496b63','#7daca0','#c6d9be'],cloth:['#385c69','#5b95aa','#a9d1db'],metal:['#324d52','#668d8c','#b0c8bd','#e5e0b9'],hair:['#364c58','#638e99','#abd5ce']},
@@ -40,11 +40,11 @@ export function paintCharacterPixels(id,rig,angle){
  if(paintAtlasCharacter(b,id,rig,at)){
   const art=b;const farArt=new PixelBrush();paintGrandPixels(farArt,rig,at,p,'far');
   const far=q=>q&&at(q).depth<body.depth;
-  const arms=(brush,near)=>{for(const arm of rig.arms){if(far(arm.root)===near)continue;const root=rig.artArmRoots?.[arm.side]||at(arm.root),joint=at(arm.joint),hand=at(arm.end),metal=id==='knight',cloth=metal?p.metal:['orc','minotaur','troll'].includes(art.data.artIdentity)?p.skin:p.cloth,skin=rig.artHandColors?.[arm.side]||p.skin[1];
-   for(const [a,z,r]of [[root,joint,1.7],[joint,hand,1.3]]){brush.line(a,z,OUT,r+.6);brush.line(a,z,cloth[0],r);brush.line({x:a.x-.4,y:a.y-.5},{x:z.x-.4,y:z.y-.5},cloth[1],r*.45);brush.dot(a.x-.5,a.y-.5,cloth[2]);}
-   brush.oval(hand.x,hand.y,2,1.7,OUT);brush.oval(hand.x,hand.y,1.4,1.1,skin);brush.dot(hand.x-.5,hand.y-.5,metal?p.metal[3]:p.skin[2]);
+  const arms=(brush,near)=>{for(const arm of rig.arms){if(far(arm.root)===near)continue;const root=rig.artArmRoots?.[arm.side]||at(arm.root),joint=rig.artProject(arm.joint),hand=rig.artProject(arm.end),metal=id==='knight',cloth=metal?p.metal:['orc','minotaur','troll'].includes(art.data.artIdentity)?p.skin:p.cloth,skin=rig.artHandColors?.[arm.side]||p.skin[1];
+   for(const [a,z,r]of [[root,joint,1.25],[joint,hand,1]]){brush.line(a,z,OUT,r+.6);brush.line(a,z,cloth[0],r);brush.line({x:a.x-.4,y:a.y-.5},{x:z.x-.4,y:z.y-.5},cloth[1],r*.45);brush.dot(a.x-.5,a.y-.5,cloth[2]);}
+   brush.oval(hand.x,hand.y,1.6,1.4,OUT);brush.oval(hand.x,hand.y,1.1,1,skin);brush.dot(hand.x-.5,hand.y-.5,metal?p.metal[3]:p.skin[2]);
   }};
-  const gear=(brush,near)=>drawGearPart(brush,id,rig,angle,p,at,(x,y,rx,ry,color)=>{brush.oval(x,y,rx+1,ry+1,OUT);brush.oval(x,y,rx,ry,color);},art.data.contactGear&&Boolean(rig.weapon)&&far(rig.weapon.grip)!==near,art.data.contactGear&&Boolean(rig.shield)&&far(rig.shield.grip)!==near);
+  const gear=(brush,near)=>drawGearPart(brush,id,rig,angle,{...p,...rig.artGearPalette},rig.artProject,(x,y,rx,ry,color)=>{brush.oval(x,y,rx+1,ry+1,OUT);brush.oval(x,y,rx,ry,color);},art.data.contactGear&&Boolean(rig.weapon)&&far(rig.weapon.grip)!==near,art.data.contactGear&&Boolean(rig.shield)&&far(rig.shield.grip)!==near);
   arms(farArt,false);
   gear(farArt,false);
   for(let i=0;i<art.data.length;i+=4)if(art.data[i+3])farArt.data.set(art.data.subarray(i,i+4),i);b=farArt;
@@ -186,7 +186,8 @@ function drawGearPart(b,id,rig,angle,p,at,outlinedOval,weapon,shield){
  if(weapon&&rig.weapon){
    const g=at(rig.weapon.grip),tip=at(rig.weapon.tip);
    if(['elf','fox'].includes(id)){
-     const top=at({...rig.weapon.grip,x:rig.weapon.grip.x-6,z:rig.weapon.grip.z+24}),bottom=at({...rig.weapon.grip,x:rig.weapon.grip.x-6,z:rig.weapon.grip.z-24}),upper=at({...rig.weapon.grip,x:rig.weapon.grip.x+1,z:rig.weapon.grip.z+12}),lower=at({...rig.weapon.grip,x:rig.weapon.grip.x+1,z:rig.weapon.grip.z-12});
+     const bowPoint=(length,bend)=>rig.ragdoll?{...rig.weapon.grip,x:rig.weapon.grip.x+length,y:rig.weapon.grip.y+bend}:{...rig.weapon.grip,x:rig.weapon.grip.x+bend,z:rig.weapon.grip.z+length};
+     const top=at(bowPoint(24,-6)),bottom=at(bowPoint(-24,-6)),upper=at(bowPoint(12,1)),lower=at(bowPoint(-12,1));
      for(const [a,z]of [[top,upper],[upper,g],[g,lower],[lower,bottom]]){b.line(a,z,OUT,1.2);b.line(a,z,'#815735',.65);b.line({x:a.x-.4,y:a.y-.4},{x:z.x-.4,y:z.y-.4},'#c09b59');}b.oval(g.x,g.y,1.3,2,'#49382d');b.dot(top.x,top.y,'#e7d9a7');b.dot(bottom.x,bottom.y,'#e7d9a7');
      const pull=rig.arms.find(a=>a.side===1);if(rig.state==='attack'&&rig.bowString?.draw>0.05){b.line(top,at(pull.end),p.metal[3]);b.line(at(pull.end),bottom,p.metal[3]);}else b.line(top,bottom,p.metal[3]);
      if(rig.bowString?.draw>0.4)b.line(at(pull.end),{x:g.x+Math.cos(angle)*7,y:g.y+Math.sin(angle)*4},p.metal[2]);
@@ -222,10 +223,10 @@ function drawGearPart(b,id,rig,angle,p,at,outlinedOval,weapon,shield){
        b.outlined([blade(-4,-2),blade(-5,-5),blade(-2,-6),blade(1,-5),blade(2,-2),blade(0,2),blade(-2,3),blade(-3,1)],p.metal[0]);b.poly([blade(-4,-3),blade(-3,-5),blade(-1,-5),blade(1,-3),blade(0,1),blade(-2,2)],p.metal[1]);b.line(blade(-3,-5),blade(0,-4),p.metal[3]);b.line(blade(0,-4),blade(1,-1),p.metal[2]);
      }else{b.outlined([q(3,-1.4),q(len-3,-1.1),q(len,0),q(len-3,1.1),q(3,1.4)],p.metal[1]);b.line(q(4,-.7),tip,p.metal[3]);b.line(q(2,-2.5),q(2,2.5),p.metal[0],1);b.line(q(2,-2),q(2,2),p.metal[2]);b.oval(q(-2,0).x,q(-2,0).y,1,1,p.metal[1]);}
    }
-   for(const hand of rig.arms.filter(a=>a.side===(rig.weapon.hand==='left'?-1:1)||id==='orc')){const h=at(hand.end);outlinedOval(h.x,h.y,1.2,1.2,id==='knight'?p.metal[1]:p.skin[1]);b.dot(h.x-1,h.y-1,id==='knight'?p.metal[3]:p.skin[2]);}
+   for(const hand of rig.arms.filter(a=>a.side===(rig.weapon.hand==='left'?-1:1)||id==='orc')){const h=at(hand.end);outlinedOval(h.x,h.y,1.2,1.2,rig.artHandColors?.[hand.side]||(id==='knight'?p.metal[1]:p.skin[1]));b.dot(h.x-1,h.y-1,rig.artHandColors?.[hand.side]||(id==='knight'?p.metal[3]:p.skin[2]));}
  }
  if(shield&&rig.shield){
-  const q=at(rig.shield.grip),w=1.5+Math.abs(Math.sin(angle))*2.5;
+  const q=rig.artShieldProject?rig.artShieldProject(rig.shield.grip):at(rig.shield.grip),w=1.5+Math.abs(Math.sin(angle))*2.5;
   b.outlined([{x:q.x-w,y:q.y-4},{x:q.x+w,y:q.y-4},{x:q.x+w,y:q.y+2},{x:q.x,y:q.y+5},{x:q.x-w,y:q.y+2}],p.metal[2]);
   b.poly([{x:q.x-w+1,y:q.y-3},{x:q.x+w-1,y:q.y-3},{x:q.x+w-1,y:q.y+1},{x:q.x,y:q.y+4},{x:q.x-w+1,y:q.y+1}],rig.back?'#614735':p.cloth[0]);
   if(rig.back){b.line({x:q.x,y:q.y-2},{x:q.x,y:q.y+2},'#b28f61',1);b.rect(q.x-1,q.y,2,1,p.metal[0]);}

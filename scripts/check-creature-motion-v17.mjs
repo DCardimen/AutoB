@@ -1,0 +1,11 @@
+import {chromium} from 'playwright';
+import fs from 'node:fs';
+const base=process.env.BASE_URL||'http://127.0.0.1:3031';
+const browser=await chromium.launch({executablePath:'/usr/bin/chromium',args:['--no-sandbox']});const page=await browser.newPage({viewport:{width:1440,height:1000}});page.on('pageerror',e=>console.log('ERROR',e.stack));await page.goto(base);
+const data=await page.evaluate(async()=>{
+ const {pixelSpec,PIXEL_SPECIES}=await import('/native-content.js'),{nativePoseRig}=await import('/native-poses.js'),{nativeRigFor}=await import('/grand-designs.js'),{paintCharacterPixels}=await import('/prototype-pixel-art.js');
+ const ids=['aurel','brakk','syl','nyra','rowan','emberhound','cogwalker','runespider','moonjelly'],out=document.createElement('canvas'),ctx=out.getContext('2d'),cell=document.createElement('canvas');cell.width=cell.height=64;const b=cell.getContext('2d');out.width=1152;out.height=ids.length*192;ctx.imageSmoothingEnabled=false;ctx.fillStyle='#14252a';ctx.fillRect(0,0,out.width,out.height);let problems=[],seen=0;
+ ids.forEach((id,row)=>{if(!pixelSpec(id)?.nativeRig)return;ctx.fillStyle='#e9deb9';ctx.font='13px monospace';ctx.fillText(id,8,row*192+17);for(let dir=0;dir<8;dir++){const spec=pixelSpec(id),c={id,evolution:0},rig=nativePoseRig(spec,c,'run',.30);const pixels=paintCharacterPixels(nativeRigFor(spec,c),rig,dir*Math.PI/4);b.putImageData(new ImageData(pixels,64,64),0,0);ctx.drawImage(cell,dir*144,row*192+28,144,144);}});
+ for(const spec of PIXEL_SPECIES){for(let form=0;form<=2;form++){for(let dir=0;dir<8;dir++){for(const state of ['idle','walk','run','sprint','attack','cast','death','dodge']){const c={id:spec.id,evolution:form,evolutionPath:'wild'},rig=nativePoseRig(spec,c,state,.5),pixels=paintCharacterPixels(nativeRigFor(spec,c),rig,dir*Math.PI/4);seen++;if(pixels.clipped)problems.push({id:c.id,form,dir,state,clipped:pixels.clipped,samples:pixels.clipSamples});}}}}
+ return {png:out.toDataURL().split(',')[1],seen,problems};
+});fs.writeFileSync('public/creature-motion-v17-directions.png',Buffer.from(data.png,'base64'));delete data.png;fs.writeFileSync('playtest-artifacts/v17-motion-check.json',JSON.stringify(data,null,2));console.log({seen:data.seen,clipped:data.problems.length,samples:data.problems.slice(0,10)});await browser.close();

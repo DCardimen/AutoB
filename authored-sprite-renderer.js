@@ -28,7 +28,7 @@ export function atlasIdentity(id,rig){
  if(id==='flyer')return 'harpy';
  return AUTHORED_SPRITES[id]?id:null;
 }
-function frameFor(id,dir,stage=0){const key=id+':'+dir+':'+stage;if(!decoded.has(key)){const a=STAGES[stage][id],hex=a.frames[dir],colors=a.palette.map(c=>'#'+c),pixels=[];for(let y=0;y<64;y++)for(let x=0;x<64;x++){const n=parseInt(hex.slice((y*64+x)*2,(y*64+x)*2+2),16);if(n)pixels.push({x,y,color:colors[n],index:n});}decoded.set(key,{pixels,colors});}return decoded.get(key);}
+function frameFor(id,dir,stage=0){const key=id+':'+dir+':'+stage;if(!decoded.has(key)){const a=STAGES[stage][id],hex=a.frames[dir],colors=a.palette.map(c=>'#'+c),pixels=[];for(let y=0;y<64;y++)for(let x=0;x<64;x++){const n=parseInt(hex.slice((y*64+x)*2,(y*64+x)*2+2),16);if(n)pixels.push({x,y,color:colors[n],rgb:colors[n].slice(1).match(/../g).map(v=>parseInt(v,16)),index:n});}const shades=pixels.filter(p=>Math.max(...p.rgb)-Math.min(...p.rgb)<48&&Math.min(...p.rgb)>45&&Math.max(...p.rgb)<232).sort((a,b)=>a.rgb.reduce((n,v)=>n+v,0)-b.rgb.reduce((n,v)=>n+v,0));const metal=shades.length>12?[.08,.4,.72,.95].map(t=>shades[Math.floor((shades.length-1)*t)].color):null;decoded.set(key,{pixels,colors,metal});}return decoded.get(key);}
 const eyeColor=(id,[r,g,b])=>id==='elf'?g>r*1.2&&g>b*1.1:id==='caster'?b>g*1.5&&r<90&&b<90:['knight','fox','orc','goblin','fairy','dwarf','minotaur','rogue','troll','skeleton','frostelf'].includes(id)?Math.max(r,g,b)<65:false;
 function restFor(id){if(!rests.has(id))rests.set(id,characterRig(id,'idle',.25));return rests.get(id);}
 function difference(a,b){return {x:a.x-b.x,y:a.y-b.y};}
@@ -38,11 +38,17 @@ function handLandmarks(asset,identity,stage){
  if(asset.hands)return asset.hands;
  const hands={},expectedY=stage?31:34;
  for(const side of [-1,1]){
-  const expectedX=32+side*11,candidates=asset.pixels.filter(p=>p.y>=expectedY-4&&p.y<=expectedY+3&&Math.abs(p.x-expectedX)<=5).filter(p=>{const [r,g,b]=p.color.slice(1).match(/../g).map(v=>parseInt(v,16));return ['orc','goblin','troll'].includes(identity)?g>r*1.08&&g>b*1.12:identity==='knight'?Math.max(r,g,b)-Math.min(r,g,b)<65&&r>40:r>g*1.12&&g>b*1.1&&r>65;});
+  const expectedX=32+side*11,candidates=asset.pixels.filter(p=>p.y>=expectedY-4&&p.y<=expectedY+3&&Math.abs(p.x-expectedX)<=5).filter(p=>{const [r,g,b]=p.rgb;return ['orc','goblin','troll'].includes(identity)?g>r*1.08&&g>b*1.12:identity==='knight'?Math.max(r,g,b)-Math.min(r,g,b)<65&&r>40:r>g*1.12&&g>b*1.1&&r>65;});
   const seed=candidates.sort((a,b)=>Math.hypot(a.x-expectedX,a.y-expectedY)-Math.hypot(b.x-expectedX,b.y-expectedY))[0];if(seed)hands[side]={...seed};
  }asset.hands=hands;asset.handMask=new Set(asset.pixels.filter(p=>Object.values(hands).some(h=>Math.hypot(p.x-h.x,p.y-h.y)<3.6||Math.abs(p.x-h.x)<2.8&&p.y>=h.y-5&&p.y<=h.y)));return hands;
 }
 function recolor(identity,p,rig,rgb){
+ // Face and hair retain their authored ramp in every pose; equipment must not
+ // recolor only the animated strands or turn skin into metal.
+ if(p.y<27)return p.color;
+ const protectedRange=Math.max(...rgb)-Math.min(...rgb),protectedLum=(rgb[0]+rgb[1]+rgb[2])/3;
+ if(['caster','frostelf'].includes(identity)&&protectedRange<60&&protectedLum>95)return p.color;
+ if(['elf','fairy','dwarf'].includes(identity)&&rgb[0]>rgb[1]*1.08&&rgb[1]>rgb[2]*1.35&&rgb[0]>90)return p.color;
  if(!rig.artRecolor)return p.color;const pal=rig.palette;if(!pal)return p.color;
  const lum=.2126*rgb[0]+.7152*rgb[1]+.0722*rgb[2];if(lum<35)return p.color;
  let material=null;
@@ -81,16 +87,23 @@ function gearDistance(x,y,g){const dx=g[2]-g[0],dy=g[3]-g[1],t=clamp(((x-g[0])*d
 export function paintAtlasCharacter(b,id,rig,at){
  const identity=atlasIdentity(id,rig);if(!identity)return false;
  const artStage=Math.min(2,rig.artStage??rig.form??0),asset=frameFor(identity,rig.dir,artStage),rest=rig.artBind||restFor(id),angle=rig.dir*Math.PI/4,base=q=>point(q,angle),poseHead=at(rig.head),poseBody=at(rig.body),posePelvis=at(rig.pelvis),head0=base(rest.head),body0=base(rest.body),pelvis0=base(rest.pelvis),dh=difference(poseHead,head0),dc=difference(poseBody,body0),dp=difference(posePelvis,pelvis0);
- const humanoid=rig.arms.length>0||identity==='fairy'||identity==='harpy'||identity==='skeleton'||identity==='rogue'||identity==='frostelf',scale=rig.artScale||{width:1,height:1},headCut=identity==='knight'?25:identity==='orc'?25:identity==='fairy'?29:27,headCenter={x:32,y:headCut-9},bodyCenter={x:32,y:33};
+ const idleLift=rig.state==='idle'?Math.sin(rig.phase*Math.PI*2)*1.25:0;dh.y+=idleLift;dc.y+=idleLift;dp.y+=idleLift*.55;
+ const humanoid=rig.arms.length>0||identity==='fairy'||identity==='harpy'||identity==='skeleton'||identity==='rogue'||identity==='frostelf',scale=rig.artScale||{width:1,height:1},headCut=identity==='orc'?27:29,headCenter={x:32,y:headCut-9},bodyCenter={x:32,y:33};
  const sourceHands=humanoid?handLandmarks(asset,identity,artStage):{};
  const headRoll=rig.ragdoll?rotation(poseHead,poseBody,head0,body0):clamp((rig.lean||0)*Math.cos(angle)+(rig.sideLean||0)*Math.sin(angle),-.25,.25),cos=Math.cos(headRoll),sin=Math.sin(headRoll);
  const footDeltas=rig.legs.map((l,i)=>{const original=rest.legs[i]||rest.legs[0],end0=base(original.end);return {delta:difference(at(l.end),end0),knee:difference(at(l.joint),base(original.joint)),root:difference(at(l.root),base(original.root)),pitch:l.foot?.pitch||0,anchor:{x:32+(end0.x-32)*(humanoid?2.4:1.45),y:45+(end0.y-43)*.6}};});
+ // Source-foot ownership is constant for a bind pose. Cache it once instead
+ // of doing a nearest-leg search three times for every painted pixel/frame.
+ const footKey=JSON.stringify(footDeltas.map(f=>f.anchor));asset.footAssignments??=new Map();
+ let footIndices=asset.footAssignments.get(footKey);
+ if(!footIndices&&footDeltas.length){footIndices=new Uint8Array(65*65);for(let y=31;y<65;y++)for(let x=0;x<65;x++){let best=0,bestD=Infinity;for(let i=0;i<footDeltas.length;i++){const f=footDeltas[i],d=humanoid?Math.abs(x-f.anchor.x):Math.hypot(x-f.anchor.x,y-f.anchor.y);if(d<bestD){best=i;bestD=d;}}footIndices[y*65+x]=best;}asset.footAssignments.set(footKey,footIndices);}
+ const footAt=(x,y)=>footDeltas[footIndices[Math.max(0,Math.min(64,Math.round(y)))*65+Math.max(0,Math.min(64,Math.round(x)))]];
  const armDeltas=rig.arms.map((a,i)=>{const orig=rest.arms[i]||rest.arms[0],end0=base(orig.end);return {side:a.side,delta:difference(at(a.end),end0),end:at(a.end),anchor:{x:32+(end0.x-32)*1.7,y:32+(end0.y-30)*.5}};});
  const sourceGear=GEAR[identity]?.[rig.dir],grip=rig.weapon&&at(rig.weapon.grip),tip=rig.weapon&&at(rig.weapon.tip),sourceLen=sourceGear&&Math.hypot(sourceGear[2]-sourceGear[0],sourceGear[3]-sourceGear[1]),weaponLen=grip&&Math.hypot(tip.x-grip.x,tip.y-grip.y),weaponAngle=grip?Math.atan2(tip.y-grip.y,tip.x-grip.x):0,sourceAngle=sourceGear?Math.atan2(sourceGear[3]-sourceGear[1],sourceGear[2]-sourceGear[0]):0;
  const action=['attack','slash','charge','cast'].includes(rig.state),align=1;
  const cape=rig.capeMesh,capeBind=rig.artCapeBind,capeOffsets=cape&&capeBind?cape.map((col,i)=>col.map((p,j)=>difference(at(p),at(capeBind[i][j])))):null;
  const expression=rig.state==='death'?'dead':['hit','stagger','knockdown'].includes(rig.state)?'hurt':rig.state==='idle'&&rig.phase>=.9375?'blink':'open';
- const eyePixels=rig.dir<5?asset.pixels.filter(p=>p.y>=14&&p.y<21&&p.x>=17&&p.x<47&&eyeColor(identity,p.color.slice(1).match(/../g).map(v=>parseInt(v,16)))):[];
+ const eyePixels=rig.dir<5?(asset.eyePixels??=asset.pixels.filter(p=>p.y>=14&&p.y<21&&p.x>=17&&p.x<47&&eyeColor(identity,p.rgb))):[];
  function warped(x,y,gearPixel=false,armPixel=false,clothPixel=false,hairPixel=false){
   if(gearPixel&&sourceGear&&grip&&gearDistance(x,y,sourceGear)<(identity==='orc'?4:identity==='caster'?2.8:2.4)&&Math.abs(x-32)>6){
    const dx=x-sourceGear[0],dy=y-sourceGear[1],theta=(weaponAngle-sourceAngle)*align,cos=Math.cos(theta),sin=Math.sin(theta),ratio=1+(clamp(weaponLen/sourceLen,.1,3)-1)*align;
@@ -99,32 +112,38 @@ export function paintAtlasCharacter(b,id,rig,at){
   }
   let delta=dc;
   if(humanoid){
-   const headWeight=1-ease((y-headCut+2)/7);delta=mix(dc,dh,headWeight);
-   const lower=ease((y-31)/10);delta=mix(delta,dp,lower);
-   if(footDeltas.length&&y>=34){const foot=footDeltas.reduce((best,f)=>Math.hypot(x-f.anchor.x,y-f.anchor.y)<Math.hypot(x-best.anchor.x,y-best.anchor.y)?f:best),leg=y<39?mix(foot.root,foot.knee,ease((y-34)/5)):mix(foot.knee,foot.delta,ease((y-39)/5));delta=mix(delta,leg,ease((y-33)/6));if(y>42)delta={x:delta.x,y:delta.y+(x-foot.anchor.x)*Math.sin(foot.pitch)*Math.cos(angle)};}
-   if(armPixel&&armDeltas.length&&y>30&&y<39&&Math.abs(x-32)>7){const arm=armDeltas.reduce((best,a)=>Math.abs(x-a.anchor.x)<Math.abs(x-best.anchor.x)?a:best);delta=mix(delta,arm.delta,ease((Math.abs(x-32)-6)/7));}
-   if(headWeight>.1&&headRoll){const dx=x-headCenter.x,dy=y-headCenter.y;delta={x:delta.x+(dx*cos-dy*sin-dx)*headWeight,y:delta.y+(dx*sin+dy*cos-dy)*headWeight};}
+   const headWeight=y<=headCut?1:0;
+   delta=headWeight?dh:y<37?dc:dp;
+   if(footDeltas.length&&y>=37){
+    const foot=footAt(x,y);
+    // A fixed thigh/shin seam, rather than independently shearing every pixel.
+    const a={x:foot.anchor.x,y:y<41?35:40},z={x:foot.anchor.x,y:y<41?40:45},da=y<41?foot.root:foot.knee,dz=y<41?foot.knee:foot.delta;
+    const pa={x:a.x+da.x,y:a.y+da.y},pz={x:z.x+dz.x,y:z.y+dz.y},theta=Math.atan2(pz.y-pa.y,pz.x-pa.x)-Math.PI/2,ratio=clamp(Math.hypot(pz.x-pa.x,pz.y-pa.y)/5,.7,1.3),dx=x-a.x,dy=y-a.y;
+    // Thigh and shin are separate rigid sections sharing exactly one knee.
+    delta={x:pa.x+dx*Math.cos(theta)-dy*ratio*Math.sin(theta)-x,y:pa.y+dx*Math.sin(theta)+dy*ratio*Math.cos(theta)-y};
+    if(['caster','frostelf'].includes(identity)&&Math.abs(x-32)<5&&y<44)delta=dc;
+   }
+   if(headWeight&&headRoll){const dx=x-headCenter.x,dy=y-headCenter.y;delta={x:delta.x+dx*cos-dy*sin-dx,y:delta.y+dx*sin+dy*cos-dy};}
   }else{
    delta=mix(dc,dh,ease((x-29)/12)*.35);
-   if(footDeltas.length&&y>33){const foot=footDeltas.reduce((best,f)=>Math.hypot(x-f.anchor.x,y-f.anchor.y)<Math.hypot(x-best.anchor.x,y-best.anchor.y)?f:best),leg=y<39?mix(foot.root,foot.knee,ease((y-33)/6)):mix(foot.knee,foot.delta,ease((y-39)/6));delta=mix(delta,leg,ease((y-31)/10));}
+   if(footDeltas.length&&y>33){const foot=footAt(x,y),leg=y<39?mix(foot.root,foot.knee,ease((y-33)/6)):mix(foot.knee,foot.delta,ease((y-39)/6));delta=mix(delta,leg,ease((y-31)/10));}
    if(['jelly','squid','mushroom'].includes(identity)){const squash=rig.squash||1,pulse=Math.sin(rig.phase*Math.PI),action=['dodge','dash','stop'].includes(rig.state)?1+.18*pulse:1,t=ease((y-27)/17),spread=1+(artStage===2?.4:artStage===1?.25:0)*t,ripple=artStage?Math.sin(rig.phase*Math.PI*2+(x-32)*.2)*t:0;return {x:32+(x-32)*scale.width*squash*action*spread+delta.x+ripple,y:44+(y-45)*scale.height/(squash*action)+delta.y};}
   }
   // Maturation changes head-to-body proportions and develops shoulders/legs.
   // Feet retain the same ground pivot; this is skinning, not a physics retarget.
-  if(humanoid&&artStage){const headWeight=1-ease((y-headCut+3)/7),headScale=identity==='orc'?(artStage===2?.7:.72):artStage===2?.78:.82,bodyWidth=artStage===2?1.24:1.16;delta={x:delta.x+(x-32)*((headScale-1)*headWeight+(bodyWidth-1)*(1-headWeight)),y:delta.y+((y-headCenter.y)*(headScale-1)-3)*headWeight+(y-45)*.18*(1-headWeight)};}
   if(artStage&&['mech','serpent','crab','spider','beetle'].includes(identity)){
    const upper=1-ease((y-27)/10),lower=1-upper,amount=identity==='crab'?(artStage===2?.55:.45):identity==='serpent'?(artStage===2?.55:.4):artStage===2?.32:.22;
-   const weight=identity==='crab'||identity==='spider'?lower:upper;
+   const weight=['crab','spider','serpent'].includes(identity)?lower:upper;
    delta={x:delta.x+(x-32)*amount*weight,y:delta.y};
   }
   if(artStage&&identity==='lion')delta={x:delta.x+(x-32)*(artStage===2?.3:.2)*(1-ease((y-25)/10)),y:delta.y};
   if(artStage&&identity==='bear')delta={x:delta.x+(x-32)*(artStage===2?.48:.35)*ease((y-16)/17),y:delta.y};
   // Fold/flap only the outer wing region; roots remain attached to the torso.
-  if(['fairy','moth','bat','harpy','drake','phoenix','owl','fish','mantis'].includes(identity)&&Math.abs(x-32)>9&&y>17){const weight=ease((Math.abs(x-32)-9)/15),flap=Math.sin(rig.phase*Math.PI*2);delta={x:delta.x+Math.sign(x-32)*weight*flap*2,y:delta.y+weight*flap*2};}
+  if(['fairy','moth','bat','harpy','drake','phoenix','owl','fish','mantis'].includes(identity)&&Math.abs(x-32)>9&&y>17){const weight=ease((Math.abs(x-32)-9)/15),flap=Math.sin(rig.phase*Math.PI*2);delta={x:delta.x+Math.sign(x-32)*weight*(flap*2+(artStage===2?3:artStage?2:0)),y:delta.y+weight*flap*2};}
   if(identity==='fox'&&y>32&&Math.abs(x-32)>12){const weight=ease((Math.abs(x-32)-12)/12);delta={x:delta.x,y:delta.y+Math.sin(rig.phase*Math.PI*2)*weight*2};}
   if(['feralfox','cat','rodent','rabbit'].includes(identity)&&y>26&&Math.abs(x-32)>14){const weight=ease((Math.abs(x-32)-14)/10);delta={x:delta.x,y:delta.y+Math.sin(rig.phase*Math.PI*2)*weight*2};}
   if(identity==='clam')delta={x:delta.x,y:delta.y-Math.sin(rig.phase*Math.PI*2)*ease((35-y)/18)*1.5};
-  if(hairPixel){const lag=ease((y-19)/20),moving=['walk','run','sprint','turn','stop','dodge','dash'].includes(rig.state),drive=moving?(rig.state==='sprint'?1.3:1):.55,wave=Math.sin(rig.phase*Math.PI*2-lag*2.1+(x<32?-.25:.25));delta={x:delta.x+wave*lag*drive*3.2-(rig.lean||0)*lag*4,y:delta.y+Math.cos(rig.phase*Math.PI*2-lag*2.1)*lag*drive*.8};}
+  if(hairPixel&&y>headCut+4&&Math.abs(x-32)>8){const lag=ease((y-19)/20),moving=['walk','run','sprint','turn','stop','dodge','dash'].includes(rig.state),drive=moving?(rig.state==='sprint'?1.3:1):.55,wave=Math.sin(rig.phase*Math.PI*2-lag*2.1+(x<32?-.25:.25));delta={x:delta.x+wave*lag*drive*1.1-(rig.lean||0)*lag*4,y:delta.y+Math.cos(rig.phase*Math.PI*2-lag*2.1)*lag*drive*.35};}
   if(cape&&capeBind&&y>27&&clothPixel&&(rig.dir>=5||Math.abs(x-32)>8)){
    const u=clamp((x-18)/28,0,1)*(cape.length-1),v=clamp((y-26)/19,0,1)*(cape[0].length-1),i=Math.floor(u),j=Math.floor(v),ii=Math.min(i+1,cape.length-1),jj=Math.min(j+1,cape[0].length-1),lag=mix(mix(capeOffsets[i][j],capeOffsets[ii][j],u-i),mix(capeOffsets[i][jj],capeOffsets[ii][jj],u-i),v-j);delta={x:delta.x+clamp(lag.x-dc.x,-5,5),y:delta.y+clamp(lag.y-dc.y,-5,5)};
   }
@@ -133,7 +152,7 @@ export function paintAtlasCharacter(b,id,rig,at){
  const pixels=asset.pixels.flatMap(p=>{
   // Neutral fists belong to articulated arm layers, never to the torso bitmap.
   if(asset.handMask?.has(p))return [];
-  const rgb=p.color.slice(1).match(/../g).map(v=>parseInt(v,16)),lum=(rgb[0]+rgb[1]+rgb[2])/3,range=Math.max(...rgb)-Math.min(...rgb),metal=range<45&&lum>55,wood=rgb[0]>rgb[1]*1.18&&rgb[1]>rgb[2]*1.15,gem=rgb[2]>rgb[0]*1.25&&rgb[1]>rgb[0]*1.2;
+  const rgb=p.rgb,lum=(rgb[0]+rgb[1]+rgb[2])/3,range=Math.max(...rgb)-Math.min(...rgb),metal=range<45&&lum>55,wood=rgb[0]>rgb[1]*1.18&&rgb[1]>rgb[2]*1.15,gem=rgb[2]>rgb[0]*1.25&&rgb[1]>rgb[0]*1.2;
   const gearPixel=['elf','fox'].includes(identity)?wood:identity==='caster'?wood||gem:metal||wood&&sourceGear&&gearDistance(p.x,p.y,sourceGear)<1;
   // The original neutral weapon is a separate piece. Remove its whole footprint,
   // then let the shared weapon renderer paint the actual physical handle/blade.
@@ -148,30 +167,41 @@ export function paintAtlasCharacter(b,id,rig,at){
  });
  // Refit a complete pose only when a fall/large limb excursion exceeds its cell.
  // This preserves the full silhouette and never crops a limb or weapon.
- const minX=Math.min(...pixels.map(p=>p.x)),maxX=Math.max(...pixels.map(p=>p.x)),minY=Math.min(...pixels.map(p=>p.y)),maxY=Math.max(...pixels.map(p=>p.y)),fit=Math.min(1,61/(maxX-minX||1),61/(maxY-minY||1));
- const ox=minX<1?1-minX:minX>1&&maxX>62?62-maxX:0,oy=minY<1?1-minY:minY>1&&maxY>62?62-maxY:0;
+ const sourceXs=asset.pixels.map(p=>32+(p.x-32)*scale.width),sourceYs=asset.pixels.map(p=>44+(p.y-45)*scale.height);
+ const minX=Math.min(...pixels.map(p=>p.x)),maxX=Math.max(...pixels.map(p=>p.x)),minY=Math.min(...pixels.map(p=>p.y)),maxY=Math.max(...pixels.map(p=>p.y));
+ const sourceLeft=Math.min(...sourceXs),sourceRight=Math.max(...sourceXs),sourceTop=Math.min(...sourceYs),sourceBottom=Math.max(...sourceYs);
+ const fit=Math.min(1,54/((sourceRight-sourceLeft||1)+(artStage&&identity==='serpent'?18:artStage&&['fairy','moth','bat','harpy','drake','phoenix','owl','fish','mantis'].includes(identity)?8:0)),54/(sourceBottom-sourceTop||1));
+ const ox=32-(sourceLeft+sourceRight)/2,oy=Math.max(0,4-sourceTop)-(rig.ragdoll?9*(rig.death||0):0);
  // Unscaled Training Glade actors expose the full physical stride. Paint its
  // limbs behind the textured body, with volume rather than skeleton lines.
  if(!humanoid&&!rig.artBind){const ramp=rig.palette?.skin||['#413a35','#786c53','#b0a17c'];for(const leg of rig.legs){const points=[leg.root,leg.joint,leg.hock||leg.end,...(leg.hock?[leg.end]:[])].map(at);for(let i=1;i<points.length;i++){b.line(points[i-1],points[i],ramp[0],1.35);b.line({x:points[i-1].x-.3,y:points[i-1].y-.4},{x:points[i].x-.3,y:points[i].y-.4},ramp[1],.65);}}}
- for(const p of pixels){const x=fit<1?1+(p.x-minX)*fit:p.x+ox,y=fit<1?1+(p.y-minY)*fit:p.y+oy;b.dot(x,y,p.color);if(p.spanX*fit>1.01||p.spanY*fit>1.01)b.rect(clamp(Math.round(x-p.spanX*.3),0,63),clamp(Math.round(y-p.spanY*.3),0,63),Math.min(64-Math.round(x-p.spanX*.3),Math.ceil(p.spanX*fit)),Math.min(64-Math.round(y-p.spanY*.3),Math.ceil(p.spanY*fit)),p.color);}
+ for(const p of pixels){const x=32+(p.x-32+ox)*fit,y=44+(p.y-44+oy)*fit;b.dot(x,y,p.color);if(p.spanX*fit>1.01||p.spanY*fit>1.01)b.rect(clamp(Math.round(x-p.spanX*.3),0,63),clamp(Math.round(y-p.spanY*.3),0,63),Math.min(64-Math.round(x-p.spanX*.3),Math.ceil(p.spanX*fit)),Math.min(64-Math.round(y-p.spanY*.3),Math.ceil(p.spanY*fit)),p.color);}
  // Close one-pixel interior gaps left by nearest-pixel skeletal deformation.
  const fills=[];for(let y=Math.max(1,Math.floor(minY+oy));y<Math.min(63,Math.ceil(maxY+oy));y++)for(let x=Math.max(1,Math.floor(minX+ox));x<Math.min(63,Math.ceil(maxX+ox));x++){const n=(y*64+x)*4;if(b.data[n+3])continue;const l=n-4,r=n+4,t=n-256,d=n+256;if(b.data[l+3]&&b.data[r+3]&&(b.data[t+3]||b.data[d+3])){const near=b.data[t+3]?t:l;fills.push([x,y,'#'+[0,1,2].map(k=>b.data[near+k].toString(16).padStart(2,'0')).join('')]);}}
  for(const p of fills)b.dot(...p);
  if(expression!=='open'&&eyePixels.length){for(const side of [-1,1]){const eye=eyePixels.filter(p=>side<0?p.x<32:p.x>=32);if(eye.length<2)continue;const x=eye.reduce((n,p)=>n+p.x,0)/eye.length,y=eye.reduce((n,p)=>n+p.y,0)/eye.length,q=warped(x,y),color='#30212b';b.line({x:q.x-1,y:q.y},{x:q.x+1,y:q.y},color);if(expression==='dead'){b.dot(q.x-1,q.y-1,color);b.dot(q.x+1,q.y+1,color);}}}
  // Weld only uncovered pixels at joint seams, preserving the painted costume.
  const weld=(a,z,color)=>{const length=Math.hypot(z.x-a.x,z.y-a.y),steps=Math.max(1,Math.ceil(length*2));for(let i=0;i<=steps;i++){const x=Math.round(a.x+(z.x-a.x)*i/steps),y=Math.round(a.y+(z.y-a.y)*i/steps);if(x>0&&x<63&&y>0&&y<63&&!b.data[(y*64+x)*4+3])b.dot(x,y,color);}};
- if(humanoid)weld(warped(32,headCut-2),warped(32,32),id==='orc'?'#708547':'#b69476');
- if(humanoid)weld(poseBody,poseHead,rig.palette?.skin?.[1]||'#b69476');
- const neckStart=id==='wolf'?{...rig.body,x:rig.body.x+18,z:rig.body.z+4}:{...rig.body,z:rig.body.z+12};
- if(humanoid||!rig.artBind)weld(at(neckStart),at({...rig.head,z:rig.head.z-5}),rig.palette?.skin?.[1]||'#89765a');
- // Animal limbs are already painted and skinned above. Their calibration rig
- // can extend beyond the source silhouette; drawing it exposes wire legs.
- if(humanoid||!rig.artBind)for(const leg of rig.legs){const color=rig.palette?.skin?.[0]||'#685546';weld(at(leg.root),at(leg.joint),color);weld(at(leg.joint),at(leg.hock||leg.end),color);if(leg.hock)weld(at(leg.hock),at(leg.end),color);}
- for(const a of rig.arms){weld(at(a.root),at(a.joint),id==='knight'?'#737d78':'#786045');weld(at(a.joint),at(a.end),id==='knight'?'#737d78':id==='orc'?'#788c4d':'#b79473');}
- const anchor=q=>fit<1?{x:1+(q.x-minX)*fit,y:1+(q.y-minY)*fit}:{x:q.x+ox,y:q.y+oy};
+ const anchor=q=>({x:32+(q.x-32+ox)*fit,y:44+(q.y-44+oy)*fit});
  rig.artAnchors={head:anchor(warped(32,headCenter.y)),body:anchor(warped(32,34)),pelvis:anchor(warped(32,38))};
  rig.artArmRoots={};rig.artHandColors={};
- for(const arm of rig.arms){const projected=-arm.side*Math.sin(angle),screenSide=Math.abs(projected)>.15?Math.sign(projected):Math.sign(arm.side*Math.cos(angle)),hand=sourceHands[screenSide];rig.artArmRoots[arm.side]=anchor(warped(32+screenSide*8,artStage?27:29));rig.artHandColors[arm.side]=hand?recolor(identity,hand,rig,hand.color.slice(1).match(/../g).map(v=>parseInt(v,16))):undefined;}
+ // One torso-relative projection for every shoulder, elbow and hand. This
+ // respects side/rear depth instead of guessing the hand from screen side.
+ const limbPoint=q=>{const v=at(q);return {...v,...anchor({x:32+(v.x-poseBody.x)*1.3+dc.x,y:33+(v.y-poseBody.y)*.90+dc.y})};};
+ const weaponScale=id==='orc'?.64:id==='knight'?.76:id==='caster'?.83:.9;
+ rig.artLimbPoints=new Map();
+ for(const arm of rig.arms){
+  const root=limbPoint(arm.root),joint=limbPoint(arm.joint),end=limbPoint(arm.end),screenSide=Math.sign(end.x-root.x)||arm.side,hand=sourceHands[screenSide];
+  rig.artArmRoots[arm.side]=root;rig.artHandColors[arm.side]=hand?.color;
+  rig.artLimbPoints.set(arm.root,root);rig.artLimbPoints.set(arm.joint,joint);rig.artLimbPoints.set(arm.end,end);
+ }
+ const main=rig.weapon&&rig.arms.find(a=>a.side===(rig.weapon.hand==='left'?-1:1)),paintedGrip=main&&rig.artLimbPoints.get(main.end),physicalGrip=rig.weapon&&at(rig.weapon.grip);
+ const heldPoint=q=>{const v=at(q);return paintedGrip?{...v,x:paintedGrip.x+(v.x-physicalGrip.x)*fit*weaponScale,y:paintedGrip.y+(v.y-physicalGrip.y)*fit*weaponScale}:v;};
+ // A two-handed handle and drawn bowstring share the held object's transform.
+ if(main&&(id==='orc'||rig.bowString?.draw>.05))for(const arm of rig.arms.filter(a=>a!==main)){rig.artLimbPoints.set(arm.end,heldPoint(arm.end));}
+ rig.artProject=q=>rig.artLimbPoints.has(q)?rig.artLimbPoints.get(q):heldPoint(q);
+ rig.artShieldProject=q=>{const arm=rig.arms.find(a=>a.side===-1),h=arm&&rig.artLimbPoints.get(arm.end),g=rig.shield&&at(rig.shield.grip),v=at(q);return h&&g?{...v,x:h.x+(v.x-g.x)*fit,y:h.y+(v.y-g.y)*fit}:v;};
+ rig.artGearPalette=asset.metal?{...rig.palette,metal:asset.metal}:rig.palette;
  rig.authoredEvolution=true;b.data.artIdentity=identity;b.data.artStage=artStage;b.data.artFit=fit;b.data.contactGear=Boolean(rig.weapon&&rig.arms.length);b.data.expression=eyePixels.length?expression:'hidden';return true;
 }
 export function paintAtlasHead(b,id,rig,center){
