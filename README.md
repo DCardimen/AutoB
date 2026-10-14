@@ -1,6 +1,8 @@
-# Starfall Menagerie · Creature Motion V17
+# Starfall Menagerie · V17.1 palette fix
 
 A single-player creature-collecting roguelike autobattler with physical arena combat. Start with two companions and grow a team of six across three planets, build individual companions with personal relics and equipment, capture permanent starters, and climb twenty Chaos tiers.
+
+**V17.1 fixes sprites with mismatched lower-body colors.** Authored colors remain consistent across equipment, evolution and animation; collection variants now color the entire material instead of only the lower half. See the [fix and checks](SPRITE-PALETTE-FIX.md), [directional examples](public/sprite-palette-fix-directions.png), and [updated offline games](public/Starfall-V17.1-Palette-Fix.zip).
 
 **Creature Motion V17 is playable in Starfall-Menagerie.html.** See [V17 changes](CREATURE-MOTION-V17.md), [movement preview](public/creature-motion-v17-preview.webm), [planet chart](public/creature-motion-v17-planets.png), [team controls](public/creature-motion-v17-team.png), [EXP and team comparison](public/creature-motion-v17-recap.png), and [offline package](public/Starfall-V17-Creature-Motion.zip). V17 adds interpolated movement, shared hand/weapon attachments, crouched bow attacks, idle motion on every family, whole-creature personal relics, wearer-only equipment, automatic capture retries, a reserve tray, AI target previews, biome maps and menus that keep your scroll position.
 

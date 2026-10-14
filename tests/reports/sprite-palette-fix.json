@@ -1,0 +1,87 @@
+{
+  "version": "0.13.1",
+  "artRevision": 5,
+  "rulesVersion": 17,
+  "saveSchema": 7,
+  "branch": "codex/sprite-palette-consistency",
+  "baseCommit": "bb863177ddfc3a41780278620c8ce04a0946b933",
+  "generatedAt": "2026-10-14T00:46:26.305461+00:00",
+  "reproducedBeforeFix": "Ordinary Windstep Boots changed the lower-body palette; equipment-color regression failed on the unmodified V17 renderer.",
+  "unit": {
+    "command": "npm test",
+    "tests": 232,
+    "pass": 232,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0,
+    "durationMs": 209849.983879
+  },
+  "focusedArt": {
+    "tests": 18,
+    "pass": 18,
+    "fail": 0,
+    "command": "node --test tests/sprite-colors.test.js tests/authored-art-v3.test.js tests/sprite-art-v2.test.js tests/prototype-pixels.test.js"
+  },
+  "browser": {
+    "command": "BASE_URL=http://127.0.0.1:3032 node tests/sprite-colors.browser.mjs",
+    "checks": [
+      "source: actual roster shows consistent upper/lower colors for both blue variants in all three forms",
+      "source: battle animates and records physical hits and skills",
+      "Source browser renders 6408 equipped frames across all 89 families, three forms, eight facings and idle/run/attack without clipping",
+      "offline: actual roster shows consistent upper/lower colors for both blue variants in all three forms",
+      "offline: battle animates and records physical hits and skills",
+      "Exact standalone Training Glade renders and animates sprinting with the shared palette correction",
+      "Both distributed HTML files work without any external requests or browser errors"
+    ],
+    "errors": [],
+    "externalRequests": [],
+    "frames": 6408
+  },
+  "packageVerification": {
+    "zipCRC": "passed",
+    "exactHTMLAndReviewSheetBytes": "passed"
+  },
+  "builds": [
+    "npm run build:standalone",
+    "npm run build:prototype"
+  ],
+  "sourceHashes": {
+    "authored-sprite-renderer.js": "d41dcdb2281072c705b43ec6377ca59dcb10a949f8d27d5abc07b7069083b6d5",
+    "native-forms.js": "af009eaa414d6305c6412af56221626ddcb045ec90cfb5dbf4693e377a887fc5",
+    "prototype-pixel-art.js": "ef7a37861dbbde1e485de9c0160fcbd639f4860979e5e52d1b3b57060a9dd824",
+    "app.js": "3c632f735c3286cb304bbae6e1732ab297462770cdecf7402af4be595ec98006",
+    "tests/sprite-colors.test.js": "a52c0ced994a20bfe57d117441cc283e08f1305776cb35204a5e76e5dbdccdeb",
+    "tests/sprite-colors.browser.mjs": "4a6e2ed03981da56a11c328915c4b4b3bc0fb3ce5f8348fcab3091390f0df03b"
+  },
+  "artifacts": {
+    "Starfall-Menagerie.html": {
+      "bytes": 13883934,
+      "sha256": "ab097eeaa02e9df72744230c03fcf6f8c31a37cc370657064a6519589179f312"
+    },
+    "Starfall-Training-Glade.html": {
+      "bytes": 13140953,
+      "sha256": "09659bfce710fb5e2dc69e588f6ac63f7f4ae1563bfc189a95464d8fe993dc5e"
+    },
+    "public/prototype-bundle.js": {
+      "bytes": 8391900,
+      "sha256": "3186b74816de845f0ac69fa2c9659f99c07533b8be402f3eedba13d6bcf82ce7"
+    },
+    "public/sprite-palette-fix-directions.png": {
+      "bytes": 348379,
+      "sha256": "d3d5363fdc26d776b4598e49205f6beedf8c3b270e5fc793135fddb008c0b905"
+    },
+    "public/Starfall-V17.1-Palette-Fix.zip": {
+      "bytes": 10039946,
+      "sha256": "a28b3b0c20992d80d07cb1e98e7be91b5b5607007531013fca7c8eccba3fa57d"
+    }
+  },
+  "preservedDraft": {
+    "path": "expedition.js",
+    "sha256": "a4c0ad756a781f8f223e34c1f9cd22d79e9fe47bff81d8ee951f47a16d987ea1",
+    "staged": false
+  },
+  "limits": [
+    "No new baked Godot atlas export; the browser runtime and both standalone HTML games contain the fix."
+  ]
+}
