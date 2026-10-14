@@ -10,6 +10,7 @@ import {AUTHORED_FAMILIES_STAGE2} from './authored-family-stage2-data.js';
 import {AUTHORED_LEGACY} from './authored-legacy-data.js';
 import {AUTHORED_LEGACY_STAGE1} from './authored-legacy-stage1-data.js';
 import {AUTHORED_LEGACY_STAGE2} from './authored-legacy-stage2-data.js';
+import {meleeWeaponBounds} from './melee-weapon-art.js';
 import {characterRig,projectRig} from './prototype-rig.js';
 // Directional artwork is skinned to the same anatomical action poses as combat.
 // The imported art is never blurred, rotated by Canvas, or stretched as one bitmap.
@@ -163,12 +164,12 @@ export function paintAtlasCharacter(b,id,rig,at){
  }
  const pixels=asset.pixels.flatMap(p=>{
   // Neutral fists belong to articulated arm layers, never to the torso bitmap.
-  if(asset.handMask?.has(p))return [];
+  if(asset.handMask?.has(p)&&Math.abs(p.x-32)>6)return [];
   const rgb=p.rgb,lum=(rgb[0]+rgb[1]+rgb[2])/3,range=Math.max(...rgb)-Math.min(...rgb),metal=range<45&&lum>55,wood=rgb[0]>rgb[1]*1.18&&rgb[1]>rgb[2]*1.15,gem=rgb[2]>rgb[0]*1.25&&rgb[1]>rgb[0]*1.2;
   const gearPixel=['elf','fox'].includes(identity)?wood:identity==='caster'?wood||gem:metal||wood&&sourceGear&&gearDistance(p.x,p.y,sourceGear)<1;
   // The original neutral weapon is a separate piece. Remove its whole footprint,
   // then let the shared weapon renderer paint the actual physical handle/blade.
-  if(!AUTHORED_SPRITES[identity].weaponless&&sourceGear&&gearDistance(p.x,p.y,sourceGear)<(identity==='orc'?4.5:identity==='caster'?3:2.8)&&Math.abs(p.x-32)>6&&p.y>=(identity==='caster'?12:22))return [];
+  if(!AUTHORED_SPRITES[identity].weaponless&&sourceGear&&gearDistance(p.x,p.y,sourceGear)<(identity==='orc'?4.5:identity==='caster'?3:2.8)&&Math.abs(p.x-32)>7&&p.y>=(identity==='caster'?12:25))return [];
   const skin=identity==='orc'||identity==='goblin'?rgb[1]>rgb[0]*1.08&&rgb[1]>rgb[2]*1.2:rgb[0]>rgb[1]*1.1&&rgb[1]>rgb[2]*1.15&&rgb[0]>100&&rgb[0]<220;
   const armPixel=identity==='knight'?metal:skin,cloth=identity==='knight'?rgb[0]>rgb[1]*1.18&&rgb[0]>rgb[2]*1.1:['caster','frostelf','rogue','skeleton'].includes(identity)?rgb[2]>rgb[1]*1.08&&rgb[0]>38:rgb[1]>rgb[0]*1.07;
   const hair=p.y>19&&p.y<42&&(['caster','frostelf'].includes(identity)?range<55&&lum>105:['elf','fairy','dwarf'].includes(identity)?rgb[0]>rgb[1]*1.1&&rgb[1]>rgb[2]*1.4&&rgb[0]>110:identity==='orc'&&artStage?lum<65&&range<35:false);
@@ -196,19 +197,54 @@ export function paintAtlasCharacter(b,id,rig,at){
  const weld=(a,z,color)=>{const length=Math.hypot(z.x-a.x,z.y-a.y),steps=Math.max(1,Math.ceil(length*2));for(let i=0;i<=steps;i++){const x=Math.round(a.x+(z.x-a.x)*i/steps),y=Math.round(a.y+(z.y-a.y)*i/steps);if(x>0&&x<63&&y>0&&y<63&&!b.data[(y*64+x)*4+3])b.dot(x,y,color);}};
  const anchor=q=>({x:32+(q.x-32+ox)*fit,y:44+(q.y-44+oy)*fit});
  rig.artAnchors={head:anchor(warped(32,headCenter.y)),body:anchor(warped(32,34)),pelvis:anchor(warped(32,38))};
+ // Bind shoulders to the connected painted torso, rather than a guessed
+ // row in the source sheet. Different species and evolved costumes have
+ // different shoulder heights, widths and rear silhouettes.
+ const torsoPixels=[];
+ if(rig.arms.length){
+  const center=rig.artAnchors.body,near=[];
+  for(let y=Math.round(center.y)-3;y<=Math.round(center.y)+3;y++)for(let x=Math.round(center.x)-3;x<=Math.round(center.x)+3;x++)if(x>=0&&x<64&&y>=0&&y<64&&b.data[(y*64+x)*4+3])near.push({x,y});
+  near.sort((a,z)=>Math.hypot(a.x-center.x,a.y-center.y)-Math.hypot(z.x-center.x,z.y-center.y));
+  if(near.length){rig.artAnchors.body={...near[0]};const todo=[near[0]],seen=new Set([near[0].y*64+near[0].x]);for(let i=0;i<todo.length;i++){const v=todo[i];if(v.y>=center.y-7&&v.y<=center.y+3)torsoPixels.push(v);for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){const x=v.x+dx,y=v.y+dy,k=y*64+x;if(x<0||x>=64||y<0||y>=64||Math.abs(x-center.x)>14||y<center.y-7||y>center.y+4||seen.has(k)||!b.data[k*4+3])continue;seen.add(k);todo.push({x,y});}}}
+ }
  rig.artArmRoots={};rig.artHandColors={};rig.artHandHighlights={};
  // One torso-relative projection for every shoulder, elbow and hand. This
  // respects side/rear depth instead of guessing the hand from screen side.
- const limbPoint=q=>{const v=at(q);return {...v,...anchor({x:32+(v.x-poseBody.x)*1.3+dc.x,y:33+(v.y-poseBody.y)*.90+dc.y})};};
- const weaponScale=id==='orc'?.64:id==='knight'?.76:id==='caster'?.83:.9;
+ const limbPoint=q=>{const v=at(q);return {...v,...anchor({x:32+(v.x-poseBody.x)*1.65+dc.x,y:30+(v.y-poseBody.y)*.95+dc.y})};};
+ const melee=rig.weapon&&['sword','axe'].includes(rig.weapon.kind),weaponScale=melee?1.02:id==='caster'?.83:.9;
  rig.artLimbPoints=new Map();
  for(const arm of rig.arms){
-  const root=limbPoint(arm.root),joint=limbPoint(arm.joint),end=limbPoint(arm.end),screenSide=Math.sign(end.x-root.x)||arm.side,hand=sourceHands[screenSide];
+  const root=limbPoint(arm.root),joint=limbPoint(arm.joint),end=limbPoint(arm.end);root.y-=3*fit;joint.y-=1.5*fit;if(torsoPixels.length){const socket=torsoPixels.reduce((best,v)=>Math.hypot(v.x-root.x,v.y-root.y)<Math.hypot(best.x-root.x,best.y-root.y)?v:best,torsoPixels[0]);const dx=socket.x-root.x,dy=socket.y-root.y;root.x=socket.x;root.y=socket.y;joint.x+=dx*.35;joint.y+=dy*.35;}const screenSide=Math.sign(end.x-root.x)||arm.side,hand=sourceHands[screenSide];
   rig.artArmRoots[arm.side]=root;rig.artHandColors[arm.side]=hand&&artColors[hand.index];rig.artHandHighlights[arm.side]=handHighlight(asset,artColors,hand);
   rig.artLimbPoints.set(arm.root,root);rig.artLimbPoints.set(arm.joint,joint);rig.artLimbPoints.set(arm.end,end);
  }
  const main=rig.weapon&&rig.arms.find(a=>a.side===(rig.weapon.hand==='left'?-1:1)),paintedGrip=main&&rig.artLimbPoints.get(main.end),physicalGrip=rig.weapon&&at(rig.weapon.grip);
- const heldPoint=q=>{const v=at(q);return paintedGrip?{...v,x:paintedGrip.x+(v.x-physicalGrip.x)*fit*weaponScale,y:paintedGrip.y+(v.y-physicalGrip.y)*fit*weaponScale}:v;};
+ // Carry the weapon on a readable diagonal between strikes. During the
+ // active swing the weight is zero and its exact physical contact axis wins.
+ const carrying=melee&&!rig.ragdoll;
+ const carryWeight=!carrying?0:['attack','slash','charge'].includes(rig.state)?(rig.stage==='windup'?1-ease(rig.phase/.72):ease((rig.phase-.26)/.74)):['cast','death','knockdown','getup'].includes(rig.state)?0:1;
+ const g3=rig.weapon?.grip,t3=rig.weapon?.tip;
+ const normalize=v=>{const n=Math.hypot(v.x,v.y,v.z)||1;return {x:v.x/n,y:v.y/n,z:v.z/n};};
+ const actual=g3?normalize({x:t3.x-g3.x,y:t3.y-g3.y,z:t3.z-g3.z}):null;
+ const forward=Math.cos(angle),screenSign=Math.abs(forward)>.35?Math.sign(forward):Math.sign((paintedGrip?.x||32)-rig.artAnchors.body.x)||1;
+ const carry=normalize({x:.86*screenSign*Math.cos(angle)+.18*Math.sin(angle),y:-.86*screenSign*Math.sin(angle)+.18*Math.cos(angle),z:id==='orc'?.42:.40});
+ const presented=actual&&normalize({x:actual.x+(carry.x-actual.x)*carryWeight,y:actual.y+(carry.y-actual.y)*carryWeight,z:actual.z+(carry.z-actual.z)*carryWeight});
+ const cross=(v,w)=>({x:v.y*w.z-v.z*w.y,y:v.z*w.x-v.x*w.z,z:v.x*w.y-v.y*w.x});
+ const axis=actual&&cross(actual,presented),cosine=actual&&(actual.x*presented.x+actual.y*presented.y+actual.z*presented.z);
+ const rotate=v=>{if(!carryWeight||!axis)return v;const first=cross(axis,v),second=cross(axis,first),denom=Math.max(.0001,1+cosine);return {x:v.x+first.x+second.x/denom,y:v.y+first.y+second.y/denom,z:v.z+first.z+second.z/denom};};
+ const heldPoint=q=>{
+  const v=at(q);if(!paintedGrip)return v;
+  const offset=rotate({x:q.x-g3.x,y:q.y-g3.y,z:q.z-g3.z}),projected=projectRig(offset,angle);
+  return {...v,x:paintedGrip.x+projected.x/3*fit*weaponScale,y:paintedGrip.y+projected.y/3*fit*weaponScale};
+ };
+ // Measure the complete silhouette, including the head/guard, before
+ // rasterization. Refit an exceptional carry or sprint pose by a few pixels
+ // at the hand and elbow so no axe cheek or hammer corner is cropped.
+ if(melee&&paintedGrip){
+  const bounds=meleeWeaponBounds(rig,paintedGrip,heldPoint(rig.weapon.tip));
+  const dx=bounds.minX<1?1-bounds.minX:bounds.maxX>62?62-bounds.maxX:0,dy=bounds.minY<1?1-bounds.minY:bounds.maxY>62?62-bounds.maxY:0;
+  if(dx||dy){paintedGrip.x+=dx;paintedGrip.y+=dy;const elbow=rig.artLimbPoints.get(main.joint);elbow.x+=dx*.5;elbow.y+=dy*.5;}
+ }
  // A two-handed handle and drawn bowstring share the held object's transform.
  if(main&&(id==='orc'||rig.bowString?.draw>.05))for(const arm of rig.arms.filter(a=>a!==main)){rig.artLimbPoints.set(arm.end,heldPoint(arm.end));}
  rig.artProject=q=>rig.artLimbPoints.has(q)?rig.artLimbPoints.get(q):heldPoint(q);

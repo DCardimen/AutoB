@@ -13,7 +13,7 @@ import {AUTHORED_FAMILIES_STAGE2 as F2} from '../authored-family-stage2-data.js'
 import {AUTHORED_LEGACY as L0} from '../authored-legacy-data.js';
 import {AUTHORED_LEGACY_STAGE1 as L1} from '../authored-legacy-stage1-data.js';
 import {AUTHORED_LEGACY_STAGE2 as L2} from '../authored-legacy-stage2-data.js';
-import {NATIVE_SPECIES,pixelSpec} from '../native-content.js';
+import {NATIVE_SPECIES,PIXEL_SPECIES,pixelSpec} from '../native-content.js';
 import {LEGACY_PIXEL_SPECIES} from '../pixel-legacy.js';
 import {nativePoseRig} from '../native-poses.js';
 import {nativeRigFor,grandDesign} from '../grand-designs.js';
@@ -41,7 +41,7 @@ test('older collection names retain their actual anatomy and complete developmen
 function opaqueNear(pixels,p){for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){const x=Math.round(p.x)+dx,y=Math.round(p.y)+dy;if(x>=0&&x<64&&y>=0&&y<64&&pixels[(y*64+x)*4+3])return y*64+x;}return -1;}
 function component(pixels,start){const seen=new Set([start]),queue=[start];for(let i=0;i<queue.length;i++){const n=queue[i],x=n%64,y=Math.floor(n/64);for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){const xx=x+dx,yy=y+dy,k=yy*64+xx;if(xx<0||xx>=64||yy<0||yy>=64||seen.has(k)||!pixels[k*4+3])continue;seen.add(k);queue.push(k);}}return seen;}
 test('visible hands remain joined to shoulders at the actual weapon and shield grips',()=>{
- for(const id of ['aurel','brakk','syl','nyra','rowan','grit','brom','tarka'])for(const evolution of [0,1,2])for(const state of ['idle','walk','run','attack','cast'])for(const phase of [.25,.8])for(let dir=0;dir<8;dir++){
+ for(const id of PIXEL_SPECIES.filter(s=>['knight','orc','elf','caster','fox'].includes(s.nativeRig)).map(s=>s.id))for(const evolution of [0,1,2])for(const state of ['idle','walk','run','attack','cast'])for(const phase of [.25,.8])for(let dir=0;dir<8;dir++){
   const spec=pixelSpec(id),c={id,evolution,evolutionPath:'wild'},rig=nativePoseRig(spec,c,state,phase),angle=dir*Math.PI/4,pixels=paintCharacterPixels(nativeRigFor(spec,c),rig,angle);
   for(const arm of rig.arms){const end=rig.artProject(arm.end),root=rig.artArmRoots[arm.side],start=opaqueNear(pixels,end),goal=opaqueNear(pixels,root);assert.ok(start>=0&&goal>=0,`${id} ${evolution} ${state} ${dir}: visible arm endpoints`);const connected=component(pixels,start);assert.ok(connected.has(goal),`${id} ${state} ${dir}: connected shoulder/hand`);const torso=opaqueNear(pixels,rig.artAnchors.body);assert.ok(torso>=0&&connected.has(torso),`${id} ${evolution} ${state} ${dir}: arm connected to torso`);}
   for(const held of [rig.weapon,rig.shield].filter(Boolean))assert.ok(opaqueNear(pixels,(held===rig.shield?rig.artShieldProject(held.grip):rig.artProject(held.grip)))>=0,id+' held grip');
