@@ -305,6 +305,8 @@ function render() {
   updateHeader();
   document.body.dataset.planet = Math.min(run.planet,2);
   document.body.dataset.phase = phase;
+  document.body.dataset.screen = viewName;
+  document.body.style.setProperty('--current-world-art','url('+worldArt(Math.min(run.planet,2))+')');
   document
     .querySelectorAll("[data-view]")
     .forEach((el) =>
@@ -373,7 +375,7 @@ function arenaHTML() {
               "",
               !["battle", "elite", "boss", "capture"].includes(type),
             );
-  return `${fieldJourney(run,phase,PLANETS)}${!profile.tutorial ? `<div class="tutorial-callout"><span>Welcome, explorer. Your two starters are ready. Scout the enemy counterplan, equip your first relic, then place your starters. Battles run automatically.</span>${button("Equip your first relic", "tutorial-gem", "secondary small")}<button data-action="dismiss-tutorial" aria-label="Dismiss welcome">×</button></div>` : ""}<div class="arena-grid"><div class="arena-main"><section class="panel arena-panel"><div class="panel-top"><span class="panel-title">${p.name.toUpperCase()} · FIELD <span style="color:#687d5d;margin-left:9px">/ ${String(run.depth + 1).padStart(2, "0")}</span></span><span class="status-dot ${live ? "live" : ""}"><i></i> ${live ? "BATTLE IN PROGRESS" : phase === "reward" ? "ENCOUNTER COMPLETE" : mapWaiting ? "AWAITING YOUR PATH" : ended ? "EXPEDITION ENDED" : "PREPARING FOR BATTLE"}</span></div>${enemyRelicBannerHTML()}${enrageHTML()}<div class="arena-viewport"><canvas id="battle-canvas" aria-label="Real-time creature arena. Your expedition is on the left, wild creatures on the right."></canvas><div class="arena-label"><span class="location-icon">${ICONS[type]}</span><div><strong>${type === "boss" ? p.bossName : "The Forgotten Colosseum"}</strong><small>${p.name.toUpperCase()} · ${LABELS[type].toUpperCase()}</small></div></div><svg id="target-preview" class="target-preview" viewBox="0 0 1002 654" aria-hidden="true"></svg><div id="ally-orders" class="ally-orders"></div><div id="enemy-overheads" class="enemy-overheads"></div><div id="capture-feedback" class="capture-feedback" role="status" aria-live="polite"></div><div class="arena-timer" id="arena-timer">${live ? "00:00" : "READY"}</div>${type === "boss" ? `<div class="boss-banner"><div><span>${p.bossName}</span><small id="boss-phase">PHASE I</small></div><div class="boss-health-track"><i id="boss-health" style="width:100%"></i></div></div>` : ""}<div class="arena-bottom-labels"><span id="ally-count">YOUR EXPEDITION · ${run.team.length}</span><span class="versus">vs.</span><span id="foe-count">THE WILDS · ${foes?.length || 4}</span></div></div><div class="arena-control"><div class="control-left"><button class="pause-btn" data-action="pause" title="Pause battle (Space)" aria-label="Pause battle" ${!live ? "disabled" : ""}>${paused ? "▶" : "II"}</button><div class="speed-switch" aria-label="Battle speed">${[1, 2, 3].map((v) => `<button data-speed="${v}" class="${speed === v ? "active" : ""}">${v}×</button>`).join("")}</div><span class="control-note"><kbd>SPACE</kbd> to pause</span></div>${mainAction}</div>${live&&run.captureOrder?retryControlsHTML():''}</section><div class="formation-section"><div class="section-heading"><h2>YOUR EXPEDITION <span>${run.team.length} / ${capacity(run)}</span></h2><p>Inspect skills & AI · Deploy on the tactical grid</p><div class="segmented" title="Team AI priority">${["balanced", "hunt", "guard"].map((s) => `<button data-stance="${s}" class="${run.stance === s ? "active" : ""}" ${live ? "disabled" : ""}>${{ balanced: "Balanced", hunt: "Hunt", guard: "Guard" }[s]}</button>`).join("")}</div></div><div class="team-grid">${Array.from({length:6},(_,seat)=>teamSeatHTML(seat)).join("")}</div>${reserveTrayHTML()}${equipmentTrayHTML()}</div><div class="relic-section"><span class="relic-heading">✧ EXPEDITION RELICS <span class="muted">${run.relics.length}</span></span><button class="text-button pack-button" data-action="pack">◈ Relic pack · ${run.inventory.length}</button>${
+  return `${fieldJourney(run,phase,PLANETS)}${!profile.tutorial ? `<div class="tutorial-callout"><span>Scout the enemy and equip your companions. Your team fights automatically.</span>${button("Equip your first relic", "tutorial-gem", "secondary small")}<button data-action="dismiss-tutorial" aria-label="Dismiss welcome">×</button></div>` : ""}<div class="arena-grid"><div class="arena-main"><section class="panel arena-panel"><div class="panel-top"><span class="panel-title">${p.name.toUpperCase()} · FIELD <span style="color:#687d5d;margin-left:9px">/ ${String(run.depth + 1).padStart(2, "0")}</span></span><span class="status-dot ${live ? "live" : ""}"><i></i> ${live ? "BATTLE IN PROGRESS" : phase === "reward" ? "ENCOUNTER COMPLETE" : mapWaiting ? "AWAITING YOUR PATH" : ended ? "EXPEDITION ENDED" : "PREPARING FOR BATTLE"}</span></div>${enrageHTML()}<div class="arena-viewport"><canvas id="battle-canvas" aria-label="Real-time creature arena. Your expedition is on the left, wild creatures on the right."></canvas><div class="arena-label"><span class="location-icon">${ICONS[type]}</span><div><strong>${type === "boss" ? p.bossName : "The Forgotten Colosseum"}</strong><small>${p.name.toUpperCase()} · ${LABELS[type].toUpperCase()}</small></div></div><svg id="target-preview" class="target-preview" viewBox="0 0 1002 654" aria-hidden="true"></svg><div id="ally-orders" class="ally-orders"></div><div id="enemy-overheads" class="enemy-overheads"></div><div id="capture-feedback" class="capture-feedback" role="status" aria-live="polite"></div><div class="arena-timer" id="arena-timer">${live ? "00:00" : "READY"}</div>${type === "boss" ? `<div class="boss-banner"><div><span>${p.bossName}</span><small id="boss-phase">PHASE I</small></div><div class="boss-health-track"><i id="boss-health" style="width:100%"></i></div></div>` : ""}<div class="arena-bottom-labels"><span id="ally-count">YOUR EXPEDITION · ${run.team.length}</span><span class="versus">vs.</span><span id="foe-count">THE WILDS · ${foes?.length || 4}</span></div></div><div class="arena-control"><div class="control-left"><button class="pause-btn" data-action="pause" title="Pause battle (Space)" aria-label="Pause battle" ${!live ? "disabled" : ""}>${paused ? "▶" : "II"}</button><div class="speed-switch" aria-label="Battle speed">${[1, 2, 3].map((v) => `<button data-speed="${v}" class="${speed === v ? "active" : ""}">${v}×</button>`).join("")}</div><span class="control-note"><kbd>SPACE</kbd> to pause</span></div>${mainAction}</div>${live&&run.captureOrder?retryControlsHTML():''}<details class="field-enemy-brief" ${matchMedia("(min-width:900px)").matches?"open":""}><summary>Enemy build <span>Inspect relics & equipment</span></summary>${enemyRelicBannerHTML()}</details></section><div class="formation-section"><div class="section-heading"><h2>YOUR EXPEDITION <span>${run.team.length} / ${capacity(run)}</span></h2><p>Inspect skills & AI · Deploy on the tactical grid</p><div class="segmented" title="Team AI priority">${["balanced", "hunt", "guard"].map((s) => `<button data-stance="${s}" class="${run.stance === s ? "active" : ""}" ${live ? "disabled" : ""}>${{ balanced: "Balanced", hunt: "Hunt", guard: "Guard" }[s]}</button>`).join("")}</div></div><div class="team-grid">${Array.from({length:6},(_,seat)=>teamSeatHTML(seat)).join("")}</div>${reserveTrayHTML()}${equipmentTrayHTML()}</div><div class="relic-section"><span class="relic-heading">✧ EXPEDITION RELICS <span class="muted">${run.relics.length}</span></span><button class="text-button pack-button" data-action="pack">◈ Relic pack · ${run.inventory.length}</button>${
     run.relics.length
       ? `<div class="relic-list">${run.relics
           .map((id) => {
@@ -440,48 +442,42 @@ function synergyHTML() {
     })
     .join("")}</div></section>`;
 }
+let fieldPreviewId=null;
 function mapHTML() {
-  if (!run.route) run.route = generateRoute(run);
-  let connections = "";
-  const positions = [];
-  run.route.forEach((row, d) =>
-    row.forEach((n, i) =>
-      positions.push({
-        ...n,
-        x: row.length === 1 ? 50 : 15+i*70/(row.length-1),
-        y: 90-d*80/(run.route.length-1),
-      }),
-    ),
-  );
-  for (const a of positions)
-    for (const b of positions)
-      if (
-        b.depth === a.depth + 1 &&
-        (a.children?a.children.includes(b.id):b.type==="boss"||Math.abs(a.lane-b.lane)<=1)&&routeVisible(run,a)&&routeVisible(run,b)
-      ) {
-        const chosen = run.path.includes(a.id) && run.path.includes(b.id);
-        connections += `<line x1="${a.x}" y1="${a.y}" x2="${b.x}" y2="${b.y}" stroke="${chosen ? BIOMES[run.planet].light : BIOMES[run.planet].water}" stroke-width="${chosen ? ".35" : ".2"}" ${chosen ? "" : 'stroke-dasharray=".9 1.1"'}/>`;
-      }
-  const biome=BIOMES[Math.min(run.planet,2)];
-  return `${fieldJourney(run,phase,PLANETS)}<div class="map-grid biome-${run.planet}" style="--biome:${biome.water};--route-art:url(\'${worldArt(Math.min(run.planet,2))}\')"><section class="panel map-panel"><div class="panel-top"><span class="panel-title">${PLANETS[Math.min(run.planet, 2)].name.toUpperCase()} · ROUTE ${run.planet + 1}</span><span class="status-dot"><i></i> ${run.complete ? "EXPEDITION COMPLETE" : phase === "battle" ? "BATTLE IN PROGRESS" : `ENCOUNTER ${run.depth + 1} / ${run.route.length}`}</span></div><div class="planet-landing">${planetOrb(run.planet,108)}<div><span class="section-kicker">${biome.name.toUpperCase()}</span><h2>${PLANETS[run.planet].name}</h2><p>${biome.tag}</p><small>${biome.features.join(' · ')}</small></div></div><div class="route biome-route">${biomeScenery(run.planet)}<svg class="route-links" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">${connections}</svg>${positions
-    .map((n) => {
-      const visible=routeVisible(run,n);
-      const available =
-        visible && canVisit(run, n) &&
-        phase !== "battle" &&
-        phase !== "reward" &&
-        phase !== "ended";
-      return `<button class="route-node ${available ? "available" : ""} ${run.path.includes(n.id) ? "visited" : ""} ${visible&&n.type === "boss" ? "boss" : ""} ${node?.id === n.id && phase === "prep" ? "selected" : ""}" data-node="${n.id}" style="left:${n.x}%;top:${n.y}%" ${!available ? "disabled" : ""} aria-label="${visible?LABELS[n.type]:"Uncharted"}, encounter ${n.depth + 1}" title="${visible?LABELS[n.type]:"Uncharted"} · ${visible?encounterInfo(run, n).arch.name:"Beyond scouting range"} ${visible?" · "+encounterInfo(run,n).weather.name+" · "+(n.type==="event"?EVENTS[n.event||0].title:encounterInfo(run,n).arch.counter):""}">${run.path.includes(n.id) && n.depth < run.depth ? "✓" : visible?fieldIcon(n.type):"?"}<small>${visible?LABELS[n.type].toUpperCase():"UNCHARTED"}</small></button>`;
-    })
-    .join(
-      "",
-    )}</div><div class="map-description">${phase === "battle" ? "Your companions are fighting. Return to the arena to watch." : phase === "reward" ? "Claim your battle rewards before choosing the next encounter." : "Choose a glowing encounter. Each room has 1–4 explicit connections; scouting reveals four encounters ahead."}</div><div class="map-legend">${Object.entries(
-    LABELS,
-  )
-    .map(([t, l]) => `<span><b>${fieldIcon(t)}</b>${l}</span>`)
-    .join(
-      "",
-    )}</div></section><aside class="side-column"><section class="panel planet-list"><span class="panel-title">YOUR JOURNEY</span>${PLANETS.map((p, i) => `<div class="planet-row ${i > run.planet ? "future" : ""}"><span class="planet-orb" style="--planet:${p.color}"></span><div><strong>${p.name}</strong><small>${i < run.planet ? "World explored" : i === run.planet ? p.sub : "Beyond the horizon"}</small></div><span>${i < run.planet ? "✓" : i === run.planet ? "→" : "·"}</span></div>`).join("")}<div class="thin-rule"></div><p class="muted" style="font-size:11px;line-height:1.9;margin:0">Eight encounters per world. Connections define your path. A retreat costs a life, but you can still move forward.</p></section>${synergyHTML()}<section class="panel briefing"><span class="section-kicker">A LITTLE FORESIGHT</span><p style="margin-top:12px">Shops reward saving. Elites reward strength. Captures reward curiosity. You can’t take every path — choose what your team is missing.</p></section></aside></div>`;
+ if(!run.route)run.route=generateRoute(run);
+ const world=Math.min(run.planet,2),p=PLANETS[world],biome=BIOMES[world],syn=synergies(run.team);
+ const canChoose=!run.complete&&!['battle','reward','ended'].includes(phase);
+ const positions=[];
+ run.route.forEach((row,d)=>row.forEach((n,i)=>positions.push({...n,x:row.length===1?54:12+i*76/(row.length-1),y:92-d*74/(run.route.length-1)})));
+ const choices=positions.filter(n=>routeVisible(run,n)&&canVisit(run,n)&&canChoose);
+ const selected=choices.find(n=>n.id===fieldPreviewId)||choices.find(n=>n.id===node?.id)||choices[0]||positions.find(n=>n.id===node?.id)||positions.find(n=>n.depth===run.depth)||positions[0];
+ const current=selected?.id;
+ const connections=[];
+ for(const a of positions)for(const b of positions){
+  if(b.depth!==a.depth+1||!(a.children?a.children.includes(b.id):b.type==='boss'||Math.abs(a.lane-b.lane)<=1))continue;
+  if(!routeVisible(run,a)||!routeVisible(run,b))continue;
+  if((a.depth<run.depth&&!run.path.includes(a.id))||(b.depth<run.depth&&!run.path.includes(b.id)))continue;
+  const chosen=run.path.includes(a.id)&&run.path.includes(b.id);
+  const next=b.id===current&&run.path.includes(a.id);
+  connections.push('<path class="'+(chosen?'walked':next?'next-path':'charted')+'" d="M'+a.x+' '+a.y+' Q'+((a.x+b.x)/2)+' '+((a.y+b.y)/2)+' '+b.x+' '+b.y+'"/>');
+ }
+ const names={battle:'The Wild Crossing',elite:'The Ancient Watch',capture:'Quiet Grove',shop:'Wayfarer’s Outpost',event:'The Whispering Signal',rest:'Moonlit Clearing',boss:p.bossName};
+ const descriptions={battle:'Ancient grounds stir with wild companions. Scout their strengths before the gates open.',elite:'A powerful gathering guards the old paths. Greater danger holds greater rewards.',capture:'A tranquil grove of colossal trees. Seek a new companion where luminous rivers meet.',shop:'A sheltered outpost along the path. Trade, recruit and prepare for the journey ahead.',event:'A strange light calls from beyond the ruins. Your next choice may change the expedition.',rest:'A quiet clearing beneath the stars. Recover, train or replenish your capture supplies.',boss:'The guardian of this world awaits. Prepare your companions for the final encounter.'};
+ const type=selected?.type||'battle';
+ const elements=Object.entries(syn).sort((a,b)=>b[1]-a[1]),bond=elements[0],element=bond?ELEMENTS[bond[0]]:null;
+ const rewards={capture:['capture','team','star'],shop:['gear','gold','team'],rest:['heart','star','capture'],event:['star','gold','help']}[type]||['gold','star','gear'];
+ const rewardLabels={gold:'Gold',star:'Experience',gear:'Equipment',capture:'Capture',team:'Companions',heart:'Recovery',help:'Unknown outcomes'};
+ let next;
+ if(run.complete||phase==='ended')next=button('New expedition '+fieldIcon('arrow'),'new-run');
+ else if(phase==='battle')next='<button class="button" data-view="arena">Return to battle '+fieldIcon('arrow')+'</button>';
+ else if(phase==='reward')next=button('Gather rewards '+fieldIcon('arrow'),'reward');
+ else next='<button class="button field-continue" data-field-enter="'+current+'" '+(!selected?'disabled':'')+'>Continue '+fieldIcon('arrow')+'</button>';
+ const steps=run.route.map((row,i)=>'<li class="'+(i<run.depth?'complete':i===run.depth?'current':'future')+'" aria-label="Encounter '+(i+1)+(i<run.depth?' completed':i===run.depth?' current':' ahead')+'"><span>'+fieldIcon(i===run.route.length-1?'boss':i<run.depth?(row.find(n=>run.path.includes(n.id))||row[0]).type:'star')+'</span></li>').join('');
+ const worldCopy=['Living canopies, luminous rivers and ancient growth. A world of wonder — and danger.','Molten rivers and obsidian peaks. Follow the embers into a world forged by fire.','A silent world beneath violet stars. Find your path through ruins at the edge of the sky.'][world];
+ return '<div class="reference-map" style="--route-art:url('+worldArt(world)+');--biome:'+biome.water+'" data-field-phase="'+phase+'">'+fieldJourney(run,phase,PLANETS)+'<div class="reference-field"><section class="reference-scene" aria-label="'+p.name+' route"><div class="route biome-route"><div class="map-world-copy"><span>'+p.name.toUpperCase()+'</span><h1>'+p.name+'</h1><p>'+worldCopy+'</p></div><div class="map-encounters">'+fieldIcon('star')+'<span><small>ENCOUNTERS</small><strong>'+Math.min(run.depth+1,run.route.length)+' / '+run.route.length+'</strong></span></div><svg class="route-links" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">'+connections.join('')+'</svg>'+positions.filter(n=>n.depth>=run.depth||run.path.includes(n.id)).map(n=>{
+ const visible=routeVisible(run,n),known=visible||n.type==='boss',available=choices.some(c=>c.id===n.id),visited=run.path.includes(n.id);
+ return '<button class="route-node '+(available?'available ':'')+(visited?'visited ':'')+(n.id===current?'selected ':'')+(n.type==='boss'?'boss ':'')+(known?'':'fogged ')+'" data-node="'+n.id+'" data-field-node="'+n.id+'" style="left:'+n.x+'%;top:'+n.y+'%" '+(!available?'disabled':'')+' aria-pressed="'+(n.id===current)+'" aria-label="'+(known?LABELS[n.type]:'Uncharted')+', encounter '+(n.depth+1)+'" title="'+(visible?LABELS[n.type]:'Beyond scouting range')+'">'+fieldIcon(known?n.type:'star')+'<small>'+(known?LABELS[n.type].toUpperCase():'UNCHARTED')+'</small></button>';
+ }).join('')+'</div></section><section class="encounter-sheet field-surface" aria-label="Selected encounter"><div class="sheet-grip" aria-hidden="true"></div><div class="encounter-sheet-head"><div class="encounter-art" style="background-image:url('+worldArt(world)+')"></div><div class="encounter-copy"><span class="section-kicker">ENCOUNTER '+((selected?.depth||0)+1)+'</span><h2>'+names[type]+'</h2><p>'+descriptions[type]+'</p></div><button class="field-scout" data-field-scout="'+current+'" aria-label="Scout selected encounter" title="Scout encounter">'+fieldIcon('arrow')+'</button><span class="encounter-kind">'+fieldIcon(type)+' '+LABELS[type]+'</span></div><div class="sheet-build"><div class="sheet-rewards"><span class="section-kicker">'+(type==='shop'?'OUTPOST SUPPLIES':'POTENTIAL REWARDS')+'</span><div>'+rewards.map((r,i)=>'<span class="reward-glyph reward-glyph-'+i+'" title="'+rewardLabels[r]+'">'+fieldIcon(r)+'<span class="sr-only">'+rewardLabels[r]+'</span></span>').join('')+'<button data-action="pack" class="reward-glyph more" aria-label="Open relic pack">···</button></div></div><button class="sheet-synergy" data-action="formation" aria-label="Inspect team synergy and deployment"><span class="section-kicker">TEAM SYNERGIES</span><div><span class="synergy-glyph" style="color:'+(element?.color||'#acd5c2')+'">'+(element?.icon||'✧')+'</span><span><strong>'+(element?.name||'Your team')+'</strong><small>'+(bond&&bond[1]>=2?'Your companions share an active bond.':'Match elements to awaken a bond.')+'</small><i style="--bond-width:'+Math.min(100,(bond?.[1]||0)*25)+'%"></i></span><b>'+(bond?.[1]||0)+' / 4</b></div></button></div><div class="sheet-bottom"><div class="sheet-journey"><span class="section-kicker">YOUR JOURNEY</span><ol class="field-steps">'+steps+'</ol><small>'+Math.min(run.depth+1,run.route.length)+' / '+run.route.length+' encounters</small></div>'+next+'</div></section></div><div class="map-accessibility-note">Select a glowing encounter, then Continue. Your route is committed when you continue.</div></div>';
 }
 function collectionHTML() {
   const shown = SPECIES.filter(
@@ -1274,7 +1270,7 @@ document.addEventListener("click", (e) => {
     render();
     return;
   }
-  if (el.dataset.node) {
+  if (el.dataset.node && !el.dataset.fieldNode) {
     chooseNode(el.dataset.node);
     return;
   }
@@ -1497,7 +1493,8 @@ $(".brand").addEventListener("click", (e) => {
 $("#sound").addEventListener("click", () => {
   profile.sound = !profile.sound;
   soundscape.setEnabled(profile.sound);
-  $("#sound").textContent = profile.sound ? "♫" : "♪";
+  $("#sound").innerHTML = fieldIcon("sound");
+  $("#sound").setAttribute("aria-pressed",String(profile.sound));
   $("#sound").setAttribute(
     "aria-label",
     profile.sound ? "Mute sound" : "Enable sound",
@@ -2102,4 +2099,23 @@ document.addEventListener('click',e=>{
  const el=e.target.closest('[data-planet-preview]');if(!el)return;
  const i=Number(el.dataset.planetPreview),p=PLANETS[i],b=BIOMES[i];
  modal('<div class="field-world-preview" style="background-image:linear-gradient(0deg,#071c23,transparent),url('+worldArt(i)+')"></div><span class="section-kicker">'+(i>run.planet?'BEYOND THE HORIZON':'YOUR JOURNEY')+'</span><h2>'+p.name+'</h2><p>'+b.tag+'</p><p>'+b.features.join(' · ')+'</p><p>'+(i>run.planet?'Defeat your current world’s guardian to travel onward.':i<run.planet?'Your expedition has explored this world.':'Choose encounters on the star chart to progress through this world.')+'</p><div class="modal-actions">'+button('Back to your journey','close','secondary')+'</div>','world-preview');
+});
+
+document.addEventListener('click',e=>{
+ const scout=e.target.closest('[data-field-scout]');
+ if(scout){const n=run.route.flat().find(n=>n.id===scout.dataset.fieldScout);if(!n)return;if(['shop','event','rest'].includes(n.type)){const text={shop:'Trade gold for relics, equipment, companions and capture tools. Enter the outpost to inspect its stock and prices.',event:'A signal awaits on this path. Enter the encounter to read its choices before deciding how to respond.',rest:'Choose recovery, training or supplies for your companions. Enter the clearing to see your available options.'}[n.type];modal('<span class="section-kicker">SCOUTED ENCOUNTER</span><h2>'+LABELS[n.type]+'</h2><p>'+text+'</p><div class="modal-actions">'+button('Back to the route','close','secondary')+'</div>','route-scout');return;}const info=encounterInfo(run,n),boss=n.type==='boss';modal('<span class="section-kicker">SCOUTED ENCOUNTER · '+LABELS[n.type].toUpperCase()+'</span><h2>'+(boss?PLANETS[Math.min(run.planet,2)].bossName:info.arch.name)+'</h2><p>'+(boss?info.boss.desc:info.arch.desc)+'</p><div class="scout-panel"><strong>COUNTERPLAN</strong><p>'+(boss?info.boss.counter:info.arch.counter)+'</p><span>'+info.weather.name+' · '+info.weather.desc+'</span></div><div class="modal-actions">'+button('Back to the route','close','secondary')+'</div>','route-scout');return;}
+ const preview=e.target.closest('[data-field-node]');
+ if(preview&&!preview.disabled){
+  fieldPreviewId=preview.dataset.fieldNode;render();
+  document.querySelector('[data-field-node="'+fieldPreviewId+'"]')?.focus({preventScroll:true});
+  return;
+ }
+ const enter=e.target.closest('[data-field-enter]');if(!enter)return;
+ if(node?.id===enter.dataset.fieldEnter){
+  if(phase==='shop'){openShop();return;}
+  if(phase==='event'){openEvent();return;}
+  if(phase==='rest'){openRest();return;}
+  if(phase==='prep'){setView('arena');window.scrollTo({top:0,behavior:'instant'});return;}
+ }
+ chooseNode(enter.dataset.fieldEnter);fieldPreviewId=null;window.scrollTo({top:0,behavior:'instant'});
 });

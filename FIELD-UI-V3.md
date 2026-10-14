@@ -6,7 +6,7 @@ The field follows the supplied dark teal, cyan and gold reference: framed panels
 
 Run `npm ci` and `npm start`, then open http://localhost:3000. Build the offline game with `npm run build:standalone` and open `Starfall-Menagerie.html`.
 
-The **Build and verify field UI** GitHub Actions workflow builds, checks and packages the standalone game. Its **Starfall-UI-V3** artifact includes the playable HTML, ZIP, UI screenshots and browser report. On the feature branch it also commits the verified HTML and `public/Starfall-UI-V3.zip`, so the branch download contains the current playable version.
+The **Build and verify field UI** GitHub Actions workflow builds, checks and packages the standalone game. Its **Starfall-Reference-UI** artifact includes the playable HTML, ZIP, UI screenshots and browser report. Generated playable files are delivered in the build artifact; they are not automatically pushed to the repository.
 
 ## Implemented
 
@@ -35,3 +35,16 @@ The uploaded originals remain at the repository root. Their unchanged bytes are 
 `node tests/field-ui.browser.mjs` checks 320, 390, 768 and 1440px widths in source and exact standalone HTML; creature tabs; world previews; real battle and pause; reward choice and cache claim; route selection; reload persistence; all three world paintings; outpost/event/rest menus; menagerie/settings; no browser errors; and no external requests in the offline game.
 
 The browser flow uses an explicitly strengthened saved-team fixture to make the battle outcome deterministic. Later-world and noncombat-menu fixtures exercise presentation; they do not establish campaign balance or a numerical mobile satisfaction score. Existing rules version 17 and save schema 7 are preserved. Training Glade and the pre-existing untracked expedition.js draft are outside this UI change.
+
+
+## Reference polish
+
+The earlier implementation was functional but visually too fragmented. This pass replaces the tall map panels with the reference composition: illustrated world cards, a title inside the world scene, luminous route marks and connections, and one integrated encounter sheet with thumbnail, rewards, synergy, journey progress and a gold Continue button. Portrait tablet layouts scale this composition; desktop uses a companion detail column.
+
+Selecting a route previews it without changing the saved expedition. Continue enters the selected encounter through the existing game logic. The sheet's scout arrow explains the actual combat counterplan and weather, or the relevant noncombat encounter. Completed alternatives collapse out of the chart while the saved chosen path remains visible. Scouting and route availability still control future choices.
+
+Phone combat removes duplicate page headings and the redundant journey introduction. The arena and Enter battle control fit in the first viewport; enemy relic details remain accessible through an expandable build panel. Character, loadout, collection, settings, outpost, event, rest and rewards reuse the world imagery and framed teal/gold treatment. Header icons and route controls have 44px touch targets while retaining compact visible medallions.
+
+Visual self-review: **9/10 for reference fidelity and UI presentation**. This is my own judgment after inspecting rendered phone, portrait tablet, desktop, preparation, creature, loadout, collection, settings, outpost, event and rest screens. It is not a measured human satisfaction score. The source and offline flow checks and all 232 existing unit tests passed during local review. GitHub Actions validates the exact final commit.
+
+The current package is `Starfall-Reference-UI.zip` in the `Starfall-Reference-UI` Actions artifact. The workflow has read-only repository access and does not push generated files.

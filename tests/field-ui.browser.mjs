@@ -20,7 +20,7 @@ for(const offline of [false,true]){
  }
  await page.setViewportSize({width:390,height:844});await page.locator('[data-creature="0"]').click();await page.locator('[data-detail-tab="equipment"]').click();await page.locator('[data-detail-tab="ai"]').click();await page.locator('[data-action="close"]').first().click();
  await page.locator('[data-planet-preview="2"]').click();assert.ok(await page.locator('.field-world-preview').isVisible());await page.locator('[data-action="close"]').first().click();
- await page.screenshot({path:'playtest-artifacts/field-'+(offline?'offline':'source')+'-mobile.png',fullPage:true});
+ await page.evaluate(()=>scrollTo(0,0));await page.waitForTimeout(400);await page.screenshot({path:'playtest-artifacts/field-'+(offline?'offline':'source')+'-mobile.png',fullPage:true});
  await page.clock.install();await page.locator('[data-speed="3"]').click();await page.locator('[data-action="battle"]').click();
  assert.equal(await page.locator('.field-journey').getAttribute('data-field-phase'),'battle');
  await page.locator('[data-action="pause"]').click();const pausedTime=await page.evaluate(()=>starfall.state.battle.time);await page.clock.runFor(2000);assert.equal(await page.evaluate(()=>starfall.state.battle.time),pausedTime);await page.locator('[data-action="pause"]').click();
@@ -34,7 +34,7 @@ for(const offline of [false,true]){
  assert.ok(await page.locator('.biome-route').evaluate(el=>getComputedStyle(el).backgroundImage.includes('world-0')||getComputedStyle(el).backgroundImage.includes('blob:')));
  await page.screenshot({path:'playtest-artifacts/field-'+(offline?'offline':'source')+'-route.png',fullPage:true});
  const available=page.locator('.route-node.available[data-node]');assert.ok(await available.count());
- await available.first().click();assert.ok(['prep','shop','event','rest'].includes(await page.evaluate(()=>starfall.state.phase)));
+ await available.first().click();assert.equal(await page.evaluate(()=>starfall.state.phase),'map');await page.locator('[data-field-scout]').click();assert.ok(await page.locator('.modal[aria-label="route-scout"]').isVisible());await page.locator('[data-action="close"]').first().click();await page.locator('[data-field-enter]').click();assert.ok(['prep','shop','event','rest'].includes(await page.evaluate(()=>starfall.state.phase)));
  if(await page.locator('.modal-close').count())await page.locator('.modal-close').first().click();
  await page.reload();assert.ok(await page.locator('.field-world.current').isVisible());
 
@@ -44,7 +44,7 @@ for(const offline of [false,true]){
   saved.run.route=generateRoute(saved.run);saved.node=saved.run.route[0][0];saved.foes=encounter(saved.run,saved.node.type,saved.node.seed);saved.phase='prep';saved.committed=false;delete saved.reward;delete saved.run.random;
   await page.evaluate(s=>localStorage.setItem('starfall-menagerie-v1',JSON.stringify(s)),saved);await page.reload();
   assert.equal(await page.locator('.field-world.current').getAttribute('data-planet-preview'),String(planet));
-  await page.locator('[data-view="map"]').click();
+  await page.locator('[data-view="map"]:visible').first().click();
   assert.ok(await page.locator('.biome-route').evaluate((el,p)=>getComputedStyle(el).backgroundImage.includes('world-'+p)||getComputedStyle(el).backgroundImage.includes('blob:'),planet));
   assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
   await page.screenshot({path:'playtest-artifacts/field-'+(offline?'offline':'source')+'-world-'+planet+'.png',fullPage:true});
@@ -59,7 +59,7 @@ for(const offline of [false,true]){
   assert.ok(await page.locator('.modal').evaluate(el=>el.scrollWidth<=el.clientWidth+1),'modal overflow: '+phase);
   await page.screenshot({path:'playtest-artifacts/field-'+(offline?'offline':'source')+'-'+phase+'.png',fullPage:true});
  }
- await page.locator('[data-action="close"]').first().click();await page.locator('[data-view="collection"]').click();
+ await page.locator('[data-action="close"]').first().click();await page.locator('[data-view="collection"]:visible').first().click();
  assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
  await page.locator('#settings').click();assert.ok(await page.locator('.settings-modal').isVisible());
  await page.locator('[data-action="close"]').first().click();
