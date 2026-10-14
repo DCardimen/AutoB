@@ -11,12 +11,12 @@ import {spriteSample} from './prototype-sprites.js';
 import {ragdollRig} from './prototype-dynamics.js';
 import {advanceCombatTexts} from './combat-text.js';
 import {CREATURE_ATTACK_EFFECTS} from './creature-attacks.js';
-export const NATIVE_BOUNDS={left:70,right:930,top:110,bottom:805};
+export const NATIVE_BOUNDS={left:170,right:832,top:230,bottom:740};
 export function actorId(spec,unit={}){return nativeRigFor(pixelSpec(spec.id)||spec,unit)||(unit.boss?NATIVE_BOSS_RIGS[spec.id]:null);}
 export function nativeSpawn(spec,unit,side,index){
- if(unit.deploymentPosition)return {...unit.deploymentPosition};
+ if(unit.deploymentPosition){const bounds=nativeEntityBounds(pixelSpec(spec.id)||spec,unit,NATIVE_BOUNDS),p=unit.deploymentPosition;return {x:Math.max(bounds.left+6,Math.min(bounds.right-6,p.x)),y:Math.max(bounds.top+6,Math.min(bounds.bottom-6,p.y))};}
  const d=unit.deployment||{row:index%3,column:index>=3?1:spec.range>100?0:2};
- const position=side===0?{x:[155,230,305][d.column],y:[220,435,650][d.row]+(index>=3?22:-12)}:{x:(spec.range>100?825:710)+(index>=3?28:-25),y:[220,435,650][index%3]+(index>=3?22:-12)};
+ const position=side===0?{x:[245,305,365][d.column],y:[300,470,640][d.row]+(index>=3?22:-12)}:{x:(spec.range>100?757:647)+(index>=3?28:-25),y:[300,470,640][index%3]+(index>=3?22:-12)};
  const size=creatureWorldScale(pixelSpec(spec.id)||spec,unit),bounds=nativeEntityBounds(pixelSpec(spec.id)||spec,unit,NATIVE_BOUNDS),radius=(spec.bodyRadius||22)*size;return {x:Math.max(bounds.left+radius,Math.min(bounds.right-radius,position.x)),y:Math.max(bounds.top+radius,Math.min(bounds.bottom-radius,position.y))};
 }
 export function initializeNative(u,spec,tuning){

@@ -1,3 +1,4 @@
+import {idleRhythm,eliteModifier} from './elite-modifiers.js';
 import {paintActionFeedback,paintImpact} from './combat-feedback.js';
 import {interpolatedNativeUnit} from './native-motion.js';
 import {activeAilments} from './status-ailments.js';
@@ -38,7 +39,7 @@ function actorFor(u,spec){
  return {...actor,hp:u.hp??1,facing:u.facing??actor.facing,evolution:u.evolution||0,evolutionPath:u.evolutionPath};
 }
 export function drawNativeUnit(c,u,spec,x,y,time,pixelScale=3){
- const actor=actorFor(u,spec),sample=spriteSample(actor,time,u.nativeActor?null:{state:'idle',phase:(time*.38+((u.seat||0)*.137))%1});
+ const actor=actorFor(u,spec),rhythm=idleRhythm(u),idle=!u.nativeActor||animationState(actor)==='idle',sample=spriteSample(actor,time,idle?{state:'idle',phase:(time*rhythm.rate+rhythm.offset)%1}:null);
  const key=u.id+':'+characterHeight+':'+sample.key+':'+u.evolution+':'+u.evolutionPath+':'+(u.equipment||[]).join(',')+':'+(actor.capeMeshKey||'')+(actor.ragdoll?':'+actor.ragdoll.time.toFixed(4):'');
  let frame=u.deploymentRig?null:frames.get(key);
  if(!frame){
@@ -67,6 +68,7 @@ export function renderNativeBattle(display,w,h,battle,planet,time,team,foes,spec
   if(u.pillar){const p=nativeScreen(u.x,u.y);c.fillStyle="#10231d77";c.beginPath();c.ellipse(p.x,p.y,u.r+8,14,0,0,Math.PI*2);c.fill();c.fillStyle="#454d47";c.fillRect(p.x-u.r,p.y-50,u.r*2,50);c.fillStyle="#808776";c.fillRect(p.x-u.r*.65,p.y-47,u.r*.35,46);c.fillStyle="#a1a58a";c.beginPath();c.ellipse(p.x,p.y-50,u.r,u.r*.58,0,0,Math.PI*2);c.fill();c.fillStyle="#37493a";for(let i=0;i<5;i++)c.fillRect(p.x-u.r*.6+i*10,p.y-50+(i%2)*8,7,6);continue;}
   const p=nativeScreen(u.x,u.y),spec=species[u.id],scale=creatureWorldScale(spec,u);if(u.captured)continue;c.fillStyle=u.hp>0?'#0d1b1577':'#0d1b1544';c.beginPath();c.ellipse(p.x,p.y,(u.boss?68:46)*scale,14*scale,0,0,Math.PI*2);c.fill();
   if(spec.rarity==='Legendary'){ring(c,u.x,u.y,20*scale+6,'#edce85aa','#e5c67716');for(let i=0;i<4;i++){const a=i*Math.PI/2+time*.6;c.fillStyle=i%2?'#fff0bd':'#d9b363';c.fillRect(Math.round(p.x+Math.cos(a)*(20*scale+6)),Math.round(p.y+Math.sin(a)*(12*scale+4)),2,2);}}
+  if(eliteModifier(u)&&u.hp>0)paintEliteFlame(c,p,scale,battle?battle.time:time,u);
   const visualTop=drawNativeUnit(c,u,spec,p.x,p.y,battle?battle.time:time,3*scale);
   if(u.hp<=0)continue;
   const width=u.boss?58:30,bar=Math.min(visualTop-9,p.y-(({knight:115,orc:100,elf:105,caster:116,wolf:77,fox:112,mech:90,spider:83,jelly:92,serpent:65,flyer:112,crab:80,centipede:75}[actorFor(u,spec).id]||112)+12)*scale*characterHeight*formProfile(spec,u).height);
@@ -102,4 +104,13 @@ function paintCapture(c,battle,species){
  c.beginPath();for(let i=0;i<8;i++){const a=i*Math.PI/4+f*.5,xx=Math.cos(a)*size,yy=Math.sin(a)*size;i?c.lineTo(xx,yy):c.moveTo(xx,yy);}c.closePath();c.stroke();
  if(f>.8){c.globalAlpha=Math.max(0,1-(f-.8)*4);for(let i=0;i<12;i++){const a=i*Math.PI/6,r=size+(f-.8)*(event.success?35:180);c.fillStyle=color;c.fillRect(Math.cos(a)*r,Math.sin(a)*r,4,4);}}
  c.globalAlpha=1;c.font='bold 13px sans-serif';c.textAlign='center';c.fillStyle=color;c.fillText(f<.8?'LATTICE LOCK · '+Math.round(event.chance*100)+'%':event.success?'ALLEGIANCE CHANGED - ROUND ALLY':'LATTICE BROKEN',0,-size-18);c.restore();
+}
+
+function paintEliteFlame(c,p,scale,time,u){
+ const rhythm=idleRhythm(u),r=Math.max(12,34*scale),height=Math.max(22,110*scale);
+ c.save();c.globalAlpha=.65;c.shadowColor='#ff3424';c.shadowBlur=8;
+ for(let i=0;i<11;i++){const f=(time*(.65+i*.025)+rhythm.offset+i/11)%1,a=i*Math.PI*2/11,x=p.x+Math.cos(a)*r,y=p.y+Math.sin(a)*r*.32-f*height;
+  c.fillStyle=i%3?'#fa3823':'#ffaf52';c.beginPath();c.moveTo(x-3*(1-f),y+6);c.quadraticCurveTo(x-7*Math.sin(time*5+i),y+1,x+Math.sin(time*7+i)*3,y-8*(1-f));c.quadraticCurveTo(x+5,y,x+3*(1-f),y+6);c.fill();
+ }
+ c.shadowBlur=0;c.strokeStyle='#e74532';c.lineWidth=1.5;c.beginPath();c.ellipse(p.x,p.y,r,r*.32,0,0,Math.PI*2);c.stroke();c.restore();
 }

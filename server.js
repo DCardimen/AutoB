@@ -16,6 +16,7 @@ const types = {
   ".woff2": "font/woff2",
 };
 const entryFiles = new Set([
+  "/elite-modifiers.js",
   "/index.html",
   "/styles.css",
   "/field-ui.css",

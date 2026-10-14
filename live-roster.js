@@ -7,8 +7,13 @@ const percent=(value,total)=>Math.max(0,Math.min(100,value/Math.max(1,total)*100
 
 // Membership changes rebuild the strip; combat values update existing nodes so
 // keyboard focus and the player's horizontal scroll position remain stable.
-export function updateLiveRoster(root,battle,{side=0,selectedUid=null,image}){
+export function updateLiveRoster(root,battle,{side=0,selectedUid=null,image,paired=false,controls=null}){
   if(!root||!battle)return;
+  if(paired){
+    if(!root.classList.contains('paired-rosters')){root.classList.add('paired-rosters');root.innerHTML='<section data-roster-panel="0" aria-label="Your team"></section><section data-roster-panel="1" aria-label="Opponents"></section>';}
+    for(const panel of root.children)updateLiveRoster(panel,battle,{side:Number(panel.dataset.rosterPanel),selectedUid,image,controls});
+    return;
+  }
   const units=battle.units.filter(u=>u.side===side);
   const key=side+':'+units.map(u=>u.uid+':'+!!u.roundAlly).join('|');
   if(root.dataset.rosterKey!==key){
@@ -28,6 +33,7 @@ export function updateLiveRoster(root,battle,{side=0,selectedUid=null,image}){
   }
   for(const card of root.querySelectorAll('[data-live-unit]')){
     const u=units.find(u=>u.uid===card.dataset.liveUnit);if(!u)continue;
+    if(controls){let commands=card.querySelector('.roster-commands');if(!commands){commands=document.createElement('div');commands.className='roster-commands';card.prepend(commands);}const html=controls(u,side);if(commands.innerHTML!==html)commands.innerHTML=html;}
     card.classList.toggle('selected',u.uid===selectedUid);
     card.classList.toggle('knocked-out',u.hp<=0);
     card.classList.toggle('low-health',u.hp>0&&u.hp/u.maxHp<=.25);

@@ -1,3 +1,4 @@
+import {assignEliteModifier,applyEliteStats,eliteModifierForSeed} from './elite-modifiers.js';
 import {rollStarterGear} from './starter-equipment.js';
 import {snapshotNativeMotion} from './native-motion.js';
 import {WEARER_BY_ID,WEARER_RELICS,wearerStats,initializeCompanion} from './wearer-relics.js';
@@ -765,7 +766,7 @@ export function stats(c, team, relics = []) {
   cd *= personal.cooldown * gear.cooldown;
   speed *= personal.speed * gear.speed * (nativeEvolution(c).speed || 1);
   dodge += personal.dodge;
-  return {
+  return applyEliteStats({
     armor:c.balanceVersion>=15?({Guardian:34,Striker:12,Ranger:7,Support:9}[s.role]||10)+Math.max(0,c.level-1)*1.5+gear.armor+personal.armor*100:0,
     hp: Math.round(hp+gear.hpFlat),
     atk: Math.round(atk+gear.atkFlat),
@@ -781,7 +782,7 @@ export function stats(c, team, relics = []) {
     dashCooldown:curios.dashCooldown*gear.dashCooldown,
     dodgeStyle:(c.balanceVersion||0)>=17?dodgeStyle(s):'roll',
     personal,
-  };
+  },c);
 }
 export function makeRun(seed = Date.now(), ids = STARTERS, options = {}) {
   const random = rng(seed),
@@ -889,7 +890,7 @@ export function encounterInfo(run, node) {
   const arch =
     ARCHETYPES.find((a) => a.id === node?.archetype) || ARCHETYPES[0];
   const weather = WEATHER.find((w) => w.id === node?.weather) || WEATHER[0];
-  return { arch, weather, boss: BOSS_GUIDES[Math.min(2, run.planet)] };
+  return { arch, weather, boss: BOSS_GUIDES[Math.min(2, run.planet)], eliteModifier:node?.type==="elite"?eliteModifierForSeed(node.seed):null };
 }
 export function setDeployment(run, index, row, column) {
   if (
@@ -1042,6 +1043,7 @@ export function encounter(run, type = "battle", seed = 1) {
     if((run.rulesVersion||0)>=15)enemyEquipment(c,seed+i*431,run.planet*8+run.depth,chaosLevel(run));
     foes.push(c);
   }
+  if(type==="elite")assignEliteModifier(foes,seed,BY_ID);
   return foes;
 }
 export function captureChance(run, c) {
@@ -1092,6 +1094,7 @@ export function awardCapture(run, c) {
   const caught = creature(c.id, Math.max(1, c.level));
   if((run.rulesVersion||0)>=15)caught.balanceVersion=run.rulesVersion;
   if(progressive(run)){caught.genes=c.genes;caught.nature=c.nature;caught.boundRelics=[...(c.enemyRelics||c.boundRelics||[])];caught.equipment=[...(c.equipment||[])];caught.equipmentQuality=1;caught.equipmentRolls=caught.equipment.map((id,i)=>({...c.equipmentRolls?.[i],id,quality:(c.equipmentRolls?.[i]?.quality??1)*(c.equipmentQuality??1)}));}
+  if(c.eliteModifier)caught.eliteModifier=c.eliteModifier;
   caught.evolution = evolutionStage(c);
   caught.evolutionPath = caught.evolution ? c.evolutionPath : null;
   run.bench.push(caught);
@@ -3542,6 +3545,7 @@ export class Battle {
         level: target.level,
         evolution: target.evolution,
         evolutionPath: target.evolutionPath,
+        eliteModifier:target.eliteModifier,
         capturePreparation: target.capturePreparation,
         genes:target.genes,nature:target.nature,enemyRelics:target.enemyRelics,equipment:[...(target.equipment||[])],equipmentRolls:target.equipmentRolls,equipmentQuality:target.equipmentQuality,
       },
