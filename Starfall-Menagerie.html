@@ -9772,7 +9772,9 @@ footer i {
   // authored-sprite-renderer.js
   var decoded = /* @__PURE__ */ new Map();
   var rests = /* @__PURE__ */ new Map();
-  var recolors = /* @__PURE__ */ new Map();
+  var variantPalettes = /* @__PURE__ */ new WeakMap();
+  var materialRamps = /* @__PURE__ */ new WeakMap();
+  var colorInfo = /* @__PURE__ */ new Map();
   var AUTHORED_SPRITES2 = { ...AUTHORED_SPRITES, ...AUTHORED_BODIES, ...AUTHORED_FAMILIES, ...AUTHORED_LEGACY };
   var STAGES = [AUTHORED_SPRITES2, { ...AUTHORED_SPRITES_STAGE1, ...AUTHORED_BODIES_STAGE1, ...AUTHORED_FAMILIES_STAGE1, ...AUTHORED_LEGACY_STAGE1 }, { ...AUTHORED_SPRITES_STAGE2, ...AUTHORED_BODIES_STAGE2, ...AUTHORED_FAMILIES_STAGE2, ...AUTHORED_LEGACY_STAGE2 }];
   var clamp = (v, a, b) => Math.max(a, Math.min(b, v));
@@ -9834,43 +9836,107 @@ footer i {
     asset.handMask = new Set(asset.pixels.filter((p) => Object.values(hands).some((h) => Math.hypot(p.x - h.x, p.y - h.y) < 3.6 || Math.abs(p.x - h.x) < 2.8 && p.y >= h.y - 5 && p.y <= h.y)));
     return hands;
   }
-  function recolor(identity, p, rig, rgb2) {
-    if (p.y < 27) return p.color;
-    const protectedRange = Math.max(...rgb2) - Math.min(...rgb2), protectedLum = (rgb2[0] + rgb2[1] + rgb2[2]) / 3;
-    if (["caster", "frostelf"].includes(identity) && protectedRange < 60 && protectedLum > 95) return p.color;
-    if (["elf", "fairy", "dwarf"].includes(identity) && rgb2[0] > rgb2[1] * 1.08 && rgb2[1] > rgb2[2] * 1.35 && rgb2[0] > 90) return p.color;
-    if (!rig.artRecolor) return p.color;
-    const pal = rig.palette;
-    if (!pal) return p.color;
-    const lum = 0.2126 * rgb2[0] + 0.7152 * rgb2[1] + 0.0722 * rgb2[2];
-    if (lum < 35) return p.color;
-    let material = null;
-    if (["knight", "orc", "goblin", "troll", "minotaur", "dwarf", "rogue", "caster", "elf", "fox", "frostelf", "fairy", "skeleton"].includes(identity)) {
-      if (rgb2[2] > rgb2[1] * 1.1 && rgb2[0] > rgb2[1] * 1.03 || identity === "knight" && rgb2[0] > rgb2[1] * 1.25 && rgb2[0] > rgb2[2] * 1.15) material = "cloth";
-      if (["elf", "fox", "fairy", "dwarf", "rogue", "frostelf"].includes(identity) && p.y > 26 && rgb2[1] > rgb2[0] * 1.05) material = "cloth";
-      if (["orc", "goblin", "troll"].includes(identity) && rgb2[1] > rgb2[0] * 0.95 && rgb2[1] > rgb2[2] * 1.2) material = rig.artVariant || rig.grand?.motif === "runetitan" ? "skin" : null;
-      if (["elf", "fairy", "caster", "frostelf"].includes(identity) && p.y < 23 && rig.artVariant) material = "hair";
-      if (Math.max(...rgb2) - Math.min(...rgb2) < 35 && p.y > 26) material = "metal";
-    } else if (rig.artVariant) {
-      const range = Math.max(...rgb2) - Math.min(...rgb2);
-      if (lum > 175 && range < 42) {
-        if (rig.form) material = "metal";
-        else return p.color;
-      } else if (lum > 235) return p.color;
-      else if (["mech", "beetle", "crab", "turtle", "rhino"].includes(identity) && rgb2[2] > rgb2[0] * 1.2 && rgb2[1] > rgb2[0] * 1.1) material = "cloth";
-      else if (identity === "cat" && p.y < 27 && rgb2[1] > rgb2[0] * 1.4 && rgb2[1] > rgb2[2] * 1.3) return p.color;
-      else if (["feralfox", "cat", "rabbit", "rodent", "owl"].includes(identity) && rgb2[0] > rgb2[1] * 1.4 && rgb2[2] > rgb2[1] * 1.15) return p.color;
-      else material = "skin";
+  var MATERIAL_HUES = {
+    knight: { neutral: true },
+    orc: [54, 100],
+    goblin: [54, 100],
+    troll: [48, 105],
+    minotaur: [12, 40],
+    elf: [65, 165],
+    fox: [65, 165],
+    fairy: [65, 165],
+    dwarf: [155, 200],
+    caster: [270, 330],
+    rogue: [200, 250],
+    frostelf: [205, 255],
+    skeleton: [270, 325],
+    harpy: [195, 265],
+    wolf: [15, 45],
+    mech: [17, 45],
+    feralfox: [17, 45],
+    rabbit: [17, 45],
+    rodent: [22, 48],
+    owl: [17, 45],
+    stag: [17, 45],
+    rhino: { neutral: true },
+    cat: { neutral: true },
+    turtle: [55, 160],
+    drake: [190, 280],
+    beetle: [265, 320],
+    bat: [265, 320],
+    phoenix: [15, 55],
+    spider: [265, 315],
+    jelly: [155, 225],
+    serpent: [155, 225],
+    fish: [155, 225],
+    mushroom: [345, 15],
+    moth: [270, 335],
+    crab: [50, 110],
+    mantis: [55, 150],
+    clam: [270, 335],
+    squid: [270, 335]
+  };
+  var COSTUME_VARIANTS = /* @__PURE__ */ new Set(["elf", "fox", "fairy", "dwarf", "caster", "rogue", "frostelf", "skeleton", "harpy"]);
+  var colorHsl = (hex) => {
+    if (colorInfo.has(hex)) return colorInfo.get(hex);
+    const [r, g, b] = hex.slice(1).match(/../g).map((v) => parseInt(v, 16) / 255), max = Math.max(r, g, b), min = Math.min(r, g, b), d = max - min, l = (max + min) / 2;
+    let h = d ? (max === r ? (g - b) / d + (g < b ? 6 : 0) : max === g ? (b - r) / d + 2 : (r - g) / d + 4) * 60 : 0;
+    const value = { h, s: d ? d / (1 - Math.abs(2 * l - 1)) : 0, l };
+    colorInfo.set(hex, value);
+    return value;
+  };
+  var hslColor = ({ h, s, l }) => {
+    h = (h % 360 + 360) % 360;
+    const c = (1 - Math.abs(2 * l - 1)) * s, x = c * (1 - Math.abs(h / 60 % 2 - 1)), m = l - c / 2, rgb2 = h < 60 ? [c, x, 0] : h < 120 ? [x, c, 0] : h < 180 ? [0, c, x] : h < 240 ? [0, x, c] : h < 300 ? [x, 0, c] : [c, 0, x];
+    return "#" + rgb2.map((v) => Math.round((v + m) * 255).toString(16).padStart(2, "0")).join("");
+  };
+  function materialColor(identity, color) {
+    const profile2 = MATERIAL_HUES[identity];
+    if (!profile2) return false;
+    const { h, s, l } = colorHsl(color);
+    if (l < 0.13 || l > 0.85) return false;
+    if (profile2.neutral) return s < 0.23 && l < 0.76;
+    return s > 0.2 && (profile2[0] <= profile2[1] ? h >= profile2[0] && h <= profile2[1] : h >= profile2[0] || h <= profile2[1]);
+  }
+  function authoredMaterialColors(identity, colors4, rig) {
+    if (!rig.artVariant || !MATERIAL_HUES[identity]) return colors4;
+    const material = COSTUME_VARIANTS.has(identity) ? "cloth" : "skin", target = (rig.artVariantPalette || rig.palette)?.[material]?.[1];
+    if (!target) return colors4;
+    let cache2 = variantPalettes.get(colors4);
+    if (!cache2) {
+      cache2 = /* @__PURE__ */ new Map();
+      variantPalettes.set(colors4, cache2);
     }
-    if (!material) return p.color;
-    const ramp = pal[material];
-    if (!ramp) return p.color;
-    const key = identity + ":" + p.color + ":" + ramp.join(",");
-    if (recolors.has(key)) return recolors.get(key);
-    const t = clamp((lum / 255 - 0.13) / 0.7, 0, 1) * (ramp.length - 1), a = Math.floor(t), z = Math.min(ramp.length - 1, a + 1), from = ramp[a].slice(1).match(/../g).map((v) => parseInt(v, 16)), to = ramp[z].slice(1).match(/../g).map((v) => parseInt(v, 16)), color = "#" + from.map((v, k) => Math.round(v + (to[k] - v) * (t - a)).toString(16).padStart(2, "0")).join("");
-    recolors.set(key, color);
-    if (recolors.size > 4096) recolors.delete(recolors.keys().next().value);
-    return color;
+    const key = identity + ":" + target;
+    if (cache2.has(key)) return cache2.get(key);
+    const to = colorHsl(target), profile2 = MATERIAL_HUES[identity], center = profile2.neutral ? to.h : (profile2[0] + (profile2[1] - profile2[0] + 360) % 360 / 2) % 360;
+    const mapped = colors4.map((color) => {
+      if (!materialColor(identity, color)) return color;
+      const from = colorHsl(color), offset = (from.h - center + 540) % 360 - 180;
+      return hslColor({ h: to.h + (profile2.neutral ? 0 : offset * 0.3), s: to.s * 0.65 + from.s * 0.35, l: from.l });
+    });
+    cache2.set(key, mapped);
+    return mapped;
+  }
+  function materialRamp(identity, colors4, mapped) {
+    let cache2 = materialRamps.get(mapped);
+    if (!cache2) {
+      cache2 = /* @__PURE__ */ new Map();
+      materialRamps.set(mapped, cache2);
+    }
+    if (cache2.has(identity)) return cache2.get(identity);
+    const shades = colors4.map((color, index) => ({ color: mapped[index], l: colorHsl(color).l, match: materialColor(identity, color) })).filter((p) => p.match).sort((a, b) => a.l - b.l);
+    const ramp = shades.length >= 3 ? [0.15, 0.5, 0.85].map((t) => shades[Math.floor((shades.length - 1) * t)].color) : null;
+    cache2.set(identity, ramp);
+    return ramp;
+  }
+  function handHighlight(asset, mapped, hand) {
+    if (!hand) return null;
+    if (hand.highlightIndex === void 0) {
+      const base = colorHsl(hand.color), shades = asset.colors.map((color, index) => ({ index, ...colorHsl(color) })).filter((p) => p.l > base.l + 0.04 && p.l < base.l + 0.22 && Math.abs(p.s - base.s) < 0.25 && (base.s < 0.15 || Math.abs((p.h - base.h + 540) % 360 - 180) < 22)).sort((a, b) => a.l - b.l);
+      hand.highlightIndex = shades[0]?.index ?? hand.index;
+    }
+    return mapped[hand.highlightIndex];
   }
   var GEAR = {
     knight: [[35, 33, 45, 25], [27, 33, 44, 28], [24, 33, 17, 25], [39, 33, 23, 28], [29, 33, 18, 25], [40, 33, 43, 24], [41, 34, 43, 25], [25, 33, 42, 26]],
@@ -9899,7 +9965,8 @@ footer i {
     dc.y += idleLift;
     dp.y += idleLift * 0.55;
     const humanoid = rig.arms.length > 0 || identity === "fairy" || identity === "harpy" || identity === "skeleton" || identity === "rogue" || identity === "frostelf", scale = rig.artScale || { width: 1, height: 1 }, headCut = identity === "orc" ? 27 : 29, headCenter = { x: 32, y: headCut - 9 }, bodyCenter = { x: 32, y: 33 };
-    const sourceHands = humanoid ? handLandmarks(asset, identity, artStage) : {};
+    const sourceHands = humanoid ? handLandmarks(asset, identity, artStage) : {}, artColors = authoredMaterialColors(identity, asset.colors, rig);
+    rig.artArmPalette = materialRamp(identity, asset.colors, artColors);
     const headRoll = rig.ragdoll ? rotation(poseHead, poseBody, head0, body0) : clamp((rig.lean || 0) * Math.cos(angle2) + (rig.sideLean || 0) * Math.sin(angle2), -0.25, 0.25), cos = Math.cos(headRoll), sin = Math.sin(headRoll);
     const footDeltas = rig.legs.map((l, i) => {
       const original = rest.legs[i] || rest.legs[0], end0 = base(original.end);
@@ -10004,10 +10071,10 @@ footer i {
       const armPixel = identity === "knight" ? metal : skin, cloth = identity === "knight" ? rgb2[0] > rgb2[1] * 1.18 && rgb2[0] > rgb2[2] * 1.1 : ["caster", "frostelf", "rogue", "skeleton"].includes(identity) ? rgb2[2] > rgb2[1] * 1.08 && rgb2[0] > 38 : rgb2[1] > rgb2[0] * 1.07;
       const hair = p.y > 19 && p.y < 42 && (["caster", "frostelf"].includes(identity) ? range < 55 && lum > 105 : ["elf", "fairy", "dwarf"].includes(identity) ? rgb2[0] > rgb2[1] * 1.1 && rgb2[1] > rgb2[2] * 1.4 && rgb2[0] > 110 : identity === "orc" && artStage ? lum < 65 && range < 35 : false);
       const q = warped(p.x, p.y, false, armPixel, cloth, hair), alongX = warped(p.x + 1, p.y, false, armPixel, cloth, hair), alongY = warped(p.x, p.y + 1, false, armPixel, cloth, hair), spanX = clamp(Math.max(Math.abs(alongX.x - q.x), Math.abs(alongY.x - q.x)), 1, 3), spanY = clamp(Math.max(Math.abs(alongX.y - q.y), Math.abs(alongY.y - q.y)), 1, 3);
-      let color = recolor(identity, p, rig, rgb2);
+      let color = artColors[p.index];
       if (expression !== "open" && eyePixels.includes(p)) {
         const below = asset.pixels.find((z) => z.x === p.x && z.y === p.y + 3);
-        color = below?.color || (identity === "fox" ? "#d48b3d" : "#d3a879");
+        color = below ? artColors[below.index] : identity === "fox" ? "#d48b3d" : "#d3a879";
       }
       return [{ ...q, color, spanX, spanY }];
     });
@@ -10017,7 +10084,7 @@ footer i {
     const fit = Math.min(1, 54 / ((sourceRight - sourceLeft || 1) + (artStage && identity === "serpent" ? 18 : artStage && ["fairy", "moth", "bat", "harpy", "drake", "phoenix", "owl", "fish", "mantis"].includes(identity) ? 8 : 0)), 54 / (sourceBottom - sourceTop || 1));
     const ox = 32 - (sourceLeft + sourceRight) / 2, oy = Math.max(0, 4 - sourceTop) - (rig.ragdoll ? 9 * (rig.death || 0) : 0);
     if (!humanoid && !rig.artBind) {
-      const ramp = rig.palette?.skin || ["#413a35", "#786c53", "#b0a17c"];
+      const ramp = rig.artArmPalette || rig.palette?.skin || ["#413a35", "#786c53", "#b0a17c"];
       for (const leg of rig.legs) {
         const points = [leg.root, leg.joint, leg.hock || leg.end, ...leg.hock ? [leg.end] : []].map(at);
         for (let i = 1; i < points.length; i++) {
@@ -10065,6 +10132,7 @@ footer i {
     rig.artAnchors = { head: anchor(warped(32, headCenter.y)), body: anchor(warped(32, 34)), pelvis: anchor(warped(32, 38)) };
     rig.artArmRoots = {};
     rig.artHandColors = {};
+    rig.artHandHighlights = {};
     const limbPoint = (q) => {
       const v = at(q);
       return { ...v, ...anchor({ x: 32 + (v.x - poseBody.x) * 1.3 + dc.x, y: 33 + (v.y - poseBody.y) * 0.9 + dc.y }) };
@@ -10074,7 +10142,8 @@ footer i {
     for (const arm of rig.arms) {
       const root = limbPoint(arm.root), joint = limbPoint(arm.joint), end = limbPoint(arm.end), screenSide = Math.sign(end.x - root.x) || arm.side, hand = sourceHands[screenSide];
       rig.artArmRoots[arm.side] = root;
-      rig.artHandColors[arm.side] = hand?.color;
+      rig.artHandColors[arm.side] = hand && artColors[hand.index];
+      rig.artHandHighlights[arm.side] = handHighlight(asset, artColors, hand);
       rig.artLimbPoints.set(arm.root, root);
       rig.artLimbPoints.set(arm.joint, joint);
       rig.artLimbPoints.set(arm.end, end);
@@ -10092,7 +10161,7 @@ footer i {
       const arm = rig.arms.find((a) => a.side === -1), h = arm && rig.artLimbPoints.get(arm.end), g = rig.shield && at(rig.shield.grip), v = at(q);
       return h && g ? { ...v, x: h.x + (v.x - g.x) * fit, y: h.y + (v.y - g.y) * fit } : v;
     };
-    rig.artGearPalette = asset.metal ? { ...rig.palette, metal: asset.metal } : rig.palette;
+    rig.artGearPalette = asset.metal && !rig.equipment?.includes("sunsteel-edge") ? { ...rig.palette, metal: asset.metal } : rig.palette;
     rig.authoredEvolution = true;
     b.data.artIdentity = identity;
     b.data.artStage = artStage;
@@ -10367,7 +10436,7 @@ footer i {
       const arms = (brush, near2) => {
         for (const arm of rig.arms) {
           if (far2(arm.root) === near2) continue;
-          const root = rig.artArmRoots?.[arm.side] || at(arm.root), joint = rig.artProject(arm.joint), hand = rig.artProject(arm.end), metal = id === "knight", cloth = metal ? p.metal : ["orc", "minotaur", "troll"].includes(art.data.artIdentity) ? p.skin : p.cloth, skin = rig.artHandColors?.[arm.side] || p.skin[1];
+          const root = rig.artArmRoots?.[arm.side] || at(arm.root), joint = rig.artProject(arm.joint), hand = rig.artProject(arm.end), metal = id === "knight", cloth = rig.artArmPalette || (metal ? p.metal : ["orc", "minotaur", "troll"].includes(art.data.artIdentity) ? p.skin : p.cloth), skin = rig.artHandColors?.[arm.side] || p.skin[1];
           for (const [a, z, r] of [[root, joint, 1.25], [joint, hand, 1]]) {
             brush.line(a, z, OUT, r + 0.6);
             brush.line(a, z, cloth[0], r);
@@ -10376,7 +10445,7 @@ footer i {
           }
           brush.oval(hand.x, hand.y, 1.6, 1.4, OUT);
           brush.oval(hand.x, hand.y, 1.1, 1, skin);
-          brush.dot(hand.x - 0.5, hand.y - 0.5, metal ? p.metal[3] : p.skin[2]);
+          brush.dot(hand.x - 0.5, hand.y - 0.5, rig.artHandHighlights?.[arm.side] || (metal ? p.metal[3] : p.skin[2]));
         }
       };
       const gear = (brush, near2) => drawGearPart(brush, id, rig, angle2, { ...p, ...rig.artGearPalette }, rig.artProject, (x, y, rx, ry, color) => {
@@ -10972,7 +11041,7 @@ footer i {
     rig.pixelMark = spec.pixelMark;
     rig.equipment = c.equipment || [];
     rig.artVariant = spec.pixelConverted ? spec.id : null;
-    rig.artRecolor = Boolean(spec.pixelConverted || c.evolution || c.equipment?.length);
+    rig.artVariantPalette = spec.pixelConverted ? spec.pixelPalette : null;
     const bind = characterRig(rig.id, "idle", 0.25);
     rig.artBind = { head: point3(bind.head), body: point3(bind.body), pelvis: point3(bind.pelvis), legs: bind.legs.map((l) => ({ ...l, root: point3(l.root), joint: point3(l.joint), hock: point3(l.hock), end: point3(l.end) })), arms: bind.arms.map((a) => ({ ...a, root: point3(a.root), joint: point3(a.joint), end: point3(a.end) })), weapon: bind.weapon ? { grip: point3(bind.weapon.grip), tip: point3(bind.weapon.tip) } : null };
     rig.artScale = { width: design.width, height: design.height * height };
@@ -16843,7 +16912,7 @@ footer i {
   function updateHeader() {
     document.body.classList.toggle("native-expedition", !!run2.native);
     const version = document.querySelector(".local-label");
-    if (version) version.innerHTML = "<i></i> " + (run2.native ? "NATIVE EXPEDITION V17 \xB7 CREATURE MOTION" : "LOCAL SAVE");
+    if (version) version.innerHTML = "<i></i> " + (run2.native ? "NATIVE EXPEDITION V17.1 \xB7 PALETTE FIX" : "LOCAL SAVE");
     const p = PLANETS[Math.min(run2.planet, 2)];
     $("#run-number").textContent = String(profile.runs).padStart(3, "0");
     $("#collection-count").textContent = profile.owned.length;

@@ -14,7 +14,7 @@ import {characterRig,projectRig} from './prototype-rig.js';
 // Directional artwork is skinned to the same anatomical action poses as combat.
 // The imported art is never blurred, rotated by Canvas, or stretched as one bitmap.
 const decoded=new Map(),rests=new Map(),CELL=64,PIVOT={x:32,y:44};
-const recolors=new Map();
+const variantPalettes=new WeakMap(),materialRamps=new WeakMap(),colorInfo=new Map();
 const AUTHORED_SPRITES={...HERO_ART,...AUTHORED_BODIES,...AUTHORED_FAMILIES,...AUTHORED_LEGACY};
 const STAGES=[AUTHORED_SPRITES,{...AUTHORED_SPRITES_STAGE1,...AUTHORED_BODIES_STAGE1,...AUTHORED_FAMILIES_STAGE1,...AUTHORED_LEGACY_STAGE1},{...AUTHORED_SPRITES_STAGE2,...AUTHORED_BODIES_STAGE2,...AUTHORED_FAMILIES_STAGE2,...AUTHORED_LEGACY_STAGE2}];
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),ease=v=>{v=clamp(v,0,1);return v*v*(3-2*v);};
@@ -42,37 +42,48 @@ function handLandmarks(asset,identity,stage){
   const seed=candidates.sort((a,b)=>Math.hypot(a.x-expectedX,a.y-expectedY)-Math.hypot(b.x-expectedX,b.y-expectedY))[0];if(seed)hands[side]={...seed};
  }asset.hands=hands;asset.handMask=new Set(asset.pixels.filter(p=>Object.values(hands).some(h=>Math.hypot(p.x-h.x,p.y-h.y)<3.6||Math.abs(p.x-h.x)<2.8&&p.y>=h.y-5&&p.y<=h.y)));return hands;
 }
-function recolor(identity,p,rig,rgb){
- // Face and hair retain their authored ramp in every pose; equipment must not
- // recolor only the animated strands or turn skin into metal.
- if(p.y<27)return p.color;
- const protectedRange=Math.max(...rgb)-Math.min(...rgb),protectedLum=(rgb[0]+rgb[1]+rgb[2])/3;
- if(['caster','frostelf'].includes(identity)&&protectedRange<60&&protectedLum>95)return p.color;
- if(['elf','fairy','dwarf'].includes(identity)&&rgb[0]>rgb[1]*1.08&&rgb[1]>rgb[2]*1.35&&rgb[0]>90)return p.color;
- if(!rig.artRecolor)return p.color;const pal=rig.palette;if(!pal)return p.color;
- const lum=.2126*rgb[0]+.7152*rgb[1]+.0722*rgb[2];if(lum<35)return p.color;
- let material=null;
- if(['knight','orc','goblin','troll','minotaur','dwarf','rogue','caster','elf','fox','frostelf','fairy','skeleton'].includes(identity)){
-  if(rgb[2]>rgb[1]*1.1&&rgb[0]>rgb[1]*1.03||identity==='knight'&&rgb[0]>rgb[1]*1.25&&rgb[0]>rgb[2]*1.15)material='cloth';
-  if(['elf','fox','fairy','dwarf','rogue','frostelf'].includes(identity)&&p.y>26&&rgb[1]>rgb[0]*1.05)material='cloth';
-  if(['orc','goblin','troll'].includes(identity)&&rgb[1]>rgb[0]*.95&&rgb[1]>rgb[2]*1.2)material=rig.artVariant||rig.grand?.motif==='runetitan'?'skin':null;
-  if(['elf','fairy','caster','frostelf'].includes(identity)&&p.y<23&&rig.artVariant)material='hair';
-  if(Math.max(...rgb)-Math.min(...rgb)<35&&p.y>26)material='metal';
- }else if(rig.artVariant){
-  const range=Math.max(...rgb)-Math.min(...rgb);
-  // Preserve white fur, bellies, pearls and eye glints rather than tinting every
-  // material into the same flat elemental color. Evolved trim follows its path.
-  if(lum>175&&range<42){if(rig.form)material='metal';else return p.color;}
-  else if(lum>235)return p.color;
-  else if(['mech','beetle','crab','turtle','rhino'].includes(identity)&&rgb[2]>rgb[0]*1.2&&rgb[1]>rgb[0]*1.1)material='cloth';
-  else if(identity==='cat'&&p.y<27&&rgb[1]>rgb[0]*1.4&&rgb[1]>rgb[2]*1.3)return p.color;
-  else if(['feralfox','cat','rabbit','rodent','owl'].includes(identity)&&rgb[0]>rgb[1]*1.4&&rgb[2]>rgb[1]*1.15)return p.color;
-  else material='skin';
- }
- if(!material)return p.color;const ramp=pal[material];if(!ramp)return p.color;
- const key=identity+':'+p.color+':'+ramp.join(',');if(recolors.has(key))return recolors.get(key);
- const t=clamp((lum/255-.13)/.7,0,1)*(ramp.length-1),a=Math.floor(t),z=Math.min(ramp.length-1,a+1),from=ramp[a].slice(1).match(/../g).map(v=>parseInt(v,16)),to=ramp[z].slice(1).match(/../g).map(v=>parseInt(v,16)),color='#'+from.map((v,k)=>Math.round(v+(to[k]-v)*(t-a)).toString(16).padStart(2,'0')).join('');
- recolors.set(key,color);if(recolors.size>4096)recolors.delete(recolors.keys().next().value);return color;
+// Variant materials are selected by palette color, never by pixel height. A
+// swatch therefore has one meaning across the face, body, limbs and animation.
+// Neutral highlights, white fur, warm skin and unrelated costume accents stay
+// in the authored palette. Complete evolved atlases already carry their colors.
+const MATERIAL_HUES={
+ knight:{neutral:true},orc:[54,100],goblin:[54,100],troll:[48,105],minotaur:[12,40],
+ elf:[65,165],fox:[65,165],fairy:[65,165],dwarf:[155,200],caster:[270,330],
+ rogue:[200,250],frostelf:[205,255],skeleton:[270,325],harpy:[195,265],
+ wolf:[15,45],mech:[17,45],feralfox:[17,45],rabbit:[17,45],rodent:[22,48],owl:[17,45],stag:[17,45],
+ rhino:{neutral:true},cat:{neutral:true},turtle:[55,160],drake:[190,280],
+ beetle:[265,320],bat:[265,320],phoenix:[15,55],spider:[265,315],
+ jelly:[155,225],serpent:[155,225],fish:[155,225],mushroom:[345,15],
+ moth:[270,335],crab:[50,110],mantis:[55,150],clam:[270,335],squid:[270,335],
+};
+const COSTUME_VARIANTS=new Set(['elf','fox','fairy','dwarf','caster','rogue','frostelf','skeleton','harpy']);
+const colorHsl=hex=>{if(colorInfo.has(hex))return colorInfo.get(hex);const [r,g,b]=hex.slice(1).match(/../g).map(v=>parseInt(v,16)/255),max=Math.max(r,g,b),min=Math.min(r,g,b),d=max-min,l=(max+min)/2;let h=d?(max===r?(g-b)/d+(g<b?6:0):max===g?(b-r)/d+2:(r-g)/d+4)*60:0;const value={h,s:d?d/(1-Math.abs(2*l-1)):0,l};colorInfo.set(hex,value);return value;};
+const hslColor=({h,s,l})=>{h=(h%360+360)%360;const c=(1-Math.abs(2*l-1))*s,x=c*(1-Math.abs(h/60%2-1)),m=l-c/2,rgb=h<60?[c,x,0]:h<120?[x,c,0]:h<180?[0,c,x]:h<240?[0,x,c]:h<300?[x,0,c]:[c,0,x];return '#'+rgb.map(v=>Math.round((v+m)*255).toString(16).padStart(2,'0')).join('');};
+function materialColor(identity,color){
+ const profile=MATERIAL_HUES[identity];if(!profile)return false;
+ const {h,s,l}=colorHsl(color);if(l<.13||l>.85)return false;
+ if(profile.neutral)return s<.23&&l<.76;
+ return s>.2&&(profile[0]<=profile[1]?h>=profile[0]&&h<=profile[1]:h>=profile[0]||h<=profile[1]);
+}
+export function authoredMaterialColors(identity,colors,rig){
+ // Equipment is rendered at its own attachment; it cannot dye a whole body.
+ if(!rig.artVariant||!MATERIAL_HUES[identity])return colors;
+ const material=COSTUME_VARIANTS.has(identity)?'cloth':'skin',target=(rig.artVariantPalette||rig.palette)?.[material]?.[1];if(!target)return colors;
+ let cache=variantPalettes.get(colors);if(!cache){cache=new Map();variantPalettes.set(colors,cache);}
+ const key=identity+':'+target;if(cache.has(key))return cache.get(key);
+ const to=colorHsl(target),profile=MATERIAL_HUES[identity],center=profile.neutral?to.h:(profile[0]+((profile[1]-profile[0]+360)%360)/2)%360;
+ const mapped=colors.map(color=>{if(!materialColor(identity,color))return color;const from=colorHsl(color),offset=((from.h-center+540)%360)-180;return hslColor({h:to.h+(profile.neutral?0:offset*.3),s:to.s*.65+from.s*.35,l:from.l});});
+ cache.set(key,mapped);return mapped;
+}
+function materialRamp(identity,colors,mapped){
+ let cache=materialRamps.get(mapped);if(!cache){cache=new Map();materialRamps.set(mapped,cache);}if(cache.has(identity))return cache.get(identity);
+ const shades=colors.map((color,index)=>({color:mapped[index],l:colorHsl(color).l,match:materialColor(identity,color)})).filter(p=>p.match).sort((a,b)=>a.l-b.l);
+ const ramp=shades.length>=3?[.15,.5,.85].map(t=>shades[Math.floor((shades.length-1)*t)].color):null;cache.set(identity,ramp);return ramp;
+}
+function handHighlight(asset,mapped,hand){
+ if(!hand)return null;
+ if(hand.highlightIndex===undefined){const base=colorHsl(hand.color),shades=asset.colors.map((color,index)=>({index,...colorHsl(color)})).filter(p=>p.l>base.l+.04&&p.l<base.l+.22&&Math.abs(p.s-base.s)<.25&&(base.s<.15||Math.abs(((p.h-base.h+540)%360)-180)<22)).sort((a,b)=>a.l-b.l);hand.highlightIndex=shades[0]?.index??hand.index;}
+ return mapped[hand.highlightIndex];
 }
 const GEAR={
  knight:[[35,33,45,25],[27,33,44,28],[24,33,17,25],[39,33,23,28],[29,33,18,25],[40,33,43,24],[41,34,43,25],[25,33,42,26]],
@@ -89,7 +100,8 @@ export function paintAtlasCharacter(b,id,rig,at){
  const artStage=Math.min(2,rig.artStage??rig.form??0),asset=frameFor(identity,rig.dir,artStage),rest=rig.artBind||restFor(id),angle=rig.dir*Math.PI/4,base=q=>point(q,angle),poseHead=at(rig.head),poseBody=at(rig.body),posePelvis=at(rig.pelvis),head0=base(rest.head),body0=base(rest.body),pelvis0=base(rest.pelvis),dh=difference(poseHead,head0),dc=difference(poseBody,body0),dp=difference(posePelvis,pelvis0);
  const idleLift=rig.state==='idle'?Math.sin(rig.phase*Math.PI*2)*1.25:0;dh.y+=idleLift;dc.y+=idleLift;dp.y+=idleLift*.55;
  const humanoid=rig.arms.length>0||identity==='fairy'||identity==='harpy'||identity==='skeleton'||identity==='rogue'||identity==='frostelf',scale=rig.artScale||{width:1,height:1},headCut=identity==='orc'?27:29,headCenter={x:32,y:headCut-9},bodyCenter={x:32,y:33};
- const sourceHands=humanoid?handLandmarks(asset,identity,artStage):{};
+ const sourceHands=humanoid?handLandmarks(asset,identity,artStage):{},artColors=authoredMaterialColors(identity,asset.colors,rig);
+ rig.artArmPalette=materialRamp(identity,asset.colors,artColors);
  const headRoll=rig.ragdoll?rotation(poseHead,poseBody,head0,body0):clamp((rig.lean||0)*Math.cos(angle)+(rig.sideLean||0)*Math.sin(angle),-.25,.25),cos=Math.cos(headRoll),sin=Math.sin(headRoll);
  const footDeltas=rig.legs.map((l,i)=>{const original=rest.legs[i]||rest.legs[0],end0=base(original.end);return {delta:difference(at(l.end),end0),knee:difference(at(l.joint),base(original.joint)),root:difference(at(l.root),base(original.root)),pitch:l.foot?.pitch||0,anchor:{x:32+(end0.x-32)*(humanoid?2.4:1.45),y:45+(end0.y-43)*.6}};});
  // Source-foot ownership is constant for a bind pose. Cache it once instead
@@ -161,8 +173,8 @@ export function paintAtlasCharacter(b,id,rig,at){
   const armPixel=identity==='knight'?metal:skin,cloth=identity==='knight'?rgb[0]>rgb[1]*1.18&&rgb[0]>rgb[2]*1.1:['caster','frostelf','rogue','skeleton'].includes(identity)?rgb[2]>rgb[1]*1.08&&rgb[0]>38:rgb[1]>rgb[0]*1.07;
   const hair=p.y>19&&p.y<42&&(['caster','frostelf'].includes(identity)?range<55&&lum>105:['elf','fairy','dwarf'].includes(identity)?rgb[0]>rgb[1]*1.1&&rgb[1]>rgb[2]*1.4&&rgb[0]>110:identity==='orc'&&artStage?lum<65&&range<35:false);
   const q=warped(p.x,p.y,false,armPixel,cloth,hair),alongX=warped(p.x+1,p.y,false,armPixel,cloth,hair),alongY=warped(p.x,p.y+1,false,armPixel,cloth,hair),spanX=clamp(Math.max(Math.abs(alongX.x-q.x),Math.abs(alongY.x-q.x)),1,3),spanY=clamp(Math.max(Math.abs(alongX.y-q.y),Math.abs(alongY.y-q.y)),1,3);
-  let color=recolor(identity,p,rig,rgb);
-  if(expression!=='open'&&eyePixels.includes(p)){const below=asset.pixels.find(z=>z.x===p.x&&z.y===p.y+3);color=below?.color||(identity==='fox'?'#d48b3d':'#d3a879');}
+  let color=artColors[p.index];
+  if(expression!=='open'&&eyePixels.includes(p)){const below=asset.pixels.find(z=>z.x===p.x&&z.y===p.y+3);color=below?artColors[below.index]:(identity==='fox'?'#d48b3d':'#d3a879');}
   return [{...q,color,spanX,spanY}];
  });
  // Refit a complete pose only when a fall/large limb excursion exceeds its cell.
@@ -174,7 +186,7 @@ export function paintAtlasCharacter(b,id,rig,at){
  const ox=32-(sourceLeft+sourceRight)/2,oy=Math.max(0,4-sourceTop)-(rig.ragdoll?9*(rig.death||0):0);
  // Unscaled Training Glade actors expose the full physical stride. Paint its
  // limbs behind the textured body, with volume rather than skeleton lines.
- if(!humanoid&&!rig.artBind){const ramp=rig.palette?.skin||['#413a35','#786c53','#b0a17c'];for(const leg of rig.legs){const points=[leg.root,leg.joint,leg.hock||leg.end,...(leg.hock?[leg.end]:[])].map(at);for(let i=1;i<points.length;i++){b.line(points[i-1],points[i],ramp[0],1.35);b.line({x:points[i-1].x-.3,y:points[i-1].y-.4},{x:points[i].x-.3,y:points[i].y-.4},ramp[1],.65);}}}
+ if(!humanoid&&!rig.artBind){const ramp=rig.artArmPalette||rig.palette?.skin||['#413a35','#786c53','#b0a17c'];for(const leg of rig.legs){const points=[leg.root,leg.joint,leg.hock||leg.end,...(leg.hock?[leg.end]:[])].map(at);for(let i=1;i<points.length;i++){b.line(points[i-1],points[i],ramp[0],1.35);b.line({x:points[i-1].x-.3,y:points[i-1].y-.4},{x:points[i].x-.3,y:points[i].y-.4},ramp[1],.65);}}}
  for(const p of pixels){const x=32+(p.x-32+ox)*fit,y=44+(p.y-44+oy)*fit;b.dot(x,y,p.color);if(p.spanX*fit>1.01||p.spanY*fit>1.01)b.rect(clamp(Math.round(x-p.spanX*.3),0,63),clamp(Math.round(y-p.spanY*.3),0,63),Math.min(64-Math.round(x-p.spanX*.3),Math.ceil(p.spanX*fit)),Math.min(64-Math.round(y-p.spanY*.3),Math.ceil(p.spanY*fit)),p.color);}
  // Close one-pixel interior gaps left by nearest-pixel skeletal deformation.
  const fills=[];for(let y=Math.max(1,Math.floor(minY+oy));y<Math.min(63,Math.ceil(maxY+oy));y++)for(let x=Math.max(1,Math.floor(minX+ox));x<Math.min(63,Math.ceil(maxX+ox));x++){const n=(y*64+x)*4;if(b.data[n+3])continue;const l=n-4,r=n+4,t=n-256,d=n+256;if(b.data[l+3]&&b.data[r+3]&&(b.data[t+3]||b.data[d+3])){const near=b.data[t+3]?t:l;fills.push([x,y,'#'+[0,1,2].map(k=>b.data[near+k].toString(16).padStart(2,'0')).join('')]);}}
@@ -184,7 +196,7 @@ export function paintAtlasCharacter(b,id,rig,at){
  const weld=(a,z,color)=>{const length=Math.hypot(z.x-a.x,z.y-a.y),steps=Math.max(1,Math.ceil(length*2));for(let i=0;i<=steps;i++){const x=Math.round(a.x+(z.x-a.x)*i/steps),y=Math.round(a.y+(z.y-a.y)*i/steps);if(x>0&&x<63&&y>0&&y<63&&!b.data[(y*64+x)*4+3])b.dot(x,y,color);}};
  const anchor=q=>({x:32+(q.x-32+ox)*fit,y:44+(q.y-44+oy)*fit});
  rig.artAnchors={head:anchor(warped(32,headCenter.y)),body:anchor(warped(32,34)),pelvis:anchor(warped(32,38))};
- rig.artArmRoots={};rig.artHandColors={};
+ rig.artArmRoots={};rig.artHandColors={};rig.artHandHighlights={};
  // One torso-relative projection for every shoulder, elbow and hand. This
  // respects side/rear depth instead of guessing the hand from screen side.
  const limbPoint=q=>{const v=at(q);return {...v,...anchor({x:32+(v.x-poseBody.x)*1.3+dc.x,y:33+(v.y-poseBody.y)*.90+dc.y})};};
@@ -192,7 +204,7 @@ export function paintAtlasCharacter(b,id,rig,at){
  rig.artLimbPoints=new Map();
  for(const arm of rig.arms){
   const root=limbPoint(arm.root),joint=limbPoint(arm.joint),end=limbPoint(arm.end),screenSide=Math.sign(end.x-root.x)||arm.side,hand=sourceHands[screenSide];
-  rig.artArmRoots[arm.side]=root;rig.artHandColors[arm.side]=hand?.color;
+  rig.artArmRoots[arm.side]=root;rig.artHandColors[arm.side]=hand&&artColors[hand.index];rig.artHandHighlights[arm.side]=handHighlight(asset,artColors,hand);
   rig.artLimbPoints.set(arm.root,root);rig.artLimbPoints.set(arm.joint,joint);rig.artLimbPoints.set(arm.end,end);
  }
  const main=rig.weapon&&rig.arms.find(a=>a.side===(rig.weapon.hand==='left'?-1:1)),paintedGrip=main&&rig.artLimbPoints.get(main.end),physicalGrip=rig.weapon&&at(rig.weapon.grip);
@@ -201,7 +213,7 @@ export function paintAtlasCharacter(b,id,rig,at){
  if(main&&(id==='orc'||rig.bowString?.draw>.05))for(const arm of rig.arms.filter(a=>a!==main)){rig.artLimbPoints.set(arm.end,heldPoint(arm.end));}
  rig.artProject=q=>rig.artLimbPoints.has(q)?rig.artLimbPoints.get(q):heldPoint(q);
  rig.artShieldProject=q=>{const arm=rig.arms.find(a=>a.side===-1),h=arm&&rig.artLimbPoints.get(arm.end),g=rig.shield&&at(rig.shield.grip),v=at(q);return h&&g?{...v,x:h.x+(v.x-g.x)*fit,y:h.y+(v.y-g.y)*fit}:v;};
- rig.artGearPalette=asset.metal?{...rig.palette,metal:asset.metal}:rig.palette;
+ rig.artGearPalette=asset.metal&&!rig.equipment?.includes('sunsteel-edge')?{...rig.palette,metal:asset.metal}:rig.palette;
  rig.authoredEvolution=true;b.data.artIdentity=identity;b.data.artStage=artStage;b.data.artFit=fit;b.data.contactGear=Boolean(rig.weapon&&rig.arms.length);b.data.expression=eyePixels.length?expression:'hidden';return true;
 }
 export function paintAtlasHead(b,id,rig,center){

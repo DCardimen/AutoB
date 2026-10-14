@@ -1,4 +1,16 @@
-# Current continuation · Creature Motion V17 / application 0.13.0
+# Current continuation · V17.1 palette fix / application 0.13.1
+
+Read SPRITE-PALETTE-FIX.md and tests/reports/sprite-palette-fix.json first. Current feature branch: `codex/sprite-palette-consistency`, based on release commit `bb863177ddfc3a41780278620c8ce04a0946b933` after PR #5 merged. This request opens a new PR targeting `codex/starfall-menagerie`. Every future request requires a fresh branch and PR.
+
+The source-row-27 tint boundary is removed. Complete native/evolved atlas palettes remain authored. Collection variants use a cached material-color mapping across the whole sprite; `artVariantPalette` is separate from mutable equipment colors. Articulated arms and hand highlights sample the same source material palette. Art revision is 5. The main header displays V17.1. Combat rules remain 17 and save schema remains 7.
+
+Both standalone HTML files and public/prototype-bundle.js are rebuilt. Current offline package is public/Starfall-V17.1-Palette-Fix.zip; the V17 ZIP is historical and does not contain this correction. See the palette report for current validation, source hashes and artifact hashes. No additional Godot atlas export was generated for this palette-only browser patch.
+
+Preserve the pre-existing untracked expedition.js draft, SHA256 `a4c0ad756a781f8f223e34c1f9cd22d79e9fe47bff81d8ee951f47a16d987ea1`. Do not stage, edit or remove it. A development server was started on port 3032; do not assume processes survive an environment restart.
+
+---
+
+# Previous checkpoint · Creature Motion V17 / application 0.13.0
 
 Read CREATURE-MOTION-V17.md and tests/reports/creature-motion-v17.json first. Current feature branch: `codex/creature-motion-v17`, based on V16 `ddc57f32524e18401cc1ef4e0447ddcd1607a75d`. V16 PR #4 merged; this task opens a NEW PR targeting `codex/starfall-menagerie`. Every future request requires a fresh branch and PR. Do not push directly to the released branch.
 

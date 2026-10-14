@@ -5,7 +5,7 @@ import {drawNativeFace,FACE_VIEWS} from './prototype-faces.js';
 import {paintAuthoredTorso,paintFairyWings,paintFairyBody} from './authored-pixel-art.js';
 import {paintAtlasCharacter} from './authored-sprite-renderer.js';
 export const CELL=64,PIVOT={x:32,y:44},PIXEL_WORLD=3;
-export const SPRITE_ART_REVISION=4;
+export const SPRITE_ART_REVISION=5;
 const OUT='#192328';
 export const PIXEL_PALETTES={
  crab:{skin:['#496b63','#7daca0','#c6d9be'],cloth:['#385c69','#5b95aa','#a9d1db'],metal:['#324d52','#668d8c','#b0c8bd','#e5e0b9'],hair:['#364c58','#638e99','#abd5ce']},
@@ -40,9 +40,9 @@ export function paintCharacterPixels(id,rig,angle){
  if(paintAtlasCharacter(b,id,rig,at)){
   const art=b;const farArt=new PixelBrush();paintGrandPixels(farArt,rig,at,p,'far');
   const far=q=>q&&at(q).depth<body.depth;
-  const arms=(brush,near)=>{for(const arm of rig.arms){if(far(arm.root)===near)continue;const root=rig.artArmRoots?.[arm.side]||at(arm.root),joint=rig.artProject(arm.joint),hand=rig.artProject(arm.end),metal=id==='knight',cloth=metal?p.metal:['orc','minotaur','troll'].includes(art.data.artIdentity)?p.skin:p.cloth,skin=rig.artHandColors?.[arm.side]||p.skin[1];
+  const arms=(brush,near)=>{for(const arm of rig.arms){if(far(arm.root)===near)continue;const root=rig.artArmRoots?.[arm.side]||at(arm.root),joint=rig.artProject(arm.joint),hand=rig.artProject(arm.end),metal=id==='knight',cloth=rig.artArmPalette||(metal?p.metal:['orc','minotaur','troll'].includes(art.data.artIdentity)?p.skin:p.cloth),skin=rig.artHandColors?.[arm.side]||p.skin[1];
    for(const [a,z,r]of [[root,joint,1.25],[joint,hand,1]]){brush.line(a,z,OUT,r+.6);brush.line(a,z,cloth[0],r);brush.line({x:a.x-.4,y:a.y-.5},{x:z.x-.4,y:z.y-.5},cloth[1],r*.45);brush.dot(a.x-.5,a.y-.5,cloth[2]);}
-   brush.oval(hand.x,hand.y,1.6,1.4,OUT);brush.oval(hand.x,hand.y,1.1,1,skin);brush.dot(hand.x-.5,hand.y-.5,metal?p.metal[3]:p.skin[2]);
+   brush.oval(hand.x,hand.y,1.6,1.4,OUT);brush.oval(hand.x,hand.y,1.1,1,skin);brush.dot(hand.x-.5,hand.y-.5,rig.artHandHighlights?.[arm.side]||(metal?p.metal[3]:p.skin[2]));
   }};
   const gear=(brush,near)=>drawGearPart(brush,id,rig,angle,{...p,...rig.artGearPalette},rig.artProject,(x,y,rx,ry,color)=>{brush.oval(x,y,rx+1,ry+1,OUT);brush.oval(x,y,rx,ry,color);},art.data.contactGear&&Boolean(rig.weapon)&&far(rig.weapon.grip)!==near,art.data.contactGear&&Boolean(rig.shield)&&far(rig.shield.grip)!==near);
   arms(farArt,false);
