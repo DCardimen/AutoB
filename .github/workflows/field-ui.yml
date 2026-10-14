@@ -35,6 +35,7 @@ jobs:
       - run: node tests/field-ui.browser.mjs
       - run: node scripts/review-melee-weapons.mjs
       - run: node scripts/review-natural-carry.mjs
+      - run: node scripts/review-swing-body.mjs
       - name: Package the playable offline game
         run: |
           python3 - <<'PY'
@@ -53,5 +54,7 @@ jobs:
             playtest-artifacts/melee-*.png
             playtest-artifacts/natural-carry-*.png
             tests/reports/natural-melee-carry.json
+            playtest-artifacts/swing-body-*.png
+            tests/reports/swing-body.json
             tests/reports/melee-weapon-ui.json
             tests/reports/field-ui-v3.json

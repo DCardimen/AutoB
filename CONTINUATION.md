@@ -1,4 +1,14 @@
-# Current continuation · Natural melee carry
+# Current continuation · Body detail during swings
+
+Fresh feature branch: `codex/complete-swing-body`, based on `codex/natural-melee-carry` commit a5e4de8 (PR #10). This is a separate follow-up PR. Read SWING-BODY.md and tests/reports/swing-body.json.
+
+Art revision 8 completes the covered torso/clothing underneath moving arms and held equipment. Repairs stay within the original torso silhouette and use adjacent costume material shades, preserving original palette mapping. A cached body layer renders below the articulated limbs. Tests render that layer alone so arms and weapons cannot hide missing pixels. The natural resting hands/downward melee carry, active physical contacts, rules 17, save schema 7 and scale remain.
+
+Both offline HTML games, public/prototype-bundle.js and public/Starfall-Natural-Carry.zip are rebuilt. scripts/review-swing-body.mjs captures separate body layers and actual windup/contact/recovery across three stages; the PR workflow includes its evidence. Future requests still require a fresh branch and PR. Preserve any pre-existing expedition.js draft.
+
+---
+
+# Previous continuation · Natural melee carry
 
 Fresh feature branch: `codex/natural-melee-carry`, based on released PR #9 merge `c82ec63fc951daacce588394f9fb431d87883024`. This request uses a new PR. Read NATURAL-MELEE-CARRY.md and tests/reports/natural-melee-carry.json.
 

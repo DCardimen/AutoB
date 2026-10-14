@@ -96,6 +96,40 @@ const GEAR={
 };
 GEAR.dwarf=GEAR.knight;GEAR.rogue=GEAR.knight;GEAR.frostelf=GEAR.caster;GEAR.skeleton=GEAR.elf;GEAR.troll=GEAR.orc;GEAR.minotaur=GEAR.orc;
 function gearDistance(x,y,g){const dx=g[2]-g[0],dy=g[3]-g[1],t=clamp(((x-g[0])*dx+(y-g[1])*dy)/(dx*dx+dy*dy),-.18,1.15);return Math.hypot(x-g[0]-t*dx,y-g[1]-t*dy);}
+function completeBodyLayer(asset,identity,stage,sourceGear){
+ if(asset.bodyLayer)return asset.bodyLayer;
+ const removed=p=>(asset.handMask?.has(p)&&Math.abs(p.x-32)>6)||(!AUTHORED_SPRITES[identity].weaponless&&sourceGear&&gearDistance(p.x,p.y,sourceGear)<(identity==='orc'?4.5:identity==='caster'?3:2.8)&&Math.abs(p.x-32)>7&&p.y>=(identity==='caster'?12:25));
+ const retained=asset.pixels.filter(p=>!removed(p)),grid=new Map(retained.map(p=>[p.y*64+p.x,p])),rows=new Map(),repairs=[];
+ const top=identity==='orc'?28:30,bottom=stage?41:38,radius=stage?12:9;
+ // Infer the chest/waist silhouette from connected costume pixels. Never
+ // fill the empty space outside the body where a resting fist used to be.
+ for(let y=top-2;y<=bottom+2;y++){
+  const seed=[32,31,33,30,34].find(x=>grid.has(y*64+x));if(seed===undefined)continue;
+  let left=seed,right=seed;
+  while(left>32-radius&&grid.has(y*64+left-1))left--;
+  while(right<32+radius&&grid.has(y*64+right+1))right++;
+  rows.set(y,{left,right});
+ }
+ for(const p of asset.pixels){
+  if(!removed(p)||p.y<top||p.y>bottom)continue;
+  const neighbors=[-2,-1,0,1,2].map(dy=>rows.get(p.y+dy)).filter(Boolean);if(!neighbors.length)continue;
+  const left=neighbors.map(r=>r.left).sort((a,b)=>a-b)[Math.floor((neighbors.length-1)*.25)],right=neighbors.map(r=>r.right).sort((a,b)=>a-b)[Math.ceil((neighbors.length-1)*.75)];
+  if(p.x<left||p.x>right)continue;
+  // Continue the adjacent material into the covered area, including its
+  // existing folds, belt and armor shading. Sample inward, never from a hand.
+  const side=Math.sign(p.x-32)||1,core=[32,31,33,30,34].map(x=>grid.get(p.y*64+x)).find(Boolean);if(!core)continue;
+  const material=colorHsl(core.color);let sample;
+  for(let step=1;step<=radius&&!sample;step++){
+   const candidate=grid.get(p.y*64+p.x-side*step);if(!candidate)continue;
+   const tone=colorHsl(candidate.color),hue=Math.abs(((tone.h-material.h+540)%360)-180);
+   if(material.s<.18?tone.s<.28:tone.s>=.18&&hue<=24)sample=candidate;
+  }
+  sample??=core;
+  if(sample)repairs.push({...p,color:sample.color,rgb:sample.rgb,index:sample.index,bodyUnderlay:true});
+ }
+ asset.bodyRepairs=repairs;
+ return asset.bodyLayer=[...retained,...repairs];
+}
 export function paintAtlasCharacter(b,id,rig,at){
  const identity=atlasIdentity(id,rig);if(!identity)return false;
  const artStage=Math.min(2,rig.artStage??rig.form??0),asset=frameFor(identity,rig.dir,artStage),rest=rig.artBind||restFor(id),angle=rig.dir*Math.PI/4,base=q=>point(q,angle),poseHead=at(rig.head),poseBody=at(rig.body),posePelvis=at(rig.pelvis),head0=base(rest.head),body0=base(rest.body),pelvis0=base(rest.pelvis),dh=difference(poseHead,head0),dc=difference(poseBody,body0),dp=difference(posePelvis,pelvis0);
@@ -162,18 +196,16 @@ export function paintAtlasCharacter(b,id,rig,at){
   }
   return {x:32+(x-32)*scale.width+delta.x,y:44+(y-45)*scale.height+delta.y};
  }
- const pixels=asset.pixels.flatMap(p=>{
-  // Neutral fists belong to articulated arm layers, never to the torso bitmap.
-  if(asset.handMask?.has(p)&&Math.abs(p.x-32)>6)return [];
+ // A complete costume sits behind the articulated arms and held equipment.
+ // Its repaired pixels use palette indices, so collection recolors stay exact.
+ const pixels=completeBodyLayer(asset,identity,artStage,sourceGear).flatMap(p=>{
   const rgb=p.rgb,lum=(rgb[0]+rgb[1]+rgb[2])/3,range=Math.max(...rgb)-Math.min(...rgb),metal=range<45&&lum>55,wood=rgb[0]>rgb[1]*1.18&&rgb[1]>rgb[2]*1.15,gem=rgb[2]>rgb[0]*1.25&&rgb[1]>rgb[0]*1.2;
   const gearPixel=['elf','fox'].includes(identity)?wood:identity==='caster'?wood||gem:metal||wood&&sourceGear&&gearDistance(p.x,p.y,sourceGear)<1;
-  // The original neutral weapon is a separate piece. Remove its whole footprint,
-  // then let the shared weapon renderer paint the actual physical handle/blade.
-  if(!AUTHORED_SPRITES[identity].weaponless&&sourceGear&&gearDistance(p.x,p.y,sourceGear)<(identity==='orc'?4.5:identity==='caster'?3:2.8)&&Math.abs(p.x-32)>7&&p.y>=(identity==='caster'?12:25))return [];
   const skin=identity==='orc'||identity==='goblin'?rgb[1]>rgb[0]*1.08&&rgb[1]>rgb[2]*1.2:rgb[0]>rgb[1]*1.1&&rgb[1]>rgb[2]*1.15&&rgb[0]>100&&rgb[0]<220;
   const armPixel=identity==='knight'?metal:skin,cloth=identity==='knight'?rgb[0]>rgb[1]*1.18&&rgb[0]>rgb[2]*1.1:['caster','frostelf','rogue','skeleton'].includes(identity)?rgb[2]>rgb[1]*1.08&&rgb[0]>38:rgb[1]>rgb[0]*1.07;
-  const hair=p.y>19&&p.y<42&&(['caster','frostelf'].includes(identity)?range<55&&lum>105:['elf','fairy','dwarf'].includes(identity)?rgb[0]>rgb[1]*1.1&&rgb[1]>rgb[2]*1.4&&rgb[0]>110:identity==='orc'&&artStage?lum<65&&range<35:false);
-  const q=warped(p.x,p.y,false,armPixel,cloth,hair),alongX=warped(p.x+1,p.y,false,armPixel,cloth,hair),alongY=warped(p.x,p.y+1,false,armPixel,cloth,hair),spanX=clamp(Math.max(Math.abs(alongX.x-q.x),Math.abs(alongY.x-q.x)),1,3),spanY=clamp(Math.max(Math.abs(alongX.y-q.y),Math.abs(alongY.y-q.y)),1,3);
+  const hair=!p.bodyUnderlay&&p.y>19&&p.y<42&&(['caster','frostelf'].includes(identity)?range<55&&lum>105:['elf','fairy','dwarf'].includes(identity)?rgb[0]>rgb[1]*1.1&&rgb[1]>rgb[2]*1.4&&rgb[0]>110:identity==='orc'&&artStage?lum<65&&range<35:false);
+  const clothMotion=cloth&&!p.bodyUnderlay;
+  const q=warped(p.x,p.y,false,armPixel,clothMotion,hair),alongX=warped(p.x+1,p.y,false,armPixel,clothMotion,hair),alongY=warped(p.x,p.y+1,false,armPixel,clothMotion,hair),spanX=clamp(Math.max(Math.abs(alongX.x-q.x),Math.abs(alongY.x-q.x)),1,3),spanY=clamp(Math.max(Math.abs(alongX.y-q.y),Math.abs(alongY.y-q.y)),1,3);
   let color=artColors[p.index];
   if(expression!=='open'&&eyePixels.includes(p)){const below=asset.pixels.find(z=>z.x===p.x&&z.y===p.y+3);color=below?artColors[below.index]:(identity==='fox'?'#d48b3d':'#d3a879');}
   return [{...q,color,spanX,spanY}];
@@ -196,6 +228,7 @@ export function paintAtlasCharacter(b,id,rig,at){
  // Weld only uncovered pixels at joint seams, preserving the painted costume.
  const weld=(a,z,color)=>{const length=Math.hypot(z.x-a.x,z.y-a.y),steps=Math.max(1,Math.ceil(length*2));for(let i=0;i<=steps;i++){const x=Math.round(a.x+(z.x-a.x)*i/steps),y=Math.round(a.y+(z.y-a.y)*i/steps);if(x>0&&x<63&&y>0&&y<63&&!b.data[(y*64+x)*4+3])b.dot(x,y,color);}};
  const anchor=q=>({x:32+(q.x-32+ox)*fit,y:44+(q.y-44+oy)*fit});
+ rig.artBodyRepairs=asset.bodyRepairs.map(p=>({...anchor(warped(p.x,p.y)),color:artColors[p.index],source:{x:p.x,y:p.y}}));
  rig.artAnchors={head:anchor(warped(32,headCenter.y)),body:anchor(warped(32,34)),pelvis:anchor(warped(32,38))};
  // Bind shoulders to the connected painted torso, rather than a guessed
  // row in the source sheet. Different species and evolved costumes have

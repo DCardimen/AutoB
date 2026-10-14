@@ -10,7 +10,7 @@ try{
  page.on('pageerror',e=>errors.push(e.message));
  await page.goto(base);await page.waitForFunction(()=>window.starfall);
  const sheet=await page.evaluate(async()=>{
-  const {pixelSpec}=await import('/native-content.js'),{nativePoseRig}=await import('/native-poses.js'),{paintCharacterPixels}=await import('/prototype-pixel-art.js');
+  const {pixelSpec}=await import('/native-content.js'),{nativePoseRig}=await import('/native-poses.js'),{paintCharacterPixels,SPRITE_ART_REVISION}=await import('/prototype-pixel-art.js');
   const rows=[['brakk',0,'idle',.25],['brakk',1,'idle',.25],['brakk',2,'idle',.25],['brom',0,'idle',.25],['aurel',0,'idle',.25],['tarka',0,'idle',.25],['brakk',0,'run',.25],['brakk',0,'attack',.46]];
   const cv=document.createElement('canvas');cv.width=1024;cv.height=rows.length*154;
   const ctx=cv.getContext('2d');ctx.imageSmoothingEnabled=false;ctx.fillStyle='#10242c';ctx.fillRect(0,0,cv.width,cv.height);ctx.font='12px sans-serif';
@@ -23,7 +23,7 @@ try{
     poses.push({id,evolution,state,dir,clipped:pixels.clipped,grip:rig.artProject(rig.weapon.grip),tip:rig.artProject(rig.weapon.tip)});
    }
   });
-  return {png:cv.toDataURL().split(',')[1],poses};
+  return {png:cv.toDataURL().split(',')[1],poses,artRevision:SPRITE_ART_REVISION};
  });
  assert.ok(sheet.poses.every(p=>p.clipped===0),'complete pose silhouettes');
  fs.writeFileSync('playtest-artifacts/natural-carry-directions.png',Buffer.from(sheet.png,'base64'));
@@ -47,6 +47,6 @@ try{
   await context.close();
  }
  assert.deepEqual(errors,[]);
- fs.writeFileSync('tests/reports/natural-melee-carry.json',JSON.stringify({artRevision:7,checks,poses:sheet.poses,errors},null,2)+'\n');
+ fs.writeFileSync('tests/reports/natural-melee-carry.json',JSON.stringify({artRevision:sheet.artRevision,checks,poses:sheet.poses,errors},null,2)+'\n');
  console.log(checks.join('\n'));
 }finally{await browser.close();}

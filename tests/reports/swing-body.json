@@ -1,0 +1,870 @@
+{
+  "artRevision": 8,
+  "poses": [
+    {
+      "id": "brakk",
+      "evolution": 0,
+      "state": "body",
+      "phase": 0.25,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 9
+    },
+    {
+      "id": "brakk",
+      "evolution": 0,
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 9
+    },
+    {
+      "id": "brakk",
+      "evolution": 0,
+      "state": "attack",
+      "phase": 0.12,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 9
+    },
+    {
+      "id": "brakk",
+      "evolution": 0,
+      "state": "attack",
+      "phase": 0.34,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 9
+    },
+    {
+      "id": "brakk",
+      "evolution": 0,
+      "state": "attack",
+      "phase": 0.46,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 9
+    },
+    {
+      "id": "brakk",
+      "evolution": 0,
+      "state": "attack",
+      "phase": 0.65,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 9
+    },
+    {
+      "id": "brakk",
+      "evolution": 0,
+      "state": "attack",
+      "phase": 0.82,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 9
+    },
+    {
+      "id": "brakk",
+      "evolution": 0,
+      "state": "attack",
+      "phase": 0.46,
+      "dir": 2,
+      "clipped": 0,
+      "bodyRepairs": 9
+    },
+    {
+      "id": "brakk",
+      "evolution": 1,
+      "state": "body",
+      "phase": 0.25,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 13
+    },
+    {
+      "id": "brakk",
+      "evolution": 1,
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 13
+    },
+    {
+      "id": "brakk",
+      "evolution": 1,
+      "state": "attack",
+      "phase": 0.12,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 13
+    },
+    {
+      "id": "brakk",
+      "evolution": 1,
+      "state": "attack",
+      "phase": 0.34,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 13
+    },
+    {
+      "id": "brakk",
+      "evolution": 1,
+      "state": "attack",
+      "phase": 0.46,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 13
+    },
+    {
+      "id": "brakk",
+      "evolution": 1,
+      "state": "attack",
+      "phase": 0.65,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 13
+    },
+    {
+      "id": "brakk",
+      "evolution": 1,
+      "state": "attack",
+      "phase": 0.82,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 13
+    },
+    {
+      "id": "brakk",
+      "evolution": 1,
+      "state": "attack",
+      "phase": 0.46,
+      "dir": 2,
+      "clipped": 0,
+      "bodyRepairs": 6
+    },
+    {
+      "id": "brakk",
+      "evolution": 2,
+      "state": "body",
+      "phase": 0.25,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 13
+    },
+    {
+      "id": "brakk",
+      "evolution": 2,
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 13
+    },
+    {
+      "id": "brakk",
+      "evolution": 2,
+      "state": "attack",
+      "phase": 0.12,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 13
+    },
+    {
+      "id": "brakk",
+      "evolution": 2,
+      "state": "attack",
+      "phase": 0.34,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 13
+    },
+    {
+      "id": "brakk",
+      "evolution": 2,
+      "state": "attack",
+      "phase": 0.46,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 13
+    },
+    {
+      "id": "brakk",
+      "evolution": 2,
+      "state": "attack",
+      "phase": 0.65,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 13
+    },
+    {
+      "id": "brakk",
+      "evolution": 2,
+      "state": "attack",
+      "phase": 0.82,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 13
+    },
+    {
+      "id": "brakk",
+      "evolution": 2,
+      "state": "attack",
+      "phase": 0.46,
+      "dir": 2,
+      "clipped": 0,
+      "bodyRepairs": 6
+    },
+    {
+      "id": "aurel",
+      "evolution": 0,
+      "state": "body",
+      "phase": 0.25,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 6
+    },
+    {
+      "id": "aurel",
+      "evolution": 0,
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 6
+    },
+    {
+      "id": "aurel",
+      "evolution": 0,
+      "state": "attack",
+      "phase": 0.12,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 6
+    },
+    {
+      "id": "aurel",
+      "evolution": 0,
+      "state": "attack",
+      "phase": 0.34,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 6
+    },
+    {
+      "id": "aurel",
+      "evolution": 0,
+      "state": "attack",
+      "phase": 0.46,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 6
+    },
+    {
+      "id": "aurel",
+      "evolution": 0,
+      "state": "attack",
+      "phase": 0.65,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 6
+    },
+    {
+      "id": "aurel",
+      "evolution": 0,
+      "state": "attack",
+      "phase": 0.82,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 6
+    },
+    {
+      "id": "aurel",
+      "evolution": 0,
+      "state": "attack",
+      "phase": 0.46,
+      "dir": 2,
+      "clipped": 0,
+      "bodyRepairs": 8
+    },
+    {
+      "id": "aurel",
+      "evolution": 1,
+      "state": "body",
+      "phase": 0.25,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 12
+    },
+    {
+      "id": "aurel",
+      "evolution": 1,
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 12
+    },
+    {
+      "id": "aurel",
+      "evolution": 1,
+      "state": "attack",
+      "phase": 0.12,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 12
+    },
+    {
+      "id": "aurel",
+      "evolution": 1,
+      "state": "attack",
+      "phase": 0.34,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 12
+    },
+    {
+      "id": "aurel",
+      "evolution": 1,
+      "state": "attack",
+      "phase": 0.46,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 12
+    },
+    {
+      "id": "aurel",
+      "evolution": 1,
+      "state": "attack",
+      "phase": 0.65,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 12
+    },
+    {
+      "id": "aurel",
+      "evolution": 1,
+      "state": "attack",
+      "phase": 0.82,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 12
+    },
+    {
+      "id": "aurel",
+      "evolution": 1,
+      "state": "attack",
+      "phase": 0.46,
+      "dir": 2,
+      "clipped": 0,
+      "bodyRepairs": 11
+    },
+    {
+      "id": "aurel",
+      "evolution": 2,
+      "state": "body",
+      "phase": 0.25,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 12
+    },
+    {
+      "id": "aurel",
+      "evolution": 2,
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 12
+    },
+    {
+      "id": "aurel",
+      "evolution": 2,
+      "state": "attack",
+      "phase": 0.12,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 12
+    },
+    {
+      "id": "aurel",
+      "evolution": 2,
+      "state": "attack",
+      "phase": 0.34,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 12
+    },
+    {
+      "id": "aurel",
+      "evolution": 2,
+      "state": "attack",
+      "phase": 0.46,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 12
+    },
+    {
+      "id": "aurel",
+      "evolution": 2,
+      "state": "attack",
+      "phase": 0.65,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 12
+    },
+    {
+      "id": "aurel",
+      "evolution": 2,
+      "state": "attack",
+      "phase": 0.82,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 12
+    },
+    {
+      "id": "aurel",
+      "evolution": 2,
+      "state": "attack",
+      "phase": 0.46,
+      "dir": 2,
+      "clipped": 0,
+      "bodyRepairs": 11
+    },
+    {
+      "id": "brom",
+      "evolution": 0,
+      "state": "body",
+      "phase": 0.25,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 0
+    },
+    {
+      "id": "brom",
+      "evolution": 0,
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 0
+    },
+    {
+      "id": "brom",
+      "evolution": 0,
+      "state": "attack",
+      "phase": 0.12,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 0
+    },
+    {
+      "id": "brom",
+      "evolution": 0,
+      "state": "attack",
+      "phase": 0.34,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 0
+    },
+    {
+      "id": "brom",
+      "evolution": 0,
+      "state": "attack",
+      "phase": 0.46,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 0
+    },
+    {
+      "id": "brom",
+      "evolution": 0,
+      "state": "attack",
+      "phase": 0.65,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 0
+    },
+    {
+      "id": "brom",
+      "evolution": 0,
+      "state": "attack",
+      "phase": 0.82,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 0
+    },
+    {
+      "id": "brom",
+      "evolution": 0,
+      "state": "attack",
+      "phase": 0.46,
+      "dir": 2,
+      "clipped": 0,
+      "bodyRepairs": 2
+    },
+    {
+      "id": "brom",
+      "evolution": 1,
+      "state": "body",
+      "phase": 0.25,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 10
+    },
+    {
+      "id": "brom",
+      "evolution": 1,
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 10
+    },
+    {
+      "id": "brom",
+      "evolution": 1,
+      "state": "attack",
+      "phase": 0.12,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 10
+    },
+    {
+      "id": "brom",
+      "evolution": 1,
+      "state": "attack",
+      "phase": 0.34,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 10
+    },
+    {
+      "id": "brom",
+      "evolution": 1,
+      "state": "attack",
+      "phase": 0.46,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 10
+    },
+    {
+      "id": "brom",
+      "evolution": 1,
+      "state": "attack",
+      "phase": 0.65,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 10
+    },
+    {
+      "id": "brom",
+      "evolution": 1,
+      "state": "attack",
+      "phase": 0.82,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 10
+    },
+    {
+      "id": "brom",
+      "evolution": 1,
+      "state": "attack",
+      "phase": 0.46,
+      "dir": 2,
+      "clipped": 0,
+      "bodyRepairs": 10
+    },
+    {
+      "id": "brom",
+      "evolution": 2,
+      "state": "body",
+      "phase": 0.25,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 10
+    },
+    {
+      "id": "brom",
+      "evolution": 2,
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 10
+    },
+    {
+      "id": "brom",
+      "evolution": 2,
+      "state": "attack",
+      "phase": 0.12,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 10
+    },
+    {
+      "id": "brom",
+      "evolution": 2,
+      "state": "attack",
+      "phase": 0.34,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 10
+    },
+    {
+      "id": "brom",
+      "evolution": 2,
+      "state": "attack",
+      "phase": 0.46,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 10
+    },
+    {
+      "id": "brom",
+      "evolution": 2,
+      "state": "attack",
+      "phase": 0.65,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 10
+    },
+    {
+      "id": "brom",
+      "evolution": 2,
+      "state": "attack",
+      "phase": 0.82,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 10
+    },
+    {
+      "id": "brom",
+      "evolution": 2,
+      "state": "attack",
+      "phase": 0.46,
+      "dir": 2,
+      "clipped": 0,
+      "bodyRepairs": 13
+    },
+    {
+      "id": "tarka",
+      "evolution": 0,
+      "state": "body",
+      "phase": 0.25,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 5
+    },
+    {
+      "id": "tarka",
+      "evolution": 0,
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 5
+    },
+    {
+      "id": "tarka",
+      "evolution": 0,
+      "state": "attack",
+      "phase": 0.12,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 5
+    },
+    {
+      "id": "tarka",
+      "evolution": 0,
+      "state": "attack",
+      "phase": 0.34,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 5
+    },
+    {
+      "id": "tarka",
+      "evolution": 0,
+      "state": "attack",
+      "phase": 0.46,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 5
+    },
+    {
+      "id": "tarka",
+      "evolution": 0,
+      "state": "attack",
+      "phase": 0.65,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 5
+    },
+    {
+      "id": "tarka",
+      "evolution": 0,
+      "state": "attack",
+      "phase": 0.82,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 5
+    },
+    {
+      "id": "tarka",
+      "evolution": 0,
+      "state": "attack",
+      "phase": 0.46,
+      "dir": 2,
+      "clipped": 0,
+      "bodyRepairs": 5
+    },
+    {
+      "id": "tarka",
+      "evolution": 1,
+      "state": "body",
+      "phase": 0.25,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 5
+    },
+    {
+      "id": "tarka",
+      "evolution": 1,
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 5
+    },
+    {
+      "id": "tarka",
+      "evolution": 1,
+      "state": "attack",
+      "phase": 0.12,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 5
+    },
+    {
+      "id": "tarka",
+      "evolution": 1,
+      "state": "attack",
+      "phase": 0.34,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 5
+    },
+    {
+      "id": "tarka",
+      "evolution": 1,
+      "state": "attack",
+      "phase": 0.46,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 5
+    },
+    {
+      "id": "tarka",
+      "evolution": 1,
+      "state": "attack",
+      "phase": 0.65,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 5
+    },
+    {
+      "id": "tarka",
+      "evolution": 1,
+      "state": "attack",
+      "phase": 0.82,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 5
+    },
+    {
+      "id": "tarka",
+      "evolution": 1,
+      "state": "attack",
+      "phase": 0.46,
+      "dir": 2,
+      "clipped": 0,
+      "bodyRepairs": 4
+    },
+    {
+      "id": "tarka",
+      "evolution": 2,
+      "state": "body",
+      "phase": 0.25,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 2
+    },
+    {
+      "id": "tarka",
+      "evolution": 2,
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 2
+    },
+    {
+      "id": "tarka",
+      "evolution": 2,
+      "state": "attack",
+      "phase": 0.12,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 2
+    },
+    {
+      "id": "tarka",
+      "evolution": 2,
+      "state": "attack",
+      "phase": 0.34,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 2
+    },
+    {
+      "id": "tarka",
+      "evolution": 2,
+      "state": "attack",
+      "phase": 0.46,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 2
+    },
+    {
+      "id": "tarka",
+      "evolution": 2,
+      "state": "attack",
+      "phase": 0.65,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 2
+    },
+    {
+      "id": "tarka",
+      "evolution": 2,
+      "state": "attack",
+      "phase": 0.82,
+      "dir": 1,
+      "clipped": 0,
+      "bodyRepairs": 2
+    },
+    {
+      "id": "tarka",
+      "evolution": 2,
+      "state": "attack",
+      "phase": 0.46,
+      "dir": 2,
+      "clipped": 0,
+      "bodyRepairs": 8
+    }
+  ],
+  "errors": []
+}
