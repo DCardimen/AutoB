@@ -1359,6 +1359,114 @@
     }
   };
 
+  // melee-weapon-art.js
+  function paintMeleeWeapon(b, rig, p, grip, tip, outline = "#192328") {
+    const kind = rig.gear || rig.weapon.kind, dx = tip.x - grip.x, dy = tip.y - grip.y, length2 = Math.hypot(dx, dy) || 1, tx = dx / length2, ty = dy / length2, nx = -ty, ny = tx;
+    const q = (a, n) => ({ x: grip.x + tx * a + nx * n, y: grip.y + ty * a + ny * n });
+    const sun = rig.equipment?.includes("sunsteel-edge") || kind === "sunblade";
+    const steel = sun ? ["#6c513c", "#bd995b", "#e8cf91", "#fff2c9"] : ["#344e5c", "#738e9b", "#b8cfce", "#eaf3e5"];
+    const wood = ["#44312c", "#815737", "#c49b62"], gold = "#d0ae70", edge = steel[3], shadow = steel[0], face = steel[1];
+    const poly = (points, color) => b.poly(points.map(([a, n]) => q(a, n)), color);
+    const shape = (points, color) => b.outlined(points.map(([a, n]) => q(a, n)), color);
+    const line = (a, n, z, m, color, r = 0) => b.line(q(a, n), q(z, m), color, r);
+    const dot2 = (a, n, color) => {
+      const v = q(a, n);
+      b.dot(v.x, v.y, color);
+    };
+    const haft = (end) => {
+      line(-2, 0, end, 0, outline, 1.05);
+      line(-2, 0, end, 0, wood[1], 0.65);
+      line(-1, -0.5, end - 1, -0.5, wood[2]);
+      for (let a = -1; a <= 2; a += 2) line(a, -0.8, a, 0.8, wood[0]);
+      dot2(-2, 0, gold);
+    };
+    if (kind === "cannon") {
+      line(0, 0, length2, 0, outline, 3);
+      line(0, 0, length2, 0, face, 2);
+      line(1, -1, length2 - 1, -1, steel[2]);
+      shape([[length2 - 2, -2], [length2 + 1, -2], [length2 + 1, 2], [length2 - 2, 2]], shadow);
+      dot2(length2, 0, "#a6ded4");
+      return;
+    }
+    if (kind === "gauntlet") {
+      shape([[-1, -2], [length2 - 2, -3], [length2 + 1, -2], [length2 + 1, 2], [length2 - 2, 3], [-1, 2]], shadow);
+      poly([[0, -1], [length2 - 2, -2], [length2, 0], [length2 - 1, 2], [0, 1]], face);
+      line(1, -1, length2 - 2, -2, edge);
+      line(length2 - 1, -2, length2 - 1, 2, steel[2]);
+      return;
+    }
+    if (["hammer", "royal-hammer"].includes(kind)) {
+      haft(length2 - 1);
+      const h = kind === "royal-hammer" ? 4.2 : 3.5;
+      shape([[length2 - 4, -h], [length2, -h], [length2 + 2, -h + 1], [length2 + 2, h - 1], [length2, h], [length2 - 4, h]], shadow);
+      poly([[length2 - 3, -h + 1], [length2, -h + 1], [length2, 0], [length2 - 3, 0]], steel[2]);
+      poly([[length2 - 3, 0], [length2, 0], [length2, h - 1], [length2 - 3, h - 1]], face);
+      line(length2 - 3, -h, length2, -h, edge);
+      line(length2 + 1, -h + 1, length2 + 1, h - 1, steel[2]);
+      line(length2 - 4, -h + 1, length2 - 4, h - 1, gold);
+      dot2(length2 - 1, 0, kind === "royal-hammer" ? "#9dd5d2" : gold);
+      return;
+    }
+    if (["club", "branch-club"].includes(kind)) {
+      haft(3);
+      shape([[2, -1], [length2 - 4, -2.5], [length2 - 1, -3], [length2 + 1, -1], [length2 + 1, 1], [length2 - 1, 3], [length2 - 4, 2.5], [2, 1]], wood[0]);
+      poly([[3, -0.4], [length2 - 3, -1.7], [length2, -1], [length2, 1], [length2 - 3, 1.7], [3, 0.6]], wood[1]);
+      line(4, -0.8, length2 - 3, -1.8, wood[2]);
+      line(length2 - 5, 0, length2 - 2, 0.5, wood[0]);
+      dot2(length2 - 2, -1, gold);
+      return;
+    }
+    if (["axe", "great-axe"].includes(kind)) {
+      haft(length2);
+      const h = kind === "great-axe" ? 6 : 5.5;
+      shape([[length2 - 4, -1], [length2 - 5, -h + 1], [length2 - 2, -h], [length2 + 1, -h + 1], [length2 + 2, -2], [length2, 1], [length2 - 3, 2]], shadow);
+      poly([[length2 - 4, -2], [length2 - 3, -h + 1], [length2 - 1, -h + 1], [length2, -2], [length2 - 1, 0], [length2 - 3, 1]], face);
+      line(length2 - 2, -h, length2 + 1, -h + 1, edge);
+      line(length2 + 1, -h + 1, length2 + 2, -2, steel[2]);
+      line(length2 + 2, -2, length2, 1, edge);
+      line(length2 - 4, -1, length2 - 2, 0, gold);
+      dot2(length2 - 2, -2, steel[2]);
+      if (kind === "great-axe") {
+        shape([[length2 - 3, 1], [length2 - 4, h - 1], [length2 - 1, h], [length2 + 1, h - 1], [length2 + 1, 2], [length2 - 1, 0]], shadow);
+        poly([[length2 - 3, 2], [length2 - 2, h - 1], [length2, h - 1], [length2, 2]], face);
+        line(length2 - 1, h, length2 + 1, h - 1, edge);
+      }
+      return;
+    }
+    const knife = kind === "knife", rapier = kind === "rapier", moon = kind === "moonblade", wide = kind === "sunblade" || moon;
+    haft(2);
+    const guard = rapier ? 2.6 : knife ? 1.7 : wide ? 3.2 : 2.8, base = knife ? 1.5 : rapier ? 1.1 : wide ? 2.3 : 2;
+    shape([[2, -base], [length2 - 3, -base * 0.65], [length2, 0], [length2 - 3, base * 0.65], [2, base]], shadow);
+    poly([[3, -base + 0.3], [length2 - 3, -base * 0.4], [length2 - 0.5, 0], [3, 0]], edge);
+    poly([[3, 0], [length2 - 0.5, 0], [length2 - 3, base * 0.65], [3, base - 0.2]], steel[2]);
+    line(3, 0, length2 - 2, 0, face);
+    line(2, -guard, 2, guard, outline, 1);
+    line(2, -guard + 0.4, 2, guard - 0.4, gold, 0.55);
+    dot2(2, -guard, edge);
+    dot2(2, guard, shadow);
+    if (rapier) {
+      const center = q(1, 0);
+      b.oval(center.x, center.y, 1.5, 1.5, shadow);
+      dot2(1, -1, gold);
+    }
+    if (wide) dot2(3, 0, moon ? "#99d9d7" : "#e5b86c");
+  }
+  function meleeWeaponBounds(rig, grip, tip) {
+    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+    const include = (x, y, rx = 0, ry = rx) => {
+      minX = Math.min(minX, Math.round(x) - Math.ceil(rx));
+      maxX = Math.max(maxX, Math.round(x) + Math.ceil(rx));
+      minY = Math.min(minY, Math.round(y) - Math.ceil(ry));
+      maxY = Math.max(maxY, Math.round(y) + Math.ceil(ry));
+    };
+    const brush = { dot: (x, y) => include(x, y), oval: (x, y, rx, ry) => include(x, y, rx, ry), line: (a, z, c2, r = 0.6) => {
+      include(a.x, a.y, r || 0.6);
+      include(z.x, z.y, r || 0.6);
+    }, poly: (vertices) => vertices.forEach((v) => include(v.x, v.y)), outlined: (vertices) => vertices.forEach((v) => include(v.x, v.y, 0.6)) };
+    paintMeleeWeapon(brush, rig, null, grip, tip);
+    return { minX, minY, maxX, maxY };
+  }
+
   // pixel-face-tools.js
   var FACE_OUTLINE = "#192328";
   function faceShape(b, x, y, rx, ry, p, sign = 0, back = false) {
@@ -2404,11 +2512,11 @@
   }
   function handLandmarks(asset, identity, stage) {
     if (asset.hands) return asset.hands;
-    const hands = {}, expectedY = stage ? 31 : 34;
+    const hands = {}, expectedY = stage ? ["orc", "minotaur", "troll", "knight", "goblin", "dwarf", "rogue"].includes(identity) ? 38 : 31 : 34;
     for (const side of [-1, 1]) {
       const expectedX = 32 + side * 11, candidates = asset.pixels.filter((p) => p.y >= expectedY - 4 && p.y <= expectedY + 3 && Math.abs(p.x - expectedX) <= 5).filter((p) => {
         const [r, g, b] = p.rgb;
-        return ["orc", "goblin", "troll"].includes(identity) ? g > r * 1.08 && g > b * 1.12 : identity === "knight" ? Math.max(r, g, b) - Math.min(r, g, b) < 65 && r > 40 : r > g * 1.12 && g > b * 1.1 && r > 65;
+        return ["orc", "goblin", "troll"].includes(identity) ? g > r * 0.9 && g > b * 1.12 : identity === "knight" ? Math.max(r, g, b) - Math.min(r, g, b) < 65 && r > 40 : r > g * 1.12 && g > b * 1.1 && r > 65;
       });
       const seed = candidates.sort((a, b) => Math.hypot(a.x - expectedX, a.y - expectedY) - Math.hypot(b.x - expectedX, b.y - expectedY))[0];
       if (seed) hands[side] = { ...seed };
@@ -2644,10 +2752,10 @@
       return { x: 32 + (x - 32) * scale.width + delta.x, y: 44 + (y - 45) * scale.height + delta.y };
     }
     const pixels = asset.pixels.flatMap((p) => {
-      if (asset.handMask?.has(p)) return [];
+      if (asset.handMask?.has(p) && Math.abs(p.x - 32) > 6) return [];
       const rgb = p.rgb, lum = (rgb[0] + rgb[1] + rgb[2]) / 3, range = Math.max(...rgb) - Math.min(...rgb), metal = range < 45 && lum > 55, wood = rgb[0] > rgb[1] * 1.18 && rgb[1] > rgb[2] * 1.15, gem = rgb[2] > rgb[0] * 1.25 && rgb[1] > rgb[0] * 1.2;
       const gearPixel = ["elf", "fox"].includes(identity) ? wood : identity === "caster" ? wood || gem : metal || wood && sourceGear && gearDistance(p.x, p.y, sourceGear) < 1;
-      if (!AUTHORED_SPRITES2[identity].weaponless && sourceGear && gearDistance(p.x, p.y, sourceGear) < (identity === "orc" ? 4.5 : identity === "caster" ? 3 : 2.8) && Math.abs(p.x - 32) > 6 && p.y >= (identity === "caster" ? 12 : 22)) return [];
+      if (!AUTHORED_SPRITES2[identity].weaponless && sourceGear && gearDistance(p.x, p.y, sourceGear) < (identity === "orc" ? 4.5 : identity === "caster" ? 3 : 2.8) && Math.abs(p.x - 32) > 7 && p.y >= (identity === "caster" ? 12 : 25)) return [];
       const skin = identity === "orc" || identity === "goblin" ? rgb[1] > rgb[0] * 1.08 && rgb[1] > rgb[2] * 1.2 : rgb[0] > rgb[1] * 1.1 && rgb[1] > rgb[2] * 1.15 && rgb[0] > 100 && rgb[0] < 220;
       const armPixel = identity === "knight" ? metal : skin, cloth = identity === "knight" ? rgb[0] > rgb[1] * 1.18 && rgb[0] > rgb[2] * 1.1 : ["caster", "frostelf", "rogue", "skeleton"].includes(identity) ? rgb[2] > rgb[1] * 1.08 && rgb[0] > 38 : rgb[1] > rgb[0] * 1.07;
       const hair = p.y > 19 && p.y < 42 && (["caster", "frostelf"].includes(identity) ? range < 55 && lum > 105 : ["elf", "fairy", "dwarf"].includes(identity) ? rgb[0] > rgb[1] * 1.1 && rgb[1] > rgb[2] * 1.4 && rgb[0] > 110 : identity === "orc" && artStage ? lum < 65 && range < 35 : false);
@@ -2711,17 +2819,63 @@
     };
     const anchor = (q) => ({ x: 32 + (q.x - 32 + ox) * fit, y: 44 + (q.y - 44 + oy) * fit });
     rig.artAnchors = { head: anchor(warped(32, headCenter.y)), body: anchor(warped(32, 34)), pelvis: anchor(warped(32, 38)) };
+    const torsoPixels = [];
+    if (rig.arms.length) {
+      const center = rig.artAnchors.body, near = [];
+      for (let y = Math.round(center.y) - 3; y <= Math.round(center.y) + 3; y++) for (let x = Math.round(center.x) - 3; x <= Math.round(center.x) + 3; x++) if (x >= 0 && x < 64 && y >= 0 && y < 64 && b.data[(y * 64 + x) * 4 + 3]) near.push({ x, y });
+      near.sort((a, z) => Math.hypot(a.x - center.x, a.y - center.y) - Math.hypot(z.x - center.x, z.y - center.y));
+      if (near.length) {
+        rig.artAnchors.body = { ...near[0] };
+        const todo = [near[0]], seen = /* @__PURE__ */ new Set([near[0].y * 64 + near[0].x]);
+        for (let i = 0; i < todo.length; i++) {
+          const v = todo[i];
+          if (v.y >= center.y - 7 && v.y <= center.y + 3) torsoPixels.push(v);
+          for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) {
+            const x = v.x + dx, y = v.y + dy, k = y * 64 + x;
+            if (x < 0 || x >= 64 || y < 0 || y >= 64 || Math.abs(x - center.x) > 14 || y < center.y - 7 || y > center.y + 4 || seen.has(k) || !b.data[k * 4 + 3]) continue;
+            seen.add(k);
+            todo.push({ x, y });
+          }
+        }
+      }
+    }
     rig.artArmRoots = {};
     rig.artHandColors = {};
     rig.artHandHighlights = {};
     const limbPoint = (q) => {
       const v = at(q);
-      return { ...v, ...anchor({ x: 32 + (v.x - poseBody.x) * 1.3 + dc.x, y: 33 + (v.y - poseBody.y) * 0.9 + dc.y }) };
+      return { ...v, ...anchor({ x: 32 + (v.x - poseBody.x) * 1.65 + dc.x, y: 30 + (v.y - poseBody.y) * 0.95 + dc.y }) };
     };
-    const weaponScale = id === "orc" ? 0.64 : id === "knight" ? 0.76 : id === "caster" ? 0.83 : 0.9;
+    const melee = rig.weapon && ["sword", "axe"].includes(rig.weapon.kind), weaponScale = melee ? 1.02 : id === "caster" ? 0.83 : 0.9;
+    const carrying = melee && !["cannon", "gauntlet"].includes(rig.gear) && !rig.ragdoll;
+    const carryWeight = !carrying ? 0 : ["attack", "slash", "charge"].includes(rig.state) ? rig.stage === "windup" ? 1 - ease2(rig.phase / 0.72) : ease2((rig.phase - 0.26) / 0.74) : ["cast", "death", "knockdown", "getup"].includes(rig.state) ? 0 : 1;
     rig.artLimbPoints = /* @__PURE__ */ new Map();
     for (const arm of rig.arms) {
-      const root = limbPoint(arm.root), joint = limbPoint(arm.joint), end = limbPoint(arm.end), screenSide = Math.sign(end.x - root.x) || arm.side, hand = sourceHands[screenSide];
+      const root = limbPoint(arm.root), joint = limbPoint(arm.joint), end = limbPoint(arm.end);
+      const screenSide = melee ? Math.sign(root.x - limbPoint(rig.body).x) || -arm.side * Math.sign(Math.cos(angle) || 1) : Math.sign(end.x - root.x) || arm.side, hand = sourceHands[screenSide];
+      root.y -= 3 * fit;
+      joint.y -= 1.5 * fit;
+      if (carryWeight && hand) {
+        const neutral = anchor({ x: 32 + (hand.x - 32) * scale.width + dc.x, y: 44 + (hand.y - 45) * scale.height + dc.y }), bind = rest.arms.find((a) => a.side === arm.side), drift = bind ? difference(limbPoint(arm.end), limbPoint(bind.end)) : { x: 0, y: 0 };
+        neutral.x += drift.x * 0.4;
+        neutral.y += drift.y * 0.4;
+        end.x += (neutral.x - end.x) * carryWeight;
+        end.y += (neutral.y - end.y) * carryWeight;
+        root.x += (neutral.x - screenSide * 1.5 * fit - root.x) * carryWeight;
+        root.y += (neutral.y - 5.5 * fit - root.y) * carryWeight;
+      }
+      if (torsoPixels.length) {
+        const socket = torsoPixels.reduce((best, v) => Math.hypot(v.x - root.x, v.y - root.y) < Math.hypot(best.x - root.x, best.y - root.y) ? v : best, torsoPixels[0]);
+        const dx = socket.x - root.x, dy = socket.y - root.y;
+        root.x = socket.x;
+        root.y = socket.y;
+        joint.x += dx * 0.35;
+        joint.y += dy * 0.35;
+      }
+      if (carryWeight) {
+        joint.x += ((root.x + end.x) / 2 + screenSide * 0.6 * fit - joint.x) * carryWeight;
+        joint.y += ((root.y + end.y) / 2 - joint.y) * carryWeight;
+      }
       rig.artArmRoots[arm.side] = root;
       rig.artHandColors[arm.side] = hand && artColors[hand.index];
       rig.artHandHighlights[arm.side] = handHighlight(asset, artColors, hand);
@@ -2730,12 +2884,43 @@
       rig.artLimbPoints.set(arm.end, end);
     }
     const main = rig.weapon && rig.arms.find((a) => a.side === (rig.weapon.hand === "left" ? -1 : 1)), paintedGrip = main && rig.artLimbPoints.get(main.end), physicalGrip = rig.weapon && at(rig.weapon.grip);
+    const g3 = rig.weapon?.grip, t3 = rig.weapon?.tip;
+    const normalize = (v) => {
+      const n = Math.hypot(v.x, v.y, v.z) || 1;
+      return { x: v.x / n, y: v.y / n, z: v.z / n };
+    };
+    const actual = g3 ? normalize({ x: t3.x - g3.x, y: t3.y - g3.y, z: t3.z - g3.z }) : null;
+    const screenSign = Math.sign((paintedGrip?.x || 32) - rig.artAnchors.body.x) || Math.sign(Math.cos(angle)) || 1;
+    const carry = normalize({ x: 0.32 * screenSign * Math.cos(angle), y: -0.32 * screenSign * Math.sin(angle), z: -1 });
+    const presented = actual && normalize({ x: actual.x + (carry.x - actual.x) * carryWeight, y: actual.y + (carry.y - actual.y) * carryWeight, z: actual.z + (carry.z - actual.z) * carryWeight });
+    const cross = (v, w) => ({ x: v.y * w.z - v.z * w.y, y: v.z * w.x - v.x * w.z, z: v.x * w.y - v.y * w.x });
+    const axis = actual && cross(actual, presented), cosine = actual && actual.x * presented.x + actual.y * presented.y + actual.z * presented.z;
+    const rotate = (v) => {
+      if (!carryWeight || !axis) return v;
+      const first = cross(axis, v), second = cross(axis, first), denom = Math.max(1e-4, 1 + cosine);
+      return { x: v.x + first.x + second.x / denom, y: v.y + first.y + second.y / denom, z: v.z + first.z + second.z / denom };
+    };
     const heldPoint = (q) => {
       const v = at(q);
-      return paintedGrip ? { ...v, x: paintedGrip.x + (v.x - physicalGrip.x) * fit * weaponScale, y: paintedGrip.y + (v.y - physicalGrip.y) * fit * weaponScale } : v;
+      if (!paintedGrip) return v;
+      const offset = rotate({ x: q.x - g3.x, y: q.y - g3.y, z: q.z - g3.z }), projected = projectRig(offset, angle);
+      const reach = weaponScale * (1 - 0.36 * carryWeight);
+      return { ...v, x: paintedGrip.x + projected.x / 3 * fit * reach, y: paintedGrip.y + projected.y / 3 * fit * reach };
     };
+    if (melee && paintedGrip) {
+      const bounds = meleeWeaponBounds(rig, paintedGrip, heldPoint(rig.weapon.tip));
+      const dx = bounds.minX < 1 ? 1 - bounds.minX : bounds.maxX > 62 ? 62 - bounds.maxX : 0, dy = bounds.minY < 1 ? 1 - bounds.minY : bounds.maxY > 62 ? 62 - bounds.maxY : 0;
+      if (dx || dy) {
+        paintedGrip.x += dx;
+        paintedGrip.y += dy;
+        const elbow = rig.artLimbPoints.get(main.joint);
+        elbow.x += dx * 0.5;
+        elbow.y += dy * 0.5;
+      }
+    }
     if (main && (id === "orc" || rig.bowString?.draw > 0.05)) for (const arm of rig.arms.filter((a) => a !== main)) {
-      rig.artLimbPoints.set(arm.end, heldPoint(arm.end));
+      const held = heldPoint(arm.end), relaxed = rig.artLimbPoints.get(arm.end);
+      rig.artLimbPoints.set(arm.end, { ...held, ...mix2(held, relaxed, carryWeight) });
     }
     rig.artProject = (q) => rig.artLimbPoints.has(q) ? rig.artLimbPoints.get(q) : heldPoint(q);
     rig.artShieldProject = (q) => {
@@ -3036,14 +3221,24 @@
       const far2 = (q) => q && at(q).depth < body.depth;
       const arms = (brush, near2) => {
         for (const arm of rig.arms) {
-          if (far2(arm.root) === near2) continue;
-          const root = rig.artArmRoots?.[arm.side] || at(arm.root), joint = rig.artProject(arm.joint), hand = rig.artProject(arm.end), metal = id === "knight", cloth = rig.artArmPalette || (metal ? p.metal : ["orc", "minotaur", "troll"].includes(art.data.artIdentity) ? p.skin : p.cloth), skin = rig.artHandColors?.[arm.side] || p.skin[1];
-          for (const [a, z, r] of [[root, joint, 1.25], [joint, hand, 1]]) {
-            brush.line(a, z, OUT, r + 0.6);
+          const root = rig.artArmRoots?.[arm.side] || at(arm.root), joint = rig.artProject(arm.joint), hand = rig.artProject(arm.end), metal = id === "knight", bare = ["orc", "minotaur", "troll", "goblin"].includes(art.data.artIdentity), cloth = rig.artArmPalette || (metal ? p.metal : bare ? p.skin : p.cloth), skin = rig.artHandColors?.[arm.side] || (metal ? p.metal[1] : p.skin[1]);
+          const lowerNear = at(arm.end).depth >= body.depth, upperNear = (at(arm.root).depth + at(arm.joint).depth) / 2 >= body.depth;
+          for (const [a, z, r, isNear] of [[root, joint, metal ? 1.65 : bare ? 1.55 : 1.35, upperNear], [joint, hand, metal ? 1.35 : bare ? 1.25 : 1.05, lowerNear]]) {
+            if (isNear !== near2) continue;
+            brush.line(a, z, OUT, r + 0.55);
             brush.line(a, z, cloth[0], r);
-            brush.line({ x: a.x - 0.4, y: a.y - 0.5 }, { x: z.x - 0.4, y: z.y - 0.5 }, cloth[1], r * 0.45);
-            brush.dot(a.x - 0.5, a.y - 0.5, cloth[2]);
+            brush.line({ x: a.x - 0.35, y: a.y - 0.45 }, { x: z.x - 0.35, y: z.y - 0.45 }, cloth[1], r * 0.6);
+            brush.line({ x: a.x - 0.6, y: a.y - 0.6 }, { x: z.x - 0.6, y: z.y - 0.6 }, cloth[2], 0.35);
+            if (a === root) {
+              brush.oval(root.x, root.y, metal ? 2 : 1.65, 1.3, cloth[1]);
+              brush.dot(root.x - 0.7, root.y - 0.7, cloth[2]);
+            }
+            if (a === joint) {
+              brush.oval(joint.x, joint.y, r * 0.9, r * 0.8, cloth[1]);
+              brush.dot(joint.x - 0.6, joint.y - 0.5, cloth[2]);
+            }
           }
+          if (lowerNear !== near2) continue;
           brush.oval(hand.x, hand.y, 1.6, 1.4, OUT);
           brush.oval(hand.x, hand.y, 1.1, 1, skin);
           brush.dot(hand.x - 0.5, hand.y - 0.5, rig.artHandHighlights?.[arm.side] || (metal ? p.metal[3] : p.skin[2]));
@@ -3462,71 +3657,7 @@
           b.dot(tip.x, tip.y - 2 - Math.min(2, q), "#dfd9f7");
         }
       } else {
-        const dx = tip.x - g.x, dy = tip.y - g.y, len = Math.hypot(dx, dy) || 1, tx = dx / len, ty = dy / len, nx = -ty, ny = tx;
-        const q = (along, across) => ({ x: g.x + tx * along + nx * across, y: g.y + ty * along + ny * across });
-        b.line(q(-2, 0), tip, OUT, 1);
-        b.line(q(-2, 0), tip, id === "orc" ? "#9a744d" : p.metal[0]);
-        b.line(q(-2, -0.5), q(2, -0.5), "#b6a077");
-        if (rig.gear === "cannon") {
-          b.line(g, tip, OUT, 3);
-          b.line(g, tip, p.metal[1], 2);
-          b.line(g, tip, p.metal[2], 1);
-          b.oval(tip.x, tip.y, 2, 2, p.cloth[2]);
-        } else if (rig.gear === "great-axe") {
-          b.line(q(-2, 0), tip, "#765036", 0.7);
-          b.line(q(-2, -0.5), q(len - 2, -0.5), "#c7a26a");
-          b.outlined([q(len - 4, -2), q(len - 5, -5), q(len - 2, -6), q(len + 1, -5), q(len + 2, -2), q(len, 0), q(len + 2, 2), q(len + 1, 5), q(len - 2, 6), q(len - 5, 5), q(len - 4, 2)], p.metal[0]);
-          for (const s of [-1, 1]) {
-            b.poly([q(len - 3, s * 2), q(len - 3, s * 4), q(len, s * 4), q(len + 1, s * 2), q(len - 1, s)], p.metal[1]);
-            b.line(q(len - 2, s * 5), q(len + 1, s * 3), p.metal[3]);
-          }
-          b.oval(q(len - 2, 0).x, q(len - 2, 0).y, 1, 1, p.metal[2]);
-        } else if (rig.gear === "royal-hammer") {
-          b.line(g, tip, "#8a633d", 0.7);
-          b.outlined([q(len - 4, -4), q(len + 1, -4), q(len + 2, -2), q(len + 2, 4), q(len - 4, 4)], p.metal[0]);
-          b.poly([q(len - 3, -3), q(len, -3), q(len + 1, -1), q(len + 1, 3), q(len - 3, 3)], p.metal[1]);
-          b.line(q(len - 3, -3), q(len, -3), p.metal[3]);
-          b.line(q(len - 3, -2), q(len - 3, 2), p.metal[2]);
-          b.dot(q(len - 1, 0).x, q(len - 1, 0).y, p.cloth[2]);
-        } else if (rig.gear === "branch-club") {
-          b.outlined([q(1, -1), q(len - 3, -3), q(len + 1, -2), q(len + 2, 1), q(len - 1, 3), q(1, 1)], "#5b4230");
-          b.poly([q(2, -0.5), q(len - 2, -2), q(len, 0), q(len - 2, 2), q(2, 0.5)], "#a07b48");
-          b.line(q(3, -0.7), q(len - 2, -1.5), "#d4b677");
-          b.oval(q(len - 2, 0).x, q(len - 2, 0).y, 1, 1, "#493a2b");
-        } else if (rig.gear === "gauntlet") {
-          b.outlined([q(0, -2), q(len - 1, -3), q(len + 1, -1), q(len + 1, 2), q(len - 1, 3), q(0, 2)], p.metal[0]);
-          b.poly([q(1, -1), q(len - 1, -2), q(len, 1), q(1, 1)], p.metal[1]);
-          b.line(q(1, -1), q(len - 1, -2), p.metal[3]);
-          for (const s of [-1, 1]) b.dot(q(len, s * 2).x, q(len, s * 2).y, p.metal[2]);
-        } else if (["sunblade", "moonblade"].includes(rig.gear)) {
-          b.outlined([q(3, -1.8), q(len - 3, -1.3), q(len, 0), q(len - 3, 1.3), q(3, 1.8)], p.metal[0]);
-          b.poly([q(3, -1), q(len - 3, -0.7), q(len, 0), q(3, 0)], p.metal[3]);
-          b.poly([q(3, 0), q(len, 0), q(len - 3, 1), q(3, 1)], p.metal[1]);
-          b.line(q(2, -3), q(2, 3), p.metal[2], 1);
-          b.dot(q(3, 0).x, q(3, 0).y, rig.gear === "moonblade" ? "#8ecbd6" : "#e8b95b");
-        } else if (rig.gear === "hammer" || rig.gear === "club") {
-          const r = rig.gear === "hammer" ? 3 : 2;
-          b.outlined([q(len - 3, -r), q(len + 1, -r), q(len + 2, r), q(len - 3, r)], rig.gear === "hammer" ? p.metal[1] : p.cloth[1]);
-          b.line(q(len - 2, -r), q(len + 1, -r), p.metal[3]);
-        } else if (rig.gear === "knife" || rig.gear === "rapier") {
-          b.outlined([q(2, -1), q(len - 2, -0.5), tip, q(len - 2, 0.7), q(2, 1)], p.metal[1]);
-          b.line(q(2, -0.5), tip, p.metal[3]);
-          b.line(q(2, -2), q(2, 2), p.metal[2]);
-          b.oval(q(1, 0).x, q(1, 0).y, 1.5, 1.5, p.metal[0]);
-          b.dot(q(1, 0).x - 0.5, q(1, 0).y - 0.5, p.metal[2]);
-        } else if (id === "orc") {
-          const blade = (along, across) => ({ x: tip.x + tx * along + nx * across, y: tip.y + ty * along + ny * across });
-          b.outlined([blade(-4, -2), blade(-5, -5), blade(-2, -6), blade(1, -5), blade(2, -2), blade(0, 2), blade(-2, 3), blade(-3, 1)], p.metal[0]);
-          b.poly([blade(-4, -3), blade(-3, -5), blade(-1, -5), blade(1, -3), blade(0, 1), blade(-2, 2)], p.metal[1]);
-          b.line(blade(-3, -5), blade(0, -4), p.metal[3]);
-          b.line(blade(0, -4), blade(1, -1), p.metal[2]);
-        } else {
-          b.outlined([q(3, -1.4), q(len - 3, -1.1), q(len, 0), q(len - 3, 1.1), q(3, 1.4)], p.metal[1]);
-          b.line(q(4, -0.7), tip, p.metal[3]);
-          b.line(q(2, -2.5), q(2, 2.5), p.metal[0], 1);
-          b.line(q(2, -2), q(2, 2), p.metal[2]);
-          b.oval(q(-2, 0).x, q(-2, 0).y, 1, 1, p.metal[1]);
-        }
+        paintMeleeWeapon(b, rig, p, g, tip, OUT);
       }
       for (const hand of rig.arms.filter((a) => a.side === (rig.weapon.hand === "left" ? -1 : 1) || id === "orc")) {
         const h = at(hand.end);

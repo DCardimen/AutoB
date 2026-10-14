@@ -34,6 +34,7 @@ jobs:
           exit 1
       - run: node tests/field-ui.browser.mjs
       - run: node scripts/review-melee-weapons.mjs
+      - run: node scripts/review-natural-carry.mjs
       - name: Package the playable offline game
         run: |
           python3 - <<'PY'
@@ -50,5 +51,7 @@ jobs:
             public/Starfall-Reference-UI.zip
             playtest-artifacts/field-*.png
             playtest-artifacts/melee-*.png
+            playtest-artifacts/natural-carry-*.png
+            tests/reports/natural-melee-carry.json
             tests/reports/melee-weapon-ui.json
             tests/reports/field-ui-v3.json

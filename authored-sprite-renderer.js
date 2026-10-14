@@ -37,9 +37,9 @@ const mix=(a,b,t)=>({x:a.x+(b.x-a.x)*t,y:a.y+(b.y-a.y)*t});
 function rotation(a,b,c,d){return Math.atan2(a.x-b.x,-(a.y-b.y))-Math.atan2(c.x-d.x,-(c.y-d.y));}
 function handLandmarks(asset,identity,stage){
  if(asset.hands)return asset.hands;
- const hands={},expectedY=stage?31:34;
+ const hands={},expectedY=stage?(['orc','minotaur','troll','knight','goblin','dwarf','rogue'].includes(identity)?38:31):34;
  for(const side of [-1,1]){
-  const expectedX=32+side*11,candidates=asset.pixels.filter(p=>p.y>=expectedY-4&&p.y<=expectedY+3&&Math.abs(p.x-expectedX)<=5).filter(p=>{const [r,g,b]=p.rgb;return ['orc','goblin','troll'].includes(identity)?g>r*1.08&&g>b*1.12:identity==='knight'?Math.max(r,g,b)-Math.min(r,g,b)<65&&r>40:r>g*1.12&&g>b*1.1&&r>65;});
+  const expectedX=32+side*11,candidates=asset.pixels.filter(p=>p.y>=expectedY-4&&p.y<=expectedY+3&&Math.abs(p.x-expectedX)<=5).filter(p=>{const [r,g,b]=p.rgb;return ['orc','goblin','troll'].includes(identity)?g>r*.9&&g>b*1.12:identity==='knight'?Math.max(r,g,b)-Math.min(r,g,b)<65&&r>40:r>g*1.12&&g>b*1.1&&r>65;});
   const seed=candidates.sort((a,b)=>Math.hypot(a.x-expectedX,a.y-expectedY)-Math.hypot(b.x-expectedX,b.y-expectedY))[0];if(seed)hands[side]={...seed};
  }asset.hands=hands;asset.handMask=new Set(asset.pixels.filter(p=>Object.values(hands).some(h=>Math.hypot(p.x-h.x,p.y-h.y)<3.6||Math.abs(p.x-h.x)<2.8&&p.y>=h.y-5&&p.y<=h.y)));return hands;
 }
@@ -212,22 +212,35 @@ export function paintAtlasCharacter(b,id,rig,at){
  // respects side/rear depth instead of guessing the hand from screen side.
  const limbPoint=q=>{const v=at(q);return {...v,...anchor({x:32+(v.x-poseBody.x)*1.65+dc.x,y:30+(v.y-poseBody.y)*.95+dc.y})};};
  const melee=rig.weapon&&['sword','axe'].includes(rig.weapon.kind),weaponScale=melee?1.02:id==='caster'?.83:.9;
+ // Relax into the authored hand positions between strikes; a weapon's carry
+ // angle must never pull the hands across the chest to improve its silhouette.
+ const carrying=melee&&!['cannon','gauntlet'].includes(rig.gear)&&!rig.ragdoll;
+ const carryWeight=!carrying?0:['attack','slash','charge'].includes(rig.state)?(rig.stage==='windup'?1-ease(rig.phase/.72):ease((rig.phase-.26)/.74)):['cast','death','knockdown','getup'].includes(rig.state)?0:1;
  rig.artLimbPoints=new Map();
  for(const arm of rig.arms){
-  const root=limbPoint(arm.root),joint=limbPoint(arm.joint),end=limbPoint(arm.end);root.y-=3*fit;joint.y-=1.5*fit;if(torsoPixels.length){const socket=torsoPixels.reduce((best,v)=>Math.hypot(v.x-root.x,v.y-root.y)<Math.hypot(best.x-root.x,best.y-root.y)?v:best,torsoPixels[0]);const dx=socket.x-root.x,dy=socket.y-root.y;root.x=socket.x;root.y=socket.y;joint.x+=dx*.35;joint.y+=dy*.35;}const screenSide=Math.sign(end.x-root.x)||arm.side,hand=sourceHands[screenSide];
+  const root=limbPoint(arm.root),joint=limbPoint(arm.joint),end=limbPoint(arm.end);
+  const screenSide=melee?(Math.sign(root.x-limbPoint(rig.body).x)||-arm.side*Math.sign(Math.cos(angle)||1)):(Math.sign(end.x-root.x)||arm.side),hand=sourceHands[screenSide];
+  root.y-=3*fit;joint.y-=1.5*fit;
+  if(carryWeight&&hand){
+   // Hands below the waist still belong to the torso, not the leg warp.
+   const neutral=anchor({x:32+(hand.x-32)*scale.width+dc.x,y:44+(hand.y-45)*scale.height+dc.y}),bind=rest.arms.find(a=>a.side===arm.side),drift=bind?difference(limbPoint(arm.end),limbPoint(bind.end)):{x:0,y:0};
+   neutral.x+=drift.x*.4;neutral.y+=drift.y*.4;
+   end.x+=(neutral.x-end.x)*carryWeight;end.y+=(neutral.y-end.y)*carryWeight;
+   root.x+=(neutral.x-screenSide*1.5*fit-root.x)*carryWeight;root.y+=(neutral.y-5.5*fit-root.y)*carryWeight;
+  }
+  if(torsoPixels.length){const socket=torsoPixels.reduce((best,v)=>Math.hypot(v.x-root.x,v.y-root.y)<Math.hypot(best.x-root.x,best.y-root.y)?v:best,torsoPixels[0]);const dx=socket.x-root.x,dy=socket.y-root.y;root.x=socket.x;root.y=socket.y;joint.x+=dx*.35;joint.y+=dy*.35;}
+  if(carryWeight){joint.x+=((root.x+end.x)/2+screenSide*.6*fit-joint.x)*carryWeight;joint.y+=((root.y+end.y)/2-joint.y)*carryWeight;}
   rig.artArmRoots[arm.side]=root;rig.artHandColors[arm.side]=hand&&artColors[hand.index];rig.artHandHighlights[arm.side]=handHighlight(asset,artColors,hand);
   rig.artLimbPoints.set(arm.root,root);rig.artLimbPoints.set(arm.joint,joint);rig.artLimbPoints.set(arm.end,end);
  }
  const main=rig.weapon&&rig.arms.find(a=>a.side===(rig.weapon.hand==='left'?-1:1)),paintedGrip=main&&rig.artLimbPoints.get(main.end),physicalGrip=rig.weapon&&at(rig.weapon.grip);
- // Carry the weapon on a readable diagonal between strikes. During the
- // active swing the weight is zero and its exact physical contact axis wins.
- const carrying=melee&&!rig.ragdoll;
- const carryWeight=!carrying?0:['attack','slash','charge'].includes(rig.state)?(rig.stage==='windup'?1-ease(rig.phase/.72):ease((rig.phase-.26)/.74)):['cast','death','knockdown','getup'].includes(rig.state)?0:1;
+ // Hang the weapon below its relaxed hand. During an active swing the weight
+ // is zero and the exact physical contact axis wins.
  const g3=rig.weapon?.grip,t3=rig.weapon?.tip;
  const normalize=v=>{const n=Math.hypot(v.x,v.y,v.z)||1;return {x:v.x/n,y:v.y/n,z:v.z/n};};
  const actual=g3?normalize({x:t3.x-g3.x,y:t3.y-g3.y,z:t3.z-g3.z}):null;
- const forward=Math.cos(angle),screenSign=Math.abs(forward)>.35?Math.sign(forward):Math.sign((paintedGrip?.x||32)-rig.artAnchors.body.x)||1;
- const carry=normalize({x:.86*screenSign*Math.cos(angle)+.18*Math.sin(angle),y:-.86*screenSign*Math.sin(angle)+.18*Math.cos(angle),z:id==='orc'?.42:.40});
+ const screenSign=Math.sign((paintedGrip?.x||32)-rig.artAnchors.body.x)||Math.sign(Math.cos(angle))||1;
+ const carry=normalize({x:.32*screenSign*Math.cos(angle),y:-.32*screenSign*Math.sin(angle),z:-1});
  const presented=actual&&normalize({x:actual.x+(carry.x-actual.x)*carryWeight,y:actual.y+(carry.y-actual.y)*carryWeight,z:actual.z+(carry.z-actual.z)*carryWeight});
  const cross=(v,w)=>({x:v.y*w.z-v.z*w.y,y:v.z*w.x-v.x*w.z,z:v.x*w.y-v.y*w.x});
  const axis=actual&&cross(actual,presented),cosine=actual&&(actual.x*presented.x+actual.y*presented.y+actual.z*presented.z);
@@ -235,7 +248,8 @@ export function paintAtlasCharacter(b,id,rig,at){
  const heldPoint=q=>{
   const v=at(q);if(!paintedGrip)return v;
   const offset=rotate({x:q.x-g3.x,y:q.y-g3.y,z:q.z-g3.z}),projected=projectRig(offset,angle);
-  return {...v,x:paintedGrip.x+projected.x/3*fit*weaponScale,y:paintedGrip.y+projected.y/3*fit*weaponScale};
+  const reach=weaponScale*(1-.36*carryWeight);
+  return {...v,x:paintedGrip.x+projected.x/3*fit*reach,y:paintedGrip.y+projected.y/3*fit*reach};
  };
  // Measure the complete silhouette, including the head/guard, before
  // rasterization. Refit an exceptional carry or sprint pose by a few pixels
@@ -246,7 +260,7 @@ export function paintAtlasCharacter(b,id,rig,at){
   if(dx||dy){paintedGrip.x+=dx;paintedGrip.y+=dy;const elbow=rig.artLimbPoints.get(main.joint);elbow.x+=dx*.5;elbow.y+=dy*.5;}
  }
  // A two-handed handle and drawn bowstring share the held object's transform.
- if(main&&(id==='orc'||rig.bowString?.draw>.05))for(const arm of rig.arms.filter(a=>a!==main)){rig.artLimbPoints.set(arm.end,heldPoint(arm.end));}
+ if(main&&(id==='orc'||rig.bowString?.draw>.05))for(const arm of rig.arms.filter(a=>a!==main)){const held=heldPoint(arm.end),relaxed=rig.artLimbPoints.get(arm.end);rig.artLimbPoints.set(arm.end,{...held,...mix(held,relaxed,carryWeight)});}
  rig.artProject=q=>rig.artLimbPoints.has(q)?rig.artLimbPoints.get(q):heldPoint(q);
  rig.artShieldProject=q=>{const arm=rig.arms.find(a=>a.side===-1),h=arm&&rig.artLimbPoints.get(arm.end),g=rig.shield&&at(rig.shield.grip),v=at(q);return h&&g?{...v,x:h.x+(v.x-g.x)*fit,y:h.y+(v.y-g.y)*fit}:v;};
  rig.artGearPalette=asset.metal&&!rig.equipment?.includes('sunsteel-edge')?{...rig.palette,metal:asset.metal}:rig.palette;

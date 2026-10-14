@@ -1,4 +1,14 @@
-# Current continuation · Melee weapon and arm polish
+# Current continuation · Natural melee carry
+
+Fresh feature branch: `codex/natural-melee-carry`, based on released PR #9 merge `c82ec63fc951daacce588394f9fb431d87883024`. This request uses a new PR. Read NATURAL-MELEE-CARRY.md and tests/reports/natural-melee-carry.json.
+
+Art revision 7 restores resting melee hands to the painted anatomy at the sides. Axes and other held melee weapons hang downward and slightly outward from the wielding hand. The free hand no longer crosses the chest to hold the resting axe; the second hand rejoins during strikes. Evolved hand landmarks use the lower hand band. Low hand pixels follow torso/arm motion rather than leg deformation. Active physical contact direction, rules 17, save schema 7 and creature scale remain.
+
+Both offline games and public/prototype-bundle.js are rebuilt. Source/offline phone detail screens and eight-direction carry/run/attack sheets are captured by scripts/review-natural-carry.mjs. The field-UI PR workflow includes the new review and its screenshots/report in the playable artifact. Existing downloaded HTML must be replaced to see this fix. Keep using a fresh feature branch and new PR for future changes; preserve any pre-existing expedition.js draft.
+
+---
+
+# Previous continuation · Melee weapon and arm polish
 
 Fresh feature branch: `codex/melee-weapon-arms`, based on release `cf840e8710bef0d016dfd8b5abfb7090eb3381b9` after PR #8 merged. This request uses a new PR. Read MELEE-WEAPONS.md and the current Build and verify field UI run.
 
