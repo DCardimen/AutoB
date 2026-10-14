@@ -35,6 +35,7 @@ assert.deepEqual(await page.evaluate(()=>prototypeLab.state.cache.directionalArt
 report.characterDirectionFrames=directionFrames;
 report.jointCoverage=await page.evaluate(async()=>{
   const {characterRig,projectRig}=await import('/prototype-rig.js');
+  const {paintCharacterPixels}=await import('/prototype-pixel-art.js');
   const {PROTOTYPE_CHARACTERS}=await import('/prototype-engine.js');
   let checks=0;const gaps=[];
   for(const spec of PROTOTYPE_CHARACTERS)for(const state of ['walk','run','sprint'])for(const phase of [0.125,0.25,0.5,0.75]){
@@ -44,9 +45,16 @@ report.jointCoverage=await page.evaluate(async()=>{
       const img=new Image();img.src=frames[dir];await img.decode();const sheet=document.createElement('canvas');sheet.width=64;sheet.height=64;const ctx=sheet.getContext('2d');ctx.drawImage(img,0,0);
       const start=spec.id==='wolf'?{...rig.body,x:rig.body.x+18,z:rig.body.z+4}:{...rig.body,z:rig.body.z+12},end={...rig.head,z:rig.head.z-5};
       const neckPoints=Array.from({length:8},(_,i)=>({x:start.x+(end.x-start.x)*i/7,y:start.y+(end.y-start.y)*i/7,z:start.z+(end.z-start.z)*i/7}));
-      const points=[...neckPoints,...rig.legs.flatMap(l=>[l.root,l.joint,...(l.hock?[l.hock]:[]),l.end]),...rig.arms.flatMap(a=>[a.root,a.joint,a.end])];
+      const angle=dir*Math.PI/4,posed=structuredClone(rig);paintCharacterPixels(spec.id,posed,angle);
+      const projected=p=>{const q=projectRig(p,angle);return {x:32+q.x/3,y:44+q.y/3};};
+      // Authored anatomy binds to its painted torso. Probe the actual rendered
+      // joints, rather than relying on a now-removed leg strip to cover an
+      // unrelated point in the unbound calibration skeleton.
+      const legs=posed.artLegVolumes?.flatMap(l=>[l.hip,l.knee,l.ankle])||rig.legs.flatMap(l=>[l.root,l.joint,...(l.hock?[l.hock]:[]),l.end]).map(projected);
+      const arms=posed.artProject?posed.arms.flatMap(a=>[posed.artProject(a.root),posed.artProject(a.joint),posed.artProject(a.end)]):rig.arms.flatMap(a=>[a.root,a.joint,a.end]).map(projected);
+      const points=[...neckPoints.map(projected),...legs,...arms];
       for(const point of points){
-        const p=projectRig(point,dir*Math.PI/4),x=Math.round(32+p.x/3),y=Math.round(44+p.y/3),pixels=ctx.getImageData(x-1,y-1,3,3).data;
+        const x=Math.round(point.x),y=Math.round(point.y),pixels=ctx.getImageData(x-1,y-1,3,3).data;
         checks++;if(!pixels.some((v,i)=>i%4===3&&v>180))gaps.push({id:spec.id,state,dir,x,y});
       }
     }
@@ -159,14 +167,20 @@ report.chargeProtection=await page.evaluate(()=>{const a=prototypeLab.state.aren
 assert.equal(report.chargeProtection.sameAction,true);assert.equal(report.chargeProtection.hpLost,45);assert.equal(report.chargeProtection.stagger,0);assert.equal(report.chargeProtection.knockdown,0);assert.equal(report.chargeProtection.impulse,0);assert.equal(report.chargeProtection.state,'charge');
 await page.clock.runFor(100);assert.match(await page.locator('#anticipation-status').textContent(),/Charged/);
 addCheck('Restart changes the actual team composition; charged-strike control survives impact while taking damage, with visible anticipation levels');
-await page.locator('[data-scene="battle"]').click();await page.locator('#play-pause').click();
+// Restart randomness is checked above. Use the same known seed as the engine's
+// timing-invariance test for the bounded result-panel check, so a different
+// random roster cannot turn a rendering regression into a long battle timeout.
+await page.evaluate(()=>{window.__prototypeTestRandom=Math.random;Math.random=()=>73107/4294967296;});
+try{await page.locator('[data-scene="battle"]').click();}finally{await page.evaluate(()=>{Math.random=window.__prototypeTestRandom;delete window.__prototypeTestRandom;});}
+assert.equal(await page.evaluate(()=>prototypeLab.state.arena.seed),73107);
+await page.locator('#play-pause').click();
 await page.clock.runFor(8500);
 const liveMetrics=await page.evaluate(()=>({...prototypeLab.state.arena.metrics}));assert.ok(liveMetrics.hits>0&&liveMetrics.rolls>0&&liveMetrics.projectiles>0);
 await page.screenshot({path:'playtest-artifacts/prototype-battle.png',fullPage:true});report.screenshots.push('prototype-battle.png');
 await page.locator('#sound-toggle').click();assert.equal(await page.locator('#sound-toggle').getAttribute('aria-pressed'),'true');
 await page.locator('#sound-toggle').click();assert.equal(await page.locator('#sound-toggle').getAttribute('aria-pressed'),'false');
 for(let i=0;i<90;i++){if(await page.evaluate(()=>prototypeLab.state.arena.done))break;await page.clock.runFor(1000);}
-assert.equal(await page.evaluate(()=>prototypeLab.state.arena.done),true);assert.equal(await page.locator('#result').isVisible(),true);
+assert.equal(await page.evaluate(()=>prototypeLab.state.arena.done),true,'seeded sparring settles');assert.equal(await page.locator('#result').isVisible(),true,'settled sparring displays its result');
 report.battle=await page.evaluate(()=>({time:prototypeLab.state.arena.time,metrics:prototypeLab.state.arena.metrics,cache:prototypeLab.state.cache}));
 assert.ok(report.battle.cache.frames<=report.battle.cache.maxFrames);
 addCheck('Rendered sparring resolves with physical hits, projectile travel, rolls and deaths; optional audio toggles');

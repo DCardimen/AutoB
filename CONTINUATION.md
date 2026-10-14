@@ -1,4 +1,34 @@
-# Current continuation · Melee weapon and arm polish
+# Current continuation · Rounded legs and complete hips
+
+Fresh feature branch: `codex/volumetric-legs`, based on `codex/complete-swing-body` commit 7bf90c6 (PR #11), with a new PR for this request. Read VOLUMETRIC-LEGS.md and tests/reports/leg-volume.json.
+
+Art revision 9 replaces flat leg strips on the two-legged characters with rounded 3D thigh/calf/knee geometry and bevelled boots, shaded using the original costume palettes. Depth buffering resolves overlapping legs; darker contact edges and sole rims reinforce volume. The original leg regions are removed, with matching pelvis detail retained underneath the moving thighs. Thickness is consistent across views. Planted-foot yaw/pitch drive the boots; physical joints, foot anchors, gait and combat remain unchanged. Other anatomical body types keep their established renderers.
+
+Both offline HTML games and public/prototype-bundle.js are rebuilt. public/Starfall-Volumetric-Legs.zip contains both games, the guide and the normal-speed leg-volume-preview.webm. scripts/review-leg-volume.mjs captures directional/gait sheets and decodes actual video frames. Leg, body, palette, cell bounds, mobile/offline and Training Glade checks validate the change. The Glade probes rendered articulated joints rather than unbound calibration points. Future requests still need a fresh branch and PR. Preserve any pre-existing expedition.js draft.
+
+---
+
+# Previous continuation · Body detail during swings
+
+Fresh feature branch: `codex/complete-swing-body`, based on `codex/natural-melee-carry` commit a5e4de8 (PR #10). This is a separate follow-up PR. Read SWING-BODY.md and tests/reports/swing-body.json.
+
+Art revision 8 completes the covered torso/clothing underneath moving arms and held equipment. Repairs stay within the original torso silhouette and use adjacent costume material shades, preserving original palette mapping. A cached body layer renders below the articulated limbs. Tests render that layer alone so arms and weapons cannot hide missing pixels. The natural resting hands/downward melee carry, active physical contacts, rules 17, save schema 7 and scale remain.
+
+Both offline HTML games, public/prototype-bundle.js and public/Starfall-Natural-Carry.zip are rebuilt. scripts/review-swing-body.mjs captures separate body layers and actual windup/contact/recovery across three stages; the PR workflow includes its evidence. Future requests still require a fresh branch and PR. Preserve any pre-existing expedition.js draft.
+
+---
+
+# Previous continuation · Natural melee carry
+
+Fresh feature branch: `codex/natural-melee-carry`, based on released PR #9 merge `c82ec63fc951daacce588394f9fb431d87883024`. This request uses a new PR. Read NATURAL-MELEE-CARRY.md and tests/reports/natural-melee-carry.json.
+
+Art revision 7 restores resting melee hands to the painted anatomy at the sides. Axes and other held melee weapons hang downward and slightly outward from the wielding hand. The free hand no longer crosses the chest to hold the resting axe; the second hand rejoins during strikes. Evolved hand landmarks use the lower hand band. Low hand pixels follow torso/arm motion rather than leg deformation. Active physical contact direction, rules 17, save schema 7 and creature scale remain.
+
+Both offline games and public/prototype-bundle.js are rebuilt. Source/offline phone detail screens and eight-direction carry/run/attack sheets are captured by scripts/review-natural-carry.mjs. The field-UI PR workflow includes the new review and its screenshots/report in the playable artifact. Existing downloaded HTML must be replaced to see this fix. Keep using a fresh feature branch and new PR for future changes; preserve any pre-existing expedition.js draft.
+
+---
+
+# Previous continuation · Melee weapon and arm polish
 
 Fresh feature branch: `codex/melee-weapon-arms`, based on release `cf840e8710bef0d016dfd8b5abfb7090eb3381b9` after PR #8 merged. This request uses a new PR. Read MELEE-WEAPONS.md and the current Build and verify field UI run.
 

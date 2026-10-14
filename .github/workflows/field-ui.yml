@@ -22,6 +22,7 @@ jobs:
       - run: npm ci
       - run: npm test
       - run: npm run build:standalone
+      - run: npm run build:prototype
       - run: npx playwright install --with-deps chromium
       - name: Start the game
         run: |
@@ -34,6 +35,10 @@ jobs:
           exit 1
       - run: node tests/field-ui.browser.mjs
       - run: node scripts/review-melee-weapons.mjs
+      - run: node scripts/review-natural-carry.mjs
+      - run: node scripts/review-swing-body.mjs
+      - run: node scripts/review-leg-volume.mjs
+      - run: node tests/prototype.browser.mjs
       - name: Package the playable offline game
         run: |
           python3 - <<'PY'
@@ -47,8 +52,16 @@ jobs:
           name: Starfall-Reference-UI
           path: |
             Starfall-Menagerie.html
+            Starfall-Training-Glade.html
             public/Starfall-Reference-UI.zip
             playtest-artifacts/field-*.png
             playtest-artifacts/melee-*.png
+            playtest-artifacts/natural-carry-*.png
+            tests/reports/natural-melee-carry.json
+            playtest-artifacts/swing-body-*.png
+            tests/reports/swing-body.json
+            playtest-artifacts/leg-volume-*.png
+            public/leg-volume-preview.webm
+            tests/reports/leg-volume.json
             tests/reports/melee-weapon-ui.json
             tests/reports/field-ui-v3.json

@@ -1,0 +1,736 @@
+{
+  "artRevision": 9,
+  "poses": [
+    {
+      "id": "brakk",
+      "evolution": 0,
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 0,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "brakk",
+      "evolution": 0,
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 1,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "brakk",
+      "evolution": 0,
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 2,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "brakk",
+      "evolution": 0,
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 3,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "brakk",
+      "evolution": 0,
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 4,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "brakk",
+      "evolution": 0,
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 5,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "brakk",
+      "evolution": 0,
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 6,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "brakk",
+      "evolution": 0,
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 7,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "brakk",
+      "evolution": 0,
+      "state": "run",
+      "phase": 0,
+      "dir": 1,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "brakk",
+      "evolution": 0,
+      "state": "run",
+      "phase": 0.125,
+      "dir": 1,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "brakk",
+      "evolution": 0,
+      "state": "run",
+      "phase": 0.25,
+      "dir": 1,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "brakk",
+      "evolution": 0,
+      "state": "run",
+      "phase": 0.375,
+      "dir": 1,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "brakk",
+      "evolution": 0,
+      "state": "run",
+      "phase": 0.5,
+      "dir": 1,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "brakk",
+      "evolution": 0,
+      "state": "run",
+      "phase": 0.625,
+      "dir": 1,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "brakk",
+      "evolution": 0,
+      "state": "run",
+      "phase": 0.75,
+      "dir": 1,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "brakk",
+      "evolution": 0,
+      "state": "run",
+      "phase": 0.875,
+      "dir": 1,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "brakk",
+      "evolution": 1,
+      "state": "run",
+      "phase": 0.25,
+      "dir": 0,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "brakk",
+      "evolution": 1,
+      "state": "run",
+      "phase": 0.25,
+      "dir": 1,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "brakk",
+      "evolution": 1,
+      "state": "run",
+      "phase": 0.25,
+      "dir": 2,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "brakk",
+      "evolution": 1,
+      "state": "run",
+      "phase": 0.25,
+      "dir": 3,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "brakk",
+      "evolution": 1,
+      "state": "run",
+      "phase": 0.25,
+      "dir": 4,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "brakk",
+      "evolution": 1,
+      "state": "run",
+      "phase": 0.25,
+      "dir": 5,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "brakk",
+      "evolution": 1,
+      "state": "run",
+      "phase": 0.25,
+      "dir": 6,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "brakk",
+      "evolution": 1,
+      "state": "run",
+      "phase": 0.25,
+      "dir": 7,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "aurel",
+      "evolution": 0,
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 0,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "aurel",
+      "evolution": 0,
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 1,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "aurel",
+      "evolution": 0,
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 2,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "aurel",
+      "evolution": 0,
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 3,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "aurel",
+      "evolution": 0,
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 4,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "aurel",
+      "evolution": 0,
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 5,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "aurel",
+      "evolution": 0,
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 6,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "aurel",
+      "evolution": 0,
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 7,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "aurel",
+      "evolution": 0,
+      "state": "sprint",
+      "phase": 0,
+      "dir": 1,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "aurel",
+      "evolution": 0,
+      "state": "sprint",
+      "phase": 0.125,
+      "dir": 1,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "aurel",
+      "evolution": 0,
+      "state": "sprint",
+      "phase": 0.25,
+      "dir": 1,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "aurel",
+      "evolution": 0,
+      "state": "sprint",
+      "phase": 0.375,
+      "dir": 1,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "aurel",
+      "evolution": 0,
+      "state": "sprint",
+      "phase": 0.5,
+      "dir": 1,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "aurel",
+      "evolution": 0,
+      "state": "sprint",
+      "phase": 0.625,
+      "dir": 1,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "aurel",
+      "evolution": 0,
+      "state": "sprint",
+      "phase": 0.75,
+      "dir": 1,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "aurel",
+      "evolution": 0,
+      "state": "sprint",
+      "phase": 0.875,
+      "dir": 1,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "aurel",
+      "evolution": 2,
+      "state": "run",
+      "phase": 0.25,
+      "dir": 0,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "aurel",
+      "evolution": 2,
+      "state": "run",
+      "phase": 0.25,
+      "dir": 1,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "aurel",
+      "evolution": 2,
+      "state": "run",
+      "phase": 0.25,
+      "dir": 2,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "aurel",
+      "evolution": 2,
+      "state": "run",
+      "phase": 0.25,
+      "dir": 3,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "aurel",
+      "evolution": 2,
+      "state": "run",
+      "phase": 0.25,
+      "dir": 4,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "aurel",
+      "evolution": 2,
+      "state": "run",
+      "phase": 0.25,
+      "dir": 5,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "aurel",
+      "evolution": 2,
+      "state": "run",
+      "phase": 0.25,
+      "dir": 6,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "aurel",
+      "evolution": 2,
+      "state": "run",
+      "phase": 0.25,
+      "dir": 7,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "brom",
+      "evolution": 0,
+      "state": "walk",
+      "phase": 0.25,
+      "dir": 0,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "brom",
+      "evolution": 0,
+      "state": "walk",
+      "phase": 0.25,
+      "dir": 1,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "brom",
+      "evolution": 0,
+      "state": "walk",
+      "phase": 0.25,
+      "dir": 2,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "brom",
+      "evolution": 0,
+      "state": "walk",
+      "phase": 0.25,
+      "dir": 3,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "brom",
+      "evolution": 0,
+      "state": "walk",
+      "phase": 0.25,
+      "dir": 4,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "brom",
+      "evolution": 0,
+      "state": "walk",
+      "phase": 0.25,
+      "dir": 5,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "brom",
+      "evolution": 0,
+      "state": "walk",
+      "phase": 0.25,
+      "dir": 6,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "brom",
+      "evolution": 0,
+      "state": "walk",
+      "phase": 0.25,
+      "dir": 7,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "tarka",
+      "evolution": 0,
+      "state": "run",
+      "phase": 0,
+      "dir": 1,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "tarka",
+      "evolution": 0,
+      "state": "run",
+      "phase": 0.125,
+      "dir": 1,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "tarka",
+      "evolution": 0,
+      "state": "run",
+      "phase": 0.25,
+      "dir": 1,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "tarka",
+      "evolution": 0,
+      "state": "run",
+      "phase": 0.375,
+      "dir": 1,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "tarka",
+      "evolution": 0,
+      "state": "run",
+      "phase": 0.5,
+      "dir": 1,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "tarka",
+      "evolution": 0,
+      "state": "run",
+      "phase": 0.625,
+      "dir": 1,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "tarka",
+      "evolution": 0,
+      "state": "run",
+      "phase": 0.75,
+      "dir": 1,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "tarka",
+      "evolution": 0,
+      "state": "run",
+      "phase": 0.875,
+      "dir": 1,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "syl",
+      "evolution": 0,
+      "state": "run",
+      "phase": 0.25,
+      "dir": 0,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "syl",
+      "evolution": 0,
+      "state": "run",
+      "phase": 0.25,
+      "dir": 1,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "syl",
+      "evolution": 0,
+      "state": "run",
+      "phase": 0.25,
+      "dir": 2,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "syl",
+      "evolution": 0,
+      "state": "run",
+      "phase": 0.25,
+      "dir": 3,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "syl",
+      "evolution": 0,
+      "state": "run",
+      "phase": 0.25,
+      "dir": 4,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "syl",
+      "evolution": 0,
+      "state": "run",
+      "phase": 0.25,
+      "dir": 5,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "syl",
+      "evolution": 0,
+      "state": "run",
+      "phase": 0.25,
+      "dir": 6,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "syl",
+      "evolution": 0,
+      "state": "run",
+      "phase": 0.25,
+      "dir": 7,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "nyra",
+      "evolution": 0,
+      "state": "walk",
+      "phase": 0.25,
+      "dir": 0,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "nyra",
+      "evolution": 0,
+      "state": "walk",
+      "phase": 0.25,
+      "dir": 1,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "nyra",
+      "evolution": 0,
+      "state": "walk",
+      "phase": 0.25,
+      "dir": 2,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "nyra",
+      "evolution": 0,
+      "state": "walk",
+      "phase": 0.25,
+      "dir": 3,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "nyra",
+      "evolution": 0,
+      "state": "walk",
+      "phase": 0.25,
+      "dir": 4,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "nyra",
+      "evolution": 0,
+      "state": "walk",
+      "phase": 0.25,
+      "dir": 5,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "nyra",
+      "evolution": 0,
+      "state": "walk",
+      "phase": 0.25,
+      "dir": 6,
+      "clipped": 0,
+      "volumeLegs": 2
+    },
+    {
+      "id": "nyra",
+      "evolution": 0,
+      "state": "walk",
+      "phase": 0.25,
+      "dir": 7,
+      "clipped": 0,
+      "volumeLegs": 2
+    }
+  ],
+  "normalSpeedPreview": "public/leg-volume-preview.webm",
+  "playback": {
+    "width": 960,
+    "height": 560,
+    "decodedTimes": [
+      1.267,
+      4.36,
+      7.723
+    ]
+  },
+  "errors": []
+}
