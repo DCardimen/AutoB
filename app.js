@@ -1,3 +1,4 @@
+import {updateLiveRoster} from './live-roster.js';
 import {fieldIcon,fieldJourney,decorateFieldUI,worldArt} from './field-ui.js';
 import {interpolatedNativeUnit} from './native-motion.js';
 import {WEARER_RELICS,WEARER_BY_ID,initializeCompanion} from './wearer-relics.js';
@@ -302,6 +303,7 @@ function image(unit, cls = "") {
 function activeSynergies() {
   return Object.values(synergies(run.team)).filter((n) => n >= 2).length;
 }
+var liveRosterSide=0,liveSelectedUid=null;
 function render() {
   const pageScroll={left:scrollX,top:scrollY};
   updateHeader();
@@ -320,6 +322,7 @@ function render() {
       : viewName === "map"
         ? mapHTML()
         : collectionHTML();
+  if(viewName==='arena'&&phase==='battle'){$('#view').insertAdjacentHTML('beforeend','<section id="live-roster" class="live-roster" aria-label="Live character status"></section>');refreshLiveRoster();}
   decorateFieldUI();
   canvas = $("#battle-canvas");
   ctx = canvas?.getContext("2d");
@@ -377,7 +380,7 @@ function arenaHTML() {
               "",
               !["battle", "elite", "boss", "capture"].includes(type),
             );
-  return `${fieldJourney(run,phase,PLANETS)}${!profile.tutorial ? `<div class="tutorial-callout"><span>Scout the enemy and equip your companions. Your team fights automatically.</span>${button("Equip your first relic", "tutorial-gem", "secondary small")}<button data-action="dismiss-tutorial" aria-label="Dismiss welcome">×</button></div>` : ""}<div class="arena-grid"><div class="arena-main"><section class="panel arena-panel"><div class="panel-top"><span class="panel-title">${p.name.toUpperCase()} · FIELD <span style="color:#687d5d;margin-left:9px">/ ${String(run.depth + 1).padStart(2, "0")}</span></span><span class="status-dot ${live ? "live" : ""}"><i></i> ${live ? "BATTLE IN PROGRESS" : phase === "reward" ? "ENCOUNTER COMPLETE" : mapWaiting ? "AWAITING YOUR PATH" : ended ? "EXPEDITION ENDED" : "PREPARING FOR BATTLE"}</span></div>${enrageHTML()}<div class="arena-viewport"><canvas id="battle-canvas" aria-label="Real-time creature arena. Your expedition is on the left, wild creatures on the right."></canvas><div class="arena-label"><span class="location-icon">${ICONS[type]}</span><div><strong>${type === "boss" ? p.bossName : "The Forgotten Colosseum"}</strong><small>${p.name.toUpperCase()} · ${LABELS[type].toUpperCase()}</small></div></div><svg id="target-preview" class="target-preview" viewBox="0 0 1002 654" aria-hidden="true"></svg><div id="ally-orders" class="ally-orders"></div><div id="enemy-overheads" class="enemy-overheads"></div><div id="capture-feedback" class="capture-feedback" role="status" aria-live="polite"></div><div class="arena-timer" id="arena-timer">${live ? "00:00" : "READY"}</div>${type === "boss" ? `<div class="boss-banner"><div><span>${p.bossName}</span><small id="boss-phase">PHASE I</small></div><div class="boss-health-track"><i id="boss-health" style="width:100%"></i></div></div>` : ""}<div class="arena-bottom-labels"><span id="ally-count">YOUR EXPEDITION · ${run.team.length}</span><span class="versus">vs.</span><span id="foe-count">THE WILDS · ${foes?.length || 4}</span></div></div><div class="arena-control"><div class="control-left"><button class="pause-btn" data-action="pause" title="Pause battle (Space)" aria-label="Pause battle" ${!live ? "disabled" : ""}>${paused ? "▶" : "II"}</button><div class="speed-switch" aria-label="Battle speed">${[1, 2, 3].map((v) => `<button data-speed="${v}" class="${speed === v ? "active" : ""}">${v}×</button>`).join("")}</div><span class="control-note"><kbd>SPACE</kbd> to pause</span></div>${mainAction}</div>${live&&run.captureOrder?retryControlsHTML():''}<details class="field-enemy-brief" ${matchMedia("(min-width:900px)").matches?"open":""}><summary>Enemy build <span>Inspect relics & equipment</span></summary>${enemyRelicBannerHTML()}</details></section><div class="formation-section"><div class="section-heading"><h2>YOUR EXPEDITION <span>${run.team.length} / ${capacity(run)}</span></h2><p>Inspect skills & AI · Deploy on the tactical grid</p><div class="segmented" title="Team AI priority">${["balanced", "hunt", "guard", "weakest"].map((s) => `<button data-stance="${s}" class="${run.stance === s ? "active" : ""}" ${live ? "disabled" : ""}>${{ balanced: "Balanced", hunt: "Hunt", guard: "Guard", weakest:"Weakest first" }[s]}</button>`).join("")}</div></div><div class="team-grid">${Array.from({length:6},(_,seat)=>teamSeatHTML(seat)).join("")}</div>${reserveTrayHTML()}${equipmentTrayHTML()}</div><div class="relic-section">${legendaryPactBanner()}<span class="relic-heading">✧ EXPEDITION RELICS <span class="muted">${run.relics.length}</span></span><button class="text-button pack-button" data-action="pack">◈ Relic pack · ${run.inventory.length}</button>${
+  return `${fieldJourney(run,phase,PLANETS)}${!profile.tutorial ? `<div class="tutorial-callout"><span>Scout the enemy and equip your companions. Your team fights automatically.</span>${button("Equip your first relic", "tutorial-gem", "secondary small")}<button data-action="dismiss-tutorial" aria-label="Dismiss welcome">×</button></div>` : ""}<div class="arena-grid"><div class="arena-main"><section class="panel arena-panel"><div class="panel-top"><span class="panel-title">${p.name.toUpperCase()} · FIELD <span style="color:#687d5d;margin-left:9px">/ ${String(run.depth + 1).padStart(2, "0")}</span></span><span class="status-dot ${live ? "live" : ""}"><i></i> ${live ? "BATTLE IN PROGRESS" : phase === "reward" ? "ENCOUNTER COMPLETE" : mapWaiting ? "AWAITING YOUR PATH" : ended ? "EXPEDITION ENDED" : "PREPARING FOR BATTLE"}</span></div>${enrageHTML()}${phase==='prep'?'<section class="prep-enemy-controls" aria-label="Pregame opponent controls"><span class="prep-control-title">OPPONENTS · INSPECT & CAPTURE</span><div id="enemy-overheads" class="enemy-overheads"></div></section>':''}<div class="arena-viewport"><canvas id="battle-canvas" aria-label="Real-time creature arena. Your expedition is on the left, wild creatures on the right."></canvas><div class="arena-label"><span class="location-icon">${ICONS[type]}</span><div><strong>${type === "boss" ? p.bossName : "The Forgotten Colosseum"}</strong><small>${p.name.toUpperCase()} · ${LABELS[type].toUpperCase()}</small></div></div><svg id="target-preview" class="target-preview" viewBox="0 0 1002 654" aria-hidden="true"></svg>${phase!=='prep'?'<div id="enemy-overheads" class="enemy-overheads"></div>':''}<div id="capture-feedback" class="capture-feedback" role="status" aria-live="polite"></div><div class="arena-timer" id="arena-timer">${live ? "00:00" : "READY"}</div>${type === "boss" ? `<div class="boss-banner"><div><span>${p.bossName}</span><small id="boss-phase">PHASE I</small></div><div class="boss-health-track"><i id="boss-health" style="width:100%"></i></div></div>` : ""}<div class="arena-bottom-labels"><span id="ally-count">YOUR EXPEDITION · ${run.team.length}</span><span class="versus">vs.</span><span id="foe-count">THE WILDS · ${foes?.length || 4}</span></div></div>${phase==='prep'?'<section class="prep-ally-controls" aria-label="Pregame companion orders"><span class="prep-control-title">YOUR TEAM · TARGET POLICY</span><div id="ally-orders" class="ally-orders"></div></section>':''}<div class="arena-control"><div class="control-left"><button class="pause-btn" data-action="pause" title="Pause battle (Space)" aria-label="Pause battle" ${!live ? "disabled" : ""}>${paused ? "▶" : "II"}</button><div class="speed-switch" aria-label="Battle speed">${[1, 2, 3].map((v) => `<button data-speed="${v}" class="${speed === v ? "active" : ""}">${v}×</button>`).join("")}</div><span class="control-note"><kbd>SPACE</kbd> to pause</span></div>${mainAction}</div>${live&&run.captureOrder?retryControlsHTML():''}<details class="field-enemy-brief" ${matchMedia("(min-width:900px)").matches?"open":""}><summary>Enemy build <span>Inspect relics & equipment</span></summary>${enemyRelicBannerHTML()}</details></section><div class="formation-section"><div class="section-heading"><h2>YOUR EXPEDITION <span>${run.team.length} / ${capacity(run)}</span></h2><p>Inspect skills & AI · Deploy on the tactical grid</p><div class="segmented" title="Team AI priority">${["balanced", "hunt", "guard", "weakest"].map((s) => `<button data-stance="${s}" class="${run.stance === s ? "active" : ""}" ${live ? "disabled" : ""}>${{ balanced: "Balanced", hunt: "Hunt", guard: "Guard", weakest:"Weakest first" }[s]}</button>`).join("")}</div></div><div class="team-grid">${Array.from({length:6},(_,seat)=>teamSeatHTML(seat)).join("")}</div>${reserveTrayHTML()}${equipmentTrayHTML()}</div><div class="relic-section">${legendaryPactBanner()}<span class="relic-heading">✧ EXPEDITION RELICS <span class="muted">${run.relics.length}</span></span><button class="text-button pack-button" data-action="pack">◈ Relic pack · ${run.inventory.length}</button>${
     run.relics.length
       ? `<div class="relic-list">${run.relics
           .map((id) => {
@@ -684,6 +687,7 @@ function startBattle() {
   soundscape.begin(run.planet, profile.sound);
   save();
   phase = "battle";
+  liveRosterSide=0;liveSelectedUid=null;
   paused = false;
   reward = null;
   captureTarget = null;
@@ -691,6 +695,7 @@ function startBattle() {
   upgradeChosen = null;
   save();
   render();
+  $('.arena-viewport')?.scrollIntoView({block:'start',behavior:'instant'});
   sound("start");
 }
 function finishBattle() {
@@ -1171,6 +1176,8 @@ document.addEventListener("click", async (e) => {
   if(e.target.classList.contains('modal-backdrop')&&e.target.dataset.dismissible==='true'){closeModal();return;}
   const el = e.target.closest("button");
   if(el?.disabled)return;
+  if(el?.dataset.rosterSide!==undefined){liveRosterSide=Number(el.dataset.rosterSide);refreshLiveRoster();return;}
+  if(el?.dataset.liveInspect){const u=battle?.units.find(u=>u.uid===el.dataset.liveInspect);if(u){liveSelectedUid=u.uid;refreshLiveRoster();const index=run.team.findIndex(c=>c.uid===u.uid);if(index>=0){selectedCreature=index;openCreature(index);}else openDetail(u);}return;}
   if(el?.dataset.enemyFocus&&phase==='battle'){battle?.focusEnemy(el.dataset.enemyFocus);return;}
   if(el?.dataset.action==='legendary-pact'){openLegendaryPact();return;}
   if(el?.dataset.pactCreature&&phase!=='battle'){
@@ -1605,7 +1612,7 @@ function frame(now) {
       (battle.finishedVisualTime || 0) + dt,
     );
   }
-  if(battle?.native)battle.selectedUid=run.team[selectedCreature]?.uid;
+  if(battle?.native)battle.selectedUid=liveSelectedUid||run.team[selectedCreature]?.uid;
   if (ctx && canvas)
     renderBattle(
       ctx,
@@ -1628,6 +1635,7 @@ function frame(now) {
           ? "DEFEATED"
           : ["PHASE I", "PHASE II", "PHASE III"][(boss.phase || 1) - 1];
     }
+    refreshLiveRoster();
     updateEnrage();
     const timer = $("#arena-timer");
     if (timer)
@@ -2000,7 +2008,7 @@ function drawEnemyOverheads(){
  const scale=c.nativeScale||creatureWorldScale(pixelSpec(c.id),c),width=30+(phase==='prep'&&!c.boss?68:0)+(c.enemyRelics?.length?32:0),x=Math.max(width/2+5,Math.min(rect.width-width/2-5,c.x/1002*rect.width));let y=Math.max(24,(c.y*.58+75-127*scale)/654*rect.height-14);
  for(let tries=0;tries<12&&placed.some(p=>Math.abs(p.x-x)<(p.width+width)/2+5&&Math.abs(p.y-y)<25);tries++)y=Math.max(24,y-28)+(y<=24?28*(tries+1):0);
  placed.push({x,y,width});const threshold=phase==='battle'?c.hp/c.maxHp:run.captureOrder?.threshold||.25,tool=phase==='battle'?run.selectedCapturer||'scout':run.captureOrder?.tool||run.selectedCapturer||'scout',chance=c.boss?0:captureChance(run,{...c,capturePreparation:{healthFraction:threshold,status:phase==='battle'&&['burn','poison','root','slow','bleed'].some(k=>c[k]>0),mode:run.captureOrder?.mode||'mercy',tool}});
- return `<div class="enemy-head-ui" data-head-uid="${c.uid}" style="left:${x/rect.width*100}%;top:${y/rect.height*100}%"><button data-enemy-inspect="${c.uid}" aria-label="Inspect ${creatureName(c)}" title="Inspect ${creatureName(c)}">ⓘ</button>${!c.boss&&(phase==='prep'||phase==='battle'&&battle?.captureResult&&!battle.captureResult.success&&battle.captureAttempts<3&&c.hp>0)?`<button data-enemy-capture="${c.uid}" class="${run.captureOrder?.uid===c.uid?'planned':''}" aria-label="Plan capture of ${creatureName(c)}" title="${Math.round(chance*100)}% at ${Math.round(threshold*100)}% HP">◇ ${Math.round(chance*100)}%</button>`:''}${phase==='battle'?`<button data-enemy-focus="${c.uid}" aria-label="Focus ${creatureName(c)}" title="Team focus for 8 seconds">◎</button>`:''}${activeAilments(c).map(a=>`<span class="live-ailment" style="--ailment:${a.color}" title="${a.name}: ${a.desc} · ${a.remaining.toFixed(1)}s" tabindex="0">${a.icon}</span>`).join('')}${c.enemyRelics?.length?`<button data-enemy-inspect="${c.uid}" class="enemy-curio" title="${c.enemyRelics.map(id=>RUN_RELIC_BY_ID[id].name).join(' · ')}" aria-label="Inspect ${c.enemyRelics.length} active enemy relics">✧ ${c.enemyRelics.length}</button>`:''}</div>`;
+ return `<div class="enemy-head-ui" data-head-uid="${c.uid}" style="${phase==='prep'?'':`left:${x/rect.width*100}%;top:${y/rect.height*100}%`}">${phase==='prep'?`<strong class="prep-enemy-name">${creatureName(c)}</strong>`:''}<button data-enemy-inspect="${c.uid}" aria-label="Inspect ${creatureName(c)}" title="Inspect ${creatureName(c)}">ⓘ</button>${!c.boss&&(phase==='prep'||phase==='battle'&&battle?.captureResult&&!battle.captureResult.success&&battle.captureAttempts<3&&c.hp>0)?`<button data-enemy-capture="${c.uid}" class="${run.captureOrder?.uid===c.uid?'planned':''}" aria-label="Plan capture of ${creatureName(c)}" title="${Math.round(chance*100)}% at ${Math.round(threshold*100)}% HP">◇ ${Math.round(chance*100)}%</button>`:''}${phase==='battle'?`<button data-enemy-focus="${c.uid}" aria-label="Focus ${creatureName(c)}" title="Team focus for 8 seconds">◎</button>`:''}${activeAilments(c).map(a=>`<span class="live-ailment" style="--ailment:${a.color}" title="${a.name}: ${a.desc} · ${a.remaining.toFixed(1)}s" tabindex="0">${a.icon}</span>`).join('')}${c.enemyRelics?.length?`<button data-enemy-inspect="${c.uid}" class="enemy-curio" title="${c.enemyRelics.map(id=>RUN_RELIC_BY_ID[id].name).join(' · ')}" aria-label="Inspect ${c.enemyRelics.length} active enemy relics">✧ ${c.enemyRelics.length}</button>`:''}</div>`;
  }).join('');
  const template=document.createElement('template');template.innerHTML=html;const seen=new Set();
  for(const next of [...template.content.children]){const uid=next.dataset.headUid;seen.add(uid);const current=[...layer.children].find(el=>el.dataset.headUid===uid);if(!current){layer.append(next);continue;}current.style.cssText=next.style.cssText;const shape=el=>[...el.children].map(c=>c.tagName+':'+(c.dataset.enemyCapture?'capture':c.dataset.enemyInspect?'inspect':c.textContent)).join('|');if(shape(current).replace(/\d+%/g,'%')!==shape(next).replace(/\d+%/g,'%')){current.replaceChildren(...next.childNodes);continue;}[...current.children].forEach((el,i)=>{const n=next.children[i];el.title=n.title;el.className=n.className;el.setAttribute('aria-label',n.getAttribute('aria-label')||n.textContent);if(el.innerHTML!==n.innerHTML)el.innerHTML=n.innerHTML;});}
@@ -2065,6 +2073,7 @@ function enemyRelicBannerHTML(){const ids=[...new Set((foes||[]).flatMap(c=>c.en
 function captureMessage(result){return result?.success?`✧ CAPTURE SUCCESSFUL · ${BY_ID[result.creature.id].name} fights for you until this round ends. Family unlocked for future starts.`:`✕ CAPTURE FAILED · ${result?.reason||'The lattice broke. Your capturer was spent.'}`;}
 function updateCaptureFeedback(){const el=$('#capture-feedback'),result=battle?.captureResult||run.captureReservation?.result;if(el&&result){el.className='capture-feedback '+(result.success?'success':'failed');el.textContent=captureMessage(result);}}
 function announceCapture(result){updateCaptureFeedback();toast(captureMessage(result));sound(result.success?'capture':'loss');}
+function refreshLiveRoster(){if(phase==='battle'&&viewName==='arena')updateLiveRoster($('#live-roster'),battle,{side:liveRosterSide,selectedUid:liveSelectedUid||run.team[selectedCreature]?.uid,image});}
 function updateLiveStatus(){
  if(!battle)return;for(const [i,c]of run.team.entries()){const u=battle.units.find(u=>u.uid===c.uid),card=document.querySelector(`[data-creature="${i}"]`);if(!u||!card)continue;card.querySelector('[data-live-health]').style.width=`${Math.max(0,u.hp/u.maxHp)*100}%`;card.querySelector('[data-live-stamina]').style.width=`${u.stamina}%`;card.querySelector('[data-vital-hp]').textContent=`HEALTH ${Math.ceil(u.hp)}/${Math.round(u.maxHp)}`;card.querySelector('[data-vital-stamina]').textContent=`STAMINA ${Math.round(u.stamina)}/100`;let row=card.querySelector('.card-ailments');if(!row){row=document.createElement('span');row.className='card-ailments';card.append(row);}const html=activeAilments(u).map(a=>`<span class="live-ailment" style="--ailment:${a.color}" title="${a.name}: ${a.desc} · ${a.remaining.toFixed(1)}s">${a.icon}</span>`).join('');if(row.innerHTML!==html)row.innerHTML=html;}
  updateCaptureFeedback();updateRetryControls();
@@ -2112,15 +2121,8 @@ var orderPreviewKey,orderPreview;
 function drawAllyOrders(){const layer=$('#ally-orders'),lines=$('#target-preview');if(!layer||!lines||!canvas)return;if(phase!=='prep'||!foes?.length){layer.replaceChildren();lines.innerHTML='';return;}
  getOrderPreview();const key=orderPreviewKey;
  if(layer.dataset.key!==key){layer.dataset.key=key;layer.innerHTML=run.team.map((c,i)=>`<label data-ally-order="${c.uid}" title="Quick target policy · conditional orders, taunts and relics still apply"><span>${ROLES[BY_ID[c.id].role]} ${creatureName(c)}</span><select data-policy="${i}" data-quick-ai="true" aria-label="${creatureName(c)} AI target policy">${Object.entries(POLICIES).map(([id,p])=>`<option value="${id}" ${id===(c.policy||'adaptive')?'selected':''}>${p.name}</option>`).join('')}</select><small data-preview-target></small></label>`).join('');}
- const rect=canvas.getBoundingClientRect(),paths=[],placed=[],compact=window.matchMedia('(max-width:850px)').matches,labelW=compact?68:118,labelH=compact?38:54;
- for(const u of orderPreview.units.filter(u=>u.side===0)){const t=orderPreview.target(u),el=layer.querySelector(`[data-ally-order="${u.uid}"]`);if(!el)continue;const x=u.x,y=u.y*.58+75-nativeBodyHeight(u)*getCharacterHeight()-52;
- let left=Math.max(labelW/2+3,Math.min(rect.width-labelW/2-3,x/1002*rect.width)),top=Math.max(3,y/654*rect.height);
- const desired={x:left,y:top},candidates=[desired];
- for(let yy=3;yy+labelH<rect.height;yy+=labelH+6)for(let xx=labelW/2+3;xx+labelW/2<rect.width;xx+=labelW+6)candidates.push({x:xx,y:yy});
- candidates.sort((a,b)=>((a.x-desired.x)**2+(a.y-desired.y)**2+(a.y>desired.y?10000:0))-((b.x-desired.x)**2+(b.y-desired.y)**2+(b.y>desired.y?10000:0)));
- const free=candidates.find(q=>!placed.some(p=>Math.abs(p.x-q.x)<labelW+5&&Math.abs(p.y-q.y)<labelH+5));if(free){left=free.x;top=free.y;}
-
- placed.push({x:left,y:top});el.style.left=`${left/rect.width*100}%`;el.style.top=`${top/rect.height*100}%`;
+ const paths=[];
+ for(const u of orderPreview.units.filter(u=>u.side===0)){const t=orderPreview.target(u),el=layer.querySelector(`[data-ally-order="${u.uid}"]`);if(!el)continue;const x=u.x;
  el.querySelector('[data-preview-target]').textContent=t?'→ '+creatureName(t):'No target';
  if(t){const tx=t.x,ty=t.y*.58+75;paths.push(`<path d="M${x} ${u.y*.58+75} Q${(x+tx)/2} ${Math.min(u.y,t.y)*.58+55} ${tx} ${ty}"/><circle cx="${tx}" cy="${ty}" r="9"/>`);}}
  const html=paths.join('');if(lines.innerHTML!==html)lines.innerHTML=html;

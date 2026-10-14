@@ -1,7 +1,7 @@
 name: Build and verify field UI
 on:
   pull_request:
-    branches: [codex/starfall-menagerie]
+    branches: [codex/starfall-menagerie, 'feat/**']
 permissions:
   contents: read
 concurrency:
@@ -35,6 +35,7 @@ jobs:
           exit 1
       - run: node tests/field-ui.browser.mjs
       - run: node tests/chaos-combat.browser.mjs
+      - run: node tests/live-roster.browser.mjs
       - run: node scripts/review-melee-weapons.mjs
       - run: node scripts/review-natural-carry.mjs
       - run: node scripts/review-swing-body.mjs
@@ -69,3 +70,5 @@ jobs:
             CHAOS-COMBAT.md
             playtest-artifacts/chaos-*.png
             playtest-artifacts/chaos-combat-browser.json
+            playtest-artifacts/live-roster-*.png
+            playtest-artifacts/live-roster-browser.json
