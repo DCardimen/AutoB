@@ -118,7 +118,7 @@ test('weakest-first targets current HP and manual focus expires, respects taunts
   other.hp=0;assert.equal(b.focusEnemy(other.uid),false);
 });
 
-test('capturing switches allegiance for this battle, clears hostile commitments, and never changes the roster',()=>{
+test('capturing switches allegiance for this battle, clears hostile commitments, before round-end roster recruitment',()=>{
   const r=fresh();r.relics=[];const foes=[creature('nyra'),creature('morrow')];
   r.captureOrder={uid:foes[0].uid,threshold:.25,tool:'scout',mode:'mercy'};
   const b=new Battle(r,foes,1,{visuals:false}),target=b.units[2],ally=b.units[0];
@@ -153,7 +153,7 @@ test('capturing the last enemy finishes the lattice before settling victory',()=
   assert.equal(b.captureScene,null);assert.equal(b.done,true);assert.equal(b.winner,0);
 });
 
-test('round-only captures remain available when permanent reserves are full',()=>{
+test('capture control remains available when permanent reserves are full',()=>{
   const {run,b,t}=arena();run.bench=Array.from({length:12},()=>creature('nyra'));
   b.capturePlan={uid:t.uid,threshold:.25,tool:'scout'};b.captureSettled=true;b.captureResult={success:false};b.captureAttempts=1;
   b.random=()=>0;t.hp=t.maxHp*.2;assert.equal(b.retryCapture(t.uid,'scout').ok,true);
@@ -161,7 +161,7 @@ test('round-only captures remain available when permanent reserves are full',()=
 });
 
 test('loot settlement remains idempotent after the collection animation',()=>{
-  const r=fresh(),gold=r.gold,cache={key:'test',drops:[{id:'coin',kind:'gold',amount:30},{id:'sword',kind:'gear',gear:'tempo-rapier'}]};
-  assert.ok(claimLoot(r,cache));assert.equal(r.gold,gold+30);assert.equal(r.gearInventory.length,1);
-  assert.equal(claimLoot(r,cache),false);assert.equal(r.gold,gold+30);assert.equal(r.gearInventory.length,1);
+  const r=fresh(),gold=r.gold,gearCount=r.gearInventory.length,cache={key:'test',drops:[{id:'coin',kind:'gold',amount:30},{id:'sword',kind:'gear',gear:'tempo-rapier'}]};
+  assert.ok(claimLoot(r,cache));assert.equal(r.gold,gold+30);assert.equal(r.gearInventory.length,gearCount+1);
+  assert.equal(claimLoot(r,cache),false);assert.equal(r.gold,gold+30);assert.equal(r.gearInventory.length,gearCount+1);
 });

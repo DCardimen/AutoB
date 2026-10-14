@@ -52,7 +52,8 @@ report.jointCoverage=await page.evaluate(async()=>{
       // unrelated point in the unbound calibration skeleton.
       const legs=posed.artLegVolumes?.flatMap(l=>[l.hip,l.knee,l.ankle])||rig.legs.flatMap(l=>[l.root,l.joint,...(l.hock?[l.hock]:[]),l.end]).map(projected);
       const arms=posed.artProject?posed.arms.flatMap(a=>[posed.artProject(a.root),posed.artProject(a.joint),posed.artProject(a.end)]):rig.arms.flatMap(a=>[a.root,a.joint,a.end]).map(projected);
-      const points=[...neckPoints.map(projected),...legs,...arms];
+      const neck=posed.artLegLayered?Array.from({length:8},(_,i)=>({x:posed.artAnchors.body.x+(posed.artAnchors.head.x-posed.artAnchors.body.x)*i/7,y:posed.artAnchors.body.y+(posed.artAnchors.head.y-posed.artAnchors.body.y)*i/7})):neckPoints.map(projected);
+      const points=[...neck,...legs,...arms];
       for(const point of points){
         const x=Math.round(point.x),y=Math.round(point.y),pixels=ctx.getImageData(x-1,y-1,3,3).data;
         checks++;if(!pixels.some((v,i)=>i%4===3&&v>180))gaps.push({id:spec.id,state,dir,x,y});

@@ -19,7 +19,8 @@ for(const offline of [false,true]){
   assert.ok((await page.locator('.field-world').first().getAttribute('style')).includes(offline?'blob:':'/public/ui/world'));
  }
  await page.setViewportSize({width:390,height:844});await page.locator('[data-creature="0"]').click();await page.locator('[data-detail-tab="equipment"]').click();await page.locator('[data-detail-tab="ai"]').click();await page.locator('[data-action="close"]').first().click();
- await page.locator('[data-planet-preview="2"]').click();assert.ok(await page.locator('.field-world-preview').isVisible());await page.locator('[data-action="close"]').first().click();
+ await page.locator('[data-view="map"]:visible').first().click();
+ await page.locator('[data-planet-preview="2"]').click();assert.ok(await page.locator('.field-world-preview').isVisible());await page.locator('[data-action="close"]').first().click();await page.locator('.brand').click();
  await page.evaluate(()=>scrollTo(0,0));await page.waitForTimeout(400);await page.screenshot({path:'playtest-artifacts/field-'+(offline?'offline':'source')+'-mobile.png',fullPage:true});
  await page.clock.install();await page.locator('[data-speed="3"]').click();await page.locator('[data-action="battle"]').click();
  assert.equal(await page.locator('.field-journey').getAttribute('data-field-phase'),'battle');
@@ -34,9 +35,9 @@ for(const offline of [false,true]){
  assert.ok(await page.locator('.biome-route').evaluate(el=>getComputedStyle(el).backgroundImage.includes('world-0')||getComputedStyle(el).backgroundImage.includes('blob:')));
  await page.screenshot({path:'playtest-artifacts/field-'+(offline?'offline':'source')+'-route.png',fullPage:true});
  const available=page.locator('.route-node.available[data-node]');assert.ok(await available.count());
- await available.first().click();await page.clock.runFor(1200);await page.locator('.field-journey:not([data-field-phase="map"])').waitFor();assert.ok(['prep','shop','event','rest'].includes(await page.evaluate(()=>starfall.state.phase)));
+ await available.first().click();await page.clock.runFor(1200);await page.locator('.field-journey:not([data-field-phase="map"])').waitFor({state:'attached'});assert.ok(['prep','shop','event','rest'].includes(await page.evaluate(()=>starfall.state.phase)));
  if(await page.locator('.modal-close').count())await page.locator('.modal-close').first().click();
- await page.reload();assert.ok(await page.locator('.field-world.current').isVisible());
+ await page.reload();await page.locator('[data-view="map"]:visible').first().click();assert.ok(await page.locator('.field-world.current').isVisible());
 
  for(const planet of [1,2]){
   const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('starfall-menagerie-v1')));

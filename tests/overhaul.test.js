@@ -64,12 +64,12 @@ function gemBattle(gem, id = "thornstag") {
     21,
   );
 }
-test("every family has a functional specialty; 30 supports and 166 relics have unique IDs", () => {
+test("every family has a functional specialty; 30 supports and 174 relics have unique IDs", () => {
   for (const c of SPECIES) assert.ok(CREATURE_TRAITS[c.id], c.id);
   assert.equal(PERSONAL_RELICS.length, 30);
-  assert.equal(RELICS.length, 166);
+  assert.equal(RELICS.length, 174);
   assert.equal(new Set(PERSONAL_RELICS.map((g) => g.id)).size, 30);
-  assert.equal(new Set(RELICS.map((g) => g.id )).size, 166);
+  assert.equal(new Set(RELICS.map((g) => g.id )).size, 174);
 });
 test("route seeds change layouts, scouting and weather, and repeat deterministically", () => {
   const layouts = new Set();

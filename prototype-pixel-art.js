@@ -6,8 +6,9 @@ import {drawNativeFace,FACE_VIEWS} from './prototype-faces.js';
 import {paintAuthoredTorso,paintFairyWings,paintFairyBody} from './authored-pixel-art.js';
 import {paintAtlasCharacter} from './authored-sprite-renderer.js';
 import {paintLegVolumes} from './leg-volume.js';
+import {paintCreatureAttack} from './creature-attacks.js';
 export const CELL=64,PIVOT={x:32,y:44},PIXEL_WORLD=3;
-export const SPRITE_ART_REVISION=9;
+export const SPRITE_ART_REVISION=10;
 const OUT='#192328';
 export const PIXEL_PALETTES={
  crab:{skin:['#496b63','#7daca0','#c6d9be'],cloth:['#385c69','#5b95aa','#a9d1db'],metal:['#324d52','#668d8c','#b0c8bd','#e5e0b9'],hair:['#364c58','#638e99','#abd5ce']},
@@ -42,6 +43,7 @@ export function paintCharacterPixels(id,rig,angle){
  if(paintAtlasCharacter(b,id,rig,at)){
   const art=b;const farArt=new PixelBrush();paintGrandPixels(farArt,rig,at,p,'far');
   paintLegVolumes(farArt,rig);
+  paintCreatureAttack(farArt,rig,'far');
   const far=q=>q&&at(q).depth<body.depth;
   const arms=(brush,near)=>{
    for(const arm of rig.arms){
@@ -64,6 +66,8 @@ export function paintCharacterPixels(id,rig,angle){
   gear(farArt,false);
   for(let i=0;i<art.data.length;i+=4)if(art.data[i+3])farArt.data.set(art.data.subarray(i,i+4),i);b=farArt;
   paintGrandPixels(b,rig,at,p,'body');paintGrandPixels(b,rig,at,p,'head');
+  if(rig.artLegLayered)paintLegVolumes(b,rig,'near');
+  paintCreatureAttack(b,rig);
   arms(b,true);
   gear(b,true);
   b.data.clipped=b.clipped;b.data.artIdentity=art.data.artIdentity;b.data.artStage=art.data.artStage;b.data.artFit=art.data.artFit;b.data.expression=art.data.expression;return b.data;
