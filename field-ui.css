@@ -1,0 +1,153 @@
+
+/* UI V3: original vector frame details; paintings supplied by the user. */
+body.ui-v3{--bg:#061217;--panel:#0b2025;--line:#365a60;--text:#ecede0;--muted:#a1b8b8;--mint:#91ded6;--gold:#ecd088;min-width:320px;background:#061217;color:var(--text)}
+.ui-v3 .ambient{background:radial-gradient(ellipse at 35% 0,#184b593a,transparent 65%),radial-gradient(ellipse at 90% 20%,#22445626,transparent 70%)}
+.field-icon{width:24px;height:24px;display:inline-block;vertical-align:middle;flex-shrink:0;pointer-events:none}
+.ui-v3 .header{height:76px;background:#07151ce8;border-bottom:1px solid #36545c;gap:16px}
+.ui-v3 .brand-mark{color:var(--gold);width:38px}.ui-v3 .brand-mark svg{width:38px;height:42px}
+.ui-v3 .brand{font-size:18px;letter-spacing:2px}.ui-v3 .brand small{color:#a6c9ca}
+.ui-v3 .main-nav{gap:8px}.ui-v3 .main-nav button{color:#a9c4c4}.ui-v3 .main-nav button.active{color:#a1e6de;border-color:#a1e6de}
+.ui-v3 .header-end{gap:8px}.ui-v3 .icon-button{width:44px;height:44px;color:#b9c9c6;border-color:#37525a;background:#0b1b23}
+.ui-v3 .local-label{max-width:115px;line-height:1.6;font-size:8px}
+.ui-v3 #app{max-width:1480px;padding:0 28px 30px}.ui-v3 .run-bar{height:48px}
+.ui-v3 .page-heading{padding:8px 0 22px}.ui-v3 h1{font-size:44px;line-height:1.12;margin:7px 0}.ui-v3 h1 span{color:var(--gold)}
+.ui-v3 .page-heading p{color:#afc6c5;max-width:55ch}
+.ui-v3 .resources{gap:10px}.ui-v3 .resources>div{background:linear-gradient(140deg,#132d34,#081b21);border:1px solid #3c5e65;border-radius:22px;padding:10px 15px;min-width:105px}
+.ui-v3 .resource-icon{width:28px;height:28px}.ui-v3 .resource-icon svg{width:28px;height:28px}
+.ui-v3 .resources strong{font-size:21px}.ui-v3 .resources small{font-size:8px;letter-spacing:1px;color:#adc9c5}
+.field-journey{margin:0 0 22px}.field-worlds{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.field-world{position:relative;isolation:isolate;display:flex;gap:14px;align-items:center;min-height:86px;padding:16px;text-align:left;border:1px solid #3b5864;border-radius:14px;overflow:hidden;background:#10242d;color:#e8ece0}
+.field-world:before{content:"";position:absolute;inset:0;z-index:-1;background-image:linear-gradient(90deg,#051e23b0,#05151ca0),var(--world-art);background-size:cover;background-position:center 44%}
+.field-world .field-icon{width:35px;height:35px;padding:6px;border:1px solid #769f92;border-radius:50%;color:#a4e0ba;background:#0b242de0}
+.field-world small{display:block;color:#bdd7ce;font-size:8px;letter-spacing:1.6px;line-height:1.6}
+.field-world strong{display:block;font-family:var(--serif);font-size:21px;font-weight:400;margin-top:4px}
+.field-world.current{border-color:#9cded5;box-shadow:0 0 0 2px #95e6df16,inset 0 0 18px #84e1d615}
+.field-world.locked:before{filter:saturate(.6);opacity:.65}.field-world.locked{color:#b4bbc3}.field-world.locked .field-icon{color:#a2aabc;border-color:#687282}
+.field-stage{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:18px 4px 0}
+.field-stage h2{font-family:var(--serif);font-size:25px;font-weight:400;margin:5px 0}.field-stage p{font-size:12px;color:#a4bfbc;margin:6px 0;line-height:1.6}
+.field-steps{display:flex;gap:0;list-style:none;padding:0;margin:0;flex-shrink:0}
+.field-steps li{position:relative;width:38px;display:grid;place-items:center}
+.field-steps li:before{content:"";position:absolute;top:50%;left:0;right:0;height:1px;background:#426269;z-index:0}
+.field-steps li:first-child:before{left:50%}.field-steps li:last-child:before{right:50%}
+.field-steps li>span{position:relative;display:grid;place-items:center;border-radius:50%;width:27px;height:27px;background:#071c23;border:1px solid #47666c;color:#729399;font-size:10px}
+.field-steps .complete>span{color:var(--gold);border-color:var(--gold)}.field-steps .current>span{color:#092025;border-color:var(--gold);background:var(--gold);box-shadow:0 0 15px #f6d36c35}
+.field-steps .field-icon{width:16px;height:16px}
+.ui-v3 .panel,.ui-v3 .modal{background:linear-gradient(140deg,#102d33f7,#071a21fa);border:1px solid #44666b;border-radius:18px;box-shadow:inset 0 0 0 3px #07171d,inset 0 0 0 4px #3d5e6038,0 12px 32px #0004}
+.field-surface{position:relative}
+.field-surface:before{content:"";position:absolute;pointer-events:none;z-index:1;top:8px;left:18px;right:18px;height:1px;background:linear-gradient(90deg,transparent,#a7cbc56b,transparent)}
+.ui-v3 .panel-top{background:#0d222bbb;border-bottom:1px solid #3a6265;padding:18px 22px}
+.ui-v3 .panel-title,.ui-v3 .section-kicker,.ui-v3 .eyebrow{color:#abd4ce}.ui-v3 .status-dot{color:#a9d7c8}
+.ui-v3 .arena-grid{grid-template-columns:minmax(0,1fr) 300px;gap:20px}.ui-v3 .arena-panel{overflow:hidden}
+.ui-v3 .arena-viewport{border:0;background:#0a1e25}.ui-v3 .arena-label{background:#071d26de;border:1px solid #486666;border-radius:10px;padding:8px 10px}
+.ui-v3 .arena-timer{border-radius:16px;color:#ead398;background:#082127df;border:1px solid #78988377}
+.ui-v3 .arena-control{padding:14px 18px;background:#0a1e26;border-color:#3a5961;gap:12px}
+.ui-v3 .button{min-height:44px;padding:12px 20px;color:#152521;background:linear-gradient(180deg,#f4dfa4,#dbb668);border:1px solid #f0d597;border-radius:24px;box-shadow:inset 0 1px #fff8,0 2px 9px #0004;font-weight:600}
+.ui-v3 .button:hover:not(:disabled){background:linear-gradient(180deg,#fff0c3,#e6c77e);box-shadow:0 0 16px #ebd39a30}
+.ui-v3 .button.secondary,.ui-v3 .button.ghost{background:linear-gradient(180deg,#173943,#0a222c);border-color:#5d9097;color:#d0e5dc;box-shadow:inset 0 0 0 2px #091e25}
+.ui-v3 .button.small{padding:9px 14px;min-height:44px;font-size:11px}
+.ui-v3 .text-button{color:#bad4cc;min-height:40px}.ui-v3 .pause-btn,.ui-v3 .speed-switch button{min-height:44px;min-width:44px}
+.ui-v3 .speed-switch{border-color:#4b6e74;background:#0b212b}.ui-v3 .speed-switch button.active{background:#274c53;color:#c4ebe2}
+.ui-v3 .side-column{gap:18px}.ui-v3 .briefing{padding:24px}.ui-v3 .briefing h2{font-size:28px;color:#eee9d4}.ui-v3 .briefing p{color:#b1c9c4;line-height:1.75}
+.ui-v3 .tag{border-radius:20px;background:#19383c;color:#b6e2d2;border-color:#477b76}.ui-v3 .tag.gold{background:#3a392a;color:#efdb9c;border-color:#8d7e4c}
+.ui-v3 .scout-panel,.ui-v3 .tactical-tip,.ui-v3 .scout-comparison{background:#0a2229;border-color:#456668}
+.ui-v3 .synergy-row,.ui-v3 .thin-rule{border-color:#31545a}.ui-v3 .synergy-row small{color:#afc7c0}
+.ui-v3 .formation-section{margin-top:24px}.ui-v3 .section-heading h2,.ui-v3 .section-heading h3{color:#c4e0d7}
+.ui-v3 .team-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.ui-v3 .creature-card{background:radial-gradient(ellipse at 50% 30%,#25434b,#0b232c 70%);border:1px solid #52777c;border-radius:14px;min-width:0}
+.ui-v3 .creature-card:hover{border-color:#aad9cb;background:radial-gradient(ellipse at 50% 30%,#32565b,#102b33 70%)}
+.ui-v3 .card-top{color:#b0cac7}.ui-v3 .creature-card strong{color:#edf0df}.ui-v3 .card-meta{color:#b4cbc1}
+.idle-portrait{position:relative;display:block;width:100%;height:120px;isolation:isolate}
+.idle-portrait .creature-art{width:100%!important;height:120px!important;object-fit:contain;margin:0!important}
+.idle-portrait canvas{position:absolute;inset:0;margin:auto;width:120px;height:120px;image-rendering:pixelated;opacity:0}
+.idle-portrait.ready canvas{opacity:1}.idle-portrait.ready img{visibility:hidden}
+.ui-v3 .card-intent{color:#aec8bf}.ui-v3 .xp-track{background:#071b24}.ui-v3 .xp-track i{background:#7fcfce}
+.ui-v3 .quick-equipment button,.ui-v3 .equipment-tray,.ui-v3 .reserve-tray,.ui-v3 .reserve-card{background:linear-gradient(145deg,#17333b,#091f28);border-color:#4e7276}
+.ui-v3 .quick-equipment button{min-height:48px}.ui-v3 .locked-seat,.ui-v3 .vacant-seat{border-color:#4a6670;background:#0b1f28;color:#b7c7c5}
+.ui-v3 .relic-section,.ui-v3 .battle-feed{background:#0a2028;border:1px solid #345d63;border-radius:12px;padding:14px}
+.ui-v3 .tactical-toolbar{background:#102a32;border:1px solid #45656a;border-radius:14px;padding:18px}
+.ui-v3 .tactical-toolbar-head{gap:8px}.ui-v3 .arena-legend{font-size:11px;color:#adc6c1;line-height:1.75}
+.ui-v3 .capture-planner{background:#09212a;border-color:#3e6f73;gap:12px}.ui-v3 .capture-planner p{color:#afc6c0;line-height:1.7}
+.ui-v3 select,.ui-v3 input:not([type="range"]):not([type="checkbox"]){background:#0a222c;color:#e0e8d8;border-color:#507d84;min-height:44px;border-radius:8px;padding:8px;max-width:100%}
+.ui-v3 .capture-planner label{color:#b5d3ca}
+.ui-v3 .enemy-build-banner{background:#10282e;border-color:#38585c;color:#b9cebd}.ui-v3 .enrage-strip{background:#122c31;border-color:#477371}
+.ui-v3 .enrage-strip.active{background:#42261d}.ui-v3 .enrage-progress{background:#091d25}.ui-v3 .enrage-progress i{background:#8ddacb}
+.ui-v3 .world-journey{display:none}
+.ui-v3 .biome-route{height:820px!important;margin:0!important;background-image:linear-gradient(0deg,#03172030,#03172010),var(--route-art)!important;background-size:cover!important;background-position:center!important;border-radius:0}
+.ui-v3 .biome-route>.biome-scenery{display:none}
+.ui-v3 .biome-route .route-links{z-index:0;pointer-events:none;filter:drop-shadow(0 0 4px #b5edd9)}
+.ui-v3 .biome-route .route-node{z-index:1;border-radius:50%;background:#09272beb;border-color:#86aca3;color:#b9e8d6;box-shadow:0 0 0 5px #081d2080,0 0 18px #8fdbdb20;width:54px;height:54px}
+.ui-v3 .biome-route .route-node.available{background:#132d27;border-color:#edce75;color:#f6d887;box-shadow:0 0 0 4px #eee0a017,0 0 20px #e9cf7145}
+.ui-v3 .biome-route .route-node.selected{background:#edd49a;color:#09232b}
+.ui-v3 .biome-route .route-node.visited{border-color:#d9c77c;color:#efdaa1}
+.ui-v3 .biome-route .route-node small{background:#062027e6;color:#ebf0df;padding:5px 7px;border:1px solid #55737166;border-radius:10px;letter-spacing:.3px}
+.ui-v3 .biome-route .route-node:disabled{opacity:1;color:#c3d5cd}
+.ui-v3 .planet-landing{background:linear-gradient(100deg,#0e2931,#0b2028);border-bottom:1px solid #385b62}
+.ui-v3 .map-description,.ui-v3 .map-legend{background:#0b232a;color:#b4d1c6}.ui-v3 .map-legend .field-icon{width:18px;height:18px}
+.ui-v3 .modal-backdrop{background:#031017cc;backdrop-filter:blur(8px)}.ui-v3 .modal{padding:30px;max-height:calc(100dvh - 48px)}
+.ui-v3 .modal-close{width:44px;height:44px;border-radius:50%;background:#142e37;border:1px solid #63888a;color:#e2e7d6}
+.ui-v3 .modal h2{color:#efe9d7}.ui-v3 .modal p{color:#bbd0c5;line-height:1.7}
+.ui-v3 .detail-tabs{background:#092029;border-color:#4a6d73}.ui-v3 .detail-tabs button{min-height:44px;color:#b8d2c6}.ui-v3 .detail-tabs button.selected{background:#29464a;color:#eee1b2}
+.ui-v3 .detail-pane,.ui-v3 .evolution-panel,.ui-v3 .personal-loadout,.ui-v3 .equipment-panel{border-color:#426d72}
+.ui-v3 .upgrade-card,.ui-v3 .shop-card,.ui-v3 .collection-card,.ui-v3 .starter-card{background:linear-gradient(145deg,#16343c,#09202a);border-color:#52757a;border-radius:14px}
+.ui-v3 .upgrade-card.selected,.ui-v3 .starter-card.selected{border-color:#ead190;background:linear-gradient(145deg,#394938,#112b31)}
+.ui-v3 .result-hero{background:radial-gradient(ellipse at 50% 0%,#80724430,transparent 70%)}.ui-v3 .result-sigil{color:var(--gold)}
+.ui-v3 .battle-recap,.ui-v3 .loot-v2,.ui-v3 .recap-growth,.ui-v3 .recap-comparison{background:linear-gradient(140deg,#133039,#091f28);border-color:#527677}
+.ui-v3 .loot-v2 .loot-drop{background:linear-gradient(145deg,#19353b,#0a2129)}.ui-v3 .loot-medallion{background:#0a252c}
+.ui-v3 .recap-tabs button,.ui-v3 .recap-sides button{background:#0c2831;color:#c4d9ce;min-height:44px}.ui-v3 .recap-tabs button.selected,.ui-v3 .recap-sides button.selected{background:#35534e;color:#f4dea4}
+.ui-v3 .result-summary{color:#ecd99e}.ui-v3 .modal-actions{gap:10px;flex-wrap:wrap}
+.ui-v3 .tutorial-callout{background:#153b40;border-color:#559990;color:#d0e1ce;font-size:12px;line-height:1.7}
+.ui-v3 .segmented{background:#0d2730;border-color:#4c777d}.ui-v3 .segmented button{min-height:44px}.ui-v3 .segmented button.active{background:#325753;color:#e8ecd7}
+.ui-v3 footer{color:#9fb9b6;border-color:#304f55;line-height:1.7}
+.ui-v3 button:focus-visible,.ui-v3 a:focus-visible,.ui-v3 select:focus-visible,.ui-v3 summary:focus-visible{outline:2px solid #a8ece1;outline-offset:4px}
+@media(min-width:1100px){.ui-v3 .map-grid{grid-template-columns:minmax(0,1fr) 300px}.ui-v3 .biome-route{height:940px!important;background-position:center 45%!important}.ui-v3 .team-grid{grid-template-columns:repeat(6,minmax(0,1fr))}.ui-v3 .idle-portrait,.ui-v3 .idle-portrait .creature-art{height:110px!important}.ui-v3 .idle-portrait canvas{width:110px;height:110px}.ui-v3 .card-top{font-size:8px}}
+@media(max-width:900px){.ui-v3 .arena-grid,.ui-v3 .map-grid{grid-template-columns:minmax(0,1fr)}.ui-v3 .side-column{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.ui-v3 .header .local-label{display:none}.field-stage{gap:12px}.field-stage p{max-width:45ch}.field-steps li{width:30px}}
+@media(max-width:700px){
+ .ui-v3 #app{padding:0 12px 100px}.ui-v3 .header{height:64px;padding:0 14px;gap:8px}.ui-v3 .brand{font-size:14px;gap:6px}.ui-v3 .brand small{font-size:7px;letter-spacing:3px}.ui-v3 .brand-mark,.ui-v3 .brand-mark svg{width:30px}
+ .ui-v3 .header-end{gap:5px}.ui-v3 .header-end .icon-button{width:40px;height:40px}.ui-v3 .header-end svg{width:19px;height:19px}
+ .ui-v3 .main-nav{position:fixed;inset:auto 0 0;z-index:30;display:flex;height:auto;min-height:64px;background:#071c24f5;border-top:1px solid #64837c;padding:5px 8px calc(5px + env(safe-area-inset-bottom));gap:4px;backdrop-filter:blur(12px)}
+ .ui-v3 .main-nav button{flex:1;display:flex;flex-direction:column;justify-content:center;gap:4px;min-height:54px;padding:6px;border-bottom:0;border-radius:10px;font-size:10px}
+ .ui-v3 .main-nav button.active{background:#234349;box-shadow:inset 0 0 0 1px #75b3ae}.ui-v3 .main-nav i{position:absolute;margin-left:75px;top:9px}
+ .ui-v3 .run-bar{height:44px}.ui-v3 .run-bar .eyebrow{font-size:8px;letter-spacing:.7px}.ui-v3 .run-bar .divider{padding:0 5px}.ui-v3 .run-bar .star-mini{margin-right:3px}
+ .ui-v3 .page-heading{display:block;padding-bottom:18px}.ui-v3 h1{font-size:35px}.ui-v3 .page-heading p{font-size:12px;line-height:1.65;margin:8px 0 14px}.ui-v3 .planet-kicker{font-size:8px;letter-spacing:1px}
+ .ui-v3 .resources{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.ui-v3 .resources>div{min-width:0;padding:9px 7px;border-radius:14px;gap:7px}.ui-v3 .resources strong{font-size:19px}.ui-v3 .resources small{font-size:7px;letter-spacing:.4px}.ui-v3 .resource-icon,.ui-v3 .resource-icon svg{width:23px;height:23px}
+ .field-worlds{gap:6px}.field-world{min-height:94px;display:block;text-align:center;padding:10px 5px;border-radius:10px}.field-world .field-icon{width:26px;height:26px;padding:4px;margin-bottom:5px}.field-world strong{font-size:13px;line-height:1.3;margin:4px 0}.field-world small{font-size:6px;letter-spacing:.4px}
+ .field-stage{display:block;padding-top:15px}.field-stage h2{font-size:23px}.field-stage p{font-size:11px;margin-bottom:13px;max-width:none}.field-steps{justify-content:space-between}.field-steps li{flex:1;width:auto}.field-steps li>span{width:26px;height:26px}
+ .ui-v3 .panel-top{padding:14px 12px;gap:8px;flex-wrap:wrap}.ui-v3 .panel-title{font-size:9px;letter-spacing:.7px}.ui-v3 .status-dot{font-size:8px;letter-spacing:.5px}
+ .ui-v3 .arena-label{max-width:65%;left:10px;top:10px;padding:6px 8px}.ui-v3 .arena-label strong{font-size:10px}.ui-v3 .arena-label small{font-size:6px;letter-spacing:.6px}.ui-v3 .arena-label .location-icon{font-size:15px}
+ .ui-v3 .arena-timer{right:10px;top:10px;font-size:10px;min-width:48px;padding:7px}.ui-v3 .arena-bottom-labels{font-size:8px;padding:12px}
+ .ui-v3 .arena-control{display:flex;flex-wrap:wrap;padding:12px;gap:10px}.ui-v3 .arena-control>.button{flex:1;min-width:160px;text-align:center}.ui-v3 .control-left{flex:1;justify-content:flex-start;gap:8px}.ui-v3 .control-note{display:none}
+ .ui-v3 .team-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.ui-v3 .section-heading{flex-wrap:wrap;gap:10px}.ui-v3 .section-heading p{font-size:10px;line-height:1.6}.ui-v3 .segmented{width:100%}.ui-v3 .segmented button{flex:1}
+ .ui-v3 .side-column{display:block}.ui-v3 .side-column>.panel{margin-bottom:16px}.ui-v3 .briefing{padding:20px}
+ .ui-v3 .tactical-toolbar{padding:14px}.ui-v3 .tactical-toolbar-head{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.ui-v3 .tactical-toolbar-head>.section-kicker,.ui-v3 .height-control{grid-column:1/-1}.ui-v3 .tactical-toolbar-head button{white-space:normal;font-size:10px}
+ .ui-v3 .capture-planner{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));padding:12px}.ui-v3 .capture-planner>label{min-width:0}.ui-v3 .capture-planner p{grid-column:1/-1}.ui-v3 .capture-planner select{width:100%;font-size:11px}
+ .ui-v3 .enemy-build-banner div{gap:5px}.ui-v3 .enemy-build-banner button{font-size:10px;min-height:36px}.ui-v3 .enemy-build-banner small{font-size:9px}
+ .ui-v3 .biome-route{height:780px!important;margin:0!important}.ui-v3 .biome-route .route-node{width:44px;height:44px}.ui-v3 .biome-route .route-node small{font-size:7px;min-width:74px;max-width:90px}.ui-v3 .biome-route .route-node.boss{width:50px;height:50px}
+ .ui-v3 .modal-backdrop{padding:12px 8px calc(12px + env(safe-area-inset-bottom));align-items:center}.ui-v3 .modal{padding:24px 16px;max-height:calc(100dvh - 24px - env(safe-area-inset-bottom));width:100%!important;border-radius:18px}
+ .ui-v3 .modal h2{font-size:28px;padding-right:26px}.ui-v3 .modal-close{right:10px;top:10px}.ui-v3 .modal-actions{position:sticky;bottom:-24px;background:#0a2028f5;padding:12px 0 6px;z-index:4;border-top:1px solid #42676c}.ui-v3 .modal-actions>.button{flex:1;min-width:130px;white-space:normal}
+ .ui-v3 .detail-tabs button{min-width:0;font-size:11px;padding:8px 10px}.ui-v3 .detail-tabs{overflow-x:auto}
+ .ui-v3 .tutorial-callout{padding:14px;gap:10px;flex-wrap:wrap}.ui-v3 footer{display:block;font-size:8px;padding-bottom:10px}.ui-v3 footer>span{display:block;margin-top:8px}
+ .ui-v3 .battle-feed{font-size:10px;flex-wrap:wrap;gap:9px}.ui-v3 .battle-feed>span{flex:1;min-width:150px}
+}
+@media(prefers-reduced-motion:reduce){.ui-v3 *, .ui-v3 *:before,.ui-v3 *:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+.field-world-preview{height:260px;background-size:cover;background-position:center 35%;border-radius:12px;margin-bottom:20px;border:1px solid #547c7c}
+.field-stage{border-bottom:1px solid #42626566;padding-bottom:18px;background-image:url("/public/ui/ornament.svg");background-repeat:no-repeat;background-position:center bottom;background-size:160px 40px}
+
+.ui-v3 .button:not(.secondary):not(.ghost){background:linear-gradient(180deg,#f4dfa4,#dbb668);border-color:#f0d597;color:#152521}
+.ui-v3 .arena-control>.button:not(.secondary){background:linear-gradient(180deg,#f4dfa4,#dbb668);color:#152521}
+.ui-v3 .main-nav button>span{display:block}
+@media(max-width:700px){
+ .ui-v3 .page-heading p{display:none}
+ .ui-v3 .page-heading{padding-bottom:14px}
+ .ui-v3 .field-world{min-height:80px}
+ .ui-v3 .field-world small{font-size:8px;letter-spacing:.1px}
+ .ui-v3 .field-world.locked small{display:none}
+ .ui-v3 .field-world strong{font-size:14px}
+ .ui-v3 .field-stage h2{font-size:21px}
+ .ui-v3 .field-stage{padding-top:12px;padding-bottom:12px}
+ .ui-v3 .field-journey{margin-bottom:14px}
+ .ui-v3 .field-stage p{font-size:12px;line-height:1.5}
+ .ui-v3 .main-nav button>span .field-icon{width:20px;height:20px}
+ .ui-v3 .briefing .opponent-thumb{min-height:100px!important}
+ .ui-v3 .capture-planner label{font-size:10px}
+ .ui-v3 .tutorial-callout{font-size:12px}
+}

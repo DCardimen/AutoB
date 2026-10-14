@@ -1,3 +1,4 @@
+import {fieldIcon,fieldJourney,decorateFieldUI,worldArt} from './field-ui.js';
 import {interpolatedNativeUnit} from './native-motion.js';
 import {WEARER_RELICS,WEARER_BY_ID,initializeCompanion} from './wearer-relics.js';
 import {BIOMES,planetOrb,biomeScenery,worldJourneyHTML} from './planet-ui.js';
@@ -302,6 +303,8 @@ function activeSynergies() {
 function render() {
   const pageScroll={left:scrollX,top:scrollY};
   updateHeader();
+  document.body.dataset.planet = Math.min(run.planet,2);
+  document.body.dataset.phase = phase;
   document
     .querySelectorAll("[data-view]")
     .forEach((el) =>
@@ -313,6 +316,7 @@ function render() {
       : viewName === "map"
         ? mapHTML()
         : collectionHTML();
+  decorateFieldUI();
   canvas = $("#battle-canvas");
   ctx = canvas?.getContext("2d");
   if (canvas) {
@@ -324,7 +328,7 @@ function render() {
 }
 function updateHeader() {
   document.body.classList.toggle("native-expedition",!!run.native);
-  const version=document.querySelector(".local-label");if(version)version.innerHTML="<i></i> "+(run.native?"NATIVE EXPEDITION V17.1 · PALETTE FIX":"LOCAL SAVE");
+  const version=document.querySelector(".local-label");if(version)version.innerHTML="<i></i> "+"SAVED ON THIS DEVICE";
   const p = PLANETS[Math.min(run.planet, 2)];
   $("#run-number").textContent = String(profile.runs).padStart(3, "0");
   $("#collection-count").textContent = profile.owned.length;
@@ -369,7 +373,7 @@ function arenaHTML() {
               "",
               !["battle", "elite", "boss", "capture"].includes(type),
             );
-  return `${!profile.tutorial ? `<div class="tutorial-callout"><span>Welcome, explorer. Your two starters are ready. Scout the enemy counterplan, equip your first relic, then place your starters. Battles run automatically.</span>${button("Equip your first relic", "tutorial-gem", "secondary small")}<button data-action="dismiss-tutorial" aria-label="Dismiss welcome">×</button></div>` : ""}<div class="arena-grid"><div class="arena-main"><section class="panel arena-panel"><div class="panel-top"><span class="panel-title">THE OVERGROWN ARENA <span style="color:#687d5d;margin-left:9px">/ ${String(run.depth + 1).padStart(2, "0")}</span></span><span class="status-dot ${live ? "live" : ""}"><i></i> ${live ? "BATTLE IN PROGRESS" : phase === "reward" ? "ENCOUNTER COMPLETE" : mapWaiting ? "AWAITING YOUR PATH" : ended ? "EXPEDITION ENDED" : "PREPARING FOR BATTLE"}</span></div>${enemyRelicBannerHTML()}${enrageHTML()}<div class="arena-viewport"><canvas id="battle-canvas" aria-label="Real-time creature arena. Your expedition is on the left, wild creatures on the right."></canvas><div class="arena-label"><span class="location-icon">${ICONS[type]}</span><div><strong>${type === "boss" ? p.bossName : "The Forgotten Colosseum"}</strong><small>${p.name.toUpperCase()} · ${LABELS[type].toUpperCase()}</small></div></div><svg id="target-preview" class="target-preview" viewBox="0 0 1002 654" aria-hidden="true"></svg><div id="ally-orders" class="ally-orders"></div><div id="enemy-overheads" class="enemy-overheads"></div><div id="capture-feedback" class="capture-feedback" role="status" aria-live="polite"></div><div class="arena-timer" id="arena-timer">${live ? "00:00" : "READY"}</div>${type === "boss" ? `<div class="boss-banner"><div><span>${p.bossName}</span><small id="boss-phase">PHASE I</small></div><div class="boss-health-track"><i id="boss-health" style="width:100%"></i></div></div>` : ""}<div class="arena-bottom-labels"><span id="ally-count">YOUR EXPEDITION · ${run.team.length}</span><span class="versus">vs.</span><span id="foe-count">THE WILDS · ${foes?.length || 4}</span></div></div><div class="arena-control"><div class="control-left"><button class="pause-btn" data-action="pause" title="Pause battle (Space)" aria-label="Pause battle" ${!live ? "disabled" : ""}>${paused ? "▶" : "II"}</button><div class="speed-switch" aria-label="Battle speed">${[1, 2, 3].map((v) => `<button data-speed="${v}" class="${speed === v ? "active" : ""}">${v}×</button>`).join("")}</div><span class="control-note"><kbd>SPACE</kbd> to pause</span></div>${mainAction}</div>${live&&run.captureOrder?retryControlsHTML():''}</section><div class="formation-section"><div class="section-heading"><h2>YOUR EXPEDITION <span>${run.team.length} / ${capacity(run)}</span></h2><p>Inspect skills & AI · Deploy on the tactical grid</p><div class="segmented" title="Team AI priority">${["balanced", "hunt", "guard"].map((s) => `<button data-stance="${s}" class="${run.stance === s ? "active" : ""}" ${live ? "disabled" : ""}>${{ balanced: "Balanced", hunt: "Hunt", guard: "Guard" }[s]}</button>`).join("")}</div></div><div class="team-grid">${Array.from({length:6},(_,seat)=>teamSeatHTML(seat)).join("")}</div>${reserveTrayHTML()}${equipmentTrayHTML()}</div><div class="relic-section"><span class="relic-heading">✧ EXPEDITION RELICS <span class="muted">${run.relics.length}</span></span><button class="text-button pack-button" data-action="pack">◈ Relic pack · ${run.inventory.length}</button>${
+  return `${fieldJourney(run,phase,PLANETS)}${!profile.tutorial ? `<div class="tutorial-callout"><span>Welcome, explorer. Your two starters are ready. Scout the enemy counterplan, equip your first relic, then place your starters. Battles run automatically.</span>${button("Equip your first relic", "tutorial-gem", "secondary small")}<button data-action="dismiss-tutorial" aria-label="Dismiss welcome">×</button></div>` : ""}<div class="arena-grid"><div class="arena-main"><section class="panel arena-panel"><div class="panel-top"><span class="panel-title">${p.name.toUpperCase()} · FIELD <span style="color:#687d5d;margin-left:9px">/ ${String(run.depth + 1).padStart(2, "0")}</span></span><span class="status-dot ${live ? "live" : ""}"><i></i> ${live ? "BATTLE IN PROGRESS" : phase === "reward" ? "ENCOUNTER COMPLETE" : mapWaiting ? "AWAITING YOUR PATH" : ended ? "EXPEDITION ENDED" : "PREPARING FOR BATTLE"}</span></div>${enemyRelicBannerHTML()}${enrageHTML()}<div class="arena-viewport"><canvas id="battle-canvas" aria-label="Real-time creature arena. Your expedition is on the left, wild creatures on the right."></canvas><div class="arena-label"><span class="location-icon">${ICONS[type]}</span><div><strong>${type === "boss" ? p.bossName : "The Forgotten Colosseum"}</strong><small>${p.name.toUpperCase()} · ${LABELS[type].toUpperCase()}</small></div></div><svg id="target-preview" class="target-preview" viewBox="0 0 1002 654" aria-hidden="true"></svg><div id="ally-orders" class="ally-orders"></div><div id="enemy-overheads" class="enemy-overheads"></div><div id="capture-feedback" class="capture-feedback" role="status" aria-live="polite"></div><div class="arena-timer" id="arena-timer">${live ? "00:00" : "READY"}</div>${type === "boss" ? `<div class="boss-banner"><div><span>${p.bossName}</span><small id="boss-phase">PHASE I</small></div><div class="boss-health-track"><i id="boss-health" style="width:100%"></i></div></div>` : ""}<div class="arena-bottom-labels"><span id="ally-count">YOUR EXPEDITION · ${run.team.length}</span><span class="versus">vs.</span><span id="foe-count">THE WILDS · ${foes?.length || 4}</span></div></div><div class="arena-control"><div class="control-left"><button class="pause-btn" data-action="pause" title="Pause battle (Space)" aria-label="Pause battle" ${!live ? "disabled" : ""}>${paused ? "▶" : "II"}</button><div class="speed-switch" aria-label="Battle speed">${[1, 2, 3].map((v) => `<button data-speed="${v}" class="${speed === v ? "active" : ""}">${v}×</button>`).join("")}</div><span class="control-note"><kbd>SPACE</kbd> to pause</span></div>${mainAction}</div>${live&&run.captureOrder?retryControlsHTML():''}</section><div class="formation-section"><div class="section-heading"><h2>YOUR EXPEDITION <span>${run.team.length} / ${capacity(run)}</span></h2><p>Inspect skills & AI · Deploy on the tactical grid</p><div class="segmented" title="Team AI priority">${["balanced", "hunt", "guard"].map((s) => `<button data-stance="${s}" class="${run.stance === s ? "active" : ""}" ${live ? "disabled" : ""}>${{ balanced: "Balanced", hunt: "Hunt", guard: "Guard" }[s]}</button>`).join("")}</div></div><div class="team-grid">${Array.from({length:6},(_,seat)=>teamSeatHTML(seat)).join("")}</div>${reserveTrayHTML()}${equipmentTrayHTML()}</div><div class="relic-section"><span class="relic-heading">✧ EXPEDITION RELICS <span class="muted">${run.relics.length}</span></span><button class="text-button pack-button" data-action="pack">◈ Relic pack · ${run.inventory.length}</button>${
     run.relics.length
       ? `<div class="relic-list">${run.relics
           .map((id) => {
@@ -384,7 +388,7 @@ function creatureCard(u, i) {
   const s = BY_ID[u.id],
     e = ELEMENTS[s.element];
   const ready=evolutionOffer(run,u).ready;
-  return `<button class="creature-card ${s.rarity==='Legendary'?'legendary-creature':''} role-${s.role.toLowerCase()} ${ready?'evolution-ready':''}" data-loadout-drop="${i}" data-creature="${i}" draggable="${phase !== "battle"}" style="--element:${e.color}" title="${s.name} · ${s.role} · ${s.skill}"><div class="card-top"><span>${String(i + 1).padStart(2, "0")} <span style="margin-left:4px">${s.role.toUpperCase()}</span></span><span class="role-icon">${ROLES[s.role]}</span></div>${ready?'<span class="evolution-beacon" title="Ready to evolve · inspect this companion">✦</span>':''}${s.rarity==='Legendary'?'<span class="legendary-crown" title="Legendary creature">✦ LEGENDARY</span>':''}${image(u, "creature-art")}<strong>${creatureName(u)}${u.level >= 5 ? ' <span class="awakened">✧</span>' : ""}</strong><div class="card-meta"><span class="element-name" style="color:${e.color}">${e.icon} ${e.name}</span><b>Lv. ${u.level}</b></div><div class="mini-skills">${[loadoutFor(s, u.level, u).auto, ...loadoutFor(s, u.level, u).active].map((id) => `<span class="mini-ability ${SKILLS[id].auto ? "auto" : ""}" data-unit-skill="${i}:${id}" title="${SKILLS[id].name}: ${SKILLS[id].desc}">${SKILLS[id].auto ? "⌁" : SKILLS[id].icon}<i></i></span>`).join("")}</div><small class="card-intent" data-intent="${u.uid}">${run.native?(ORDERS[u.order||"advance"]?.name||"Advance"):""}</small><div class="xp-track" title="${u.xp} / ${xpNeeded(u.level)} EXP"><i style="width:${(u.xp / xpNeeded(u.level)) * 100}%"></i></div><div class="card-slots" title="${(u.relics || []).length} of ${relicSlots(u)} personal relic slots filled">${Array.from({ length: relicSlots(u) }, (_, j) => `<span class="${u.relics?.[j] ? "filled" : ""}" style="color:${u.relics?.[j] ? PERSONAL_BY_ID[u.relics[j].id].color : ""}">${u.relics?.[j] ? "◆" : "◇"}</span>`).join("")}<small>${(u.relics || []).length} / ${relicSlots(u)}</small></div><i class="card-health" style="width:0%"></i></button>`;
+  return `<button class="creature-card ${s.rarity==='Legendary'?'legendary-creature':''} role-${s.role.toLowerCase()} ${ready?'evolution-ready':''}" data-loadout-drop="${i}" data-creature="${i}" draggable="${phase !== "battle"}" style="--element:${e.color}" title="${s.name} · ${s.role} · ${s.skill}"><div class="card-top"><span>${String(i + 1).padStart(2, "0")} <span style="margin-left:4px">${s.role.toUpperCase()}</span></span><span class="role-icon">${ROLES[s.role]}</span></div>${ready?'<span class="evolution-beacon" title="Ready to evolve · inspect this companion">✦</span>':''}${s.rarity==='Legendary'?'<span class="legendary-crown" title="Legendary creature">✦ LEGENDARY</span>':''}<span class="idle-portrait">${image(u, "creature-art")}<canvas width="128" height="128" data-idle-index="${i}" aria-hidden="true"></canvas></span><strong>${creatureName(u)}${u.level >= 5 ? ' <span class="awakened">✧</span>' : ""}</strong><div class="card-meta"><span class="element-name" style="color:${e.color}">${e.icon} ${e.name}</span><b>Lv. ${u.level}</b></div><div class="mini-skills">${[loadoutFor(s, u.level, u).auto, ...loadoutFor(s, u.level, u).active].map((id) => `<span class="mini-ability ${SKILLS[id].auto ? "auto" : ""}" data-unit-skill="${i}:${id}" title="${SKILLS[id].name}: ${SKILLS[id].desc}">${SKILLS[id].auto ? "⌁" : SKILLS[id].icon}<i></i></span>`).join("")}</div><small class="card-intent" data-intent="${u.uid}">${run.native?(ORDERS[u.order||"advance"]?.name||"Advance"):""}</small><div class="xp-track" title="${u.xp} / ${xpNeeded(u.level)} EXP"><i style="width:${(u.xp / xpNeeded(u.level)) * 100}%"></i></div><div class="card-slots" title="${(u.relics || []).length} of ${relicSlots(u)} personal relic slots filled">${Array.from({ length: relicSlots(u) }, (_, j) => `<span class="${u.relics?.[j] ? "filled" : ""}" style="color:${u.relics?.[j] ? PERSONAL_BY_ID[u.relics[j].id].color : ""}">${u.relics?.[j] ? "◆" : "◇"}</span>`).join("")}<small>${(u.relics || []).length} / ${relicSlots(u)}</small></div><i class="card-health" style="width:0%"></i></button>`;
 }
 function briefingHTML() {
   const type = node?.type || "battle",
@@ -459,7 +463,7 @@ function mapHTML() {
         connections += `<line x1="${a.x}" y1="${a.y}" x2="${b.x}" y2="${b.y}" stroke="${chosen ? BIOMES[run.planet].light : BIOMES[run.planet].water}" stroke-width="${chosen ? ".35" : ".2"}" ${chosen ? "" : 'stroke-dasharray=".9 1.1"'}/>`;
       }
   const biome=BIOMES[Math.min(run.planet,2)];
-  return `${worldJourneyHTML(PLANETS,run.planet)}<div class="map-grid biome-${run.planet}" style="--biome:${biome.water}"><section class="panel map-panel"><div class="panel-top"><span class="panel-title">${PLANETS[Math.min(run.planet, 2)].name.toUpperCase()} · ROUTE ${run.planet + 1}</span><span class="status-dot"><i></i> ${run.complete ? "EXPEDITION COMPLETE" : phase === "battle" ? "BATTLE IN PROGRESS" : `ENCOUNTER ${run.depth + 1} / ${run.route.length}`}</span></div><div class="planet-landing">${planetOrb(run.planet,108)}<div><span class="section-kicker">${biome.name.toUpperCase()}</span><h2>${PLANETS[run.planet].name}</h2><p>${biome.tag}</p><small>${biome.features.join(' · ')}</small></div></div><div class="route biome-route">${biomeScenery(run.planet)}<svg class="route-links" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">${connections}</svg>${positions
+  return `${fieldJourney(run,phase,PLANETS)}<div class="map-grid biome-${run.planet}" style="--biome:${biome.water};--route-art:url(\'${worldArt(Math.min(run.planet,2))}\')"><section class="panel map-panel"><div class="panel-top"><span class="panel-title">${PLANETS[Math.min(run.planet, 2)].name.toUpperCase()} · ROUTE ${run.planet + 1}</span><span class="status-dot"><i></i> ${run.complete ? "EXPEDITION COMPLETE" : phase === "battle" ? "BATTLE IN PROGRESS" : `ENCOUNTER ${run.depth + 1} / ${run.route.length}`}</span></div><div class="planet-landing">${planetOrb(run.planet,108)}<div><span class="section-kicker">${biome.name.toUpperCase()}</span><h2>${PLANETS[run.planet].name}</h2><p>${biome.tag}</p><small>${biome.features.join(' · ')}</small></div></div><div class="route biome-route">${biomeScenery(run.planet)}<svg class="route-links" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">${connections}</svg>${positions
     .map((n) => {
       const visible=routeVisible(run,n);
       const available =
@@ -467,14 +471,14 @@ function mapHTML() {
         phase !== "battle" &&
         phase !== "reward" &&
         phase !== "ended";
-      return `<button class="route-node ${available ? "available" : ""} ${run.path.includes(n.id) ? "visited" : ""} ${visible&&n.type === "boss" ? "boss" : ""} ${node?.id === n.id && phase === "prep" ? "selected" : ""}" data-node="${n.id}" style="left:${n.x}%;top:${n.y}%" ${!available ? "disabled" : ""} aria-label="${visible?LABELS[n.type]:"Uncharted"}, encounter ${n.depth + 1}" title="${visible?LABELS[n.type]:"Uncharted"} · ${visible?encounterInfo(run, n).arch.name:"Beyond scouting range"} ${visible?" · "+encounterInfo(run,n).weather.name+" · "+(n.type==="event"?EVENTS[n.event||0].title:encounterInfo(run,n).arch.counter):""}">${run.path.includes(n.id) && n.depth < run.depth ? "✓" : visible?ICONS[n.type]:"?"}<small>${visible?LABELS[n.type].toUpperCase():"UNCHARTED"}</small></button>`;
+      return `<button class="route-node ${available ? "available" : ""} ${run.path.includes(n.id) ? "visited" : ""} ${visible&&n.type === "boss" ? "boss" : ""} ${node?.id === n.id && phase === "prep" ? "selected" : ""}" data-node="${n.id}" style="left:${n.x}%;top:${n.y}%" ${!available ? "disabled" : ""} aria-label="${visible?LABELS[n.type]:"Uncharted"}, encounter ${n.depth + 1}" title="${visible?LABELS[n.type]:"Uncharted"} · ${visible?encounterInfo(run, n).arch.name:"Beyond scouting range"} ${visible?" · "+encounterInfo(run,n).weather.name+" · "+(n.type==="event"?EVENTS[n.event||0].title:encounterInfo(run,n).arch.counter):""}">${run.path.includes(n.id) && n.depth < run.depth ? "✓" : visible?fieldIcon(n.type):"?"}<small>${visible?LABELS[n.type].toUpperCase():"UNCHARTED"}</small></button>`;
     })
     .join(
       "",
     )}</div><div class="map-description">${phase === "battle" ? "Your companions are fighting. Return to the arena to watch." : phase === "reward" ? "Claim your battle rewards before choosing the next encounter." : "Choose a glowing encounter. Each room has 1–4 explicit connections; scouting reveals four encounters ahead."}</div><div class="map-legend">${Object.entries(
     LABELS,
   )
-    .map(([t, l]) => `<span><b>${ICONS[t]}</b>${l}</span>`)
+    .map(([t, l]) => `<span><b>${fieldIcon(t)}</b>${l}</span>`)
     .join(
       "",
     )}</div></section><aside class="side-column"><section class="panel planet-list"><span class="panel-title">YOUR JOURNEY</span>${PLANETS.map((p, i) => `<div class="planet-row ${i > run.planet ? "future" : ""}"><span class="planet-orb" style="--planet:${p.color}"></span><div><strong>${p.name}</strong><small>${i < run.planet ? "World explored" : i === run.planet ? p.sub : "Beyond the horizon"}</small></div><span>${i < run.planet ? "✓" : i === run.planet ? "→" : "·"}</span></div>`).join("")}<div class="thin-rule"></div><p class="muted" style="font-size:11px;line-height:1.9;margin:0">Eight encounters per world. Connections define your path. A retreat costs a life, but you can still move forward.</p></section>${synergyHTML()}<section class="panel briefing"><span class="section-kicker">A LITTLE FORESIGHT</span><p style="margin-top:12px">Shops reward saving. Elites reward strength. Captures reward curiosity. You can’t take every path — choose what your team is missing.</p></section></aside></div>`;
@@ -537,6 +541,7 @@ function modal(html, kind = "generic", closable = true) {
   closable=true;modalKind = kind;
   $("#modal-root").innerHTML =
     `<div class="modal-backdrop" data-dismissible="${closable}"><section class="modal" role="dialog" aria-modal="true" aria-label="${kind}">${closable ? '<button class="modal-close" data-action="close" aria-label="Close dialog">×</button>' : ""}${html}</section></div>`;
+  decorateFieldUI($("#modal-root"));
   decorateAilments($("#modal-root"));prepareLoadoutDragging();prepareDetailTabs();
   const first = $("#modal-root button:not(:disabled)");
   if(previousKind===kind){$(".modal").scrollTop=previousScroll;$(".modal-backdrop").scrollTop=backdropScroll;}
@@ -1632,6 +1637,7 @@ function frame(now) {
     });
   }
   if(modalKind==="roster")drawRoster(now/1000);
+  drawIdlePortraits(now);
   requestAnimationFrame(frame);
 }
 document.addEventListener("input",e=>{if(e.target.matches("[data-tuning]")){applyTuning({...profile.tuning,[e.target.dataset.tuning]:Number(e.target.value)});return;}if(e.target.matches("[data-character-height]")){profile.tuning=setTuning(profile.tuning||DEFAULT_TUNING);
@@ -2077,3 +2083,23 @@ document.addEventListener('change',e=>{if(e.target.matches('[data-auto-capture]'
 
 function getOrderPreview(){if(!foes?.length)return null;const key=JSON.stringify([run.team,run.relics,run.stance,run.rulesVersion,run.planet,run.depth,foes]);if(key!==orderPreviewKey){orderPreview=new Battle(JSON.parse(JSON.stringify(run)),structuredClone(foes),node?.seed||run.seed,{visuals:false});orderPreviewKey=key;}return orderPreview;}
 function scoutingComparisonHTML(){const preview=getOrderPreview();if(!preview)return '';const total=(side,key)=>preview.units.filter(u=>u.side===side).reduce((n,u)=>n+(u[key]||0),0),average=(side,key)=>total(side,key)/Math.max(1,preview.units.filter(u=>u.side===side).length);return `<div class="scout-comparison"><div><b>YOUR TEAM</b><small>OPENING STATS</small><b>THE WILDS</b></div>${[['HP',total(0,'maxHp'),total(1,'maxHp')],['Attack',total(0,'atk'),total(1,'atk')],['Avg. armor',average(0,'armor'),average(1,'armor')]].map(([label,a,b])=>`<div><strong>${Math.round(a)}</strong><small>${label}</small><strong>${Math.round(b)}</strong></div>`).join('')}<p>Includes worn equipment and opening relic effects. Conditional bonuses change during combat.</p></div>`;}
+
+let idlePortraitTick=0;
+function drawIdlePortraits(now){
+ if(document.hidden||phase==='battle'||now-idlePortraitTick<125)return;
+ idlePortraitTick=now;
+ for(const portrait of document.querySelectorAll('[data-idle-index]')){
+  const rect=portrait.getBoundingClientRect();
+  if(rect.bottom<0||rect.top>innerHeight)continue;
+  const u=run.team[Number(portrait.dataset.idleIndex)];if(!u)continue;
+  const c=portrait.getContext('2d');if(!c)continue;
+  c.clearRect(0,0,128,128);c.imageSmoothingEnabled=false;
+  const pose=nativePreviewFrame(u,'idle',profile.reducedMotion?0:(now/3200)%1,2);
+  c.drawImage(pose,0,0,128,128);portrait.parentElement.classList.add('ready');
+ }
+}
+document.addEventListener('click',e=>{
+ const el=e.target.closest('[data-planet-preview]');if(!el)return;
+ const i=Number(el.dataset.planetPreview),p=PLANETS[i],b=BIOMES[i];
+ modal('<div class="field-world-preview" style="background-image:linear-gradient(0deg,#071c23,transparent),url('+worldArt(i)+')"></div><span class="section-kicker">'+(i>run.planet?'BEYOND THE HORIZON':'YOUR JOURNEY')+'</span><h2>'+p.name+'</h2><p>'+b.tag+'</p><p>'+b.features.join(' · ')+'</p><p>'+(i>run.planet?'Defeat your current world’s guardian to travel onward.':i<run.planet?'Your expedition has explored this world.':'Choose encounters on the star chart to progress through this world.')+'</p><div class="modal-actions">'+button('Back to your journey','close','secondary')+'</div>','world-preview');
+});

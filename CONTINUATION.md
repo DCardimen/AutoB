@@ -1,3 +1,15 @@
+# Current continuation · Field UI V3
+
+UI work is on the fresh `codex/uploaded-ui-art` branch from uploaded-art commit `723f802458fa42e8d877afeae6ecb29d2b85a458`, targeting `codex/starfall-menagerie` through a new PR. Read FIELD-UI-V3.md and tests/reports/field-ui-v3.json. The supplied world paintings are integrated; original vector icons and an ornament match the reference across field and menus. Idle card portraits reuse the accepted renderer. Mobile navigation, controls, dialogs and all three routes are responsive. Rules 17 and save schema 7 remain.
+
+Source and exact rebuilt standalone pass the complete field browser checks, including preparation → combat/pause → rewards/cache → route → next encounter and reload, all three world paintings, outpost/event/rest, menagerie/settings and 320/390/768/1440px. Offline checks make no external requests. All 232 unit tests pass. The functional browser fixtures are not a human satisfaction score or a campaign balance certification.
+
+The GitHub Actions field-UI workflow builds and verifies the downloadable HTML and ZIP, uploads a playable artifact plus screenshots, and saves the generated playable files to this feature branch. Check its current run before using the branch's standalone download. For local work use npm ci, npm start, npm run build:standalone and node tests/field-ui.browser.mjs. The isolated execution checkout is /vercel/AutoB; its processes are temporary.
+
+The unavailable original workspace's expedition.js draft was not accessed, changed or staged. Future changes still require a fresh branch and PR.
+
+---
+
 # Current continuation · V17.1 palette fix / application 0.13.1
 
 Read SPRITE-PALETTE-FIX.md and tests/reports/sprite-palette-fix.json first. Current feature branch: `codex/sprite-palette-consistency`, based on release commit `bb863177ddfc3a41780278620c8ce04a0946b933` after PR #5 merged. This request opens a new PR targeting `codex/starfall-menagerie`. Every future request requires a fresh branch and PR.

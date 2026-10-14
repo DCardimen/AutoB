@@ -1,0 +1,7 @@
+{
+  "checks": [
+    "Source: 320/390/768/1440px, creature tabs, world previews, battle/pause, reward/cache, route selection, save reload, all three world paintings, outpost/event/rest menus, menagerie/settings",
+    "Offline: 320/390/768/1440px, creature tabs, world previews, battle/pause, reward/cache, route selection, save reload, all three world paintings, outpost/event/rest menus, menagerie/settings, zero external requests"
+  ],
+  "errors": []
+}

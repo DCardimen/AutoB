@@ -1,3 +1,5 @@
+**Field UI V3:** The feature branch adds the supplied world paintings, original vector UI art, animated idle portraits, matching menus and responsive mobile controls. See [the UI notes and playable build instructions](FIELD-UI-V3.md). The Build and verify field UI workflow publishes the tested offline HTML and ZIP.
+
 # Starfall Menagerie · V17.1 palette fix
 
 A single-player creature-collecting roguelike autobattler with physical arena combat. Start with two companions and grow a team of six across three planets, build individual companions with personal relics and equipment, capture permanent starters, and climb twenty Chaos tiers.
