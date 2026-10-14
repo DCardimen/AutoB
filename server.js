@@ -16,6 +16,9 @@ const types = {
   ".woff2": "font/woff2",
 };
 const entryFiles = new Set([
+  "/movement-tuning.js",
+  "/settings-movement-preview.js",
+  "/elite-modifiers.js",
   "/index.html",
   "/styles.css",
   "/field-ui.css",
@@ -57,6 +60,8 @@ const entryFiles = new Set([
 
   "/native-forms.js",
   "/leg-volume.js",
+  "/creature-leg-volume.js",
+  "/creature-attacks.js",
   "/native-faces.js",
   "/native-poses.js",
   "/native-export.js",
