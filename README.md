@@ -1,4 +1,6 @@
-# Chaos, relics and combat update
+# Fang & Feather
+
+**Fang & Feather (F&F)** is a creature collecting autobattler. The supplied feather-and-fang logo appears in the game and Training Glade, including both offline builds. Existing saves and the legacy offline filenames remain compatible.
 
 Settings now rotate randomized small, regular and large examples every five seconds. Eighteen sliders include five movement-pattern controls for direction changes, corner slowdown, run/sprint distances and animation transitions. Examples demonstrate the same movement rules as combat.
 
@@ -12,7 +14,7 @@ Three starter points plus one per cleared Chaos tier; a third starting companion
 
 **Melee weapon and arm polish · Art 6:** Complete connected arms, original weapon silhouettes and readable carry poses; phone AI controls moved below the creatures. See [the changes and validation](MELEE-WEAPONS.md). After pulling, run `npm ci` and `npm start`, or `npm run build:standalone` for the updated offline game.
 
-**Reference field UI:** Illustrated route scene and encounter sheet, matching menus, mobile combat layout and original vector artwork. See [UI notes and build instructions](FIELD-UI-V3.md). Run `npm ci` and `npm start` to play the latest source after pulling. For the updated offline game, run `npm run build:standalone`, or use the **Starfall-Reference-UI** Actions artifact.
+**Reference field UI:** Illustrated route scene and encounter sheet, matching menus, mobile combat layout and original vector artwork. See [UI notes and build instructions](FIELD-UI-V3.md). Run `npm ci` and `npm start` to play the latest source after pulling. For the updated offline game, run `npm run build:standalone`, or use the **Fang-and-Feather** Actions artifact.
 
 # Previous release · V17.1 palette fix
 
@@ -42,7 +44,7 @@ Open **Starfall-Training-Glade.html** in Chrome, Edge or Firefox and look for **
 
 ## Play
 
-After pulling this UI branch, run `npm ci` and `npm start`, then open http://localhost:3000. To play offline, first run `npm run build:standalone` and open **Starfall-Menagerie.html** in Chrome or Firefox, or extract the tested **Starfall-Reference-UI** GitHub Actions artifact. The rebuilt HTML embeds all code, artwork, audio synthesis, and fonts and needs no server or internet connection. Tracked older generated packages are historical; rebuilding includes the latest source changes.
+After pulling this UI branch, run `npm ci` and `npm start`, then open http://localhost:3000. To play offline, first run `npm run build:standalone` and open **Starfall-Menagerie.html** in Chrome or Firefox, or extract the tested **Fang-and-Feather** GitHub Actions artifact. The rebuilt HTML embeds all code, artwork, audio synthesis, and fonts and needs no server or internet connection. Tracked older generated packages are historical; rebuilding includes the latest source changes.
 
 Keep the file at the same location to retain its browser-local save. Existing collections are preserved on the same browser origin. New runs use the new route generator; an existing run keeps its saved route.
 

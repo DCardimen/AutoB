@@ -51,17 +51,17 @@ jobs:
         run: |
           python3 - <<'PY'
           import zipfile
-          with zipfile.ZipFile('public/Starfall-Reference-UI.zip', 'w', zipfile.ZIP_DEFLATED) as z:
+          with zipfile.ZipFile('public/Fang-and-Feather.zip', 'w', zipfile.ZIP_DEFLATED) as z:
               z.write('Starfall-Menagerie.html')
-              z.writestr('README.txt', 'Extract and open Starfall-Menagerie.html in Chrome, Firefox, or Edge. The complete game, fonts, and three world paintings are embedded. Keep the same file location to retain the device save.\n')
+              z.writestr('README.txt', 'Fang & Feather (F&F)\nExtract and open Starfall-Menagerie.html in Chrome, Firefox, or Edge. The complete game, logo, fonts, and three world paintings are embedded. Keep the same file location to retain the device save.\n')
           PY
       - uses: actions/upload-artifact@v4
         with:
-          name: Starfall-Reference-UI
+          name: Fang-and-Feather
           path: |
             Starfall-Menagerie.html
             Starfall-Training-Glade.html
-            public/Starfall-Reference-UI.zip
+            public/Fang-and-Feather.zip
             playtest-artifacts/field-*.png
             playtest-artifacts/melee-*.png
             playtest-artifacts/natural-carry-*.png

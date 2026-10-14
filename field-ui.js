@@ -5,7 +5,7 @@ export const WORLD_ART = ['/public/ui/world-0.png','/public/ui/world-1.png','/pu
  return URL.createObjectURL(new Blob([Uint8Array.from(binary,c=>c.charCodeAt(0))],{type:'image/png'}));
 });
 export const worldArt = index => WORLD_ART[Math.max(0,Math.min(2,index))];
-// Original vector artwork for the uploaded Starfall UI style.
+// Original vector artwork for the supplied field UI style.
 const paths = {
  star:'M16 2l4 10 10 4-10 4-4 10-4-10L2 16l10-4z',
  battle:'M6 4l17 19M4 6l2-2 6 2M19 19l7 7M19 23l4-4M26 4L9 21M28 6l-2-2-6 2M13 19l-7 7M9 19l4 4',
@@ -34,7 +34,7 @@ export function fieldJourney(run,phase,planets) {
  return '<section class="field-journey" aria-label="Expedition progress" data-field-phase="'+phase+'"><div class="field-worlds">'+planets.map((p,i)=>'<button data-planet-preview="'+i+'" class="field-world '+(i===planet?'current':i>planet?'locked':'explored')+'" style="--world-art:url('+worldArt(i)+')" aria-label="'+p.name+(i>planet?' · locked, preview world':' · preview world')+'">'+planetOrb(i,39)+(i>planet?fieldIcon('lock','field-world-lock'):'')+'<span><small>'+ (i===planet?'CURRENT WORLD':i>planet?'Locked':'WORLD EXPLORED')+'</small><strong>'+p.name+'</strong></span></button>').join('')+'</div><div class="field-stage"><div><span class="section-kicker">WORLD '+(planet+1)+' OF 3 · ENCOUNTER '+current+' / '+total+'</span><h2>'+title+'</h2><p>'+hint+'</p></div><ol class="field-steps" aria-label="Encounter progress">'+Array.from({length:total},(_,i)=>'<li class="'+(i<run.depth?'complete':i===run.depth?'current':'future')+'" aria-label="Encounter '+(i+1)+(i<run.depth?' completed':i===run.depth?' current':' ahead')+'"><span>'+ (i===total-1?fieldIcon('boss'):i<run.depth?'✓':i+1)+'</span></li>').join('')+'</ol></div></section>';
 }
 export function decorateFieldUI(root=document) {
- for(const [selector,name] of [['.brand-mark','star'],['[data-view="arena"] > span','battle'],['[data-view="map"] > span','map'],['[data-view="collection"] > span','team'],['.resource-icon.gold','gold'],['.resource-icon.mint','capture'],['.resource-icon.pink','heart'],['.field-collection-shortcut','team'],['#settings','gear'],['#sound','sound'],['#help','help']]) {
+ for(const [selector,name] of [['[data-view="arena"] > span','battle'],['[data-view="map"] > span','map'],['[data-view="collection"] > span','team'],['.resource-icon.gold','gold'],['.resource-icon.mint','capture'],['.resource-icon.pink','heart'],['.field-collection-shortcut','team'],['#settings','gear'],['#sound','sound'],['#help','help']]) {
   const el=root.querySelector(selector);if(el&&!el.querySelector('svg'))el.innerHTML=fieldIcon(name);
  }
  const panels=root.querySelectorAll('.panel,.modal');for(const el of panels)el.classList.add('field-surface');

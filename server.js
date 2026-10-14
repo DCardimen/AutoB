@@ -156,5 +156,5 @@ http
     });
   })
   .listen(port, "0.0.0.0", () =>
-    console.log(`Starfall Menagerie listening on ${port}`),
+    console.log(`Fang & Feather listening on ${port}`),
   );

@@ -6,10 +6,11 @@ const notice=fs.readFileSync('node_modules/three/LICENSE','utf8');
 const bundle=fs.readFileSync('public/prototype-bundle.js','utf8').replaceAll('\t','  ').replace(/[ \t]+$/gm,'')+'\n/* Three.js license\n'+notice+'*/\n';
 fs.writeFileSync('public/prototype-bundle.js',bundle);
 const glade='data:image/png;base64,'+fs.readFileSync('public/prototype-glade-pixel.png').toString('base64');
+const logo='data:image/png;base64,'+fs.readFileSync('public/ui/fang-and-feather-logo.png').toString('base64');
 let js=bundle.replace('backdrop.src = "/public/prototype-glade-pixel.png"','backdrop.src = '+JSON.stringify(glade));
 if(js.includes('"/public/prototype-glade-pixel.png"'))throw new Error('Unresolved background asset');
 js=js.replaceAll('</script','<\\/script');new vm.Script(js);
 const html=fs.readFileSync('prototype.html','utf8').replace('<link rel="stylesheet" href="prototype.css">','<style>'+fs.readFileSync('prototype.css','utf8')+'</style>')
-  .replace('<script src="public/prototype-bundle.js"></script>','<script>'+js+'</script>').replaceAll('href="index.html"','href="Starfall-Menagerie.html"');
+  .replace('<script src="public/prototype-bundle.js"></script>','<script>'+js+'</script>').replaceAll('href="index.html"','href="Starfall-Menagerie.html"').replaceAll('/public/ui/fang-and-feather-logo.png',logo);
 fs.writeFileSync('Starfall-Training-Glade.html',html);
-console.log(`Built native-pixel Training Glade: ${(Buffer.byteLength(html)/1024/1024).toFixed(2)} MiB, zero remote dependencies.`);
+console.log(`Built Fang & Feather Training Glade: ${(Buffer.byteLength(html)/1024/1024).toFixed(2)} MiB, zero remote dependencies.`);

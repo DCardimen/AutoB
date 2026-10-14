@@ -14,6 +14,6 @@ const bundle=await build({entryPoints:[path.join(root,'app.js')],bundle:true,wri
 });}}]});
 const js='const embeddedAssets='+JSON.stringify(assets)+';\n'+bundle.outputFiles[0].text;
 new vm.Script(js);if(/<\/script/i.test(js))throw new Error('Unsafe script embedding');
-const html=fs.readFileSync(path.join(root,'index.html'),'utf8').replace('<link rel="stylesheet" href="styles.css" />','<style>'+css+'</style>').replace(/\s*<link rel="stylesheet" href="field-ui.css" \/>/,'').replace('<script type="module" src="app.js"></script>','<script>'+js+'</script>').replace('href="prototype.html"','href="Starfall-Training-Glade.html"');
+const html=fs.readFileSync(path.join(root,'index.html'),'utf8').replace('<link rel="stylesheet" href="styles.css" />','<style>'+css+'</style>').replace(/\s*<link rel="stylesheet" href="field-ui.css" \/>/,'').replace('<script type="module" src="app.js"></script>','<script>'+js+'</script>').replace('href="prototype.html"','href="Starfall-Training-Glade.html"').replaceAll('/public/ui/fang-and-feather-logo.png',asset('public/ui/fang-and-feather-logo.png'));
 fs.writeFileSync(path.join(root,'Starfall-Menagerie.html'),html);
-console.log('Built native-compatible standalone: '+(Buffer.byteLength(html)/1024/1024).toFixed(1)+' MiB, embedded artwork and fonts.');
+console.log('Built Fang & Feather standalone: '+(Buffer.byteLength(html)/1024/1024).toFixed(1)+' MiB, embedded artwork and fonts.');
