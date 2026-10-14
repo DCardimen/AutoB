@@ -531,3 +531,59 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
 .ui-v3 .quick-equipment button small { white-space:normal; font-size:10px; }
 .ui-v3 .quick-equipment .visible-gear-effect { grid-column:1 / -1; font-size:10px; line-height:1.5; overflow-wrap:break-word; }
 @media(max-width:600px) { .ui-v3 .quick-equipment { grid-template-columns:1fr; } .ui-v3 .stat-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+
+/* Preparation controls have their own space; dragging or resizing a creature
+   cannot place its sprite beneath a button or an AI selector. */
+.ui-v3 .prep-enemy-controls,.ui-v3 .prep-ally-controls { padding:10px 12px; background:#0a2028; border-block:1px solid #42676c; min-width:0; }
+.prep-control-title { display:block; color:#a8cfc4; font-size:9px; letter-spacing:.1em; margin-bottom:7px; }
+.ui-v3 .prep-enemy-controls .enemy-overheads { position:static; display:flex; gap:8px; overflow-x:auto; padding:0 0 3px; pointer-events:auto; }
+.ui-v3 .prep-enemy-controls .enemy-head-ui { position:static; transform:none; flex:0 0 auto; display:flex; align-items:center; gap:5px; padding:6px 8px; border:1px solid #4a6b6c; border-radius:7px; background:#14313a; }
+.ui-v3 .prep-enemy-controls .enemy-head-ui button { min-width:30px; min-height:30px; border-radius:4px; }
+.prep-enemy-name { color:#e7e9d5; font-size:11px; max-width:110px; overflow:hidden; text-overflow:ellipsis; }
+.ui-v3 .prep-ally-controls .ally-orders { position:static; display:flex; gap:8px; overflow-x:auto; padding:0 0 3px; pointer-events:auto; }
+.ui-v3 .prep-ally-controls .ally-orders label { position:static; transform:none; flex:0 0 155px; width:155px; padding:7px 9px; box-shadow:none; }
+.ui-v3 .prep-ally-controls .ally-orders label>span { display:block; font-size:11px; line-height:1.4; }
+.ui-v3 .prep-ally-controls .ally-orders select { min-height:32px; height:auto; font-size:11px; }
+.ui-v3 .prep-ally-controls .ally-orders small { display:block; font-size:10px; }
+.ui-v3 .capture-quick { flex-wrap:wrap; min-width:0; max-width:100%; grid-template-columns:repeat(4,minmax(0,1fr)); }
+.ui-v3 .capture-quick button { min-width:0; white-space:normal; }
+.ui-v3 .capture-quick small { overflow-wrap:anywhere; }
+
+.ui-v3 .live-roster { position:fixed; z-index:15; bottom:0; left:12px; right:12px; max-width:1250px; margin-inline:auto; padding:8px 10px calc(8px + env(safe-area-inset-bottom)); background:#071c25fa; border:1px solid #638982; border-bottom:0; border-radius:13px 13px 0 0; box-shadow:0 -8px 24px #0006; }
+.live-roster-head { display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:6px; }
+.live-roster-head>small { color:#b3c9c1; font-size:10px; }
+.live-roster-tabs { display:flex; gap:6px; }
+.live-roster-tabs button { padding:5px 10px; min-height:30px; border:1px solid #456a6d; border-radius:6px; background:#102b33; color:#c4d7cd; font-size:11px; }
+.live-roster-tabs button[aria-pressed=true] { background:#2c4949; border-color:#d3c78f; color:#f3e6b9; }
+.live-roster-cards { display:flex; gap:8px; overflow-x:auto; overscroll-behavior-x:contain; padding:0 0 4px; scrollbar-width:thin; scrollbar-color:#638982 #0a2028; }
+.live-unit-card { position:relative; box-sizing:border-box; flex:1 0 175px; min-width:175px; max-width:240px; padding:8px; border:1px solid #496e6a; border-radius:9px; background:#122f34; color:#e5ecd5; }
+.live-unit-card.selected { border-color:#e8d292; box-shadow:inset 0 0 0 1px #e8d29255; }
+.live-unit-card.low-health .live-health-bar i { background:#ec9c7c; }
+.live-unit-card.knocked-out { opacity:.58; }
+.live-unit-portrait { display:flex; align-items:center; gap:7px; width:100%; border:0; padding:0; background:none; color:inherit; text-align:left; }
+.live-unit-portrait img { width:32px; height:32px; object-fit:contain; image-rendering:pixelated; }
+.live-unit-portrait>span { min-width:0; }
+.live-unit-portrait strong { display:block; font-size:11px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.live-unit-portrait small { display:block; font-size:8px; color:#b1d1c8; margin-top:3px; }
+.live-vital-label { display:flex; justify-content:space-between; font-size:9px; line-height:1.5; margin-top:3px; }
+.live-vital-label b { font-weight:500; }
+.live-health-bar,.live-stamina-bar { height:4px; border-radius:3px; overflow:hidden; background:#061b21; }
+.live-health-bar i,.live-stamina-bar i { display:block; height:100%; background:#aed28e; }
+.live-stamina-bar i { background:#e5bf78; }
+.live-unit-skills { display:flex; gap:4px; margin-top:6px; }
+.live-unit-skill { position:relative; display:grid; grid-template-rows:12px 11px; align-content:center; justify-items:center; flex:1; min-width:0; height:29px; background:#0b2029; border:1px solid #426568; border-radius:4px; overflow:hidden; font-size:10px; }
+.live-unit-skill b { font-size:9px; line-height:11px; font-weight:500; }
+.live-unit-skill i { position:absolute; height:2px; bottom:0; left:0; background:#9abfc7; }
+.live-unit-skill.ready { color:#d3eeb1; border-color:#87a967; }
+.live-unit-condition { font-size:9px; color:#c1d5c7; margin-top:5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.live-focus-button { position:absolute; right:7px; top:42px; min-height:23px; font-size:9px; padding:2px 6px; border:1px solid #aa9a66; border-radius:4px; background:#243c3c; color:#f2dca1; }
+.live-unit-card:has(.live-focus-button) .live-vital-label { padding-right:47px; }
+.ui-v3[data-phase=battle][data-screen=arena] #app { padding-bottom:200px; }
+.ui-v3 .arena-viewport { scroll-margin-top:85px; }
+@media(max-width:600px) {
+ .ui-v3 .live-roster { left:4px; right:4px; padding:6px 6px calc(5px + env(safe-area-inset-bottom)); }
+ .live-roster-head>small { font-size:8px; max-width:80px; text-align:right; }
+ .live-roster-tabs button { font-size:10px; padding:5px 7px; }
+ .live-unit-card { flex:0 0 164px; min-width:164px; padding:7px; }
+ .live-unit-portrait img { width:28px; height:28px; }
+}

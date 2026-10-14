@@ -16,6 +16,14 @@ Start a new expedition to receive one random, seeded expedition relic. Existing 
 
 The existing item-strength rule remains: modern runs apply half of catalogue magnitudes. UI descriptions use the same scaling as combat.
 
+## Live character UI
+
+Live combat has a fixed roster strip at the bottom of the screen. Every ally has a portrait, health and stamina values, skill cooldowns and status text. Knocked-out companions remain visible; captured allies join the strip for their round. Tap a portrait to inspect its character, or switch to Opponents to inspect and focus enemies. The strip scrolls horizontally on phones and keeps its scroll position and keyboard focus as values update.
+
+Pregame enemy inspection/capture controls and allied target policies occupy separate rows above and below the battlefield. Their controls cannot cover a sprite, including during deployment dragging or with large evolved forms. Target-preview lines remain on the arena.
+
+`node tests/live-roster.browser.mjs` verifies source and offline builds with six evolved allies and six enemies at 320/390/768/1440px, maximum size tuning, actual control/canvas separation, live values, inspection, knockouts, captured allies and phone scrolling. Its default preview URL is `http://127.0.0.1:3000`; set `BASE_URL` for another preview port.
+
 ## Play and verify
 
 Run `npm ci` and `npm start`, then open `http://localhost:3000`. Rebuild the portable game with `npm run build:standalone`, or open the updated `Starfall-Menagerie.html`.
