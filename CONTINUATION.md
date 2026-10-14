@@ -1,3 +1,15 @@
+# Current continuation · Melee weapon and arm polish
+
+Fresh feature branch: `codex/melee-weapon-arms`, based on release `cf840e8710bef0d016dfd8b5abfb7090eb3381b9` after PR #8 merged. This request uses a new PR. Read MELEE-WEAPONS.md and the current Build and verify field UI run.
+
+Art revision is 6. Shoulders bind to the connected painted torso, with separately layered upper arms, elbows, forearms and hands. Original pixel weapon silhouettes share the wielding grip, remain readable between strikes and retain physical active-contact directions. Complete silhouettes are measured before rasterization to refit exceptional poses without clipping. Phone AI shortcuts use a lower scrolling arena strip to expose the creatures. Authored body palettes, rules 17, save schema 7 and accepted creature scale remain.
+
+All 234 unit tests pass locally. Source/offline field browser checks pass. Additional pose/physical-contact checks and the expanded arm-connectivity matrix cover the repair; scripts/review-melee-weapons.mjs records representative evolved forms and actual desktop/phone preparation and combat. Visual self-review reached 9/10 for weapon and limb presentation, not a numerical player satisfaction score.
+
+Use npm ci and npm start for the latest source; npm run build:standalone regenerates the latest offline game. The workflow has read-only repository access and packages playable files and review evidence in its Actions artifact. It does not push generated files to the branch. Preserve the original unavailable workspace's untracked expedition.js draft. Every future requested change still needs a fresh branch and new PR. Temporary sandbox processes may expire; do not assume they survive.
+
+---
+
 # Current continuation · Reference UI polish
 
 Current feature branch: `codex/reference-ui-polish`, based on first-pass UI commit `9dd399fb74e9fa18948ba666e18a62844008bf20`, targeting `codex/starfall-menagerie` through a fresh PR. This supersedes the UI presentation from PR #7. Read FIELD-UI-V3.md and the latest Build and verify field UI run.

@@ -33,6 +33,7 @@ jobs:
           cat /tmp/field-server.log
           exit 1
       - run: node tests/field-ui.browser.mjs
+      - run: node scripts/review-melee-weapons.mjs
       - name: Package the playable offline game
         run: |
           python3 - <<'PY'
@@ -48,4 +49,6 @@ jobs:
             Starfall-Menagerie.html
             public/Starfall-Reference-UI.zip
             playtest-artifacts/field-*.png
+            playtest-artifacts/melee-*.png
+            tests/reports/melee-weapon-ui.json
             tests/reports/field-ui-v3.json

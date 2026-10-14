@@ -1,3 +1,5 @@
+**Melee weapon and arm polish · Art 6:** Complete connected arms, original weapon silhouettes and readable carry poses; phone AI controls moved below the creatures. See [the changes and validation](MELEE-WEAPONS.md). After pulling, run `npm ci` and `npm start`, or `npm run build:standalone` for the updated offline game.
+
 **Reference field UI:** Illustrated route scene and encounter sheet, matching menus, mobile combat layout and original vector artwork. See [UI notes and build instructions](FIELD-UI-V3.md). Run `npm ci` and `npm start` to play the latest source after pulling. For the updated offline game, run `npm run build:standalone`, or use the **Starfall-Reference-UI** Actions artifact.
 
 # Starfall Menagerie · V17.1 palette fix
