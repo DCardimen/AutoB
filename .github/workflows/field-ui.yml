@@ -1,7 +1,7 @@
 name: Build and verify field UI
 on:
   pull_request:
-    branches: [codex/starfall-menagerie, 'feat/**']
+    branches: [codex/starfall-menagerie, 'feat/**', 'fix/**']
 permissions:
   contents: read
 concurrency:
@@ -37,6 +37,11 @@ jobs:
       - run: node tests/chaos-combat.browser.mjs
       - run: node tests/live-roster.browser.mjs
       - run: node tests/relic-supplies.browser.mjs
+      - run: node tests/capture-recruitment.browser.mjs
+      - run: node tests/creature-anatomy.browser.mjs
+      - run: node tests/arena-elite.browser.mjs
+      - run: node tests/settings-movement.browser.mjs
+      - run: node scripts/review-creature-anatomy.mjs
       - run: node scripts/review-melee-weapons.mjs
       - run: node scripts/review-natural-carry.mjs
       - run: node scripts/review-swing-body.mjs
@@ -75,4 +80,17 @@ jobs:
             playtest-artifacts/live-roster-browser.json
             playtest-artifacts/relic-supplies-*.png
             playtest-artifacts/relic-supplies-browser.json
+            playtest-artifacts/capture-recruitment-*.png
+            playtest-artifacts/capture-recruitment-browser.json
+            playtest-artifacts/creature-anatomy-*.png
+            playtest-artifacts/creature-anatomy-browser.json
+            tests/reports/creature-anatomy.json
+            public/creature-anatomy-preview.webm
+            CREATURE-ANATOMY.md
+            ARENA-ELITES.md
+            playtest-artifacts/arena-ui-*.png
+            playtest-artifacts/arena-elite-*.png
+            playtest-artifacts/arena-elite-browser.json
+            playtest-artifacts/settings-movement-*.png
+            playtest-artifacts/settings-movement-browser.json
             RELIC-DESIGN.md

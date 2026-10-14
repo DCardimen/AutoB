@@ -26,14 +26,15 @@ try{
     const canvas=document.querySelector('#battle-canvas').getBoundingClientRect();
     return [...document.querySelectorAll('#ally-orders label,#enemy-overheads button')].every(el=>{const r=el.getBoundingClientRect();return r.bottom<=canvas.top||r.top>=canvas.bottom||r.right<=canvas.left||r.left>=canvas.right;});
    }),width+'px: preparation controls must never intersect the sprite canvas');
+   assert.ok(await page.evaluate(()=>[...document.querySelectorAll('[data-ally-order],.enemy-head-ui')].every(el=>el.querySelector('.roster-commands').getBoundingClientRect().bottom<=el.querySelector('.prep-roster-portrait').getBoundingClientRect().top+1)),width+'px: commands must sit above their portrait');
    const overflow=await page.evaluate(()=>[...document.querySelectorAll('body *')].filter(el=>el.getBoundingClientRect().right>innerWidth+1&&getComputedStyle(el).position!=='fixed').filter(el=>{for(let p=el.parentElement;p;p=p.parentElement)if(['auto','scroll','hidden','clip'].includes(getComputedStyle(p).overflowX))return false;return true;}).slice(0,30).map(el=>({tag:el.tagName,cls:el.className,right:Math.round(el.getBoundingClientRect().right),overflow:getComputedStyle(el).overflowX,text:el.textContent.slice(0,100),parent:el.parentElement.className})));
    assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),width+'px: no page overflow '+JSON.stringify(overflow));
    if(!offline&&[390,1440].includes(width))await page.locator('.arena-panel').screenshot({path:`${out}/live-roster-prep-${width}.png`});
   }
   await page.locator('[data-action="battle"]').click();await page.locator('#live-roster [data-live-unit]').first().waitFor();
   await page.locator('[data-action="pause"]').click();
-  assert.equal(await page.locator('#live-roster [data-live-unit]').count(),6);
-  assert.ok(await page.locator('#live-roster').evaluate(el=>Math.abs(el.getBoundingClientRect().bottom-innerHeight)<=1));
+  assert.equal(await page.locator('#live-roster [data-live-unit]').count(),12);
+  assert.ok(await page.locator('#live-roster').evaluate(el=>{const r=el.getBoundingClientRect(),f=el.closest('.arena-frame').getBoundingClientRect();return r.left>=f.left&&r.right<=f.right&&r.top>=f.top&&r.bottom<=f.bottom;}));
   const first=await page.evaluate(()=>{
    const b=starfall.state.battle,u=b.units[0];window.hudOriginalCard=document.querySelector('[data-live-unit]');
    u.hp=123;u.maxHp=500;u.stamina=28;Object.values(u.cooldowns)[0].remaining=8;return u.uid;
@@ -46,21 +47,20 @@ try{
   await card.locator('[data-live-inspect]').click();await page.locator('.modal[aria-label="creature"]').waitFor();
   await page.locator('[data-action="close"]').first().click();
   await page.evaluate(()=>{const b=starfall.state.battle;b.units[0].hp=0;const t=b.living(1)[0];t.hp=t.maxHp*.2;b.capturePlan={uid:t.uid,threshold:.25,tool:'scout'};b.random=()=>0;b.attemptCapture();});
-  await page.waitForFunction(()=>document.querySelectorAll('#live-roster [data-live-unit]').length===7);
+  await page.waitForFunction(()=>document.querySelectorAll('#live-roster [data-roster-panel="0"] [data-live-unit]').length===7);
   assert.ok(await card.evaluate(el=>el.classList.contains('knocked-out')));
   assert.match(await page.locator('#live-roster').textContent(),/ROUND ALLY/);
   if(!offline)await page.screenshot({path:`${out}/live-roster-desktop.png`});
-  await page.locator('[data-roster-side="1"]').click();assert.equal(await page.locator('#live-roster [data-live-unit]').count(),5);
+  assert.equal(await page.locator('#live-roster [data-roster-panel="1"] [data-live-unit]').count(),5);
   await page.locator('#live-roster [data-enemy-focus]').first().click();assert.ok(await page.evaluate(()=>starfall.state.battle.focusUid));
-  await page.locator('[data-roster-side="0"]').click();
   await page.setViewportSize({width:390,height:844});
   await page.locator('.arena-viewport').evaluate(el=>el.scrollIntoView({block:'start',behavior:'instant'}));
   assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
-  assert.ok(await page.locator('.live-roster-cards').evaluate(el=>el.scrollWidth>el.clientWidth));
+  assert.ok(await page.locator('.live-roster-cards').first().evaluate(el=>el.scrollWidth>el.clientWidth));
   if(!offline)await page.screenshot({path:`${out}/live-roster-mobile.png`});
-  await page.locator('.live-roster-cards').evaluate(el=>el.scrollLeft=el.scrollWidth);
-  assert.ok(await page.locator('.live-roster-cards').evaluate(el=>el.scrollLeft>0));
-  report.checks.push(`${offline?'Offline':'Source'}: six evolved allies and six enemies; sprite-safe prep controls at 320/390/768/1440px; fixed HUD, live HP/stamina/cooldowns, stable DOM, inspection, knockouts, captured ally membership, enemy focus and phone scrolling`);
+  await page.locator('.live-roster-cards').first().evaluate(el=>el.scrollLeft=el.scrollWidth);
+  assert.ok(await page.locator('.live-roster-cards').first().evaluate(el=>el.scrollLeft>0));
+  report.checks.push(`${offline?'Offline':'Source'}: six evolved allies and six enemies; sprite-safe prep controls at 320/390/768/1440px; both rosters inside the arena frame, live HP/stamina/cooldowns, stable DOM, inspection, knockouts, captured ally membership, enemy focus and phone scrolling`);
   await context.close();
  }
  assert.deepEqual(report.errors,[]);console.log(JSON.stringify(report,null,2));

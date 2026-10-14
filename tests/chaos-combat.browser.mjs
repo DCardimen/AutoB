@@ -48,7 +48,7 @@ try{
   assert.equal(await page.evaluate(()=>starfall.state.run.bench.length),0);
   await page.waitForTimeout(700);await page.screenshot({path:out+'/chaos-capture-lattice.png'});
   await page.waitForTimeout(1300);await page.screenshot({path:out+'/chaos-capture-allegiance.png'});
-  report.checks.push('Epic capture changes allegiance immediately and leaves the persistent bench unchanged');
+  report.checks.push('Epic capture changes allegiance immediately and defers persistent recruitment until round end');
   await context.close();
 
   const pact=await openFixture({pact:true});
