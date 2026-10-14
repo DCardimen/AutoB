@@ -37,6 +37,7 @@ jobs:
       - run: node tests/chaos-combat.browser.mjs
       - run: node tests/live-roster.browser.mjs
       - run: node tests/relic-supplies.browser.mjs
+      - run: node tests/capture-recruitment.browser.mjs
       - run: node scripts/review-melee-weapons.mjs
       - run: node scripts/review-natural-carry.mjs
       - run: node scripts/review-swing-body.mjs
@@ -75,4 +76,6 @@ jobs:
             playtest-artifacts/live-roster-browser.json
             playtest-artifacts/relic-supplies-*.png
             playtest-artifacts/relic-supplies-browser.json
+            playtest-artifacts/capture-recruitment-*.png
+            playtest-artifacts/capture-recruitment-browser.json
             RELIC-DESIGN.md

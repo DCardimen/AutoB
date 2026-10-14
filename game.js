@@ -1102,6 +1102,33 @@ export function awardCapture(run, c) {
   }
   return caught;
 }
+// Settle the battle's recruitment after rewards/casualties. The combat copy
+// stays separate, so a saved mid-fight capture cannot duplicate a deployed ally.
+export function settleCaptureRecruitment(run, result) {
+  if (!result?.success || !BY_ID[result.creature?.id]) return null;
+  const key = result.uid || result.creature.uid;
+  if (!key) return null;
+  run.captureRecruitments ??= {};
+  if (run.captureRecruitments[key]) {
+    result.recruitment = run.captureRecruitments[key];
+    return result.recruitment;
+  }
+  let caught = [...run.team, ...run.bench].find(c =>
+    c.captureSourceUid === key || c.uid === result.creature.uid);
+  if (!caught) caught = awardCapture(run, result.creature);
+  initializeCompanion(run, caught);
+  caught.captureSourceUid = key;
+  caught.bond = result.creature.bond || caught.bond || 0;
+  const reserveIndex = run.bench.indexOf(caught);
+  if (reserveIndex >= 0 && run.team.length < capacity(run))
+    deployReserve(run, reserveIndex);
+  const recruitment = { uid: caught.uid, id: caught.id,
+    destination: run.team.includes(caught) ? 'team' : 'reserve' };
+  if (recruitment.destination === 'team') recruitment.seat = caught.seat;
+  run.captureRecruitments[key] = recruitment;
+  result.recruitment = recruitment;
+  return recruitment;
+}
 export function buyLegendaryLure(run) {
   const cost = shopPrice(run, 90);
   if (run.legendaryLure || run.gold < cost) return false;

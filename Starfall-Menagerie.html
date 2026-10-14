@@ -4420,8 +4420,8 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
     b.fx("ring", center.x, center.y, "#d6d7a4", { r: radius, ttl: 0.4, max: 0.4 });
   }
   function designRelicEvent(b, u, event, data = {}) {
-    var _a, _b, _c, _d;
-    const castLink = event === "cast" ? (_a = b.designLinks ?? (b.designLinks = {}))[_b = u.side] ?? (_a[_b] = { last: -100, proc: -100 }) : null;
+    var _a2, _b, _c, _d;
+    const castLink = event === "cast" ? (_a2 = b.designLinks ?? (b.designLinks = {}))[_b = u.side] ?? (_a2[_b] = { last: -100, proc: -100 }) : null;
     for (const r of u.runCurios || []) {
       const m = r.mechanic;
       if (!m) continue;
@@ -5169,11 +5169,11 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
     }
   }
   function relicEvent(b, u, event, data = {}) {
-    var _a, _b;
+    var _a2, _b;
     if (!u) return;
     for (const r of u.runCurios || []) {
       if (r.hook !== event) continue;
-      const e = r.effect, local = r.wearerOnly || r.id.startsWith("gear:"), t = data.target, st = (_a = u.curioState)[_b = r.id] ?? (_a[_b] = { count: 0, last: -100 });
+      const e = r.effect, local = r.wearerOnly || r.id.startsWith("gear:"), t = data.target, st = (_a2 = u.curioState)[_b = r.id] ?? (_a2[_b] = { count: 0, last: -100 });
       if (e.auto && !data.def?.auto || !condition(b, u, t, e.condition) || e.uses && st.count >= e.uses || e.onlyCrit && !data.critical || e.physical && !["physical", "projectile"].includes(data.kind)) continue;
       st.count++;
       if (e.every && st.count % e.every) continue;
@@ -5287,9 +5287,9 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
     return true;
   }
   function relicTick(b, u, dt) {
-    var _a, _b;
+    var _a2, _b;
     for (const r of u.runCurios || []) if (r.hook === "tick") {
-      const st = (_a = u.curioState)[_b = "timer:" + r.id] ?? (_a[_b] = { next: 0 });
+      const st = (_a2 = u.curioState)[_b = "timer:" + r.id] ?? (_a2[_b] = { next: 0 });
       if (b.time >= st.next) {
         st.next = b.time + r.effect.interval;
         const others = u.runCurios;
@@ -14396,6 +14396,58 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
     const bonus = ((run3.relics.includes("lens") ? 0.06 : 0) + (run3.encounterType === "capture" ? 0.04 : 0) + (preparation.status ? 0.04 : 0) + (hp <= 0.3 ? mods.captureBonus || 0 : 0) + (preparation.status ? mods.statusCapture || 0 : 0)) * Math.min(1, (1 - hp) / 0.75);
     return Math.min(easy ? 0.99 : rarity === "Legendary" ? 0.3 : 0.7, (baseline * healthFactor * tier.mult + bonus) * (preparation.mode === "swift" ? 0.94 : 1));
   }
+  function awardCapture(run3, c) {
+    const caught = creature(c.id, Math.max(1, c.level));
+    if ((run3.rulesVersion || 0) >= 15) caught.balanceVersion = run3.rulesVersion;
+    if (progressive(run3)) {
+      caught.genes = c.genes;
+      caught.nature = c.nature;
+      caught.boundRelics = [...c.enemyRelics || c.boundRelics || []];
+      caught.equipment = [...c.equipment || []];
+      caught.equipmentQuality = 1;
+      caught.equipmentRolls = caught.equipment.map((id, i) => ({ ...c.equipmentRolls?.[i], id, quality: (c.equipmentRolls?.[i]?.quality ?? 1) * (c.equipmentQuality ?? 1) }));
+    }
+    caught.evolution = evolutionStage(c);
+    caught.evolutionPath = caught.evolution ? c.evolutionPath : null;
+    run3.bench.push(caught);
+    if (progressive(run3)) {
+      const mod = routeModifiers(run3);
+      run3.gold += mod.captureGold || 0;
+      if (mod.captureXP) run3.team.forEach((u) => gainXP(u, mod.captureXP));
+    }
+    if (run3.relics.includes("hatchery")) {
+      run3.gold += 20 * itemStrength2(run3);
+      run3.team.forEach((u) => gainXP(u, 35 * itemStrength2(run3)));
+    }
+    return caught;
+  }
+  function settleCaptureRecruitment(run3, result) {
+    if (!result?.success || !BY_ID[result.creature?.id]) return null;
+    const key = result.uid || result.creature.uid;
+    if (!key) return null;
+    run3.captureRecruitments ?? (run3.captureRecruitments = {});
+    if (run3.captureRecruitments[key]) {
+      result.recruitment = run3.captureRecruitments[key];
+      return result.recruitment;
+    }
+    let caught = [...run3.team, ...run3.bench].find((c) => c.captureSourceUid === key || c.uid === result.creature.uid);
+    if (!caught) caught = awardCapture(run3, result.creature);
+    initializeCompanion(run3, caught);
+    caught.captureSourceUid = key;
+    caught.bond = result.creature.bond || caught.bond || 0;
+    const reserveIndex = run3.bench.indexOf(caught);
+    if (reserveIndex >= 0 && run3.team.length < capacity(run3))
+      deployReserve(run3, reserveIndex);
+    const recruitment = {
+      uid: caught.uid,
+      id: caught.id,
+      destination: run3.team.includes(caught) ? "team" : "reserve"
+    };
+    if (recruitment.destination === "team") recruitment.seat = caught.seat;
+    run3.captureRecruitments[key] = recruitment;
+    result.recruitment = recruitment;
+    return recruitment;
+  }
   function buyLegendaryLure(run3) {
     const cost = shopPrice(run3, 90);
     if (run3.legendaryLure || run3.gold < cost) return false;
@@ -18414,6 +18466,12 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
   if (shopStock?.recruits) shopStock.recruits.forEach((c) => initializeCompanion(run2, c));
   run2.inventory.forEach((r) => delete r.link);
   if (shopStock) shopStock.relics = shopStock.relics.slice(0, 2);
+  var _a;
+  if (phase === "reward") {
+    const result = reward?.tacticalCapture || run2.captureReservation?.result;
+    if (result?.success) (_a = result.creature).bond ?? (_a.bond = Math.min(5, profile.bonds[result.creature.id] || 0));
+    if (settleCaptureRecruitment(run2, result)) save();
+  }
   function freshRun(ids, increment = true, options = {}) {
     if (increment) profile.runs++;
     run2 = makeRun(Date.now() % 2147483647, ids, { ...options, native: true, starterBudget: starterBudget(profile), chaosCleared: profile.chaosCleared, starterBonds: profile.bonds });
@@ -18894,6 +18952,7 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
         run2.defeatReservation.key,
         run2.defeatReservation.seed
       );
+    settleCaptureRecruitment(run2, reward.tacticalCapture);
     if (run2.relics.includes("salvage") && node.type === "elite" && won)
       run2.inventory.push(personalRelic(reward.personalRelic));
     run2.contracts = [];
@@ -18954,7 +19013,7 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
   }
   function captureOutcomeHTML() {
     const result = reward?.tacticalCapture || run2.captureReservation?.result;
-    return result ? `<div class="capture-outcome ${result.success ? "success" : "failed"}" role="status"><strong>${result.success ? "\u2727 CAPTURE SUCCESSFUL" : "\u2715 CAPTURE FAILED"}</strong><p>${result.success ? `${BY_ID[result.creature.id].name} fought for you this round. Its family is unlocked as a future starter.` : result.reason || "The lattice broke. The selected capturer was spent."}</p></div>` : "";
+    return result ? `<div class="capture-outcome ${result.success ? "success" : "failed"}" role="status"><strong>${result.success ? "\u2727 CAPTURE SUCCESSFUL" : "\u2715 CAPTURE FAILED"}</strong><p>${result.success ? `${BY_ID[result.creature.id].name} fought for you this round and ${result.recruitment?.destination === "team" ? "joined an open team slot" : "joined your reserves"}. Its family is also unlocked as a future starter.` : result.reason || "The lattice broke. The selected capturer was spent."}</p></div>` : "";
   }
   function openRewards() {
     const won = reward.won, options = rewardOptions();
@@ -19306,7 +19365,7 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
   }
   function openHelp() {
     modal(
-      `<span class="section-kicker">FIELD NOTES FOR A NEW EXPLORER</span><h2>A little strategy. A lot of heart.</h2><p>Collect creatures. Build bonds. Let your companions fight. Bring their stories home.</p><div class="help-grid"><div><h3>01 \xB7 Two beginnings, six ambitions</h3><p>Inspect creatures to choose training focuses or swap bench companions. Guardians hold the front; supports and rangers keep their distance. Drag companions on the arena before battle; grabbing a head, hand or foot changes how they hang. Team places unlock at 2, 5, 8 and 11 combat wins, with hiring permits available after win 3. Deployment also offers a tactical grid. Inspect a creature to choose its AI policy.</p></div><div><h3>02 \xB7 Smart, automatic combat</h3><p>Creatures commit to aimed swings and straight-flying shots. Stamina pays for attacks and physical dodge rolls; roots prevent rolls. Guardians screen shots, strikers flank, and healers save defensive skills for danger. Heavy melee causes bleed and breaks poise; stagger interrupts windups. Hunt prioritizes wounded enemies; Guard holds the frontline. After 30 combat seconds, both teams enrage: 3\xD7 damage and healing, 1.5\xD7 attacks and cooldown recharge. Healing effectiveness drops by 20 percentage points every five seconds, reaching zero at 55s. Space pauses; 1, 2, 3 change playback speed. Use Settings to tune combat feel and sprite sizes.</p></div><div><h3>03 \xB7 Your route matters</h3><p>Each planet has eight encounters linked by one to four explicit connections. See four rooms ahead; scouting relics reveal more. Choose battles, shops, captures, recovery, or difficult bargains. Losing costs a life and a permanent casualty. Defeat each planet\u2019s boss to advance.</p></div><div><h3>04 \xB7 Build with intent</h3><p>Two creatures of an element activate a team bonus. Four unlock another. Expedition relics affect every ally. Personal relics fill individual slots: Common 1, Uncommon 2, Rare 3, Epic 4, Legendary 5. Levels and training improve base stats. Skills show their effective cooldown in the creature panel.</p></div><div><h3>05 \xB7 Catch your next beginning</h3><p>Use a wild creature\u2019s overhead diamond before battle to choose a target, 5\u201375% HP threshold, and a capturer tier. Scout Prisms at 25% HP start at 90% Common, 85% Uncommon, 25% Rare, 22% Epic and 8% Legendary. Runic, Astral and Mythic tools improve them. Your team deals less damage while preparing an automatic throw; weakening and statuses improve odds. A lethal hit or damage over time can knock out the target before the throw. There are no post-match captures; select your target before combat. Rare creatures have stronger skills and lower capture chances. Successful captures join your bench and unlock permanent starters.</p></div><div><h3>06 \xB7 Evolve your companions</h3><p>At level 5, spend 50 gold in a creature panel to choose Wild damage or Warden resilience. At level 8, ascend for 100 gold. Each stage transforms the silhouette, unlocks an exclusive cooldown skill and equipment slot, and adds a personal relic slot. Choose a free evolution gear cache in the companion panel; outposts sell further gear. Worn relics remain equipped. Common companions also awaken at level 5. New expeditions start in base forms at level 1 with no run relics. Your permanent creatures stay. Choose one or two within a two-point rarity budget. Chaos clears earn additional starting points. Legendary starters cost 6 points, or 4 after five captures strengthen their bond. Victories earn Starlight for permanent Legendary adoption.</p></div></div><p class="starter-note">Surviving allies fully recover between encounters. A defeat permanently kills one random deployed starter, or another companion when none remain; its family remains unlocked. Its worn gear and personal relics disappear, and another owned relic is destroyed. Recruit reserves before taking large risks. Expedition lives measure your ability to retreat. Browser storage keeps your collection and run; sound is optional.</p><div class="modal-actions">${button("I\u2019m ready to explore \u2192", "help-done")}</div>`,
+      `<span class="section-kicker">FIELD NOTES FOR A NEW EXPLORER</span><h2>A little strategy. A lot of heart.</h2><p>Collect creatures. Build bonds. Let your companions fight. Bring their stories home.</p><div class="help-grid"><div><h3>01 \xB7 Two beginnings, six ambitions</h3><p>Inspect creatures to choose training focuses or swap bench companions. Guardians hold the front; supports and rangers keep their distance. Drag companions on the arena before battle; grabbing a head, hand or foot changes how they hang. Team places unlock at 2, 5, 8 and 11 combat wins, with hiring permits available after win 3. Deployment also offers a tactical grid. Inspect a creature to choose its AI policy.</p></div><div><h3>02 \xB7 Smart, automatic combat</h3><p>Creatures commit to aimed swings and straight-flying shots. Stamina pays for attacks and physical dodge rolls; roots prevent rolls. Guardians screen shots, strikers flank, and healers save defensive skills for danger. Heavy melee causes bleed and breaks poise; stagger interrupts windups. Hunt prioritizes wounded enemies; Guard holds the frontline. After 30 combat seconds, both teams enrage: 3\xD7 damage and healing, 1.5\xD7 attacks and cooldown recharge. Healing effectiveness drops by 20 percentage points every five seconds, reaching zero at 55s. Space pauses; 1, 2, 3 change playback speed. Use Settings to tune combat feel and sprite sizes.</p></div><div><h3>03 \xB7 Your route matters</h3><p>Each planet has eight encounters linked by one to four explicit connections. See four rooms ahead; scouting relics reveal more. Choose battles, shops, captures, recovery, or difficult bargains. Losing costs a life and a permanent casualty. Defeat each planet\u2019s boss to advance.</p></div><div><h3>04 \xB7 Build with intent</h3><p>Two creatures of an element activate a team bonus. Four unlock another. Expedition relics affect every ally. Personal relics fill individual slots: Common 1, Uncommon 2, Rare 3, Epic 4, Legendary 5. Levels and training improve base stats. Skills show their effective cooldown in the creature panel.</p></div><div><h3>05 \xB7 Catch your next beginning</h3><p>Use a wild creature\u2019s overhead diamond before battle to choose a target, 5\u201375% HP threshold, and a capturer tier. Scout Prisms at 25% HP start at 90% Common, 85% Uncommon, 25% Rare, 22% Epic and 8% Legendary. Runic, Astral and Mythic tools improve them. Your team deals less damage while preparing an automatic throw; weakening and statuses improve odds. A lethal hit or damage over time can knock out the target before the throw. There are no post-match captures; select your target before combat. Rare creatures have stronger skills and lower capture chances. Successful captures fight for you immediately. At round end they join an unlocked empty team slot, or your reserves if the team is full, and unlock permanent starters.</p></div><div><h3>06 \xB7 Evolve your companions</h3><p>At level 5, spend 50 gold in a creature panel to choose Wild damage or Warden resilience. At level 8, ascend for 100 gold. Each stage transforms the silhouette, unlocks an exclusive cooldown skill and equipment slot, and adds a personal relic slot. Choose a free evolution gear cache in the companion panel; outposts sell further gear. Worn relics remain equipped. Common companions also awaken at level 5. New expeditions start in base forms at level 1 with no run relics. Your permanent creatures stay. Choose one or two within a two-point rarity budget. Chaos clears earn additional starting points. Legendary starters cost 6 points, or 4 after five captures strengthen their bond. Victories earn Starlight for permanent Legendary adoption.</p></div></div><p class="starter-note">Surviving allies fully recover between encounters. A defeat permanently kills one random deployed starter, or another companion when none remain; its family remains unlocked. Its worn gear and personal relics disappear, and another owned relic is destroyed. Recruit reserves before taking large risks. Expedition lives measure your ability to retreat. Browser storage keeps your collection and run; sound is optional.</p><div class="modal-actions">${button("I\u2019m ready to explore \u2192", "help-done")}</div>`,
       "help"
     );
   }
@@ -19951,7 +20010,7 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
     }
   });
   document.addEventListener("change", (e) => {
-    var _a;
+    var _a2;
     const el = e.target;
     if (el.dataset.roster !== void 0) {
       const key = el.dataset.roster;
@@ -20020,7 +20079,7 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
       } else {
         const [i, slot] = String(el.dataset.ruleWhen || el.dataset.ruleDo).split(":").map(Number), u = run2.team[i];
         u.rules ?? (u.rules = [{ when: "none", do: "retreat" }, { when: "none", do: "protect" }]);
-        (_a = u.rules)[slot] ?? (_a[slot] = { when: "none", do: "retreat" });
+        (_a2 = u.rules)[slot] ?? (_a2[slot] = { when: "none", do: "retreat" });
         if (el.dataset.ruleWhen && CONDITIONS[el.value]) u.rules[slot].when = el.value;
         if (el.dataset.ruleDo && RESPONSES[el.value]) u.rules[slot].do = el.value;
         selectedCreature = i;
@@ -20224,6 +20283,7 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
     if (result.success) {
       const caught = result.creature;
       caught.bond = recordBond(profile, caught.id);
+      run2.captureReservation.result.creature.bond = caught.bond;
       discoverForm(caught);
       unlock(caught.id);
     }
@@ -20684,7 +20744,7 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
     }).join("")}</div><small>Inspect enemies for full equipment sets and quality.</small></aside>` : "";
   }
   function captureMessage(result) {
-    return result?.success ? `\u2727 CAPTURE SUCCESSFUL \xB7 ${BY_ID[result.creature.id].name} fights for you until this round ends. Family unlocked for future starts.` : `\u2715 CAPTURE FAILED \xB7 ${result?.reason || "The lattice broke. Your capturer was spent."}`;
+    return result?.success ? `\u2727 CAPTURE SUCCESSFUL \xB7 ${BY_ID[result.creature.id].name} fights for you now and joins your team or reserves at round end. Family unlocked for future starts.` : `\u2715 CAPTURE FAILED \xB7 ${result?.reason || "The lattice broke. Your capturer was spent."}`;
   }
   function updateCaptureFeedback() {
     const el = $("#capture-feedback"), result = battle?.captureResult || run2.captureReservation?.result;
@@ -20922,7 +20982,7 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
     return `<span class="role-badge role-${s.role.toLowerCase()}" title="${s.role}: ${{ Guardian: "Armored frontline and interception", Striker: "Close combat pressure", Ranger: "Ranged damage and kiting", Support: "Healing and control" }[s.role]}">${ROLES[s.role]} ${s.role}${s.rarity === "Legendary" ? " \xB7 \u2726 Legendary" : ""}</span>`;
   }
   function reserveTrayHTML() {
-    return `<section class="reserve-tray"><div class="section-heading"><h3>RESERVE ROSTER <span>${run2.bench.length} / 12</span></h3><small>Drag onto a team member to swap \xB7 their equipment stays with them</small></div><div class="reserve-tray-list">${run2.bench.map((c, j) => `<button class="reserve-card ${BY_ID[c.id].rarity === "Legendary" ? "legendary-creature" : ""}" data-swap="${j}" data-index="${selectedCreature}" data-drag-payload='${JSON.stringify({ kind: "reserve", uid: c.uid })}' draggable="${phase !== "battle"}" ${phase === "battle" ? "disabled" : ""}>${image(c)}<span><strong>${creatureName(c)}</strong>${roleBadge(BY_ID[c.id])}<small>Lv. ${c.level} \xB7 ${c.equipment?.length || 0}/${equipmentSlots(c)} gear slots</small></span></button>`).join("") || "<p>Capture or recruit a companion to build your reserves.</p>"}</div></section>`;
+    return `<section class="reserve-tray"><div class="section-heading"><h3>RESERVE ROSTER <span>${run2.bench.length} / 12</span></h3><small>Drag onto a team member to swap \xB7 their equipment stays with them${run2.bench.length > 12 ? " \xB7 Extra captured companions are kept safely." : ""}</small></div><div class="reserve-tray-list">${run2.bench.map((c, j) => `<button class="reserve-card ${BY_ID[c.id].rarity === "Legendary" ? "legendary-creature" : ""}" data-swap="${j}" data-index="${selectedCreature}" data-drag-payload='${JSON.stringify({ kind: "reserve", uid: c.uid })}' draggable="${phase !== "battle"}" ${phase === "battle" ? "disabled" : ""}>${image(c)}<span><strong>${creatureName(c)}</strong>${roleBadge(BY_ID[c.id])}<small>Lv. ${c.level} \xB7 ${c.equipment?.length || 0}/${equipmentSlots(c)} gear slots</small></span></button>`).join("") || "<p>Capture or recruit a companion to build your reserves.</p>"}</div></section>`;
   }
   var orderPreviewKey;
   var orderPreview;
