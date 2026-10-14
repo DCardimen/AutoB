@@ -1,4 +1,14 @@
-# Current continuation · Body detail during swings
+# Current continuation · Rounded legs and complete hips
+
+Fresh feature branch: `codex/volumetric-legs`, based on `codex/complete-swing-body` commit 7bf90c6 (PR #11), with a new PR for this request. Read VOLUMETRIC-LEGS.md and tests/reports/leg-volume.json.
+
+Art revision 9 replaces flat leg strips on the two-legged characters with rounded 3D thigh/calf/knee geometry and bevelled boots, shaded using the original costume palettes. Depth buffering resolves overlapping legs; darker contact edges and sole rims reinforce volume. The original leg regions are removed, with matching pelvis detail retained underneath the moving thighs. Thickness is consistent across views. Planted-foot yaw/pitch drive the boots; physical joints, foot anchors, gait and combat remain unchanged. Other anatomical body types keep their established renderers.
+
+Both offline HTML games and public/prototype-bundle.js are rebuilt. public/Starfall-Volumetric-Legs.zip contains both games, the guide and the normal-speed leg-volume-preview.webm. scripts/review-leg-volume.mjs captures directional/gait sheets and decodes actual video frames. Leg, body, palette, cell bounds, mobile/offline and Training Glade checks validate the change. The Glade probes rendered articulated joints rather than unbound calibration points. Future requests still need a fresh branch and PR. Preserve any pre-existing expedition.js draft.
+
+---
+
+# Previous continuation · Body detail during swings
 
 Fresh feature branch: `codex/complete-swing-body`, based on `codex/natural-melee-carry` commit a5e4de8 (PR #10). This is a separate follow-up PR. Read SWING-BODY.md and tests/reports/swing-body.json.
 
