@@ -1,5 +1,7 @@
 # Chaos, relics and combat update
 
+Multi-legged creatures now have solid shaded leg models, and natural attack animations include canine bites, mantis scythes, claws, pincers and horn attacks. See [creature anatomy](CREATURE-ANATOMY.md) and the [animation preview](public/creature-anatomy-preview.webm).
+
 Latest update: three randomized Common starter equipment pieces appear beneath the creatures; eight original build-around relics add resource banks and team interactions. Enrage ramps continuously after 30 seconds with live damage, healing and action modifiers. See [relic research and current rules](RELIC-DESIGN.md).
 
 Three starter points plus one per cleared Chaos tier; a third starting companion at Chaos 3. Adds 30 relics, 50 equipment types, speed and stamina stats, temporary captured allies, weakest-first and click-to-focus targeting, varied opening encounters and new combat effects. Relics are retained after companion deaths. See [changes and play instructions](CHAOS-COMBAT.md).

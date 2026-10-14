@@ -10,6 +10,7 @@ import {equipmentEffects} from './creature-equipment.js';
 import {spriteSample} from './prototype-sprites.js';
 import {ragdollRig} from './prototype-dynamics.js';
 import {advanceCombatTexts} from './combat-text.js';
+import {CREATURE_ATTACK_EFFECTS} from './creature-attacks.js';
 export const NATIVE_BOUNDS={left:70,right:930,top:110,bottom:805};
 export function actorId(spec,unit={}){return nativeRigFor(pixelSpec(spec.id)||spec,unit)||(unit.boss?NATIVE_BOSS_RIGS[spec.id]:null);}
 export function nativeSpawn(spec,unit,side,index){
@@ -20,6 +21,7 @@ export function nativeSpawn(spec,unit,side,index){
 }
 export function initializeNative(u,spec,tuning){
  spec=pixelSpec(spec.id)||spec;const id=actorId(spec,u);if(!id)return;
+ u.nativeAttackEffect=CREATURE_ATTACK_EFFECTS[spec.nativeDesign||spec.nativeRig];
  u.nativeScale=creatureWorldScale(spec,u,tuning);u.radius*=u.nativeScale;u.range=spec.range>100?u.range:u.range*u.nativeScale;u.mass*=Math.max(.5,u.nativeScale);u.entityBounds=nativeEntityBounds(spec,u,NATIVE_BOUNDS,tuning);u.y=Math.max(u.y,u.entityBounds.top+u.radius);u.py=u.y;
  u.nativeActor=makePrototypeUnit(id,u.side,0,u.x,u.y);u.nativeActor.uid=u.uid;u.nativeActor.family=spec;u.nativeActor.creature=u;u.nativeActor.rigScale=u.nativeScale;u.nativeActor.stride=formProfile(spec,u).stride||u.nativeActor.stride;
  u.facing=u.side?Math.PI:0;u.meleeCount=0;u.nativeActor.facing=u.facing;u.nativeActor.moveFacing=u.facing;
@@ -69,7 +71,7 @@ export function advanceNative(u,dt,time,visuals=true,actionDt=dt){
 
 }
 export function nativeBladePoint(u,strike,phase){
- const rig=nativeFormRig(u.nativeActor.family,u,characterRig(u.nativeActor.id,'attack',phase,'windup',{swing:strike.style,charged:strike.charged})),angle=Math.atan2(strike.dy,strike.dx),tip=rig.weapon?.tip||(u.nativeActor.id==='wolf'?{...rig.head,x:rig.head.x+16,z:rig.head.z-3}:rig.head);
+ const rig=nativeFormRig(u.nativeActor.family,u,characterRig(u.nativeActor.id,'attack',phase,'windup',{swing:strike.style,charged:strike.charged})),angle=Math.atan2(strike.dy,strike.dx),tip=rig.creatureAttack?.contact||rig.weapon?.tip||(u.nativeActor.id==='wolf'?{...rig.head,x:rig.head.x+16,z:rig.head.z-3}:rig.head);
  const point={x:tip.x*Math.cos(angle)-tip.y*Math.sin(angle),y:tip.x*Math.sin(angle)+tip.y*Math.cos(angle),z:tip.z};
  const scale=u.nativeScale||1;return {x:u.x+point.x*scale,y:u.y+point.y*scale,z:point.z*scale};
 }
@@ -80,7 +82,7 @@ export function nativeBodyHeight(u){
 export function nativeMuzzle(u,target){
  if(!u.nativeActor)return {x:u.x,y:u.y-15,z:45};
  const id=u.nativeActor.id,angle=Math.atan2(target.y-u.y,target.x-u.x),rig=nativeFormRig(u.nativeActor.family,u,characterRig(id,['caster','jelly'].includes(id)?'cast':'attack',1,'windup'));
- const hand=['elf','fox'].includes(id)?rig.weapon.grip:rig.weapon?.tip||rig.head;
+ const hand=['elf','fox'].includes(id)?rig.weapon.grip:rig.creatureAttack?.contact||rig.weapon?.tip||rig.head;
  const scale=u.nativeScale||1;return {x:u.x+(hand.x*Math.cos(angle)-hand.y*Math.sin(angle))*scale,y:u.y+(hand.x*Math.sin(angle)+hand.y*Math.cos(angle))*scale-14,z:hand.z*scale};
 }
 export function finishNativeVisuals(battle,dt){

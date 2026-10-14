@@ -2,6 +2,7 @@ import {grandDesign,nativeRigFor,capeSpecification} from './grand-designs.js';
 import {previewCape} from './native-cloth.js';
 import {PIXEL_PALETTES} from './prototype-pixel-art.js';
 import {characterRig} from './prototype-rig.js';
+import {applyCreatureAnatomy} from './creature-attacks.js';
 const rgb=(a,b,c)=>[a,b,c];
 // Stable anatomy and equipment profiles used by both art and weapon contacts.
 export const NATIVE_DESIGNS={
@@ -64,5 +65,7 @@ export function nativeFormRig(spec,c,source,height=1){
  const cloth=capeSpecification(spec,c);if(cloth){rig.capeMesh=(source.capeMesh||previewCape(source,cloth)).map(col=>col.map(point));rig.artCapeBind=previewCape(bind,cloth).map(col=>col.map(point));}else rig.capeMesh=null;
  if(c.equipment?.includes('mooncloth-mantle'))rig.palette.cloth=['#38284d','#7d5596','#c7a5d3'];
  if(spec.nativeDesign==='drake'&&!c.evolution)rig.grand={motif:'drake',wings:true};
+ applyCreatureAnatomy(rig,spec);
+ applyCreatureAnatomy(rig.artBind,spec);
  return rig;
 }

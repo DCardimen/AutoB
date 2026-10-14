@@ -1,0 +1,1614 @@
+{
+  "poses": [
+    {
+      "id": "emberhound",
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 0,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "canine-bite",
+      "clipped": 0
+    },
+    {
+      "id": "emberhound",
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 2,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "canine-bite",
+      "clipped": 0
+    },
+    {
+      "id": "emberhound",
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 5,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "canine-bite",
+      "clipped": 0
+    },
+    {
+      "id": "emberhound",
+      "state": "attack",
+      "phase": 0.12,
+      "dir": 1,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "canine-bite",
+      "clipped": 0
+    },
+    {
+      "id": "emberhound",
+      "state": "attack",
+      "phase": 0.34,
+      "dir": 1,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "canine-bite",
+      "clipped": 0
+    },
+    {
+      "id": "emberhound",
+      "state": "attack",
+      "phase": 0.48,
+      "dir": 1,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "canine-bite",
+      "clipped": 0
+    },
+    {
+      "id": "emberhound",
+      "state": "attack",
+      "phase": 0.58,
+      "dir": 1,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "canine-bite",
+      "clipped": 0
+    },
+    {
+      "id": "emberhound",
+      "state": "attack",
+      "phase": 0.92,
+      "dir": 1,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "canine-bite",
+      "clipped": 0
+    },
+    {
+      "id": "cinderfox",
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 0,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "fox-snap",
+      "clipped": 0
+    },
+    {
+      "id": "cinderfox",
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 2,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "fox-snap",
+      "clipped": 0
+    },
+    {
+      "id": "cinderfox",
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 5,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "fox-snap",
+      "clipped": 0
+    },
+    {
+      "id": "cinderfox",
+      "state": "attack",
+      "phase": 0.12,
+      "dir": 1,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "fox-snap",
+      "clipped": 0
+    },
+    {
+      "id": "cinderfox",
+      "state": "attack",
+      "phase": 0.34,
+      "dir": 1,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "fox-snap",
+      "clipped": 0
+    },
+    {
+      "id": "cinderfox",
+      "state": "attack",
+      "phase": 0.48,
+      "dir": 1,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "fox-snap",
+      "clipped": 0
+    },
+    {
+      "id": "cinderfox",
+      "state": "attack",
+      "phase": 0.58,
+      "dir": 1,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "fox-snap",
+      "clipped": 0
+    },
+    {
+      "id": "cinderfox",
+      "state": "attack",
+      "phase": 0.92,
+      "dir": 1,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "fox-snap",
+      "clipped": 0
+    },
+    {
+      "id": "nightmaw",
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 0,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "feline-rake",
+      "clipped": 0
+    },
+    {
+      "id": "nightmaw",
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 2,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "feline-rake",
+      "clipped": 0
+    },
+    {
+      "id": "nightmaw",
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 5,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "feline-rake",
+      "clipped": 0
+    },
+    {
+      "id": "nightmaw",
+      "state": "attack",
+      "phase": 0.12,
+      "dir": 1,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "feline-rake",
+      "clipped": 0
+    },
+    {
+      "id": "nightmaw",
+      "state": "attack",
+      "phase": 0.34,
+      "dir": 1,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "feline-rake",
+      "clipped": 0
+    },
+    {
+      "id": "nightmaw",
+      "state": "attack",
+      "phase": 0.48,
+      "dir": 1,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "feline-rake",
+      "clipped": 0
+    },
+    {
+      "id": "nightmaw",
+      "state": "attack",
+      "phase": 0.58,
+      "dir": 1,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "feline-rake",
+      "clipped": 0
+    },
+    {
+      "id": "nightmaw",
+      "state": "attack",
+      "phase": 0.92,
+      "dir": 1,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "feline-rake",
+      "clipped": 0
+    },
+    {
+      "id": "frostursa",
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 0,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "bear-maul",
+      "clipped": 0
+    },
+    {
+      "id": "frostursa",
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 2,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "bear-maul",
+      "clipped": 0
+    },
+    {
+      "id": "frostursa",
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 5,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "bear-maul",
+      "clipped": 0
+    },
+    {
+      "id": "frostursa",
+      "state": "attack",
+      "phase": 0.12,
+      "dir": 1,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "bear-maul",
+      "clipped": 0
+    },
+    {
+      "id": "frostursa",
+      "state": "attack",
+      "phase": 0.34,
+      "dir": 1,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "bear-maul",
+      "clipped": 0
+    },
+    {
+      "id": "frostursa",
+      "state": "attack",
+      "phase": 0.48,
+      "dir": 1,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "bear-maul",
+      "clipped": 0
+    },
+    {
+      "id": "frostursa",
+      "state": "attack",
+      "phase": 0.58,
+      "dir": 1,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "bear-maul",
+      "clipped": 0
+    },
+    {
+      "id": "frostursa",
+      "state": "attack",
+      "phase": 0.92,
+      "dir": 1,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "bear-maul",
+      "clipped": 0
+    },
+    {
+      "id": "pyrehorn",
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 0,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "horn-gore",
+      "clipped": 0
+    },
+    {
+      "id": "pyrehorn",
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 2,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "horn-gore",
+      "clipped": 0
+    },
+    {
+      "id": "pyrehorn",
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 5,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "horn-gore",
+      "clipped": 0
+    },
+    {
+      "id": "pyrehorn",
+      "state": "attack",
+      "phase": 0.12,
+      "dir": 1,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "horn-gore",
+      "clipped": 0
+    },
+    {
+      "id": "pyrehorn",
+      "state": "attack",
+      "phase": 0.34,
+      "dir": 1,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "horn-gore",
+      "clipped": 0
+    },
+    {
+      "id": "pyrehorn",
+      "state": "attack",
+      "phase": 0.48,
+      "dir": 1,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "horn-gore",
+      "clipped": 0
+    },
+    {
+      "id": "pyrehorn",
+      "state": "attack",
+      "phase": 0.58,
+      "dir": 1,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "horn-gore",
+      "clipped": 0
+    },
+    {
+      "id": "pyrehorn",
+      "state": "attack",
+      "phase": 0.92,
+      "dir": 1,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "horn-gore",
+      "clipped": 0
+    },
+    {
+      "id": "crownstag",
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 0,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "antler-ram",
+      "clipped": 0
+    },
+    {
+      "id": "crownstag",
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 2,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "antler-ram",
+      "clipped": 0
+    },
+    {
+      "id": "crownstag",
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 5,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "antler-ram",
+      "clipped": 0
+    },
+    {
+      "id": "crownstag",
+      "state": "attack",
+      "phase": 0.12,
+      "dir": 1,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "antler-ram",
+      "clipped": 0
+    },
+    {
+      "id": "crownstag",
+      "state": "attack",
+      "phase": 0.34,
+      "dir": 1,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "antler-ram",
+      "clipped": 0
+    },
+    {
+      "id": "crownstag",
+      "state": "attack",
+      "phase": 0.48,
+      "dir": 1,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "antler-ram",
+      "clipped": 0
+    },
+    {
+      "id": "crownstag",
+      "state": "attack",
+      "phase": 0.58,
+      "dir": 1,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "antler-ram",
+      "clipped": 0
+    },
+    {
+      "id": "crownstag",
+      "state": "attack",
+      "phase": 0.92,
+      "dir": 1,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "antler-ram",
+      "clipped": 0
+    },
+    {
+      "id": "flintback",
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 0,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "turtle-snap",
+      "clipped": 0
+    },
+    {
+      "id": "flintback",
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 2,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "turtle-snap",
+      "clipped": 0
+    },
+    {
+      "id": "flintback",
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 5,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "turtle-snap",
+      "clipped": 0
+    },
+    {
+      "id": "flintback",
+      "state": "attack",
+      "phase": 0.12,
+      "dir": 1,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "turtle-snap",
+      "clipped": 0
+    },
+    {
+      "id": "flintback",
+      "state": "attack",
+      "phase": 0.34,
+      "dir": 1,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "turtle-snap",
+      "clipped": 0
+    },
+    {
+      "id": "flintback",
+      "state": "attack",
+      "phase": 0.48,
+      "dir": 1,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "turtle-snap",
+      "clipped": 0
+    },
+    {
+      "id": "flintback",
+      "state": "attack",
+      "phase": 0.58,
+      "dir": 1,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "turtle-snap",
+      "clipped": 0
+    },
+    {
+      "id": "flintback",
+      "state": "attack",
+      "phase": 0.92,
+      "dir": 1,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "turtle-snap",
+      "clipped": 0
+    },
+    {
+      "id": "stormdrake",
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 0,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "dragon-chomp",
+      "clipped": 0
+    },
+    {
+      "id": "stormdrake",
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 2,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "dragon-chomp",
+      "clipped": 0
+    },
+    {
+      "id": "stormdrake",
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 5,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "dragon-chomp",
+      "clipped": 0
+    },
+    {
+      "id": "stormdrake",
+      "state": "attack",
+      "phase": 0.12,
+      "dir": 1,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "dragon-chomp",
+      "clipped": 0
+    },
+    {
+      "id": "stormdrake",
+      "state": "attack",
+      "phase": 0.34,
+      "dir": 1,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "dragon-chomp",
+      "clipped": 0
+    },
+    {
+      "id": "stormdrake",
+      "state": "attack",
+      "phase": 0.48,
+      "dir": 1,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "dragon-chomp",
+      "clipped": 0
+    },
+    {
+      "id": "stormdrake",
+      "state": "attack",
+      "phase": 0.58,
+      "dir": 1,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "dragon-chomp",
+      "clipped": 0
+    },
+    {
+      "id": "stormdrake",
+      "state": "attack",
+      "phase": 0.92,
+      "dir": 1,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "dragon-chomp",
+      "clipped": 0
+    },
+    {
+      "id": "orchimantis",
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 0,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "mantis-scythes",
+      "clipped": 0
+    },
+    {
+      "id": "orchimantis",
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 2,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "mantis-scythes",
+      "clipped": 0
+    },
+    {
+      "id": "orchimantis",
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 5,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "mantis-scythes",
+      "clipped": 0
+    },
+    {
+      "id": "orchimantis",
+      "state": "attack",
+      "phase": 0.12,
+      "dir": 1,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "mantis-scythes",
+      "clipped": 0
+    },
+    {
+      "id": "orchimantis",
+      "state": "attack",
+      "phase": 0.34,
+      "dir": 1,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "mantis-scythes",
+      "clipped": 0
+    },
+    {
+      "id": "orchimantis",
+      "state": "attack",
+      "phase": 0.48,
+      "dir": 1,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "mantis-scythes",
+      "clipped": 0
+    },
+    {
+      "id": "orchimantis",
+      "state": "attack",
+      "phase": 0.58,
+      "dir": 1,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "mantis-scythes",
+      "clipped": 0
+    },
+    {
+      "id": "orchimantis",
+      "state": "attack",
+      "phase": 0.92,
+      "dir": 1,
+      "legs": 4,
+      "volumeLegs": 4,
+      "attack": "mantis-scythes",
+      "clipped": 0
+    },
+    {
+      "id": "mireclaw",
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 0,
+      "legs": 8,
+      "volumeLegs": 8,
+      "attack": "crab-pinch",
+      "clipped": 0
+    },
+    {
+      "id": "mireclaw",
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 2,
+      "legs": 8,
+      "volumeLegs": 8,
+      "attack": "crab-pinch",
+      "clipped": 0
+    },
+    {
+      "id": "mireclaw",
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 5,
+      "legs": 8,
+      "volumeLegs": 8,
+      "attack": "crab-pinch",
+      "clipped": 0
+    },
+    {
+      "id": "mireclaw",
+      "state": "attack",
+      "phase": 0.12,
+      "dir": 1,
+      "legs": 8,
+      "volumeLegs": 8,
+      "attack": "crab-pinch",
+      "clipped": 0
+    },
+    {
+      "id": "mireclaw",
+      "state": "attack",
+      "phase": 0.34,
+      "dir": 1,
+      "legs": 8,
+      "volumeLegs": 8,
+      "attack": "crab-pinch",
+      "clipped": 0
+    },
+    {
+      "id": "mireclaw",
+      "state": "attack",
+      "phase": 0.48,
+      "dir": 1,
+      "legs": 8,
+      "volumeLegs": 8,
+      "attack": "crab-pinch",
+      "clipped": 0
+    },
+    {
+      "id": "mireclaw",
+      "state": "attack",
+      "phase": 0.58,
+      "dir": 1,
+      "legs": 8,
+      "volumeLegs": 8,
+      "attack": "crab-pinch",
+      "clipped": 0
+    },
+    {
+      "id": "mireclaw",
+      "state": "attack",
+      "phase": 0.92,
+      "dir": 1,
+      "legs": 8,
+      "volumeLegs": 8,
+      "attack": "crab-pinch",
+      "clipped": 0
+    },
+    {
+      "id": "onyxscarab",
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 0,
+      "legs": 6,
+      "volumeLegs": 6,
+      "attack": "beetle-pry",
+      "clipped": 0
+    },
+    {
+      "id": "onyxscarab",
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 2,
+      "legs": 6,
+      "volumeLegs": 6,
+      "attack": "beetle-pry",
+      "clipped": 0
+    },
+    {
+      "id": "onyxscarab",
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 5,
+      "legs": 6,
+      "volumeLegs": 6,
+      "attack": "beetle-pry",
+      "clipped": 0
+    },
+    {
+      "id": "onyxscarab",
+      "state": "attack",
+      "phase": 0.12,
+      "dir": 1,
+      "legs": 6,
+      "volumeLegs": 6,
+      "attack": "beetle-pry",
+      "clipped": 0
+    },
+    {
+      "id": "onyxscarab",
+      "state": "attack",
+      "phase": 0.34,
+      "dir": 1,
+      "legs": 6,
+      "volumeLegs": 6,
+      "attack": "beetle-pry",
+      "clipped": 0
+    },
+    {
+      "id": "onyxscarab",
+      "state": "attack",
+      "phase": 0.48,
+      "dir": 1,
+      "legs": 6,
+      "volumeLegs": 6,
+      "attack": "beetle-pry",
+      "clipped": 0
+    },
+    {
+      "id": "onyxscarab",
+      "state": "attack",
+      "phase": 0.58,
+      "dir": 1,
+      "legs": 6,
+      "volumeLegs": 6,
+      "attack": "beetle-pry",
+      "clipped": 0
+    },
+    {
+      "id": "onyxscarab",
+      "state": "attack",
+      "phase": 0.92,
+      "dir": 1,
+      "legs": 6,
+      "volumeLegs": 6,
+      "attack": "beetle-pry",
+      "clipped": 0
+    },
+    {
+      "id": "runespider",
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 0,
+      "legs": 8,
+      "volumeLegs": 8,
+      "attack": "spider-fangs",
+      "clipped": 0
+    },
+    {
+      "id": "runespider",
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 2,
+      "legs": 8,
+      "volumeLegs": 8,
+      "attack": "spider-fangs",
+      "clipped": 0
+    },
+    {
+      "id": "runespider",
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 5,
+      "legs": 8,
+      "volumeLegs": 8,
+      "attack": "spider-fangs",
+      "clipped": 0
+    },
+    {
+      "id": "runespider",
+      "state": "attack",
+      "phase": 0.12,
+      "dir": 1,
+      "legs": 8,
+      "volumeLegs": 8,
+      "attack": "spider-fangs",
+      "clipped": 0
+    },
+    {
+      "id": "runespider",
+      "state": "attack",
+      "phase": 0.34,
+      "dir": 1,
+      "legs": 8,
+      "volumeLegs": 8,
+      "attack": "spider-fangs",
+      "clipped": 0
+    },
+    {
+      "id": "runespider",
+      "state": "attack",
+      "phase": 0.48,
+      "dir": 1,
+      "legs": 8,
+      "volumeLegs": 8,
+      "attack": "spider-fangs",
+      "clipped": 0
+    },
+    {
+      "id": "runespider",
+      "state": "attack",
+      "phase": 0.58,
+      "dir": 1,
+      "legs": 8,
+      "volumeLegs": 8,
+      "attack": "spider-fangs",
+      "clipped": 0
+    },
+    {
+      "id": "runespider",
+      "state": "attack",
+      "phase": 0.92,
+      "dir": 1,
+      "legs": 8,
+      "volumeLegs": 8,
+      "attack": "spider-fangs",
+      "clipped": 0
+    },
+    {
+      "id": "ironscolopendra",
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 0,
+      "legs": 12,
+      "volumeLegs": 12,
+      "attack": "centipede-mandibles",
+      "clipped": 0
+    },
+    {
+      "id": "ironscolopendra",
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 2,
+      "legs": 12,
+      "volumeLegs": 12,
+      "attack": "centipede-mandibles",
+      "clipped": 0
+    },
+    {
+      "id": "ironscolopendra",
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 5,
+      "legs": 12,
+      "volumeLegs": 12,
+      "attack": "centipede-mandibles",
+      "clipped": 0
+    },
+    {
+      "id": "ironscolopendra",
+      "state": "attack",
+      "phase": 0.12,
+      "dir": 1,
+      "legs": 12,
+      "volumeLegs": 12,
+      "attack": "centipede-mandibles",
+      "clipped": 0
+    },
+    {
+      "id": "ironscolopendra",
+      "state": "attack",
+      "phase": 0.34,
+      "dir": 1,
+      "legs": 12,
+      "volumeLegs": 12,
+      "attack": "centipede-mandibles",
+      "clipped": 0
+    },
+    {
+      "id": "ironscolopendra",
+      "state": "attack",
+      "phase": 0.48,
+      "dir": 1,
+      "legs": 12,
+      "volumeLegs": 12,
+      "attack": "centipede-mandibles",
+      "clipped": 0
+    },
+    {
+      "id": "ironscolopendra",
+      "state": "attack",
+      "phase": 0.58,
+      "dir": 1,
+      "legs": 12,
+      "volumeLegs": 12,
+      "attack": "centipede-mandibles",
+      "clipped": 0
+    },
+    {
+      "id": "ironscolopendra",
+      "state": "attack",
+      "phase": 0.92,
+      "dir": 1,
+      "legs": 12,
+      "volumeLegs": 12,
+      "attack": "centipede-mandibles",
+      "clipped": 0
+    },
+    {
+      "id": "cogwalker",
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 0,
+      "legs": 6,
+      "volumeLegs": 6,
+      "attack": "cannon-recoil",
+      "clipped": 0
+    },
+    {
+      "id": "cogwalker",
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 2,
+      "legs": 6,
+      "volumeLegs": 6,
+      "attack": "cannon-recoil",
+      "clipped": 0
+    },
+    {
+      "id": "cogwalker",
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 5,
+      "legs": 6,
+      "volumeLegs": 6,
+      "attack": "cannon-recoil",
+      "clipped": 0
+    },
+    {
+      "id": "cogwalker",
+      "state": "attack",
+      "phase": 0.12,
+      "dir": 1,
+      "legs": 6,
+      "volumeLegs": 6,
+      "attack": "cannon-recoil",
+      "clipped": 0
+    },
+    {
+      "id": "cogwalker",
+      "state": "attack",
+      "phase": 0.34,
+      "dir": 1,
+      "legs": 6,
+      "volumeLegs": 6,
+      "attack": "cannon-recoil",
+      "clipped": 0
+    },
+    {
+      "id": "cogwalker",
+      "state": "attack",
+      "phase": 0.48,
+      "dir": 1,
+      "legs": 6,
+      "volumeLegs": 6,
+      "attack": "cannon-recoil",
+      "clipped": 0
+    },
+    {
+      "id": "cogwalker",
+      "state": "attack",
+      "phase": 0.58,
+      "dir": 1,
+      "legs": 6,
+      "volumeLegs": 6,
+      "attack": "cannon-recoil",
+      "clipped": 0
+    },
+    {
+      "id": "cogwalker",
+      "state": "attack",
+      "phase": 0.92,
+      "dir": 1,
+      "legs": 6,
+      "volumeLegs": 6,
+      "attack": "cannon-recoil",
+      "clipped": 0
+    },
+    {
+      "id": "nix",
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 0,
+      "legs": 0,
+      "volumeLegs": 0,
+      "attack": "serpent-strike",
+      "clipped": 0
+    },
+    {
+      "id": "nix",
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 2,
+      "legs": 0,
+      "volumeLegs": 0,
+      "attack": "serpent-strike",
+      "clipped": 0
+    },
+    {
+      "id": "nix",
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 5,
+      "legs": 0,
+      "volumeLegs": 0,
+      "attack": "serpent-strike",
+      "clipped": 0
+    },
+    {
+      "id": "nix",
+      "state": "attack",
+      "phase": 0.12,
+      "dir": 1,
+      "legs": 0,
+      "volumeLegs": 0,
+      "attack": "serpent-strike",
+      "clipped": 0
+    },
+    {
+      "id": "nix",
+      "state": "attack",
+      "phase": 0.34,
+      "dir": 1,
+      "legs": 0,
+      "volumeLegs": 0,
+      "attack": "serpent-strike",
+      "clipped": 0
+    },
+    {
+      "id": "nix",
+      "state": "attack",
+      "phase": 0.48,
+      "dir": 1,
+      "legs": 0,
+      "volumeLegs": 0,
+      "attack": "serpent-strike",
+      "clipped": 0
+    },
+    {
+      "id": "nix",
+      "state": "attack",
+      "phase": 0.58,
+      "dir": 1,
+      "legs": 0,
+      "volumeLegs": 0,
+      "attack": "serpent-strike",
+      "clipped": 0
+    },
+    {
+      "id": "nix",
+      "state": "attack",
+      "phase": 0.92,
+      "dir": 1,
+      "legs": 0,
+      "volumeLegs": 0,
+      "attack": "serpent-strike",
+      "clipped": 0
+    },
+    {
+      "id": "zephyr",
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 0,
+      "legs": 0,
+      "volumeLegs": 0,
+      "attack": "talon-rake",
+      "clipped": 0
+    },
+    {
+      "id": "zephyr",
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 2,
+      "legs": 0,
+      "volumeLegs": 0,
+      "attack": "talon-rake",
+      "clipped": 0
+    },
+    {
+      "id": "zephyr",
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 5,
+      "legs": 0,
+      "volumeLegs": 0,
+      "attack": "talon-rake",
+      "clipped": 0
+    },
+    {
+      "id": "zephyr",
+      "state": "attack",
+      "phase": 0.12,
+      "dir": 1,
+      "legs": 0,
+      "volumeLegs": 0,
+      "attack": "talon-rake",
+      "clipped": 0
+    },
+    {
+      "id": "zephyr",
+      "state": "attack",
+      "phase": 0.34,
+      "dir": 1,
+      "legs": 0,
+      "volumeLegs": 0,
+      "attack": "talon-rake",
+      "clipped": 0
+    },
+    {
+      "id": "zephyr",
+      "state": "attack",
+      "phase": 0.48,
+      "dir": 1,
+      "legs": 0,
+      "volumeLegs": 0,
+      "attack": "talon-rake",
+      "clipped": 0
+    },
+    {
+      "id": "zephyr",
+      "state": "attack",
+      "phase": 0.58,
+      "dir": 1,
+      "legs": 0,
+      "volumeLegs": 0,
+      "attack": "talon-rake",
+      "clipped": 0
+    },
+    {
+      "id": "zephyr",
+      "state": "attack",
+      "phase": 0.92,
+      "dir": 1,
+      "legs": 0,
+      "volumeLegs": 0,
+      "attack": "talon-rake",
+      "clipped": 0
+    },
+    {
+      "id": "vesper",
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 0,
+      "legs": 0,
+      "volumeLegs": 0,
+      "attack": "bat-bite",
+      "clipped": 0
+    },
+    {
+      "id": "vesper",
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 2,
+      "legs": 0,
+      "volumeLegs": 0,
+      "attack": "bat-bite",
+      "clipped": 0
+    },
+    {
+      "id": "vesper",
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 5,
+      "legs": 0,
+      "volumeLegs": 0,
+      "attack": "bat-bite",
+      "clipped": 0
+    },
+    {
+      "id": "vesper",
+      "state": "attack",
+      "phase": 0.12,
+      "dir": 1,
+      "legs": 0,
+      "volumeLegs": 0,
+      "attack": "bat-bite",
+      "clipped": 0
+    },
+    {
+      "id": "vesper",
+      "state": "attack",
+      "phase": 0.34,
+      "dir": 1,
+      "legs": 0,
+      "volumeLegs": 0,
+      "attack": "bat-bite",
+      "clipped": 0
+    },
+    {
+      "id": "vesper",
+      "state": "attack",
+      "phase": 0.48,
+      "dir": 1,
+      "legs": 0,
+      "volumeLegs": 0,
+      "attack": "bat-bite",
+      "clipped": 0
+    },
+    {
+      "id": "vesper",
+      "state": "attack",
+      "phase": 0.58,
+      "dir": 1,
+      "legs": 0,
+      "volumeLegs": 0,
+      "attack": "bat-bite",
+      "clipped": 0
+    },
+    {
+      "id": "vesper",
+      "state": "attack",
+      "phase": 0.92,
+      "dir": 1,
+      "legs": 0,
+      "volumeLegs": 0,
+      "attack": "bat-bite",
+      "clipped": 0
+    },
+    {
+      "id": "pearlsquid",
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 0,
+      "legs": 0,
+      "volumeLegs": 0,
+      "attack": "tentacle-lash",
+      "clipped": 0
+    },
+    {
+      "id": "pearlsquid",
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 2,
+      "legs": 0,
+      "volumeLegs": 0,
+      "attack": "tentacle-lash",
+      "clipped": 0
+    },
+    {
+      "id": "pearlsquid",
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 5,
+      "legs": 0,
+      "volumeLegs": 0,
+      "attack": "tentacle-lash",
+      "clipped": 0
+    },
+    {
+      "id": "pearlsquid",
+      "state": "attack",
+      "phase": 0.12,
+      "dir": 1,
+      "legs": 0,
+      "volumeLegs": 0,
+      "attack": "tentacle-lash",
+      "clipped": 0
+    },
+    {
+      "id": "pearlsquid",
+      "state": "attack",
+      "phase": 0.34,
+      "dir": 1,
+      "legs": 0,
+      "volumeLegs": 0,
+      "attack": "tentacle-lash",
+      "clipped": 0
+    },
+    {
+      "id": "pearlsquid",
+      "state": "attack",
+      "phase": 0.48,
+      "dir": 1,
+      "legs": 0,
+      "volumeLegs": 0,
+      "attack": "tentacle-lash",
+      "clipped": 0
+    },
+    {
+      "id": "pearlsquid",
+      "state": "attack",
+      "phase": 0.58,
+      "dir": 1,
+      "legs": 0,
+      "volumeLegs": 0,
+      "attack": "tentacle-lash",
+      "clipped": 0
+    },
+    {
+      "id": "pearlsquid",
+      "state": "attack",
+      "phase": 0.92,
+      "dir": 1,
+      "legs": 0,
+      "volumeLegs": 0,
+      "attack": "tentacle-lash",
+      "clipped": 0
+    },
+    {
+      "id": "brineclam",
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 0,
+      "legs": 0,
+      "volumeLegs": 0,
+      "attack": "shell-snap",
+      "clipped": 0
+    },
+    {
+      "id": "brineclam",
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 2,
+      "legs": 0,
+      "volumeLegs": 0,
+      "attack": "shell-snap",
+      "clipped": 0
+    },
+    {
+      "id": "brineclam",
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 5,
+      "legs": 0,
+      "volumeLegs": 0,
+      "attack": "shell-snap",
+      "clipped": 0
+    },
+    {
+      "id": "brineclam",
+      "state": "attack",
+      "phase": 0.12,
+      "dir": 1,
+      "legs": 0,
+      "volumeLegs": 0,
+      "attack": "shell-snap",
+      "clipped": 0
+    },
+    {
+      "id": "brineclam",
+      "state": "attack",
+      "phase": 0.34,
+      "dir": 1,
+      "legs": 0,
+      "volumeLegs": 0,
+      "attack": "shell-snap",
+      "clipped": 0
+    },
+    {
+      "id": "brineclam",
+      "state": "attack",
+      "phase": 0.48,
+      "dir": 1,
+      "legs": 0,
+      "volumeLegs": 0,
+      "attack": "shell-snap",
+      "clipped": 0
+    },
+    {
+      "id": "brineclam",
+      "state": "attack",
+      "phase": 0.58,
+      "dir": 1,
+      "legs": 0,
+      "volumeLegs": 0,
+      "attack": "shell-snap",
+      "clipped": 0
+    },
+    {
+      "id": "brineclam",
+      "state": "attack",
+      "phase": 0.92,
+      "dir": 1,
+      "legs": 0,
+      "volumeLegs": 0,
+      "attack": "shell-snap",
+      "clipped": 0
+    },
+    {
+      "id": "moonjelly",
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 0,
+      "legs": 0,
+      "volumeLegs": 0,
+      "attack": "gel-pulse",
+      "clipped": 0
+    },
+    {
+      "id": "moonjelly",
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 2,
+      "legs": 0,
+      "volumeLegs": 0,
+      "attack": "gel-pulse",
+      "clipped": 0
+    },
+    {
+      "id": "moonjelly",
+      "state": "idle",
+      "phase": 0.25,
+      "dir": 5,
+      "legs": 0,
+      "volumeLegs": 0,
+      "attack": "gel-pulse",
+      "clipped": 0
+    },
+    {
+      "id": "moonjelly",
+      "state": "attack",
+      "phase": 0.12,
+      "dir": 1,
+      "legs": 0,
+      "volumeLegs": 0,
+      "attack": "gel-pulse",
+      "clipped": 0
+    },
+    {
+      "id": "moonjelly",
+      "state": "attack",
+      "phase": 0.34,
+      "dir": 1,
+      "legs": 0,
+      "volumeLegs": 0,
+      "attack": "gel-pulse",
+      "clipped": 0
+    },
+    {
+      "id": "moonjelly",
+      "state": "attack",
+      "phase": 0.48,
+      "dir": 1,
+      "legs": 0,
+      "volumeLegs": 0,
+      "attack": "gel-pulse",
+      "clipped": 0
+    },
+    {
+      "id": "moonjelly",
+      "state": "attack",
+      "phase": 0.58,
+      "dir": 1,
+      "legs": 0,
+      "volumeLegs": 0,
+      "attack": "gel-pulse",
+      "clipped": 0
+    },
+    {
+      "id": "moonjelly",
+      "state": "attack",
+      "phase": 0.92,
+      "dir": 1,
+      "legs": 0,
+      "volumeLegs": 0,
+      "attack": "gel-pulse",
+      "clipped": 0
+    }
+  ],
+  "errors": [],
+  "preview": {
+    "path": "public/creature-anatomy-preview.webm",
+    "width": 960,
+    "height": 780,
+    "decodedTimes": [
+      1.227,
+      4.01
+    ]
+  }
+}

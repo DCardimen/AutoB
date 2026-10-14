@@ -56,13 +56,15 @@ export function buildLegVolumes(rig,profiles,rest,angle,scale,colors){
  return {faces,legs};
 }
 
-export function paintLegVolumes(brush,rig){
+export function paintLegVolumes(brush,rig,layer='far'){
  if(!rig.artLegFaces?.length)return;
  const depth=new Float32Array(4096).fill(-Infinity),pixels=new Array(4096),shadows=new Array(4096),owner=new Int8Array(4096).fill(-1),outline='#192328';
  for(const face of rig.artLegFaces){
+  if(rig.artLegLayered&&layer==='near'&&(face.layer!==layer||!face.raised))continue;
   const [a,b,c]=face.vertices,area=(b.x-a.x)*(c.y-a.y)-(b.y-a.y)*(c.x-a.x);if(Math.abs(area)<.01)continue;
   const minX=Math.floor(Math.min(a.x,b.x,c.x)),maxX=Math.ceil(Math.max(a.x,b.x,c.x)),minY=Math.floor(Math.min(a.y,b.y,c.y)),maxY=Math.ceil(Math.max(a.y,b.y,c.y));
   for(let y=minY;y<=maxY;y++)for(let x=minX;x<=maxX;x++){
+   if(rig.artLegLayered&&layer==='near'&&!face.raised&&y<rig.artLegCoverY)continue;
    const px=x+.5,py=y+.5,w1=((b.x-px)*(c.y-py)-(b.y-py)*(c.x-px))/area,w2=((c.x-px)*(a.y-py)-(c.y-py)*(a.x-px))/area,w3=1-w1-w2;
    if(w1<-.001||w2<-.001||w3<-.001)continue;
    const z=w1*a.depth+w2*b.depth+w3*c.depth;

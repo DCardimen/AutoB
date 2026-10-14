@@ -2652,7 +2652,10 @@ export class Battle {
     if (strike.cancelled || u.hp <= 0) return;
     const color =
       SKILLS[strike.skillId].color || ELEMENTS[BY_ID[u.id].element].color;
-    this.fx(strike.beam ? "beam" : "slash", u.x, u.y - 12, color, {
+    const naturalEffect=strike.nativeMelee&&u.nativeAttackEffect;
+    const naturalTip=naturalEffect?nativeBladePoint(u,strike,1):null;
+    this.fx(strike.beam ? "beam" : naturalEffect||"slash", naturalTip?.x??u.x, naturalTip?.y??u.y-12, color, {
+      originZ:naturalTip?.z,
       tx: u.x + strike.dx * strike.reach,
       ty: u.y + strike.dy * strike.reach - 12,
       angle: Math.atan2(strike.dy, strike.dx),
