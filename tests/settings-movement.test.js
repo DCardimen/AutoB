@@ -7,8 +7,8 @@ import {makeRun,creature,Battle,rng} from '../game.js';
 import {advanceNative} from '../native-combat.js';
 import {creatureTypeFactor} from '../native-size.js';
 const ids=['steeringAgility','cornerSlowdown','runStartDistance','sprintStartDistance','gaitBlendSpeed'];
-test('five movement controls extend settings to 18 and migrate older saved preferences',()=>{
- assert.equal(TUNING_OPTIONS.length,18);const old=normalizeTuning({movementSpeed:150,turnSpeed:200});
+test('five movement controls and stride length extend settings to 19 and migrate older saved preferences',()=>{
+ assert.equal(TUNING_OPTIONS.length,19);const old=normalizeTuning({movementSpeed:150,turnSpeed:200});
  for(const id of ids){assert.equal(old[id],100);assert.ok(TUNING_OPTIONS.some(o=>o.id===id&&o.group==='Movement patterns'));}
  assert.equal(old.movementSpeed,150);assert.equal(normalizeTuning({cornerSlowdown:-1}).cornerSlowdown,0);assert.equal(normalizeTuning({steeringAgility:999}).steeringAgility,250);
 });

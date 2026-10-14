@@ -2,7 +2,9 @@
 
 **Fang & Feather (F&F)** is a creature collecting autobattler. The supplied feather-and-fang logo appears in the game and Training Glade, including both offline builds. Existing saves and the legacy offline filenames remain compatible.
 
-Settings now rotate randomized small, regular and large examples every five seconds. Eighteen sliders include five movement-pattern controls for direction changes, corner slowdown, run/sprint distances and animation transitions. Examples demonstrate the same movement rules as combat.
+Legs V2 gives heavy creatures thicker supporting limbs, anatomy-specific paws/hooves/armored feet, rounded joints, coherent fur and costume colors, and more compact strides. The new **Stride length** slider changes step length and cadence together without changing combat speed. See [V2 review and checks](LEGS-V2.md) and the [normal-speed preview](public/legs-v2-preview.webm).
+
+Settings now rotate randomized small, regular and large examples every five seconds. Nineteen sliders include stride length and five movement-pattern controls for direction changes, corner slowdown, run/sprint distances and animation transitions. Examples demonstrate the same movement rules as combat.
 
 Arena controls and both rosters now sit inside the supplied blue/gold UI frame. Elite encounters have one seeded mutation from 50 variants; captured individuals keep their mutation, nature and genes for future starter selection. See [arena UI and elite hunting](ARENA-ELITES.md).
 

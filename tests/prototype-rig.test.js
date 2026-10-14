@@ -10,11 +10,12 @@ test('sideways dodges lead with the correct foot and tilt toward their actual es
     for(const leg of rig.legs){assert.equal(leg.clamped,false);if(leg.side*sign>0){assert.equal(leg.foot.planted,false);assert.ok(leg.foot.ground.z>5);}else assert.equal(leg.foot.planted,true);}
   }
 });
-test('humanoid travel uses brisk walk cadence and longer running/sprinting strides',()=>{
+test('humanoid strides grow with pace while staying compact relative to short legs',()=>{
   for(const spec of PROTOTYPE_CHARACTERS.filter(s=>['knight','orc','elf','caster','fox'].includes(s.id))){
     const walkSteps=120*spec.speed/spec.stride;assert.ok(walkSteps>=100&&walkSteps<=180);
-    assert.ok(locomotionStride(spec.stride,1,1,spec.id)>spec.stride*1.7);
-    const sprintSteps=120*spec.sprint/locomotionStride(spec.stride,1,1,spec.id);assert.ok(sprintSteps>=160&&sprintSteps<=260);
+    const walk=locomotionStride(spec.stride,0,0,spec.id),run=locomotionStride(spec.stride,1,0,spec.id),sprint=locomotionStride(spec.stride,1,1,spec.id);
+    assert.ok(run>walk&&sprint>run);assert.ok(sprint<spec.stride*1.15,'avoid the old long split stride');
+    assert.ok(walk<spec.stride,'walk starts from anatomy-sized steps');
   }
 });
 test('hips and head stay continuous when the last supporting foot leaves the ground',()=>{

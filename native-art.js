@@ -16,10 +16,11 @@ import {nativeRigFor} from './grand-designs.js';
 import {creatureWorldScale} from './native-size.js';
 import {paintCombatTexts} from './combat-text.js';
 import {terrainFor} from './native-tactics.js';
+import {getTuning} from './tuning.js';
 let characterHeight=1;
 export function setCharacterHeight(value){characterHeight=Math.max(.85,Math.min(1.1,Number(value)||1));}
 export function getCharacterHeight(){return characterHeight;}
-export function nativePreviewFrame(c,state='idle',phase=.25,dir=1){const key=['preview',c.id,c.evolution,c.evolutionPath,state,phase,dir,characterHeight].join(':');if(!frames.has(key)){const spec=byId[c.id];frames.set(key,renderCharacterFrame(nativeRigFor(spec,c),nativePoseRig(spec,c,state,phase,characterHeight),dir*Math.PI/4));if(frames.size>256)frames.delete(frames.keys().next().value);}return frames.get(key);}
+export function nativePreviewFrame(c,state='idle',phase=.25,dir=1){const key=['preview',c.id,c.evolution,c.evolutionPath,state,phase,dir,characterHeight,getTuning().strideLength].join(':');if(!frames.has(key)){const spec=byId[c.id];frames.set(key,renderCharacterFrame(nativeRigFor(spec,c),nativePoseRig(spec,c,state,phase,characterHeight),dir*Math.PI/4));if(frames.size>256)frames.delete(frames.keys().next().value);}return frames.get(key);}
 export const nativeScreen=(x,y)=>({x,y:y*.58+75});
 export const NATIVE_RENDER_SCALE=1;
 export const NATIVE_SPRITE_GRID=[1002,654];

@@ -15,6 +15,7 @@ import {characterRig,projectRig} from './prototype-rig.js';
 import {buildLegVolumes} from './leg-volume.js';
 import {creatureLegArt,buildCreatureLegVolumes} from './creature-leg-volume.js';
 import {creatureMouthSource} from './creature-attacks.js';
+import {legAnatomy,sampleLegMaterial} from './leg-anatomy.js';
 // Directional artwork is skinned to the same anatomical action poses as combat.
 // The imported art is never blurred, rotated by Canvas, or stretched as one bitmap.
 const decoded=new Map(),rests=new Map(),CELL=64,PIVOT={x:32,y:44};
@@ -141,27 +142,17 @@ function legProfiles(asset,footIndices,footDeltas,identity,stage){
   if(!pixels.length)pixels=asset.pixels.filter(p=>p.y>=cut&&Math.abs(p.x-foot.anchor.x)<5);
   const bottom=pixels.length?Math.max(...pixels.map(p=>p.y)):46,sole=pixels.filter(p=>p.y>=bottom-2),centerX=sole.length?sole.reduce((n,p)=>n+p.x,0)/sole.length:foot.anchor.x;
   const rows=new Map();for(const p of pixels)rows.set(p.y,(rows.get(p.y)||0)+1);
-  const width=Math.min(stage?9:7,Math.max(4,...rows.values())),baseRadius=['orc','minotaur','troll'].includes(identity)?2.55:identity==='dwarf'?2.35:identity==='knight'?2.2:1.95,radius=baseRadius*(1+stage*.13),ankleY=bottom-1.5,hipY=robe?cut-3:cut-.5;
+  const width=Math.min(stage?9:7,Math.max(4,...rows.values())),anatomy=legAnatomy(identity),radius=anatomy.radius*(1+stage*.13),ankleY=bottom-1.5,hipY=robe?cut-3:cut-.5;
   for(const p of pixels)if(Math.abs(p.x-centerX)<=width*.65+1)mask.add(p.y*64+p.x);
   const clothPixels=pixels.filter(p=>!asset.handMask?.has(p));
   const material=(lo,hi)=>{
-   const region=clothPixels.filter(p=>p.y>=lo&&p.y<=hi),groups=new Map();
-   for(const p of region){const h=colorHsl(p.color);if(h.l<.1||h.l>.9)continue;const g=h.s<.22?'neutral':Math.floor(h.h/35);if(!groups.has(g))groups.set(g,[]);groups.get(g).push(p);}
-   const dominant=[...groups.values()].sort((a,b)=>b.length-a.length)[0]||clothPixels;if(!dominant.length)return [1,1,1,1];
-   const shades=[...new Map(dominant.map(p=>[p.index,p])).values()].sort((a,b)=>colorHsl(a.color).l-colorHsl(b.color).l);
-   return [0,.32,.68,1].map(t=>shades[Math.round((shades.length-1)*t)].index);
+   const region=clothPixels.filter(p=>p.y>=lo&&p.y<=hi);
+   return sampleLegMaterial(asset,region.length?region:clothPixels);
   };
   const mid=(hipY+ankleY)/2,boot=material(bottom-3,bottom),materials={thigh:material(cut,mid+1),calf:material(mid-1,bottom-2),boot,sole:[boot[0],boot[0],boot[1],boot[1]]},bands={};
-  for(const [part,lo,hi]of [['thigh',cut,mid+1],['calf',mid-1,bottom-2],['boot',bottom-3,bottom]]){
-   bands[part]=Array.from({length:3},(_,row)=>{
-    const y=Math.round(lo+(hi-lo)*row/2),region=clothPixels.filter(p=>Math.abs(p.y-y)<=1),groups=new Map();
-    for(const p of region){const h=colorHsl(p.color);if(h.l<.1||h.l>.9)continue;const key=h.s<.22?'neutral':Math.floor(h.h/35);if(!groups.has(key))groups.set(key,[]);groups.get(key).push(p);}
-    const group=[...groups.values()].sort((a,b)=>b.length-a.length)[0];if(!group)return materials[part];
-    const shades=[...new Map(group.map(p=>[p.index,p])).values()].sort((a,b)=>colorHsl(a.color).l-colorHsl(b.color).l);
-    return [0,.32,.68,1].map(t=>shades[Math.round((shades.length-1)*t)].index);
-   });
-  }
-  return {centerX,hipY,ankleY,radius,bootLength:radius*2.5,materials,bands};
+  // A thigh/calf/boot keeps its material through the bend. Resampling every
+  // vertical stripe made folds turn into unrelated colors along one shin.
+  return {centerX,hipY,ankleY,radius,calf:anatomy.calf,bootLength:radius*2.35,materials,bands};
  });
  // The pelvis remains complete when either thigh moves away. Only the upper
  // two rows inside the hips are restored; the natural gap between legs stays.
