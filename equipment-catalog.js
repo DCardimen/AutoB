@@ -1,3 +1,4 @@
+import {CHAOS_GEAR} from './combat-expansion.js';
 // These are character passives. They affect all applicable attacks, spells,
 // movement and defensive events rather than linking to one skill ID.
 const rows=[
@@ -103,4 +104,4 @@ const rows=[
  ['steady-breath','Steady Breath','Core','flat',{regenStamina:1.18},'Recover attack and dodge stamina faster.'],
 ];
 const colors={Weapon:'#e4bc7b',Armor:'#a9becd',Boots:'#abd19b',Core:'#cea2db',Focus:'#92d6df',Cape:'#bd9ed7'};
-export const EXPANDED_GEAR=rows.map(([id,name,slot,hook,effect,desc],i)=>({id,name,slot,hook,effect,desc,color:colors[slot],cost:90+(i%7)*8,armor:slot==='Armor'?12:0}));
+export const EXPANDED_GEAR=rows.map(([id,name,slot,hook,effect,desc],i)=>({id,name,slot,hook,effect,desc,color:colors[slot],cost:90+(i%7)*8,armor:slot==='Armor'?12:0})).concat(CHAOS_GEAR);

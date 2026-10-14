@@ -3612,6 +3612,22 @@ footer i {
 .pack-recipients{display:flex;gap:7px;overflow-x:auto;padding:5px 0 12px}.pack-recipients button{flex:0 0 auto;display:flex;gap:7px;align-items:center;min-width:110px;padding:5px 9px;border:1px dashed #739365;border-radius:8px;background:#142b21;color:#dae6bf;text-align:left;font-size:11px}.pack-recipients img{width:30px;height:36px;object-fit:contain;image-rendering:pixelated}.pack-recipients small{display:block;color:#9fb28d;font-size:9px;margin-top:3px}
 .ally-orders label{width:118px;padding:4px 6px}.ally-orders select{font-size:10px}.ally-orders small{font-size:8px}@media(max-width:850px){.ally-orders label{width:68px;padding:3px 4px;border-radius:6px}.ally-orders label>span{display:none}.ally-orders select{font-size:8px;padding:0;height:16px}.ally-orders small{font-size:7px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden}}
 .ui-v2 .ally-orders select{height:18px;min-height:18px;padding:0!important;line-height:16px;margin:0}.ally-orders small{line-height:10px}@media(max-width:850px){.ui-v2 .ally-orders select{height:16px;min-height:16px;line-height:14px}.ally-orders small{line-height:8px}}
+:root { --stamina-gold: #e5bf78; }
+.card-vitals { width:100%; padding:5px 0; text-align:left; }
+.card-vitals small { font-size:9px; letter-spacing:.07em; color:#c5d5b6; }
+.card-health-track { height:6px; background:#28382c; border-radius:3px; overflow:hidden; }
+.card-health-track i { display:block; height:100%; background:#bad79a; transition:width .12s linear; }
+.visible-gear-effect { display:block; color:#d4e6c5; font-size:11px; line-height:1.55; white-space:normal; text-align:left; margin-top:6px; }
+.quick-equipment { align-items:stretch; }
+.quick-equipment button { height:auto; min-height:76px; white-space:normal; }
+.equipment-tray-items button { height:auto; min-height:112px; white-space:normal; align-items:start; }
+.legendary-pact-banner { padding:16px; margin:12px 0; border:1px solid #ebcd80; border-radius:10px; background:#433723; color:#ffe4a0; }
+.legendary-pact-banner p { font-size:12px; }
+.legendary-choice img { width:80px; height:80px; object-fit:contain; }
+.loot-flying-token { position:fixed; z-index:10000; font-size:34px; pointer-events:none; text-shadow:0 0 16px currentColor; }
+.stamina-track { height:5px; background:#293629; border:1px solid #63704c; margin-top:3px; overflow:hidden; border-radius:3px; }
+.stamina-track i { display:block; height:100%; background:var(--stamina-gold); transition:width .12s linear; }
+@media (max-width:600px) { .quick-equipment { grid-template-columns:1fr; } .visible-gear-effect { font-size:11px; } .formation-section .section-heading { flex-wrap:wrap; } }
 
 
 /* UI V3: original vector frame details; paintings supplied by the user. */
@@ -4140,6 +4156,12 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
  .ui-v3 .ally-orders select{font-size:10px;min-height:26px;width:100%}
  .ui-v3 .ally-orders [data-preview-target]{font-size:8px;line-height:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 }
+.ui-v3 .equipment-tray-items > button > .visible-gear-effect { float:none; clear:both; font-size:11px; color:#d2e5dc; margin:8px 0 0; }
+.ui-v3 .quick-equipment { grid-template-columns:1fr; }
+.ui-v3 .quick-equipment button { min-height:60px; display:grid; grid-template-columns:24px minmax(0,1fr); align-items:center; gap:4px; text-align:left; padding:9px; }
+.ui-v3 .quick-equipment button small { white-space:normal; font-size:10px; }
+.ui-v3 .quick-equipment .visible-gear-effect { grid-column:1 / -1; font-size:10px; line-height:1.5; overflow-wrap:break-word; }
+@media(max-width:600px) { .ui-v3 .quick-equipment { grid-template-columns:1fr; } .ui-v3 .stat-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
 </style>
   </head>
   <body class="ui-v2 ui-v3">
@@ -4335,7 +4357,7 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
 
   // item-effects.js
   var unchanged = /* @__PURE__ */ new Set(["every", "interval", "delay", "radius", "condition", "auto", "uses", "onlyCrit", "physical", "selfHP", "distance", "threshold"]);
-  var multipliers = /* @__PURE__ */ new Set(["damage", "reduction", "factor", "hp", "atk", "speed", "cd", "healing", "regenStamina", "enemyHP", "channel"]);
+  var multipliers = /* @__PURE__ */ new Set(["damage", "reduction", "factor", "hp", "atk", "speed", "cd", "healing", "regenStamina", "attackSpeed", "actionSpeed", "dashCooldown", "enemyHP", "channel"]);
   var itemStrength2 = (model) => (model?.balanceVersion || model?.rulesVersion || 0) >= 15 ? 0.5 : 1;
   function scaledEffect(effect, strength = 1) {
     return Object.fromEntries(Object.entries(effect).map(([key, value]) => [key, typeof value !== "number" || unchanged.has(key) ? value : multipliers.has(key) ? 1 + (value - 1) * strength : value * strength]));
@@ -4348,8 +4370,8 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
     const e = scaledEffect(item.effect, itemStrength2(model)), parts = [];
     const events = { hit: "On connected hits", hurt: "When hit", dodge: "After a dodge", cast: "After cooldown skills", heal: "When healing", kill: "After a kill", death: "On defeat", tick: "Periodically", fatal: "Once at lethal damage", channel: "Skill channels", flat: "Always" };
     for (const [key, label] of Object.entries(names)) if (e[key]) parts.push(`${label} ${number(e[key])}s`);
-    for (const [key, label] of Object.entries({ damage: "damage", reduction: "incoming damage", hp: "health", atk: "attack", speed: "movement", cd: "cooldown time", healing: "healing", regenStamina: "stamina recovery", enemyHP: "enemy health", factor: "channel time" })) if (e[key] !== void 0) parts.push(`${number((e[key] - 1) * 100) > 0 ? "+" : ""}${number((e[key] - 1) * 100)}% ${label}`);
-    for (const [key, label] of Object.entries({ shield: "shield", shred: "shield damage", stamina: "stamina", refresh: "seconds off all cooldowns", heal: "healing", poise: "poise", armor: "armor", armorAll: "team armor", shieldAll: "team shield", staminaAll: "team stamina" })) if (e[key]) parts.push(`${number(e[key])} ${label}`);
+    for (const [key, label] of Object.entries({ damage: "damage", reduction: "incoming damage", hp: "health", atk: "attack", speed: "movement", cd: "cooldown time", healing: "healing", regenStamina: "stamina recovery", attackSpeed: "basic attack speed", actionSpeed: "action speed", dashCooldown: "dodge/dash cooldown time", enemyHP: "enemy health", factor: "channel time" })) if (e[key] !== void 0) parts.push(`${number((e[key] - 1) * 100) > 0 ? "+" : ""}${number((e[key] - 1) * 100)}% ${label}`);
+    for (const [key, label] of Object.entries({ shield: "shield", shred: "shield damage", stamina: "stamina", refresh: "seconds off all cooldowns", dodgeRefresh: "seconds off dodge cooldown", heal: "healing", poise: "poise", armor: "armor", armorAll: "team armor", shieldAll: "team shield", staminaAll: "team stamina" })) if (e[key]) parts.push(`${number(e[key])} ${label}`);
     for (const [key, label] of Object.entries({ life: "damage lifesteal", reflect: "damage reflected", echo: "skill echo power", chain: "attack chain power", splash: "attack splash power", counter: "attack counter power", healPercent: "max-health healing", shieldPercent: "max-health shield", healLowest: "attack healing to weakest ally", shieldLowest: "attack shield to weakest ally", overflow: "overheal converted to shield", revive: "health on revival", crit: "critical chance", burnDetonate: "attack burn detonation", poisonBurst: "attack poison detonation", siphon: "shield siphoned" })) if (e[key]) parts.push(`${number(e[key] * 100)}% ${label}`);
     if (e.cleanse) parts.push("cleanse ailments");
     if (e.cleanseAll) parts.push("cleanse the team");
@@ -4423,6 +4445,100 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
     c.relics ?? (c.relics = []);
     if (c.balanceVersion >= 17) c.relics.forEach((r) => delete r.link);
     return c;
+  }
+
+  // combat-expansion.js
+  var relicRows = [
+    ["chrono-throne", "Chrono Throne", "flat", { actionSpeed: 2.2, regenStamina: 2 }, "Act 60% faster and recover stamina 50% faster.", "jackpot"],
+    ["phoenix-covenant", "Phoenix Covenant", "fatal", { revive: 1.6, shield: 180 }, "Once per companion per battle, return at 80% health with 90 shield.", "jackpot"],
+    ["cataclysm-heart", "Cataclysm Heart", "hit", { splash: 1.6, radius: 145, every: 3 }, "Every third connected hit erupts for 80% attack around its victim.", "jackpot"],
+    ["endless-banquet", "Endless Banquet", "kill", { healPercent: 0.6, refresh: 8, staminaAll: 60 }, "Kills restore 30% health, advance skills 4 seconds and feed team stamina.", "jackpot"],
+    ["sovereigns-seat", "Sovereign\u2019s Seat", "route", { legendaryChoice: true }, "Permanently sacrifice one active place this expedition to choose any Legendary companion.", "jackpot"],
+    ["polite-pebble", "Polite Pebble", "flat", { shield: 4 }, "Begin each battle with a very polite 2 shield.", "comfort"],
+    ["slightly-warm-sock", "Slightly Warm Sock", "flat", { hp: 1.02 }, "A comforting 1% extra maximum health.", "comfort"],
+    ["dented-button", "Dented Button", "flat", { poise: 2 }, "One extra poise. Better than no button.", "comfort"],
+    ["emergency-napkin", "Emergency Napkin", "hurt", { shield: 2, uses: 1 }, "The first hit grants 1 shield. For small emergencies.", "comfort"],
+    ["patient-moss", "Patient Moss", "tick", { heal: 2, interval: 12, condition: "still" }, "Standing still restores 1 health every 12 seconds.", "comfort"],
+    ["quicksilver-pulse", "Quicksilver Pulse", "flat", { attackSpeed: 1.5 }, "Basic attacks are 25% faster.", "build"],
+    ["metronome-soul", "Metronome Soul", "flat", { actionSpeed: 1.3 }, "Windups, recoveries, attacks and skill recovery are 15% faster.", "build"],
+    ["slipstream-knot", "Slipstream Knot", "flat", { dashCooldown: 0.5 }, "Dodge and dash skill cooldowns are 25% shorter.", "build"],
+    ["second-step", "Second Step", "dodge", { dodgeRefresh: 1.6, interval: 4 }, "Dodging refunds 0.8 seconds of dodge recovery.", "build"],
+    ["lung-of-the-storm", "Lung of the Storm", "flat", { regenStamina: 1.7 }, "Recover stamina 35% faster.", "build"],
+    ["blood-clock", "Blood Clock", "hit", { refresh: 0.8, condition: "bleed", interval: 2 }, "Bleeding targets advance all your skills 0.4 seconds when struck.", "build"],
+    ["ember-vortex", "Ember Vortex", "hit", { burnDetonate: 1.1, condition: "burn", interval: 4 }, "Strike a burning target to detonate a 55% attack fire burst.", "build"],
+    ["plague-garden", "Plague Garden", "hit", { statusSpread: 1, radius: 160, every: 3 }, "Every third hit spreads burn, poison and bleed to nearby enemies.", "build"],
+    ["winter-gavel", "Winter Gavel", "hit", { root: 1.8, condition: "slow", interval: 5 }, "Striking a chilled enemy roots it for 0.9 seconds.", "build"],
+    ["glass-dancer", "Glass Dancer", "dodge", { haste: 5, shieldPercent: 0.12 }, "Dodging grants 2.5 seconds of haste and a 6% health barrier.", "build"],
+    ["kindling-script", "Kindling Script", "cast", { burn: 5 }, "Cooldown skills burn their target for 2.5 seconds.", "build"],
+    ["reservoir-crown", "Reservoir Crown", "heal", { overflow: 1.2 }, "Convert 60% of excess healing into a shield.", "build"],
+    ["mirror-oath", "Mirror Oath", "hurt", { reflect: 0.6, condition: "shielded" }, "Reflect 30% of connected damage while shielded.", "build"],
+    ["hungry-comet", "Hungry Comet", "kill", { hasteAll: 6, dodgeRefresh: 3 }, "A kill hastens allies for 3 seconds and refunds 1.5 seconds of your dodge.", "build"],
+    ["lantern-of-return", "Lantern of Return", "dodge", { healLowest: 0.8, interval: 4 }, "Dodging heals the weakest ally for 40% attack.", "build"],
+    ["storm-recital", "Storm Recital", "cast", { echo: 0.9, delay: 0.65, interval: 7 }, "Echo a cooldown skill at 45% power every 7 seconds.", "build"],
+    ["serpent-payback", "Serpent Payback", "hurt", { poison: 6, interval: 2 }, "Attackers receive 3 seconds of poison.", "build"],
+    ["redline-talisman", "Redline Talisman", "hit", { stamina: 16, condition: "staminaLow", interval: 2 }, "Connected hits below 35 stamina recover 8 stamina.", "build"],
+    ["pilgrims-bell", "Pilgrim\u2019s Bell", "dodge", { cleanse: 1, ward: 3, interval: 6 }, "Dodges cleanse ailments and grant 1.5 seconds of immunity.", "build"],
+    ["pack-resonance", "Pack Resonance", "cast", { staminaAll: 20, interval: 5 }, "A cooldown cast returns 10 stamina to every ally.", "build"]
+  ];
+  var CHAOS_RELICS = relicRows.map(([id, name, hook, effect, desc, tier]) => ({ id, name, hook, effect, desc, tier, category: hook === "route" ? "expedition" : "combat", icon: tier === "jackpot" ? "\u2726" : tier === "comfort" ? "\xB7" : "\u2727", color: tier === "jackpot" ? "#f3ce82" : tier === "comfort" ? "#a6b5a3" : "#a8dfe0", cost: tier === "jackpot" ? 380 : tier === "comfort" ? 50 : 240 }));
+  var gearRows = [
+    ["tempo-rapier", "Tempo Rapier", "Weapon", "flat", { attackSpeed: 1.36 }],
+    ["clockwork-wand", "Clockwork Wand", "Focus", "flat", { actionSpeed: 1.24 }],
+    ["rift-sandals", "Rift Sandals", "Boots", "flat", { dashCooldown: 0.64 }],
+    ["sprinters-bellows", "Sprinter\u2019s Bellows", "Core", "flat", { regenStamina: 1.44 }],
+    ["bulwark-pump", "Bulwark Pump", "Armor", "flat", { armor: 20, regenStamina: 1.16 }],
+    ["gale-sash", "Gale Sash", "Cape", "flat", { actionSpeed: 1.16, speed: 1.14 }],
+    ["dueling-metronome", "Dueling Metronome", "Core", "flat", { attackSpeed: 1.24, regenStamina: 1.2 }],
+    ["phase-spurs", "Phase Spurs", "Boots", "flat", { dashCooldown: 0.76, speed: 1.12 }],
+    ["quickdraw-string", "Quickdraw String", "Weapon", "flat", { attackSpeed: 1.28, atk: 1.08 }],
+    ["tide-clock", "Tide Clock", "Focus", "flat", { cd: 0.86, regenStamina: 1.12 }],
+    ["sanguine-needle", "Sanguine Needle", "Weapon", "hit", { bleed: 5, every: 3 }],
+    ["furnace-staff", "Furnace Staff", "Focus", "hit", { burn: 4, every: 2 }],
+    ["venom-thimble", "Venom Thimble", "Core", "hit", { poison: 6, every: 4 }],
+    ["glacial-tuning-fork", "Glacial Tuning Fork", "Weapon", "hit", { slow: 3, every: 3 }],
+    ["shatter-chisel", "Shatter Chisel", "Weapon", "hit", { damage: 1.36, condition: "control" }],
+    ["murder-compass", "Murder Compass", "Core", "hit", { damage: 1.32, condition: "wounded" }],
+    ["vitality-scythe", "Vitality Scythe", "Weapon", "hit", { life: 0.24, condition: "bleed" }],
+    ["arcing-copper", "Arcing Copper", "Focus", "hit", { chain: 0.7, every: 4 }],
+    ["siegebreaker-pick", "Siegebreaker Pick", "Weapon", "hit", { shred: 50, condition: "enemyShield" }],
+    ["virulent-fan", "Virulent Fan", "Weapon", "hit", { statusSpread: 1, radius: 140, every: 5 }],
+    ["counterweight-mail", "Counterweight Mail", "Armor", "hurt", { counter: 0.65, condition: "close", interval: 4 }],
+    ["mirror-thread", "Mirror Thread", "Cape", "hurt", { reflect: 0.32, condition: "shielded" }],
+    ["nettleskin-vest", "Nettleskin Vest", "Armor", "hurt", { poison: 4, interval: 4 }],
+    ["aegis-buckle", "Aegis Buckle", "Armor", "hurt", { shieldPercent: 0.12, condition: "healthy", interval: 6 }],
+    ["pocket-smokescreen", "Pocket Smokescreen", "Core", "hurt", { evade: 3, retreat: 18, condition: "lowHP", interval: 8 }],
+    ["resolute-collar", "Resolute Collar", "Armor", "hurt", { armor: 24, interval: 7 }],
+    ["last-light-hood", "Last Light Hood", "Cape", "hurt", { cleanse: 1, ward: 3, condition: "lowHP", interval: 12 }],
+    ["recoil-bracers", "Recoil Bracers", "Armor", "hurt", { retreat: 36, condition: "flanked", interval: 5 }],
+    ["thorned-rampart", "Thorned Rampart", "Armor", "hurt", { counter: 0.45, shield: 10, interval: 5 }],
+    ["shelter-pendant", "Shelter Pendant", "Core", "hurt", { reduction: 0.82, condition: "nearAlly" }],
+    ["rewind-heel", "Rewind Heel", "Boots", "dodge", { dodgeRefresh: 1.4, interval: 4 }],
+    ["rally-treads", "Rally Treads", "Boots", "dodge", { stamina: 24, interval: 3 }],
+    ["frostwake-skates", "Frostwake Skates", "Boots", "dodge", { root: 1.4, radius: 75, interval: 6 }],
+    ["thunder-heel", "Thunder Heel", "Boots", "dodge", { splash: 0.6, radius: 95, interval: 4 }],
+    ["mistwalk-wraps", "Mistwalk Wraps", "Boots", "dodge", { cleanse: 1, evade: 2, interval: 5 }],
+    ["tempo-cape", "Tempo Cape", "Cape", "dodge", { refresh: 1.2, haste: 2, interval: 5 }],
+    ["wardstep-soles", "Wardstep Soles", "Boots", "dodge", { shieldPercent: 0.1, interval: 4 }],
+    ["menders-slippers", "Mender\u2019s Slippers", "Boots", "dodge", { healPercent: 0.08, interval: 5 }],
+    ["duelists-scarf", "Duelist\u2019s Scarf", "Cape", "dodge", { haste: 4, stamina: 8, interval: 5 }],
+    ["untouchable-signet", "Untouchable Signet", "Core", "dodge", { ward: 4, interval: 7 }],
+    ["echo-quill", "Echo Quill", "Focus", "cast", { echo: 0.6, delay: 0.55, interval: 7 }],
+    ["star-ink", "Star Ink", "Focus", "cast", { refresh: 1.8, selfHP: 0.03, interval: 6 }],
+    ["cinder-codex", "Cinder Codex", "Focus", "cast", { burn: 6, interval: 4 }],
+    ["astral-capacitor", "Astral Capacitor", "Core", "cast", { stamina: 18, shield: 10, interval: 5 }],
+    ["snowglobe-wand", "Snowglobe Wand", "Focus", "cast", { slow: 3, radius: 140, interval: 6 }],
+    ["overflow-chalice", "Overflow Chalice", "Focus", "heal", { overflow: 0.7, interval: 2 }],
+    ["purifying-ribbon", "Purifying Ribbon", "Cape", "heal", { cleanse: 1, shield: 8, interval: 5 }],
+    ["execution-hourglass", "Execution Hourglass", "Core", "kill", { refresh: 3.2, dodgeRefresh: 2 }],
+    ["feast-banner", "Feast Banner", "Cape", "kill", { healPercent: 0.18, stamina: 20 }],
+    ["living-hourglass", "Living Hourglass", "Core", "tick", { refresh: 1, stamina: 8, interval: 7 }]
+  ];
+  var CHAOS_GEAR = gearRows.map(([id, name, slot, hook, effect], i) => ({ id, name, slot, hook, effect, desc: "Character-wide passive; inspect the effect below.", color: ["#e5c085", "#99dfe0", "#c5a3e3", "#a9d59c"][i % 4], cost: 110 + i % 6 * 12, armor: slot === "Armor" ? 12 : 0 }));
+  function dodgeStyle(spec) {
+    if (spec.element === "void" || spec.role === "Support") return "blink";
+    if (spec.role === "Guardian") return "barrel";
+    if (spec.role === "Ranger") return "sidestep";
+    return "roll";
   }
 
   // equipment-catalog.js
@@ -4529,7 +4645,7 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
     ["steady-breath", "Steady Breath", "Core", "flat", { regenStamina: 1.18 }, "Recover attack and dodge stamina faster."]
   ];
   var colors2 = { Weapon: "#e4bc7b", Armor: "#a9becd", Boots: "#abd19b", Core: "#cea2db", Focus: "#92d6df", Cape: "#bd9ed7" };
-  var EXPANDED_GEAR = rows2.map(([id, name, slot, hook, effect, desc], i) => ({ id, name, slot, hook, effect, desc, color: colors2[slot], cost: 90 + i % 7 * 8, armor: slot === "Armor" ? 12 : 0 }));
+  var EXPANDED_GEAR = rows2.map(([id, name, slot, hook, effect, desc], i) => ({ id, name, slot, hook, effect, desc, color: colors2[slot], cost: 90 + i % 7 * 8, armor: slot === "Armor" ? 12 : 0 })).concat(CHAOS_GEAR);
 
   // creature-equipment.js
   var CREATURE_GEAR = [
@@ -4550,7 +4666,7 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
     return Math.max(0.25, Math.min(1.3, c.equipmentRolls?.[(c.equipment || []).indexOf(id)]?.quality ?? 1));
   }
   function equipmentEffects(c) {
-    const out = { attack: 1, health: 1, cooldown: 1, speed: 1, healing: 1, poise: 0, shield: 0, armor: 0, regenStamina: 1 };
+    const out = { attack: 1, health: 1, cooldown: 1, speed: 1, healing: 1, poise: 0, shield: 0, armor: 0, regenStamina: 1, attackSpeed: 1, actionSpeed: 1, dashCooldown: 1 };
     for (const id of c.equipment || []) {
       const strength = equipmentStrength(c) * gearQuality(c, id), g = GEAR_BY_ID[id];
       if (!g) continue;
@@ -4567,6 +4683,9 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
         out.healing *= e.healing || 1;
         out.armor += e.armor || 0;
         out.regenStamina *= e.regenStamina || 1;
+        out.attackSpeed *= e.attackSpeed || 1;
+        out.actionSpeed *= e.actionSpeed || 1;
+        out.dashCooldown *= e.dashCooldown || 1;
       }
     }
     return out;
@@ -4595,6 +4714,10 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
     };
     const build = builds[c.relicBuild] || ["siege-maul", "stoneheart-plate", "living-battery", "runner-coils", "echo-prism"];
     c.equipment = build.slice(0, equipmentSlots(c));
+    if (Math.abs(seed) % 3 === 0) {
+      const pool = CREATURE_GEAR.filter((g) => g.slot === ({ Guardian: "Armor", Striker: "Weapon", Ranger: "Boots", Support: "Focus" }[c.role] || "Core"));
+      if (pool.length) c.equipment[c.equipment.length - 1] = pool[Math.abs(seed * 31) % pool.length].id;
+    }
     return c;
   }
   function claimEvolutionGear(run3, index, id) {
@@ -4878,7 +5001,7 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
     ["keen-shard", "Keen Shard", "flat", { crit: 0.07 }, "Connected hits gain seven percentage points of critical chance."]
   ];
   var icons2 = { route: "\u2316", hit: "\u2736", hurt: "\u25D2", dodge: "\u27B6", tick: "\u274B", fatal: "\u2739", cast: "\u2727", channel: "\u231B", heal: "\u271A", kill: "\u2691", death: "\u2620", flat: "\u25C6" };
-  var EXPEDITION_RELICS = rows3.map(([id, name, hook, effect, desc], i) => ({ id, name, hook, effect, desc, icon: icons2[hook], color: ["#a6c88a", "#89ccd7", "#d3a4e5", "#e2be7b", "#eea281"][i % 5], cost: 220 + i % 5 * 25, category: hook === "flat" ? "stat" : hook === "route" ? "expedition" : "combat" })).concat(AI_RELICS);
+  var EXPEDITION_RELICS = rows3.map(([id, name, hook, effect, desc], i) => ({ id, name, hook, effect, desc, icon: icons2[hook], color: ["#a6c88a", "#89ccd7", "#d3a4e5", "#e2be7b", "#eea281"][i % 5], cost: 220 + i % 5 * 25, category: hook === "flat" ? "stat" : hook === "route" ? "expedition" : "combat" })).concat(AI_RELICS, CHAOS_RELICS);
   var RUN_RELIC_BY_ID = Object.fromEntries(EXPEDITION_RELICS.map((d) => [d.id, d]));
   function enemyRelicPool() {
     return EXPEDITION_RELICS.filter((r) => !["route", "death", "fatal"].includes(r.hook));
@@ -4892,7 +5015,7 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
     return out;
   }
   function relicStatFactors(ids, strength = 1) {
-    const o = { hp: 1, atk: 1, speed: 1, cd: 1, healing: 1, poise: 0, shield: 0, crit: 0, regenStamina: 1, enemyHP: 1, channel: 1 };
+    const o = { hp: 1, atk: 1, speed: 1, cd: 1, healing: 1, poise: 0, shield: 0, crit: 0, regenStamina: 1, attackSpeed: 1, actionSpeed: 1, dashCooldown: 1, enemyHP: 1, channel: 1 };
     for (const id of new Set(ids)) {
       const r = RUN_RELIC_BY_ID[id];
       if (r?.hook === "flat") for (const [k, v] of Object.entries(scaledEffect(r.effect, strength))) ["poise", "shield", "crit"].includes(k) ? o[k] += v : o[k] *= v;
@@ -4920,6 +5043,7 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
     return (u.runCurios || []).filter((r) => r.hook === "hurt" && condition(b, u, t, r.effect.condition)).reduce((m, r) => m * (r.effect.reduction || 1), 1);
   }
   function status(t, key, value, u) {
+    if (t?.side === u.side && ["poison", "burn", "root", "slow", "bleed", "wither", "exposed"].includes(key)) return;
     if (!t || t.hp <= 0 || t.statusWard > 0 || ["root", "stagger"].includes(key) && t.nativeAction?.charged) return;
     t[key] = Math.max(t[key] || 0, value);
     if (key === "poison" || key === "burn") {
@@ -4933,7 +5057,7 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
     for (const r of u.runCurios || []) {
       if (r.hook !== event) continue;
       const e = r.effect, local = r.wearerOnly || r.id.startsWith("gear:"), t = data.target, st = (_a = u.curioState)[_b = r.id] ?? (_a[_b] = { count: 0, last: -100 });
-      if (!condition(b, u, t, e.condition) || e.uses && st.count >= e.uses || e.onlyCrit && !data.critical || e.physical && !["physical", "projectile"].includes(data.kind)) continue;
+      if (e.auto && !data.def?.auto || !condition(b, u, t, e.condition) || e.uses && st.count >= e.uses || e.onlyCrit && !data.critical || e.physical && !["physical", "projectile"].includes(data.kind)) continue;
       st.count++;
       if (e.every && st.count % e.every) continue;
       if (e.interval && b.time - st.last < e.interval) continue;
@@ -4966,6 +5090,7 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
         t.haste = 0;
         t.evade = 0;
       }
+      if (e.dodgeRefresh) u.dodgeCooldown = Math.max(0, u.dodgeCooldown - e.dodgeRefresh);
       if (e.refresh) for (const cd of Object.values(u.cooldowns)) cd.remaining = Math.max(0, cd.remaining - e.refresh);
       if (e.life && data.dealt) b.heal(u, data.dealt * e.life, u, null, false);
       if (e.heal) b.heal(u, e.heal, u, null, false);
@@ -7478,6 +7603,7 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
 
   // tactics.js
   var POLICIES = {
+    weakest: { name: "Weakest first", desc: "Prioritize the enemy with the fewest current hit points. Taunts and urgent defensive actions still apply." },
     nearest: { name: "Nearest enemy", desc: "Focus the closest enemy. Taunts still take priority." },
     adaptive: {
       name: "Adaptive",
@@ -7820,7 +7946,10 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
       profile2.chaosCleared = Math.max(profile2.chaosCleared || 0, chaosLevel(run3));
   }
   function starterBudget(profile2 = {}) {
-    return 2 + [1, 4, 8, 12, 16, 20].filter((tier) => (profile2.chaosCleared || 0) >= tier).length;
+    return 3 + Math.max(0, Math.min(20, Math.floor(Number(profile2.chaosCleared) || 0)));
+  }
+  function starterSlots(profile2 = {}) {
+    return (profile2.chaosCleared || 0) >= 3 ? 3 : 2;
   }
   function starterPoints(rarity, bond = 0) {
     const cost = { Common: 1, Uncommon: 2, Rare: 3, Epic: 4, Legendary: 6 }[rarity];
@@ -12341,7 +12470,7 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
     a.moving += ((u.actionLock > 0 ? 0 : Math.min(1, velocity / (a.run || 1))) - a.moving) * (1 - Math.exp(-dt * 12));
     a.hitTime = u.nativeAction?.charged ? 0 : Math.min(0.13, u.hitAnim || 0);
     a.stagger = u.stagger || 0;
-    a.roll = u.rollTime > 0 ? { kind: "dodge", elapsed: 0.25 - u.rollTime, duration: 0.25, dx: u.rollX, dy: u.rollY } : u.dashMotion ? { kind: "dash", elapsed: Math.max(0, u.dashDuration - u.dashAnim), duration: u.dashDuration, dx: u.dashMotion.x, dy: u.dashMotion.y } : null;
+    a.roll = u.rollTime > 0 ? { kind: u.dodgeStyle === "barrel" || u.dodgeStyle === "sidestep" ? "dash" : "dodge", elapsed: 0.25 - u.rollTime, duration: 0.25, dx: u.rollX, dy: u.rollY } : u.dashMotion ? { kind: "dash", elapsed: Math.max(0, u.dashDuration - u.dashAnim), duration: u.dashDuration, dx: u.dashMotion.x, dy: u.dashMotion.y } : null;
     if (u.stagger > 0 && !u.nativeAction?.charged) u.nativeAction = null;
     if (u.nativeAction) {
       u.nativeAction.elapsed += actionDt;
@@ -13635,11 +13764,16 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
       speed: speed2,
       dodge,
       range: s.range + (nativeEvolution(c).range || 0),
+      attackSpeed: curios.attackSpeed * gear.attackSpeed / ((s.role === "Guardian" ? 1.55 : 1.3) * linkedSupport(c, loadoutFor(s, c.level, c).auto).attackSpeed),
+      actionSpeed: curios.actionSpeed * gear.actionSpeed,
+      staminaRecharge: ((c.balanceVersion || 0) >= 17 ? { Striker: 26, Ranger: 22, Support: 20, Guardian: 15 }[s.role] || 20 : 20) * curios.regenStamina * gear.regenStamina,
+      dashCooldown: curios.dashCooldown * gear.dashCooldown,
+      dodgeStyle: (c.balanceVersion || 0) >= 17 ? dodgeStyle(s) : "roll",
       personal
     };
   }
   function makeRun(seed = Date.now(), ids = STARTERS, options = {}) {
-    const random = rng(seed), native = options.native ?? ids.every((id) => !!BY_ID[id].nativeRig), rulesVersion = options.rulesVersion ?? 17, teamSize = rulesVersion >= 15 ? Math.max(1, Math.min(2, ids.length)) : rulesVersion >= 12 ? 2 : 6, team = ids.slice(0, teamSize).map((id, i) => {
+    const random = rng(seed), native = options.native ?? ids.every((id) => !!BY_ID[id].nativeRig), rulesVersion = options.rulesVersion ?? 17, teamSize = rulesVersion >= 15 ? Math.max(1, Math.min(starterSlots(options), ids.length)) : rulesVersion >= 12 ? 2 : 6, team = ids.slice(0, teamSize).map((id, i) => {
       const c = creature(id);
       c.seat = i;
       c.starter = true;
@@ -13652,7 +13786,7 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
       team.push(rulesVersion >= 12 ? rollIndividual(c, seed + i * 1179, true) : c);
     }
     if (rulesVersion >= 15) {
-      const budget = Math.max(2, Math.min(8, options.starterBudget ?? 2));
+      const budget = Math.max(3, Math.min(23, options.starterBudget ?? starterBudget(options)));
       if (team.reduce((points, c) => points + starterPoints(BY_ID[c.id].rarity, options.starterBonds?.[c.id] || 0), 0) > budget) throw new Error("Starting companions exceed the starter point budget.");
     }
     if (rulesVersion >= 15) team.forEach((c, i) => {
@@ -13662,7 +13796,8 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
     const result = {
       seed,
       rulesVersion,
-      teamCapacity: rulesVersion >= 12 ? 2 : teamSize,
+      teamCapacity: rulesVersion >= 12 ? Math.max(teamSize, starterSlots(options)) : teamSize,
+      chaosCleared: Math.max(0, Math.min(20, options.chaosCleared || 0)),
       captureTools: rulesVersion >= 12 ? { scout: 5, runic: 0, astral: 0, mythic: 0 } : void 0,
       native,
       rosterMode: options.rosterMode || (ids.every((id) => !!BY_ID[id].nativeRig) ? "authored" : "collection"),
@@ -13695,7 +13830,13 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
       shop: null,
       complete: false
     };
+    const opening = EXPEDITION_RELICS[Math.floor(rng(seed + 807731)() * EXPEDITION_RELICS.length)];
+    if (rulesVersion >= 17) {
+      result.relics = [opening.id];
+      result.startingRelic = opening.id;
+    }
     const chaos = chaosLevel(result);
+    if (chaos >= 3) result.teamCapacity = Math.max(3, result.teamCapacity);
     if (chaos >= 3) result.gold = 130;
     if (chaos >= 7) {
       result.orbs = 4;
@@ -13801,9 +13942,9 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
     const novice = progressive(run3) && run3.planet === 0 && run3.depth < 3 && type === "battle", gentleComposition = novice && r() < 0.85;
     const scout = run3.route?.flat().find((n2) => n2.seed === seed), arch = ARCHETYPES.find((a) => a.id === scout?.archetype) || ARCHETYPES[Math.floor(r() * ARCHETYPES.length)];
     const rarityRank = { Common: 0, Uncommon: 1, Rare: 2, Epic: 3, Legendary: 4 };
+    const encounterPool = (run3.rulesVersion || 0) >= 17 ? SPECIES.filter((s) => !s.boss).map((s) => s.id) : run3.native && run3.rosterMode !== "collection" ? nativePool(run3, type) : p.pool.filter((id) => !BY_ID[id].nativeRig);
     const maxRank = run3.planet === 0 && run3.depth < 3 ? 1 : run3.planet === 0 ? 2 : run3.planet === 1 ? 3 : 4;
-    const encounterPool = run3.native && run3.rosterMode !== "collection" ? nativePool(run3, type) : p.pool.filter((id) => !BY_ID[id].nativeRig);
-    const pool = encounterPool.filter((id) => rarityRank[BY_ID[id].rarity] <= maxRank);
+    const pool = (run3.rulesVersion || 0) >= 17 ? encounterPool : encounterPool.filter((id) => rarityRank[BY_ID[id].rarity] <= maxRank);
     const weights = {
       Common: 5,
       Uncommon: 4,
@@ -13812,9 +13953,14 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
       Legendary: 0.4
     };
     const chooseWild = (available) => {
-      let roll = r() * available.reduce((sum, id) => sum + weights[BY_ID[id].rarity], 0);
+      if ((run3.rulesVersion || 0) >= 17 && novice && r() < 0.45) available = pool;
+      if ((run3.rulesVersion || 0) >= 17) {
+        const fresh = available.filter((id) => !foes2.some((c) => c.id === id));
+        if (fresh.length) available = fresh;
+      }
+      let roll = r() * available.reduce((sum, id) => sum + weights[BY_ID[id].rarity] * (novice && rarityRank[BY_ID[id].rarity] > 1 ? 0.32 : 1), 0);
       for (const id of available) {
-        roll -= weights[BY_ID[id].rarity];
+        roll -= weights[BY_ID[id].rarity] * (novice && rarityRank[BY_ID[id].rarity] > 1 ? 0.32 : 1);
         if (roll <= 0) return id;
       }
       return available.at(-1);
@@ -13839,6 +13985,7 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
         }
       }
       c.balanceVersion = run3.rulesVersion;
+      c.role = BY_ID[c.id].role;
       c.archetype = arch.id;
       if (run3.native) c.terrain = terrainFor(run3, seed);
       c.elite = type === "elite";
@@ -13877,31 +14024,6 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
     const healthFactor = easy ? hp <= 0.35 ? 1 + (0.25 - hp) * 0.6 : 0.94 * Math.pow((1 - hp) / 0.65, 1.8) : Math.pow((1 - hp) / 0.75, 1.8);
     const bonus = ((run3.relics.includes("lens") ? 0.06 : 0) + (run3.encounterType === "capture" ? 0.04 : 0) + (preparation.status ? 0.04 : 0) + (hp <= 0.3 ? mods.captureBonus || 0 : 0) + (preparation.status ? mods.statusCapture || 0 : 0)) * Math.min(1, (1 - hp) / 0.75);
     return Math.min(easy ? 0.99 : rarity === "Legendary" ? 0.3 : 0.7, (baseline * healthFactor * tier.mult + bonus) * (preparation.mode === "swift" ? 0.94 : 1));
-  }
-  function awardCapture(run3, c) {
-    const caught = creature(c.id, Math.max(1, c.level));
-    if ((run3.rulesVersion || 0) >= 15) caught.balanceVersion = run3.rulesVersion;
-    if (progressive(run3)) {
-      caught.genes = c.genes;
-      caught.nature = c.nature;
-      caught.boundRelics = [...c.enemyRelics || c.boundRelics || []];
-      caught.equipment = [...c.equipment || []];
-      caught.equipmentQuality = 1;
-      caught.equipmentRolls = caught.equipment.map((id, i) => ({ ...c.equipmentRolls?.[i], id, quality: (c.equipmentRolls?.[i]?.quality ?? 1) * (c.equipmentQuality ?? 1) }));
-    }
-    caught.evolution = evolutionStage(c);
-    caught.evolutionPath = caught.evolution ? c.evolutionPath : null;
-    run3.bench.push(caught);
-    if (progressive(run3)) {
-      const mod = routeModifiers(run3);
-      run3.gold += mod.captureGold || 0;
-      if (mod.captureXP) run3.team.forEach((u) => gainXP(u, mod.captureXP));
-    }
-    if (run3.relics.includes("hatchery")) {
-      run3.gold += 20 * itemStrength2(run3);
-      run3.team.forEach((u) => gainXP(u, 35 * itemStrength2(run3)));
-    }
-    return caught;
   }
   function buyLegendaryLure(run3) {
     const cost = shopPrice(run3, 90);
@@ -14404,7 +14526,7 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
         const actualY = deployment2 ? [155, 275, 395][deployment2.row] + (index >= 3 ? 24 : -15) : y;
         const cooldowns = Object.fromEntries(
           loadout.active.map((id, i) => {
-            const total = skillDefinition(c, id).cd * st.cdFactor * linkedSupport(c, id).cooldown;
+            const total = skillDefinition(c, id).cd * st.cdFactor * linkedSupport(c, id).cooldown * (["dash", "charge"].includes(skillDefinition(c, id).kind) ? st.dashCooldown : 1);
             return [
               id,
               { total, remaining: 1.6 + i * 1.8 + this.random() * 3, casts: 0 }
@@ -14555,6 +14677,9 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
       const taunters = enemies.filter((t) => t.taunt > 0 && distance2(t, u) < 250);
       if (taunters.length)
         return taunters.sort((a, b) => distance2(a, u) - distance2(b, u))[0];
+      const focus = u.side === 0 ? enemies.find((e) => e.uid === this.focusUid && this.time < this.focusUntil) : null;
+      if (focus && distance2(u, focus) <= Math.max(300, u.range * 1.5)) return focus;
+      if (u.side === 0 && this.run.stance === "weakest" || u.policy === "weakest") return enemies.sort((a, b) => a.hp - b.hp || distance2(a, u) - distance2(b, u))[0];
       if (u.policy === "nearest") return enemies.sort((a, b) => distance2(a, u) - distance2(b, u))[0];
       const tactical = tacticalTarget(this, u, enemies);
       if (tactical) return tactical;
@@ -14586,6 +14711,15 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
           (a, b) => a.hp / a.maxHp + distance2(a, u) / 600 - (b.hp / b.maxHp + distance2(b, u) / 600)
         )[0];
       return enemies.sort((a, b) => distance2(a, u) - distance2(b, u))[0];
+    }
+    focusEnemy(uid) {
+      const enemy = this.living(1).find((u) => u.uid === uid);
+      if (!enemy || this.done) return false;
+      this.focusUid = uid;
+      this.focusUntil = this.time + 8;
+      this.living(0).forEach((u) => u.targetTimer = 0);
+      this.effect(enemy.x, enemy.y - 55, "FOCUS \xB7 8s", "#f4cf7e");
+      return true;
     }
     get enrage() {
       return enrageAt((this.run.rulesVersion || 0) >= 15 ? this.time : 0);
@@ -14895,6 +15029,7 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
       );
       this.burst(target.x, target.y - 10, color, crit ? 11 : 4, crit ? 110 : 60);
       this.fx("impact", target.x, target.y - 8, color, { r: crit ? 35 : 23, victimUid: target.uid });
+      if (dealt > 0 && this.run.rulesVersion >= 17 && this.visuals && !this.reducedMotion) this.hitPause = Math.max(this.hitPause || 0, crit ? 0.055 : 0.025);
       if (crit || !def.auto) this.shake = Math.min(4, this.shake + 1.1);
       this.audioEvents.push({
         type: crit ? "crit" : def.auto ? "hit" : "skill",
@@ -15398,8 +15533,24 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
       u.rollTime = 0.25;
       u.dodgeAnim = 0.32;
       u.dodgeLock = 0.28;
-      u.dodgeCooldown = Math.max(1.5, 3.1 - u.dodge * 4 - (u.evade > 0 ? 1 : 0));
+      u.dodgeCooldown = (this.run.rulesVersion || 0) >= 17 ? Math.max(0.45, (3.1 - u.dodge * 4 - (u.evade > 0 ? 1 : 0)) * u.dashCooldown) : Math.max(1.5, 3.1 - u.dodge * 4 - (u.evade > 0 ? 1 : 0));
       u.stamina -= 30;
+      if (u.dodgeStyle === "blink") {
+        const from = { x: u.x, y: u.y }, length2 = 65;
+        const to = { x: u.x + direction.x * length2, y: u.y + direction.y * length2 };
+        if (!this.native || !firstTerrainHit(u, to, this.terrain, u.radius)) {
+          u.x = to.x;
+          u.y = to.y;
+          confineBody(u, this.bounds);
+        }
+        u.rollTime = 0;
+        u.velocityX = u.velocityY = 0;
+        this.fx("blink", from.x, from.y, "#cdb0ff", { r: 40, ttl: 0.45, max: 0.45 });
+        this.fx("blink", u.x, u.y, "#cdb0ff", { r: 40, ttl: 0.45, max: 0.45 });
+      } else if (u.dodgeStyle === "barrel") {
+        u.barrelHits = /* @__PURE__ */ new Set();
+        u.shield += u.maxHp * 0.025;
+      }
       u.rollCount++;
       relicEvent(this, u, "dodge");
       this.metrics.rolls++;
@@ -15912,7 +16063,7 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
       const target = this.units.find((u) => u.uid === uid && u.side === 1 && !u.boss && u.hp > 0 && !u.captured);
       if (!target) return { ok: false, reason: "Choose a living, non-boss opponent." };
       if (target.hp >= target.maxHp) return { ok: false, reason: "Weaken this opponent first. Full-health capture chance is 0%." };
-      if (this.run.bench.length >= 12) return { ok: false, reason: "Your reserves are full." };
+      if ((this.run.rulesVersion || 0) < 17 && this.run.bench.length >= 12) return { ok: false, reason: "Your reserves are full." };
       if (!CAPTURERS[tool] || !consumeCapturer(this.run, tool)) return { ok: false, reason: "That capturer is unavailable." };
       this.autoRetryAt = null;
       this.autoRetryBlocked = null;
@@ -15976,7 +16127,7 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
       };
       const chance = this.savedCaptureResult?.chance ?? captureChance(this.run, target), success = this.savedCaptureResult?.success ?? this.random() < chance;
       this.captureSettled = true;
-      if (progressive(this.run)) this.captureScene = { uid: target.uid, elapsed: 0, duration: 1.8, success, chance, tool: this.capturePlan.tool || "scout" };
+      if (progressive(this.run)) this.captureScene = { uid: target.uid, elapsed: 0, duration: (this.run.rulesVersion || 0) >= 17 ? 2.4 : 1.8, success, chance, tool: this.capturePlan.tool || "scout" };
       this.captureResult = {
         tool: this.capturePlan.tool || "scout",
         success,
@@ -16010,8 +16161,43 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
         success ? "#aee8de" : "#eeaa8b"
       );
       if (success) {
-        target.hp = 0;
-        target.captured = true;
+        if ((this.run.rulesVersion || 0) < 17) {
+          target.hp = 0;
+          target.captured = true;
+        } else {
+          target.roundAlly = true;
+          target.originalSide = 1;
+          target.side = 0;
+          target.captured = false;
+          target.hp = Math.max(target.hp, target.maxHp * 0.45);
+          target.burn = target.poison = target.bleed = target.root = target.slow = target.wither = 0;
+          target.targetMemory = null;
+          target.targetTimer = 0;
+          target.nativeAction = null;
+          target.dashMotion = null;
+          target.actionLock = 0;
+          target.actionId = null;
+          target.attackTimer = 0.15;
+          if (target.nativeActor) target.nativeActor.side = 0;
+          for (const a of this.strikes) if (a.source === target) a.cancelled = true;
+          this.queue = this.queue.filter((q) => q.source !== target && q.target !== target);
+          this.projectiles = this.projectiles.filter((p) => p.source !== target);
+          const converted = stats(target, this.living(0), this.run.relics);
+          const healthFraction = target.hp / target.maxHp;
+          target.maxHp = converted.hp;
+          target.hp = converted.hp * healthFraction;
+          for (const key of ["atk", "armor", "attackSpeed", "actionSpeed", "staminaRecharge", "dashCooldown", "speed", "dodge", "cdFactor"]) target[key] = converted[key];
+          for (const [id, cd] of Object.entries(target.cooldowns)) {
+            const total = skillDefinition(target, id).cd * converted.cdFactor * linkedSupport(target, id).cooldown * (["dash", "charge"].includes(skillDefinition(target, id).kind) ? converted.dashCooldown : 1);
+            cd.remaining *= total / cd.total;
+            cd.total = total;
+          }
+          compileRelics(this, target);
+          this.living(1).forEach((u) => {
+            u.targetMemory = null;
+            u.targetTimer = 0;
+          });
+        }
         this.metrics.captures++;
       }
       this.say(
@@ -16062,6 +16248,10 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
     }
     step(dt) {
       if (!Number.isFinite(dt) || dt <= 0) return;
+      if (this.hitPause > 0 && this.visuals && !this.reducedMotion) {
+        this.hitPause = Math.max(0, this.hitPause - dt);
+        return;
+      }
       if (this.captureScene) {
         this.captureScene.elapsed += dt;
         if (this.captureScene.elapsed >= this.captureScene.duration) {
@@ -16162,7 +16352,7 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
           "stagger",
           "bleed"
         ])
-          u[k] = Math.max(0, u[k] - (["attackAnim", "castAnim", "actionLock", "dodgeCooldown"].includes(k) ? actionDt : dt));
+          u[k] = Math.max(0, u[k] - (["attackAnim", "castAnim", "actionLock"].includes(k) ? actionDt * u.actionSpeed : k === "dodgeCooldown" ? actionDt : dt));
         u.statusWard = Math.max(0, (u.statusWard || 0) - dt);
         u.armorBuffTime = Math.max(0, (u.armorBuffTime || 0) - dt);
         if (u.statusWard > 0) for (const ailment of ["burn", "poison", "bleed", "root", "slow", "stagger", "wither", "exposed", "weakened"]) u[ailment] = 0;
@@ -16203,7 +16393,7 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
         } else if (u.nativeGetup > 0) u.nativeGetup = Math.max(0, u.nativeGetup - dt);
         u.stamina = Math.min(
           100,
-          u.stamina + dt * (u.actionLock > 0 || u.rollTime > 0 ? 9 : 20) * (u.curioStats?.regenStamina || 1) * (equipmentEffects(u).regenStamina || 1)
+          u.stamina + dt * u.staminaRecharge * (u.actionLock > 0 || u.rollTime > 0 ? 0.45 : 1)
         );
         u.poise = Math.max(0, u.poise - dt * 12);
         relicTick(this, u, dt);
@@ -16216,14 +16406,14 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
         const syn = u.side === 0 ? this.teamSyn : this.foeSyn;
         if (syn.grove >= 2 && u.hp > 0)
           this.heal(u, u.maxHp * 0.01 * dt, u, null, false);
-        u.attackTimer -= actionDt * (u.haste > 0 ? 1.4 : 1);
+        u.attackTimer -= actionDt * u.actionSpeed * (u.haste > 0 ? 1.4 : 1);
         for (const cooldown of Object.values(u.cooldowns))
-          cooldown.remaining -= actionDt;
+          cooldown.remaining -= actionDt * u.actionSpeed;
         if (u.boss) this.bossMechanic(u, actionDt);
         const forced = this.living(1 - u.side).some(
           (e) => e.taunt > 0 && distance2(e, u) < 250
         );
-        if (u.targetTimer <= 0 || !u.targetMemory || u.targetMemory.hp <= 0 || forced) {
+        if (u.targetTimer <= 0 || !u.targetMemory || u.targetMemory.hp <= 0 || u.targetMemory.side === u.side || forced) {
           u.targetMemory = this.target(u);
           u.targetTimer = 0.45;
         }
@@ -16254,11 +16444,11 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
           vx = (u.x - t.x) / (dist4 || 1);
           vy = (u.y - t.y) / (dist4 || 1);
         }
-        const screen = this.living(u.side).find(
+        const screen2 = this.living(u.side).find(
           (a) => a !== u && BY_ID[a.id].role === "Guardian" && distance2(a, t) < 90
         );
-        if (screen && sp.role === "Striker" && dist4 < 160 && dist4 > ((this.run.rulesVersion || 0) >= 15 ? u.range + Math.max(7, u.radius * 2) : u.range * 0.7) && !hazard) {
-          const dx = t.x - screen.x, dy = t.y - screen.y, len = Math.hypot(dx, dy) || 1;
+        if (screen2 && sp.role === "Striker" && dist4 < 160 && dist4 > ((this.run.rulesVersion || 0) >= 15 ? u.range + Math.max(7, u.radius * 2) : u.range * 0.7) && !hazard) {
+          const dx = t.x - screen2.x, dy = t.y - screen2.y, len = Math.hypot(dx, dy) || 1;
           const direction = u.y < t.y ? -1 : 1;
           const flankOffset = (this.run.rulesVersion || 0) >= 15 ? Math.max(10, t.radius * 2 + u.radius) : 65;
           const point3 = {
@@ -16315,11 +16505,18 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
           }
           if (dash.remaining <= 0) u.dashMotion = null;
         } else if (u.rollTime > 0 && !rooted && u.stagger <= 0) {
-          const speed2 = (u.mass > 1.8 || u.balanceVersion >= 15 && u.role === "Guardian" ? 225 : 300) * this.tuning.movementSpeed / 100;
+          const speed2 = ((this.run.rulesVersion || 0) >= 17 ? { barrel: 350, sidestep: 370, roll: 300 }[u.dodgeStyle] || 300 : u.mass > 1.8 || u.balanceVersion >= 15 && u.role === "Guardian" ? 225 : 300) * this.tuning.movementSpeed / 100;
           u.velocityX = u.rollX * speed2;
           u.velocityY = u.rollY * speed2;
           u.x += u.velocityX * dt;
           u.y += u.velocityY * dt;
+          if (u.dodgeStyle === "barrel") for (const enemy of this.living(1 - u.side)) {
+            if (distance2(u, enemy) < u.radius + enemy.radius + 14 && !u.barrelHits?.has(enemy.uid)) {
+              u.barrelHits ?? (u.barrelHits = /* @__PURE__ */ new Set());
+              u.barrelHits.add(enemy.uid);
+              this.hit(enemy, u.atk * 0.35, u, u.loadout.auto, 1, false, "physical");
+            }
+          }
           u.rollTime = Math.max(0, u.rollTime - dt);
         } else {
           if (rooted) {
@@ -16383,7 +16580,7 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
         u.skillTimer = u.cooldowns[u.id].remaining;
         u.cd = u.cooldowns[u.id].total;
         if (u.attackTimer <= 0 && u.actionLock <= 0 && u.stagger <= 0 && !u.nativeKnockdown && !u.nativeGetup && u.stamina >= (u.aiEffects?.reserveStamina ? 38 : 8) && dist4 <= u.range + ((this.run.rulesVersion || 0) >= 15 && sp.range < 100 ? 12 * (u.nativeScale || 1) : 12) && (!this.native || !u.nativeActor || Math.abs(Math.atan2(Math.sin(Math.atan2(t.y - u.y, t.x - u.x) - u.facing), Math.cos(Math.atan2(t.y - u.y, t.x - u.x) - u.facing))) < 0.5) && u.dodgeLock <= 0 && u.hp > 0) {
-          u.attackTimer = (sp.role === "Guardian" ? 1.55 : 1.3) * linkedSupport(u, u.loadout.auto).attackSpeed;
+          u.attackTimer = 1 / u.attackSpeed;
           u.stamina -= 8;
           this.cast(u, u.loadout.auto, t);
         }
@@ -16391,11 +16588,11 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
       this.metrics.collisions += separateBodies(this.units, this.bounds);
       for (const u of this.units) {
         if (this.native) confineTerrain(u, this.terrain);
-        if (u.nativeActor) advanceNative(u, dt, this.time, this.visuals, actionDt);
+        if (u.nativeActor) advanceNative(u, dt, this.time, this.visuals, actionDt * u.actionSpeed);
       }
       for (const strike of this.strikes) {
         const previous = strike.remaining;
-        strike.remaining -= actionDt;
+        strike.remaining -= actionDt * strike.source.actionSpeed;
         if (strike.nativeMelee) this.nativeContact(strike, 1 - previous / strike.total, 1 - strike.remaining / strike.total);
         if (strike.remaining <= 0) this.resolveStrike(strike);
       }
@@ -16403,7 +16600,7 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
         (s) => s.remaining > 0 && !s.cancelled && s.source.hp > 0
       );
       for (const q of this.queue) {
-        q.ttl -= actionDt;
+        q.ttl -= actionDt * (q.source.actionSpeed || 1);
         if (q.ttl <= 0 && q.source.hp > 0 && !this.cancelledAttacks.has(q.actionKey)) {
           if (q.relicEcho) {
             this.cast(q.source, q.skillId, q.target, q.scale, true, true);
@@ -16519,7 +16716,7 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
       this.attemptCapture();
       if (this.audioEvents.length > 20)
         this.audioEvents = this.audioEvents.slice(-20);
-      if (!this.living(0).length || !this.living(1).length || this.time >= 90) {
+      if (!this.captureScene && (!this.living(0).length || !this.living(1).length || this.time >= 90)) {
         if (this.capturePlan && !this.captureSettled) {
           const target = this.units.find((u) => u.uid === this.capturePlan.uid);
           this.captureSettled = true;
@@ -16539,7 +16736,7 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
         }
         this.done = true;
         const a = this.living(0), b = this.living(1);
-        this.winner = !a.length ? 1 : !b.length ? 0 : a.reduce((s, u) => s + u.hp / u.maxHp, 0) / this.run.team.length >= b.reduce((s, u) => s + u.hp / u.maxHp, 0) / (this.units.length - this.run.team.length) ? 0 : 1;
+        this.winner = !a.length ? 1 : !b.length ? 0 : a.reduce((s, u) => s + u.hp / u.maxHp, 0) / this.units.filter((u) => u.side === 0).length >= b.reduce((s, u) => s + u.hp / u.maxHp, 0) / this.units.filter((u) => u.side === 1).length ? 0 : 1;
         this.say(
           this.time >= 90 ? "Time limit reached. Surviving health decides the encounter." : this.winner === 0 ? "The expedition is victorious." : "The expedition retreats."
         );
@@ -16553,7 +16750,21 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
   // expedition-rules.js
   var progressive = (run3) => (run3.rulesVersion || 0) >= 12;
   var expeditionDepth = (run3) => (run3.rulesVersion || 0) >= 15;
-  var capacity = (run3) => progressive(run3) ? run3.teamCapacity || 2 : 6;
+  var capacity = (run3) => Math.max(1, (progressive(run3) ? run3.teamCapacity || 2 : 6) - (run3.legendaryPact ? 1 : 0));
+  function chooseLegendaryPact(run3, id) {
+    if (run3.legendaryPact || !run3.relics?.includes("sovereigns-seat") || BY_ID[id]?.rarity !== "Legendary") return false;
+    const overflow = Math.max(0, run3.team.length - (capacity(run3) - 1));
+    if (capacity(run3) <= 1 || (run3.bench?.length || 0) + overflow + 1 > 12) return false;
+    run3.legendaryPact = id;
+    run3.bench ?? (run3.bench = []);
+    while (run3.team.length > capacity(run3)) run3.bench.push(run3.team.pop());
+    run3.team.forEach((c, i) => c.seat = i);
+    const chosen = creature(id, Math.max(1, 1 + run3.planet * 2));
+    chosen.balanceVersion = run3.rulesVersion;
+    initializeCompanion(run3, chosen);
+    run3.bench.push(chosen);
+    return chosen;
+  }
   var CAPTURERS = { scout: { name: "Scout Prism", icon: "\u25C7", mult: 1, cost: 35, color: "#9dc4b0" }, runic: { name: "Runic Cage", icon: "\u2B21", mult: 1.3, cost: 75, color: "#8fcddd" }, astral: { name: "Astral Lattice", icon: "\u2727", mult: 1.6, cost: 130, color: "#bb9fe2" }, mythic: { name: "Mythic Snare", icon: "\u2739", mult: 1.9, cost: 210, color: "#efcc7d" } };
   var natures = [{ name: "Balanced", hp: 1, atk: 1, speed: 1, cd: 1 }, { name: "Titan", hp: 1.3, atk: 0.84, speed: 0.88, cd: 1.05 }, { name: "Feral", hp: 0.82, atk: 1.3, speed: 1.04, cd: 1.07 }, { name: "Quickling", hp: 0.88, atk: 0.9, speed: 1.27, cd: 0.9 }, { name: "Savant", hp: 0.9, atk: 0.87, speed: 0.95, cd: 0.75 }, { name: "Stalwart", hp: 1.16, atk: 1.06, speed: 0.76, cd: 1.08 }];
   function rollIndividual(c, seed, starter = false) {
@@ -16566,14 +16777,14 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
   function unlockSlots(run3) {
     if (!progressive(run3)) return 0;
     const before = capacity(run3), earned = expeditionDepth(run3) ? 2 + [2, 5, 8, 11].filter((wins) => run3.wins >= wins).length : Math.min(6, 2 + Math.floor(run3.wins / 3));
-    run3.teamCapacity = Math.max(before, earned);
+    run3.teamCapacity = Math.max(run3.teamCapacity || 2, earned, (run3.chaosCleared || 0) >= 3 ? 3 : 2);
     return run3.teamCapacity - before;
   }
   function permitCost(run3) {
     return Math.ceil((90 + (capacity(run3) - 2) * 45) * (1 - (routeModifiers(run3).permitDiscount || 0)));
   }
   function buyPermit(run3) {
-    if (!progressive(run3) || run3.wins < 3 || capacity(run3) >= 6 || run3.gold < permitCost(run3)) return false;
+    if (!progressive(run3) || run3.wins < 3 || (run3.teamCapacity || 2) >= 6 || run3.gold < permitCost(run3)) return false;
     run3.gold -= permitCost(run3);
     run3.teamCapacity++;
     return true;
@@ -16681,8 +16892,11 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
     run3.defeatLedger ?? (run3.defeatLedger = {});
     if (run3.defeatLedger[key]) return run3.defeatLedger[key];
     if (!run3.team.length) return run3.defeatLedger[key] = { lost: false, reason: "No deployed companion remains" };
-    const r = rng(seed + 731947), starters = run3.team.filter((c2) => c2.starter), pool = starters.length ? starters : run3.team, c = pool[Math.floor(r() * pool.length)], seat = c.seat ?? run3.team.indexOf(c), items = [...c.equipment || [], ...c.boundRelics || [], ...(c.relics || []).map((g) => g.id)];
-    const relic = run3.relics.length ? run3.relics.splice(Math.floor(r() * run3.relics.length), 1)[0] : run3.inventory?.length ? run3.inventory.splice(Math.floor(r() * run3.inventory.length), 1)[0].id : null;
+    const r = rng(seed + 731947), starters = run3.team.filter((c2) => c2.starter), pool = starters.length ? starters : run3.team, c = pool[Math.floor(r() * pool.length)], seat = c.seat ?? run3.team.indexOf(c), items = [...c.equipment || []];
+    const relic = null;
+    run3.inventory ?? (run3.inventory = []);
+    run3.inventory.push(...c.relics || []);
+    for (const id of c.boundRelics || []) if (!run3.relics.includes(id)) run3.relics.push(id);
     const result = { lost: true, id: c.id, uid: c.uid, name: BY_ID[c.id].name, level: c.level, evolution: c.evolution, evolutionPath: c.evolutionPath, rarity: BY_ID[c.id].rarity, risk: 1, key, seat, destroyedItems: items, destroyedRelic: relic };
     run3.team = run3.team.filter((u) => u.uid !== c.uid);
     run3.fallen.push({ ...result, planet: run3.planet, depth: run3.depth });
@@ -16690,7 +16904,7 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
   }
   function makeLoot(run3, type, foes2, seed) {
     const r = rng(seed + 155171), drops = [], mods = routeModifiers(run3), tiers2 = Object.keys(CAPTURERS);
-    for (const [i, c] of foes2.filter((c2) => !c2.captured && (c2.maxHp === void 0 || c2.hp <= 0)).entries()) {
+    for (const [i, c] of foes2.filter((c2) => !c2.captured && !c2.roundAlly && (c2.maxHp === void 0 || c2.hp <= 0)).entries()) {
       if (c.boss || type === "elite" || r() < 0.33) {
         const tier = c.boss ? run3.planet > 0 ? "mythic" : "astral" : type === "elite" ? run3.planet ? "astral" : "runic" : "scout";
         drops.push({ id: `${seed}:tool:${i}`, kind: "capturer", tier: tiers2[Math.min(3, tiers2.indexOf(tier) + (type === "elite" || type === "boss" ? mods.toolUpgrade || 0 : 0))], x: c.x, y: c.y });
@@ -16993,6 +17207,121 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
     }
   };
 
+  // combat-feedback.js
+  var screen = (x, y) => ({ x, y: y * 0.58 + 75 });
+  function paintActionFeedback(c, battle2, height = 1) {
+    const intensity = Math.min(1.5, (battle2.tuning?.effectIntensity ?? 100) / 100);
+    if (!intensity) return;
+    c.save();
+    for (const strike of battle2.strikes) {
+      if (!strike.nativeMelee || strike.cancelled || strike.source.hp <= 0) continue;
+      const phase2 = Math.min(1, 1 - strike.remaining / strike.total);
+      if (phase2 < 0.48) continue;
+      c.strokeStyle = strike.charged ? "#d0faff" : strike.heavy ? "#ffc28d" : "#fff3ca";
+      c.lineCap = "round";
+      for (let ribbon = 0; ribbon < 3; ribbon++) {
+        c.globalAlpha = (0.7 - ribbon * 0.2) * intensity;
+        c.lineWidth = 3 - ribbon * 0.7;
+        c.beginPath();
+        const end = phase2 - ribbon * 0.022, start = Math.max(0.48, end - (battle2.reducedMotion ? 0.035 : 0.14));
+        for (let i = 0; i <= 9; i++) {
+          const blade = nativeBladePoint(strike.source, strike, start + (end - start) * i / 9), p = screen(blade.x, blade.y);
+          i ? c.lineTo(p.x, p.y - blade.z * height) : c.moveTo(p.x, p.y - blade.z * height);
+        }
+        c.stroke();
+      }
+    }
+    for (const u of battle2.living(0).concat(battle2.living(1))) {
+      if (u.roundAlly) {
+        const p = screen(u.x, u.y);
+        c.globalAlpha = 0.8;
+        c.strokeStyle = "#9ff4e5";
+        c.lineWidth = 2;
+        c.beginPath();
+        c.ellipse(p.x, p.y, 22, 10, 0, 0, Math.PI * 2);
+        c.stroke();
+        c.fillStyle = "#baffed";
+        c.font = "bold 10px sans-serif";
+        c.textAlign = "center";
+        c.fillText("ROUND ALLY", p.x, p.y + 33);
+      }
+      const action = u.nativeAction;
+      if (action && !action.released && (action.casting || u.range > 100 && !["elf", "fox"].includes(u.nativeActor?.id))) {
+        const muzzle = nativeMuzzle(u, u.targetMemory || { x: u.x + u.face * 100, y: u.y }), p = screen(muzzle.x, muzzle.y), charge = Math.min(1, action.elapsed / action.windup), r = 5 + charge * 11;
+        c.globalAlpha = (0.45 + 0.5 * charge) * intensity;
+        c.strokeStyle = "#d8bbff";
+        c.fillStyle = "#fff6df";
+        c.lineWidth = 2;
+        c.beginPath();
+        c.arc(p.x, p.y - muzzle.z * height, r, 0, Math.PI * 2);
+        c.stroke();
+        for (let i = 0; i < 5; i++) {
+          const a = i * Math.PI * 0.4 + (battle2.reducedMotion ? 0 : battle2.time * 5);
+          c.fillRect(p.x + Math.cos(a) * r - 1, p.y - muzzle.z * height + Math.sin(a) * r - 1, 3, 3);
+        }
+        c.fillRect(p.x - 2, p.y - muzzle.z * height - 2, 5, 5);
+      }
+      if (u.rollTime > 0 && u.dodgeStyle !== "blink") {
+        const p = screen(u.x, u.y);
+        c.strokeStyle = u.dodgeStyle === "barrel" ? "#f7c68b" : "#afe7de";
+        c.lineWidth = u.dodgeStyle === "barrel" ? 4 : 2;
+        c.globalAlpha = 0.6 * intensity;
+        for (let i = 1; i <= 3; i++) {
+          c.beginPath();
+          c.moveTo(p.x - u.rollX * i * 12, p.y - u.rollY * i * 7 - 8);
+          c.lineTo(p.x - u.rollX * (i * 12 + 10), p.y - u.rollY * (i * 7 + 6) - 8);
+          c.stroke();
+        }
+      }
+    }
+    const focus = battle2.living(1).find((u) => u.uid === battle2.focusUid && battle2.time < battle2.focusUntil);
+    if (focus) {
+      const p = screen(focus.x, focus.y);
+      c.globalAlpha = 0.9;
+      c.strokeStyle = "#ffdb87";
+      c.lineWidth = 2;
+      const r = 25 + (battle2.reducedMotion ? 0 : Math.sin(battle2.time * 5) * 3);
+      c.beginPath();
+      c.ellipse(p.x, p.y, r, r * 0.58, 0, 0, Math.PI * 2);
+      c.stroke();
+      c.fillStyle = "#ffe4a4";
+      c.font = "bold 11px sans-serif";
+      c.textAlign = "center";
+      c.fillText("FOCUS " + Math.ceil(battle2.focusUntil - battle2.time) + "s", p.x, p.y - nativeBodyHeight(focus) * height - 25);
+    }
+    c.restore();
+  }
+  function paintImpact(c, e, p, z = 40) {
+    const progress = 1 - e.ttl / (e.max || 0.45), r = (e.r || 22) * (0.25 + progress * 0.9);
+    c.translate(p.x, p.y - z);
+    c.rotate(e.angle || 0);
+    c.lineWidth = Math.max(1, 3 * (1 - progress));
+    c.beginPath();
+    c.arc(0, 0, r, 0, Math.PI * 2);
+    c.stroke();
+    for (let i = 0; i < 8; i++) {
+      const a = i * Math.PI / 4;
+      c.beginPath();
+      c.moveTo(Math.cos(a) * r * 0.6, Math.sin(a) * r * 0.6);
+      c.lineTo(Math.cos(a) * (r + 8), Math.sin(a) * (r + 8));
+      c.stroke();
+    }
+    if (progress < 0.35) {
+      c.fillStyle = "#fff7db";
+      c.beginPath();
+      c.moveTo(-9, 0);
+      c.lineTo(-2, -2);
+      c.lineTo(0, -10);
+      c.lineTo(2, -2);
+      c.lineTo(9, 0);
+      c.lineTo(2, 2);
+      c.lineTo(0, 10);
+      c.lineTo(-2, 2);
+      c.closePath();
+      c.fill();
+    }
+  }
+
   // native-poses.js
   var NATIVE_POSES = ["idle", "walk", "run", "sprint", "turn", "stop", "attack", "slash", "charge", "cast", "dash", "dodge", "hit", "stagger", "knockdown", "getup", "death"];
   function nativePoseRig(spec, c, state = "idle", phase2 = 0.25, height = 1) {
@@ -17183,8 +17512,10 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
         c.fillRect(p.x - width / 2, bar - 4, width * Math.min(1, u.shield / u.maxHp), 2);
       }
       if (battle2) {
-        c.fillStyle = "#e5bf78";
-        c.fillRect(p.x - width / 2, bar + 8, width * u.stamina / 100, 2);
+        c.fillStyle = "#14251e";
+        c.fillRect(p.x - width / 2 - 1, bar + 7, width + 2, 6);
+        c.fillStyle = u.stamina < 30 ? "#e69367" : "#e5bf78";
+        c.fillRect(p.x - width / 2, bar + 8, width * u.stamina / 100, 4);
         c.fillStyle = "#e5a47d";
         c.fillRect(p.x - width / 2, bar + 16, width * Math.min(1, (u.poise || 0) / (u.maxPoise || 1)), 2);
         const a = u.nativeAction;
@@ -17226,6 +17557,7 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
       }
       if (battle2?.capturePlan?.uid === u.uid && !battle2.captureSettled) ring(c, u.x, u.y, 35, "#e8d385");
     }
+    if (battle2) paintActionFeedback(c, battle2, characterHeight);
     if (battle2?.captureScene) paintCapture(c, battle2, species);
     if (battle2) {
       for (const p of battle2.projectiles) {
@@ -17235,6 +17567,20 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
         c.rotate(Math.atan2(p.vy * 0.58, p.vx));
         c.fillStyle = p.nativeArrow ? "#e4d7b7" : p.color;
         c.fillRect(p.nativeArrow ? -9 : -3, -2, p.nativeArrow ? 13 : 6, 4);
+        if (!p.nativeArrow) {
+          c.globalAlpha = 0.35;
+          c.beginPath();
+          c.arc(0, 0, p.skill ? 10 : 7, 0, Math.PI * 2);
+          c.fill();
+          c.globalAlpha = 1;
+          c.fillStyle = "#fff3dd";
+          c.fillRect(-2, -2, 4, 4);
+          for (let i = 0; i < 3; i++) {
+            const a = battle2.time * 12 + i * Math.PI * 2 / 3;
+            c.fillStyle = p.color;
+            c.fillRect(Math.cos(a) * 9 - 1, Math.sin(a) * 5 - 1, 2, 2);
+          }
+        }
         c.restore();
         for (const t of p.trail) {
           const v = nativeScreen(t.x, t.y + 14);
@@ -17253,6 +17599,25 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
           c.font = "bold 13px sans-serif";
           c.textAlign = "center";
           c.fillText(e.text, p.x, p.y - 55 - (1 - e.ttl) * 20);
+        } else if (e.type === "impact") {
+          paintImpact(c, e, p, (e.victimUid ? nativeBodyHeight(battle2.units.find((u) => u.uid === e.victimUid)) : 40) * characterHeight);
+        } else if (e.type === "blink") {
+          const f = 1 - e.ttl / e.max;
+          c.beginPath();
+          c.ellipse(p.x, p.y - 20, 10 + 35 * f, 30 * (1 - f) + 6, 0, 0, Math.PI * 2);
+          c.stroke();
+          for (let i = 0; i < 6; i++) {
+            const a = i * Math.PI / 3 + f * 3;
+            c.fillRect(p.x + Math.cos(a) * 25 * f, p.y - 20 + Math.sin(a) * 35, 3, 3);
+          }
+        } else if (e.type === "slash") {
+          c.translate(p.x, p.y - 18);
+          c.scale(1, 0.58);
+          c.rotate(e.angle || 0);
+          c.lineWidth = 5;
+          c.beginPath();
+          c.arc(0, 0, (e.r || 40) * 0.8, -0.75, 0.75);
+          c.stroke();
         } else if (e.tx !== void 0) {
           const t = nativeScreen(e.tx, e.ty);
           c.beginPath();
@@ -17290,6 +17655,32 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
     if (!u) return;
     const p = nativeScreen(u.x, u.y), t = event.elapsed, f = t / event.duration, scale = creatureWorldScale(species[u.id], u), color = { scout: "#a3e2c5", runic: "#93dbe9", astral: "#caadfa", mythic: "#f8d58c" }[event.tool], z = p.y - nativeBodyHeight(u) * characterHeight / 2;
     c.save();
+    if (!battle2.reducedMotion) {
+      c.fillStyle = "#080f222b";
+      c.fillRect(0, 0, 1002, 654);
+      c.strokeStyle = color;
+      c.lineWidth = 2;
+      for (let i = 0; i < 3; i++) {
+        const r = 35 + 70 * (1 - Math.min(1, f * 2)) + i * 13;
+        c.globalAlpha = 0.6 * (1 - f * 0.4);
+        c.beginPath();
+        c.ellipse(p.x, z, r, r * 0.55, i * 0.6 + t, 0, Math.PI * 2);
+        c.stroke();
+      }
+      for (let i = 0; i < 12; i++) {
+        const a = i * Math.PI / 6 + t * 0.8, r = 95 * (1 - Math.min(0.9, f));
+        c.fillStyle = color;
+        c.fillRect(p.x + Math.cos(a) * r, z + Math.sin(a) * r - 80 * (1 - Math.min(1, f * 3)), 3, 3);
+      }
+      if (f > 0.7 && event.success) {
+        c.globalAlpha = Math.max(0, (1 - f) * 2);
+        c.lineWidth = 5;
+        c.beginPath();
+        c.arc(p.x, z, 30 + (f - 0.7) * 340, 0, Math.PI * 2);
+        c.stroke();
+      }
+    }
+    c.globalAlpha = 1;
     c.translate(p.x, z);
     const size = 24 + 12 * Math.sin(Math.min(1, f * 3) * Math.PI / 2), shake = f > 0.35 && f < 0.8 ? Math.sin(t * 35) * 3 : 0;
     c.translate(shake, 0);
@@ -17336,7 +17727,7 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
     c.font = "bold 13px sans-serif";
     c.textAlign = "center";
     c.fillStyle = color;
-    c.fillText(f < 0.8 ? "LATTICE LOCK \xB7 " + Math.round(event.chance * 100) + "%" : event.success ? "COMPANION CAPTURED" : "LATTICE BROKEN", 0, -size - 18);
+    c.fillText(f < 0.8 ? "LATTICE LOCK \xB7 " + Math.round(event.chance * 100) + "%" : event.success ? "ALLEGIANCE CHANGED - ROUND ALLY" : "LATTICE BROKEN", 0, -size - 18);
     c.restore();
   }
 
@@ -17691,8 +18082,9 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
     if (phase === "map") viewName = "map";
   } else freshRun(NATIVE_STARTERS, false);
   if ((run2.rulesVersion || 0) < 12) run2.team.forEach((c) => c.starter ?? (c.starter = true));
+  run2.chaosCleared = Math.max(run2.chaosCleared || 0, profile.chaosCleared || 0);
   run2.rulesVersion = 17;
-  run2.teamCapacity = Math.min(6, Math.max(run2.teamCapacity || 2, run2.team.length));
+  run2.teamCapacity = Math.min(6, Math.max(run2.teamCapacity || 2, run2.team.length + (run2.legendaryPact ? 1 : 0), starterSlots(profile), run2.difficulty === "chaos" && run2.chaos >= 3 ? 3 : 2));
   run2.captureTools ?? (run2.captureTools = { scout: run2.orbs || 0, runic: 0, astral: 0, mythic: 0 });
   run2.team.forEach((c, i) => c.seat ?? (c.seat = i));
   run2.rosterMode ?? (run2.rosterMode = run2.native ? "authored" : "collection");
@@ -17723,7 +18115,7 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
   if (shopStock) shopStock.relics = shopStock.relics.slice(0, 2);
   function freshRun(ids, increment = true, options = {}) {
     if (increment) profile.runs++;
-    run2 = makeRun(Date.now() % 2147483647, ids, { ...options, native: true, starterBudget: starterBudget(profile), starterBonds: profile.bonds });
+    run2 = makeRun(Date.now() % 2147483647, ids, { ...options, native: true, starterBudget: starterBudget(profile), chaosCleared: profile.chaosCleared, starterBonds: profile.bonds });
     run2.team.forEach((c) => c.bond = Math.min(5, profile.bonds[c.id] || 0));
     run2.route = generateRoute(run2);
     phase = "prep";
@@ -17854,7 +18246,7 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
       "",
       !["battle", "elite", "boss", "capture"].includes(type)
     );
-    return `${fieldJourney(run2, phase, PLANETS)}${!profile.tutorial ? `<div class="tutorial-callout"><span>Scout the enemy and equip your companions. Your team fights automatically.</span>${button("Equip your first relic", "tutorial-gem", "secondary small")}<button data-action="dismiss-tutorial" aria-label="Dismiss welcome">\xD7</button></div>` : ""}<div class="arena-grid"><div class="arena-main"><section class="panel arena-panel"><div class="panel-top"><span class="panel-title">${p.name.toUpperCase()} \xB7 FIELD <span style="color:#687d5d;margin-left:9px">/ ${String(run2.depth + 1).padStart(2, "0")}</span></span><span class="status-dot ${live ? "live" : ""}"><i></i> ${live ? "BATTLE IN PROGRESS" : phase === "reward" ? "ENCOUNTER COMPLETE" : mapWaiting ? "AWAITING YOUR PATH" : ended ? "EXPEDITION ENDED" : "PREPARING FOR BATTLE"}</span></div>${enrageHTML()}<div class="arena-viewport"><canvas id="battle-canvas" aria-label="Real-time creature arena. Your expedition is on the left, wild creatures on the right."></canvas><div class="arena-label"><span class="location-icon">${ICONS[type]}</span><div><strong>${type === "boss" ? p.bossName : "The Forgotten Colosseum"}</strong><small>${p.name.toUpperCase()} \xB7 ${LABELS[type].toUpperCase()}</small></div></div><svg id="target-preview" class="target-preview" viewBox="0 0 1002 654" aria-hidden="true"></svg><div id="ally-orders" class="ally-orders"></div><div id="enemy-overheads" class="enemy-overheads"></div><div id="capture-feedback" class="capture-feedback" role="status" aria-live="polite"></div><div class="arena-timer" id="arena-timer">${live ? "00:00" : "READY"}</div>${type === "boss" ? `<div class="boss-banner"><div><span>${p.bossName}</span><small id="boss-phase">PHASE I</small></div><div class="boss-health-track"><i id="boss-health" style="width:100%"></i></div></div>` : ""}<div class="arena-bottom-labels"><span id="ally-count">YOUR EXPEDITION \xB7 ${run2.team.length}</span><span class="versus">vs.</span><span id="foe-count">THE WILDS \xB7 ${foes?.length || 4}</span></div></div><div class="arena-control"><div class="control-left"><button class="pause-btn" data-action="pause" title="Pause battle (Space)" aria-label="Pause battle" ${!live ? "disabled" : ""}>${paused ? "\u25B6" : "II"}</button><div class="speed-switch" aria-label="Battle speed">${[1, 2, 3].map((v) => `<button data-speed="${v}" class="${speed === v ? "active" : ""}">${v}\xD7</button>`).join("")}</div><span class="control-note"><kbd>SPACE</kbd> to pause</span></div>${mainAction}</div>${live && run2.captureOrder ? retryControlsHTML() : ""}<details class="field-enemy-brief" ${matchMedia("(min-width:900px)").matches ? "open" : ""}><summary>Enemy build <span>Inspect relics & equipment</span></summary>${enemyRelicBannerHTML()}</details></section><div class="formation-section"><div class="section-heading"><h2>YOUR EXPEDITION <span>${run2.team.length} / ${capacity(run2)}</span></h2><p>Inspect skills & AI \xB7 Deploy on the tactical grid</p><div class="segmented" title="Team AI priority">${["balanced", "hunt", "guard"].map((s) => `<button data-stance="${s}" class="${run2.stance === s ? "active" : ""}" ${live ? "disabled" : ""}>${{ balanced: "Balanced", hunt: "Hunt", guard: "Guard" }[s]}</button>`).join("")}</div></div><div class="team-grid">${Array.from({ length: 6 }, (_, seat) => teamSeatHTML(seat)).join("")}</div>${reserveTrayHTML()}${equipmentTrayHTML()}</div><div class="relic-section"><span class="relic-heading">\u2727 EXPEDITION RELICS <span class="muted">${run2.relics.length}</span></span><button class="text-button pack-button" data-action="pack">\u25C8 Relic pack \xB7 ${run2.inventory.length}</button>${run2.relics.length ? `<div class="relic-list">${run2.relics.map((id) => {
+    return `${fieldJourney(run2, phase, PLANETS)}${!profile.tutorial ? `<div class="tutorial-callout"><span>Scout the enemy and equip your companions. Your team fights automatically.</span>${button("Equip your first relic", "tutorial-gem", "secondary small")}<button data-action="dismiss-tutorial" aria-label="Dismiss welcome">\xD7</button></div>` : ""}<div class="arena-grid"><div class="arena-main"><section class="panel arena-panel"><div class="panel-top"><span class="panel-title">${p.name.toUpperCase()} \xB7 FIELD <span style="color:#687d5d;margin-left:9px">/ ${String(run2.depth + 1).padStart(2, "0")}</span></span><span class="status-dot ${live ? "live" : ""}"><i></i> ${live ? "BATTLE IN PROGRESS" : phase === "reward" ? "ENCOUNTER COMPLETE" : mapWaiting ? "AWAITING YOUR PATH" : ended ? "EXPEDITION ENDED" : "PREPARING FOR BATTLE"}</span></div>${enrageHTML()}<div class="arena-viewport"><canvas id="battle-canvas" aria-label="Real-time creature arena. Your expedition is on the left, wild creatures on the right."></canvas><div class="arena-label"><span class="location-icon">${ICONS[type]}</span><div><strong>${type === "boss" ? p.bossName : "The Forgotten Colosseum"}</strong><small>${p.name.toUpperCase()} \xB7 ${LABELS[type].toUpperCase()}</small></div></div><svg id="target-preview" class="target-preview" viewBox="0 0 1002 654" aria-hidden="true"></svg><div id="ally-orders" class="ally-orders"></div><div id="enemy-overheads" class="enemy-overheads"></div><div id="capture-feedback" class="capture-feedback" role="status" aria-live="polite"></div><div class="arena-timer" id="arena-timer">${live ? "00:00" : "READY"}</div>${type === "boss" ? `<div class="boss-banner"><div><span>${p.bossName}</span><small id="boss-phase">PHASE I</small></div><div class="boss-health-track"><i id="boss-health" style="width:100%"></i></div></div>` : ""}<div class="arena-bottom-labels"><span id="ally-count">YOUR EXPEDITION \xB7 ${run2.team.length}</span><span class="versus">vs.</span><span id="foe-count">THE WILDS \xB7 ${foes?.length || 4}</span></div></div><div class="arena-control"><div class="control-left"><button class="pause-btn" data-action="pause" title="Pause battle (Space)" aria-label="Pause battle" ${!live ? "disabled" : ""}>${paused ? "\u25B6" : "II"}</button><div class="speed-switch" aria-label="Battle speed">${[1, 2, 3].map((v) => `<button data-speed="${v}" class="${speed === v ? "active" : ""}">${v}\xD7</button>`).join("")}</div><span class="control-note"><kbd>SPACE</kbd> to pause</span></div>${mainAction}</div>${live && run2.captureOrder ? retryControlsHTML() : ""}<details class="field-enemy-brief" ${matchMedia("(min-width:900px)").matches ? "open" : ""}><summary>Enemy build <span>Inspect relics & equipment</span></summary>${enemyRelicBannerHTML()}</details></section><div class="formation-section"><div class="section-heading"><h2>YOUR EXPEDITION <span>${run2.team.length} / ${capacity(run2)}</span></h2><p>Inspect skills & AI \xB7 Deploy on the tactical grid</p><div class="segmented" title="Team AI priority">${["balanced", "hunt", "guard", "weakest"].map((s) => `<button data-stance="${s}" class="${run2.stance === s ? "active" : ""}" ${live ? "disabled" : ""}>${{ balanced: "Balanced", hunt: "Hunt", guard: "Guard", weakest: "Weakest first" }[s]}</button>`).join("")}</div></div><div class="team-grid">${Array.from({ length: 6 }, (_, seat) => teamSeatHTML(seat)).join("")}</div>${reserveTrayHTML()}${equipmentTrayHTML()}</div><div class="relic-section">${legendaryPactBanner()}<span class="relic-heading">\u2727 EXPEDITION RELICS <span class="muted">${run2.relics.length}</span></span><button class="text-button pack-button" data-action="pack">\u25C8 Relic pack \xB7 ${run2.inventory.length}</button>${run2.relics.length ? `<div class="relic-list">${run2.relics.map((id) => {
       const r = RELICS.find((r2) => r2.id === id);
       return `<button class="relic-item" data-relic="${id}" style="--relic:${r.color}" title="${r.name}: ${relicDescription(r)}" aria-label="${r.name}">${r.icon}</button>`;
     }).join("")}</div>` : '<span class="relic-empty">A story yet to be written. Find relics at outposts and along your path.</span>'}</div>${tacticalHTML()}<div class="battle-feed"><time id="feed-time">\u2727</time><span id="feed-text">${live ? battle?.log[0]?.text || "The gates open." : "Your formation is set. Let your companions do the fighting."}</span><button class="text-button" data-action="report" style="margin-left:auto;white-space:nowrap">Battle log \u2192</button></div></div><aside class="side-column">${briefingHTML()}${synergyHTML()}</aside></div>`;
@@ -17862,7 +18254,7 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
   function creatureCard(u, i) {
     const s = BY_ID[u.id], e = ELEMENTS[s.element];
     const ready = evolutionOffer(run2, u).ready;
-    return `<button class="creature-card ${s.rarity === "Legendary" ? "legendary-creature" : ""} role-${s.role.toLowerCase()} ${ready ? "evolution-ready" : ""}" data-loadout-drop="${i}" data-creature="${i}" draggable="${phase !== "battle"}" style="--element:${e.color}" title="${s.name} \xB7 ${s.role} \xB7 ${s.skill}"><div class="card-top"><span>${String(i + 1).padStart(2, "0")} <span style="margin-left:4px">${s.role.toUpperCase()}</span></span><span class="role-icon">${ROLES[s.role]}</span></div>${ready ? '<span class="evolution-beacon" title="Ready to evolve \xB7 inspect this companion">\u2726</span>' : ""}${s.rarity === "Legendary" ? '<span class="legendary-crown" title="Legendary creature">\u2726 LEGENDARY</span>' : ""}<span class="idle-portrait">${image(u, "creature-art")}<canvas width="128" height="128" data-idle-index="${i}" aria-hidden="true"></canvas></span><strong>${creatureName(u)}${u.level >= 5 ? ' <span class="awakened">\u2727</span>' : ""}</strong><div class="card-meta"><span class="element-name" style="color:${e.color}">${e.icon} ${e.name}</span><b>Lv. ${u.level}</b></div><div class="mini-skills">${[loadoutFor(s, u.level, u).auto, ...loadoutFor(s, u.level, u).active].map((id) => `<span class="mini-ability ${SKILLS[id].auto ? "auto" : ""}" data-unit-skill="${i}:${id}" title="${SKILLS[id].name}: ${SKILLS[id].desc}">${SKILLS[id].auto ? "\u2301" : SKILLS[id].icon}<i></i></span>`).join("")}</div><small class="card-intent" data-intent="${u.uid}">${run2.native ? ORDERS[u.order || "advance"]?.name || "Advance" : ""}</small><div class="xp-track" title="${u.xp} / ${xpNeeded(u.level)} EXP"><i style="width:${u.xp / xpNeeded(u.level) * 100}%"></i></div><div class="card-slots" title="${(u.relics || []).length} of ${relicSlots(u)} personal relic slots filled">${Array.from({ length: relicSlots(u) }, (_, j) => `<span class="${u.relics?.[j] ? "filled" : ""}" style="color:${u.relics?.[j] ? PERSONAL_BY_ID2[u.relics[j].id].color : ""}">${u.relics?.[j] ? "\u25C6" : "\u25C7"}</span>`).join("")}<small>${(u.relics || []).length} / ${relicSlots(u)}</small></div><i class="card-health" style="width:0%"></i></button>`;
+    return `<button class="creature-card ${s.rarity === "Legendary" ? "legendary-creature" : ""} role-${s.role.toLowerCase()} ${ready ? "evolution-ready" : ""}" data-loadout-drop="${i}" data-creature="${i}" draggable="${phase !== "battle"}" style="--element:${e.color}" title="${s.name} \xB7 ${s.role} \xB7 ${s.skill}"><div class="card-top"><span>${String(i + 1).padStart(2, "0")} <span style="margin-left:4px">${s.role.toUpperCase()}</span></span><span class="role-icon">${ROLES[s.role]}</span></div>${ready ? '<span class="evolution-beacon" title="Ready to evolve \xB7 inspect this companion">\u2726</span>' : ""}${s.rarity === "Legendary" ? '<span class="legendary-crown" title="Legendary creature">\u2726 LEGENDARY</span>' : ""}<span class="idle-portrait">${image(u, "creature-art")}<canvas width="128" height="128" data-idle-index="${i}" aria-hidden="true"></canvas></span><strong>${creatureName(u)}${u.level >= 5 ? ' <span class="awakened">\u2727</span>' : ""}</strong><div class="card-meta"><span class="element-name" style="color:${e.color}">${e.icon} ${e.name}</span><b>Lv. ${u.level}</b></div><div class="mini-skills">${[loadoutFor(s, u.level, u).auto, ...loadoutFor(s, u.level, u).active].map((id) => `<span class="mini-ability ${SKILLS[id].auto ? "auto" : ""}" data-unit-skill="${i}:${id}" title="${SKILLS[id].name}: ${SKILLS[id].desc}">${SKILLS[id].auto ? "\u2301" : SKILLS[id].icon}<i></i></span>`).join("")}</div><div class="card-vitals"><small data-vital-hp>HEALTH</small><div class="card-health-track"><i data-live-health style="width:100%"></i></div><small data-vital-stamina>STAMINA 100</small><div class="stamina-track"><i data-live-stamina style="width:100%"></i></div></div><small class="card-intent" data-intent="${u.uid}">${run2.native ? ORDERS[u.order || "advance"]?.name || "Advance" : ""}</small><div class="xp-track" title="${u.xp} / ${xpNeeded(u.level)} EXP"><i style="width:${u.xp / xpNeeded(u.level) * 100}%"></i></div><div class="card-slots" title="${(u.relics || []).length} of ${relicSlots(u)} personal relic slots filled">${Array.from({ length: relicSlots(u) }, (_, j) => `<span class="${u.relics?.[j] ? "filled" : ""}" style="color:${u.relics?.[j] ? PERSONAL_BY_ID2[u.relics[j].id].color : ""}">${u.relics?.[j] ? "\u25C6" : "\u25C7"}</span>`).join("")}<small>${(u.relics || []).length} / ${relicSlots(u)}</small></div><i class="card-health" style="width:0%"></i></button>`;
   }
   function briefingHTML() {
     const type = node?.type || "battle", elite = ["elite", "boss"].includes(type), p = PLANETS[Math.min(run2.planet, 2)];
@@ -17940,7 +18332,7 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
     const shown = SPECIES.filter(
       (s) => filter === "all" || filter === "owned" && profile.owned.includes(s.id) || s.element === filter
     );
-    return `<div class="collection-banner"><div><h2>Every ending is a new beginning.</h2><p>Captured creatures become permanent starters. Repeat captures grow bonds: +2% starter health per bond. At bond 5, starter cost drops; Legendary families cost 6 points, or 4 at bond 5. Choose one or two within ${starterBudget(profile)} points. The budget begins at two and grows with Chaos clears. Clear Chaos 1 to earn one extra point.</p></div>${button('Build an expedition <span class="arrow">\u2192</span>', "new-run", "secondary")}</div><div class="collection-toolbar">${button("Roster & forms", "roster", "secondary small")}${button(`\u2726 Celestial adoption \xB7 ${profile.starlight || 0} starlight`, "legendary-adopt", "secondary small", (profile.starlight || 0) < 3)}<div class="filters">${[{ id: "all", name: "All creatures" }, { id: "owned", name: "Discovered" }, ...Object.entries(ELEMENTS).map(([id, e]) => ({ id, name: e.name }))].map((f) => `<button data-filter="${f.id}" class="${filter === f.id ? "active" : ""}">${f.name}</button>`).join("")}</div><p><strong style="color:#c2d5b0">${profile.owned.length}</strong> / ${SPECIES.length} discovered \xB7 ${profile.victories} completed expeditions</p></div><div class="codex-grid">${shown.map((s) => {
+    return `<div class="collection-banner"><div><h2>Every ending is a new beginning.</h2><p>Captured creatures become permanent starters. Repeat captures grow bonds: +2% starter health per bond. At bond 5, starter cost drops; Legendary families cost 6 points, or 4 at bond 5. Choose up to ${starterSlots(profile)} within ${starterBudget(profile)} points. Start with three points and gain one per cleared Chaos tier. Chaos 3 unlocks a third starting place.</p></div>${button('Build an expedition <span class="arrow">\u2192</span>', "new-run", "secondary")}</div><div class="collection-toolbar">${button("Roster & forms", "roster", "secondary small")}${button(`\u2726 Celestial adoption \xB7 ${profile.starlight || 0} starlight`, "legendary-adopt", "secondary small", (profile.starlight || 0) < 3)}<div class="filters">${[{ id: "all", name: "All creatures" }, { id: "owned", name: "Discovered" }, ...Object.entries(ELEMENTS).map(([id, e]) => ({ id, name: e.name }))].map((f) => `<button data-filter="${f.id}" class="${filter === f.id ? "active" : ""}">${f.name}</button>`).join("")}</div><p><strong style="color:#c2d5b0">${profile.owned.length}</strong> / ${SPECIES.length} discovered \xB7 ${profile.victories} completed expeditions</p></div><div class="codex-grid">${shown.map((s) => {
       const owned = profile.owned.includes(s.id);
       const discoveredForm = {
         id: s.id,
@@ -18076,7 +18468,7 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
       index === null ? [] : run2.relics
     ), locked = codex && !profile.owned.includes(u.id);
     modal(
-      `<div class="detail-top">${image(u)}<div><span class="section-kicker" style="color:${RARITY[s.rarity].color}">${s.rarity.toUpperCase()} CREATURE</span><h2>${creatureName(u)}</h2><p style="margin:0">${s.role} \xB7 ${e.name} \xB7 Level ${u.level}</p><div class="tags">${tag(`${ROLES[s.role]} ${s.role}`)}${tag(`${e.icon} ${e.name}`)}</div></div></div>${detailTabsHTML(index)}<div class="detail-pane" data-detail-pane="overview"><div class="stat-grid"><div class="stat"><small>HEALTH</small><strong>${st.hp}</strong></div><div class="stat"><small>ATTACK</small><strong>${st.atk}</strong></div><div class="stat"><small>MOVEMENT</small><strong>${Math.round(st.speed)}</strong></div><div class="stat"><small>SKILL COOLDOWN</small><strong>${st.cd.toFixed(1)}s</strong></div></div>${armorHTML(st, s)}${ailmentMenuHTML(u)}${individualHTML(u)}${enemyCuriosHTML(u)}<div class="trait-panel"><strong>${traitFor(u).name}</strong><p>${traitFor(u).desc}</p></div>${familyInfo(u)}${evolutionHTML(u, index)}</div><div class="detail-pane" data-detail-pane="equipment">${equipmentHTML(u, index)}${loadoutHTML(u, index)}</div><div class="detail-pane" data-detail-pane="skills">${skillsHTML(u, index)}<p>Drag cooldown skills into a different order to change which ready skill the AI considers first.</p></div><div class="detail-pane" data-detail-pane="ai">${index !== null ? policyHTML(u, index) + survivalHTML(u, index) : ""}${index !== null ? `<div class="focus-control"><span class="section-kicker">TRAINING FOCUS \xB7 CHOOSE BEFORE BATTLE</span><div class="segmented">${["balanced", "aggressive", "defensive", "swift"].map((f) => `<button data-focus="${f}" data-index="${index}" class="${u.focus === f ? "active" : ""}" ${phase === "battle" ? "disabled" : ""}>${f.charAt(0).toUpperCase() + f.slice(1)}</button>`).join("")}</div><p style="font-size:10px;margin:9px 0 0">${{ balanced: "Natural strengths. No stat tradeoffs.", aggressive: "+15% attack \xB7 \u22128% health.", defensive: "+15% health \xB7 \u22128% attack.", swift: "15% faster skills \xB7 \u22126% attack." }[u.focus || "balanced"]}</p></div><div class="thin-rule"></div><span class="section-kicker">SWAP WITH A COMPANION ON YOUR BENCH</span><div class="bench-list">${run2.bench.length ? run2.bench.map((b, j) => `<button class="bench-button" data-swap="${j}" data-index="${index}" ${phase === "battle" ? "disabled" : ""}>${image(b)}${creatureName(b)}<br><span class="muted">Lv. ${b.level}</span></button>`).join("") : '<div class="empty-bench">Capture a creature or recruit one at an outpost to fill your bench.</div>'}</div><p class="starter-note">${u.level >= 5 && !evolutionStage(u) && lineageLimit(u) > 0 ? "EVOLUTION AVAILABLE \xB7 INSPECT YOUR EVOLUTION PATH ABOVE \xB7 " : ""}${u.level >= 5 ? "AWAKENED \xB7 THIRD SKILL UNLOCKED \xB7 " : ""}${u.bond ? `BOND ${u.bond} \xB7 +${u.bond * 2}% BASE HEALTH \xB7 ` : ""}${u.xp} / ${xpNeeded(u.level)} EXP toward the next level \xB7 ${u.training || 0} training upgrades</p>` : locked ? '<p class="disabled-note">Find this creature in the wild and capture it to unlock it as a future starter.</p>' : `<p style="font-size:11px">${e.description}. Rare companions have stronger base stats and specialized skills.</p>`}</div>${button("Back to expedition", "close", "secondary")}`,
+      `<div class="detail-top">${image(u)}<div><span class="section-kicker" style="color:${RARITY[s.rarity].color}">${s.rarity.toUpperCase()} CREATURE</span><h2>${creatureName(u)}</h2><p style="margin:0">${s.role} \xB7 ${e.name} \xB7 Level ${u.level}</p><div class="tags">${tag(`${ROLES[s.role]} ${s.role}`)}${tag(`${e.icon} ${e.name}`)}</div></div></div>${detailTabsHTML(index)}<div class="detail-pane" data-detail-pane="overview"><div class="stat-grid"><div class="stat"><small>HEALTH</small><strong>${st.hp}</strong></div><div class="stat"><small>ATTACK</small><strong>${st.atk}</strong></div><div class="stat"><small>BASIC ATTACK SPEED</small><strong>${st.attackSpeed.toFixed(2)}/s</strong></div><div class="stat"><small>ACTION SPEED</small><strong>${st.actionSpeed.toFixed(2)}\xD7</strong></div><div class="stat"><small>STAMINA RECHARGE</small><strong>${st.staminaRecharge.toFixed(1)}/s</strong></div><div class="stat"><small>DODGE / DASH</small><strong>${st.dodgeStyle} \xB7 ${Math.round(st.dashCooldown * 100)}% CD</strong></div><div class="stat"><small>MOVEMENT</small><strong>${Math.round(st.speed)}</strong></div><div class="stat"><small>SKILL COOLDOWN</small><strong>${st.cd.toFixed(1)}s</strong></div></div>${armorHTML(st, s)}${ailmentMenuHTML(u)}${individualHTML(u)}${enemyCuriosHTML(u)}<div class="trait-panel"><strong>${traitFor(u).name}</strong><p>${traitFor(u).desc}</p></div>${familyInfo(u)}${evolutionHTML(u, index)}</div><div class="detail-pane" data-detail-pane="equipment">${equipmentHTML(u, index)}${loadoutHTML(u, index)}</div><div class="detail-pane" data-detail-pane="skills">${skillsHTML(u, index)}<p>Drag cooldown skills into a different order to change which ready skill the AI considers first.</p></div><div class="detail-pane" data-detail-pane="ai">${index !== null ? policyHTML(u, index) + survivalHTML(u, index) : ""}${index !== null ? `<div class="focus-control"><span class="section-kicker">TRAINING FOCUS \xB7 CHOOSE BEFORE BATTLE</span><div class="segmented">${["balanced", "aggressive", "defensive", "swift"].map((f) => `<button data-focus="${f}" data-index="${index}" class="${u.focus === f ? "active" : ""}" ${phase === "battle" ? "disabled" : ""}>${f.charAt(0).toUpperCase() + f.slice(1)}</button>`).join("")}</div><p style="font-size:10px;margin:9px 0 0">${{ balanced: "Natural strengths. No stat tradeoffs.", aggressive: "+15% attack \xB7 \u22128% health.", defensive: "+15% health \xB7 \u22128% attack.", swift: "15% faster skills \xB7 \u22126% attack." }[u.focus || "balanced"]}</p></div><div class="thin-rule"></div><span class="section-kicker">SWAP WITH A COMPANION ON YOUR BENCH</span><div class="bench-list">${run2.bench.length ? run2.bench.map((b, j) => `<button class="bench-button" data-swap="${j}" data-index="${index}" ${phase === "battle" ? "disabled" : ""}>${image(b)}${creatureName(b)}<br><span class="muted">Lv. ${b.level}</span></button>`).join("") : '<div class="empty-bench">Capture a creature or recruit one at an outpost to fill your bench.</div>'}</div><p class="starter-note">${u.level >= 5 && !evolutionStage(u) && lineageLimit(u) > 0 ? "EVOLUTION AVAILABLE \xB7 INSPECT YOUR EVOLUTION PATH ABOVE \xB7 " : ""}${u.level >= 5 ? "AWAKENED \xB7 THIRD SKILL UNLOCKED \xB7 " : ""}${u.bond ? `BOND ${u.bond} \xB7 +${u.bond * 2}% BASE HEALTH \xB7 ` : ""}${u.xp} / ${xpNeeded(u.level)} EXP toward the next level \xB7 ${u.training || 0} training upgrades</p>` : locked ? '<p class="disabled-note">Find this creature in the wild and capture it to unlock it as a future starter.</p>' : `<p style="font-size:11px">${e.description}. Rare companions have stronger base stats and specialized skills.</p>`}</div>${button("Back to expedition", "close", "secondary")}`,
       "creature"
     );
   }
@@ -18095,8 +18487,8 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
     }
     if (run2.captureOrder) {
       const target = foes.find((f) => f.uid === run2.captureOrder.uid && !f.boss);
-      if (!target || !run2.captureReservation?.result && run2.bench.length >= 12 || !run2.captureReservation && run2.orbs < 1) {
-        toast("Capture requires a wild target, an orb, and bench space.");
+      if (!target || !run2.captureReservation && run2.orbs < 1) {
+        toast("Capture requires a wild target and an available capturer.");
         return;
       }
       if (!run2.captureReservation) {
@@ -18206,17 +18598,17 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
   }
   function casualtyHTML(outcome) {
     if (!outcome?.id) return "";
-    if (progressive(run2)) return `<section class="casualty-result lost"><span class="section-kicker">PERMANENT RUN LOSS \xB7 SAVED</span><div>${image(outcome.id)}<div><strong>\u2715 ${outcome.name} has fallen.</strong><p>Removed for the rest of this run. Worn gear, bound curios and socketed gems are destroyed. ${outcome.destroyedRelic ? "Another relic was destroyed: " + (RELICS.find((r) => r.id === outcome.destroyedRelic)?.name || PERSONAL_BY_ID2[outcome.destroyedRelic]?.name || outcome.destroyedRelic) : "No additional relic was owned."} The family stays permanently unlocked.</p></div></div>${run2.bench.length ? button("Deploy a reserve \u2192", "reserves", "secondary") : ""}</section>`;
+    if (progressive(run2)) return `<section class="casualty-result lost"><span class="section-kicker">PERMANENT RUN LOSS \xB7 SAVED</span><div>${image(outcome.id)}<div><strong>\u2715 ${outcome.name} has fallen.</strong><p>Removed for the rest of this run. Worn equipment is destroyed. Expedition relics are kept; bound curios and socketed gems return to your pack. The family stays permanently unlocked.</p></div></div>${run2.bench.length ? button("Deploy a reserve \u2192", "reserves", "secondary") : ""}</section>`;
     return `<section class="casualty-result ${outcome.lost ? "lost" : "rescued"}"><span class="section-kicker">RETREAT CASUALTY \xB7 RESULT SAVED</span><div>${image(outcome.id)}<div><strong>${outcome.lost ? outcome.name + " has fallen." : outcome.name + " was rescued."}</strong><p>${outcome.rarity} \xB7 ${Math.round(outcome.risk * 1e3) / 10}% death chance if selected. ${outcome.lost ? "Lost permanently from this expedition. Socketed gems were recovered into your pack. The family remains unlocked for future runs." : "Field care and survival drills lower this risk. Your companion remains on the team."}</p></div></div>${outcome.lost && run2.bench.length ? button("Deploy a reserve companion \u2192", "reserves", "secondary") : ""}</section>`;
   }
   function survivalHTML(c, index) {
-    if (progressive(run2)) return `<section class="survival-panel"><strong>Defeat is permanent.</strong><p>A deployed starter is selected at random; when no starter remains, another deployed companion is selected. Its worn items disappear, and one additional owned relic is destroyed. Rarity improves its combat tools, not this death roll.</p></section>`;
+    if (progressive(run2)) return `<section class="survival-panel"><strong>Defeat is permanent.</strong><p>A deployed starter is selected at random; when no starter remains, another deployed companion is selected. Its worn equipment disappears. Expedition relics are kept, and personal relics return to your pack. Rarity improves its combat tools, not this death roll.</p></section>`;
     const level = c.survivalTraining || 0, cost = shopPrice(run2, 30 + level * 30);
     return `<section class="survival-panel"><span class="section-kicker">SURVIVAL \xB7 ${BY_ID[c.id].rarity.toUpperCase()}</span><strong>${Math.round(casualtyRisk(run2, c) * 1e3) / 10}% death chance if selected on defeat</strong><p>One random active ally faces a rescue roll after a lost battle. Rarer creatures are safer. Evolution lowers the risk 15%. Field hospital ${run2.fieldHospital || 0} / 3 \xB7 drills ${level} / 2.</p>${button(level >= 2 ? "\u2713 Survival drills mastered" : `Survival drill \xB7 \u25C9 ${cost}`, `survival-${index}`, "secondary small", phase === "battle" || level >= 2 || run2.gold < cost)}<small>Each drill lowers this companion\u2019s remaining risk by 25% for the run.</small></section>`;
   }
   function openFieldCare() {
     if (progressive(run2)) {
-      modal(`<h2>Protect the expedition.</h2><p>Defeat always kills one deployed companion and destroys its worn items plus another owned relic. Recruit reserves, improve your build, and scout dangerous rooms. Capture families remain permanently unlocked.</p>${button("Return", "close", "secondary")}`, "care");
+      modal(`<h2>Protect the expedition.</h2><p>Defeat always kills one deployed companion and destroys its worn equipment. Expedition and personal relics are kept. Recruit reserves, improve your build, and scout dangerous rooms. Capture families remain permanently unlocked.</p>${button("Return", "close", "secondary")}`, "care");
       return;
     }
     const offer = hospitalOffer(run2);
@@ -18252,7 +18644,7 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
   }
   function captureOutcomeHTML() {
     const result = reward?.tacticalCapture || run2.captureReservation?.result;
-    return result ? `<div class="capture-outcome ${result.success ? "success" : "failed"}" role="status"><strong>${result.success ? "\u2727 CAPTURE SUCCESSFUL" : "\u2715 CAPTURE FAILED"}</strong><p>${result.success ? `${BY_ID[result.creature.id].name} joined your reserves and permanent collection.` : result.reason || "The lattice broke. The selected capturer was spent."}</p></div>` : "";
+    return result ? `<div class="capture-outcome ${result.success ? "success" : "failed"}" role="status"><strong>${result.success ? "\u2727 CAPTURE SUCCESSFUL" : "\u2715 CAPTURE FAILED"}</strong><p>${result.success ? `${BY_ID[result.creature.id].name} fought for you this round. Its family is unlocked as a future starter.` : result.reason || "The lattice broke. The selected capturer was spent."}</p></div>` : "";
   }
   function openRewards() {
     const won = reward.won, options = rewardOptions();
@@ -18339,7 +18731,9 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
         `Welcome to ${PLANETS[run2.planet].name}. The journey grows more dangerous.`
       );
   }
-  function chooseNode(id) {
+  var stageTransitionBusy = false;
+  async function chooseNode(id) {
+    if (stageTransitionBusy) return;
     if (phase === "battle" || phase === "reward" || phase === "ended" || run2.complete)
       return;
     const n = run2.route.flat().find((n2) => n2.id === id);
@@ -18347,6 +18741,11 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
     if (committed && node?.id !== id) {
       toast("Finish your current encounter before choosing another path.");
       return;
+    }
+    if (["battle", "elite", "boss", "capture"].includes(n.type) && !profile.reducedMotion) {
+      stageTransitionBusy = true;
+      await stageZoom(n.id);
+      stageTransitionBusy = false;
     }
     node = n;
     run2.captureOrder = null;
@@ -18359,6 +18758,7 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
       viewName = "arena";
       save();
       render();
+      if (!profile.reducedMotion) $(".arena-viewport")?.animate([{ opacity: 0, transform: "scale(.94)" }, { opacity: 1, transform: "scale(1)" }], { duration: 440, easing: "ease-out" });
     } else {
       enterNode(run2, n);
       committed = true;
@@ -18375,6 +18775,16 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
       }
       if (n.type === "rest") openRest();
     }
+  }
+  async function stageZoom(id) {
+    const el = document.querySelector(`[data-node="${id}"]`), scene2 = el?.closest(".field-journey") || el?.parentElement;
+    if (!scene2) return;
+    const r = el.getBoundingClientRect(), s = scene2.getBoundingClientRect();
+    const animation = scene2.animate([{ transform: "scale(1)", opacity: 1 }, { transform: "scale(1.9)", opacity: 0 }], { duration: 520, easing: "cubic-bezier(.4,0,.2,1)" });
+    scene2.style.transformOrigin = `${r.left - s.left + r.width / 2}px ${r.top - s.top + r.height / 2}px`;
+    await animation.finished.catch(() => {
+    });
+    scene2.style.transformOrigin = "";
   }
   function leaveNode() {
     closeModal();
@@ -18411,7 +18821,7 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
         return `<div class="shop-personal"><span style="color:${r.color}">${r.icon}</span><strong>${r.name}</strong><p>${relicDescription(r)}</p>${button(sold ? "\u2713 In your pack" : `\u25C9 ${shopPrice(run2, r.cost)}`, `buy-personal-${id}`, "secondary small", sold || run2.gold < shopPrice(run2, r.cost))}</div>`;
       }).join(
         ""
-      )}</div>${gearShopHTML(stock)}${newShopHTML(stock)}<div class="shop-supplies"><span>\u25C8 <strong>Capture supplies</strong><br><span class="muted" style="font-size:9px">One orb. One more possibility.</span></span>${button(`\u25C9 ${shopPrice(run2, 35)} \xB7 +1 orb`, "buy-orb", "secondary small", run2.gold < shopPrice(run2, 35))}</div><div class="shop-supplies"><div class="shop-companion" style="display:flex;align-items:center;gap:10px">${image(stock.creature)}<span><strong>${BY_ID[stock.creature].name}</strong><br><span style="font-size:9px;color:${RARITY[BY_ID[stock.creature].rarity].color}">${BY_ID[stock.creature].rarity} \xB7 ${BY_ID[stock.creature].role}</span></span></div>${button(stock.sold.includes("creature") ? "\u2713 Recruited" : `\u25C9 ${shopPrice(run2, RARITY[BY_ID[stock.creature].rarity].cost)} \xB7 Recruit`, "buy-creature", "secondary small", stock.sold.includes("creature") || run2.gold < shopPrice(run2, RARITY[BY_ID[stock.creature].rarity].cost) || run2.bench.length >= 12)}</div><div class="field-care-shop"><strong>Keep your companions alive.</strong><p>Defeat permanently kills a deployed companion and destroys its worn items plus one owned relic. Keep a reserve and choose threats carefully.</p>${button(`Defeat rules`, "field-care", "secondary")}</div><div class="legendary-outpost"><span class="section-kicker">CELESTIAL CONTRACTS</span><div class="shop-supplies">${image(stock.legendary)}<span><strong>${BY_ID[stock.legendary].name}</strong><small>Legendary \xB7 recruit and permanently unlock</small></span>${button(stock.sold.includes("legendary") ? "\u2713 Recruited" : `\u25C9 ${shopPrice(run2, 290)} \xB7 Recruit`, "buy-legendary", "secondary small", stock.sold.includes("legendary") || run2.gold < shopPrice(run2, 290) || run2.bench.length >= 12)}</div><p>Signal a Legendary at your next sanctuary. Prepare a tactical capture to improve its odds.</p>${button(run2.legendaryLure ? "\u2713 Beacon ready" : `\u25C9 ${shopPrice(run2, 90)} \xB7 Celestial beacon`, "buy-beacon", "secondary", run2.legendaryLure || run2.gold < shopPrice(run2, 90))}</div><div class="modal-actions">${button(`Refresh relics \xB7 \u25C9 ${shopPrice(run2, 20 + stock.rerolls * 15)}`, "reroll", "ghost", run2.gold < shopPrice(run2, 20 + stock.rerolls * 15))}${button("Leave outpost \u2192", "leave-node")}</div>`,
+      )}</div>${gearShopHTML(stock)}${newShopHTML(stock)}<div class="shop-supplies"><span>\u25C8 <strong>Capture supplies</strong><br><span class="muted" style="font-size:9px">One orb. One more possibility.</span></span>${button(`\u25C9 ${shopPrice(run2, 35)} \xB7 +1 orb`, "buy-orb", "secondary small", run2.gold < shopPrice(run2, 35))}</div><div class="shop-supplies"><div class="shop-companion" style="display:flex;align-items:center;gap:10px">${image(stock.creature)}<span><strong>${BY_ID[stock.creature].name}</strong><br><span style="font-size:9px;color:${RARITY[BY_ID[stock.creature].rarity].color}">${BY_ID[stock.creature].rarity} \xB7 ${BY_ID[stock.creature].role}</span></span></div>${button(stock.sold.includes("creature") ? "\u2713 Recruited" : `\u25C9 ${shopPrice(run2, RARITY[BY_ID[stock.creature].rarity].cost)} \xB7 Recruit`, "buy-creature", "secondary small", stock.sold.includes("creature") || run2.gold < shopPrice(run2, RARITY[BY_ID[stock.creature].rarity].cost) || run2.bench.length >= 12)}</div><div class="field-care-shop"><strong>Keep your companions alive.</strong><p>Defeat permanently kills a deployed companion and destroys its worn equipment; relics are retained. Keep a reserve and choose threats carefully.</p>${button(`Defeat rules`, "field-care", "secondary")}</div><div class="legendary-outpost"><span class="section-kicker">CELESTIAL CONTRACTS</span><div class="shop-supplies">${image(stock.legendary)}<span><strong>${BY_ID[stock.legendary].name}</strong><small>Legendary \xB7 recruit and permanently unlock</small></span>${button(stock.sold.includes("legendary") ? "\u2713 Recruited" : `\u25C9 ${shopPrice(run2, 290)} \xB7 Recruit`, "buy-legendary", "secondary small", stock.sold.includes("legendary") || run2.gold < shopPrice(run2, 290) || run2.bench.length >= 12)}</div><p>Signal a Legendary at your next sanctuary. Prepare a tactical capture to improve its odds.</p>${button(run2.legendaryLure ? "\u2713 Beacon ready" : `\u25C9 ${shopPrice(run2, 90)} \xB7 Celestial beacon`, "buy-beacon", "secondary", run2.legendaryLure || run2.gold < shopPrice(run2, 90))}</div><div class="modal-actions">${button(`Refresh relics \xB7 \u25C9 ${shopPrice(run2, 20 + stock.rerolls * 15)}`, "reroll", "ghost", run2.gold < shopPrice(run2, 20 + stock.rerolls * 15))}${button("Leave outpost \u2192", "leave-node")}</div>`,
       "shop",
       false
     );
@@ -18534,19 +18944,19 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
     }
     const cost = starterSelection.reduce((s, id) => s + starterCost(id), 0);
     modal(
-      `<span class="section-kicker">A NEW EXPEDITION</span><h2>Choose your unlikely heroes.</h2><p>Up to two companions. ${starterBudget(profile)} points. Captures from past expeditions let you start with rarer creatures \u2014 if you can afford the team around them.</p>${difficultyHTML()}<div class="starter-budget"><span>${starterSelection.length} / 2 companions</span><strong style="color:${cost > starterBudget(profile) ? "#f4a391" : ""}">${cost} / ${starterBudget(profile)} starter points</strong></div><div class="starter-grid">${profile.owned.map((id) => {
+      `<span class="section-kicker">A NEW EXPEDITION</span><h2>Choose your unlikely heroes.</h2><p>Up to ${starterSlots(profile)} companions. ${starterBudget(profile)} points. Three base points + one per cleared Chaos tier. Chaos 3 opens the third place. Captures from past expeditions let you start with rarer creatures \u2014 if you can afford the team around them.</p>${difficultyHTML()}<div class="starter-budget"><span>${starterSelection.length} / ${starterSlots(profile)} companions</span><strong style="color:${cost > starterBudget(profile) ? "#f4a391" : ""}">${cost} / ${starterBudget(profile)} starter points</strong></div><div class="starter-grid">${profile.owned.map((id) => {
         const s = BY_ID[id], selected = starterSelection.includes(id);
         return `<button class="starter-card ${selected ? "selected" : ""}" data-starter="${id}"><span class="starter-check">${selected ? "\u2713" : starterCost(id) + "pt"}</span>${image(id)}${roleBadge(s)}<strong>${s.name}</strong><small style="color:${RARITY[s.rarity].color}">${s.rarity} \xB7 ${starterCost(id)} ${starterCost(id) === 1 ? "point" : "points"}<br>Bond ${profile.bonds[id] || 0} / 5</small></button>`;
       }).join(
         ""
-      )}</div><p class="starter-note">Starting a new expedition replaces your current run. Your permanent menagerie remains.</p><div class="modal-actions">${button("Keep exploring", "close", "ghost")}${button("Set off for the stars \u2192", "confirm-run", "", starterSelection.length < 1 || starterSelection.length > 2 || cost > starterBudget(profile))}</div>`,
+      )}</div><p class="starter-note">Starting a new expedition replaces your current run. Your permanent menagerie remains.</p><div class="modal-actions">${button("Keep exploring", "close", "ghost")}${button("Set off for the stars \u2192", "confirm-run", "", starterSelection.length < 1 || starterSelection.length > starterSlots(profile) || cost > starterBudget(profile))}</div>`,
       "starters"
     );
   }
   function selectStarter(id) {
     if (starterSelection.includes(id))
       starterSelection = starterSelection.filter((x) => x !== id);
-    else if (starterSelection.length < 2 && starterSelection.reduce((n, c) => n + starterCost(c), 0) + starterCost(id) <= starterBudget(profile)) starterSelection.push(id);
+    else if (starterSelection.length < starterSlots(profile) && starterSelection.reduce((n, c) => n + starterCost(c), 0) + starterCost(id) <= starterBudget(profile)) starterSelection.push(id);
     else {
       toast("Deselect a companion first. Respect both the two-place limit and your point budget.");
       return;
@@ -18571,7 +18981,7 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
   }
   function openEnd(won = run2.complete) {
     modal(
-      `<div class="result-hero"><span class="result-sigil">${won ? "\u2727" : "\u2661"}</span><span class="section-kicker" style="display:block">${won ? "THREE WORLDS. ONE EXTRAORDINARY TEAM." : "SOME STORIES ARE ONLY THE BEGINNING"}</span><h2>${won ? "You brought the stars home." : "The journey stays with you."}</h2><p>${won ? "Your companions have conquered the Silent Expanse. There are more teams to discover, more paths to try." : "Your expedition ends here. Every creature you discovered is waiting for your next attempt."}</p></div><div class="end-stats"><div><strong>${run2.wins}</strong><small>BATTLES WON</small></div><div><strong>${profile.owned.length}</strong><small>PERMANENT CREATURES</small></div><div><strong>${run2.relics.length}</strong><small>RELICS FOUND</small></div></div>${won ? `<div class="chaos-victory"><strong>CHAOS ${profile.chaosUnlocked} / 20 UNLOCKED</strong><p>Victory grants 3 starlight: adopt a Legendary family from the menagerie. ${chaosLevel(run2) ? `Chaos ${chaosLevel(run2)} cleared. ` : ""}${(profile.chaosCleared || 0) >= 1 ? `Permanent starter budget: ${starterBudget(profile)} points. Further points at Chaos 4 / 8 / 12 / 16 / 20.` : "Clear Chaos 1 to unlock your third permanent starter point."} New expeditions can select the next unlocked tier.</p></div>` : ""}<p class="starter-note" style="text-align:center">Captured creatures are saved on this device. Use them as starters to discover new team combinations.</p><div class="modal-actions">${button("View menagerie", "end-collection", "secondary")}${button("Build a new expedition \u2192", "new-run")}</div>`,
+      `<div class="result-hero"><span class="result-sigil">${won ? "\u2727" : "\u2661"}</span><span class="section-kicker" style="display:block">${won ? "THREE WORLDS. ONE EXTRAORDINARY TEAM." : "SOME STORIES ARE ONLY THE BEGINNING"}</span><h2>${won ? "You brought the stars home." : "The journey stays with you."}</h2><p>${won ? "Your companions have conquered the Silent Expanse. There are more teams to discover, more paths to try." : "Your expedition ends here. Every creature you discovered is waiting for your next attempt."}</p></div><div class="end-stats"><div><strong>${run2.wins}</strong><small>BATTLES WON</small></div><div><strong>${profile.owned.length}</strong><small>PERMANENT CREATURES</small></div><div><strong>${run2.relics.length}</strong><small>RELICS FOUND</small></div></div>${won ? `<div class="chaos-victory"><strong>CHAOS ${profile.chaosUnlocked} / 20 UNLOCKED</strong><p>Victory grants 3 starlight: adopt a Legendary family from the menagerie. ${chaosLevel(run2) ? `Chaos ${chaosLevel(run2)} cleared. ` : ""}${(profile.chaosCleared || 0) >= 1 ? `Permanent starter budget: ${starterBudget(profile)} points. Gain one point per Chaos tier cleared. Chaos 3 unlocks the third starting place.` : "Start with three points. Clear each Chaos tier for +1 point; Chaos 3 unlocks a third starting place."} New expeditions can select the next unlocked tier.</p></div>` : ""}<p class="starter-note" style="text-align:center">Captured creatures are saved on this device. Use them as starters to discover new team combinations.</p><div class="modal-actions">${button("View menagerie", "end-collection", "secondary")}${button("Build a new expedition \u2192", "new-run")}</div>`,
       "end",
       false
     );
@@ -18604,12 +19014,31 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
     viewName = v;
     render();
   }
-  document.addEventListener("click", (e) => {
+  document.addEventListener("click", async (e) => {
     if (e.target.classList.contains("modal-backdrop") && e.target.dataset.dismissible === "true") {
       closeModal();
       return;
     }
     const el = e.target.closest("button");
+    if (el?.disabled) return;
+    if (el?.dataset.enemyFocus && phase === "battle") {
+      battle?.focusEnemy(el.dataset.enemyFocus);
+      return;
+    }
+    if (el?.dataset.action === "legendary-pact") {
+      openLegendaryPact();
+      return;
+    }
+    if (el?.dataset.pactCreature && phase !== "battle") {
+      const chosen = chooseLegendaryPact(run2, el.dataset.pactCreature);
+      if (chosen) {
+        save();
+        closeModal();
+        render();
+        toast(creatureName(chosen) + " awaits in Reserves. One active place sacrificed.");
+      }
+      return;
+    }
     if (el?.dataset.recapMetric || el?.dataset.recapSide !== void 0) {
       if (el.dataset.recapMetric) recapMetric = el.dataset.recapMetric;
       if (el.dataset.recapSide !== void 0) recapSide = Number(el.dataset.recapSide);
@@ -18675,12 +19104,17 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
       return;
     }
     if (el?.dataset.action === "claim-loot" && phase === "reward") {
+      if (lootCollecting) return;
+      lootCollecting = true;
+      el.disabled = true;
+      await flyLootToTotals();
       if (claimLoot(run2, reward.loot)) {
         save();
         render();
         openRewards();
         sound("buy");
       }
+      lootCollecting = false;
       return;
     }
     if (!el || el.disabled) return;
@@ -18958,8 +19392,8 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
     if (action === "view-map") setView("map");
     if (action === "new-run") openStarters();
     if (action === "confirm-run") {
-      if (!starterSelection.length || starterSelection.length > 2 || starterSelection.reduce((n, id) => n + starterCost(id), 0) > starterBudget(profile)) {
-        toast("Choose one or two companions within your point budget.");
+      if (!starterSelection.length || starterSelection.length > starterSlots(profile) || starterSelection.reduce((n, id) => n + starterCost(id), 0) > starterBudget(profile)) {
+        toast("Choose companions within your unlocked places and point budget.");
         return;
       }
       freshRun(starterSelection, true, {
@@ -19287,6 +19721,34 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
   if (phase === "event") openEvent();
   if (phase === "rest") openRest();
   if (phase === "ended") openEnd();
+  var lootCollecting = false;
+  function legendaryPactBanner() {
+    if (!run2.relics.includes("sovereigns-seat")) return "";
+    return `<div class="legendary-pact-banner"><strong>\u2726 SOVEREIGN\u2019S SEAT</strong><p>${run2.legendaryPact ? "One active place exchanged for " + BY_ID[run2.legendaryPact].name + "." : "Trade one active place for your choice of any Legendary. Existing companions move to Reserves when needed."}</p>${!run2.legendaryPact ? button("Choose your Legendary", "legendary-pact", "secondary", phase === "battle") : ""}</div>`;
+  }
+  function openLegendaryPact() {
+    if (phase === "battle" || run2.legendaryPact || !run2.relics.includes("sovereigns-seat")) return;
+    modal(`<span class="section-kicker">SOVEREIGN\u2019S SEAT</span><h2>One throne. One extraordinary ally.</h2><p>Choosing below permanently reduces your active capacity from ${capacity(run2)} to ${capacity(run2) - 1} for this expedition. Your Legendary waits in Reserves. Move it into your team before the next battle.</p><div class="gear-grid legendary-choice">${SPECIES.filter((s) => s.rarity === "Legendary").map((s) => `<button data-pact-creature="${s.id}" ${run2.bench.length + Math.max(0, run2.team.length - capacity(run2) + 1) + 1 > 12 ? "disabled" : ""}>${image(creature(s.id))}<strong>${s.name}</strong><small>${s.role} \xB7 ${ELEMENTS[s.element].name}</small></button>`).join("")}</div>`, "legendary-pact");
+  }
+  async function flyLootToTotals() {
+    if (profile.reducedMotion) return;
+    const cards = [...document.querySelectorAll(".loot-drop")];
+    await Promise.all(cards.map(async (card, i) => {
+      const d = reward.loot.drops[i], target = document.querySelector(d?.kind === "gold" ? "#gold" : d?.kind === "gear" ? "[data-equipment-total]" : ".relic-heading") || $("#gold");
+      const from = card.querySelector(".loot-medallion")?.getBoundingClientRect(), to = target?.getBoundingClientRect();
+      if (!from || !to) return;
+      const token = document.createElement("div");
+      token.className = "loot-flying-token";
+      token.textContent = lootIcon(d);
+      Object.assign(token.style, { left: from.left + "px", top: from.top + "px", color: lootVisual(d).color });
+      document.body.append(token);
+      const dx = to.left + to.width / 2 - from.left, dy = to.top + to.height / 2 - from.top;
+      await token.animate([{ transform: "translate(0,0) scale(1)", opacity: 1 }, { transform: `translate(${dx * 0.4}px,${dy * 0.4 - 70}px) scale(1.3)`, opacity: 1 }, { transform: `translate(${dx}px,${dy}px) scale(.25)`, opacity: 0 }], { duration: 650, delay: i * 70, easing: "cubic-bezier(.3,0,.6,1)" }).finished.catch(() => {
+      });
+      token.remove();
+      target.animate([{ filter: "brightness(2.2)", transform: "scale(1.2)" }, { filter: "brightness(1)", transform: "scale(1)" }], { duration: 280 });
+    }));
+  }
   window.starfall = {
     get state() {
       return { run: run2, phase, node, foes, battle, profile, view: viewName, practice, deployment };
@@ -19320,7 +19782,7 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
   }
   function tacticalHTML() {
     const editable = phase === "prep", targets = (foes || []).filter((f) => !f.boss), plan = run2.captureOrder;
-    return `<section class="tactical-toolbar"><div class="tactical-toolbar-head"><span class="section-kicker">PLAN BEFORE THE GATES OPEN</span>${button("\u25A6 Deployment & AI", "formation", "secondary small", phase === "battle")}${run2.native ? button("Build practice", "practice", "secondary small", phase === "battle" || !run2.team.length) + button("Roster & forms", "roster", "secondary small") + heightControl() : ""}${button(`Defeat rules`, "field-care", "secondary small", phase === "battle")}${run2.team.length < capacity(run2) ? button(`Reserves \xB7 ${run2.team.length}/${capacity(run2)}`, "reserves", "secondary small", phase === "battle") : ""}${button(profile.reducedMotion ? "Motion: gentle" : "Motion: full", "motion", "ghost small")}</div><p class="arena-legend">Gold bars: stamina \xB7 orange bars: poise. Enemy windups show red arcs or lines. Roots stop dodge rolls; stagger interrupts attacks; bleed worsens while moving. Native charged strikes resist interruption. Armor reduces direct hits with diminishing returns; Guardians use it better. Hover over an ailment to learn its effect.</p>${targets.length && editable ? `<div class="capture-planner"><label>TACTICAL CAPTURE<select id="capture-target" ${run2.orbs < 1 || run2.bench.length >= 12 || run2.captureReservation ? "disabled" : ""}><option value="">No capture order</option>${targets.map((f) => `<option value="${f.uid}" ${plan?.uid === f.uid ? "selected" : ""}>${creatureName(f)} \xB7 ${BY_ID[f.id].rarity}</option>`).join("")}</select></label><label>APPROACH<select id="capture-mode" ${!plan || run2.captureReservation ? "disabled" : ""}><option value="mercy" ${plan?.mode !== "swift" ? "selected" : ""}>Mercy \xB7 hold back 14% damage</option><option value="swift" ${plan?.mode === "swift" ? "selected" : ""}>Swift \xB7 hold back 6% damage</option></select></label>${captureControlsHTML()}<p>${plan ? `Reserves 1 capturer when battle starts. ${plan.mode === "swift" ? "6%" : "14%"} less team damage until the throw. Weakening and statuses raise odds. Lower HP sharply improves the chance. There is no protection from lethal damage.` : "Select a wild target to automate a capture during combat. Captures only happen when preselected. Lower HP improves odds but a lethal hit can knock the target out first."}</p></div>` : ""}${run2.captureReservation ? `<p class="reservation-note">Capturer committed. Reloading preserves the reservation and any resolved result.</p>` : ""}${run2.contracts?.length ? `<p class="reservation-note">Contract active: next enemy team gains ${Math.round(run2.contracts.reduce((n, c) => n + (c.attack || 0), 0) * 100)}% attack and ${Math.round(run2.contracts.reduce((n, c) => n + (c.health || 0), 0) * 100)}% health.</p>` : ""}</section>`;
+    return `<section class="tactical-toolbar"><div class="tactical-toolbar-head"><span class="section-kicker">PLAN BEFORE THE GATES OPEN</span>${button("\u25A6 Deployment & AI", "formation", "secondary small", phase === "battle")}${run2.native ? button("Build practice", "practice", "secondary small", phase === "battle" || !run2.team.length) + button("Roster & forms", "roster", "secondary small") + heightControl() : ""}${button(`Defeat rules`, "field-care", "secondary small", phase === "battle")}${run2.team.length < capacity(run2) ? button(`Reserves \xB7 ${run2.team.length}/${capacity(run2)}`, "reserves", "secondary small", phase === "battle") : ""}${button(profile.reducedMotion ? "Motion: gentle" : "Motion: full", "motion", "ghost small")}</div><p class="arena-legend">Gold bars below health: stamina \xB7 orange bars: poise. Click an enemy to focus it for 8s; taunts and nearby threats still matter. Enemy windups show red arcs or lines. Roots stop dodge rolls; stagger interrupts attacks; bleed worsens while moving. Native charged strikes resist interruption. Armor reduces direct hits with diminishing returns; Guardians use it better. Hover over an ailment to learn its effect.</p>${targets.length && editable ? `<div class="capture-planner"><label>TACTICAL CAPTURE<select id="capture-target" ${run2.orbs < 1 || run2.captureReservation ? "disabled" : ""}><option value="">No capture order</option>${targets.map((f) => `<option value="${f.uid}" ${plan?.uid === f.uid ? "selected" : ""}>${creatureName(f)} \xB7 ${BY_ID[f.id].rarity}</option>`).join("")}</select></label><label>APPROACH<select id="capture-mode" ${!plan || run2.captureReservation ? "disabled" : ""}><option value="mercy" ${plan?.mode !== "swift" ? "selected" : ""}>Mercy \xB7 hold back 14% damage</option><option value="swift" ${plan?.mode === "swift" ? "selected" : ""}>Swift \xB7 hold back 6% damage</option></select></label>${captureControlsHTML()}<p>${plan ? `Reserves 1 capturer when battle starts. ${plan.mode === "swift" ? "6%" : "14%"} less team damage until the throw. Weakening and statuses raise odds. Lower HP sharply improves the chance. There is no protection from lethal damage.` : "Select a wild target to automate a capture during combat. Captures only happen when preselected. Lower HP improves odds but a lethal hit can knock the target out first."}</p></div>` : ""}${run2.captureReservation ? `<p class="reservation-note">Capturer committed. Reloading preserves the reservation and any resolved result.</p>` : ""}${run2.contracts?.length ? `<p class="reservation-note">Contract active: next enemy team gains ${Math.round(run2.contracts.reduce((n, c) => n + (c.attack || 0), 0) * 100)}% attack and ${Math.round(run2.contracts.reduce((n, c) => n + (c.health || 0), 0) * 100)}% health.</p>` : ""}</section>`;
   }
   function openFormation() {
     if (!run2.team.length) {
@@ -19431,7 +19893,7 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
     run2.captureReservation.result = JSON.parse(JSON.stringify(result));
     run2.captureReservation.result.refunded = refundCapture(run2, result, `tactical:${run2.planet}:${run2.depth}:${result.uid}:${result.attempt}`, node.seed + (result.attempt || 1) * 313);
     if (result.success) {
-      const caught = awardCapture(run2, result.creature);
+      const caught = result.creature;
       caught.bond = recordBond(profile, caught.id);
       discoverForm(caught);
       unlock(caught.id);
@@ -19520,12 +19982,12 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
   function teamSeatHTML(seat) {
     const index = run2.team.findIndex((c2) => c2.seat === seat), c = run2.team[index];
     if (c) return `<div class="companion-loadout">${creatureCard(c, index)}${quickEquipmentHTML(c, index)}</div>`;
-    if (seat >= capacity(run2)) return `<div class="creature-card locked-seat"><span>\u2311</span><strong>Locked place</strong><small>Unlock at ${[2, 5, 8, 11][seat - 2] || 11} wins</small></div>`;
+    if (seat >= capacity(run2)) return `<div class="creature-card locked-seat"><span>\u2311</span><strong>${run2.legendaryPact && seat === 5 ? "Sacrificed place" : "Locked place"}</strong><small>${run2.legendaryPact && seat === 5 ? "Sovereign\u2019s Seat" : "Unlock at " + ([2, 5, 8, 11][seat - 2 + (run2.legendaryPact ? 1 : 0)] || 11) + " wins"}</small></div>`;
     const fallen = run2.fallen.filter((c2) => c2.seat === seat).at(-1);
     return `<button data-seat-drop="${seat}" class="creature-card empty-slot ${fallen ? "fallen-seat" : ""}" data-action="reserves" ${phase === "battle" ? "disabled" : ""}>${fallen ? image(fallen) : "<span>+</span>"}${fallen ? '<b class="death-cross">\u2715</b>' : ""}<strong>${fallen ? "Fallen \xB7 " + fallen.name : "Open place"}</strong><small>Deploy a reserve \xB7 ${run2.team.length}/${capacity(run2)}</small></button>`;
   }
   function individualHTML(c) {
-    return c.genes ? `<section class="individual-rolls"><strong>${c.nature} individual</strong><p>HP ${Math.round(c.genes.hp * 100)}% \xB7 Attack ${Math.round(c.genes.atk * 100)}% \xB7 Speed ${Math.round(c.genes.speed * 100)}% \xB7 cooldown time ${Math.round(c.genes.cd * 100)}%. Capturing preserves this individual\u2019s strengths and tradeoffs for this run.</p></section>` : "";
+    return c.genes ? `<section class="individual-rolls"><strong>${c.nature} individual</strong><p>HP ${Math.round(c.genes.hp * 100)}% \xB7 Attack ${Math.round(c.genes.atk * 100)}% \xB7 Speed ${Math.round(c.genes.speed * 100)}% \xB7 cooldown time ${Math.round(c.genes.cd * 100)}%. Capturing borrows this individual for the current round and unlocks its family for future starts.</p></section>` : "";
   }
   function enemyCuriosHTML(c) {
     const ids = c.enemyRelics || c.boundRelics || [], loot = c.enemyRelics || c.side === 1 ? `<section class="enemy-loot-preview"><strong>Equipment drop \xB7 ${Math.round(equipmentDropChance(c, BY_ID[c.id], node?.type) * 100)}%</strong><p>${BY_ID[c.id].rarity} opponent \xB7 loot is drawn from its worn gear. Higher rarity means better item-quality rolls.</p></section>` : "";
@@ -19563,7 +20025,7 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
       for (let tries = 0; tries < 12 && placed.some((p) => Math.abs(p.x - x) < (p.width + width) / 2 + 5 && Math.abs(p.y - y) < 25); tries++) y = Math.max(24, y - 28) + (y <= 24 ? 28 * (tries + 1) : 0);
       placed.push({ x, y, width });
       const threshold = phase === "battle" ? c.hp / c.maxHp : run2.captureOrder?.threshold || 0.25, tool = phase === "battle" ? run2.selectedCapturer || "scout" : run2.captureOrder?.tool || run2.selectedCapturer || "scout", chance = c.boss ? 0 : captureChance(run2, { ...c, capturePreparation: { healthFraction: threshold, status: phase === "battle" && ["burn", "poison", "root", "slow", "bleed"].some((k) => c[k] > 0), mode: run2.captureOrder?.mode || "mercy", tool } });
-      return `<div class="enemy-head-ui" data-head-uid="${c.uid}" style="left:${x / rect.width * 100}%;top:${y / rect.height * 100}%"><button data-enemy-inspect="${c.uid}" aria-label="Inspect ${creatureName(c)}" title="Inspect ${creatureName(c)}">\u24D8</button>${!c.boss && (phase === "prep" || phase === "battle" && battle?.captureResult && !battle.captureResult.success && battle.captureAttempts < 3 && c.hp > 0) ? `<button data-enemy-capture="${c.uid}" class="${run2.captureOrder?.uid === c.uid ? "planned" : ""}" aria-label="Plan capture of ${creatureName(c)}" title="${Math.round(chance * 100)}% at ${Math.round(threshold * 100)}% HP">\u25C7 ${Math.round(chance * 100)}%</button>` : ""}${activeAilments(c).map((a) => `<span class="live-ailment" style="--ailment:${a.color}" title="${a.name}: ${a.desc} \xB7 ${a.remaining.toFixed(1)}s" tabindex="0">${a.icon}</span>`).join("")}${c.enemyRelics?.length ? `<button data-enemy-inspect="${c.uid}" class="enemy-curio" title="${c.enemyRelics.map((id) => RUN_RELIC_BY_ID[id].name).join(" \xB7 ")}" aria-label="Inspect ${c.enemyRelics.length} active enemy relics">\u2727 ${c.enemyRelics.length}</button>` : ""}</div>`;
+      return `<div class="enemy-head-ui" data-head-uid="${c.uid}" style="left:${x / rect.width * 100}%;top:${y / rect.height * 100}%"><button data-enemy-inspect="${c.uid}" aria-label="Inspect ${creatureName(c)}" title="Inspect ${creatureName(c)}">\u24D8</button>${!c.boss && (phase === "prep" || phase === "battle" && battle?.captureResult && !battle.captureResult.success && battle.captureAttempts < 3 && c.hp > 0) ? `<button data-enemy-capture="${c.uid}" class="${run2.captureOrder?.uid === c.uid ? "planned" : ""}" aria-label="Plan capture of ${creatureName(c)}" title="${Math.round(chance * 100)}% at ${Math.round(threshold * 100)}% HP">\u25C7 ${Math.round(chance * 100)}%</button>` : ""}${phase === "battle" ? `<button data-enemy-focus="${c.uid}" aria-label="Focus ${creatureName(c)}" title="Team focus for 8 seconds">\u25CE</button>` : ""}${activeAilments(c).map((a) => `<span class="live-ailment" style="--ailment:${a.color}" title="${a.name}: ${a.desc} \xB7 ${a.remaining.toFixed(1)}s" tabindex="0">${a.icon}</span>`).join("")}${c.enemyRelics?.length ? `<button data-enemy-inspect="${c.uid}" class="enemy-curio" title="${c.enemyRelics.map((id) => RUN_RELIC_BY_ID[id].name).join(" \xB7 ")}" aria-label="Inspect ${c.enemyRelics.length} active enemy relics">\u2727 ${c.enemyRelics.length}</button>` : ""}</div>`;
     }).join("");
     const template = document.createElement("template");
     template.innerHTML = html;
@@ -19593,7 +20055,7 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
     for (const el of [...layer.children]) if (!seen.has(el.dataset.headUid)) el.remove();
   }
   function newShopHTML(stock) {
-    return `<section class="new-shop"><h3>CAPTURE TOOLS</h3><p>At 25% HP, Scout odds are 90% Common, 85% Uncommon, 25% Rare, 22% Epic and 8% Legendary. Stronger tools improve these odds; each attempt consumes one.</p><div class="gear-grid">${Object.entries(CAPTURERS).map(([id, t]) => `<div><strong style="color:${t.color}">${t.icon} ${t.name}</strong><p>${t.mult}\xD7 basic chance \xB7 ${run2.captureTools?.[id] || 0} owned</p>${button("\u25C9 " + shopPrice(run2, t.cost), "buy-capturer-" + id, "secondary small", run2.gold < shopPrice(run2, t.cost))}</div>`).join("")}</div><h3>GROW THE ROSTER \xB7 ${capacity(run2)} / 6 PLACES</h3>${button("Hiring permit \xB7 \u25C9 " + permitCost(run2), "buy-permit", "secondary", run2.wins < 3 || capacity(run2) >= 6 || run2.gold < permitCost(run2))}<p>The first extra place is earned after two wins. Permits accelerate later growth. New recruits wait on the bench until deployed.</p><div class="gear-grid">${(stock.recruits || []).map((c, i) => {
+    return `<section class="new-shop"><h3>CAPTURE TOOLS</h3><p>At 25% HP, Scout odds are 90% Common, 85% Uncommon, 25% Rare, 22% Epic and 8% Legendary. Stronger tools improve these odds; each attempt consumes one.</p><div class="gear-grid">${Object.entries(CAPTURERS).map(([id, t]) => `<div><strong style="color:${t.color}">${t.icon} ${t.name}</strong><p>${t.mult}\xD7 basic chance \xB7 ${run2.captureTools?.[id] || 0} owned</p>${button("\u25C9 " + shopPrice(run2, t.cost), "buy-capturer-" + id, "secondary small", run2.gold < shopPrice(run2, t.cost))}</div>`).join("")}</div><h3>GROW THE ROSTER \xB7 ${capacity(run2)} / ${run2.legendaryPact ? 5 : 6} PLACES</h3>${button("Hiring permit \xB7 \u25C9 " + permitCost(run2), "buy-permit", "secondary", run2.wins < 3 || (run2.teamCapacity || 2) >= 6 || run2.gold < permitCost(run2))}<p>The first extra place is earned after two wins. Permits accelerate later growth. New recruits wait on the bench until deployed.</p><div class="gear-grid">${(stock.recruits || []).map((c, i) => {
       const st = stats(c, [c]);
       c.marketCost = recruitPrice(run2, c);
       return `<div>${image(c)}<strong>${creatureName(c)} \xB7 ${c.nature}</strong><p>HP ${st.hp} \xB7 ATK ${st.atk} \xB7 SPD ${Math.round(st.speed)} \xB7 CD ${st.cd.toFixed(1)}s</p>${button(c.recruited ? "\u2713 Recruited" : "\u25C9 " + c.marketCost, "buy-recruit-" + i, "secondary small", c.recruited || run2.gold < c.marketCost || run2.bench.length >= 12)}</div>`;
@@ -19623,13 +20085,14 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
       return { x: (e.clientX - rect.left) * 1002 / rect.width, y: (e.clientY - rect.top) * 654 / rect.height };
     };
     canvas.addEventListener("pointerdown", (e) => {
-      if (phase === "battle" && !modalKind && battle?.captureResult && !battle.captureResult.success) {
-        const p = coords(e), u = battle.units.filter((u2) => u2.side === 1 && u2.hp > 0 && !u2.boss).sort((a, b) => b.y - a.y).find((u2) => {
+      if (phase === "battle" && !modalKind && battle) {
+        const p = coords(e), u = battle.living(1).sort((a, b) => b.y - a.y).find((u2) => {
           const h = nativeBodyHeight(u2) * getCharacterHeight(), y = u2.y * 0.58 + 75 - h / 2;
-          return Math.pow((p.x - u2.x) / Math.max(9, 70 * u2.nativeScale), 2) + Math.pow((p.y - y) / Math.max(12, h * 0.6), 2) <= 1;
+          return Math.pow((p.x - u2.x) / Math.max(12, 70 * u2.nativeScale), 2) + Math.pow((p.y - y) / Math.max(15, h * 0.6), 2) <= 1;
         });
         if (u) {
-          retryCaptureUI(u.uid);
+          battle.focusEnemy(u.uid);
+          toast("Focus: " + creatureName(u) + " - 8s");
           e.preventDefault();
         }
         return;
@@ -19737,13 +20200,13 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
     const slots = equipmentSlots(c);
     return `<div class="quick-equipment" aria-label="${creatureName(c)} equipment" data-loadout-drop="${index}">${Array.from({ length: slots }, (_, slot) => {
       const g = GEAR_BY_ID[c.equipment?.[slot]], roll = c.equipmentRolls?.[slot];
-      return g ? `<button data-gear-remove="${slot}" data-index="${index}" data-loadout-drop="${index}" data-gear-slot="${slot}" style="--gear-color:${g.color || "#b9cf9d"}" ${phase === "battle" ? "disabled" : ""} title="${roll?.rarity || "Standard"} ${g.name} \xB7 ${Math.round((roll?.quality || 1) * 100)}% quality: ${equipmentDescription(g, c)}. Drag to another creature; click to return to pack." aria-label="${creatureName(c)}: ${g.name}">${gearSymbol(g)}<small>${g.name}</small></button>` : `<button data-action="inspect-quick-gear" data-index="${index}" data-loadout-drop="${index}" data-gear-slot="${slot}" title="Drop equipment here or inspect this companion\u2019s equipment">\uFF0B<small>Slot ${slot + 1}</small></button>`;
+      return g ? `<button data-gear-remove="${slot}" data-index="${index}" data-loadout-drop="${index}" data-gear-slot="${slot}" style="--gear-color:${g.color || "#b9cf9d"}" ${phase === "battle" ? "disabled" : ""} title="${roll?.rarity || "Standard"} ${g.name} \xB7 ${Math.round((roll?.quality || 1) * 100)}% quality: ${equipmentDescription(g, c)}. Drag to another creature; click to return to pack." aria-label="${creatureName(c)}: ${g.name}">${gearSymbol(g)}<small>${g.name}</small><span class="visible-gear-effect">${equipmentDescription(g, c)}</span></button>` : `<button data-action="inspect-quick-gear" data-index="${index}" data-loadout-drop="${index}" data-gear-slot="${slot}" title="Drop equipment here or inspect this companion\u2019s equipment">\uFF0B<small>Slot ${slot + 1}</small></button>`;
     }).join("")}</div>`;
   }
   function equipmentTrayHTML() {
-    return `<section class="equipment-tray" data-pack-drop="true"><div class="section-heading"><h3>YOUR EQUIPMENT PACK <span>${run2.gearInventory?.length || 0}</span></h3><small>${phase === "battle" ? "Equipment locks during combat." : "Drag onto a creature above \xB7 drag worn items between companions"}</small></div><div class="pack-recipients" aria-label="Equipment recipients">${run2.team.map((c, i) => `<button data-loadout-drop="${i}" data-switch-creature="${i}" ${phase === "battle" ? "disabled" : ""} title="Drop equipment on ${creatureName(c)}">${image(c)}<span>${creatureName(c)}<small>${c.equipment?.length || 0}/${equipmentSlots(c)} equipped</small></span></button>`).join("")}</div><div class="equipment-tray-items">${(run2.gearInventory || []).map((item) => {
+    return `<section class="equipment-tray" data-pack-drop="true"><div class="section-heading"><h3>YOUR EQUIPMENT PACK <span data-equipment-total>${run2.gearInventory?.length || 0}</span></h3><small>${phase === "battle" ? "Equipment locks during combat." : "Drag onto a creature above \xB7 drag worn items between companions"}</small></div><div class="pack-recipients" aria-label="Equipment recipients">${run2.team.map((c, i) => `<button data-loadout-drop="${i}" data-switch-creature="${i}" ${phase === "battle" ? "disabled" : ""} title="Drop equipment on ${creatureName(c)}">${image(c)}<span>${creatureName(c)}<small>${c.equipment?.length || 0}/${equipmentSlots(c)} equipped</small></span></button>`).join("")}</div><div class="equipment-tray-items">${(run2.gearInventory || []).map((item) => {
       const g = GEAR_BY_ID[item.id];
-      return `<button data-gear-equip="${item.uid}" data-index="${selectedCreature}" ${phase === "battle" ? "disabled" : ""} style="--gear-color:${g.color || "#b9cf9d"}" title="${equipmentDescription(g, { balanceVersion: 15, equipment: [g.id], equipmentRolls: [item] })}${item.sourceName ? " \xB7 from " + item.sourceName : ""} \xB7 drag onto a companion"><span>${gearSymbol(g)}</span><strong>${g.name}</strong><small>${item.rarity || "Standard"} \xB7 ${Math.round((item.quality || 1) * 100)}% quality \xB7 ${g.slot || "Equipment"}</small></button>`;
+      return `<button data-gear-equip="${item.uid}" data-index="${selectedCreature}" ${phase === "battle" ? "disabled" : ""} style="--gear-color:${g.color || "#b9cf9d"}" title="${equipmentDescription(g, { balanceVersion: 15, equipment: [g.id], equipmentRolls: [item] })}${item.sourceName ? " \xB7 from " + item.sourceName : ""} \xB7 drag onto a companion"><span>${gearSymbol(g)}</span><strong>${g.name}</strong><small>${item.rarity || "Standard"} \xB7 ${Math.round((item.quality || 1) * 100)}% quality \xB7 ${g.slot || "Equipment"}</small><span class="visible-gear-effect">${equipmentDescription(g, { balanceVersion: 15, equipment: [g.id], equipmentRolls: [item] })}</span></button>`;
     }).join("") || "<p>Equipment changes one companion\u2019s stats or behavior. Find it in victory caches, evolution caches or at outposts. Drag worn gear here to return it to the pack.</p>"}</div></section>`;
   }
   function retryCaptureUI(uid) {
@@ -19889,7 +20352,7 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
     }).join("")}</div><small>Inspect enemies for full equipment sets and quality.</small></aside>` : "";
   }
   function captureMessage(result) {
-    return result?.success ? `\u2727 CAPTURE SUCCESSFUL \xB7 ${BY_ID[result.creature.id].name} joined your reserves.` : `\u2715 CAPTURE FAILED \xB7 ${result?.reason || "The lattice broke. Your capturer was spent."}`;
+    return result?.success ? `\u2727 CAPTURE SUCCESSFUL \xB7 ${BY_ID[result.creature.id].name} fights for you until this round ends. Family unlocked for future starts.` : `\u2715 CAPTURE FAILED \xB7 ${result?.reason || "The lattice broke. Your capturer was spent."}`;
   }
   function updateCaptureFeedback() {
     const el = $("#capture-feedback"), result = battle?.captureResult || run2.captureReservation?.result;
@@ -19908,6 +20371,10 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
     for (const [i, c] of run2.team.entries()) {
       const u = battle.units.find((u2) => u2.uid === c.uid), card = document.querySelector(`[data-creature="${i}"]`);
       if (!u || !card) continue;
+      card.querySelector("[data-live-health]").style.width = `${Math.max(0, u.hp / u.maxHp) * 100}%`;
+      card.querySelector("[data-live-stamina]").style.width = `${u.stamina}%`;
+      card.querySelector("[data-vital-hp]").textContent = `HEALTH ${Math.ceil(u.hp)}/${Math.round(u.maxHp)}`;
+      card.querySelector("[data-vital-stamina]").textContent = `STAMINA ${Math.round(u.stamina)}/100`;
       let row = card.querySelector(".card-ailments");
       if (!row) {
         row = document.createElement("span");
@@ -20227,6 +20694,12 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
     }
     const preview = e.target.closest("[data-field-node]");
     if (preview && !preview.disabled) {
+      const selected = run2.route.flat().find((n) => n.id === preview.dataset.fieldNode);
+      if (selected && ["battle", "elite", "boss", "capture"].includes(selected.type) && !committed) {
+        chooseNode(selected.id);
+        fieldPreviewId = null;
+        return;
+      }
       fieldPreviewId = preview.dataset.fieldNode;
       render();
       document.querySelector('[data-field-node="' + fieldPreviewId + '"]')?.focus({ preventScroll: true });

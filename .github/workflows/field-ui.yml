@@ -34,6 +34,7 @@ jobs:
           cat /tmp/field-server.log
           exit 1
       - run: node tests/field-ui.browser.mjs
+      - run: node tests/chaos-combat.browser.mjs
       - run: node scripts/review-melee-weapons.mjs
       - run: node scripts/review-natural-carry.mjs
       - run: node scripts/review-swing-body.mjs
@@ -65,3 +66,6 @@ jobs:
             tests/reports/leg-volume.json
             tests/reports/melee-weapon-ui.json
             tests/reports/field-ui-v3.json
+            CHAOS-COMBAT.md
+            playtest-artifacts/chaos-*.png
+            playtest-artifacts/chaos-combat-browser.json

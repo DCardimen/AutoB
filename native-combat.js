@@ -53,7 +53,7 @@ export function advanceNative(u,dt,time,visuals=true,actionDt=dt){
  if(!u.nativeAction&&!a.roll&&u.stagger<=0&&u.hp>0)a.gait+=gaitPace*Math.min(distance/stride,dt*(2.4+a.runBlend*.6+a.sprintBlend*.6));
  a.moving+=( (u.actionLock>0?0:Math.min(1,velocity/(a.run||1)))-a.moving)*(1-Math.exp(-dt*12));
  a.hitTime=u.nativeAction?.charged?0:Math.min(.13,u.hitAnim||0);a.stagger=u.stagger||0;
- a.roll=u.rollTime>0?{kind:'dodge',elapsed:.25-u.rollTime,duration:.25,dx:u.rollX,dy:u.rollY}:u.dashMotion?{kind:'dash',elapsed:Math.max(0,u.dashDuration-u.dashAnim),duration:u.dashDuration,dx:u.dashMotion.x,dy:u.dashMotion.y}:null;
+ a.roll=u.rollTime>0?{kind:u.dodgeStyle==='barrel'||u.dodgeStyle==='sidestep'?'dash':'dodge',elapsed:.25-u.rollTime,duration:.25,dx:u.rollX,dy:u.rollY}:u.dashMotion?{kind:'dash',elapsed:Math.max(0,u.dashDuration-u.dashAnim),duration:u.dashDuration,dx:u.dashMotion.x,dy:u.dashMotion.y}:null;
  if(u.stagger>0&&!u.nativeAction?.charged)u.nativeAction=null;
  if(u.nativeAction){u.nativeAction.elapsed+=actionDt;u.nativeAction.released=u.nativeAction.elapsed>=u.nativeAction.windup;if(u.nativeAction.elapsed>=u.nativeAction.duration)u.nativeAction=null;}
  a.action=u.nativeAction;a.casts=!!u.nativeAction?.casting||a.id==='caster'||a.id==='jelly';

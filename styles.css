@@ -3605,3 +3605,19 @@ footer i {
 .pack-recipients{display:flex;gap:7px;overflow-x:auto;padding:5px 0 12px}.pack-recipients button{flex:0 0 auto;display:flex;gap:7px;align-items:center;min-width:110px;padding:5px 9px;border:1px dashed #739365;border-radius:8px;background:#142b21;color:#dae6bf;text-align:left;font-size:11px}.pack-recipients img{width:30px;height:36px;object-fit:contain;image-rendering:pixelated}.pack-recipients small{display:block;color:#9fb28d;font-size:9px;margin-top:3px}
 .ally-orders label{width:118px;padding:4px 6px}.ally-orders select{font-size:10px}.ally-orders small{font-size:8px}@media(max-width:850px){.ally-orders label{width:68px;padding:3px 4px;border-radius:6px}.ally-orders label>span{display:none}.ally-orders select{font-size:8px;padding:0;height:16px}.ally-orders small{font-size:7px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden}}
 .ui-v2 .ally-orders select{height:18px;min-height:18px;padding:0!important;line-height:16px;margin:0}.ally-orders small{line-height:10px}@media(max-width:850px){.ui-v2 .ally-orders select{height:16px;min-height:16px;line-height:14px}.ally-orders small{line-height:8px}}
+:root { --stamina-gold: #e5bf78; }
+.card-vitals { width:100%; padding:5px 0; text-align:left; }
+.card-vitals small { font-size:9px; letter-spacing:.07em; color:#c5d5b6; }
+.card-health-track { height:6px; background:#28382c; border-radius:3px; overflow:hidden; }
+.card-health-track i { display:block; height:100%; background:#bad79a; transition:width .12s linear; }
+.visible-gear-effect { display:block; color:#d4e6c5; font-size:11px; line-height:1.55; white-space:normal; text-align:left; margin-top:6px; }
+.quick-equipment { align-items:stretch; }
+.quick-equipment button { height:auto; min-height:76px; white-space:normal; }
+.equipment-tray-items button { height:auto; min-height:112px; white-space:normal; align-items:start; }
+.legendary-pact-banner { padding:16px; margin:12px 0; border:1px solid #ebcd80; border-radius:10px; background:#433723; color:#ffe4a0; }
+.legendary-pact-banner p { font-size:12px; }
+.legendary-choice img { width:80px; height:80px; object-fit:contain; }
+.loot-flying-token { position:fixed; z-index:10000; font-size:34px; pointer-events:none; text-shadow:0 0 16px currentColor; }
+.stamina-track { height:5px; background:#293629; border:1px solid #63704c; margin-top:3px; overflow:hidden; border-radius:3px; }
+.stamina-track i { display:block; height:100%; background:var(--stamina-gold); transition:width .12s linear; }
+@media (max-width:600px) { .quick-equipment { grid-template-columns:1fr; } .visible-gear-effect { font-size:11px; } .formation-section .section-heading { flex-wrap:wrap; } }

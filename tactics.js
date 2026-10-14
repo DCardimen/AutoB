@@ -2,6 +2,7 @@ import {routeModifiers} from './run-relics.js';
 import { NATIVE_SPECIES, NATIVE_EVOLUTIONS } from './native-content.js';
 // Shared design data. Rules, scouting, tooltips, and reports use the same definitions.
 export const POLICIES = {
+  weakest:{name:'Weakest first',desc:'Prioritize the enemy with the fewest current hit points. Taunts and urgent defensive actions still apply.'},
   nearest:{name:"Nearest enemy",desc:"Focus the closest enemy. Taunts still take priority."},
   adaptive: {
     name: "Adaptive",
@@ -361,7 +362,8 @@ export function unlockChaos(profile, run) {
   if (chaosLevel(run))
     profile.chaosCleared = Math.max(profile.chaosCleared || 0, chaosLevel(run));
 }
-export function starterBudget(profile={}) { return 2 + [1,4,8,12,16,20].filter(tier=>(profile.chaosCleared||0)>=tier).length; }
+export function starterBudget(profile={}) { return 3 + Math.max(0,Math.min(20,Math.floor(Number(profile.chaosCleared)||0))); }
+export function starterSlots(profile={}) { return (profile.chaosCleared||0)>=3?3:2; }
 export function starterPoints(rarity, bond = 0) {
   const cost = { Common: 1, Uncommon: 2, Rare: 3, Epic: 4, Legendary: 6 }[
     rarity

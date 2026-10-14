@@ -525,3 +525,9 @@ body.ui-v3[data-screen="arena"][data-phase="battle"] .field-stage p{display:none
  .ui-v3 .ally-orders select{font-size:10px;min-height:26px;width:100%}
  .ui-v3 .ally-orders [data-preview-target]{font-size:8px;line-height:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 }
+.ui-v3 .equipment-tray-items > button > .visible-gear-effect { float:none; clear:both; font-size:11px; color:#d2e5dc; margin:8px 0 0; }
+.ui-v3 .quick-equipment { grid-template-columns:1fr; }
+.ui-v3 .quick-equipment button { min-height:60px; display:grid; grid-template-columns:24px minmax(0,1fr); align-items:center; gap:4px; text-align:left; padding:9px; }
+.ui-v3 .quick-equipment button small { white-space:normal; font-size:10px; }
+.ui-v3 .quick-equipment .visible-gear-effect { grid-column:1 / -1; font-size:10px; line-height:1.5; overflow-wrap:break-word; }
+@media(max-width:600px) { .ui-v3 .quick-equipment { grid-template-columns:1fr; } .ui-v3 .stat-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
