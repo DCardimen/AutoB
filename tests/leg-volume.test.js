@@ -6,6 +6,10 @@ import {paintCharacterPixels,spritePoint} from '../prototype-pixel-art.js';
 import {paintAtlasCharacter} from '../authored-sprite-renderer.js';
 import {paintLegVolumes} from '../leg-volume.js';
 
+// Exercise the legacy solid-volume diagnostic explicitly; production sprites
+// now use their complete authored legs and boots.
+const volumeRig=(...args)=>Object.assign(nativePoseRig(...args),{debugLegVolumes:true});
+
 test('the near leg hides the far leg independently of face submission order',()=>{
  const triangle=(leg,depth,color)=>({leg,color,vertices:[{x:20,y:20,depth},{x:27,y:20,depth},{x:20,y:27,depth}]}),far=triangle(0,0,'#553322'),near=triangle(1,4,'#ccaa77');
  for(const faces of [[far,near],[near,far]]){
@@ -14,9 +18,9 @@ test('the near leg hides the far leg independently of face submission order',()=
  }
 });
 
-test('humanoid legs retain solid thigh, knee, calf, boot and sole surfaces in every view',()=>{
+test('diagnostic humanoid volumes retain solid thigh, knee, calf, boot and sole surfaces in every view',()=>{
  for(const id of ['brakk','aurel','brom','tarka','syl','nyra'])for(const evolution of [0,1,2])for(const state of ['idle','walk','run','sprint'])for(let dir=0;dir<8;dir++){
-  const spec=pixelSpec(id),rig=nativePoseRig(spec,{id,evolution,evolutionPath:'wild'},state,.25),pixels=paintCharacterPixels(spec.nativeRig,rig,dir*Math.PI/4);
+  const spec=pixelSpec(id),rig=volumeRig(spec,{id,evolution,evolutionPath:'wild'},state,.25),pixels=paintCharacterPixels(spec.nativeRig,rig,dir*Math.PI/4);
   assert.equal(rig.artLegVolumes.length,2);
   for(let index=0;index<2;index++){
    const faces=rig.artLegFaces.filter(f=>f.leg===index),vertices=faces.flatMap(f=>f.vertices);
@@ -30,7 +34,7 @@ test('humanoid legs retain solid thigh, knee, calf, boot and sole surfaces in ev
 });
 
 test('boot yaw changes its toe, side and sole projection without shifting the leg joints',()=>{
- const spec=pixelSpec('brakk'),a=nativePoseRig(spec,{id:'brakk'},'walk',.3),b=structuredClone(a);
+ const spec=pixelSpec('brakk'),a=volumeRig(spec,{id:'brakk'},'walk',.3),b=structuredClone(a);
  b.legs[0].foot.angle=Math.PI/2;
  paintCharacterPixels('orc',a,Math.PI/4);paintCharacterPixels('orc',b,Math.PI/4);
  assert.deepEqual(a.artLegVolumes.map(l=>[l.hip,l.knee,l.ankle]),b.artLegVolumes.map(l=>[l.hip,l.knee,l.ankle]));
@@ -40,14 +44,14 @@ test('boot yaw changes its toe, side and sole projection without shifting the le
 
 test('rendering thick legs preserves anatomical joints and planted foot physics',()=>{
  for(const id of ['aurel','brakk','syl','nyra','brom','tarka'])for(const state of ['walk','run','sprint','dodge','attack'])for(const phase of [.1,.43,.8]){
-  const spec=pixelSpec(id),rig=nativePoseRig(spec,{id},state,phase),before=structuredClone(rig.legs);
+  const spec=pixelSpec(id),rig=volumeRig(spec,{id},state,phase),before=structuredClone(rig.legs);
   paintCharacterPixels(spec.nativeRig,rig,Math.PI/4);assert.deepEqual(rig.legs,before,'rendering must not move the simulation foot anchors');
  }
 });
 
 test('leg proportions follow the short and tall character-height settings',()=>{
  for(const id of ['aurel','brakk','brom','tarka','syl','nyra']){
-  const spec=pixelSpec(id),short=nativePoseRig(spec,{id},'idle',.25,.85),tall=nativePoseRig(spec,{id},'idle',.25,1.1);
+  const spec=pixelSpec(id),short=volumeRig(spec,{id},'idle',.25,.85),tall=volumeRig(spec,{id},'idle',.25,1.1);
   paintCharacterPixels(spec.nativeRig,short,Math.PI/2);paintCharacterPixels(spec.nativeRig,tall,Math.PI/2);
   for(let i=0;i<2;i++){
    const length=l=>Math.hypot(l.ankle.x-l.hip.x,l.ankle.y-l.hip.y);
@@ -65,7 +69,7 @@ test('the body remains filled at the hips when the leg mesh is hidden',()=>{
  }
  let checks=0;
  for(const id of ['aurel','brakk','brom','tarka'])for(const phase of [.1,.4,.8])for(const dir of [1,2,3]){
-  const spec=pixelSpec(id),rig=nativePoseRig(spec,{id},'run',phase),brush=new BodyBrush();rig.dir=dir;
+  const spec=pixelSpec(id),rig=volumeRig(spec,{id},'run',phase),brush=new BodyBrush();rig.dir=dir;
   paintAtlasCharacter(brush,spec.nativeRig,rig,q=>spritePoint(q,dir*Math.PI/4));
   for(const p of rig.artHipRepairs){assert.equal(brush.data[(Math.round(p.y)*64+Math.round(p.x))*4+3],255,'covered pelvis detail survives leg motion');checks++;}
  }

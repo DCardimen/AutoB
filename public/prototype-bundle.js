@@ -184,9 +184,9 @@
     if (id !== "wolf") return [{ x: 0, y: -RIGS[id].stance, offset: 0 }, { x: 0, y: RIGS[id].stance, offset: 0.5 }];
     return [
       { x: 18, y: -7, offset: 0, front: true },
-      { x: -18, y: -7, offset: 0.75 - 0.25 * run2, front: false },
-      { x: 18, y: 7, offset: 0.5 + 0.38 * sprint2, front: true },
-      { x: -18, y: 7, offset: 0.25 * (1 - run2) + 0.38 * sprint2, front: false }
+      { x: -18, y: -7, offset: 0.5, front: false },
+      { x: 18, y: 7, offset: 0.5, front: true },
+      { x: -18, y: 7, offset: 0, front: false }
     ];
   }
   function rigFoot(phase, stride, running = false, sprinting = 0) {
@@ -201,7 +201,7 @@
     return { x: -half + 2 * half * ease(t), z: Math.sin(Math.PI * t) ** 1.35 * (8 + run2 * 5 + sprint2 * 5), pitch: 0.28 * (1 - ease(t)) - 0.16 * ease(t), planted: false, duty };
   }
   function canineFoot(phase, stride, run2 = 0, sprint2 = 0) {
-    const duty = 0.64 - 0.1 * run2 - 0.26 * sprint2, p = (phase % 1 + 1) % 1, half = stride * duty / 2;
+    const duty = 0.64 - 0.1 * run2 - 0.02 * sprint2, p = (phase % 1 + 1) % 1, half = stride * duty / 2;
     if (p < duty) return { x: half - p * stride, z: 0, pitch: 0, planted: true, duty };
     const t = (p - duty) / (1 - duty);
     return { x: -half + 2 * half * ease(t), z: Math.sin(Math.PI * t) ** 1.5 * (4 + run2 * 2 + sprint2 * 3), pitch: -0.08 * Math.sin(t * Math.PI), planted: false, duty };
@@ -2629,13 +2629,15 @@
     n = clamp3(n, 0, 1);
     return n * n * (3 - 2 * n);
   };
+  var QUADRUPEDS = /* @__PURE__ */ new Set(["wolf", "feralfox", "cat", "lion", "bear", "rhino", "stag", "rabbit", "rodent", "turtle"]);
   var arthropods = /* @__PURE__ */ new Set(["spider", "crab", "mantis", "beetle", "centipede", "mech"]);
   function creatureLegArt(asset, rig, colors2 = asset.colors) {
     const design = rig.design || rig.id;
     asset.creatureSkins ?? (asset.creatureSkins = /* @__PURE__ */ new Map());
     if (asset.creatureSkins.has(design)) return asset.creatureSkins.get(design);
     const bottom = Math.max(...asset.pixels.map((p) => p.y)), top = Math.min(...asset.pixels.map((p) => p.y));
-    const height = Math.min((bottom - top) * 0.36, legAnatomy(design).height || 9), rootY = bottom - height;
+    const robe = ["caster", "frostelf", "elf", "fox", "skeleton"].includes(design);
+    const height = Math.min((bottom - top) * 0.36, legAnatomy(design).height || (robe ? 5 : 9)), rootY = bottom - height;
     const occupied = new Set(asset.pixels.map((p) => p.y * 64 + p.x));
     let branches = [], score = -Infinity;
     for (let depth = 2; depth <= Math.min(7, Math.ceil(height * 0.7)); depth++) {
@@ -2659,6 +2661,11 @@
         score = value;
         branches = candidates;
       }
+    }
+    if (branches.length < 2 && (QUADRUPEDS.has(design) || rig.legs.length === 2)) {
+      const fringe = asset.pixels.filter((p) => p.y >= bottom - height * 0.6), left = Math.min(...fringe.map((p) => p.x)), right = Math.max(...fringe.map((p) => p.x)), middle = (left + right) / 2;
+      const halves = [fringe.filter((p) => p.x <= middle), fringe.filter((p) => p.x > middle)];
+      if (right - left >= 6 && halves.every((g) => g.length >= 3)) branches = halves;
     }
     if (!branches.length) branches = [asset.pixels.filter((p) => p.y >= bottom - 2)];
     const limbs = branches.map((points) => {
@@ -2687,9 +2694,13 @@
     const bind = rest.legs.map((l) => project(l.end)), xs = bind.map((p) => p.x), left = Math.min(...xs), right = Math.max(...xs);
     const first = art.limbs[0].x, last2 = art.limbs.at(-1).x, available = new Set(bind.map((_, i) => i));
     const moving = ["walk", "run", "sprint", "turn", "stop", "dash", "dodge"].includes(rig.state), fallen = Boolean(rig.ragdoll);
-    const limbs = art.limbs.map((source) => {
+    const quad = QUADRUPEDS.has(rig.design || rig.id), group = (index) => index === 0 || index === 3 ? 0 : 1;
+    let firstGroup;
+    const limbs = art.limbs.map((source, ordinal) => {
       const tx = left + (source.x - first) / Math.max(1, last2 - first) * (right - left);
-      const index = [...available].sort((a, b) => Math.abs(bind[a].x - tx) - Math.abs(bind[b].x - tx) || bind[b].y - bind[a].y)[0] ?? 0;
+      const candidates = [...available].sort((a, b) => Math.abs(bind[a].x - tx) - Math.abs(bind[b].x - tx) || bind[b].y - bind[a].y);
+      if (quad && firstGroup === void 0) firstGroup = group(candidates[0] ?? 0);
+      const wanted = (firstGroup + ordinal) % 2, index = (quad ? candidates.find((i) => group(i) === wanted) : void 0) ?? candidates[0] ?? 0;
       available.delete(index);
       const end = project(rig.legs[index].end), origin = bind[index];
       const strideScale = Math.sqrt(clamp3((rig.strideLength ?? 100) / 100, 0.5, 1.5)), reach = art.height * (art.arthropod ? 0.2 : 0.28) * strideScale, lift = art.height * (art.arthropod ? 0.17 : 0.22);
@@ -2837,7 +2848,7 @@
     if (id === "flyer") return "harpy";
     return AUTHORED_SPRITES2[id] ? id : null;
   }
-  function restoreCrabCrown(pixels, colors2) {
+  function restoreCrystalCrown(pixels, colors2) {
     const top = Math.min(...pixels.map((p) => p.y)), blue = (p) => p.rgb[2] > p.rgb[0] * 1.5 && p.rgb[2] > p.rgb[1] * 1.04;
     const rim = pixels.filter((p) => p.y === top && blue(p));
     if (rim.length < 6) return;
@@ -2854,7 +2865,7 @@
     const tip = Math.min(...template.map((p) => p.y)), cap = template.filter((p) => p.y < tip + 8), base = cap.filter((p) => p.y === tip + 7), tl = Math.min(...base.map((p) => p.x)), tr = Math.max(...base.map((p) => p.x)), tc = (tl + tr) / 2;
     const grid = new Map(cap.map((p) => [p.y * 64 + p.x, p])), swatches = pixels.filter((p) => p.y < top + 12 && blue(p));
     const matched = /* @__PURE__ */ new Map();
-    for (let row = 0; row < height; row++) for (let x = left - 2; x <= right + 2; x++) {
+    for (let row = 0; row < height; row++) for (let x = Math.floor(center - width * 0.6); x <= Math.ceil(center + width * 0.6); x++) {
       const sx = Math.round(tc + (x - center) * (tr - tl + 1) / width), sy = tip + Math.min(7, Math.floor(row * 8 / height)), sample = grid.get(sy * 64 + sx);
       if (!sample) continue;
       const key = sample.rgb.join(",");
@@ -2883,7 +2894,7 @@
         const n = parseInt(hex.slice((y * 64 + x) * 2, (y * 64 + x) * 2 + 2), 16);
         if (n) pixels.push({ x, y, color: colors2[n], rgb: colors2[n].slice(1).match(/../g).map((v) => parseInt(v, 16)), index: n });
       }
-      if (id === "crab" && stage) restoreCrabCrown(pixels, colors2);
+      if (["crab", "mech"].includes(id) && stage) restoreCrystalCrown(pixels, colors2, id, stage);
       if (id === "stag" && stage === 2) cleanStagSoles(pixels, colors2, dir);
       const shades = pixels.filter((p) => Math.max(...p.rgb) - Math.min(...p.rgb) < 48 && Math.min(...p.rgb) > 45 && Math.max(...p.rgb) < 232).sort((a2, b) => a2.rgb.reduce((n, v) => n + v, 0) - b.rgb.reduce((n, v) => n + v, 0));
       const metal = shades.length > 12 ? [0.08, 0.4, 0.72, 0.95].map((t) => shades[Math.floor((shades.length - 1) * t)].color) : null;
@@ -3107,7 +3118,7 @@
     const identity = atlasIdentity(id, rig);
     if (!identity) return false;
     const artStage = Math.min(2, rig.artStage ?? rig.form ?? 0), asset = frameFor(identity, rig.dir, artStage), rest = rig.artBind || restFor(id), angle = rig.dir * Math.PI / 4, base = (q) => point2(q, angle), poseHead = at(rig.head), poseBody = at(rig.body), posePelvis = at(rig.pelvis), head0 = base(rest.head), body0 = base(rest.body), pelvis0 = base(rest.pelvis), dh = difference(poseHead, head0), dc = difference(poseBody, body0), dp = difference(posePelvis, pelvis0);
-    const idleLift = rig.state === "idle" ? Math.sin(rig.phase * Math.PI * 2) * (rig.legs.length > 2 ? 0.4 : 1.25) : 0;
+    const idleLift = rig.state === "idle" ? Math.sin(rig.phase * Math.PI * 2) * (rig.legs.length > 2 ? 0.85 : 1.25) : 0;
     dh.y += idleLift;
     dc.y += idleLift;
     dp.y += idleLift * 0.55;
@@ -3139,8 +3150,15 @@
     }
     const footAt = (x, y) => footDeltas[footIndices[Math.max(0, Math.min(64, Math.round(y))) * 65 + Math.max(0, Math.min(64, Math.round(x)))]];
     const naturalLegs = rig.legs.length > 2;
-    const solidLegs = !naturalLegs && humanoid && rig.legs.length === 2 && ["knight", "orc", "elf", "caster", "fox"].includes(id), legArt = naturalLegs ? creatureLegArt(asset, rig, artColors) : solidLegs ? legProfiles(asset, footIndices, footDeltas, identity, artStage) : null;
-    const legSkin = naturalLegs ? skinCreatureLegs(rig, rest, angle, legArt, dc) : null;
+    const solidLegs = Boolean(rig.debugLegVolumes) && !naturalLegs && humanoid && rig.legs.length === 2 && ["knight", "orc", "elf", "caster", "fox"].includes(id), authoredLegs = rig.legs.length > 0 && !solidLegs;
+    if (QUADRUPEDS.has(rig.design || id) && ["walk", "run", "sprint", "turn", "stop"].includes(rig.state)) {
+      const oldY = dc.y;
+      dc.y = clamp4(dc.y, -0.7, 0.7);
+      dh.y = dc.y + clamp4(dh.y - oldY, -1, 1);
+      dc.x = clamp4(dc.x, -1.2, 1.2);
+    }
+    const legArt = authoredLegs ? creatureLegArt(asset, rig, artColors) : solidLegs ? legProfiles(asset, footIndices, footDeltas, identity, artStage) : null;
+    const legSkin = authoredLegs ? skinCreatureLegs(rig, rest, angle, legArt, humanoid ? dp : dc) : null;
     const legMesh = solidLegs ? buildLegVolumes(rig, legArt.profiles, rest, angle, scale, artColors) : null;
     const mouthSource = rig.creatureAttack && creatureMouthSource(rig);
     const armDeltas = rig.arms.map((a, i) => {
@@ -3162,7 +3180,7 @@
       if (humanoid) {
         const headWeight = y <= headCut ? 1 : 0;
         delta = headWeight ? dh : y < 37 ? dc : dp;
-        if (!solidLegs && footDeltas.length && y >= 37) {
+        if (!legSkin && !solidLegs && footDeltas.length && y >= 37) {
           const foot = footAt(x, y);
           const a = { x: foot.anchor.x, y: y < 41 ? 35 : 40 }, z = { x: foot.anchor.x, y: y < 41 ? 40 : 45 }, da = y < 41 ? foot.root : foot.knee, dz = y < 41 ? foot.knee : foot.delta;
           const pa = { x: a.x + da.x, y: a.y + da.y }, pz = { x: z.x + dz.x, y: z.y + dz.y }, theta = Math.atan2(pz.y - pa.y, pz.x - pa.x) - Math.PI / 2, ratio = clamp4(Math.hypot(pz.x - pa.x, pz.y - pa.y) / 5, 0.7, 1.3), dx = x - a.x, dy = y - a.y;
@@ -3194,7 +3212,6 @@
         delta = { x: delta.x + (x - 32) * amount * weight, y: delta.y };
       }
       if (!naturalLegs && artStage && identity === "lion") delta = { x: delta.x + (x - 32) * (artStage === 2 ? 0.3 : 0.2) * (1 - ease3((y - 25) / 10)), y: delta.y };
-      if (!naturalLegs && artStage && identity === "bear") delta = { x: delta.x + (x - 32) * (artStage === 2 ? 0.48 : 0.35) * ease3((y - 16) / 17), y: delta.y };
       if (["fairy", "moth", "bat", "harpy", "drake", "phoenix", "owl", "fish", "mantis"].includes(identity) && (!naturalLegs || y < legArt.rootY - 2) && Math.abs(x - 32) > 9 && y > 17) {
         const weight = ease3((Math.abs(x - 32) - 9) / 15), flap = Math.sin(rig.phase * Math.PI * 2);
         delta = { x: delta.x + Math.sign(x - 32) * weight * (flap * 2 + (artStage === 2 ? 3 : artStage ? 2 : 0)), y: delta.y + weight * flap * 2 };
@@ -3217,6 +3234,8 @@
         delta = { x: delta.x + clamp4(lag.x - dc.x, -5, 5), y: delta.y + clamp4(lag.y - dc.y, -5, 5) };
       }
       if (legSkin && y >= legArt.rootY) delta = legSkin.offset(x, y);
+      if (naturalLegs && identity === "crab" && artStage) delta = { x: delta.x + (x - 32) * (artStage === 2 ? 0.55 : 0.45) * ease3((y - 27) / 10), y: delta.y };
+      if (naturalLegs && identity === "bear" && artStage) delta = { x: delta.x + (x - 32) * (artStage === 2 ? 0.48 : 0.35) * ease3((y - 16) / 17), y: delta.y };
       return { x: 32 + (x - 32) * scale.width + delta.x, y: 44 + (y - 45) * scale.height + delta.y };
     }
     const bodyLayer = completeBodyLayer(asset, identity, artStage, sourceGear), layer = solidLegs ? [...bodyLayer.filter((p) => p.bodyUnderlay || !legArt.mask.has(p.y * 64 + p.x)), ...legArt.repairs] : bodyLayer;
@@ -3240,28 +3259,27 @@
     const sourceLeft = Math.min(...sourceXs), sourceRight = Math.max(...sourceXs), sourceTop = Math.min(...sourceYs), sourceBottom = Math.max(...sourceYs);
     let fit = Math.min(1, 54 / ((sourceRight - sourceLeft || 1) + (artStage && identity === "serpent" ? 18 : artStage && ["fairy", "moth", "bat", "harpy", "drake", "phoenix", "owl", "fish", "mantis"].includes(identity) ? 8 : 0)), 54 / (sourceBottom - sourceTop || 1));
     let ox = 32 - (sourceLeft + sourceRight) / 2, oy = Math.max(0, 4 - sourceTop) - (rig.ragdoll ? 9 * (rig.death || 0) : 0);
-    if (legMesh || naturalLegs) {
+    if (legMesh || authoredLegs) {
       const vertices = legMesh?.faces.flatMap((f) => f.vertices) || [], left = Math.min(minX, ...vertices.map((v) => v.x)) - 1, right = Math.max(maxX, ...vertices.map((v) => v.x)) + 1, top = Math.min(minY, ...vertices.map((v) => v.y)) - 1, bottom = Math.max(maxY, ...vertices.map((v) => v.y)) + 1;
       fit = Math.min(fit, 60 / (right - left || 1), 60 / (bottom - top || 1));
       const lx = 32 + (left - 32 + ox) * fit, rx = 32 + (right - 32 + ox) * fit, ty = 44 + (top - 44 + oy) * fit, by = 44 + (bottom - 44 + oy) * fit;
       ox += (lx < 1 ? 1 - lx : rx > 62 ? 62 - rx : 0) / fit;
       oy += (ty < 1 ? 1 - ty : by > 62 ? 62 - by : 0) / fit;
     }
-    if (!naturalLegs) for (const p of pixels) {
+    if (!authoredLegs) for (const p of pixels) {
       const x = 32 + (p.x - 32 + ox) * fit, y = 44 + (p.y - 44 + oy) * fit;
       b.dot(x, y, p.color);
       if (p.spanX * fit > 1.01 || p.spanY * fit > 1.01) b.rect(clamp4(Math.round(x - p.spanX * 0.3), 0, 63), clamp4(Math.round(y - p.spanY * 0.3), 0, 63), Math.min(64 - Math.round(x - p.spanX * 0.3), Math.ceil(p.spanX * fit)), Math.min(64 - Math.round(y - p.spanY * 0.3), Math.ceil(p.spanY * fit)), p.color);
     }
-    if (naturalLegs) {
-      asset.indexGrid ?? (asset.indexGrid = new Map(asset.pixels.map((p) => [p.y * 64 + p.x, p.index])));
-      const mapped = new Map(layer.map((p, i) => [p.y * 64 + p.x, { ...p, q: { x: 32 + (pixels[i].x - 32 + ox) * fit, y: 44 + (pixels[i].y - 44 + oy) * fit } }]));
+    if (authoredLegs) {
+      const mapped = new Map(layer.map((p, i) => [p.y * 64 + p.x, { ...p, shade: pixels[i].color, q: { x: 32 + (pixels[i].x - 32 + ox) * fit, y: 44 + (pixels[i].y - 44 + oy) * fit } }]));
       for (const p of mapped.values()) {
-        b.dot(p.q.x, p.q.y, artColors[p.index]);
+        b.dot(p.q.x, p.q.y, p.shade);
         for (const [dx, dy] of [[1, 0], [0, 1], [-1, 1], [1, 1]]) {
           const other = mapped.get((p.y + dy) * 64 + p.x + dx);
           if (!other || Math.abs(other.x - p.x) > 1) continue;
           if (dx && dy && (mapped.has(p.y * 64 + other.x) || mapped.has(other.y * 64 + p.x))) continue;
-          if (Math.max(Math.abs(Math.round(other.q.x) - Math.round(p.q.x)), Math.abs(Math.round(other.q.y) - Math.round(p.q.y))) > 1) b.line(p.q, other.q, artColors[p.index]);
+          if (Math.max(Math.abs(Math.round(other.q.x) - Math.round(p.q.x)), Math.abs(Math.round(other.q.y) - Math.round(p.q.y))) > 1) b.line(p.q, other.q, p.shade);
         }
       }
       const l = Math.max(0, Math.floor(32 + (minX - 32 + ox) * fit) - 1), r = Math.min(63, Math.ceil(32 + (maxX - 32 + ox) * fit) + 1), t = Math.max(0, Math.floor(44 + (minY - 44 + oy) * fit) - 1), z = Math.min(63, Math.ceil(44 + (maxY - 44 + oy) * fit) + 1);
@@ -3275,8 +3293,8 @@
         }
         const xx = Math.round(sx), yy = Math.round(sy);
         if (xx < 0 || xx > 63) continue;
-        const index = asset.indexGrid.get(yy * 64 + xx);
-        if (index) b.dot(x, y, artColors[index]);
+        const source = mapped.get(yy * 64 + xx);
+        if (source) b.dot(x, y, source.shade);
       }
       const reached = new Uint8Array(4096), queue2 = new Uint16Array(4096);
       let count = 0;
@@ -3299,7 +3317,7 @@
       for (let i = 0; i < 4096; i++) if (b.data[i * 4 + 3] && !reached[i]) b.data.fill(0, i * 4, i * 4 + 4);
     }
     const fills = [];
-    if (!naturalLegs) for (let y = Math.max(1, Math.floor(minY + oy)); y < Math.min(63, Math.ceil(maxY + oy)); y++) for (let x = Math.max(1, Math.floor(minX + ox)); x < Math.min(63, Math.ceil(maxX + ox)); x++) {
+    if (!authoredLegs) for (let y = Math.max(1, Math.floor(minY + oy)); y < Math.min(63, Math.ceil(maxY + oy)); y++) for (let x = Math.max(1, Math.floor(minX + ox)); x < Math.min(63, Math.ceil(maxX + ox)); x++) {
       const n = (y * 64 + x) * 4;
       if (b.data[n + 3]) continue;
       const l = n - 4, r = n + 4, t = n - 256, d = n + 256;
@@ -3331,8 +3349,8 @@
     const anchor = (q) => ({ x: 32 + (q.x - 32 + ox) * fit, y: 44 + (q.y - 44 + oy) * fit });
     rig.artLegLayered = false;
     rig.artLegCoverY = legArt?.coverY === void 0 ? 0 : anchor({ x: 32, y: legArt.coverY }).y;
-    rig.artLegRegistration = naturalLegs ? { cutY: anchor(warped(32, legArt.rootY)).y, soleY: anchor(warped(32, legArt.bottom)).y } : null;
-    rig.artNaturalPalette = naturalLegs ? legArt.materialIndices.map((i) => artColors[i]) : legArt?.material || rig.palette?.skin;
+    rig.artLegRegistration = authoredLegs ? { cutY: anchor(warped(32, legArt.rootY)).y, soleY: anchor(warped(32, legArt.bottom)).y } : null;
+    rig.artNaturalPalette = authoredLegs ? legArt.materialIndices.map((i) => artColors[i]) : legArt?.material || rig.palette?.skin;
     rig.artCreatureFit = fit;
     rig.artSourceTransform = { scale, fit, ox, oy };
     rig.artCreatureProject = (q) => anchor({ x: 32 + (at(q).x - poseBody.x) * 1.5 + dc.x, y: 34 + (at(q).y - poseBody.y) * 1.1 + dc.y });
@@ -3373,20 +3391,23 @@
     const melee = rig.weapon && ["sword", "axe"].includes(rig.weapon.kind), weaponScale = melee ? 1.02 : id === "caster" ? 0.83 : 0.9;
     const carrying = melee && !["cannon", "gauntlet"].includes(rig.gear) && !rig.ragdoll;
     const carryWeight = !carrying ? 0 : ["attack", "slash", "charge"].includes(rig.state) ? rig.stage === "windup" ? 1 - ease3(rig.phase / 0.72) : ease3((rig.phase - 0.26) / 0.74) : ["cast", "death", "knockdown", "getup"].includes(rig.state) ? 0 : 1;
+    const handCarryWeight = humanoid && rig.weapon && !rig.ragdoll && ["idle", "walk", "run", "sprint", "turn", "stop"].includes(rig.state) ? 1 : carryWeight;
     rig.artLimbPoints = /* @__PURE__ */ new Map();
     for (const arm of rig.arms) {
       const root = limbPoint(arm.root), joint = limbPoint(arm.joint), end = limbPoint(arm.end);
-      const screenSide = melee ? Math.sign(root.x - limbPoint(rig.body).x) || -arm.side * Math.sign(Math.cos(angle) || 1) : Math.sign(end.x - root.x) || arm.side, hand = sourceHands[screenSide];
+      const bindGear = (GEAR[identity] || GEAR[id])?.[rig.dir], wield = rig.weapon?.hand === "left" ? -1 : 1, mainSide = bindGear ? Math.sign(bindGear[0] - 32) || 1 : rig.dir >= 1 && rig.dir <= 4 ? -1 : 1, screenSide = arm.side === wield ? mainSide : -mainSide, hand = sourceHands[screenSide];
       root.y -= 3 * fit;
       joint.y -= 1.5 * fit;
-      if (carryWeight && hand) {
-        const neutral = anchor({ x: 32 + (hand.x - 32) * scale.width + dc.x, y: 44 + (hand.y - 45) * scale.height + dc.y }), bind = rest.arms.find((a) => a.side === arm.side), drift = bind ? difference(limbPoint(arm.end), limbPoint(bind.end)) : { x: 0, y: 0 };
+      if (handCarryWeight) {
+        const socket = hand || { x: 32 + screenSide * (Math.abs((bindGear?.[0] ?? 41) - 32) || 9), y: bindGear?.[1] ?? 34 };
+        const neutral = anchor({ x: 32 + (socket.x - 32) * scale.width + dc.x, y: 44 + (socket.y - 45) * scale.height + dc.y }), bind = rest.arms.find((a) => a.side === arm.side), drift = bind ? difference(limbPoint(arm.end), limbPoint(bind.end)) : { x: 0, y: 0 };
         neutral.x += drift.x * 0.4;
         neutral.y += drift.y * 0.4;
-        end.x += (neutral.x - end.x) * carryWeight;
-        end.y += (neutral.y - end.y) * carryWeight;
-        root.x += (neutral.x - screenSide * 1.5 * fit - root.x) * carryWeight;
-        root.y += (neutral.y - 5.5 * fit - root.y) * carryWeight;
+        if (handCarryWeight === 1) neutral.x = rig.artAnchors.body.x + screenSide * Math.max(2 * fit, screenSide * (neutral.x - rig.artAnchors.body.x));
+        end.x += (neutral.x - end.x) * handCarryWeight;
+        end.y += (neutral.y - end.y) * handCarryWeight;
+        root.x += (neutral.x - screenSide * 1.5 * fit - root.x) * handCarryWeight;
+        root.y += (neutral.y - 5.5 * fit - root.y) * handCarryWeight;
       }
       if (torsoPixels.length) {
         const socket = torsoPixels.reduce((best, v) => Math.hypot(v.x - root.x, v.y - root.y) < Math.hypot(best.x - root.x, best.y - root.y) ? v : best, torsoPixels[0]);
@@ -3396,9 +3417,9 @@
         joint.x += dx * 0.35;
         joint.y += dy * 0.35;
       }
-      if (carryWeight) {
-        joint.x += ((root.x + end.x) / 2 + screenSide * 0.6 * fit - joint.x) * carryWeight;
-        joint.y += ((root.y + end.y) / 2 - joint.y) * carryWeight;
+      if (handCarryWeight) {
+        joint.x += ((root.x + end.x) / 2 + screenSide * 0.6 * fit - joint.x) * handCarryWeight;
+        joint.y += ((root.y + end.y) / 2 - joint.y) * handCarryWeight;
       }
       rig.artArmRoots[arm.side] = root;
       rig.artHandColors[arm.side] = hand && artColors[hand.index];
@@ -3414,7 +3435,8 @@
       return { x: v.x / n, y: v.y / n, z: v.z / n };
     };
     const actual = g3 ? normalize({ x: t3.x - g3.x, y: t3.y - g3.y, z: t3.z - g3.z }) : null;
-    const screenSign = Math.sign((paintedGrip?.x || 32) - rig.artAnchors.body.x) || Math.sign(Math.cos(angle)) || 1;
+    const carryBind = (GEAR[identity] || GEAR[id])?.[rig.dir], screenSign = carryBind ? Math.sign(carryBind[0] - 32) || 1 : rig.dir >= 1 && rig.dir <= 4 ? -1 : 1;
+    rig.artWeaponIdentity = rig.weapon && { kind: rig.gear || rig.weapon.kind, hand: rig.weapon.hand, screenSide: screenSign };
     const carry = normalize({ x: 0.32 * screenSign * Math.cos(angle), y: -0.32 * screenSign * Math.sin(angle), z: -1 });
     const presented = actual && normalize({ x: actual.x + (carry.x - actual.x) * carryWeight, y: actual.y + (carry.y - actual.y) * carryWeight, z: actual.z + (carry.z - actual.z) * carryWeight });
     const cross2 = (v, w) => ({ x: v.y * w.z - v.z * w.y, y: v.z * w.x - v.x * w.z, z: v.x * w.y - v.y * w.x });

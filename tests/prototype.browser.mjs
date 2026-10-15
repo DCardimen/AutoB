@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {createHash} from 'node:crypto';
 const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||'/usr/bin/chromium',headless:true,args:['--no-sandbox','--enable-unsafe-swiftshader']});
-const base=process.env.BASE_URL||'http://127.0.0.1:3007',report={checks:[],errors:[],screenshots:[]};
+const base=process.env.BASE_URL||'http://127.0.0.1:3000',report={checks:[],errors:[],screenshots:[]};
 const addCheck=s=>{report.checks.push(s);console.log(s);};
 const page=await browser.newPage({viewport:{width:1440,height:1100}});
 page.on('pageerror',e=>report.errors.push(e.message));page.on('response',r=>{if(r.status()>=400)report.errors.push(r.status()+' '+r.url());});

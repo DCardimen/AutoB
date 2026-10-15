@@ -44,6 +44,7 @@ jobs:
       - run: node tests/legs-v2.browser.mjs
       - run: node scripts/review-legs-v2.mjs final
       - run: node scripts/review-legs-v3.mjs final
+      - run: node scripts/review-gaits-carry.mjs final
       - run: node scripts/review-creature-anatomy.mjs
       - run: node scripts/review-melee-weapons.mjs
       - run: node scripts/review-natural-carry.mjs
@@ -103,6 +104,11 @@ jobs:
             public/legs-v2-paws.png
             LEGS-V2.md
             LEGS-V3.md
+            GAITS-AND-CARRY.md
+            playtest-artifacts/gaits-carry-*.png
+            playtest-artifacts/gaits-carry-*.json
+            public/gaits-carry-*.png
+            public/gaits-carry-preview.webm
             playtest-artifacts/legs-v3-*.png
             playtest-artifacts/legs-v3-*.json
             public/legs-v3-*.png

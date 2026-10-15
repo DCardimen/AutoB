@@ -70,8 +70,8 @@ export function legLayout(id,run=0,sprint=0){
   if(id==='mech')return Array.from({length:6},(_,i)=>({x:(i%3-1)*14,y:i<3?-11:11,footY:i<3?-25:25,offset:((i%3+(i<3?0:1))%2)*0.5}));
   if(id==='spider')return Array.from({length:8},(_,i)=>({x:(1.5-i%4)*8,y:i<4?-6:6,footX:(1.5-i%4)*12,footY:i<4?-32:32,offset:((i%4+(i<4?0:1))%2)*0.5+(i%4)*0.025}));
   if(id!=='wolf')return [{x:0,y:-RIGS[id].stance,offset:0},{x:0,y:RIGS[id].stance,offset:0.5}];
-  return [{x:18,y:-7,offset:0,front:true},{x:-18,y:-7,offset:0.75-0.25*run,front:false},
-    {x:18,y:7,offset:0.5+0.38*sprint,front:true},{x:-18,y:7,offset:0.25*(1-run)+0.38*sprint,front:false}];
+  return [{x:18,y:-7,offset:0,front:true},{x:-18,y:-7,offset:0.5,front:false},
+    {x:18,y:7,offset:0.5,front:true},{x:-18,y:7,offset:0,front:false}];
 }
 export function rigFoot(phase,stride,running=false,sprinting=0){
   const run=typeof running==='number'?bound(running,0,1):running?1:0;
@@ -87,7 +87,7 @@ export function rigFoot(phase,stride,running=false,sprinting=0){
 
 // Paws land flat. A dog does not use a human heel/toe roll or high knee lift.
 export function canineFoot(phase,stride,run=0,sprint=0){
-  const duty=0.64-0.1*run-0.26*sprint,p=((phase%1)+1)%1,half=stride*duty/2;
+  const duty=0.64-0.1*run-0.02*sprint,p=((phase%1)+1)%1,half=stride*duty/2;
   if(p<duty)return {x:half-p*stride,z:0,pitch:0,planted:true,duty};
   const t=(p-duty)/(1-duty);
   return {x:-half+2*half*ease(t),z:Math.sin(Math.PI*t)**1.5*(4+run*2+sprint*3),pitch:-0.08*Math.sin(t*Math.PI),planted:false,duty};

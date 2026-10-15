@@ -45,7 +45,7 @@ test('all 89 collection families retain unclipped legs through movement, dodging
  for(const spec of PIXEL_SPECIES)for(const evolution of [0,1,2])for(const [state,phase]of [['walk',.12],['run',.31],['sprint',.72],['dodge',.5],['death',.5]])for(let dir=0;dir<8;dir++){
   const rig=nativePoseRig(spec,{id:spec.id,evolution,evolutionPath:evolution===1?'warden':'wild'},state,phase),pixels=paintCharacterPixels(nativeRigFor(spec,{evolution}),rig,dir*Math.PI/4);
   assert.equal(pixels.clipped,0,`${spec.id} ${evolution} ${state} ${dir}`);
-  if(rig.legs.length>2)assert.equal(rig.artLegSkin.mode,'authored',spec.id+' retains its original visible anatomy');else if(rig.legs.length)assert.equal(rig.artLegVolumes.length,rig.legs.length,spec.id+' has one modeled set of legs');
+  if(rig.legs.length>2)assert.equal(rig.artLegSkin.mode,'authored',spec.id+' retains its original visible anatomy');else if(rig.legs.length)assert.equal(rig.artLegSkin.mode,'authored',spec.id+' retains its painted boots and clothing');
  }
 });
 

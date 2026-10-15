@@ -2,6 +2,7 @@ import {projectRig} from './prototype-rig.js';
 import {legAnatomy,sampleLegMaterial} from './leg-anatomy.js';
 const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
 const ease=n=>{n=clamp(n,0,1);return n*n*(3-2*n);};
+export const QUADRUPEDS=new Set(['wolf','feralfox','cat','lion','bear','rhino','stag','rabbit','rodent','turtle']);
 const arthropods=new Set(['spider','crab','mantis','beetle','centipede','mech']);
 
 // V3 skins the actual directional artwork. A proxy skeleton describes motion,
@@ -11,7 +12,8 @@ export function creatureLegArt(asset,rig,colors=asset.colors){
  const design=rig.design||rig.id;
  asset.creatureSkins??=new Map();if(asset.creatureSkins.has(design))return asset.creatureSkins.get(design);
  const bottom=Math.max(...asset.pixels.map(p=>p.y)),top=Math.min(...asset.pixels.map(p=>p.y));
- const height=Math.min((bottom-top)*.36,legAnatomy(design).height||9),rootY=bottom-height;
+ const robe=['caster','frostelf','elf','fox','skeleton'].includes(design);
+ const height=Math.min((bottom-top)*.36,legAnatomy(design).height||(robe?5:9)),rootY=bottom-height;
  const occupied=new Set(asset.pixels.map(p=>p.y*64+p.x));
  // Separate the visible terminal branches below the belly. Evaluate several
  // depths: a single scan line misses far feet that end above the near soles.
@@ -26,6 +28,14 @@ export function creatureLegArt(asset,rig,colors=asset.colors){
   const candidates=groups.filter(g=>Math.max(...g.map(p=>p.y))>=bottom-height*.6);
   const value=(candidates.length>=2&&candidates.length<=Math.min(6,rig.legs.length)?100:0)+Math.min(6,candidates.length)*4-depth;
   if(value>score){score=value;branches=candidates;}
+ }
+ // Broad paws often touch the belly in the lower fringe. Treating that
+ // connected region as one foot made bears, lions and rabbits hop as a block.
+ // Split its two visible lobes without removing or narrowing any artwork.
+ if(branches.length<2&&(QUADRUPEDS.has(design)||rig.legs.length===2)){
+  const fringe=asset.pixels.filter(p=>p.y>=bottom-height*.6),left=Math.min(...fringe.map(p=>p.x)),right=Math.max(...fringe.map(p=>p.x)),middle=(left+right)/2;
+  const halves=[fringe.filter(p=>p.x<=middle),fringe.filter(p=>p.x>middle)];
+  if(right-left>=6&&halves.every(g=>g.length>=3))branches=halves;
  }
  if(!branches.length)branches=[asset.pixels.filter(p=>p.y>=bottom-2)];
  const limbs=branches.map(points=>{
@@ -47,9 +57,15 @@ export function skinCreatureLegs(rig,rest,angle,art,bodyDelta){
  const bind=rest.legs.map(l=>project(l.end)),xs=bind.map(p=>p.x),left=Math.min(...xs),right=Math.max(...xs);
  const first=art.limbs[0].x,last=art.limbs.at(-1).x,available=new Set(bind.map((_,i)=>i));
  const moving=['walk','run','sprint','turn','stop','dash','dodge'].includes(rig.state),fallen=Boolean(rig.ragdoll);
- const limbs=art.limbs.map(source=>{
+ const quad=QUADRUPEDS.has(rig.design||rig.id),group=index=>index===0||index===3?0:1;let firstGroup;
+ const limbs=art.limbs.map((source,ordinal)=>{
   const tx=left+(source.x-first)/Math.max(1,last-first)*(right-left);
-  const index=[...available].sort((a,b)=>Math.abs(bind[a].x-tx)-Math.abs(bind[b].x-tx)||bind[b].y-bind[a].y)[0]??0;available.delete(index);
+  const candidates=[...available].sort((a,b)=>Math.abs(bind[a].x-tx)-Math.abs(bind[b].x-tx)||bind[b].y-bind[a].y);
+  if(quad&&firstGroup===undefined)firstGroup=group(candidates[0]??0);
+  // Two visible paws can otherwise bind to the same diagonal pair. Prefer
+  // opposite footfall groups for neighboring visible lobes, while retaining
+  // the closest depth-correct physical leg within each group.
+  const wanted=(firstGroup+ordinal)%2,index=(quad?candidates.find(i=>group(i)===wanted):undefined)??candidates[0]??0;available.delete(index);
   const end=project(rig.legs[index].end),origin=bind[index];
   // Source-relative travel limits keep a short crab leg short even when its
   // locomotion skeleton has a large world-space stride. The existing stride

@@ -4,9 +4,9 @@ V2 replaced the lower sprite with generic shaded tubes. Comparing the original a
 
 V3 keeps the original directional limb shapes and skins their painted pixels to the movement rig. Fur, scales, metal, dark hooves and highlights retain their original palette indices, including collection variants. Hidden far legs stay hidden. Idle feet retain the authored stance; breathing moves the body gently above them. Movement is limited by the source limb length, and the existing 50–150% stride slider remains visible without changing combat stats.
 
-Source-adjacent pixels remain connected during rasterization. Inverse texture samples that form unsupported detached fragments are discarded. Resting claws and mantis scythes are no longer drawn a second time over the artwork. Natural attack contacts and the 3D simulation skeleton remain in use; humanoid leg volumes retain their existing construction.
+Source-adjacent pixels remain connected during rasterization. Inverse texture samples that form unsupported detached fragments are discarded. Resting claws and mantis scythes are no longer drawn a second time over the artwork. Natural attack contacts and the 3D simulation skeleton remain in use. Humanoids also skin their original painted clothing and boots; replacement leg volumes are available only through an explicit diagnostic flag. See [alternating gaits and stable carries](GAITS-AND-CARRY.md).
 
-The apex stag source art contained painted blue/brown ground strips in six facings; V3 removes that scenery and retains dark hoof tips. The evolved crab source frames also contained truncated crystal crowns. Their missing caps now reuse the intact juvenile crystal's painted facets in the evolved palette. The full pose is fitted with headroom, including virtual source rows above the original cell.
+The apex stag source art contained painted blue/brown ground strips in six facings; V3 removes that scenery and retains dark hoof tips. Evolved crab and walker source frames also contained truncated crystal crowns. Their missing caps now reuse the intact juvenile crystal's painted facets in the evolved palette. The full pose is fitted with headroom, including virtual source rows above the original cell. Mature bear and crab proportions deform continuously across the textured skin, preserving their evolution silhouettes and leg connections.
 
 ## Visual review
 

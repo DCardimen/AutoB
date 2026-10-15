@@ -16,7 +16,7 @@ try{
    ctx.fillStyle='#e4dfc2';ctx.font='12px monospace';ctx.fillText(`${id} / idle views, then windup > contact > recovery`,4,row*150+13);
    for(let col=0;col<8;col++){
     const state=col<3?'idle':'attack',dir=col<3?[0,2,5][col]:1,phase=col<3?.25:[.12,.34,.48,.58,.92][col-3],spec=pixelSpec(id),rig=nativePoseRig(spec,{id},state,phase),pixels=paintCharacterPixels(spec.nativeRig,rig,dir*Math.PI/4);
-    sc.putImageData(new ImageData(pixels,64,64),0,0);ctx.drawImage(cell,col*128,row*150+20,128,128);poses.push({id,state,phase,dir,legs:rig.legs.length,volumeLegs:rig.artLegVolumes?.length||0,attack:rig.creatureAttack?.category,clipped:pixels.clipped});
+    sc.putImageData(new ImageData(pixels,64,64),0,0);ctx.drawImage(cell,col*128,row*150+20,128,128);poses.push({id,state,phase,dir,legs:rig.legs.length,volumeLegs:rig.artLegVolumes?.length||0,skinLegs:rig.artLegSkin?.limbs.length||0,attack:rig.creatureAttack?.category,clipped:pixels.clipped});
    }
   }
   const focus=document.createElement('canvas');focus.width=1024;focus.height=450;const fc=focus.getContext('2d');for(const [i,row]of [0,8,9].entries())fc.drawImage(canvas,0,row*150,1024,150,0,i*150,1024,150);
@@ -26,7 +26,7 @@ try{
  fs.writeFileSync(`playtest-artifacts/creature-anatomy-focus-${label}.png`,Buffer.from(result.focus,'base64'));
  const report={poses:result.poses,errors};fs.writeFileSync(`playtest-artifacts/creature-anatomy-${label}.json`,JSON.stringify(report,null,2));
  assert.deepEqual(errors,[]);if(label==='after'){
-  assert.ok(result.poses.every(p=>p.clipped===0));assert.ok(result.poses.filter(p=>p.legs>2).every(p=>p.volumeLegs===p.legs));
+  assert.ok(result.poses.every(p=>p.clipped===0));assert.ok(result.poses.filter(p=>p.legs>2).every(p=>p.skinLegs>=1&&p.skinLegs<=p.legs));
   const movie=await page.evaluate(async()=>{
    const {pixelSpec}=await import('/native-content.js'),{nativePoseRig}=await import('/native-poses.js'),{paintCharacterPixels}=await import('/prototype-pixel-art.js');
    const ids=['emberhound','orchimantis','mireclaw','nightmaw','frostursa','pyrehorn','runespider','ironscolopendra','nix'];
