@@ -22,7 +22,9 @@ export function nativeSpawn(spec,unit,side,index){
 export function initializeNative(u,spec,tuning){
  spec=pixelSpec(spec.id)||spec;const id=actorId(spec,u);if(!id)return;
  u.nativeAttackEffect=CREATURE_ATTACK_EFFECTS[spec.nativeDesign||spec.nativeRig];
- u.nativeScale=creatureWorldScale(spec,u,tuning);u.radius*=u.nativeScale;u.range=spec.range>100?u.range:u.range*u.nativeScale;u.mass*=Math.max(.5,u.nativeScale);u.entityBounds=nativeEntityBounds(spec,u,NATIVE_BOUNDS,tuning);u.y=Math.max(u.y,u.entityBounds.top+u.radius);u.py=u.y;
+ u.nativeScale=creatureWorldScale(spec,u,tuning);// Compact shells/pincers have shorter authored contact paths than tall bodies.
+ const footprint={crab:32,clam:25,beetle:35}[spec.nativeDesign||spec.nativeRig]||44;
+ u.radius=Math.max(u.radius,footprint)*u.nativeScale;u.range=spec.range>100?u.range:u.range*u.nativeScale;u.mass*=Math.max(.65,u.nativeScale/.15);u.entityBounds=nativeEntityBounds(spec,u,NATIVE_BOUNDS,tuning);u.y=Math.max(u.y,u.entityBounds.top+u.radius);u.py=u.y;
  u.nativeActor=makePrototypeUnit(id,u.side,0,u.x,u.y);u.nativeActor.uid=u.uid;u.nativeActor.family=spec;u.nativeActor.creature=u;u.nativeActor.rigScale=u.nativeScale;u.nativeActor.stride=formProfile(spec,u).stride||u.nativeActor.stride;u.nativeActor.strideLength=tuning?.strideLength??100;
  u.facing=u.side?Math.PI:0;u.meleeCount=0;u.nativeActor.facing=u.facing;u.nativeActor.moveFacing=u.facing;
  const gear=equipmentEffects(u);u.maxPoise+=(nativeEvolution(u).poise||0)+gear.poise;u.shield+=gear.shield;
@@ -56,7 +58,7 @@ export function advanceNative(u,dt,time,visuals=true,actionDt=dt){
  const cycleLimit=(2.4+a.runBlend*.6+a.sprintBlend*.6)/Math.sqrt(a.strideLength/100);
  if(!u.nativeAction&&!a.roll&&u.stagger<=0&&u.hp>0)a.gait+=gaitPace*Math.min(distance/stride,dt*cycleLimit);
  a.moving+=( (u.actionLock>0?0:Math.min(1,velocity/(a.run||1)))-a.moving)*(1-Math.exp(-dt*12*gaitBlend));
- a.hitTime=u.nativeAction?.charged?0:Math.min(.13,u.hitAnim||0);a.stagger=u.stagger||0;
+ a.hitDuration=.22;a.hitTime=u.nativeAction?.charged?0:Math.min(a.hitDuration,u.hitAnim||0);a.stagger=u.stagger||0;
  a.roll=u.rollTime>0?{kind:u.dodgeStyle==='barrel'||u.dodgeStyle==='sidestep'?'dash':'dodge',elapsed:.25-u.rollTime,duration:.25,dx:u.rollX,dy:u.rollY}:u.dashMotion?{kind:'dash',elapsed:Math.max(0,u.dashDuration-u.dashAnim),duration:u.dashDuration,dx:u.dashMotion.x,dy:u.dashMotion.y}:null;
  if(u.stagger>0&&!u.nativeAction?.charged)u.nativeAction=null;
  if(u.nativeAction){u.nativeAction.elapsed+=actionDt;u.nativeAction.released=u.nativeAction.elapsed>=u.nativeAction.windup;if(u.nativeAction.elapsed>=u.nativeAction.duration)u.nativeAction=null;}

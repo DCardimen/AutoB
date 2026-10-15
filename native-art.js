@@ -70,6 +70,7 @@ export function renderNativeBattle(display,w,h,battle,planet,time,team,foes,spec
   const p=nativeScreen(u.x,u.y),spec=species[u.id],scale=creatureWorldScale(spec,u);if(u.captured)continue;c.fillStyle=u.hp>0?'#0d1b1577':'#0d1b1544';c.beginPath();c.ellipse(p.x,p.y,(u.boss?68:46)*scale,14*scale,0,0,Math.PI*2);c.fill();
   if(spec.rarity==='Legendary'){ring(c,u.x,u.y,20*scale+6,'#edce85aa','#e5c67716');for(let i=0;i<4;i++){const a=i*Math.PI/2+time*.6;c.fillStyle=i%2?'#fff0bd':'#d9b363';c.fillRect(Math.round(p.x+Math.cos(a)*(20*scale+6)),Math.round(p.y+Math.sin(a)*(12*scale+4)),2,2);}}
   if(eliteModifier(u)&&u.hp>0)paintEliteFlame(c,p,scale,battle?battle.time:time,u);
+  if(battle&&u.hp>0){const radius=u.radius;c.strokeStyle=u.side?'#dc9c8155':'#c6df9d55';c.lineWidth=1;c.beginPath();c.ellipse(p.x,p.y,radius,radius*.58,0,0,Math.PI*2);c.stroke();}
   const visualTop=drawNativeUnit(c,u,spec,p.x,p.y,battle?battle.time:time,3*scale);
   if(u.hp<=0)continue;
   const width=u.boss?58:30,bar=Math.min(visualTop-9,p.y-(({knight:115,orc:100,elf:105,caster:116,wolf:77,fox:112,mech:90,spider:83,jelly:92,serpent:65,flyer:112,crab:80,centipede:75}[actorFor(u,spec).id]||112)+12)*scale*characterHeight*formProfile(spec,u).height);

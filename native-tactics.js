@@ -38,3 +38,47 @@ export function orderGoal(u,target,allies,enemies,response){
  if(u.order==='flank'&&Math.hypot(target.x-u.x,target.y-u.y)>u.range+10&&Math.hypot(target.x-u.x,target.y-u.y)<230)return {x:target.x+(u.side?35:-35)*(u.balanceVersion>=15?u.nativeScale||.15:1),y:target.y+(u.y<target.y?-70:70)*(u.balanceVersion>=15?u.nativeScale||.15:1),intent:'Flanking the occupied front'};
  return null;
 }
+
+// Reserve reachable ground positions instead of steering every attacker into a target's center.
+export function combatApproach(u,target,units,bounds){
+ const alive=units.filter(a=>a.hp>0&&!a.captured&&a!==u&&a!==target),distance=Math.hypot(u.x-target.x,u.y-target.y),ranged=u.range>100;
+ const gap=u.radius+target.radius+.8,reach=ranged?u.range*.78:Math.max(gap,u.range*.88);
+ const current=Math.atan2(u.y-target.y,u.x-target.x),previous=u.engagement;
+ // A fighter already in a clear attack position plants its feet through cooldown/recovery.
+ const crowded=alive.some(a=>Math.hypot(a.x-u.x,a.y-u.y)<u.radius+a.radius+1);
+ if(!crowded&&distance>=gap-.2&&distance<=reach+.3&&(!ranged||distance>=u.range*.55)){
+  u.engagement={targetUid:target.uid,angle:current,x:u.x,y:u.y};return {x:u.x,y:u.y,intent:ranged?'Holding firing range':'Holding striking range'};
+ }
+ let best=null;
+ for(let i=0;i<24;i++){
+  const angle=current+i*Math.PI/12,x=target.x+Math.cos(angle)*reach,y=target.y+Math.sin(angle)*reach,b=u.entityBounds||bounds;
+  if(b&&(x<b.left+u.radius||x>b.right-u.radius||y<b.top+u.radius||y>b.bottom-u.radius))continue;
+  let score=Math.hypot(x-u.x,y-u.y);
+  if(previous?.targetUid===target.uid)score+=Math.abs(Math.atan2(Math.sin(angle-previous.angle),Math.cos(angle-previous.angle)))*8;
+  for(const a of alive){
+   const clearance=u.radius+a.radius+2,d=Math.hypot(x-a.x,y-a.y);
+   if(d<clearance)score+=(clearance-d)*18+35;
+   if(a.side===u.side&&a.engagement?.targetUid===target.uid){const reserved=Math.hypot(x-a.engagement.x,y-a.engagement.y);if(reserved<clearance)score+=(clearance-reserved)*12;}
+  }
+  if(!best||score<best.score)best={x,y,angle,score};
+ }
+ if(!best)return null;
+ u.engagement={targetUid:target.uid,angle:best.angle,x:best.x,y:best.y};
+ return {x:best.x,y:best.y,intent:ranged?'Finding a clear firing position':'Approaching an open striking position'};
+}
+export function avoidCombatBodies(u,vx,vy,units){
+ const length=Math.hypot(vx,vy);if(length<.001)return {x:vx,y:vy};
+ let x=vx,y=vy;
+ for(const a of units){
+  if(a===u||a.hp<=0||a.captured||u.range<=100&&a===u.targetMemory)continue;
+  const dx=a.x-u.x,dy=a.y-u.y,d=Math.hypot(dx,dy)||.001,nx=dx/d,ny=dy/d,gap=u.radius+a.radius+2;
+  const along=dx*vx/length+dy*vy/length,across=dx*(-vy)/length+dy*vx/length;
+  if(along<=0||along>gap+Math.min(38,Math.hypot(u.velocityX||0,u.velocityY||0)*.22+12)||Math.abs(across)>gap)continue;
+  const closeness=Math.max(0,Math.min(1,(gap+14-d)/14)),closing=Math.max(0,x*nx+y*ny);
+  x-=nx*closing*closeness;y-=ny*closing*closeness;
+  // Keep a stable passing side even when the obstacle is directly ahead.
+  const side=Math.abs(across)>.5?(across>0?-1:1):(String(u.uid)<String(a.uid)?1:-1);
+  x+=-ny*side*closeness*.65;y+=nx*side*closeness*.65;
+ }
+ return {x,y};
+}
