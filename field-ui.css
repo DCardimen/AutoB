@@ -685,3 +685,15 @@ body.ui-v3[data-screen="arena"] .main-nav button.active{background:#12364e;color
 .tuning-preview [data-preview-name]{font-size:12px;color:#e2e9dc;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
 .tuning-preview [data-preview-motion]{color:#8fd5e2}
 .tuning-preview .tuning-preview-note{margin:0;padding:7px 10px;text-align:center;font-size:10px;color:#b6ccc7;background:#061e2b;line-height:1.4}
+
+/* Supplied Fang & Feather crest, with compact branding on phone layouts. */
+.ui-v3 .header .brand{flex-shrink:0;gap:10px;white-space:nowrap}
+.ui-v3 .header .brand .brand-mark{display:block;width:56px;height:56px;flex-shrink:0;line-height:0}
+.ui-v3 .header .brand-mark img{display:block;width:100%;height:100%;object-fit:contain}
+.ui-v3 .header .brand .brand-name{font-size:18px;letter-spacing:1.2px;line-height:1.2}
+.brand-short{display:none}
+@media(max-width:700px){
+ .ui-v3 .header .brand .brand-mark{width:42px;height:42px}
+ .ui-v3 .header .brand .brand-name{font-size:21px;letter-spacing:1px}
+ .brand-full{display:none}.brand-short{display:block}
+}

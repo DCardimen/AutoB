@@ -21,7 +21,7 @@ try{
 }finally{await browser.close();}
 fs.writeFileSync(path.join(output,'sprites','manifest.json'),JSON.stringify(manifest,null,2)+'\n');
 fs.copyFileSync('public/prototype-glade-pixel.png',path.join(output,'environment.png'));
-fs.writeFileSync(path.join(output,'project.godot'),`config_version=5\n[application]\nconfig/name="Starfall · Native Pixel Showcase"\nrun/main_scene="res://showcase.tscn"\n[display]\nwindow/size/viewport_width=1002\nwindow/size/viewport_height=654\n[rendering]\nrenderer/rendering_method="gl_compatibility"\ntextures/default_filters/use_nearest_mipmap_filter=false\n`);
+fs.writeFileSync(path.join(output,'project.godot'),`config_version=5\n[application]\nconfig/name="Fang & Feather · Native Pixel Showcase"\nrun/main_scene="res://showcase.tscn"\n[display]\nwindow/size/viewport_width=1002\nwindow/size/viewport_height=654\n[rendering]\nrenderer/rendering_method="gl_compatibility"\ntextures/default_filters/use_nearest_mipmap_filter=false\n`);
 fs.writeFileSync(path.join(output,'showcase.tscn'),`[gd_scene load_steps=2 format=3]\n[ext_resource type="Script" path="res://showcase.gd" id="1"]\n[node name="Showcase" type="Node2D"]\ntexture_filter = 1\nscript = ExtResource("1")\n`);
 fs.writeFileSync(path.join(output,'showcase.gd'),`extends Node2D
 const IDS = ["knight", "orc", "elf", "caster", "wolf", "fox", "mech", "spider", "jelly"]

@@ -1,6 +1,6 @@
 config_version=5
 [application]
-config/name="Starfall · Native Pixel Showcase"
+config/name="Fang & Feather · Native Pixel Showcase"
 run/main_scene="res://showcase.tscn"
 [display]
 window/size/viewport_width=1002
