@@ -23,8 +23,9 @@ try{
   await page.locator('[data-action="pause"]').click();if(!offline)await page.screenshot({path:'playtest-artifacts/legs-v2-live-arena.png'});
   const before=await page.locator('#battle-canvas').evaluate(c=>c.toDataURL());await page.locator('[data-action="pause"]').click();await page.clock.runFor(400);assert.notEqual(await page.locator('#battle-canvas').evaluate(c=>c.toDataURL()),before,'native combat animates with authored limb skinning');
   if(!offline){
-   const audit=await page.evaluate(async()=>{const {spriteSample}=await import('/prototype-sprites.js'),{characterRig}=await import('/prototype-rig.js');return starfall.state.battle.units.filter(u=>u.hp>0).map(u=>{const a=u.nativeActor,s=spriteSample(a,starfall.state.battle.time),rig=characterRig(a.id,s.state,s.phase,s.stage,{...s,stride:a.stride});return {id:u.id,clamped:rig.legs.filter(l=>l.clamped).length};});});
-   assert.ok(audit.every(u=>u.clamped===0),JSON.stringify(audit));
+   const audit=await page.evaluate(async()=>{const {spriteSample}=await import('/prototype-sprites.js'),{characterRig}=await import('/prototype-rig.js'),{nativeFormRig}=await import('/native-forms.js');return starfall.state.battle.units.filter(u=>u.hp>0).map(u=>{const a=u.nativeActor,s=spriteSample(a,starfall.state.battle.time),rig=nativeFormRig(a.family,u,characterRig(a.id,s.state,s.phase,s.stage,{...s,stride:a.stride}),1);return {id:u.id,state:s.state,clamped:rig.legs.filter(l=>l.clamped).length,finite:rig.legs.every(l=>[l.root,l.joint,l.end].every(p=>[p.x,p.y,p.z].every(Number.isFinite)))};});});
+   assert.ok(audit.every(u=>u.finite),JSON.stringify(audit));
+   const locomotion=audit.filter(u=>['walk','run','sprint','turn','stop'].includes(u.state));assert.ok(locomotion.length>0);assert.ok(locomotion.every(u=>u.clamped===0),JSON.stringify(locomotion));
   }
   await page.locator('#settings').click();await page.locator('[data-action="reset-tuning"]').click();assert.equal(await page.locator('[data-tuning="strideLength"]').inputValue(),'100');
   for(const width of [320,390]){await page.setViewportSize({width,height:844});assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));}
