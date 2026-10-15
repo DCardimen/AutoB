@@ -162,13 +162,12 @@ test('carried weapons retain their grip through walk/run/sprint, including both 
     for(const arm of rig.arms)assert.equal(arm.clamped,false);
   }
 });
-test('walking rolls heel to toe; sprint adds lift, forward lean and a separate wolf gallop',()=>{
+test('walking rolls heel to toe; sprint adds lift, forward lean and an alternating wolf trot',()=>{
   assert.ok(rigFoot(0,76,false).pitch<0);assert.ok(rigFoot(0.6,76,false).pitch>0);
   for(const spec of PROTOTYPE_CHARACTERS){
     const walk=characterRig(spec.id,'walk',0.78),sprint=characterRig(spec.id,'sprint',0.78);
     assert.ok(sprint.lean>walk.lean+0.1);
     if(spec.id==='wolf')assert.equal(sprint.legs.filter(l=>l.hock).length,2);
   }
-  const walk=characterRig('wolf','walk',0),sprint=characterRig('wolf','sprint',0);
-  assert.notDeepEqual(walk.legs.map(l=>l.foot.planted),sprint.legs.map(l=>l.foot.planted));
+  for(const state of ['walk','run','sprint'])for(let step=0;step<32;step++){const pose=characterRig('wolf',state,step/32);assert.ok(pose.legs.some(l=>l.foot.planted),'alternating support remains on the ground');}
 });

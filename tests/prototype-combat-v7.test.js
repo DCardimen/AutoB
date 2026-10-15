@@ -47,9 +47,9 @@ test('directional faces have isolated profiles, no rear eyes and stable distinct
  const hash=p=>createHash('sha256').update(p).digest('hex');
  for(const id of Object.keys(FACE_IDENTITIES)){assert.ok(PIXEL_PALETTES[id]);const rig=characterRig(id,'idle',0.25);assert.equal(new Set(Array.from({length:8},(_,dir)=>hash(paintCharacterPixels(id,rig,dir*Math.PI/4)))).size,8);}
 });
-test('the dog uses flat paws, low swing lift, diagonal trot support and an asymmetric gallop',()=>{
+test('the dog uses flat paws, low swing lift, alternating diagonal support at every pace',()=>{
  for(let i=0;i<100;i++){const foot=canineFoot(i/100,72,0,0);assert.ok(foot.z<=4.01);if(foot.planted){assert.equal(foot.z,0);assert.equal(foot.pitch,0);}}
  const trot=legLayout('wolf',1,0);assert.equal(trot[0].offset,trot[3].offset);assert.equal(trot[1].offset,trot[2].offset);
- const gallop=legLayout('wolf',1,1);assert.equal(new Set(gallop.map(l=>((l.offset%1)+1)%1)).size,4);
+ for(const [run,sprint]of [[0,0],[1,0],[1,1]]){const steps=legLayout('wolf',run,sprint);assert.equal(steps[0].offset,steps[3].offset);assert.equal(steps[1].offset,steps[2].offset);assert.equal(Math.abs(steps[0].offset-steps[1].offset),.5);}
  for(const [run,sprint]of [[0,0],[1,0],[1,1]]){const stride=locomotionStride(72,run,sprint,'wolf'),a=canineFoot(0.05,stride,run,sprint),b=canineFoot(0.05+3/stride,stride,run,sprint);assert.ok(a.planted&&b.planted);assert.ok(Math.abs(a.x-b.x-3)<1e-8);}
 });
