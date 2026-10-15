@@ -4576,7 +4576,7 @@
       phase = Math.min(1, u.deathTime / 0.95);
       count = 32;
     } else if (state === "dodge" || state === "dash") phase = u.roll ? u.roll.elapsed / u.roll.duration : 0;
-    else if (state === "hit") phase = 1 - u.hitTime / 0.13;
+    else if (state === "hit") phase = 1 - u.hitTime / (u.hitDuration || 0.13);
     else if (state === "stagger") phase = 1 - u.stagger / 0.46;
     else if (state === "knockdown") phase = 1 - u.knockdown / 0.65;
     else if (state === "getup") phase = 1 - u.getup / 0.45;

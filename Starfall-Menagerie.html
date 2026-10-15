@@ -9428,13 +9428,39 @@ body:has(.team-select-backdrop){overflow:hidden}
   function separateBodies(units, bounds = ARENA_BOUNDS) {
     const alive = units.filter((u) => u.hp > 0 && !u.captured);
     let contacts = 0;
-    for (let pass = 0; pass < 4; pass++) {
+    for (let i = 0; i < alive.length; i++) for (let j = i + 1; j < alive.length; j++) {
+      const a = alive[i], b = alive[j];
+      if (![a.px, a.py, b.px, b.py].every(Number.isFinite)) continue;
+      const gap = a.radius + b.radius, start = { x: a.px - b.px, y: a.py - b.py }, end = { x: a.x - b.x, y: a.y - b.y };
+      if (Math.hypot(start.x, start.y) < gap - 0.02) continue;
+      const t = sweepCircle(start, end, { x: 0, y: 0 }, gap);
+      if (t === null || t >= 1) continue;
+      const nx = (start.x + (end.x - start.x) * t) / gap, ny = (start.y + (end.y - start.y) * t) / gap;
+      const ax = a.x - a.px, ay = a.y - a.py, bx = b.x - b.px, by = b.y - b.py, closing = (ax - bx) * nx + (ay - by) * ny;
+      if (closing >= 0) continue;
+      const wa = 1 / (a.mass || 1), wb = 1 / (b.mass || 1), impulse = closing * (1 - t) / (wa + wb);
+      a.x -= nx * impulse * wa;
+      a.y -= ny * impulse * wa;
+      b.x += nx * impulse * wb;
+      b.y += ny * impulse * wb;
+      const speed2 = ((a.velocityX || 0) - (b.velocityX || 0)) * nx + ((a.velocityY || 0) - (b.velocityY || 0)) * ny;
+      if (speed2 < 0) {
+        const reaction = speed2 / (wa + wb);
+        a.velocityX = (a.velocityX || 0) - nx * reaction * wa;
+        a.velocityY = (a.velocityY || 0) - ny * reaction * wa;
+        b.velocityX = (b.velocityX || 0) + nx * reaction * wb;
+        b.velocityY = (b.velocityY || 0) + ny * reaction * wb;
+      }
+    }
+    for (let pass = 0; pass < 16; pass++) {
+      let deepest = 0;
       for (let i = 0; i < alive.length; i++)
         for (let j = i + 1; j < alive.length; j++) {
           const a = alive[i], b = alive[j], dx = b.x - a.x, dy = b.y - a.y, distance3 = Math.hypot(dx, dy), gap = (a.radius || 17) + (b.radius || 17);
-          if (distance3 >= gap - 0.1) continue;
+          if (distance3 >= gap - 0.02) continue;
           contacts += pass === 0;
-          const nx = distance3 > 1e-3 ? dx / distance3 : (i + j) % 2 ? 1 : -1, ny = distance3 > 1e-3 ? dy / distance3 : 0;
+          deepest = Math.max(deepest, gap - distance3);
+          const angle2 = (i * 2.399963 + j * 1.618034) % (Math.PI * 2), nx = distance3 > 1e-3 ? dx / distance3 : Math.cos(angle2), ny = distance3 > 1e-3 ? dy / distance3 : Math.sin(angle2);
           const wa = 1 / (a.mass || 1), wb = 1 / (b.mass || 1), penetration = gap - distance3 + 0.02;
           a.x -= nx * penetration * wa / (wa + wb);
           a.y -= ny * penetration * wa / (wa + wb);
@@ -9442,7 +9468,7 @@ body:has(.team-select-backdrop){overflow:hidden}
           b.y += ny * penetration * wb / (wa + wb);
           const closing = ((a.velocityX || 0) - (b.velocityX || 0)) * nx + ((a.velocityY || 0) - (b.velocityY || 0)) * ny;
           if (closing > 0) {
-            const impulse = closing / (wa + wb) * 0.85;
+            const impulse = closing / (wa + wb);
             a.velocityX = (a.velocityX || 0) - nx * impulse * wa;
             a.velocityY = (a.velocityY || 0) - ny * impulse * wa;
             b.velocityX = (b.velocityX || 0) + nx * impulse * wb;
@@ -9451,6 +9477,7 @@ body:has(.team-select-backdrop){overflow:hidden}
           confineBody(a, bounds);
           confineBody(b, bounds);
         }
+      if (deepest < 0.02) break;
     }
     return contacts;
   }
@@ -9514,6 +9541,53 @@ body:has(.team-select-backdrop){overflow:hidden}
     if (u.order === "hold" && u.nativeHome && Math.hypot(target.x - u.nativeHome.x, target.y - u.nativeHome.y) > 105 + (u.range || 50)) return { ...u.nativeHome, intent: "Holding the deployment lane" };
     if (u.order === "flank" && Math.hypot(target.x - u.x, target.y - u.y) > u.range + 10 && Math.hypot(target.x - u.x, target.y - u.y) < 230) return { x: target.x + (u.side ? 35 : -35) * (u.balanceVersion >= 15 ? u.nativeScale || 0.15 : 1), y: target.y + (u.y < target.y ? -70 : 70) * (u.balanceVersion >= 15 ? u.nativeScale || 0.15 : 1), intent: "Flanking the occupied front" };
     return null;
+  }
+  function combatApproach(u, target, units, bounds) {
+    const alive = units.filter((a) => a.hp > 0 && !a.captured && a !== u && a !== target), distance3 = Math.hypot(u.x - target.x, u.y - target.y), ranged = u.range > 100;
+    const gap = u.radius + target.radius + 0.8, reach = ranged ? u.range * 0.78 : Math.max(gap, u.range * 0.88);
+    const current2 = Math.atan2(u.y - target.y, u.x - target.x), previous = u.engagement;
+    const crowded = alive.some((a) => Math.hypot(a.x - u.x, a.y - u.y) < u.radius + a.radius + 1);
+    if (!crowded && distance3 >= gap - 0.2 && distance3 <= reach + 0.3 && (!ranged || distance3 >= u.range * 0.55)) {
+      u.engagement = { targetUid: target.uid, angle: current2, x: u.x, y: u.y };
+      return { x: u.x, y: u.y, intent: ranged ? "Holding firing range" : "Holding striking range" };
+    }
+    let best = null;
+    for (let i = 0; i < 24; i++) {
+      const angle2 = current2 + i * Math.PI / 12, x = target.x + Math.cos(angle2) * reach, y = target.y + Math.sin(angle2) * reach, b = u.entityBounds || bounds;
+      if (b && (x < b.left + u.radius || x > b.right - u.radius || y < b.top + u.radius || y > b.bottom - u.radius)) continue;
+      let score = Math.hypot(x - u.x, y - u.y);
+      if (previous?.targetUid === target.uid) score += Math.abs(Math.atan2(Math.sin(angle2 - previous.angle), Math.cos(angle2 - previous.angle))) * 8;
+      for (const a of alive) {
+        const clearance = u.radius + a.radius + 2, d = Math.hypot(x - a.x, y - a.y);
+        if (d < clearance) score += (clearance - d) * 18 + 35;
+        if (a.side === u.side && a.engagement?.targetUid === target.uid) {
+          const reserved = Math.hypot(x - a.engagement.x, y - a.engagement.y);
+          if (reserved < clearance) score += (clearance - reserved) * 12;
+        }
+      }
+      if (!best || score < best.score) best = { x, y, angle: angle2, score };
+    }
+    if (!best) return null;
+    u.engagement = { targetUid: target.uid, angle: best.angle, x: best.x, y: best.y };
+    return { x: best.x, y: best.y, intent: ranged ? "Finding a clear firing position" : "Approaching an open striking position" };
+  }
+  function avoidCombatBodies(u, vx, vy, units) {
+    const length2 = Math.hypot(vx, vy);
+    if (length2 < 1e-3) return { x: vx, y: vy };
+    let x = vx, y = vy;
+    for (const a of units) {
+      if (a === u || a.hp <= 0 || a.captured || u.range <= 100 && a === u.targetMemory) continue;
+      const dx = a.x - u.x, dy = a.y - u.y, d = Math.hypot(dx, dy) || 1e-3, nx = dx / d, ny = dy / d, gap = u.radius + a.radius + 2;
+      const along = dx * vx / length2 + dy * vy / length2, across = dx * -vy / length2 + dy * vx / length2;
+      if (along <= 0 || along > gap + Math.min(38, Math.hypot(u.velocityX || 0, u.velocityY || 0) * 0.22 + 12) || Math.abs(across) > gap) continue;
+      const closeness = Math.max(0, Math.min(1, (gap + 14 - d) / 14)), closing = Math.max(0, x * nx + y * ny);
+      x -= nx * closing * closeness;
+      y -= ny * closing * closeness;
+      const side = Math.abs(across) > 0.5 ? across > 0 ? -1 : 1 : String(u.uid) < String(a.uid) ? 1 : -1;
+      x += -ny * side * closeness * 0.65;
+      y += nx * side * closeness * 0.65;
+    }
+    return { x, y };
   }
 
   // grand-designs.js
@@ -13781,7 +13855,7 @@ body:has(.team-select-backdrop){overflow:hidden}
       phase2 = Math.min(1, u.deathTime / 0.95);
       count = 32;
     } else if (state === "dodge" || state === "dash") phase2 = u.roll ? u.roll.elapsed / u.roll.duration : 0;
-    else if (state === "hit") phase2 = 1 - u.hitTime / 0.13;
+    else if (state === "hit") phase2 = 1 - u.hitTime / (u.hitDuration || 0.13);
     else if (state === "stagger") phase2 = 1 - u.stagger / 0.46;
     else if (state === "knockdown") phase2 = 1 - u.knockdown / 0.65;
     else if (state === "getup") phase2 = 1 - u.getup / 0.45;
@@ -13833,9 +13907,10 @@ body:has(.team-select-backdrop){overflow:hidden}
     if (!id) return;
     u.nativeAttackEffect = CREATURE_ATTACK_EFFECTS[spec.nativeDesign || spec.nativeRig];
     u.nativeScale = creatureWorldScale(spec, u, tuning);
-    u.radius *= u.nativeScale;
+    const footprint = { crab: 32, clam: 25, beetle: 35 }[spec.nativeDesign || spec.nativeRig] || 44;
+    u.radius = Math.max(u.radius, footprint) * u.nativeScale;
     u.range = spec.range > 100 ? u.range : u.range * u.nativeScale;
-    u.mass *= Math.max(0.5, u.nativeScale);
+    u.mass *= Math.max(0.65, u.nativeScale / 0.15);
     u.entityBounds = nativeEntityBounds(spec, u, NATIVE_BOUNDS, tuning);
     u.y = Math.max(u.y, u.entityBounds.top + u.radius);
     u.py = u.y;
@@ -13911,7 +13986,8 @@ body:has(.team-select-backdrop){overflow:hidden}
     const cycleLimit = (2.4 + a.runBlend * 0.6 + a.sprintBlend * 0.6) / Math.sqrt(a.strideLength / 100);
     if (!u.nativeAction && !a.roll && u.stagger <= 0 && u.hp > 0) a.gait += gaitPace * Math.min(distance3 / stride, dt * cycleLimit);
     a.moving += ((u.actionLock > 0 ? 0 : Math.min(1, velocity / (a.run || 1))) - a.moving) * (1 - Math.exp(-dt * 12 * gaitBlend));
-    a.hitTime = u.nativeAction?.charged ? 0 : Math.min(0.13, u.hitAnim || 0);
+    a.hitDuration = 0.22;
+    a.hitTime = u.nativeAction?.charged ? 0 : Math.min(a.hitDuration, u.hitAnim || 0);
     a.stagger = u.stagger || 0;
     a.roll = u.rollTime > 0 ? { kind: u.dodgeStyle === "barrel" || u.dodgeStyle === "sidestep" ? "dash" : "dodge", elapsed: 0.25 - u.rollTime, duration: 0.25, dx: u.rollX, dy: u.rollY } : u.dashMotion ? { kind: "dash", elapsed: Math.max(0, u.dashDuration - u.dashAnim), duration: u.dashDuration, dx: u.dashMotion.x, dy: u.dashMotion.y } : null;
     if (u.stagger > 0 && !u.nativeAction?.charged) u.nativeAction = null;
@@ -16233,7 +16309,7 @@ body:has(.team-select-backdrop){overflow:hidden}
         u.nativeScale = next;
         u.radius *= ratio;
         if (BY_ID[u.id].range <= 100) u.range *= ratio;
-        u.mass *= Math.max(0.5, next) / Math.max(0.5, old);
+        u.mass *= Math.max(0.65, next / 0.15) / Math.max(0.65, old / 0.15);
         u.entityBounds = nativeEntityBounds(BY_ID[u.id], u, NATIVE_BOUNDS, this.tuning);
         u.nativeActor.rigScale = next;
         u.nativeActor.strideLength = this.tuning.strideLength;
@@ -16529,7 +16605,7 @@ body:has(.team-select-backdrop){overflow:hidden}
         crit ? "#fff0b3" : target.side === 0 ? "#eeb6a7" : "#f3e5c7"
       );
       this.burst(target.x, target.y - 10, color, crit ? 11 : 4, crit ? 110 : 60);
-      this.fx("impact", target.x, target.y - 8, color, { r: crit ? 35 : 23, victimUid: target.uid });
+      this.fx("impact", target.x, target.y - 8, color, { r: crit ? 35 : 23, victimUid: target.uid, angle: Math.atan2(target.y - source.y, target.x - source.x), groundRadius: target.radius, heavy: !def.auto, blocked: dealt <= 0, ttl: crit ? 0.32 : 0.26, max: crit ? 0.32 : 0.26 });
       if (dealt > 0 && this.run.rulesVersion >= 17 && this.visuals && !this.reducedMotion) this.hitPause = Math.max(this.hitPause || 0, crit ? 0.055 : 0.025);
       if (crit || !def.auto) this.shake = Math.min(4, this.shake + 1.1);
       this.audioEvents.push({
@@ -17425,6 +17501,10 @@ body:has(.team-select-backdrop){overflow:hidden}
       if (!enemies.length) return false;
       const selected = this.target(u);
       if (u.aiEffects?.captureCare && this.capturePlan && !this.captureSettled && selected?.uid === this.capturePlan.uid && ["cleave", "charge", "nova"].includes(def.kind)) return false;
+      if (this.native && selected && !["heal", "heal-all", "awakening", "shield", "buff", "dash", "blink", "charge"].includes(def.kind)) {
+        const reach = ["melee", "cleave", "double"].includes(def.kind) ? Math.max(u.range + selected.radius, u.radius + selected.radius + 1) : ["nova", "shell", "gravity", "wave"].includes(def.kind) ? (def.radius || 180) + selected.radius : Math.max(u.range, 220) + (def.kind === "beam" ? 40 : 0);
+        if (distance2(u, selected) > reach) return false;
+      }
       if (u.aiEffects?.interrupt && ["stun", "root"].some((key3) => def[key3]) && !enemies.some((e) => e.nativeAction && !e.nativeAction.released && !e.nativeAction.charged)) return false;
       if (["dash", "blink", "charge"].includes(def.kind) && (u.root > 0 || distance2(u, this.target(u) || u) >= 340))
         return false;
@@ -17976,12 +18056,17 @@ body:has(.team-select-backdrop){overflow:hidden}
           }
         }
         if (this.native) {
-          const response = evaluateOrders(u, this.living(u.side), this.living(1 - u.side)), goal = tacticalMove(this, u, t, orderGoal(u, t, this.living(u.side), this.living(1 - u.side), response));
+          const response = evaluateOrders(u, this.living(u.side), this.living(1 - u.side)), goal = tacticalMove(this, u, t, orderGoal(u, t, this.living(u.side), this.living(1 - u.side), response) || combatApproach(u, t, this.units, this.bounds));
           u.intention = u.nativeAction ? u.nativeAction.charged ? "Bracing a charged strike" : "Preparing " + (SKILLS[u.nativeAction.skillId]?.name || "a strike") : u.rollTime > 0 ? "Dodging a committed threat" : hazard ? "Leaving the danger field" : goal?.intent || response?.text || (dist5 > u.range ? "Closing on " + creatureName(t) : "Attacking " + creatureName(t));
           if (goal && !hazard) {
             const d = distance2(u, goal);
-            vx = d > 7 ? (goal.x - u.x) / d * Math.min(1, d / 35) : 0;
-            vy = d > 7 ? (goal.y - u.y) / d * Math.min(1, d / 35) : 0;
+            vx = d > 0.4 ? (goal.x - u.x) / d * Math.min(1, d / 12) : 0;
+            vy = d > 0.4 ? (goal.y - u.y) / d * Math.min(1, d / 12) : 0;
+          }
+          if (!u.nativeAction && !hazard && Math.hypot(vx, vy) > 0.05) {
+            const clear = avoidCombatBodies(u, vx, vy, this.units);
+            vx = clear.x;
+            vy = clear.y;
           }
           if (!u.nativeAction && Math.hypot(vx, vy) > 0.05) {
             const safe = terrainSteering(u, { x: u.x + vx * 180, y: u.y + vy * 180 }, this.terrain), d = distance2(u, safe) || 1;
@@ -18032,7 +18117,8 @@ body:has(.team-select-backdrop){overflow:hidden}
           const movement = u.speed * this.tuning.movementSpeed / 100 * (this.native ? movementPace(dist5, u.stamina, this.tuning, (this.run.rulesVersion || 0) >= 15) : 1) * (progressive(this.run) && this.native && sp.range > 100 && nearestEnemy && vx * (nearestEnemy.x - u.x) + vy * (nearestEnemy.y - u.y) < -0.15 ? 0.58 : 1) * (u.slow > 0 ? 0.5 : 1) * (u.movementBuff > 0 ? 1.3 : 1) * (u.stamina < 20 ? 0.7 : 1);
           const factor2 = rooted || locked ? 0 : 1;
           if ((this.run.rulesVersion || 0) >= 15 && this.native) {
-            const velocity = steerMovement(u.velocityX, u.velocityY, vx, vy, movement, factor2, dt, this.tuning);
+            const weight = Math.max(0.65, Math.min(1.2, 1 / Math.sqrt(u.mass || 1)));
+            const velocity = steerMovement(u.velocityX, u.velocityY, vx, vy, movement, factor2, dt, { ...this.tuning, acceleration: this.tuning.acceleration * weight });
             u.velocityX = velocity.x;
             u.velocityY = velocity.y;
           } else {
@@ -18079,7 +18165,7 @@ body:has(.team-select-backdrop){overflow:hidden}
         }
         u.skillTimer = u.cooldowns[u.id].remaining;
         u.cd = u.cooldowns[u.id].total;
-        if (u.attackTimer <= 0 && u.actionLock <= 0 && u.stagger <= 0 && !u.nativeKnockdown && !u.nativeGetup && u.stamina >= (u.aiEffects?.reserveStamina ? 38 : 8) && dist5 <= u.range + ((this.run.rulesVersion || 0) >= 15 && sp.range < 100 ? 12 * (u.nativeScale || 1) : 12) && (!this.native || !u.nativeActor || Math.abs(Math.atan2(Math.sin(Math.atan2(t.y - u.y, t.x - u.x) - u.facing), Math.cos(Math.atan2(t.y - u.y, t.x - u.x) - u.facing))) < 0.5) && u.dodgeLock <= 0 && u.hp > 0) {
+        if (u.attackTimer <= 0 && u.actionLock <= 0 && u.stagger <= 0 && !u.nativeKnockdown && !u.nativeGetup && u.stamina >= (u.aiEffects?.reserveStamina ? 38 : 8) && dist5 <= (this.native && sp.range < 100 ? Math.max(u.range + 12 * u.nativeScale, u.radius + t.radius + 1 + 3 * u.nativeScale) : u.range + 12) && (!this.native || !u.nativeActor || Math.abs(Math.atan2(Math.sin(Math.atan2(t.y - u.y, t.x - u.x) - u.facing), Math.cos(Math.atan2(t.y - u.y, t.x - u.x) - u.facing))) < 0.5) && u.dodgeLock <= 0 && u.hp > 0) {
           u.attackTimer = 1 / u.attackSpeed;
           u.stamina -= 8;
           this.cast(u, u.loadout.auto, t);
@@ -18935,8 +19021,22 @@ body:has(.team-select-backdrop){overflow:hidden}
   }
   function paintImpact(c, e, p2, z = 40) {
     const progress = 1 - e.ttl / (e.max || 0.45), r = (e.r || 22) * (0.25 + progress * 0.9);
+    c.save();
+    c.translate(p2.x, p2.y);
+    c.scale(1, 0.58);
+    c.lineWidth = 1.5;
+    c.beginPath();
+    c.arc(0, 0, (e.groundRadius || 8) + progress * (e.heavy ? 20 : 12), 0, Math.PI * 2);
+    c.stroke();
+    c.restore();
     c.translate(p2.x, p2.y - z);
     c.rotate(e.angle || 0);
+    if (e.blocked) {
+      c.beginPath();
+      c.arc(0, 0, r * 0.8, -1.1, 1.1);
+      c.stroke();
+      return;
+    }
     c.lineWidth = Math.max(1, 3 * (1 - progress));
     c.beginPath();
     c.arc(0, 0, r, 0, Math.PI * 2);
@@ -19128,6 +19228,14 @@ body:has(.team-select-backdrop){overflow:hidden}
         }
       }
       if (eliteModifier(u) && u.hp > 0) paintEliteFlame(c, p2, scale, battle2 ? battle2.time : time, u);
+      if (battle2 && u.hp > 0) {
+        const radius = u.radius;
+        c.strokeStyle = u.side ? "#dc9c8155" : "#c6df9d55";
+        c.lineWidth = 1;
+        c.beginPath();
+        c.ellipse(p2.x, p2.y, radius, radius * 0.58, 0, 0, Math.PI * 2);
+        c.stroke();
+      }
       const visualTop = drawNativeUnit(c, u, spec, p2.x, p2.y, battle2 ? battle2.time : time, 3 * scale);
       if (u.hp <= 0) continue;
       const width = u.boss ? 58 : 30, bar = Math.min(visualTop - 9, p2.y - (({ knight: 115, orc: 100, elf: 105, caster: 116, wolf: 77, fox: 112, mech: 90, spider: 83, jelly: 92, serpent: 65, flyer: 112, crab: 80, centipede: 75 }[actorFor(u, spec).id] || 112) + 12) * scale * characterHeight * formProfile(spec, u).height);
