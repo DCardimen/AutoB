@@ -10,6 +10,20 @@ import {QUADRUPEDS} from '../creature-leg-volume.js';
 const quadrupeds=[...QUADRUPEDS].map(design=>PIXEL_SPECIES.find(s=>(s.nativeDesign||s.nativeRig)===design&&!s.pixelConverted)||PIXEL_SPECIES.find(s=>(s.nativeDesign||s.nativeRig)===design));
 const humanoids=[...new Map(PIXEL_SPECIES.filter(s=>['knight','orc','elf','caster','fox'].includes(s.nativeRig)).map(s=>[s.nativeDesign||s.nativeRig,s])).values()];
 
+test('every four-leg physics proxy has an explicit source-anatomy classification',()=>{
+ // The drake source stands on two visible rear feet; a wolf proxy does not
+ // justify inventing forelegs beneath its wings. Review new exceptions in art.
+ const exceptions=new Map([
+  ['drake','Authored bipedal rear-foot stance with wings; covered by Legs V3 source review.'],
+  ['mantis','Six-limbed arthropod: four walking legs plus two raptorial arms; creature-anatomy tests cover its gait rig and scythe contacts.'],
+ ]);
+ for(const spec of PIXEL_SPECIES){
+  const rig=nativePoseRig(spec,{id:spec.id},'idle',.25);if(rig.legs.length!==4)continue;
+  const design=spec.nativeDesign||spec.nativeRig;
+  assert.ok(QUADRUPEDS.has(design)||exceptions.has(design),`${spec.id}: review the original anatomy and register ${design} in QUADRUPEDS or document/test its source-art exception; do not silently skip alternating-gait coverage`);
+ }
+});
+
 test('all quadruped anatomies alternate visible footfall groups through walk, run and sprint in every form and facing',()=>{
  for(const spec of quadrupeds)for(const evolution of [0,1,2])for(let dir=0;dir<8;dir++)for(const state of ['walk','run','sprint']){
   const support=[],lowerFrames=[];let cut;
