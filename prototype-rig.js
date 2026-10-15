@@ -263,7 +263,7 @@ function creatureRig(id,state,phase,stage,options){
   const grip=point(head.x+3,0,head.z),axis=point(1,0,0),weapon={kind:id==='mech'?'cannon':id==='jelly'?'gel':'fangs',grip,axis,tip:plus(grip,times(axis,id==='spider'?19:24)),length:24,tilt:Math.PI/2};
   const segments=id==='centipede'?Array.from({length:7},(_,i)=>point(23-i*8,Math.sin(phase*TAU-i*.7)*2,body.z)):id==='serpent'?Array.from({length:9},(_,i)=>point(17-i*6,Math.sin(phase*TAU-i*.68)*(moving?9:3),6+Math.sin(phase*TAU-i*.68)*1.4)):null;
   const flap=Math.sin(phase*TAU)*(dead?0:1),wings=id==='flyer'?[-1,1].map(side=>[point(-2,side*5,body.z+3),point(-10,side*(21+run*3),body.z+flap*10),point(-18,side*(37+run*3),body.z+flap*20),point(-15,side*12,body.z-8)]):null;
-  return {id,state,phase,stage,dimensions:d,pelvis,body,head,legs,arms:[],weapon,segments,wings,lean,sideLean:0,torsoYaw:0,crouch:d.hip-hip,death:dead,squash:id==='jelly'?(dead?1+dead*1.8:1+Math.sin(phase*TAU)*0.2):1,tail:point(-18,0,hip)};
+  return {id,state,phase,stage,strideLength:options.strideLength??100,dimensions:d,pelvis,body,head,legs,arms:[],weapon,segments,wings,lean,sideLean:0,torsoYaw:0,crouch:d.hip-hip,death:dead,squash:id==='jelly'?(dead?1+dead*1.8:1+Math.sin(phase*TAU)*0.2):1,tail:point(-18,0,hip)};
 }
 
 export function weaponContactPath(id,angle,options={}){

@@ -2,13 +2,13 @@
 
 **Fang & Feather (F&F)** is a creature collecting autobattler. The supplied feather-and-fang logo appears in the game and Training Glade, including both offline builds. Existing saves and the legacy offline filenames remain compatible.
 
-Legs V2 gives heavy creatures thicker supporting limbs, anatomy-specific paws/hooves/armored feet, rounded joints, coherent fur and costume colors, and more compact strides. The new **Stride length** slider changes step length and cadence together without changing combat speed. See [V2 review and checks](LEGS-V2.md) and the [normal-speed preview](public/legs-v2-preview.webm).
+Legs V3 preserves each creature’s original limb widths, textures, body connections and idle stance. Natural creatures animate their authored legs instead of inheriting generic replacement limbs; evolved crab crowns also regain their missing tops. The **Stride length** slider changes step length and cadence without changing combat speed. See [V3 review and checks](LEGS-V3.md) and the [normal-speed preview](public/legs-v3-preview.webm).
 
 Settings now rotate randomized small, regular and large examples every five seconds. Nineteen sliders include stride length and five movement-pattern controls for direction changes, corner slowdown, run/sprint distances and animation transitions. Examples demonstrate the same movement rules as combat.
 
 Arena controls and both rosters now sit inside the supplied blue/gold UI frame. Elite encounters have one seeded mutation from 50 variants; captured individuals keep their mutation, nature and genes for future starter selection. See [arena UI and elite hunting](ARENA-ELITES.md).
 
-Multi-legged creatures now have solid shaded leg models, and natural attack animations include canine bites, mantis scythes, claws, pincers and horn attacks. See [creature anatomy](CREATURE-ANATOMY.md) and the [animation preview](public/creature-anatomy-preview.webm).
+Multi-legged creatures retain their physical joint rigs with the V3 authored limb renderer. Natural attack animations include canine bites, mantis scythes, claws, pincers and horn attacks. See [creature anatomy](CREATURE-ANATOMY.md) and the [animation preview](public/creature-anatomy-preview.webm).
 
 Latest update: three randomized Common starter equipment pieces appear beneath the creatures; eight original build-around relics add resource banks and team interactions. Enrage ramps continuously after 30 seconds with live damage, healing and action modifiers. See [relic research and current rules](RELIC-DESIGN.md).
 
