@@ -20,6 +20,8 @@ const entryFiles = new Set([
   "/settings-movement-preview.js",
   "/elite-modifiers.js",
   "/starter-reactions.js",
+  "/intro.js",
+  "/portrait-expressions.js",
   "/authored-arm-skin.js",
   "/index.html",
   "/styles.css",

@@ -1,0 +1,59 @@
+TAP version 13
+# Subtest: base Brakk removes the old sleeves/hands from the body and paints one authored pair
+ok 1 - base Brakk removes the old sleeves/hands from the body and paints one authored pair
+  ---
+  duration_ms: 155.3266
+  ...
+# Subtest: base Brakk arms stay connected and unclipped through every facing and combat motion
+ok 2 - base Brakk arms stay connected and unclipped through every facing and combat motion
+  ---
+  duration_ms: 4500.0306
+  ...
+# Subtest: Brakk waves with his free hand while his hatchet remains on its original hand
+ok 3 - Brakk waves with his free hand while his hatchet remains on its original hand
+  ---
+  duration_ms: 335.3072
+  ...
+# Subtest: every authored design has a distinct reviewed gesture and no whole-sprite swing
+ok 2 - every authored design has a distinct reviewed gesture and no whole-sprite swing
+  ---
+  duration_ms: 4.1053
+  ...
+# Subtest: source expressions keep pupil centers open, retain source palette indices and touch only the face
+ok 3 - source expressions keep pupil centers open, retain source palette indices and touch only the face
+  ---
+  duration_ms: 93.7317
+  ...
+# Subtest: all 89 companion variants have a visible local greeting and complete cells at every height limit
+ok 4 - all 89 companion variants have a visible local greeting and complete cells at every height limit
+  ---
+  duration_ms: 16851.7346
+  ...
+# Subtest: greetings follow authored anatomy instead of a reused physics rig
+ok 3 - greetings follow authored anatomy instead of a reused physics rig
+  ---
+  duration_ms: 0.9316
+  ...
+# Subtest: weapon greetings remain pre-release, retain identity and keep their physical hand attachment
+ok 4 - weapon greetings remain pre-release, retain identity and keep their physical hand attachment
+  ---
+  duration_ms: 48.5105
+  ...
+# Subtest: all first-form greetings stay inside the source cell in the selectable head-on facing
+ok 5 - all first-form greetings stay inside the source cell in the selectable head-on facing
+  ---
+  duration_ms: 5169.1916
+  ...
+# Subtest: owl head tilt keeps open eyes, the painted palette, body and planted feet
+ok 6 - owl head tilt keeps open eyes, the painted palette, body and planted feet
+  ---
+  duration_ms: 74.3692
+  ...
+1..10
+# tests 10
+# pass 10
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 27861.194

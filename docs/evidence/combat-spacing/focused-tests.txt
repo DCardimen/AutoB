@@ -1,0 +1,59 @@
+TAP version 13
+# Subtest: native bodies occupy their visible ground footprint and retain weight across size controls
+ok 1 - native bodies occupy their visible ground footprint and retain weight across size controls
+  ---
+  duration_ms: 5.6581
+  ...
+# Subtest: a crowded mixed-mass pile separates in two dimensions without pushing through arena walls
+ok 2 - a crowded mixed-mass pile separates in two dimensions without pushing through arena walls
+  ---
+  duration_ms: 0.9115
+  ...
+# Subtest: fast opposing dashes cannot tunnel through each other between fixed steps
+ok 3 - fast opposing dashes cannot tunnel through each other between fixed steps
+  ---
+  duration_ms: 0.1363
+  ...
+# Subtest: allies reserve different reachable approach positions around a shared opponent
+ok 4 - allies reserve different reachable approach positions around a shared opponent
+  ---
+  duration_ms: 2.0468
+  ...
+# Subtest: melee approaches, commits, contacts and recovers while both bodies stay apart
+ok 5 - melee approaches, commits, contacts and recovers while both bodies stay apart
+  ---
+  duration_ms: 85.9332
+  ...
+# Subtest: six versus six retain solid footprints through pursuit, crowding and knockback
+ok 6 - six versus six retain solid footprints through pursuit, crowding and knockback
+  ---
+  duration_ms: 683.6859
+  ...
+# Subtest: a distant committed swing cannot deal identity-based damage
+ok 7 - a distant committed swing cannot deal identity-based damage
+  ---
+  duration_ms: 4.2872
+  ...
+# Subtest: heavy bodies recoil less than light bodies from the same connected impact
+ok 8 - heavy bodies recoil less than light bodies from the same connected impact
+  ---
+  duration_ms: 0.5085
+  ...
+# Subtest: every melee companion and form reaches actual authored contact from all eight approach directions
+ok 9 - every melee companion and form reaches actual authored contact from all eight approach directions
+  ---
+  duration_ms: 32457.5536
+  ...
+# Subtest: offensive abilities wait for actual range while shields and healing keep their support rules
+ok 10 - offensive abilities wait for actual range while shields and healing keep their support rules
+  ---
+  duration_ms: 0.9439
+  ...
+1..10
+# tests 10
+# pass 10
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 33412.5799

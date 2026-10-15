@@ -1,0 +1,12 @@
+{
+  "arena.js": "e78488981c9c21e1879e832498669b227e8fd1c6740a4fc9855879e65b1db6fb",
+  "native-tactics.js": "b51d449f95b0c8562985b8de9a62d57dba0c3e07e27506fdd43ffccb306a8cd4",
+  "native-combat.js": "eef25cb3e4a17f246ed7e88803253d20fb099dbaccdb9225314a7de74aba70ed",
+  "game.js": "8d75121c0db1ba05c850d5e0b958c82c56ed9351bce007665ce60d358ed45ae5",
+  "prototype-sprites.js": "57ef086250e21897e6890ea65f95d8c680613eb1bb059f5f5533806b3062c8fe",
+  "combat-feedback.js": "779e99fd0d1aaa494380ace8ee21b80a7368ccc5fd205bc86ab959bc6bff869b",
+  "native-art.js": "d1f0eea060edc84ee5abe19bd24ed12469bc1cf19d1c2fa84fcc9273b4ddca18",
+  "Starfall-Menagerie.html": "9b595cd42671ec0b8d52c7c5fc285bc83e8ed02d9ca295956a8864ec9b7debef",
+  "Starfall-Training-Glade.html": "c22b421b115f08a4d20bf4bb3de814ab67a2c45f92ba0cd7e9b67f263cd623fa",
+  "public/prototype-bundle.js": "afdb8f7a4ff6ddbf9e637f238bbbd0f797a97ba4cc97ecb9c6a377f45a410f85"
+}

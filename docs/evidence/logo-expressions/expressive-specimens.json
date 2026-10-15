@@ -1,0 +1,371 @@
+[
+  {
+    "design": "feralfox",
+    "id": "cinderfox",
+    "kind": "nuzzle",
+    "duration": 2100,
+    "glyph": "♥",
+    "gesture": "ear-flick",
+    "mood": "smile"
+  },
+  {
+    "design": "troll",
+    "id": "grum",
+    "kind": "nod",
+    "duration": 2400,
+    "glyph": "♡",
+    "gesture": "troll-huff",
+    "mood": "scowl"
+  },
+  {
+    "design": "fish",
+    "id": "brookfin",
+    "kind": "swish",
+    "duration": 2100,
+    "glyph": "◦",
+    "gesture": "fish-bubbles",
+    "mood": "surprise"
+  },
+  {
+    "design": "owl",
+    "id": "voltwing",
+    "kind": "owl",
+    "duration": 2600,
+    "glyph": "♡",
+    "gesture": "owl-head-tilt",
+    "mood": "smile"
+  },
+  {
+    "design": "rhino",
+    "id": "pyrehorn",
+    "kind": "nod",
+    "duration": 2300,
+    "glyph": "♡",
+    "gesture": "horn-snort",
+    "mood": "scowl"
+  },
+  {
+    "design": "faerie",
+    "id": "luma",
+    "kind": "flutter",
+    "duration": 2400,
+    "glyph": "✧",
+    "gesture": "flower-wings",
+    "mood": "smile"
+  },
+  {
+    "design": "stag",
+    "id": "crownstag",
+    "kind": "nod",
+    "duration": 2100,
+    "glyph": "♡",
+    "gesture": "listening-ears",
+    "mood": "smile"
+  },
+  {
+    "design": "cat",
+    "id": "nightmaw",
+    "kind": "nuzzle",
+    "duration": 2500,
+    "glyph": "♥",
+    "gesture": "cat-whiskers",
+    "mood": "smile"
+  },
+  {
+    "design": "rabbit",
+    "id": "sparkhare",
+    "kind": "perk",
+    "duration": 2100,
+    "glyph": "♥",
+    "gesture": "rabbit-ears",
+    "mood": "surprise"
+  },
+  {
+    "design": "drake",
+    "id": "stormdrake",
+    "kind": "nod",
+    "duration": 2500,
+    "glyph": "♡",
+    "gesture": "dragon-roar",
+    "mood": "scowl"
+  },
+  {
+    "design": "mushroom",
+    "id": "duskcap",
+    "kind": "wobble",
+    "duration": 2400,
+    "glyph": "♡",
+    "gesture": "cap-tip",
+    "mood": "smile"
+  },
+  {
+    "design": "turtle",
+    "id": "flintback",
+    "kind": "nod",
+    "duration": 2500,
+    "glyph": "♡",
+    "gesture": "shell-peek",
+    "mood": "smile"
+  },
+  {
+    "design": "crab",
+    "id": "mireclaw",
+    "kind": "skitter",
+    "duration": 2300,
+    "glyph": "✧",
+    "gesture": "claw-hello",
+    "mood": "scowl"
+  },
+  {
+    "design": "moth",
+    "id": "nyxwing",
+    "kind": "flutter",
+    "duration": 2600,
+    "glyph": "✧",
+    "gesture": "moth-antennae",
+    "mood": "smile"
+  },
+  {
+    "design": "beetle",
+    "id": "onyxscarab",
+    "kind": "skitter",
+    "duration": 2100,
+    "glyph": "✧",
+    "gesture": "beetle-horn",
+    "mood": "scowl"
+  },
+  {
+    "design": "goblin",
+    "id": "grit",
+    "kind": "salute",
+    "duration": 2100,
+    "glyph": "✦",
+    "gesture": "mischief-scowl",
+    "mood": "scowl"
+  },
+  {
+    "design": "serpent",
+    "id": "nix",
+    "kind": "swish",
+    "duration": 2300,
+    "glyph": "◦",
+    "gesture": "serpent-hiss",
+    "mood": "scowl"
+  },
+  {
+    "design": "clam",
+    "id": "brineclam",
+    "kind": "wobble",
+    "duration": 2400,
+    "glyph": "♡",
+    "gesture": "shell-kiss",
+    "mood": "smile"
+  },
+  {
+    "design": "squid",
+    "id": "pearlsquid",
+    "kind": "wobble",
+    "duration": 2100,
+    "glyph": "♡",
+    "gesture": "mantle-pulse",
+    "mood": "surprise"
+  },
+  {
+    "design": "harpy",
+    "id": "zephyr",
+    "kind": "flutter",
+    "duration": 2300,
+    "glyph": "✧",
+    "gesture": "harpy-feathers",
+    "mood": "smile"
+  },
+  {
+    "design": "rodent",
+    "id": "zipmouse",
+    "kind": "perk",
+    "duration": 2100,
+    "glyph": "♥",
+    "gesture": "whisker-sniff",
+    "mood": "smile"
+  },
+  {
+    "design": "jelly",
+    "id": "moonjelly",
+    "kind": "wobble",
+    "duration": 2400,
+    "glyph": "♡",
+    "gesture": "jelly-squeeze",
+    "mood": "smile"
+  },
+  {
+    "design": "spider",
+    "id": "runespider",
+    "kind": "skitter",
+    "duration": 2100,
+    "glyph": "✧",
+    "gesture": "fang-grin",
+    "mood": "smile"
+  },
+  {
+    "design": "phoenix",
+    "id": "solara",
+    "kind": "flutter",
+    "duration": 2400,
+    "glyph": "✧",
+    "gesture": "phoenix-preen",
+    "mood": "smile"
+  },
+  {
+    "design": "bear",
+    "id": "frostursa",
+    "kind": "nod",
+    "duration": 2600,
+    "glyph": "♡",
+    "gesture": "bear-yawn",
+    "mood": "smile"
+  },
+  {
+    "design": "mantis",
+    "id": "orchimantis",
+    "kind": "skitter",
+    "duration": 2100,
+    "glyph": "✧",
+    "gesture": "antenna-salute",
+    "mood": "scowl"
+  },
+  {
+    "design": "knight",
+    "id": "aurel",
+    "kind": "salute",
+    "duration": 2400,
+    "glyph": "✦",
+    "gesture": "sword-shoulder",
+    "mood": "smile"
+  },
+  {
+    "design": "orc",
+    "id": "brakk",
+    "kind": "wave",
+    "duration": 2300,
+    "glyph": "♥",
+    "gesture": "friendly-wave",
+    "mood": "smile"
+  },
+  {
+    "design": "elf",
+    "id": "syl",
+    "kind": "bow",
+    "duration": 2300,
+    "glyph": "✧",
+    "gesture": "archer-grin",
+    "mood": "smile"
+  },
+  {
+    "design": "caster",
+    "id": "nyra",
+    "kind": "magic",
+    "duration": 2300,
+    "glyph": "✦",
+    "gesture": "spell-smile",
+    "mood": "smile"
+  },
+  {
+    "design": "wolf",
+    "id": "emberhound",
+    "kind": "nuzzle",
+    "duration": 2100,
+    "glyph": "♥",
+    "gesture": "nose-sniff",
+    "mood": "smile"
+  },
+  {
+    "design": "fox",
+    "id": "rowan",
+    "kind": "bow",
+    "duration": 2100,
+    "glyph": "✧",
+    "gesture": "fox-grin",
+    "mood": "smile"
+  },
+  {
+    "design": "mech",
+    "id": "cogwalker",
+    "kind": "chime",
+    "duration": 2400,
+    "glyph": "✧",
+    "gesture": "optic-scan",
+    "mood": "focus"
+  },
+  {
+    "design": "dwarf",
+    "id": "brom",
+    "kind": "salute",
+    "duration": 2300,
+    "glyph": "✦",
+    "gesture": "dwarf-chuckle",
+    "mood": "smile"
+  },
+  {
+    "design": "skeleton",
+    "id": "morrow",
+    "kind": "salute",
+    "duration": 2400,
+    "glyph": "✦",
+    "gesture": "skeletal-grin",
+    "mood": "smile"
+  },
+  {
+    "design": "minotaur",
+    "id": "tarka",
+    "kind": "salute",
+    "duration": 2400,
+    "glyph": "✦",
+    "gesture": "bull-huff",
+    "mood": "scowl"
+  },
+  {
+    "design": "bat",
+    "id": "vesper",
+    "kind": "flutter",
+    "duration": 2300,
+    "glyph": "✧",
+    "gesture": "bat-ear-prick",
+    "mood": "smile"
+  },
+  {
+    "design": "rogue",
+    "id": "sable",
+    "kind": "salute",
+    "duration": 2300,
+    "glyph": "✦",
+    "gesture": "rogue-glare",
+    "mood": "scowl"
+  },
+  {
+    "design": "frostelf",
+    "id": "eira",
+    "kind": "magic",
+    "duration": 2300,
+    "glyph": "✦",
+    "gesture": "frost-poise",
+    "mood": "smile"
+  },
+  {
+    "design": "lion",
+    "id": "sunlion",
+    "kind": "nuzzle",
+    "duration": 2100,
+    "glyph": "♥",
+    "gesture": "proud-cub",
+    "mood": "scowl"
+  },
+  {
+    "design": "centipede",
+    "id": "ironscolopendra",
+    "kind": "skitter",
+    "duration": 2300,
+    "glyph": "✧",
+    "gesture": "visor-squint",
+    "mood": "scowl"
+  }
+]

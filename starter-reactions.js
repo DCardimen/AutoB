@@ -2,6 +2,7 @@
 import {nativePoseRig} from './native-poses.js';
 import {solveLimb} from './prototype-rig.js';
 import {paintCharacterPixels} from './prototype-pixel-art.js';
+import {PORTRAIT_PROFILES} from './portrait-expressions.js';
 const groups={
  owl:['owl'],
  nuzzle:['feralfox','wolf','cat','lion'],
@@ -20,11 +21,12 @@ const groups={
 const byDesign=Object.fromEntries(Object.entries(groups).flatMap(([kind,designs])=>designs.map(design=>[design,kind])));
 const glyphs={owl:'♡',nuzzle:'♥',perk:'♥',nod:'♡',swish:'◦',flutter:'✧',wobble:'♡',skitter:'✧',salute:'✦',wave:'♥',bow:'✧',magic:'✦',chime:'✧'};
 export function starterReactionProfile(spec){
- const kind=byDesign[spec.nativeDesign||spec.nativeRig]||'nod';
- return {kind,duration:kind==='owl'?1100:kind==='salute'||kind==='bow'?1000:900,glyph:glyphs[kind]};
+ const design=spec.nativeDesign||spec.nativeRig,kind=byDesign[design],profile=PORTRAIT_PROFILES[design];
+ if(!kind||!profile)throw new Error('Missing authored greeting: '+design);
+ return {kind,duration:profile.duration,glyph:glyphs[kind],gesture:profile.gesture,mood:profile.mood};
 }
 export function starterReactionPose(spec,progress){
- const {kind}=starterReactionProfile(spec),p=Math.max(0,Math.min(1,progress)),pulse=Math.sin(Math.PI*p)**2;
+ const {kind}=starterReactionProfile(spec),p=Math.max(0,Math.min(1,progress));
  // Hold only the existing pre-release windup. It raises the held weapon near
  // its shoulder without attacking, swapping hands or introducing a new grip.
  if(kind==='salute'||kind==='bow'){
@@ -32,8 +34,7 @@ export function starterReactionPose(spec,progress){
   return {state:'attack',phase:(kind==='salute'?.34:.30)*greet,x:0,y:0,roll:0};
  }
  if(kind==='magic')return {state:'cast',phase:p,x:0,y:0,roll:0};
- const wave=Math.sin(p*Math.PI*4)*pulse;
- return {state:'idle',phase:.25+p*.5,x:kind==='swish'?wave*2:kind==='skitter'?wave:0,y:kind==='flutter'?-pulse*2:0,roll:['nuzzle','perk','nod','wobble','skitter','chime'].includes(kind)?wave*(kind==='nod'?.035:.065):kind==='swish'?wave*.1:0};
+ return {state:'idle',phase:.25,x:0,y:0,roll:0};
 }
 
 export function starterReactionRig(spec,progress,height=1){
@@ -55,39 +56,24 @@ export function starterReactionRig(spec,progress,height=1){
    weapon.grip={...arm.end};weapon.tip={x:arm.end.x+blended.x/norm*len,y:arm.end.y+blended.y/norm*len,z:arm.end.z+blended.z/norm*len};weapon.axis={x:blended.x/norm,y:blended.y/norm,z:blended.z/norm};weapon.active=false;
   }
  }
+ rig.portraitMenu={progress:p};
+ if(rig.weapon)rig.weapon.active=false;
  return rig;
 }
 export function starterReactionPixels(spec,progress,height=1){
  const rig=starterReactionRig(spec,progress,height),pixels=paintCharacterPixels(rig.id,rig,Math.PI/2);
  if(starterReactionProfile(spec).kind!=='owl')return pixels;
- const result=owlReactionPixels(pixels,progress,owlPortraitLandmarks(rig));result.clipped=pixels.clipped;return result;
+ const result=owlHeadTiltPixels(pixels,progress,owlPortraitLandmarks(rig));result.clipped=pixels.clipped;return result;
 }
 
 export function owlPortraitLandmarks(rig){
  const {scale,fit}=rig.artSourceTransform,sy=scale.height/.9*fit,sx=scale.width/1.08*fit,head=rig.artAnchors.head;
  return {cx:head.x-scale.width*fit,eyeY:head.y-2.75*sy,neckY:Math.round(head.y+6.25*sy),sx,sy};
 }
-// The reviewed front owl has a broad face and two eyes. Follow its actual
-// painted head transform at every height setting; leave body/feet untouched.
-export function owlReactionPixels(source,progress,landmarks={cx:32,eyeY:20,neckY:29,sx:1,sy:1}){
+// Only tilt the painted head. Eyes stay open, and body/feet stay planted.
+export function owlHeadTiltPixels(source,progress,landmarks={cx:32,eyeY:20,neckY:29,sx:1,sy:1}){
  const input=new Uint8ClampedArray(source),p=Math.max(0,Math.min(1,progress));
- const {cx:centerX,eyeY,neckY,sx:scaleX,sy:scaleY}=landmarks;
- const blink=(p>.22&&p<.36)||(p>.62&&p<.72);
- if(blink)for(const cx of [centerX-8*scaleX,centerX+8*scaleX]){
-  const shades=new Map();let inkColor=null,inkLight=Infinity;
-  for(let y=Math.floor(eyeY-7*scaleY);y<=Math.ceil(eyeY+7*scaleY);y++)for(let x=Math.floor(cx-7*scaleX);x<=Math.ceil(cx+7*scaleX);x++){
-   const color=input.slice((y*64+x)*4,(y*64+x)*4+4);if(!color[3])continue;
-   const [r,g,b]=color,key=[...color].join(',');
-   if(r>180&&g>180&&b>160){const entry=shades.get(key)||{color,count:0};entry.count++;shades.set(key,entry);}
-   if(Math.abs(x-cx)<=3*scaleX&&Math.abs(y-eyeY)<=3*scaleY&&r+g+b<inkLight){inkLight=r+g+b;inkColor=color;}
-  }
-  const featherColor=[...shades.values()].sort((a,b)=>b.count-a.count)[0]?.color;
-  if(!featherColor||!inkColor)continue;
-  for(let y=Math.floor(eyeY-7*scaleY);y<=Math.ceil(eyeY+7*scaleY);y++)for(let x=Math.floor(cx-7*scaleX);x<=Math.ceil(cx+7*scaleX);x++)if(((x-cx)/(7*scaleX))**2+((y-eyeY)/(7*scaleY))**2<=1){
-   const i=(y*64+x)*4;if(input[i+3])input.set(featherColor,i);
-  }
-  for(let x=Math.ceil(cx-5*scaleX);x<=Math.floor(cx+5*scaleX);x++)input.set(inkColor,(Math.round(eyeY+(Math.abs(x-cx)>=4*scaleX?scaleY:0))*64+x)*4);
- }
+ const {cx:centerX,neckY,sy:scaleY}=landmarks;
  const out=new Uint8ClampedArray(input),angle=Math.sin(p*Math.PI*2)*Math.sin(p*Math.PI)*.11;
  for(let y=0;y<neckY;y++)for(let x=0;x<64;x++){
   const pivotY=neckY-2*scaleY,weight=Math.min(1,(neckY-y)/(6*scaleY)),a=angle*weight,dx=x-centerX,dy=y-pivotY;
