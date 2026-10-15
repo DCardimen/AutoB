@@ -8,7 +8,7 @@ try{
  for(const offline of [false,true]){
   const context=await browser.newContext({viewport:{width:1440,height:1100}}),page=await context.newPage(),url=base+(offline?'/Starfall-Menagerie.html':'/index.html'),requests=[];
   page.on('pageerror',e=>report.errors.push(e.message));
-  if(offline)await page.route('**/*',r=>r.request().url()===url?r.fulfill({status:200,contentType:'text/html',body:fs.readFileSync('Starfall-Menagerie.html')}):(requests.push(r.request().url()),r.abort()));
+  if(offline)await page.route('**/*',r=>r.request().isNavigationRequest()&&r.request().url()===url?r.continue():(requests.push(r.request().url()),r.abort()));
   const run=makeRun(72,['aurel']);run.team=[['frostursa',2],['pyrehorn',0],['flintback',0],['mireclaw',2],['stormdrake',2],['cogwalker',0]].map(([id,evolution])=>({...creature(id),evolution,evolutionPath:'wild',equipment:[]}));run.teamCapacity=6;run.route=generateRoute(run);const node=run.route[0][0];
   const foes=['runespider','orchimantis','onyxscarab','ironscolopendra','nightmaw','crownstag'].map(id=>({...creature(id),evolution:2,evolutionPath:'wild',equipment:[]}));
   await page.addInitScript(saved=>localStorage.setItem('starfall-menagerie-v1',JSON.stringify(saved)),{version:7,run,node,foes,phase:'prep',profile:{owned:run.team.map(c=>c.id),tutorial:true,tuning:{spriteSize:250}}});

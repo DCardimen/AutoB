@@ -40,6 +40,7 @@ jobs:
       - run: node tests/capture-recruitment.browser.mjs
       - run: node tests/creature-anatomy.browser.mjs
       - run: node tests/arena-elite.browser.mjs
+      - run: node tests/uploaded-ui.browser.mjs
       - run: node tests/settings-movement.browser.mjs
       - run: node tests/legs-v2.browser.mjs
       - run: node scripts/review-legs-v2.mjs final
@@ -65,6 +66,10 @@ jobs:
           path: |
             Starfall-Menagerie.html
             Starfall-Training-Glade.html
+            playtest-artifacts/uploaded-*.png
+            playtest-artifacts/uploaded-*.json
+            public/uploaded-ui-preview.webm
+            docs/UPLOADED-ART-REVIEW.md
             public/Fang-and-Feather.zip
             playtest-artifacts/field-*.png
             playtest-artifacts/melee-*.png

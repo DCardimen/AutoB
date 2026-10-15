@@ -1,5 +1,7 @@
 # Fang & Feather
 
+**Uploaded art pass:** Supplied arena and inventory art, companion management, capture kit, encounter intel, world paintings, and an animated post-match rewards scene. Chest opening, card reveals, EXP, and collection flights support gentle motion and persistent one-time grants. See the [visual review and test results](docs/UPLOADED-ART-REVIEW.md) and [normal-speed preview](public/uploaded-ui-preview.webm). Both offline builds have been rebuilt.
+
 **Fang & Feather (F&F)** is a creature collecting autobattler. The supplied feather-and-fang logo appears in the game and Training Glade, including both offline builds. Existing saves and the legacy offline filenames remain compatible.
 
 Legs V3 preserves each creature’s original limb widths, textures, body connections and idle stance. All ten four-legged anatomies now alternate their visible steps, including heavy animals and every evolved form. Humanoids retain their painted boots and clothing, and travelling weapons stay in a fixed hand on a consistent side. The **Stride length** slider changes step length and cadence without changing combat speed. See [gait and carry checks](GAITS-AND-CARRY.md), the [normal-speed preview](public/gaits-carry-preview.webm), and [V3 anatomy review](LEGS-V3.md).

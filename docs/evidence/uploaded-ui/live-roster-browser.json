@@ -1,0 +1,7 @@
+{
+  "checks": [
+    "Source: six evolved allies and six enemies; sprite-safe prep controls at 320/390/768/1440px; both rosters inside the arena frame, live HP/stamina/cooldowns, stable DOM, inspection, knockouts, captured ally membership, enemy focus and phone scrolling",
+    "Offline: six evolved allies and six enemies; sprite-safe prep controls at 320/390/768/1440px; both rosters inside the arena frame, live HP/stamina/cooldowns, stable DOM, inspection, knockouts, captured ally membership, enemy focus and phone scrolling"
+  ],
+  "errors": []
+}
