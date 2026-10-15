@@ -21,20 +21,20 @@ async function openFixture({mobile=false,phase='prep',pact=false,offline=false}=
 
 try{
   const {page,context}=await openFixture();
-  await page.locator('[data-creature="0"]').click();
+  await page.locator('.arena-dock [data-action="companions"]').click();await page.locator('[data-party-select="0"]').click();await page.locator('[data-action="inspect-selected"]').click();
   await page.locator('.stat-grid').waitFor();
   assert.match(await page.locator('.stat-grid').textContent(),/BASIC ATTACK SPEED.*STAMINA RECHARGE/);
   await page.waitForTimeout(400);await page.screenshot({path:out+'/chaos-character-stats.png'});
   await page.locator('[data-action="close"]').first().click();
-  await page.locator('[data-stance="weakest"]').click();assert.equal(await page.evaluate(()=>starfall.state.run.stance),'weakest');
-  assert.ok(await page.locator('.visible-gear-effect').count()>1);
+  await page.locator('.arena-dock [data-action="formation"]').click();await page.locator('.modal [data-stance="weakest"]').click();await page.locator('.modal-close').click();assert.equal(await page.evaluate(()=>starfall.state.run.stance),'weakest');
+  await page.locator('.arena-dock [data-action="companions"]').click();assert.ok(await page.locator('.visible-gear-effect').count()>1);await page.locator('.modal-close').click();
   await page.locator('[data-action="battle"]').click();
   await page.waitForFunction(()=>starfall.state.battle);
   await page.evaluate(()=>{const b=starfall.state.battle;b.units.forEach(u=>{u.hp=u.maxHp=10000;});});
   await page.locator('[data-enemy-focus]').first().click();
   assert.ok(await page.evaluate(()=>starfall.state.battle.focusUid));
   await page.waitForTimeout(1000);
-  assert.match(await page.locator('[data-vital-stamina]').first().textContent(),/STAMINA \d+\/100/);
+  assert.match(await page.locator('[data-hud-stamina]').first().textContent(),/\d+ \/ 100/);
   await page.screenshot({path:out+'/chaos-combat-desktop.png'});
   report.checks.push('Character stats, visible equipment effects, weakest-first, live stamina, and click-to-focus work in browser');
   // Freeze a real battle at capture milestones, with deterministic odds for repeatability.
@@ -62,13 +62,13 @@ try{
   await pact.context.close();
 
   const mobile=await openFixture({mobile:true});
-  await mobile.page.locator('[data-creature="1"]').click();await mobile.page.waitForTimeout(400);await mobile.page.screenshot({path:out+'/chaos-character-mobile.png'});
+  await mobile.page.locator('.arena-dock [data-action="companions"]').click();await mobile.page.locator('[data-party-select="1"]').click();await mobile.page.locator('[data-action="inspect-selected"]').click();await mobile.page.waitForTimeout(400);await mobile.page.screenshot({path:out+'/chaos-character-mobile.png'});
   assert.ok(await mobile.page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
   await mobile.page.locator('[data-detail-tab="equipment"]').click();
   assert.ok(await mobile.page.locator('.equipment-panel').isVisible());
   await mobile.page.waitForTimeout(400);await mobile.page.screenshot({path:out+'/chaos-equipment-mobile.png'});
   await mobile.page.locator('[data-action="close"]').first().click();
-  await mobile.page.locator('[data-view="collection"]').first().click();await mobile.page.locator('[data-action="new-run"]').first().click();
+  await mobile.page.locator('[data-view="collection"]:visible').first().click();await mobile.page.locator('[data-action="new-run"]').first().click();
   assert.match(await mobile.page.locator('.starter-budget').textContent(),/\/ 3 companions/);
   assert.match(await mobile.page.locator('.starter-budget').textContent(),/\/ 6 starter points/);
   report.checks.push('390px character/equipment menus fit; Chaos 3 selection exposes three companions and six points');
@@ -80,19 +80,19 @@ try{
   report.checks.push('Selected stage zooms and transitions to arena preparation');await map.context.close();
 
   const loot=await openFixture();
-  await loot.page.evaluate(()=>{const data=JSON.parse(localStorage.getItem('starfall-menagerie-v1'));data.phase='reward';data.upgradeChosen='gold';data.reward={gold:0,xp:0,time:10,win:true,loot:{key:'browser-loot',claimed:false,drops:[{id:'gold',kind:'gold',amount:25},{id:'gear',kind:'gear',gear:'tempo-rapier'}]}};localStorage.setItem('starfall-menagerie-v1',JSON.stringify(data));});
+  await loot.page.evaluate(()=>{const data=JSON.parse(localStorage.getItem('starfall-menagerie-v1'));data.phase='reward';data.upgradeChosen='gold';data.reward={gold:0,xp:0,time:10,won:true,loot:{key:'browser-loot',claimed:false,drops:[{id:'gold',kind:'gold',amount:25},{id:'gear',kind:'gear',gear:'tempo-rapier'}]}};localStorage.setItem('starfall-menagerie-v1',JSON.stringify(data));});
   await loot.page.reload();await loot.page.waitForFunction(()=>window.starfall);
   const before=await loot.page.evaluate(()=>({gold:starfall.state.run.gold,gear:starfall.state.run.gearInventory.length}));
   await loot.page.locator('[data-action="claim-loot"]').click();
-  await loot.page.waitForSelector('.loot-flying-token');await loot.page.screenshot({path:out+'/chaos-loot-flight.png'});
+  await loot.page.waitForSelector('.reward-flight-card');await loot.page.screenshot({path:out+'/chaos-loot-flight.png'});
   await loot.page.waitForFunction(()=>starfall.state.run.gold>160);
   assert.equal(await loot.page.evaluate(()=>starfall.state.run.gold),before.gold+25);
   assert.equal(await loot.page.evaluate(()=>starfall.state.run.gearInventory.length),before.gear+1);
   assert.ok(await loot.page.locator('[data-action="claim-loot"]').isDisabled());
-  report.checks.push('Loot visibly flies into totals, then settles gold/equipment exactly once');await loot.context.close();
+  report.checks.push('Loot visibly flies into the knapsack, then settles gold/equipment exactly once');await loot.context.close();
 
   const offline=await openFixture({offline:true});
-  await offline.page.locator('[data-creature="0"]').click();
+  await offline.page.locator('.arena-dock [data-action="companions"]').click();await offline.page.locator('[data-party-select="0"]').click();await offline.page.locator('[data-action="inspect-selected"]').click();
   assert.match(await offline.page.locator('.stat-grid').textContent(),/STAMINA RECHARGE/);
   report.checks.push('Rebuilt offline game includes the new gameplay and UI');await offline.context.close();
   assert.deepEqual(report.errors,[]);console.log(JSON.stringify(report,null,2));

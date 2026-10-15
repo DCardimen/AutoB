@@ -39,7 +39,7 @@ try {
   console.log(offline?'Checking offline UI':'Checking source UI');
   const {page,context,requests}=await fixture({offline});
   assert.ok(await page.locator('.arena-control').evaluate(el=>el.getBoundingClientRect().bottom<=innerHeight+1));
-  assert.equal(await page.locator('.arena-dock button').count(),4);
+  assert.equal(await page.locator('.arena-dock button').count(),5);
   const before=await page.locator('#battle-canvas').evaluate(c=>c.toDataURL());await page.clock.runFor(600);assert.notEqual(await page.locator('#battle-canvas').evaluate(c=>c.toDataURL()),before);
   await page.locator('.arena-dock [data-action="companions"]').click();await loaded(page);
   assert.equal(await page.locator('.party-overview [data-party-select]').count(),3);
@@ -83,7 +83,7 @@ try {
   await page.locator('[data-recap-metric="healed"]').click();await page.locator('[data-recap-side="1"]').click();assert.ok(await page.locator('#battle-recap svg').count()>0);
   await page.locator('[data-action="return-rewards"]').click();
   await page.locator('[data-upgrade]').first().click();
-  await page.locator('[data-action="claim-loot"]').click();await page.clock.runFor(1200);
+  await page.locator('[data-action="claim-loot"]').click();await page.clock.runFor(1900);
   assert.ok(await page.evaluate(()=>JSON.parse(localStorage.getItem('starfall-menagerie-v1')).reward.loot.claimed));
   await page.locator('.loot-cache.collected').waitFor();
   assert.ok(await page.locator('[data-action="continue"]').isEnabled());
@@ -91,7 +91,7 @@ try {
   await page.reload();await page.waitForFunction(()=>window.starfall);await page.clock.runFor(300);
   assert.equal(await page.evaluate(()=>JSON.stringify([starfall.state.run.gold,starfall.state.run.captureTools,starfall.state.run.gearInventory,starfall.state.run.relics])),inventory);
   assert.ok(await page.locator('[data-action="claim-loot"]').isDisabled());
-  for(const width of [768,390,320]){await fit(page,width);await page.locator('.reward-screen').evaluate(el=>el.scrollTop=0);await page.screenshot({path:`playtest-artifacts/uploaded-${offline?'offline':'source'}-rewards-${width}.png`,animations:'disabled'});await page.locator('.rewards-expedition').scrollIntoViewIfNeeded();assert.ok(await page.locator('.rewards-expedition').isVisible());}
+  for(const width of [768,390,320]){await fit(page,width);await page.locator('.reward-screen').evaluate(el=>el.scrollTop=0);await page.screenshot({path:`playtest-artifacts/uploaded-${offline?'offline':'source'}-rewards-${width}.png`,animations:'disabled'});await page.locator('.rewards-expedition .growth-row').first().scrollIntoViewIfNeeded();assert.ok(await page.locator('.rewards-expedition .growth-row').first().isVisible());}
   await page.locator('[data-action="continue"]').click();assert.equal(await page.evaluate(()=>starfall.state.phase),'map');
   if(offline)assert.deepEqual(requests,[base+'/Starfall-Menagerie.html',base+'/Starfall-Menagerie.html'],'offline requires only navigation requests');
   report.checks.push(`${offline?'Offline':'Source'}: responsive arena, animated idles, companion selection, equipment click/remove/drag, capture tool/target/threshold, auto retry, four intel tabs, live combat, chest/card/EXP art, inspection, performance chart, persistent single grant and journey continuation`);
@@ -116,7 +116,7 @@ try {
  report.checks.push('Reload during collection retains the committed grant without duplication');
  for(const success of [true,false]){
   const {page,context}=await fixture({reduced:true});
-  await page.locator('[data-enemy-capture]').first().click();await page.locator('[data-action="battle"]').click();
+  await page.locator('.arena-dock [data-action="capture-kit"]').click();await page.locator('#kit-capture-target').selectOption(await page.evaluate(()=>starfall.state.foes[0].uid));await page.locator('.modal-close').click();await page.locator('[data-action="battle"]').click();
   await page.evaluate(success=>{const b=starfall.state.battle;for(const u of b.units){u.speed=0;u.attackTimer=9999;u.dodgeCooldown=9999;Object.values(u.cooldowns).forEach(cd=>cd.remaining=9999);}const target=b.units.find(u=>u.uid===b.capturePlan.uid);target.hp=target.maxHp*.1;b.random=()=>success?0:.999;b.attemptCapture();},success);
   await page.clock.runFor(2800);await settle(page,true);
   assert.ok(await page.locator('.capture-outcome.'+(success?'success':'failed')).isVisible());

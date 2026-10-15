@@ -1,5 +1,7 @@
 # Fang & Feather
 
+**Arena and reward journey:** The confirmed arena example now guides a broad battlefield, compact companion strip, menu-based management and bottom dock. Cards rise out of the chest; EXP reaches each companion; gold and cards enter the animated knapsack. Top relic inscriptions, smooth damage feedback and subtle environmental motion support gentle motion. See the [review and validation](docs/JOURNEY-POLISH-REVIEW.md) and [normal-speed preview](public/journey-polish-source.webm). Both offline builds are updated.
+
 **Uploaded art pass:** Supplied arena and inventory art, companion management, capture kit, encounter intel, world paintings, and an animated post-match rewards scene. Chest opening, card reveals, EXP, and collection flights support gentle motion and persistent one-time grants. See the [visual review and test results](docs/UPLOADED-ART-REVIEW.md) and [normal-speed preview](public/uploaded-ui-preview.webm). Both offline builds have been rebuilt.
 
 **Fang & Feather (F&F)** is a creature collecting autobattler. The supplied feather-and-fang logo appears in the game and Training Glade, including both offline builds. Existing saves and the legacy offline filenames remain compatible.

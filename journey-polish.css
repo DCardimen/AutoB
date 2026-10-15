@@ -1,0 +1,171 @@
+/* Motion is a transparent environmental layer, beneath interface content. */
+.ambient-host{isolation:isolate}
+.background-motion{position:absolute;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none;border-radius:inherit}
+.rewards-landscape>.background-motion,.ambient>.background-motion{z-index:0}
+.ui-v3 .ambient-host>canvas.background-motion{position:absolute;inset:0;z-index:-1;width:100%;height:100%;pointer-events:none}
+.ui-v3 .rewards-landscape>canvas.background-motion,.ui-v3 .ambient>canvas.background-motion{z-index:0}
+.formation-team-stance{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}.formation-team-stance button{padding:9px 13px;border:1px solid #456d75;background:#08212c;color:#b9d9d7;border-radius:5px;cursor:pointer}.formation-team-stance button.active{border-color:#e5ce8a;background:#23443e;color:#ffedb5}
+@media(max-width:620px){body.ui-v3.native-expedition .modal-backdrop:has(.modal[data-kind="companions"]),body.ui-v3.native-expedition .modal-backdrop:has(.modal[data-kind="intel"]),body.ui-v3.native-expedition .modal-backdrop:has(.modal[data-kind="capture-kit"]){overflow-y:auto;overflow-x:hidden}}
+
+body.ui-v3.native-expedition .expedition-relic-bar{display:flex;align-items:center;gap:16px;min-height:46px;padding:5px 12px;margin:0 0 8px;border-block:1px solid #44777b66;background:linear-gradient(90deg,#00232bb3,#00182140);position:relative;border-radius:4px}
+.relic-bar-label{flex:none;color:#cce9e2}.relic-bar-label>span{display:block;font:8px var(--sans);letter-spacing:1.9px;color:#93bfc2}.relic-bar-label>strong{font:18px var(--serif)}.relic-bar-label b{font:10px var(--sans);color:#e6d495;margin-left:8px}
+.relic-bar-items{display:flex;gap:8px;align-items:center;overflow:auto;min-width:0;flex:1;padding:3px}
+body.ui-v3.native-expedition .relic-bar-item{flex:none;width:40px;height:40px;border:1px solid #62918a66;background:radial-gradient(circle,#234043,#001820);border-radius:8px;padding:3px;cursor:pointer;transition:border-color .2s,box-shadow .2s}
+.relic-bar-item img{width:100%;height:100%;filter:drop-shadow(0 1px 4px #0009)}
+body.ui-v3.native-expedition .relic-bar-item:hover,body.ui-v3.native-expedition .relic-bar-item:focus-visible{border-color:var(--relic);box-shadow:0 0 15px color-mix(in srgb,var(--relic) 25%,transparent)}
+.relic-bar-empty{font:10px/1.4 var(--sans);color:#91b0b0;margin:0}.relic-pack-link{display:flex;align-items:center;gap:6px;white-space:nowrap}.relic-pack-link img{width:28px;height:28px}.relic-pack-link span{font-size:10px}.relic-pack-link b{color:#edd69b;margin-left:5px}
+.relic-effect-panel{position:fixed;z-index:20000;box-sizing:border-box;width:min(350px,calc(100vw - 24px));max-height:calc(100dvh - 24px);overflow:auto;padding:20px;border:1px solid var(--relic,#e5ce88);border-radius:10px;background:radial-gradient(ellipse at 25% 0,#24474c,#041d28 70%);box-shadow:0 18px 50px #000b,inset 0 0 0 4px #092731;color:#e7eeeb;animation:relic-inscription-in .18s ease-out}
+.relic-effect-panel:before{content:"✦";position:absolute;top:6px;right:10px;color:var(--relic);font-size:13px}.relic-effect-panel header{display:flex;align-items:center;gap:13px;border-bottom:1px solid #6b92915e;padding-bottom:14px;margin-bottom:14px}.relic-effect-panel header img{width:58px;height:58px;object-fit:contain;filter:drop-shadow(0 0 12px color-mix(in srgb,var(--relic) 30%,transparent))}.relic-effect-panel small{font:8px var(--sans);letter-spacing:1.8px;color:#a8cfce}.relic-effect-panel h3{font:25px/1.06 var(--serif);color:var(--relic);margin:6px 0 0}.relic-inscription{font:17px/1.6 var(--serif);color:#e0ebe3}.relic-inscription em{font-style:normal;color:#ffe3a2;text-shadow:0 0 12px #e4be6655;font-weight:700}.relic-effect-panel footer{margin-top:16px;font:8px/1.6 var(--sans);letter-spacing:.5px;color:#a9c9c4}.relic-effect-panel footer span{display:block;color:#7b9c9e;margin-top:4px}
+@keyframes relic-inscription-in{from{opacity:0;translate:0 -5px}to{opacity:1;translate:0 0}}
+
+/* Real chest/portrait/knapsack destinations replace the decorative EXP path. */
+body.ui-v3.native-expedition .reward-chest .chest-mouth{position:absolute;left:44%;top:48%;width:12%;height:5%;z-index:2}
+body.ui-v3.native-expedition .rewards-layout .loot-drop{animation:none;transform-origin:center}
+body.ui-v3.native-expedition .reward-reveal-pending .loot-drop{opacity:0}
+body.ui-v3.native-expedition .rewards-layout .growth-track .new-xp{animation:none;transform:scaleX(1)}
+body.ui-v3.native-expedition .reward-reveal-pending .growth-row:not(.xp-arrived) .new-xp{transform:scaleX(0)}
+body.ui-v3.native-expedition .growth-row.xp-arrived .new-xp{animation:reward-xp .65s ease-out both}
+body.ui-v3.native-expedition .reward-reveal-pending .growth-level{opacity:.25}
+body.ui-v3.native-expedition .reward-reveal-pending .xp-arrived .growth-level{opacity:1;animation:level-awaken .7s ease-out}
+body.ui-v3.native-expedition .reward-knapsack{display:flex;align-items:center;gap:10px;min-width:160px;color:#f7e4b3}
+body.ui-v3.native-expedition .knapsack-art{position:relative;width:68px;height:65px;flex:none;filter:drop-shadow(0 2px 10px #ffd56d44)}
+.knapsack-art>img{width:100%;height:100%;object-fit:contain}.reward-knapsack strong{font:20px var(--serif)}
+.knapsack-art>.pack-frame{position:absolute;inset:0;opacity:0}.knapsack-art>.pack-0{opacity:1}.knapsack-mouth{position:absolute;left:38%;top:30%;width:24%;height:7%;pointer-events:none}.reward-knapsack strong>b{display:block;font:11px/1.5 var(--sans);color:#ffdf8f}
+body.ui-v3.native-expedition .rewards-footer .reward-knapsack small{display:block;font:9px/1.6 var(--sans);color:#b9d8ce;text-align:left;margin-top:3px}
+.pack-arrival-ring{position:absolute;inset:8px;border:1px solid #ffe4a377;border-radius:50%;box-shadow:0 0 15px #ffc56d33;z-index:-1}
+body.ui-v3.native-expedition .rewards-footer .reward-knapsack{flex-direction:row;align-items:center}
+body.ui-v3.native-expedition .rewards-footer{align-items:center}
+body.ui-v3.native-expedition .rewards-footer>div:last-child>.button[data-action="claim-loot"]{background:var(--upload-collect) center/100% 100% no-repeat;color:#182c28}
+body.ui-v3.native-expedition .rewards-layout:not(.spoils-claimed):not(.defeat) .rewards-footer [data-action="continue"],body.ui-v3.native-expedition .spoils-claimed .rewards-footer [data-action="claim-loot"]{display:none}
+body.ui-v3.native-expedition .reward-reveal-pending .growth-level{transition:opacity .3s}
+.reward-flight{position:fixed;top:0;left:0;z-index:10000;pointer-events:none;opacity:0;will-change:transform;contain:layout style}
+.reward-flight-gold{width:35px;height:35px;filter:drop-shadow(0 0 8px #ffd56b)}.reward-flight-gold img{width:100%;height:100%}
+.reward-flight-xp{width:52px;height:52px;filter:drop-shadow(0 0 12px #bcffb1)}.reward-flight-xp img{width:100%;height:100%;object-fit:contain}.reward-flight-xp i{position:absolute;inset:18px;border-radius:50%;background:#f3ffe4;box-shadow:0 0 8px 4px #d3ffbd}
+.flying-reward-card{width:90px;min-height:125px;box-sizing:border-box;padding:18px 10px;background:var(--upload-card) center/100% 100%;display:flex;flex-direction:column;align-items:center;color:#fff3cf;text-align:center;filter:drop-shadow(0 0 10px #e8c47188)}.flying-reward-card .loot-medallion{width:58px;height:58px}.flying-reward-card img{width:100%;height:100%;object-fit:contain}.flying-reward-card strong{font:12px/1.1 var(--serif);margin-top:6px}
+body.ui-v3.native-expedition .collecting .loot-drop.card-packed{opacity:.35;filter:saturate(.4)}
+@keyframes level-awaken{0%{scale:.8;filter:brightness(2)}50%{scale:1.12}100%{scale:1;filter:brightness(1)}}
+
+/* Arena reference: one broad stage, a compact status strip, encounter sidebar
+   and a persistent tool dock. Detailed management lives in its own menus. */
+body.ui-v3.native-expedition[data-screen="arena"] .formation-section,
+body.ui-v3.native-expedition[data-screen="arena"] .arena-main>.tactical-toolbar,
+body.ui-v3.native-expedition[data-screen="arena"] .side-column>.synergy-panel,
+body.ui-v3.native-expedition[data-screen="arena"] .field-enemy-brief,
+body.ui-v3.native-expedition[data-screen="arena"] .tactical-tip{display:none}
+body.ui-v3.native-expedition[data-screen="arena"] main{max-width:1800px;padding:7px 24px 14px}
+body.ui-v3.native-expedition[data-screen="arena"] .header{height:64px;padding-inline:30px}
+body.ui-v3.native-expedition[data-screen="arena"] .run-bar{height:44px;min-height:44px;margin:0 0 4px;padding:0}
+body.ui-v3.native-expedition[data-screen="arena"] .page-heading{position:absolute;top:67px;right:24px;height:40px;margin:0}
+body.ui-v3.native-expedition[data-screen="arena"] .resources>div{min-width:105px;padding:5px 12px;min-height:40px}
+body.ui-v3.native-expedition[data-screen="arena"] .arena-grid,
+body.ui-v3.native-expedition[data-screen="arena"][data-phase="battle"] .arena-grid,
+body.ui-v3.native-expedition[data-screen="arena"] .arena-grid:has(.elite-encounter){width:100%;max-width:none;margin:0;grid-template-columns:minmax(0,1fr) clamp(300px,25vw,390px);gap:14px;align-items:start}
+body.ui-v3.native-expedition .arena-panel .arena-frame{display:block;height:auto;min-height:0}
+body.ui-v3.native-expedition .arena-frame .arena-viewport{height:clamp(340px,calc(100dvh - 397px),650px);width:auto;aspect-ratio:auto;border-width:10px}
+body.ui-v3.native-expedition .arena-panel .enrage-strip:not(.active){display:none}
+body.ui-v3.native-expedition .arena-panel .enrage-strip.active{padding:5px 9px;min-height:28px;font-size:8px}
+body.ui-v3.native-expedition .arena-field-tools{position:absolute;left:12px;bottom:10px;display:flex;gap:8px;z-index:5;padding:6px;background:#001b25e8;border:1px solid #537e83;border-radius:8px}
+.arena-field-tools button{display:flex;align-items:center;gap:7px;min-height:38px;padding:7px 14px;background:#00232e;border:1px solid #4e7d87;color:#d8e9de;border-radius:5px;cursor:pointer;font:12px var(--sans)}.arena-field-tools img{width:23px;height:23px}
+body.ui-v3.native-expedition .arena-bottom-labels{display:none}
+body.ui-v3.native-expedition .arena-roster-deck{padding:6px;display:block}
+body.ui-v3.native-expedition .prep-ally-controls{padding:0;background:none;border:0}
+body.ui-v3.native-expedition .prep-enemy-controls{display:none}
+body.ui-v3.native-expedition .arena-roster-deck h3{height:24px;font-size:11px;display:flex;align-items:center;gap:8px}
+body.ui-v3.native-expedition .arena-roster-deck h3>span{margin-left:0}
+body.ui-v3.native-expedition .roster-manage{margin-left:auto;display:flex;gap:12px;font-size:10px;font-weight:400;letter-spacing:0}
+.roster-manage button{color:#c7e4e2;border:1px solid #4a7882;background:#00212b;padding:4px 10px;border-radius:4px;cursor:pointer}
+body.ui-v3.native-expedition #ally-orders{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:8px}
+body.ui-v3.native-expedition .ally-orders>[data-ally-order]{display:grid;grid-template-columns:minmax(80px,1fr) 105px;gap:4px 10px;padding:8px;border-color:#457984;background:#001e29}
+body.ui-v3.native-expedition #ally-orders>[data-ally-order]{width:auto!important;max-width:none!important;min-width:0}
+body.ui-v3.native-expedition .ally-orders .prep-roster-portrait{grid-column:1;grid-row:1/3;min-width:0}
+body.ui-v3.native-expedition .ally-orders .prep-roster-portrait img{width:50px;height:50px}
+body.ui-v3.native-expedition .ally-orders .roster-commands{grid-column:2;grid-row:1;padding:0;min-height:27px}
+body.ui-v3.native-expedition .ally-orders .roster-commands label{width:100%}
+body.ui-v3.native-expedition .ally-orders .roster-commands small{display:none}
+body.ui-v3.native-expedition .ally-orders .prep-roster-vitals{grid-column:2;grid-row:2;width:100%;height:17px}
+body.ui-v3.native-expedition .ally-orders>[data-ally-order]{grid-template-columns:55px minmax(0,1fr) 105px}
+body.ui-v3.native-expedition .ally-orders .prep-roster-portrait{grid-column:1/3;grid-row:1/4}
+body.ui-v3.native-expedition .ally-orders .roster-commands{grid-column:3;grid-row:1}
+body.ui-v3.native-expedition .ally-orders .prep-roster-vitals{grid-column:2/4;grid-row:3;height:7px;margin-left:0}
+body.ui-v3.native-expedition .ally-orders .prep-roster-vitals span{font-size:8px;top:-13px}
+.prep-roster-stamina{grid-column:2/4;grid-row:4;position:relative;height:5px;background:#1c2f2d;border-radius:3px;margin-top:3px}.prep-roster-stamina>i{position:absolute;inset:0;background:var(--upload-stamina) center/100% 100%;border-radius:3px}.prep-roster-stamina>span{position:absolute;right:0;top:6px;font:7px var(--sans);color:#e4cf9c}.prep-roster-poise{grid-column:1;grid-row:4;color:#c7ac77;font-size:8px}
+body.ui-v3.native-expedition .ally-orders>[data-ally-order]{padding-bottom:15px}
+body.ui-v3.native-expedition .ally-orders .prep-roster-portrait strong{font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+body.ui-v3.native-expedition .ally-orders .prep-roster-portrait small{font-size:10px}
+body.ui-v3.native-expedition .briefing{padding:15px 16px;background:#001b25;border:1px solid #3e737b;border-radius:6px}
+body.ui-v3.native-expedition .briefing h2{font-size:32px;line-height:1.05;margin:8px 0 12px}
+body.ui-v3.native-expedition .briefing>p{font:12px/1.65 var(--sans);margin-bottom:14px}
+body.ui-v3.native-expedition .briefing .section-kicker{font-size:9px;letter-spacing:1.7px}
+body.ui-v3.native-expedition .opponent-preview{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin:10px 0}
+body.ui-v3.native-expedition .opponent-thumb{min-height:72px!important;padding:8px!important}
+body.ui-v3.native-expedition .opponent-thumb img{width:40px;height:40px}
+body.ui-v3.native-expedition .scout-comparison{margin:12px 0;background:#001923}
+body.ui-v3.native-expedition .comparison-stats>div{padding:6px 10px}
+body.ui-v3.native-expedition .scout-panel{padding:12px;margin:12px 0;border-radius:6px}
+body.ui-v3.native-expedition .briefing .reward-preview{gap:14px;padding:8px 0;font-size:11px}
+body.ui-v3.native-expedition .briefing .scout-panel p{font:10px/1.4 var(--sans);margin:5px 0}
+body.ui-v3.native-expedition .briefing .scout-panel>span,body.ui-v3.native-expedition .briefing .scout-panel>small{display:none}
+body.ui-v3.native-expedition .briefing .scout-panel b{font-size:8px}
+body.ui-v3.native-expedition .arena-dock .arena-dock-current{border-color:#a8d8d5;box-shadow:inset 0 0 0 2px #28677355;background:#063342}
+body.ui-v3.native-expedition .briefing .briefing-battle{min-height:55px;font:23px var(--serif);width:100%}
+body.ui-v3.native-expedition .arena-control>.button[data-action="battle"]{display:none}
+body.ui-v3.native-expedition .arena-control{min-height:70px;padding:10px 28px;background:#001923f5;backdrop-filter:blur(10px);border-top:1px solid #54828a;box-shadow:0 -4px 25px #00101866}
+body.ui-v3.native-expedition .arena-dock{justify-content:center;gap:10px}
+body.ui-v3.native-expedition .arena-dock button{min-width:160px;min-height:48px;font:15px var(--serif);border-radius:6px}
+body.ui-v3.native-expedition .pause-btn{width:50px;height:50px;min-width:50px}
+body.ui-v3.native-expedition .battle-feed{padding:6px 10px;min-height:29px;font-size:10px;margin:6px 0 0}
+body.ui-v3.native-expedition .briefing .elite-encounter{margin-top:9px;padding:8px;font-size:9px}
+
+@media(min-width:901px){body.ui-v3.native-expedition .arena-frame .arena-viewport{max-height:calc((100vw - clamp(300px,25vw,390px) - 90px)/1.64);min-height:300px}body.ui-v3.native-expedition .live-roster.paired-rosters{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:6px}body.ui-v3.native-expedition .live-roster .live-unit-card{min-width:155px;flex:1 0 155px;padding:7px}body.ui-v3.native-expedition .live-unit-skills{display:none}body.ui-v3.native-expedition .live-roster .live-vital-label{font-size:8px}body.ui-v3.native-expedition .live-roster .live-unit-portrait img{width:38px;height:38px}body.ui-v3.native-expedition .live-roster .live-unit-portrait strong{font-size:13px}body.ui-v3.native-expedition .live-unit-condition{font-size:8px}body.ui-v3.native-expedition .live-roster-head{padding:0;margin:0 0 4px}body.ui-v3.native-expedition .live-roster-head>small{display:none}}
+@media(max-width:1250px){body.ui-v3.native-expedition .arena-dock button{min-width:0;font-size:12px}body.ui-v3.native-expedition .ally-orders>[data-ally-order]{grid-template-columns:40px minmax(0,1fr) 78px;gap:4px}body.ui-v3.native-expedition .ally-orders .prep-roster-portrait img{width:40px;height:40px}body.ui-v3.native-expedition .ally-orders .prep-roster-portrait strong{font-size:13px}body.ui-v3.native-expedition .ally-orders .prep-roster-portrait small{font-size:8px}body.ui-v3.native-expedition .reward-knapsack{min-width:0}.reward-knapsack strong{font-size:17px}}
+@media(min-width:901px){body.ui-v3.native-expedition .briefing{max-height:calc(100dvh - 270px);overflow:auto;scrollbar-width:thin;scrollbar-color:#467b80 #001b25}body.ui-v3.native-expedition .briefing-actions{position:sticky;bottom:-15px;background:#001b25f7;padding:8px 0 0;z-index:3}body.ui-v3.native-expedition .briefing .capture-summary{padding:8px;min-height:50px;font-size:9px}body.ui-v3.native-expedition .briefing .capture-summary small{font-size:8px}}
+@media(min-width:901px){body.ui-v3.native-expedition .live-roster.paired-rosters{min-height:0}body.ui-v3.native-expedition .live-roster .live-unit-card{position:relative;min-height:0;max-height:155px;padding:5px}body.ui-v3.native-expedition .live-roster .live-unit-portrait img{width:30px;height:30px}body.ui-v3.native-expedition .live-roster .roster-commands{min-height:19px;margin:0;font-size:8px;padding:0}body.ui-v3.native-expedition .live-roster .roster-commands button{font-size:7px;min-height:19px;padding:2px 4px}body.ui-v3.native-expedition .live-roster .live-vital-label{margin:2px 0;font-size:7px}body.ui-v3.native-expedition .live-roster .live-health-bar,body.ui-v3.native-expedition .live-roster .live-stamina-bar{height:4px;margin:0}body.ui-v3.native-expedition .live-roster .live-unit-condition{max-height:14px;white-space:nowrap;overflow:hidden;font-size:7px;margin-top:2px}body.ui-v3.native-expedition .live-roster .live-focus-button{min-height:20px;padding:3px;margin-top:3px;font-size:8px}body.ui-v3.native-expedition[data-phase="battle"] .arena-frame .arena-viewport{height:clamp(300px,calc(100dvh - 435px),620px)}}
+@media(max-width:900px){
+ body.ui-v3.native-expedition[data-screen="arena"] .arena-grid,body.ui-v3.native-expedition[data-screen="arena"][data-phase="battle"] .arena-grid,body.ui-v3.native-expedition[data-screen="arena"] .arena-grid:has(.elite-encounter){grid-template-columns:1fr}
+ body.ui-v3.native-expedition[data-screen="arena"] .page-heading{position:static;height:45px;margin:0 0 6px}
+ body.ui-v3.native-expedition .arena-frame .arena-viewport{height:auto;aspect-ratio:1002/654;min-height:0;border-width:7px}
+ body.ui-v3.native-expedition .arena-field-tools{left:6px;bottom:6px;padding:3px;gap:4px}.arena-field-tools button{font-size:10px;min-height:32px;padding:5px 8px}.arena-field-tools img{width:17px;height:17px}
+ body.ui-v3.native-expedition .side-column{display:block}body.ui-v3.native-expedition .arena-control{position:static;padding:8px;flex-wrap:wrap}
+ body.ui-v3.native-expedition .arena-dock{gap:5px}body.ui-v3.native-expedition .arena-dock button{font-size:11px;flex:1;min-width:0}
+ body.ui-v3.native-expedition .ally-orders>[data-ally-order]{display:flex;flex-direction:column}.roster-manage button{font-size:8px;padding:4px 6px}
+ body.ui-v3.native-expedition .rewards-layout{display:flex;flex-direction:column}
+ body.ui-v3.native-expedition .rewards-stage,body.ui-v3.native-expedition .rewards-expedition{display:contents}
+ body.ui-v3.native-expedition .result-hero{order:0;min-height:115px}
+ body.ui-v3.native-expedition .rewards-expedition>header{display:none}
+ body.ui-v3.native-expedition .rewards-expedition .recap-growth{order:1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+ body.ui-v3.native-expedition .rewards-expedition .growth-row{flex-direction:column;min-height:100px;padding:8px 5px;gap:5px;margin:0;text-align:center}
+ body.ui-v3.native-expedition .rewards-expedition .growth-info{width:100%}
+ body.ui-v3.native-expedition .rewards-expedition .growth-info strong{font-size:14px;line-height:1.2}
+ body.ui-v3.native-expedition .rewards-expedition .growth-info strong>b{float:none;display:block;font-size:9px;margin-top:4px}
+ body.ui-v3.native-expedition .rewards-expedition .growth-info small{font-size:8px}
+ body.ui-v3.native-expedition .rewards-expedition .growth-row>img{width:42px;height:42px}
+ body.ui-v3.native-expedition .rewards-expedition .growth-level{font-size:8px;max-width:none}
+ body.ui-v3.native-expedition .reward-showcase{order:2;flex:none;height:430px;min-height:430px}
+ body.ui-v3.native-expedition .reward-upgrades{order:3}
+ body.ui-v3.native-expedition .rewards-expedition .capture-outcome{order:4;margin:5px 0}
+ body.ui-v3.native-expedition .result-levels,body.ui-v3.native-expedition .rewards-team{order:5}
+ body.ui-v3.native-expedition .rewards-numbers{order:6}
+ body.ui-v3.native-expedition .rewards-footer{order:7;flex-wrap:wrap;margin-top:5px;column-gap:10px;row-gap:5px}
+ body.ui-v3.native-expedition .rewards-footer>.button{display:none}
+ body.ui-v3.native-expedition .reward-knapsack{flex:0 0 95px;gap:5px}
+ body.ui-v3.native-expedition .knapsack-art{width:47px;height:50px}
+ body.ui-v3.native-expedition .reward-knapsack>span{display:none}
+ body.ui-v3.native-expedition .rewards-footer>div:last-child{flex:1}
+ body.ui-v3.native-expedition .rewards-footer>div:last-child>.button{min-width:0;width:100%;font-size:16px}
+ body.ui-v3.native-expedition .rewards-footer{flex-wrap:nowrap}
+ body.ui-v3.native-expedition .rewards-footer{flex-direction:row}
+ body.ui-v3.native-expedition .rewards-footer .reward-knapsack{flex:0 0 50px}
+ body.ui-v3.native-expedition .rewards-footer>div:last-child{flex:1 1 auto;width:auto;min-width:0}
+}
+@media(max-width:620px){body.ui-v3.native-expedition[data-screen="arena"] main{padding:6px 10px 14px}body.ui-v3.native-expedition[data-screen="arena"] .header{height:64px;padding-inline:12px}body.ui-v3.native-expedition[data-screen="arena"] .run-bar{height:36px;min-height:36px}body.ui-v3.native-expedition .expedition-relic-bar{gap:7px;padding:4px 5px;margin-bottom:7px}.relic-bar-label>span{font-size:6px;letter-spacing:1px}.relic-bar-label>strong{font-size:14px}.relic-bar-empty{font-size:8px}.relic-bar-item{width:35px!important;height:35px!important}.relic-pack-link span{display:none}.relic-bar-items{gap:5px}body.ui-v3.native-expedition #ally-orders{grid-auto-flow:row;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-columns:auto}body.ui-v3.native-expedition .ally-orders>[data-ally-order]{display:grid;grid-template-columns:minmax(0,1fr) 70px;padding:6px}body.ui-v3.native-expedition .ally-orders .prep-roster-portrait{grid-column:1/-1;grid-row:1}body.ui-v3.native-expedition .ally-orders .roster-commands{grid-column:2;grid-row:2}body.ui-v3.native-expedition .ally-orders .prep-roster-vitals{grid-column:1;grid-row:2;align-self:center}body.ui-v3.native-expedition .arena-roster-deck h3{height:auto;min-height:29px;font-size:9px;gap:5px}.roster-manage{gap:4px}.roster-manage button:first-child{display:none}body.ui-v3.native-expedition .roster-manage button{font-size:8px}.arena-field-tools button{min-height:28px;font-size:8px;padding:4px 6px}.arena-field-tools img{width:15px;height:15px}body.ui-v3.native-expedition .briefing h2{font-size:29px}body.ui-v3.native-expedition .reward-knapsack{flex-basis:45px}body.ui-v3.native-expedition .knapsack-art{width:42px;height:45px}body.ui-v3.native-expedition .rewards-footer>div:last-child>.button{font-size:13px}body.ui-v3.native-expedition .rewards-footer{padding:7px 4vw}body.ui-v3.native-expedition .loot-collection{margin-top:160px}}
+@media(prefers-reduced-motion:reduce){.background-motion,.reward-flight{display:none}.relic-effect-panel{animation:none}body.ui-v3.native-expedition .reward-reveal-pending .loot-drop{opacity:1}body.ui-v3.native-expedition .reward-reveal-pending .growth-row .new-xp{transform:scaleX(1)}body.ui-v3.native-expedition .growth-row.xp-arrived .new-xp{animation:none}}
+@media(max-width:620px){body.ui-v3.native-expedition .arena-control .arena-dock{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));width:100%;min-width:0;flex-basis:100%}body.ui-v3.native-expedition .arena-control .arena-dock button{font-size:9px;padding:7px 4px;gap:4px;min-width:0;white-space:normal}body.ui-v3.native-expedition .arena-control .arena-dock button img{width:19px;height:19px}body.ui-v3.native-expedition #ally-orders:not(:has(> :nth-child(4))){grid-auto-flow:row;grid-template-columns:repeat(2,minmax(0,1fr))}body.ui-v3.native-expedition .ally-orders .prep-roster-stamina{grid-column:1/-1;grid-row:3}body.ui-v3.native-expedition .ally-orders .prep-roster-poise{display:none}}
+.gentle-ui .background-motion,.gentle-ui .reward-flight{display:none}.gentle-ui .relic-effect-panel{animation:none}
+/* Leave room for the complete status strip above the desktop dock. */
+@media(min-width:901px){body.ui-v3.native-expedition .arena-frame .arena-viewport{height:clamp(300px,calc(100dvh - 425px),620px)}body.ui-v3.native-expedition[data-phase="battle"] .arena-frame .arena-viewport{height:clamp(300px,calc(100dvh - 455px),600px)}body.ui-v3.native-expedition .live-roster .roster-commands .elite-badge{display:none}}
+body.ui-v3.native-expedition .ally-orders .prep-roster-vitals>span{top:auto!important;bottom:100%;right:0;left:auto;line-height:12px;font-size:8px;transform:none;background:none}
+@media(max-width:620px){body.ui-v3.native-expedition .ally-orders .prep-roster-vitals{grid-row:2;grid-column:1;align-self:end;margin-bottom:3px;height:6px}body.ui-v3.native-expedition .ally-orders .prep-roster-vitals>span{font-size:7px;line-height:10px}body.ui-v3.native-expedition .ally-orders .prep-roster-stamina{margin-top:2px}}
+@media(max-width:900px){body.ui-v3.native-expedition .arena-control>.button[data-action="battle"]{display:flex;min-width:0;min-height:46px;font-size:18px;flex:1}body.ui-v3.native-expedition .arena-control>.button[data-action="battle"] img{width:22px;height:22px}}
+@media(max-width:620px){body.ui-v3.native-expedition .arena-control>.button[data-action="battle"]{flex:1 0 100%;width:100%;justify-content:center}body.ui-v3.native-expedition .speed-switch{flex:none}body.ui-v3.native-expedition .speed-switch button{min-width:38px;max-width:38px;padding:5px 4px}body.ui-v3.native-expedition .companion-equipment>header{flex-wrap:wrap;gap:8px}body.ui-v3.native-expedition .companion-equipment>header>div{min-width:0;flex:1}body.ui-v3.native-expedition .companion-equipment>header>img{width:48px;height:48px}body.ui-v3.native-expedition .companion-equipment>header>button{flex:1 0 100%;width:100%;min-width:0;font-size:13px}}
+
+@media(max-width:620px){body.ui-v3.native-expedition[data-screen="arena"] .resources>div{min-width:0;flex:1 1 0;padding:5px 6px}}

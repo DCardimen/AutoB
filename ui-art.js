@@ -5,6 +5,8 @@ import {WEARER_RELICS} from './wearer-relics.js';
 import {SKILLS} from './skills.js';
 
 export {UI_ART};
+const ART_VARIABLES={frame:'arena-frame',panel:'leaf-panel',gold:'gold-action',collect:'collect-button','collect-hover':'collect-hover',card:'reward-card','card-hover':'reward-card-hover','card-grove':'reward-card-grove',slot:'gear-slot',empty:'empty-slot',tab:'tab','tab-active':'tab-selected',result:'result-panel',rewards:'rewards-backdrop',leaves:'reward-leaves',failure:'capture-failed',success:'capture-success',companion:'companion-card',hp:'bar-health','enemy-hp':'bar-enemy',stamina:'bar-stamina',poise:'bar-poise'};
+let installedArtVariables=false;
 export function artImage(key, cls='', alt='') {
  const src=UI_ART[key];
  return src ? `<img class="uploaded-art ${cls}" src="${src}" alt="${alt}" draggable="false" decoding="async">` : '';
@@ -51,6 +53,9 @@ export function skillArt(skill) {
 
 export function decorateUploadedArt(root=document) {
  if(!root)return;
+ // Large data URLs exceed browser CSS custom-property limits. The offline
+ // registry already provides compact blob URLs; share them with the CSS skin.
+ if(!installedArtVariables){for(const [name,key]of Object.entries(ART_VARIABLES))document.documentElement.style.setProperty('--upload-'+name,`url("${UI_ART[key]}")`);installedArtVariables=true;}
  for(const el of root.querySelectorAll('.inventory-item,.relic-slot.equipped,.personal-inventory [data-equip]')){
   const name=el.querySelector('strong')?.textContent,r=WEARER_RELICS.find(r=>r.name===name),icon=el.querySelector('span');
   if(r&&icon&&!icon.querySelector('.uploaded-art'))icon.innerHTML=artImage(relicArt(r.id),'relic-art');

@@ -1,5 +1,8 @@
+import {arenaCamera,arenaPoint} from './arena-camera.js';
+import {relicBarHTML,installRelicPreviews,refreshRelicPreviews} from './relic-ui.js';
+import {decorateAmbientBackgrounds,tickAmbientBackgrounds} from './ambient-ui.js';
 import {UI_ART,artImage,gearArt,relicArt,lootArt,skillArt,decorateUploadedArt} from './ui-art.js';
-import {rewardsShell,rewardDropHTML,animateRewardCollection} from './rewards-ui.js';
+import {rewardsShell,rewardDropHTML,animateRewardCollection,animateRewardReveal} from './rewards-ui.js';
 import {growthHTML} from './battle-summary.js';
 import {SettingsMovementPreview} from './settings-movement-preview.js';
 import {showLogoIntro} from './intro.js';
@@ -332,7 +335,7 @@ function activeSynergies() {
 var liveRosterSide=0,liveSelectedUid=null;
 function render() {
   const pageScroll={left:scrollX,top:scrollY};
-  updateHeader();
+  updateHeader();refreshRelicPreviews();installRelicPreviews();
   document.body.dataset.planet = Math.min(run.planet,2);
   document.body.dataset.phase = phase;
   document.body.classList.toggle("gentle-ui",!!profile.reducedMotion);
@@ -343,14 +346,14 @@ function render() {
     .forEach((el) =>
       el.classList.toggle("active", el.dataset.view === viewName),
     );
-  $("#view").innerHTML =
+  $("#view").innerHTML = relicBarHTML(run.relics.map(id=>RELICS.find(r=>r.id===id)||RUN_RELIC_BY_ID[id]).filter(Boolean),relicDescription,{inventory:run.inventory.length,pact:legendaryPactBanner()}) + (
     viewName === "arena"
       ? arenaHTML()
       : viewName === "map"
         ? mapHTML()
-        : collectionHTML();
+        : collectionHTML());
   if(viewName==='arena'&&phase==='battle')refreshLiveRoster();
-  decorateFieldUI();decorateUploadedArt();
+  decorateFieldUI();decorateUploadedArt();decorateAmbientBackgrounds();
   canvas = $("#battle-canvas");
   ctx = canvas?.getContext("2d");
   if (canvas) {
@@ -407,16 +410,7 @@ function arenaHTML() {
               "",
               !["battle", "elite", "boss", "capture"].includes(type),
             );
-  return `${fieldJourney(run,phase,PLANETS)}${!profile.tutorial ? `<div class="tutorial-callout"><span>Scout the enemy and equip your companions. Your team fights automatically.</span>${button("Equip your starter gear", "tutorial-gear", "secondary small")}<button data-action="dismiss-tutorial" aria-label="Dismiss welcome">×</button></div>` : ""}<div class="arena-grid"><div class="arena-main"><section class="panel arena-panel"><div class="panel-top"><span class="panel-title">${p.name.toUpperCase()} · FIELD <span style="color:#687d5d;margin-left:9px">/ ${String(run.depth + 1).padStart(2, "0")}</span></span><span class="status-dot ${live ? "live" : ""}"><i></i> ${live ? "BATTLE IN PROGRESS" : phase === "reward" ? "ENCOUNTER COMPLETE" : mapWaiting ? "AWAITING YOUR PATH" : ended ? "EXPEDITION ENDED" : "PREPARING FOR BATTLE"}</span></div>${enrageHTML()}${eliteEncounterHTML(foes)}<div class="arena-frame"><div class="arena-viewport"><canvas id="battle-canvas" aria-label="Real-time creature arena. Your expedition is on the left, wild creatures on the right."></canvas><div class="arena-label"><span class="location-icon">${ICONS[type]}</span><div><strong>${type === "boss" ? p.bossName : "The Forgotten Colosseum"}</strong><small>${p.name.toUpperCase()} · ${LABELS[type].toUpperCase()}</small></div></div><svg id="target-preview" class="target-preview" viewBox="0 0 1002 654" aria-hidden="true"></svg><div id="capture-feedback" class="capture-feedback" role="status" aria-live="polite"></div><div class="arena-timer" id="arena-timer">${live ? "00:00" : "READY"}</div>${type === "boss" ? `<div class="boss-banner"><div><span>${p.bossName}</span><small id="boss-phase">PHASE I</small></div><div class="boss-health-track"><i id="boss-health" style="width:100%"></i></div></div>` : ""}<div class="arena-bottom-labels"><span id="ally-count">YOUR EXPEDITION · ${run.team.length}</span><span class="versus">vs.</span><span id="foe-count">THE WILDS · ${foes?.length || 4}</span></div></div>${arenaDeckHTML()}</div><div class="arena-control"><div class="control-left"><button class="pause-btn" data-action="pause" title="Pause battle (Space)" aria-label="Pause battle" ${!live ? "disabled" : ""}>${paused ? "▶" : "II"}</button><div class="speed-switch" aria-label="Battle speed">${[1, 2, 3].map((v) => `<button data-speed="${v}" class="${speed === v ? "active" : ""}">${v}×</button>`).join("")}</div><span class="control-note"><kbd>SPACE</kbd> to pause</span></div>${mainAction}<nav class="arena-dock" aria-label="Expedition tools">${dockHTML()}</nav></div>${live&&run.captureOrder?retryControlsHTML():''}<details class="field-enemy-brief" ${matchMedia("(min-width:900px)").matches?"open":""}><summary>Enemy build <span>Inspect relics & equipment</span></summary>${enemyRelicBannerHTML()}</details></section><div class="formation-section"><div class="section-heading"><h2>YOUR EXPEDITION <span>${run.team.length} / ${capacity(run)}</span></h2><p>Inspect skills & AI · Deploy on the tactical grid</p><div class="segmented" title="Team AI priority">${["balanced", "hunt", "guard", "weakest"].map((s) => `<button data-stance="${s}" class="${run.stance === s ? "active" : ""}" ${live ? "disabled" : ""}>${{ balanced: "Balanced", hunt: "Hunt", guard: "Guard", weakest:"Weakest first" }[s]}</button>`).join("")}</div></div><div class="team-grid">${Array.from({length:6},(_,seat)=>teamSeatHTML(seat)).join("")}</div>${reserveTrayHTML()}${equipmentTrayHTML()}</div><div class="relic-section">${legendaryPactBanner()}<span class="relic-heading">✧ EXPEDITION RELICS <span class="muted">${run.relics.length}</span></span><button class="text-button pack-button" data-action="pack">◈ Relic pack · ${run.inventory.length}</button>${
-    run.relics.length
-      ? `<div class="relic-list">${run.relics
-          .map((id) => {
-            const r = RELICS.find((r) => r.id === id);
-            return `<button class="relic-item" data-relic="${id}" style="--relic:${r.color}" title="${r.name}: ${relicDescription(r)}" aria-label="${r.name}">${r.icon}</button>`;
-          })
-          .join("")}</div>`
-      : '<span class="relic-empty">A story yet to be written. Find relics at outposts and along your path.</span>'
-  }</div>${tacticalHTML()}<div class="battle-feed"><time id="feed-time">✧</time><span id="feed-text">${live ? battle?.log[0]?.text || "The gates open." : "Your formation is set. Let your companions do the fighting."}</span><button class="text-button" data-action="report" style="margin-left:auto;white-space:nowrap">Battle log →</button></div></div><aside class="side-column">${briefingHTML()}${synergyHTML()}</aside></div>`;
+  return `${fieldJourney(run,phase,PLANETS)}${!profile.tutorial ? `<div class="tutorial-callout"><span>Scout the enemy and equip your companions. Your team fights automatically.</span>${button("Equip your starter gear", "tutorial-gear", "secondary small")}<button data-action="dismiss-tutorial" aria-label="Dismiss welcome">×</button></div>` : ""}<div class="arena-grid"><div class="arena-main"><section class="panel arena-panel"><div class="panel-top"><span class="panel-title">${p.name.toUpperCase()} · FIELD <span style="color:#687d5d;margin-left:9px">/ ${String(run.depth + 1).padStart(2, "0")}</span></span><span class="status-dot ${live ? "live" : ""}"><i></i> ${live ? "BATTLE IN PROGRESS" : phase === "reward" ? "ENCOUNTER COMPLETE" : mapWaiting ? "AWAITING YOUR PATH" : ended ? "EXPEDITION ENDED" : "PREPARING FOR BATTLE"}</span></div>${enrageHTML()}<div class="arena-frame"><div class="arena-viewport"><canvas id="battle-canvas" aria-label="Real-time creature arena. Your expedition is on the left, wild creatures on the right."></canvas><div class="arena-label"><span class="location-icon">${ICONS[type]}</span><div><strong>${type === "boss" ? p.bossName : "The Forgotten Colosseum"}</strong><small>${p.name.toUpperCase()} · ${LABELS[type].toUpperCase()}</small></div></div><svg id="target-preview" class="target-preview" viewBox="0 0 1002 654" aria-hidden="true"></svg><div id="capture-feedback" class="capture-feedback" role="status" aria-live="polite"></div><div class="arena-timer" id="arena-timer">${live ? "00:00" : "READY"}</div>${type === "boss" ? `<div class="boss-banner"><div><span>${p.bossName}</span><small id="boss-phase">PHASE I</small></div><div class="boss-health-track"><i id="boss-health" style="width:100%"></i></div></div>` : ""}<div class="arena-field-tools"><button data-action="formation">${artImage('icon-formation')}Formation: ${run.formation||'balanced'}</button><button data-action="formation">${artImage('icon-battle')}Deploy</button><button data-action="capture-kit">${artImage('icon-target')}Target lock</button></div><div class="arena-bottom-labels"><span id="ally-count">YOUR EXPEDITION · ${run.team.length}</span><span class="versus">vs.</span><span id="foe-count">THE WILDS · ${foes?.length || 4}</span></div></div>${arenaDeckHTML()}</div><div class="arena-control"><div class="control-left"><button class="pause-btn" data-action="pause" title="Pause battle (Space)" aria-label="Pause battle" ${!live ? "disabled" : ""}>${paused ? "▶" : "II"}</button><div class="speed-switch" aria-label="Battle speed">${[1, 2, 3].map((v) => `<button data-speed="${v}" class="${speed === v ? "active" : ""}">${v}×</button>`).join("")}</div><span class="control-note"><kbd>SPACE</kbd> to pause</span></div>${phase==='prep'?'':mainAction}<nav class="arena-dock" aria-label="Expedition tools">${dockHTML()}</nav></div>${live&&run.captureOrder?retryControlsHTML():''}<details class="field-enemy-brief" ${matchMedia("(min-width:900px)").matches?"open":""}><summary>Enemy build <span>Inspect relics & equipment</span></summary>${enemyRelicBannerHTML()}</details></section><div class="battle-feed"><time id="feed-time">✧</time><span id="feed-text">${live ? battle?.log[0]?.text || "The gates open." : "Your formation is set. Let your companions do the fighting."}</span><button class="text-button" data-action="report" style="margin-left:auto;white-space:nowrap">Battle log →</button></div></div><aside class="side-column">${briefingHTML()}${synergyHTML()}</aside></div>`;
 }
 function creatureCard(u, i) {
   const s = BY_ID[u.id],
@@ -456,11 +450,11 @@ function briefingHTML() {
     .slice(0, 6)
     .map(
       (u) =>
-        `<button class="opponent-thumb" data-foe="${u.id}" title="${creatureName(u)} · ${BY_ID[u.id].rarity}">${image(u)}<span><strong>${creatureName(u)}</strong><small>${BY_ID[u.id].role} ? Lv. ${u.level}</small><b>${stats(u,foes,u.enemyRelics||[]).hp} HP</b></span>${roleBadge(BY_ID[u.id])}</button>`,
+        `<button class="opponent-thumb" data-foe="${u.id}" title="${creatureName(u)} · ${BY_ID[u.id].rarity}">${image(u)}<span><strong>${creatureName(u)}</strong><small>${BY_ID[u.id].role} \u00b7 Lv. ${u.level}</small><b>${stats(u,foes,u.enemyRelics||[]).hp} HP</b></span>${roleBadge(BY_ID[u.id])}</button>`,
     )
     .join(
       "",
-    )}</div>${scoutingComparisonHTML()}<div class="thin-rule"></div><span class="section-kicker">VICTORY REWARDS</span><div class="reward-preview"><span>◉ ${Math.round((type === "boss" ? 145 : type === "elite" ? 85 : 48 + run.depth * 4)*(run.relics.includes("coin")?1+.35*itemStrength(run):1)*(run.relics.includes("salvage")&&type!=="elite"&&type!=="boss"?.9:1)*(chaosLevel(run)>=17?.88:1)*.65)} base gold</span><span>✧ ${Math.round((type === "boss" ? 72 : type === "elite" ? 46 : 32 + run.depth * 3) * (1 + run.planet * 0.35))} EXP</span><span>◇ Preselect to capture</span></div><div class="scout-panel"><strong>${encounterInfo(run, node).arch.name}</strong><p>${type === "boss" ? encounterInfo(run, node).boss.desc : encounterInfo(run, node).arch.desc}</p><b>COUNTERPLAN</b><p>${type === "boss" ? encounterInfo(run, node).boss.counter : encounterInfo(run, node).arch.counter}</p><span>${encounterInfo(run, node).weather.name} · ${encounterInfo(run, node).weather.desc}</span><small>${DIFFICULTIES[run.difficulty || "standard"].name}${chaosLevel(run) ? " " + chaosLevel(run) + " / 20" : ""}${run.legendaryLure ? " · CELESTIAL BEACON READY" : ""}</small></div><div class="briefing-actions">${captureSummaryHTML()}${phase==='prep'?button(artImage('icon-battle')+'Enter battle \u2192','begin-encounter','briefing-battle'):phase==='reward'?button('Gather rewards \u2192','show-spoils'):button('Encounter intel \u2192','intel','secondary')}</div><div class="tactical-tip"><strong>AN EXPLORER’S INSTINCT</strong>${type === "boss" ? "Boss creatures have reinforced health. Protect your healers and invest in cooldowns." : "Scout the enemy tactic, equip a counter relic, then adjust deployment."}</div></section>`;
+    )}</div>${scoutingComparisonHTML()}<div class="thin-rule"></div><span class="section-kicker">VICTORY REWARDS</span><div class="reward-preview"><span>◉ ${Math.round((type === "boss" ? 145 : type === "elite" ? 85 : 48 + run.depth * 4)*(run.relics.includes("coin")?1+.35*itemStrength(run):1)*(run.relics.includes("salvage")&&type!=="elite"&&type!=="boss"?.9:1)*(chaosLevel(run)>=17?.88:1)*.65)} base gold</span><span>✧ ${Math.round((type === "boss" ? 72 : type === "elite" ? 46 : 32 + run.depth * 3) * (1 + run.planet * 0.35))} EXP</span><span>◇ Preselect to capture</span></div><div class="scout-panel"><strong>${encounterInfo(run, node).arch.name}</strong><p>${type === "boss" ? encounterInfo(run, node).boss.desc : encounterInfo(run, node).arch.desc}</p><b>COUNTERPLAN</b><p>${type === "boss" ? encounterInfo(run, node).boss.counter : encounterInfo(run, node).arch.counter}</p><span>${encounterInfo(run, node).weather.name} · ${encounterInfo(run, node).weather.desc}</span><small>${DIFFICULTIES[run.difficulty || "standard"].name}${chaosLevel(run) ? " " + chaosLevel(run) + " / 20" : ""}${run.legendaryLure ? " · CELESTIAL BEACON READY" : ""}</small></div>${eliteEncounterHTML(foes)}<div class="briefing-actions">${captureSummaryHTML()}${phase==='prep'?button(artImage('icon-battle')+'Enter battle \u2192','battle','briefing-battle'):phase==='reward'?button('Gather rewards \u2192','show-spoils'):button('Encounter intel \u2192','intel','secondary')}</div><div class="tactical-tip"><strong>AN EXPLORER’S INSTINCT</strong>${type === "boss" ? "Boss creatures have reinforced health. Protect your healers and invest in cooldowns." : "Scout the enemy tactic, equip a counter relic, then adjust deployment."}</div></section>`;
 }
 function synergyHTML() {
   const syn = synergies(run.team);
@@ -530,12 +524,18 @@ function collectionHTML() {
     })
     .join("")}</div>`;
 }
+function placeArenaAction(){
+ const action=$(".briefing-battle"),dock=$(".arena-control .arena-dock");if(!action||!dock)return;
+ if(matchMedia("(max-width:900px)").matches)dock.before(action);else $(".briefing-actions")?.append(action);
+}
 function resizeCanvas() {
+  placeArenaAction();
   if (!canvas) return;
   const rect = canvas.getBoundingClientRect();
   const dpr = Math.min(devicePixelRatio, 2);
   canvas.width = rect.width * dpr;
   canvas.height = rect.height * dpr;
+  const camera=arenaCamera(rect.width,rect.height);$("#target-preview")?.setAttribute("viewBox",`${camera.x} ${camera.y} ${camera.width} ${camera.height}`);
 }
 window.addEventListener("resize", resizeCanvas);
 let dragIndex = null;
@@ -576,7 +576,7 @@ function modal(html, kind = "generic", closable = true) {
   $(".modal").dataset.kind=kind;
   $(".modal-backdrop").dataset.kind=kind;
   $(".modal").classList.toggle("reward-screen",kind==="reward");
-  decorateFieldUI($("#modal-root"));decorateUploadedArt($("#modal-root"));
+  decorateFieldUI($("#modal-root"));decorateUploadedArt($("#modal-root"));decorateAmbientBackgrounds($("#modal-root"));
   decorateAilments($("#modal-root"));prepareLoadoutDragging();prepareDetailTabs();
   const first = (focusSelector&&$(focusSelector))||$("#modal-root button:not(:disabled)");
   if(previousKind===kind){$(".modal").scrollTop=previousScroll;$(".modal-backdrop").scrollTop=backdropScroll;}
@@ -731,7 +731,7 @@ function startBattle() {
   upgradeChosen = null;
   save();
   render();
-  $('.arena-viewport')?.scrollIntoView({block:'start',behavior:'instant'});
+  if(matchMedia('(min-width:901px)').matches)window.scrollTo({top:0,behavior:'instant'});else $('.expedition-relic-bar')?.scrollIntoView({block:'start',behavior:'instant'});
   sound("start");
 }
 function finishBattle() {
@@ -853,7 +853,8 @@ function openRewards(){
  const upgrades=`<div class="upgrade-grid">${options.map(u=>`<button class="upgrade-card ${upgradeChosen===u.id?'selected':''}" data-upgrade="${u.id}" aria-pressed="${upgradeChosen===u.id}" ${upgradeChosen?'disabled':''}>${artImage(u.id==='gear'?gearArt(reward.equipmentReward):u.id==='orbs'?'capture-scout-idle':u.id==='gold'?'treasure-01':u.id.startsWith('relic:')||u.id.startsWith('boon:')?relicArt(u.id.split(':')[1]):'rich-03','upgrade-symbol')}<span><strong>${upgradeChosen===u.id?'\u2713 ':''}${u.name}</strong><p>${u.desc}</p></span></button>`).join('')}</div>`;
  const growth=growthHTML(lastReport||{growth:reward.growth},{image:c=>image(c),name:creatureName})||`<div class="rewards-team">${run.team.map(c=>`<div>${image(c)}<span><strong>${creatureName(c)}</strong><small>Lv. ${c.level} \u00b7 ${c.xp} / ${xpNeeded(c.level)} EXP</small></span></div>`).join('')}</div>`;
  const next=button(won?'Continue the journey \u2192':run.integrity<=0?'End expedition \u2192':node.type==='boss'?'Challenge the guardian again \u2192':'Choose the next path \u2192','continue','',won&&(!upgradeChosen||reward.loot&&!reward.loot.claimed));
- modal(rewardsShell({won,reveal,gold:reward.gold,xp:reward.xp,time:reward.time,claimed:!!reward.loot?.claimed,loot:lootHTML(),upgrades,growth,capture:captureOutcomeHTML()||`<div class="capture-outcome neutral">${artImage('icon-capture')}<div><strong>No capture planned</strong><p>Select a wild target before your next battle.</p></div></div>`,casualty:casualtyHTML(reward.casualty),report:lastReport,continueButton:next,slots:reward.slotsAdded?`<p class="result-levels">NEW TEAM PLACE \u00b7 ${capacity(run)} available. Deploy a companion from Reserves.</p>`:''}),'reward');
+ modal(rewardsShell({won,reveal,gold:reward.gold,xp:reward.xp,time:reward.time,claimed:!!reward.loot?.claimed,loot:lootHTML(),upgrades,growth,capture:captureOutcomeHTML()||`<div class="capture-outcome neutral">${artImage('icon-capture')}<div><strong>No capture planned</strong><p>Select a wild target before your next battle.</p></div></div>`,casualty:casualtyHTML(reward.casualty),report:lastReport,continueButton:next,collectionButton:won&&reward.loot?button(reward.loot.claimed?'Spoils collected':artImage('rich-11')+'Collect all spoils','claim-loot','',reward.loot.claimed):'',slots:reward.slotsAdded?`<p class="result-levels">NEW TEAM PLACE \u00b7 ${capacity(run)} available. Deploy a companion from Reserves.</p>`:''}),'reward');
+ animateRewardReveal(document.querySelector('.rewards-layout'),{gold:reward.gold,reducedMotion:profile.reducedMotion});
 }
 
 function chooseUpgrade(id) {
@@ -1337,10 +1338,11 @@ document.addEventListener("click", async (e) => {
     if (phase === "battle") return;
     run.stance = el.dataset.stance;
     save();
-    render();
+    render();if(modalKind==='formation')openFormation();
     toast(
       {
         balanced: "Balanced: roles use their natural targeting.",
+        weakest: "Weakest first: the team prioritizes the lowest-health enemy.",
         hunt: "Hunt: the team focuses wounded targets. Your backline may advance.",
         guard:
           "Guard: strikers stay near the frontline. Safer, but less burst pressure.",
@@ -1699,6 +1701,7 @@ document.addEventListener("keydown", (e) => {
 let practice=null,practiceScenario="shielded",practiceComparisons={};
 let uiTick = 0;
 function frame(now) {
+  tickAmbientBackgrounds(now,{reducedMotion:profile.reducedMotion});
   const dt = Math.min((now - last) / 1000, 0.08);
   last = now;
   if(practice&&modalKind==="practice"){if(!practice.done)practice.step(dt);else finishNativeVisuals(practice,dt);const pc=$("#practice-canvas");if(pc)renderBattle(pc.getContext("2d"),pc.width,pc.height,practice,Math.min(run.planet,2),practice.time,practice.run.team,[],);const status=$("#practice-status");if(status)status.textContent=practice.done?"Comparison finished. Change a relic or run the other comparison.":"Practice · "+practice.time.toFixed(1)+"s";if(practice.done&&!practice.recorded){practice.recorded=true;practiceComparisons[practiceScenario]??={};practiceComparisons[practiceScenario][practice.baseline?"baseline":"linked"]=practiceResult(practice);showPracticeResults();}}
@@ -1923,7 +1926,7 @@ function openFormation() {
   );
   const selected = run.team[formationSelection];
   modal(
-    `<span class="section-kicker">DEPLOYMENT · ENEMIES APPROACH FROM THE RIGHT</span><h2>Give everyone a place.</h2><p>Choose a companion, then a cell. Occupied cells swap companions. Protectors cover nearby allies; spread rows against artillery.</p><div class="formation-picker">${run.team.map((c, i) => `<button data-formation-unit="${i}" class="${i === formationSelection ? "selected" : ""}">${image(c)}<span>${creatureName(c)}</span></button>`).join("")}</div><div class="formation-columns"><span>BACKLINE</span><span>MIDFIELD</span><span>FRONTLINE →</span></div><div class="deployment-grid">${Array.from(
+    `<span class="section-kicker">DEPLOYMENT · ENEMIES APPROACH FROM THE RIGHT</span><h2>Give everyone a place.</h2><p>Choose a companion, then a cell. Occupied cells swap companions. Protectors cover nearby allies; spread rows against artillery.</p><div class="formation-team-stance" aria-label="Team AI priority">${["balanced","hunt","guard","weakest"].map(id=>`<button data-stance="${id}" class="${run.stance===id?'active':''}" ${phase==='battle'?'disabled':''}>${{balanced:'Balanced',hunt:'Hunt',guard:'Guard',weakest:'Weakest first'}[id]}</button>`).join('')}</div><div class="formation-picker">${run.team.map((c, i) => `<button data-formation-unit="${i}" class="${i === formationSelection ? "selected" : ""}">${image(c)}<span>${creatureName(c)}</span></button>`).join("")}</div><div class="formation-columns"><span>BACKLINE</span><span>MIDFIELD</span><span>FRONTLINE →</span></div><div class="deployment-grid">${Array.from(
       { length: 9 },
       (_, cell) => {
         const row = Math.floor(cell / 3),
@@ -1936,7 +1939,7 @@ function openFormation() {
       },
     ).join(
       "",
-    )}</div>${policyHTML(selected, formationSelection)}<div class="modal-actions">${button("Formation ready →", "close")}</div>`,
+    )}</div>${policyHTML(selected, formationSelection)}${tacticalHTML()}<div class="modal-actions">${button("Formation ready →", "close")}</div>`,
     "formation",
   );
 }
@@ -2130,12 +2133,12 @@ function lootVisual(d){const color=d.kind==='capturer'?CAPTURERS[d.tier].color:d
 function lootIcon(d){return artImage(lootArt(d));}
 function lootHTML(){
  const cache=reward?.loot;if(!cache)return '';
- return `<section class="loot-cache loot-v2 ${cache.claimed?'collected':''}" aria-label="Victory spoils"><div class="loot-drops">${cache.drops.map((d,i)=>{const {color,tier}=lootVisual(d);return rewardDropHTML(d,i,{name:lootName(d),color,tier,claimed:cache.claimed,description:lootDescription(d)});}).join('')}</div><div class="loot-collection"><span role="status">${cache.claimed?'\u2713 Safely in your pack.':cache.drops.length+' drops ready to claim'}</span>${button(cache.claimed?'\u2713 Spoils collected':artImage('rich-11')+'Collect all spoils','claim-loot','',cache.claimed)}</div></section>`;
+ return `<section class="loot-cache loot-v2 ${cache.claimed?'collected':''}" aria-label="Victory spoils"><div class="loot-drops">${cache.drops.map((d,i)=>{const {color,tier}=lootVisual(d);return rewardDropHTML(d,i,{name:lootName(d),color,tier,claimed:cache.claimed,description:lootDescription(d)});}).join('')}</div><div class="loot-collection"><span role="status">${cache.claimed?'\u2713 Safely in your pack.':cache.drops.length+' drops ready to claim'}</span></div></section>`;
 }
 function lootDescription(d){return d.kind==='gear'?equipmentDescription(GEAR_BY_ID[d.gear],{balanceVersion:15,equipment:[d.gear],equipmentRolls:[d]}):d.kind==='relic'?relicDescription(RUN_RELIC_BY_ID[d.relic]):d.kind==='capturer'?`${CAPTURERS[d.tier].mult}\u00d7 Scout odds \u00b7 one attempt`:'Spend at an outpost to shape your next build.';}
 
-function bindArenaDeployment(){if(!canvas||canvas.dataset.physicsBound)return;canvas.dataset.physicsBound='1';const coords=e=>{const rect=canvas.getBoundingClientRect();return {x:(e.clientX-rect.left)*1002/rect.width,y:(e.clientY-rect.top)*654/rect.height};};canvas.addEventListener('pointerdown',e=>{if(phase==='battle'&&!modalKind&&battle){const p=coords(e),u=battle.living(1).sort((a,b)=>b.y-a.y).find(u=>{const h=nativeBodyHeight(u)*getCharacterHeight(),y=u.y*.58+75-h/2;return Math.pow((p.x-u.x)/Math.max(12,70*u.nativeScale),2)+Math.pow((p.y-y)/Math.max(15,h*.6),2)<=1;});if(u){battle.focusEnemy(u.uid);toast('Focus: '+creatureName(u)+' - 8s');e.preventDefault();}return;}if(phase!=='prep'||modalKind)return;for(let i=run.team.length-1;i>=0;i--)if(deployment.begin(run.team[i],i,coords(e),getCharacterHeight())){canvas.setPointerCapture(e.pointerId);e.preventDefault();break;}});canvas.addEventListener('pointermove',e=>{if(deployment.held){deployment.move(coords(e));e.preventDefault();}});const release=e=>{if(deployment.held){deployment.release();save();if(canvas.hasPointerCapture(e.pointerId))canvas.releasePointerCapture(e.pointerId);}};canvas.addEventListener('pointerup',release);canvas.addEventListener('pointercancel',release);}
-function drawDefeatFilm(){if(!defeatFilm||!ctx||!canvas)return;const c=defeatFilm.outcome,u=battle?.units.find(u=>u.uid===c.uid),x=(u?.x||500)/1002*canvas.width,y=((u?.y||450)*.58+75)/654*canvas.height,t=defeatFilm.elapsed;ctx.save();ctx.fillStyle='#1c090866';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.strokeStyle='#ed8879';ctx.lineWidth=5;const r=22*(Math.min(1,t*3));ctx.beginPath();ctx.moveTo(x-r,y-r);ctx.lineTo(x+r,y+r);ctx.moveTo(x+r,y-r);ctx.lineTo(x-r,y+r);ctx.stroke();ctx.fillStyle='#ffd0ba';ctx.font='bold 18px sans-serif';ctx.textAlign='center';ctx.fillText(c.name+' · PERMANENT LOSS',x,y-65);for(let i=0;i<12;i++){const a=i*Math.PI/6,r=t*45;ctx.fillStyle=i%2?'#eec389':'#dc8278';ctx.fillRect(x+Math.cos(a)*r,y+Math.sin(a)*r,5,5);}ctx.font='13px sans-serif';ctx.fillText('Worn items shattered'+(c.destroyedRelic?' · a relic destroyed':''),x,y+55);ctx.restore();}
+function bindArenaDeployment(){if(!canvas||canvas.dataset.physicsBound)return;canvas.dataset.physicsBound='1';const coords=e=>{const rect=canvas.getBoundingClientRect();return arenaPoint(e.clientX,e.clientY,rect);};canvas.addEventListener('pointerdown',e=>{if(phase==='battle'&&!modalKind&&battle){const p=coords(e),u=battle.living(1).sort((a,b)=>b.y-a.y).find(u=>{const h=nativeBodyHeight(u)*getCharacterHeight(),y=u.y*.58+75-h/2;return Math.pow((p.x-u.x)/Math.max(12,70*u.nativeScale),2)+Math.pow((p.y-y)/Math.max(15,h*.6),2)<=1;});if(u){battle.focusEnemy(u.uid);toast('Focus: '+creatureName(u)+' - 8s');e.preventDefault();}return;}if(phase!=='prep'||modalKind)return;for(let i=run.team.length-1;i>=0;i--)if(deployment.begin(run.team[i],i,coords(e),getCharacterHeight())){canvas.setPointerCapture(e.pointerId);e.preventDefault();break;}});canvas.addEventListener('pointermove',e=>{if(deployment.held){deployment.move(coords(e));e.preventDefault();}});const release=e=>{if(deployment.held){deployment.release();save();if(canvas.hasPointerCapture(e.pointerId))canvas.releasePointerCapture(e.pointerId);}};canvas.addEventListener('pointerup',release);canvas.addEventListener('pointercancel',release);}
+function drawDefeatFilm(){if(!defeatFilm||!ctx||!canvas)return;const c=defeatFilm.outcome,u=battle?.units.find(u=>u.uid===c.uid),camera=arenaCamera(canvas.width,canvas.height),x=((u?.x||500)-camera.x)*camera.scale,y=((u?.y||450)*.58+75-camera.y)*camera.scale,t=defeatFilm.elapsed;ctx.save();ctx.fillStyle='#1c090866';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.strokeStyle='#ed8879';ctx.lineWidth=5;const r=22*(Math.min(1,t*3));ctx.beginPath();ctx.moveTo(x-r,y-r);ctx.lineTo(x+r,y+r);ctx.moveTo(x+r,y-r);ctx.lineTo(x-r,y+r);ctx.stroke();ctx.fillStyle='#ffd0ba';ctx.font='bold 18px sans-serif';ctx.textAlign='center';ctx.fillText(c.name+' · PERMANENT LOSS',x,y-65);for(let i=0;i<12;i++){const a=i*Math.PI/6,r=t*45;ctx.fillStyle=i%2?'#eec389':'#dc8278';ctx.fillRect(x+Math.cos(a)*r,y+Math.sin(a)*r,5,5);}ctx.font='13px sans-serif';ctx.fillText('Worn items shattered'+(c.destroyedRelic?' · a relic destroyed':''),x,y+55);ctx.restore();}
 
 function recapHTML(report){return battleSummaryHTML(report,{image:c=>image(c),name:creatureName,skill:id=>SKILLS[id]?.name||id},recapMetric,recapSide);}
 function enrageHTML(){return `<div class="enrage-strip" id="enrage-strip"><strong id="enrage-status">Calm - ramp starts at 30s</strong><div class="enrage-live-values"><span id="enrage-damage">1.00× DMG</span><span id="enrage-healing">−0% HEALING</span><span id="enrage-actions">1.00× ACTIONS</span></div><span id="enrage-details">Both teams - gradual pressure after 30 combat seconds</span><div class="enrage-progress"><i id="enrage-progress"></i></div></div>`;}
@@ -2160,12 +2163,12 @@ function retryControlsHTML(){return `<div id="capture-retry-controls" class="cap
 function updateRetryControls(){if(phase!=='battle'||!battle)return;const count=$('#capture-attempt-count');if(count)count.textContent=`${battle.captureAttempts} / 3 attempts`;const note=$('#capture-retry-note');if(note)note.textContent=battle.captureResult?.success?'Captured. No more throws this round.':battle.captureAttempts>=3?'All three attempts used.':battle.autoRetryAt!==null?`Auto retry in ${Math.max(0,battle.autoRetryAt-battle.time).toFixed(1)}s · highlighted capturer`:battle.autoRetryBlocked?'Auto retry stopped · '+battle.autoRetryBlocked:battle.captureResult?'Capture failed · click a weakened opponent or enable auto retry.':'Your planned throw will happen automatically at the selected HP.';for(const el of document.querySelectorAll('#capture-retry-controls [data-capture-method]')){const id=el.dataset.captureMethod;el.disabled=!(run.captureTools?.[id]>0)||battle.captureResult?.success||battle.captureAttempts>=3;el.classList.toggle('selected',id===(run.selectedCapturer||run.captureOrder.tool));el.querySelector('small').textContent=CAPTURERS[id].name.split(' ')[0]+' · '+(run.captureTools?.[id]||0);}}
 function ensureCapturer(){if(!run.captureTools?.[run.selectedCapturer||"scout"])run.selectedCapturer=Object.keys(CAPTURERS).find(id=>run.captureTools?.[id]>0)||"scout";}
 
-function drawGroundLoot(time){if(phase!=='reward'||!reward?.loot||reward.loot.claimed||!ctx||!canvas)return;ctx.save();ctx.scale(canvas.width/1002,canvas.height/654);reward.loot.drops.forEach((d,i)=>{const x=d.x||600+i*35,y=(d.y||430)*.58+75,{color}=lootVisual(d),t=profile.reducedMotion?1:Math.max(0,(victoryFilm?.elapsed??1)-i*.08),rise=Math.min(1,t/.65),bounce=profile.reducedMotion?0:Math.round(Math.sin(time*3+i)*3),h=42*rise,beam=ctx.createLinearGradient(x,y-h-55,x,y);beam.addColorStop(0,color+'00');beam.addColorStop(1,color+'55');ctx.fillStyle=beam;ctx.beginPath();ctx.moveTo(x-20,y);ctx.lineTo(x-12,y-h-55);ctx.lineTo(x+12,y-h-55);ctx.lineTo(x+20,y);ctx.fill();ctx.strokeStyle=color;ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(x,y,19,7,0,0,Math.PI*2);ctx.stroke();ctx.save();ctx.translate(Math.round(x-17),Math.round(y-h-28+bounce));ctx.fillStyle='#10231e';ctx.fillRect(3,2,28,28);ctx.fillStyle=color;if(d.kind==='gold'){for(let n=0;n<3;n++){ctx.fillRect(n*9+3,24-n*5,8,6+n*5);ctx.fillStyle='#fff0a5';ctx.fillRect(n*9+4,24-n*5,6,2);ctx.fillStyle=color;}}else if(d.kind==='gear'){ctx.fillRect(8,20,18,4);ctx.fillRect(15,5,5,25);ctx.fillStyle='#fff2ce';ctx.fillRect(17,4,2,16);}else if(d.kind==='capturer'){ctx.fillRect(7,7,21,21);ctx.fillStyle='#153a3e';ctx.fillRect(10,10,15,15);ctx.fillStyle=color;ctx.fillRect(15,3,5,29);ctx.fillRect(3,15,29,5);}else{ctx.fillRect(14,2,7,31);ctx.fillRect(2,14,31,7);ctx.fillStyle='#f7efd2';ctx.fillRect(14,14,7,7);}ctx.restore();for(let j=0;j<5;j++){const a=j*Math.PI*.4+time*.7,r=20+Math.sin(time*2+j)*6;ctx.fillStyle=j%2?color:'#fff1c5';ctx.fillRect(Math.round(x+Math.cos(a)*r),Math.round(y-h-10+Math.sin(a)*r*.55),2,2);}ctx.font='bold 11px sans-serif';ctx.textAlign='center';ctx.fillStyle='#f3e9c9';ctx.fillText(lootName(d),x,y+23);});ctx.restore();}
+function drawGroundLoot(time){if(phase!=='reward'||!reward?.loot||reward.loot.claimed||!ctx||!canvas)return;ctx.save();const camera=arenaCamera(canvas.width,canvas.height);ctx.scale(camera.scale,camera.scale);ctx.translate(-camera.x,-camera.y);reward.loot.drops.forEach((d,i)=>{const x=d.x||600+i*35,y=(d.y||430)*.58+75,{color}=lootVisual(d),t=profile.reducedMotion?1:Math.max(0,(victoryFilm?.elapsed??1)-i*.08),rise=Math.min(1,t/.65),bounce=profile.reducedMotion?0:Math.round(Math.sin(time*3+i)*3),h=42*rise,beam=ctx.createLinearGradient(x,y-h-55,x,y);beam.addColorStop(0,color+'00');beam.addColorStop(1,color+'55');ctx.fillStyle=beam;ctx.beginPath();ctx.moveTo(x-20,y);ctx.lineTo(x-12,y-h-55);ctx.lineTo(x+12,y-h-55);ctx.lineTo(x+20,y);ctx.fill();ctx.strokeStyle=color;ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(x,y,19,7,0,0,Math.PI*2);ctx.stroke();ctx.save();ctx.translate(Math.round(x-17),Math.round(y-h-28+bounce));ctx.fillStyle='#10231e';ctx.fillRect(3,2,28,28);ctx.fillStyle=color;if(d.kind==='gold'){for(let n=0;n<3;n++){ctx.fillRect(n*9+3,24-n*5,8,6+n*5);ctx.fillStyle='#fff0a5';ctx.fillRect(n*9+4,24-n*5,6,2);ctx.fillStyle=color;}}else if(d.kind==='gear'){ctx.fillRect(8,20,18,4);ctx.fillRect(15,5,5,25);ctx.fillStyle='#fff2ce';ctx.fillRect(17,4,2,16);}else if(d.kind==='capturer'){ctx.fillRect(7,7,21,21);ctx.fillStyle='#153a3e';ctx.fillRect(10,10,15,15);ctx.fillStyle=color;ctx.fillRect(15,3,5,29);ctx.fillRect(3,15,29,5);}else{ctx.fillRect(14,2,7,31);ctx.fillRect(2,14,31,7);ctx.fillStyle='#f7efd2';ctx.fillRect(14,14,7,7);}ctx.restore();for(let j=0;j<5;j++){const a=j*Math.PI*.4+time*.7,r=20+Math.sin(time*2+j)*6;ctx.fillStyle=j%2?color:'#fff1c5';ctx.fillRect(Math.round(x+Math.cos(a)*r),Math.round(y-h-10+Math.sin(a)*r*.55),2,2);}ctx.font='bold 11px sans-serif';ctx.textAlign='center';ctx.fillStyle='#f3e9c9';ctx.fillText(lootName(d),x,y+23);});ctx.restore();}
 
 function relicDescription(r){
  if(r?.id==='treasure-moth')return 'Victory caches have a 50% chance to include one extra unique relic.';
  if(r?.effect)return combatEffectDescription(r,run);
- const descriptions={fangs:'Basic attacks deal 9% more damage. Strikers gain 4% lifesteal.',clock:'Skill cooldown times are 11% shorter.',seed:'Healing is 17.5% stronger. Grove creatures gain 6% max HP.',prism:'Every ally starts battle with 32.5 shield.',lens:'Improves the capture base before health, rarity and capturer calculations.',banner:'Guardians gain 11% max HP and taunt at battle start.',feather:'Improves physical dodge reactions and grants 6% movement speed.',coin:'Battle gold rewards increase by 17.5%.',bond:'Each active elemental synergy grants 2.5% attack.'};
+ const descriptions={fangs:'Basic attacks deal 9% more damage. Strikers gain 4% lifesteal.',clock:'Skill cooldown times are 11% shorter.',seed:'Healing is 17.5% stronger. Grove creatures gain 6% max HP.',prism:'Every ally starts battle with 32.5 shield.',lens:'Adds up to 6 percentage points to capture odds, scaled by missing health (full bonus at 25% HP or lower), before Swift mode and rarity caps.',banner:'Guardians gain 11% max HP and taunt at battle start.',feather:'Improves physical dodge reactions and grants 6% movement speed.',coin:'Battle gold rewards increase by 17.5%.',bond:'Each active elemental synergy grants 2.5% attack.'};
  const classic={
   'blood-pact':'Allies deal 11% more damage, but healing is 25% weaker.',
   mercy:'Once per creature: falling below 30% health restores 10% max health.',
@@ -2242,7 +2245,7 @@ function reserveTrayHTML(){return `<section class="reserve-tray"><div class="sec
 var orderPreviewKey,orderPreview;
 function drawAllyOrders(){const layer=$('#ally-orders'),lines=$('#target-preview');if(!layer||!lines||!canvas)return;if(phase!=='prep'||!foes?.length){layer.replaceChildren();lines.innerHTML='';return;}
  getOrderPreview();const key=orderPreviewKey;
- if(layer.dataset.key!==key){layer.dataset.key=key;layer.innerHTML=run.team.map((c,i)=>{const st=stats(c,run.team,run.relics);return `<article data-ally-order="${c.uid}"><div class="roster-commands"><label><span class="sr-only">Behavior</span><select data-policy="${i}" data-quick-ai="true" aria-label="${creatureName(c)} AI target policy">${Object.entries(POLICIES).map(([id,p])=>`<option value="${id}" ${id===(c.policy||'adaptive')?'selected':''}>${p.name}</option>`).join('')}</select></label><small data-preview-target></small></div><button class="prep-roster-portrait" data-switch-creature="${i}" aria-label="Inspect ${creatureName(c)}">${image(c)}<span><strong>${creatureName(c)}</strong><small>${BY_ID[c.id].role} · Lv. ${c.level}</small></span></button>${eliteBadgeHTML(c)}<div class="prep-roster-vitals"><span>${st.hp} HP</span><i style="width:100%"></i></div></article>`;}).join('');}
+ if(layer.dataset.key!==key){layer.dataset.key=key;layer.innerHTML=run.team.map((c,i)=>{const st=stats(c,run.team,run.relics),preview=orderPreview.units.find(u=>u.uid===c.uid);return `<article data-ally-order="${c.uid}"><div class="roster-commands"><label><span class="sr-only">Behavior</span><select data-policy="${i}" data-quick-ai="true" aria-label="${creatureName(c)} AI target policy">${Object.entries(POLICIES).map(([id,p])=>`<option value="${id}" ${id===(c.policy||'adaptive')?'selected':''}>${p.name}</option>`).join('')}</select></label><small data-preview-target></small></div><button class="prep-roster-portrait" data-switch-creature="${i}" aria-label="Inspect ${creatureName(c)}">${image(c)}<span><strong>${creatureName(c)}</strong><small>${BY_ID[c.id].role} · Lv. ${c.level}</small></span></button>${eliteBadgeHTML(c)}<div class="prep-roster-vitals"><span>${st.hp} HP</span><i style="width:100%"></i></div><div class="prep-roster-stamina"><i></i><span>100 / 100 STA</span></div><small class="prep-roster-poise">${Math.round(preview?.maxPoise||0)} poise</small></article>`;}).join('');}
  const paths=[];
  for(const u of orderPreview.units.filter(u=>u.side===0)){const t=orderPreview.target(u),el=layer.querySelector(`[data-ally-order="${u.uid}"]`);if(!el)continue;
  el.querySelector('[data-preview-target]').textContent=t?'→ '+creatureName(t):'No target';
@@ -2317,7 +2320,7 @@ document.addEventListener('click',e=>{
 function arenaDeckHTML(){
  if(phase==='battle')return '<section id="live-roster" class="live-roster" aria-label="Live character status"></section>';
  if(phase!=='prep')return '';
- return `<div class="arena-roster-deck"><section class="prep-ally-controls" aria-label="Pregame companion orders"><h3><i class="arena-crest ally"></i>YOUR TEAM <span>${run.team.length} / ${capacity(run)}</span></h3><div id="ally-orders" class="ally-orders"></div></section><section class="prep-enemy-controls" aria-label="Pregame opponent controls"><h3><i class="arena-crest enemy"></i>OPPONENTS <span>${foes?.length||0}</span></h3><div id="enemy-overheads" class="enemy-overheads"></div></section></div>`;
+ return `<div class="arena-roster-deck"><section class="prep-ally-controls" aria-label="Pregame companion orders"><h3><i class="arena-crest ally"></i>YOUR TEAM <span>${run.team.length} / ${capacity(run)}</span><nav class="roster-manage" aria-label="Team management"><button data-action="pack">Relic pack \u00b7 ${run.inventory.length}</button><button data-action="companions">Manage companions \u2192</button></nav></h3><div id="ally-orders" class="ally-orders"></div></section><section class="prep-enemy-controls" aria-label="Pregame opponent controls"><h3><i class="arena-crest enemy"></i>OPPONENTS <span>${foes?.length||0}</span></h3><div id="enemy-overheads" class="enemy-overheads"></div></section></div>`;
 }
 function eliteBadgeHTML(c){const m=eliteModifier(c);return m?`<span class="elite-badge" title="${m.text} · retained on capture">♨ ${m.name}<small>${m.text}</small></span>`:'';}
 function eliteEncounterHTML(creatures){const c=creatures?.find(c=>eliteModifier(c));return c?`<div class="elite-encounter" role="note"><b>♨ ELITE MUTATION · ${eliteModifier(c).name}</b><span>${creatureName(c)} · ${eliteModifier(c).text}</span><small>Capture this individual to keep its mutation for this run and future expeditions.</small></div>`:'';}
@@ -2335,7 +2338,7 @@ document.addEventListener('click',e=>{const el=e.target.closest('[data-hunted-in
 function gearSymbol(g){return artImage(gearArt(g.id),"item-art");}
 
 function dockHTML(){
- return [['formation','formation','Deployment & AI'],['companions','team','Companions'],['capture-kit','capture','Capture'],['intel','log','Intel & log']].map(([action,icon,label])=>`<button data-action="${action}">${artImage('icon-'+icon)}<span>${label}</span>${action==='capture-kit'?`<b>${run.orbs}</b>`:''}</button>`).join('');
+ return `<button data-view="arena" class="arena-dock-current" aria-current="page">${artImage('icon-battle')}<span>Arena</span></button>`+[['formation','formation','Deployment & AI'],['companions','team','Companions'],['capture-kit','capture','Capture'],['intel','log','Intel & log']].map(([action,icon,label])=>`<button data-action="${action}">${artImage('icon-'+icon)}<span>${label}</span>${action==='capture-kit'?`<b>${run.orbs}</b>`:''}</button>`).join('');
 }
 function captureSummaryHTML(){
  const target=foes?.find(c=>c.uid===run.captureOrder?.uid);

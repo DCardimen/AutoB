@@ -1,0 +1,9 @@
+{
+  "checks": [
+    "source: reference layout, relic hover/focus, equipment, 320/390/768px layouts, live combat/pause, chest/card/gold/EXP destinations, exactly-once save, three animated worlds",
+    "offline: reference layout, relic hover/focus, equipment, 320/390/768px layouts, live combat/pause, chest/card/gold/EXP destinations, exactly-once save, three animated worlds",
+    "source: touch relics and reduced motion reward collection",
+    "offline: touch relics and reduced motion reward collection"
+  ],
+  "errors": []
+}

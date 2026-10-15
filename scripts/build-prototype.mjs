@@ -11,6 +11,6 @@ let js=bundle.replace('backdrop.src = "/public/prototype-glade-pixel.png"','back
 if(js.includes('"/public/prototype-glade-pixel.png"'))throw new Error('Unresolved background asset');
 js=js.replaceAll('</script','<\\/script');new vm.Script(js);
 const html=fs.readFileSync('prototype.html','utf8').replace('<link rel="stylesheet" href="prototype.css">','<style>'+fs.readFileSync('prototype.css','utf8')+'</style>')
-  .replace('<script src="public/prototype-bundle.js"></script>','<script>'+js+'</script>').replaceAll('href="index.html"','href="Starfall-Menagerie.html"').replaceAll('/public/ui/fang-and-feather-logo.png',logo);
+  .replace('<script src="public/prototype-bundle.js"></script>',()=>'<script>'+js+'</script>').replaceAll('href="index.html"','href="Starfall-Menagerie.html"').replaceAll('/public/ui/fang-and-feather-logo.png',logo);
 fs.writeFileSync('Starfall-Training-Glade.html',html);
 console.log(`Built Fang & Feather Training Glade: ${(Buffer.byteLength(html)/1024/1024).toFixed(2)} MiB, zero remote dependencies.`);

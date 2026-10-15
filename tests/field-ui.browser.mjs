@@ -18,7 +18,7 @@ for(const offline of [false,true]){
   assert.equal(await page.locator('.field-world').count(),3);
   assert.ok((await page.locator('.field-world').first().getAttribute('style')).includes(offline?'blob:':'/public/ui/uploaded/world'));
  }
- await page.setViewportSize({width:390,height:844});await page.locator('[data-creature="0"]').click();await page.locator('[data-detail-tab="equipment"]').click();await page.locator('[data-detail-tab="ai"]').click();await page.locator('[data-action="close"]').first().click();
+ await page.setViewportSize({width:390,height:844});await page.locator('.arena-dock [data-action="companions"]').click();await page.locator('[data-party-select="0"]').click();await page.locator('[data-action="inspect-selected"]').click();await page.locator('[data-detail-tab="equipment"]').click();await page.locator('[data-detail-tab="ai"]').click();await page.locator('[data-action="close"]').first().click();
  await page.locator('[data-view="map"]:visible').first().click();
  await page.locator('[data-planet-preview="2"]').click();assert.ok(await page.locator('.field-world-preview').isVisible());await page.locator('[data-action="close"]').first().click();await page.locator('.brand').click();
  await page.evaluate(()=>scrollTo(0,0));await page.waitForTimeout(400);await page.screenshot({path:'playtest-artifacts/field-'+(offline?'offline':'source')+'-mobile.png',fullPage:true});

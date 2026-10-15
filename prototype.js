@@ -1,3 +1,4 @@
+import {paintAmbient} from './ambient-art.js';
 import { PrototypeArena, ANTICIPATION_LEVELS, HERO_IDS, circuitCenter, PROTOTYPE_CHARACTERS, PROTOTYPE_BY_ID, ANIMATION_STATES, animationState, directionalFrame, groundToScreen, screenToGround, clamp } from './prototype-engine.js';
 import { drawPrototypeSprite, spritesReady, prototypePortrait, spriteCacheStats, prototypeDirectionFrames } from './prototype-sprites.js';
 import {exportAtlas} from './prototype-export.js';
@@ -90,6 +91,7 @@ function background(){
   const vignette=c.createRadialGradient(500,330,220,500,330,660);vignette.addColorStop(0,'#14211900');vignette.addColorStop(1,'#0b181abb');c.fillStyle=vignette;c.fillRect(0,0,1000,650);
   // A restrained dust layer remains behind the characters.
   for(let i=0;i<18;i++)ellipse((i*137)%1000+Math.sin(arena.time*0.18+i)*5,100+(i*53)%470+Math.sin(arena.time*0.23+i)*7,1,1,'#edd99b55');
+  if(!matchMedia('(prefers-reduced-motion: reduce)').matches)paintAmbient(c,'glade',arena.time,{width:1000,height:650,cover:false});
 }
 function drawScene(){
   c.clearRect(0,0,1002,654);c.save();

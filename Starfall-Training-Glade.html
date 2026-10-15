@@ -44,8 +44,111 @@
     <section class="sprite-showcase"><div class="section-line"><h2>THE HEROES · FOUR DIRECTIONS</h2><span>NATIVE 64 × 64 SPRITES</span></div><canvas id="hero-showcase" width="1000" height="610" aria-label="Front, right, back and left views of five heroes"></canvas><div class="section-line"><h2>ANIMATION SHOWCASE</h2><span>SELECT ANY COMPANION ABOVE</span></div><canvas id="animation-showcase" width="1000" height="330" aria-label="Idle, walk, run, turn, stop, overhead strike, side slash, charged strike, cast, dodge, get-up and death examples"></canvas></section>
     <footer><span>Milestone 1 · Original prototype inspired by the supplied fantasy RPG reference.</span><span>Direction, stride, anticipation, contact, recovery.</span></footer>
   </main><script>(() => {
-  // prototype-motion.js
+  // ambient-art.js
+  var AMBIENT_SCENES = {
+    rewards: { moon: null, water: [[[0.1, 0.31], [0.15, 0.33], [0.2, 0.64], [0.12, 0.61]], [[0.27, 0.39], [0.3, 0.4], [0.32, 0.62], [0.27, 0.6]], [[0.425, 0.33], [0.45, 0.34], [0.46, 0.48], [0.43, 0.47]], [[0.36, 0.54], [0.5, 0.55], [0.49, 0.77], [0.37, 0.74]], [[0.235, 0.73], [0.26, 0.74], [0.27, 0.95], [0.23, 0.93]], [[0.64, 0.37], [0.67, 0.38], [0.69, 0.55], [0.64, 0.55]]], mist: [[0.25, 0.65, 0.2, 0.06], [0.49, 0.79, 0.23, 0.07], [0.69, 0.46, 0.14, 0.04]], sky: 0.29 },
+    grove: { moon: [0.88, 0.09, 0.045], water: [[[0.69, 0.38], [0.71, 0.38], [0.7, 0.52], [0.67, 0.51]]], mist: [[0.55, 0.5, 0.18, 0.035], [0.5, 0.7, 0.25, 0.045]], sky: 0.22 },
+    night: { moon: [0.73, 0.095, 0.085], mist: [[0.46, 0.52, 0.31, 0.05], [0.6, 0.73, 0.28, 0.04]], sky: 0.25 },
+    cinder: { lava: [[[0.285, 0.09], [0.3, 0.14], [0.31, 0.22], [0.32, 0.25]], [[0.46, 0.39], [0.47, 0.45], [0.47, 0.48]], [[0.06, 0.59], [0.17, 0.63], [0.26, 0.63], [0.37, 0.64]], [[0.38, 0.51], [0.53, 0.52], [0.63, 0.5], [0.75, 0.48]], [[0.01, 0.91], [0.12, 0.94], [0.17, 1]]], mist: [[0.49, 0.66, 0.3, 0.05], [0.73, 0.53, 0.23, 0.05]], sky: 0.2 },
+    astral: { stars: true, moon: null, mist: [[0.39, 0.52, 0.31, 0.05], [0.65, 0.66, 0.26, 0.05]], sky: 0.3 },
+    glade: { lanterns: [[0.15, 0.14], [0.79, 0.17], [0.1, 0.7], [0.9, 0.7]], mist: [[0.5, 0.12, 0.26, 0.035]] },
+    sky: { stars: true, sky: 0.7, moon: [0.8, 0.14, 0.07], mist: [[0.26, 0.22, 0.22, 0.045]] }
+  };
   var TAU = Math.PI * 2;
+  function polygon(c2, points) {
+    c2.beginPath();
+    points.forEach(([x, y], i) => i ? c2.lineTo(x, y) : c2.moveTo(x, y));
+    c2.closePath();
+  }
+  function glow(c2, x, y, rx, ry, color, alpha) {
+    c2.save();
+    c2.translate(x, y);
+    c2.scale(rx, ry);
+    const g = c2.createRadialGradient(0, 0, 0, 0, 0, 1);
+    g.addColorStop(0, color);
+    g.addColorStop(1, "transparent");
+    c2.globalAlpha *= alpha;
+    c2.fillStyle = g;
+    c2.fillRect(-1, -1, 2, 2);
+    c2.restore();
+  }
+  function coverGeometry(w, h, iw, ih, px = 0.5, py = 0.5) {
+    const scale = Math.max(w / iw, h / ih);
+    return { x: (w - iw * scale) * px, y: (h - ih * scale) * py, w: iw * scale, h: ih * scale };
+  }
+  function paintAmbient(c2, theme, time, { width = 1002, height = 654, image = null, positionY = 0.5, cover = true } = {}) {
+    const scene = AMBIENT_SCENES[theme];
+    if (!scene) return;
+    c2.save();
+    const g = image?.naturalWidth && cover ? coverGeometry(width, height, image.naturalWidth, image.naturalHeight, 0.5, positionY) : { x: 0, y: 0, w: width, h: height };
+    c2.translate(g.x, g.y);
+    c2.scale(g.w, g.h);
+    for (const [i, points] of (scene.water || []).entries()) {
+      c2.save();
+      polygon(c2, points);
+      c2.clip();
+      if (image?.naturalWidth) {
+        c2.globalAlpha = 0.26;
+        c2.drawImage(image, 0, Math.sin(time * 2 + i) * 3e-3, 1, 1);
+        c2.globalAlpha = 1;
+      }
+      const ys = points.map((p) => p[1]), xs = points.map((p) => p[0]), top = Math.min(...ys), bottom = Math.max(...ys), left = Math.min(...xs), right = Math.max(...xs);
+      for (let n = 0; n < 6; n++) {
+        const y = top + (time * 0.13 + n * 0.17 + i * 0.13) % 1 * (bottom - top), x = left + (n + 0.5) / 6 * (right - left);
+        const streak = c2.createLinearGradient(0, y, 0, y + 0.05);
+        streak.addColorStop(0, "#d4faff00");
+        streak.addColorStop(0.65, "#e2fcff77");
+        streak.addColorStop(1, "#d4faff00");
+        c2.fillStyle = streak;
+        c2.fillRect(x, y, 18e-4, 0.05);
+      }
+      c2.restore();
+    }
+    for (const [i, line] of (scene.lava || []).entries()) {
+      c2.save();
+      c2.lineCap = "round";
+      c2.strokeStyle = `rgba(255,178,87,${0.16 + 0.08 * Math.sin(time * 1.3 + i)})`;
+      c2.lineWidth = 3e-3;
+      c2.beginPath();
+      line.forEach(([x, y], n) => n ? c2.lineTo(x, y) : c2.moveTo(x, y));
+      c2.stroke();
+      for (let n = 0; n < 3; n++) {
+        const f = (time * 0.05 + n * 0.31 + i * 0.12) % 1, a = line[Math.min(line.length - 2, Math.floor(f * (line.length - 1)))], b = line[Math.min(line.length - 1, Math.floor(f * (line.length - 1)) + 1)], v = f * (line.length - 1) % 1;
+        glow(c2, a[0] + (b[0] - a[0]) * v, a[1] + (b[1] - a[1]) * v, 0.012, 8e-3, "#ffca75", 0.22);
+      }
+      c2.restore();
+    }
+    for (const [i, [x, y, rx, ry]] of (scene.mist || []).entries()) glow(c2, x + Math.sin(time * 0.055 + i) * 0.012, y + Math.sin(time * 0.08 + i) * 2e-3, rx, ry, theme === "cinder" ? "#b79b9a" : "#b6dce9", 0.08 + 0.025 * Math.sin(time * 0.24 + i));
+    if (scene.moon) {
+      const [x, y, r] = scene.moon;
+      glow(c2, x + Math.sin(time * 0.04) * 15e-4, y, r * 2.8, r * 3.7, "#a7d9f6", 0.07 + 0.025 * Math.sin(time * 0.45));
+    }
+    if (scene.sky) {
+      for (let i = 0; i < 2; i++) glow(c2, 0.35 + i * 0.22 + Math.sin(time * 0.035 + i) * 0.015, scene.sky * 0.47 + i * 0.025, 0.18, 0.014, "#bdd4df", 0.045);
+    }
+    if (scene.stars || theme === "night" || theme === "grove") for (let i = 0; i < 16; i++) {
+      const x = 0.15 + i * 137 % 701 / 1e3, y = 0.035 + i * 67 % 173 / 1e3, twinkle = Math.pow(Math.max(0, Math.sin(time * (0.35 + i % 3 * 0.1) + i * 1.7)), 6);
+      c2.save();
+      c2.globalAlpha = 0.12 + twinkle * 0.55;
+      c2.fillStyle = theme === "astral" ? "#e7c9ff" : "#dcf4ff";
+      c2.fillRect(x, y, 15e-4, 2e-3);
+      if (twinkle > 0.5) {
+        c2.globalAlpha *= 0.6;
+        c2.fillRect(x - 2e-3, y + 6e-4, 55e-4, 8e-4);
+        c2.fillRect(x + 4e-4, y - 3e-3, 7e-4, 8e-3);
+      }
+      c2.restore();
+    }
+    for (const [i, [x, y]] of (scene.lanterns || []).entries()) {
+      glow(c2, x, y, 0.032, 0.045, "#ffbc59", 0.15 + 0.045 * Math.sin(time * 7 + i) + 0.025 * Math.sin(time * 11 + i * 2));
+      const f = (time * 0.2 + i * 0.31) % 1;
+      glow(c2, x + Math.sin(time + i) * 3e-3, y - f * 0.025, 2e-3, 4e-3, "#ffe09b", (1 - f) * 0.3);
+    }
+    c2.restore();
+  }
+
+  // prototype-motion.js
+  var TAU2 = Math.PI * 2;
   var MOTION_PROFILES = {
     crab: { sway: 0.3, arm: 0, runArm: 0, sprintArm: 0, landing: 0.5, spine: 0.02 },
     centipede: { sway: 0.4, arm: 0, runArm: 0, sprintArm: 0, landing: 0.3, spine: 0.03 },
@@ -74,17 +177,17 @@
     return track[0][1];
   }
   function locomotionPose(id, phase, runBlend = 0, sprintBlend = 0) {
-    const p = MOTION_PROFILES[id], wave = Math.sin(phase * TAU), arm = p.arm + (p.runArm - p.arm) * runBlend + (p.sprintArm - p.runArm) * sprintBlend;
+    const p = MOTION_PROFILES[id], wave = Math.sin(phase * TAU2), arm = p.arm + (p.runArm - p.arm) * runBlend + (p.sprintArm - p.runArm) * sprintBlend;
     let bob = samplePoseTrack(walk, phase) * (1 - runBlend) + samplePoseTrack(run, phase) * runBlend;
     if (id === "wolf") bob = bob * (1 - sprintBlend) + samplePoseTrack(gallop, phase) * sprintBlend;
     else bob = bob * (1 - sprintBlend) + samplePoseTrack(sprint, phase) * sprintBlend;
     return {
       bob: bob * p.landing,
       sway: -wave * p.sway,
-      arm: Math.cos(phase * TAU) * arm,
+      arm: Math.cos(phase * TAU2) * arm,
       yaw: wave * (p.spine + runBlend * 0.025),
-      pitch: id === "wolf" ? Math.sin(phase * TAU + 0.5) * sprintBlend * 0.045 : 0,
-      spine: id === "wolf" ? Math.cos(phase * TAU) * sprintBlend * 4 : 0
+      pitch: id === "wolf" ? Math.sin(phase * TAU2 + 0.5) * sprintBlend * 0.045 : 0,
+      spine: id === "wolf" ? Math.cos(phase * TAU2) * sprintBlend * 4 : 0
     };
   }
 
@@ -161,7 +264,7 @@
   }
 
   // prototype-rig.js
-  var TAU2 = Math.PI * 2;
+  var TAU3 = Math.PI * 2;
   var bound = (n, a, b) => Math.max(a, Math.min(b, n));
   var ease = (p) => {
     p = bound(p, 0, 1);
@@ -304,7 +407,7 @@
     const sprintBlend = options.sprintBlend ?? (state === "sprint" ? 1 : 0);
     const stride = locomotionStride(options.stride || (wolf ? 72 : heavy ? 72 : id === "caster" ? 70 : id === "fox" ? 74 : 76), runBlend, sprintBlend, id, options);
     const layout = legLayout(id, runBlend, sprintBlend);
-    const breath = Math.sin(phase * TAU2) * 0.25;
+    const breath = Math.sin(phase * TAU3) * 0.25;
     const authored = locomotionPose(id, gait, runBlend, sprintBlend);
     const bob = moving ? authored.bob * motion : breath;
     let crouch = moving ? (wolf ? 6 + runBlend + sprintBlend : heavy ? 5.5 + runBlend + sprintBlend : 6 + runBlend * 1.2 + sprintBlend) * motion : 0, shift = 0, sideShift = 0, sideLean = 0;
@@ -367,10 +470,10 @@
       torsoYaw = -0.13 * Math.sin(phase * Math.PI);
     }
     if (state === "turn") {
-      shift = Math.sin(phase * TAU2) * 1.5;
+      shift = Math.sin(phase * TAU3) * 1.5;
       crouch += Math.sin(phase * Math.PI) * 1.5;
-      torsoYaw += Math.sin(phase * TAU2) * 0.12;
-      lean += Math.sin(phase * TAU2) * 0.04;
+      torsoYaw += Math.sin(phase * TAU3) * 0.12;
+      lean += Math.sin(phase * TAU3) * 0.04;
     }
     if (state === "stop") {
       crouch = 6 * (1 - ease(phase)) + 3 * Math.sin(phase * Math.PI);
@@ -422,8 +525,8 @@
         foot.planted = !lead || pulse < 0.05;
       }
       if (state === "turn") {
-        foot.x += Math.sin((phase + l.offset) * TAU2) * 3;
-        foot.z = Math.max(0, Math.sin((phase + l.offset) * TAU2)) * 3;
+        foot.x += Math.sin((phase + l.offset) * TAU3) * 3;
+        foot.z = Math.max(0, Math.sin((phase + l.offset) * TAU3)) * 3;
       }
       if (prior) {
         const old = prior.legs[i], t = transition.weight;
@@ -486,7 +589,7 @@
         left.x += shoulderX;
       }
       if (heavy) {
-        tilt = state === "attack" ? tilt : 1.1 + Math.sin(gait * TAU2) * motion * 0.08;
+        tilt = state === "attack" ? tilt : 1.1 + Math.sin(gait * TAU3) * motion * 0.08;
         left = plus(right, times(point(Math.sin(tilt), 0, Math.cos(tilt)), -11));
       }
       if (state === "attack" && (id === "knight" || heavy)) {
@@ -567,7 +670,7 @@
       return { ...solved, index: i, side: l.y, front: l.x > 0, foot: { ...foot, position: target, ground, soleLift: lift, angle: options.feet?.[i]?.angle || 0 } };
     });
     if (id === "jelly") {
-      body.z = 17 + Math.max(0, Math.sin(phase * TAU2)) * ((moving ? 1 : 0) * (7 + run2 * 4 + sprint2 * 4));
+      body.z = 17 + Math.max(0, Math.sin(phase * TAU3)) * ((moving ? 1 : 0) * (7 + run2 * 4 + sprint2 * 4));
       head.z = body.z + 3;
     }
     if (id === "serpent") {
@@ -576,7 +679,7 @@
       head.z = 19 - dead * 12;
     }
     if (id === "flyer") {
-      body.z = 30 + (moving ? Math.sin(phase * TAU2) * 3 : Math.sin(phase * TAU2) * 1.5) - dead * 20;
+      body.z = 30 + (moving ? Math.sin(phase * TAU3) * 3 : Math.sin(phase * TAU3) * 1.5) - dead * 20;
       head.x = 7;
       head.z = body.z + 15;
       head.y = body.y * 0.5;
@@ -586,9 +689,9 @@
       body.x = 0;
     }
     const grip = point(head.x + 3, 0, head.z), axis = point(1, 0, 0), weapon = { kind: id === "mech" ? "cannon" : id === "jelly" ? "gel" : "fangs", grip, axis, tip: plus(grip, times(axis, id === "spider" ? 19 : 24)), length: 24, tilt: Math.PI / 2 };
-    const segments = id === "centipede" ? Array.from({ length: 7 }, (_, i) => point(23 - i * 8, Math.sin(phase * TAU2 - i * 0.7) * 2, body.z)) : id === "serpent" ? Array.from({ length: 9 }, (_, i) => point(17 - i * 6, Math.sin(phase * TAU2 - i * 0.68) * (moving ? 9 : 3), 6 + Math.sin(phase * TAU2 - i * 0.68) * 1.4)) : null;
-    const flap = Math.sin(phase * TAU2) * (dead ? 0 : 1), wings = id === "flyer" ? [-1, 1].map((side) => [point(-2, side * 5, body.z + 3), point(-10, side * (21 + run2 * 3), body.z + flap * 10), point(-18, side * (37 + run2 * 3), body.z + flap * 20), point(-15, side * 12, body.z - 8)]) : null;
-    return { id, state, phase, stage, strideLength: options.strideLength ?? 100, dimensions: d, pelvis, body, head, legs, arms: [], weapon, segments, wings, lean, sideLean: 0, torsoYaw: 0, crouch: d.hip - hip, death: dead, squash: id === "jelly" ? dead ? 1 + dead * 1.8 : 1 + Math.sin(phase * TAU2) * 0.2 : 1, tail: point(-18, 0, hip) };
+    const segments = id === "centipede" ? Array.from({ length: 7 }, (_, i) => point(23 - i * 8, Math.sin(phase * TAU3 - i * 0.7) * 2, body.z)) : id === "serpent" ? Array.from({ length: 9 }, (_, i) => point(17 - i * 6, Math.sin(phase * TAU3 - i * 0.68) * (moving ? 9 : 3), 6 + Math.sin(phase * TAU3 - i * 0.68) * 1.4)) : null;
+    const flap = Math.sin(phase * TAU3) * (dead ? 0 : 1), wings = id === "flyer" ? [-1, 1].map((side) => [point(-2, side * 5, body.z + 3), point(-10, side * (21 + run2 * 3), body.z + flap * 10), point(-18, side * (37 + run2 * 3), body.z + flap * 20), point(-15, side * 12, body.z - 8)]) : null;
+    return { id, state, phase, stage, strideLength: options.strideLength ?? 100, dimensions: d, pelvis, body, head, legs, arms: [], weapon, segments, wings, lean, sideLean: 0, torsoYaw: 0, crouch: d.hip - hip, death: dead, squash: id === "jelly" ? dead ? 1 + dead * 1.8 : 1 + Math.sin(phase * TAU3) * 0.2 : 1, tail: point(-18, 0, hip) };
   }
   function weaponContactPath(id, angle, options = {}) {
     const points = [];
@@ -5047,6 +5150,7 @@
     c.fillStyle = vignette;
     c.fillRect(0, 0, 1e3, 650);
     for (let i = 0; i < 18; i++) ellipse(i * 137 % 1e3 + Math.sin(arena.time * 0.18 + i) * 5, 100 + i * 53 % 470 + Math.sin(arena.time * 0.23 + i) * 7, 1, 1, "#edd99b55");
+    if (!matchMedia("(prefers-reduced-motion: reduce)").matches) paintAmbient(c, "glade", arena.time, { width: 1e3, height: 650, cover: false });
   }
   function drawScene() {
     c.clearRect(0, 0, 1002, 654);

@@ -1,0 +1,7 @@
+{
+  "checks": [
+    "Source: three visible Common starter equipment pieces, empty personal relic bag, working tutorial/equip, persisted seed, gradual enrage values and pause, live relic counter, 320/390/768px overflow checks",
+    "Offline: three visible Common starter equipment pieces, empty personal relic bag, working tutorial/equip, persisted seed, gradual enrage values and pause, live relic counter, 320/390/768px overflow checks"
+  ],
+  "errors": []
+}
