@@ -41,6 +41,8 @@ jobs:
       - run: node tests/creature-anatomy.browser.mjs
       - run: node tests/arena-elite.browser.mjs
       - run: node tests/settings-movement.browser.mjs
+      - run: node tests/legs-v2.browser.mjs
+      - run: node scripts/review-legs-v2.mjs final
       - run: node scripts/review-creature-anatomy.mjs
       - run: node scripts/review-melee-weapons.mjs
       - run: node scripts/review-natural-carry.mjs
@@ -93,4 +95,10 @@ jobs:
             playtest-artifacts/arena-elite-browser.json
             playtest-artifacts/settings-movement-*.png
             playtest-artifacts/settings-movement-browser.json
+            playtest-artifacts/legs-v2-*.png
+            playtest-artifacts/legs-v2-*.json
+            public/legs-v2-preview.webm
+            public/legs-v2-heavy.png
+            public/legs-v2-paws.png
+            LEGS-V2.md
             RELIC-DESIGN.md

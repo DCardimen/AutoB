@@ -1884,7 +1884,7 @@ export class Battle {
       u.nativeScale=next;u.radius*=ratio;if(BY_ID[u.id].range<=100)u.range*=ratio;
       u.mass*=Math.max(.5,next)/Math.max(.5,old);
       u.entityBounds=nativeEntityBounds(BY_ID[u.id],u,NATIVE_BOUNDS,this.tuning);
-      u.nativeActor.rigScale=next;u.nativeActor.capeCloth=null;u.nativeActor.groundFeet=null;
+        u.nativeActor.rigScale=next;u.nativeActor.strideLength=this.tuning.strideLength;u.nativeActor.capeCloth=null;u.nativeActor.groundFeet=null;
       for(const strike of this.strikes)if(strike.source===u&&strike.nativeMelee)strike.reach*=ratio;
       confineBody(u,this.bounds);
     }

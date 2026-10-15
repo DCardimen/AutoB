@@ -60,6 +60,7 @@ const entryFiles = new Set([
 
   "/native-forms.js",
   "/leg-volume.js",
+  "/leg-anatomy.js",
   "/creature-leg-volume.js",
   "/creature-attacks.js",
   "/native-faces.js",

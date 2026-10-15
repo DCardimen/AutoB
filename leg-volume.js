@@ -17,7 +17,7 @@ export function buildLegVolumes(rig,profiles,rest,angle,scale,colors){
   const vertical=(ankleY-hipY)/Math.max(4,(bind.root.z-bind.end.z)/3),horizontal=1.12;
   const position=q=>({x:(q.x-bind.end.x)*horizontal,y:(q.y-bind.end.y)*horizontal,z:(q.z-bind.end.z)*vertical});
   const project=q=>{const p=projectRig(q,angle);return {x:centerX+p.x/3,y:ankleY+p.y/3,depth:p.depth/3+projectRig(bind.end,angle).depth/3};};
-  const hip=position(leg.root),knee=position(leg.joint),ankle=position(leg.end),thigh=profile.radius*3*scale.width,calf=thigh*.83;
+  const hip=position(leg.root),knee=position(leg.joint),ankle=position(leg.end),thigh=profile.radius*3*scale.width,calf=thigh*(profile.calf||.83);
   const face=(vertices,material,u,v,part)=>{
    const normal=unit(cross(sub(vertices[1],vertices[0]),sub(vertices[2],vertices[0]))),brightness=clamp(.48+.48*dot(normal,light),0,1),ramp=profile.bands[material]?.[clamp(Math.floor(v*3),0,2)]||profile.materials[material];
    const shade=clamp(Math.round(brightness*(ramp.length-1)),0,ramp.length-1);
