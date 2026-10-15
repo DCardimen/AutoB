@@ -4,6 +4,8 @@
 
 Legs V3 preserves each creature’s original limb widths, textures, body connections and idle stance. All ten four-legged anatomies now alternate their visible steps, including heavy animals and every evolved form. Humanoids retain their painted boots and clothing, and travelling weapons stay in a fixed hand on a consistent side. The **Stride length** slider changes step length and cadence without changing combat speed. See [gait and carry checks](GAITS-AND-CARRY.md), the [normal-speed preview](public/gaits-carry-preview.webm), and [V3 anatomy review](LEGS-V3.md).
 
+Adding a character or evolution? Follow the required [creature art and animation guide](CREATURE-ART-GUIDE.md) before editing sprites, legs or weapon attachments.
+
 Settings now rotate randomized small, regular and large examples every five seconds. Nineteen sliders include stride length and five movement-pattern controls for direction changes, corner slowdown, run/sprint distances and animation transitions. Examples demonstrate the same movement rules as combat.
 
 Arena controls and both rosters now sit inside the supplied blue/gold UI frame. Elite encounters have one seeded mutation from 50 variants; captured individuals keep their mutation, nature and genes for future starter selection. See [arena UI and elite hunting](ARENA-ELITES.md).
