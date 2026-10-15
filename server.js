@@ -19,6 +19,8 @@ const entryFiles = new Set([
   "/movement-tuning.js",
   "/settings-movement-preview.js",
   "/elite-modifiers.js",
+  "/starter-reactions.js",
+  "/authored-arm-skin.js",
   "/index.html",
   "/styles.css",
   "/field-ui.css",

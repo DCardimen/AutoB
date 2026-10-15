@@ -5,6 +5,7 @@ import {projectRig,characterRig} from './prototype-rig.js';
 import {drawNativeFace,FACE_VIEWS} from './prototype-faces.js';
 import {paintAuthoredTorso,paintFairyWings,paintFairyBody} from './authored-pixel-art.js';
 import {paintAtlasCharacter} from './authored-sprite-renderer.js';
+import {paintAuthoredArms} from './authored-arm-skin.js';
 import {paintLegVolumes} from './leg-volume.js';
 import {paintCreatureAttack} from './creature-attacks.js';
 export const CELL=64,PIVOT={x:32,y:44},PIXEL_WORLD=3;
@@ -46,6 +47,7 @@ export function paintCharacterPixels(id,rig,angle){
   paintCreatureAttack(farArt,rig,'far');
   const far=q=>q&&at(q).depth<body.depth;
   const arms=(brush,near)=>{
+   if(rig.artArmSkin){paintAuthoredArms(brush,rig,near,at);return;}
    for(const arm of rig.arms){
     const root=rig.artArmRoots?.[arm.side]||at(arm.root),joint=rig.artProject(arm.joint),hand=rig.artProject(arm.end),metal=id==='knight',bare=['orc','minotaur','troll','goblin'].includes(art.data.artIdentity),cloth=rig.artArmPalette||(metal?p.metal:bare?p.skin:p.cloth),skin=rig.artHandColors?.[arm.side]||(metal?p.metal[1]:p.skin[1]);
     const lowerNear=at(arm.end).depth>=body.depth,upperNear=(at(arm.root).depth+at(arm.joint).depth)/2>=body.depth;

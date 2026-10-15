@@ -776,6 +776,12 @@ body.ui-v3[data-screen="arena"] .main-nav button.active{background:#12364e;color
 .ui-v3 .team-select .starter-portrait img,.starter-portrait canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;image-rendering:pixelated;z-index:1}
 .ui-v3 .team-select .starter-card .starter-portrait img,.team-select .starter-card .starter-portrait canvas{top:auto;bottom:5px;height:clamp(90px,6.6vw,120px);object-position:center bottom}
 .starter-portrait canvas{visibility:hidden}.starter-portrait.ready canvas{visibility:visible}.starter-portrait.ready img{visibility:hidden}
+.team-select .starter-portrait canvas{transform-origin:50% 96%}
+.starter-reaction-particle{position:absolute;right:13%;top:18%;z-index:2;font:18px Georgia,serif;color:#ffd1a7;pointer-events:none;opacity:0;text-shadow:0 0 7px #ffd1a755;line-height:1}
+.starter-portrait[data-reaction="magic"] .starter-reaction-particle,.starter-portrait[data-reaction="flutter"] .starter-reaction-particle{color:#e4c5ff}
+.starter-portrait[data-reaction="swish"] .starter-reaction-particle{color:#9ee9ff;font-size:28px}
+.party-companion .starter-reaction-particle{font-size:10px;right:0;top:0}
+@media(prefers-reduced-motion:reduce){.starter-reaction-particle{display:none}}
 .ui-v3 .team-select .starter-card .role-badge{font:12px Georgia,serif;padding:3px 10px;border:1px solid currentColor;background:#03181f;border-radius:12px;line-height:1.2;margin:0 0 5px}
 .ui-v3 .team-select .starter-card>strong{font:400 clamp(16px,1.25vw,22px)/1.2 var(--serif);margin:0 0 4px}
 .starter-cost{border:1px solid #577864;border-radius:20px;min-width:60px;padding:2px 10px;font:12px Georgia;background:#0a2627aa;color:#f1e7bb}
