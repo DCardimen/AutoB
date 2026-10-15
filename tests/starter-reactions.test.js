@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {starterReactionProfile,starterReactionPose,starterReactionRig,starterReactionPixels,owlReactionPixels,owlPortraitLandmarks} from '../starter-reactions.js';
+import {starterReactionProfile,starterReactionPose,starterReactionRig,starterReactionPixels,owlHeadTiltPixels,owlPortraitLandmarks} from '../starter-reactions.js';
 import {PIXEL_SPECIES,pixelSpec} from '../native-content.js';
-import {nativePoseRig,nativePosePixels} from '../native-poses.js';
+import {nativePosePixels} from '../native-poses.js';
 import {paintCharacterPixels} from '../prototype-pixel-art.js';
 const designs=[...new Map(PIXEL_SPECIES.map(spec=>[spec.nativeDesign||spec.nativeRig,spec])).values()];
 const colors=p=>new Set(Array.from({length:4096},(_,i)=>p[i*4+3]?Array.from(p.subarray(i*4,i*4+4)).join(','):null).filter(Boolean));
@@ -28,23 +28,20 @@ test('all first-form greetings stay inside the source cell in the selectable hea
  }
 });
 
-test('owl blink and connected head tilt preserve the painted palette, body and planted feet',()=>{
+test('owl head tilt keeps open eyes, the painted palette, body and planted feet',()=>{
  const spec=pixelSpec('voltwing'),source=new Uint8ClampedArray(nativePosePixels(spec,{id:'voltwing'},'idle',.25,2)),palette=colors(source);
- const open=owlReactionPixels(source,0),blink=owlReactionPixels(source,.28);
- assert.deepEqual(open,source);assert.notDeepEqual(blink,source,'eyes visibly close');
+ const open=owlHeadTiltPixels(source,0),tilt=owlHeadTiltPixels(source,.28);
+ assert.deepEqual(open,source);assert.notDeepEqual(tilt,source,'head visibly tilts without closing the eyes');
  for(let i=0;i<=32;i++){
-  const frame=owlReactionPixels(source,i/32);
+  const frame=owlHeadTiltPixels(source,i/32);
   assert.deepEqual(frame.subarray(29*64*4),source.subarray(29*64*4),'body, wings and feet are unchanged');
-  assert.ok([...colors(frame)].every(color=>palette.has(color)),'eyelids use existing feather/eye swatches');
+  assert.ok([...colors(frame)].every(color=>palette.has(color)),'head tilt uses existing feather/eye swatches');
   for(let x=0;x<64;x++)assert.equal(frame[x*4+3],0,'complete head fits below the cell edge');
  }
  for(const height of [.85,1,1.1])for(const progress of [.28,.67]){
-  const rig=starterReactionRig(spec,progress,height),source=paintCharacterPixels(rig.id,rig,Math.PI/2),landmarks=owlPortraitLandmarks(rig),frame=owlReactionPixels(source,progress,landmarks),palette=colors(source);
+  const rig=starterReactionRig(spec,progress,height),source=paintCharacterPixels(rig.id,rig,Math.PI/2),landmarks=owlPortraitLandmarks(rig),frame=owlHeadTiltPixels(source,progress,landmarks),palette=colors(source);
   assert.deepEqual(frame.subarray(landmarks.neckY*64*4),source.subarray(landmarks.neckY*64*4),'height tuning preserves body/feet');
   assert.ok([...colors(frame)].every(color=>palette.has(color)),'height tuning uses original palette');
-  for(const cx of [landmarks.cx-8*landmarks.sx,landmarks.cx+8*landmarks.sx]){
-   const offset=(Math.round(landmarks.eyeY+3*landmarks.sy)*64+Math.round(cx))*4;
-   assert.ok(frame[offset]>180&&frame[offset+1]>180&&frame[offset+2]>160,'both eyelids use light face feathers at every height');
-  }
+
  }
 });

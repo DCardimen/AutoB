@@ -1,5 +1,7 @@
 # Companion greetings and Brakk's arms
 
+This records the initial reaction implementation. For current menu behavior, including the removal of blinks and the new logo introduction, see [Logo and expressive first forms](LOGO-AND-EXPRESSIONS-REVIEW.md).
+
 Selecting or deselecting a first-form companion plays a short greeting based on its authored animal/design. Aurel rests his sword near his shoulder; Brakk waves with his free hand; Voltwing blinks and tilts its head. Animal foxes nuzzle, fish swish, winged companions flutter, mushrooms wobble, insects skitter, and magic users greet with a cast pose. Hearts or sparkles provide a small additional response. Repeated clicks restart the greeting, filtering/sorting preserves an active greeting, and reduced motion suppresses movement. Evolution forms receive no menu reactions.
 
 Brakk's original painted cuffs, forearms and fists are extracted from the body layer and skinned as one pair. The old arm pixels are removed from the costume, and the generic arm drawing is skipped for base Brakk. The replacement uses the original arm pixels, shape thickness, palette indices and cuff texture. Its shoulder, elbow and fist remain connected; the weapon stays on the original right hand. This base-arm repair also applies in live combat. His evolution artwork and other families' arm renderers are unchanged.

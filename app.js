@@ -1,4 +1,5 @@
 import {SettingsMovementPreview} from './settings-movement-preview.js';
+import {showLogoIntro} from './intro.js';
 import {starterReactionProfile,starterReactionPose,starterReactionPixels} from './starter-reactions.js';
 import {assignEliteModifier,eliteModifier,rememberEliteCapture,inheritEliteStarter,idleRhythm} from './elite-modifiers.js';
 import {enrageAt} from './battle-enrage.js';
@@ -1842,6 +1843,7 @@ if (phase === "event") openEvent();
 if (phase === "rest") openRest();
 if (phase === "ended") openEnd();
 if (!saved?.run) openStarters();
+showLogoIntro({reducedMotion:profile.reducedMotion});
 // Read-only inspection for deterministic playtesting and debugging. No gameplay shortcuts.
 let lootCollecting=false;
 function legendaryPactBanner(){
@@ -2243,14 +2245,15 @@ function drawIdlePortraits(now){
   const cell=reaction?starterReactionCell(u.id):starterPortraitCell(u.id),idle=starterPortraitCell(u.id),pose=reaction?starterReactionPose(pixelSpec(u.id),progress):null;
   if(portrait.width!==cell.w||portrait.height!==cell.h){portrait.width=cell.w;portrait.height=cell.h;}
   c.imageSmoothingEnabled=false;c.clearRect(0,0,cell.w,cell.h);
-  const frame=reaction?reactionFrame(u.id,progress):nativePreviewFrame(u,'idle',profile.reducedMotion?.25:(now/1000*rhythm.rate+rhythm.offset)%1,2);
+  // Keep the menu eyes open, including between greetings.
+  const frame=reaction?reactionFrame(u.id,progress):nativePreviewFrame(u,'idle',profile.reducedMotion?.25:Math.min(.875,(now/1000*rhythm.rate+rhythm.offset)%1),2);
   c.drawImage(frame,cell.x,cell.y,cell.w,cell.h,0,0,cell.w,cell.h);
   const baseHeight=parseFloat(getComputedStyle(portrait.previousElementSibling).height),height=Math.min(baseHeight*cell.h/idle.h,portrait.parentElement.clientHeight-10),scale=height/cell.h;
   portrait.style.height=reaction?height+'px':'';
   portrait.style.transform=pose?`translate(${pose.x*scale}px,${pose.y*scale}px) rotate(${pose.roll}rad)`:'';
   const stage=portrait.parentElement,particle=stage.querySelector('.starter-reaction-particle');
-  if(reaction){stage.dataset.reaction=reaction.kind;particle.textContent=reaction.glyph;particle.style.opacity=Math.sin(progress*Math.PI).toFixed(3);particle.style.transform=`translateY(${-progress*18}px)`;}
-  else{delete stage.dataset.reaction;particle.textContent='';particle.style.opacity='0';}
+  if(reaction){stage.dataset.reaction=reaction.kind;stage.dataset.gesture=reaction.gesture;particle.textContent=reaction.glyph;particle.style.opacity=Math.sin(progress*Math.PI).toFixed(3);particle.style.transform=`translateY(${-progress*18}px)`;}
+  else{delete stage.dataset.reaction;delete stage.dataset.gesture;particle.textContent='';particle.style.opacity='0';}
   portrait.parentElement.classList.add('ready');
  }
  for(const portrait of document.querySelectorAll('[data-idle-index]')){

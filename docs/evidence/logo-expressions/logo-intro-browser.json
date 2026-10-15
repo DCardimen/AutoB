@@ -1,0 +1,8 @@
+{
+  "checks": [
+    "Source: original logo, automatic brief dismissal, protected game controls, restored focus, unchanged expedition, once per session, working team selection",
+    "Offline: original logo, automatic brief dismissal, protected game controls, restored focus, unchanged expedition, once per session, working team selection",
+    "320/390px layouts, immediate button/Escape skip, reduced motion without zoom"
+  ],
+  "errors": []
+}
