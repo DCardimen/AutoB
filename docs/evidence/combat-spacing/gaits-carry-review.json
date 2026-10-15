@@ -1,0 +1,443 @@
+{
+  "poses": 1472,
+  "clippedPixels": 0,
+  "specimens": [
+    {
+      "id": "aurel",
+      "poses": 64,
+      "states": [
+        "idle",
+        "run",
+        "sprint",
+        "walk"
+      ],
+      "forms": [
+        0,
+        2
+      ],
+      "facings": [
+        1,
+        6
+      ],
+      "clippedPixels": 0
+    },
+    {
+      "id": "brakk",
+      "poses": 64,
+      "states": [
+        "idle",
+        "run",
+        "sprint",
+        "walk"
+      ],
+      "forms": [
+        0,
+        2
+      ],
+      "facings": [
+        1,
+        6
+      ],
+      "clippedPixels": 0
+    },
+    {
+      "id": "brom",
+      "poses": 64,
+      "states": [
+        "idle",
+        "run",
+        "sprint",
+        "walk"
+      ],
+      "forms": [
+        0,
+        2
+      ],
+      "facings": [
+        1,
+        6
+      ],
+      "clippedPixels": 0
+    },
+    {
+      "id": "cinderfox",
+      "poses": 64,
+      "states": [
+        "idle",
+        "run",
+        "sprint",
+        "walk"
+      ],
+      "forms": [
+        0,
+        2
+      ],
+      "facings": [
+        1,
+        6
+      ],
+      "clippedPixels": 0
+    },
+    {
+      "id": "crownstag",
+      "poses": 64,
+      "states": [
+        "idle",
+        "run",
+        "sprint",
+        "walk"
+      ],
+      "forms": [
+        0,
+        2
+      ],
+      "facings": [
+        1,
+        6
+      ],
+      "clippedPixels": 0
+    },
+    {
+      "id": "eira",
+      "poses": 64,
+      "states": [
+        "idle",
+        "run",
+        "sprint",
+        "walk"
+      ],
+      "forms": [
+        0,
+        2
+      ],
+      "facings": [
+        1,
+        6
+      ],
+      "clippedPixels": 0
+    },
+    {
+      "id": "emberhound",
+      "poses": 64,
+      "states": [
+        "idle",
+        "run",
+        "sprint",
+        "walk"
+      ],
+      "forms": [
+        0,
+        2
+      ],
+      "facings": [
+        1,
+        6
+      ],
+      "clippedPixels": 0
+    },
+    {
+      "id": "frostursa",
+      "poses": 64,
+      "states": [
+        "idle",
+        "run",
+        "sprint",
+        "walk"
+      ],
+      "forms": [
+        0,
+        2
+      ],
+      "facings": [
+        1,
+        6
+      ],
+      "clippedPixels": 0
+    },
+    {
+      "id": "grit",
+      "poses": 64,
+      "states": [
+        "idle",
+        "run",
+        "sprint",
+        "walk"
+      ],
+      "forms": [
+        0,
+        2
+      ],
+      "facings": [
+        1,
+        6
+      ],
+      "clippedPixels": 0
+    },
+    {
+      "id": "grum",
+      "poses": 64,
+      "states": [
+        "idle",
+        "run",
+        "sprint",
+        "walk"
+      ],
+      "forms": [
+        0,
+        2
+      ],
+      "facings": [
+        1,
+        6
+      ],
+      "clippedPixels": 0
+    },
+    {
+      "id": "luma",
+      "poses": 64,
+      "states": [
+        "idle",
+        "run",
+        "sprint",
+        "walk"
+      ],
+      "forms": [
+        0,
+        2
+      ],
+      "facings": [
+        1,
+        6
+      ],
+      "clippedPixels": 0
+    },
+    {
+      "id": "morrow",
+      "poses": 64,
+      "states": [
+        "idle",
+        "run",
+        "sprint",
+        "walk"
+      ],
+      "forms": [
+        0,
+        2
+      ],
+      "facings": [
+        1,
+        6
+      ],
+      "clippedPixels": 0
+    },
+    {
+      "id": "nightmaw",
+      "poses": 64,
+      "states": [
+        "idle",
+        "run",
+        "sprint",
+        "walk"
+      ],
+      "forms": [
+        0,
+        2
+      ],
+      "facings": [
+        1,
+        6
+      ],
+      "clippedPixels": 0
+    },
+    {
+      "id": "nyra",
+      "poses": 64,
+      "states": [
+        "idle",
+        "run",
+        "sprint",
+        "walk"
+      ],
+      "forms": [
+        0,
+        2
+      ],
+      "facings": [
+        1,
+        6
+      ],
+      "clippedPixels": 0
+    },
+    {
+      "id": "pyrehorn",
+      "poses": 64,
+      "states": [
+        "idle",
+        "run",
+        "sprint",
+        "walk"
+      ],
+      "forms": [
+        0,
+        2
+      ],
+      "facings": [
+        1,
+        6
+      ],
+      "clippedPixels": 0
+    },
+    {
+      "id": "rabbit",
+      "poses": 64,
+      "states": [
+        "idle",
+        "run",
+        "sprint",
+        "walk"
+      ],
+      "forms": [
+        0,
+        2
+      ],
+      "facings": [
+        1,
+        6
+      ],
+      "clippedPixels": 0
+    },
+    {
+      "id": "rodent",
+      "poses": 64,
+      "states": [
+        "idle",
+        "run",
+        "sprint",
+        "walk"
+      ],
+      "forms": [
+        0,
+        2
+      ],
+      "facings": [
+        1,
+        6
+      ],
+      "clippedPixels": 0
+    },
+    {
+      "id": "rowan",
+      "poses": 64,
+      "states": [
+        "idle",
+        "run",
+        "sprint",
+        "walk"
+      ],
+      "forms": [
+        0,
+        2
+      ],
+      "facings": [
+        1,
+        6
+      ],
+      "clippedPixels": 0
+    },
+    {
+      "id": "sable",
+      "poses": 64,
+      "states": [
+        "idle",
+        "run",
+        "sprint",
+        "walk"
+      ],
+      "forms": [
+        0,
+        2
+      ],
+      "facings": [
+        1,
+        6
+      ],
+      "clippedPixels": 0
+    },
+    {
+      "id": "sunlion",
+      "poses": 64,
+      "states": [
+        "idle",
+        "run",
+        "sprint",
+        "walk"
+      ],
+      "forms": [
+        0,
+        2
+      ],
+      "facings": [
+        1,
+        6
+      ],
+      "clippedPixels": 0
+    },
+    {
+      "id": "syl",
+      "poses": 64,
+      "states": [
+        "idle",
+        "run",
+        "sprint",
+        "walk"
+      ],
+      "forms": [
+        0,
+        2
+      ],
+      "facings": [
+        1,
+        6
+      ],
+      "clippedPixels": 0
+    },
+    {
+      "id": "tarka",
+      "poses": 64,
+      "states": [
+        "idle",
+        "run",
+        "sprint",
+        "walk"
+      ],
+      "forms": [
+        0,
+        2
+      ],
+      "facings": [
+        1,
+        6
+      ],
+      "clippedPixels": 0
+    },
+    {
+      "id": "turtle",
+      "poses": 64,
+      "states": [
+        "idle",
+        "run",
+        "sprint",
+        "walk"
+      ],
+      "forms": [
+        0,
+        2
+      ],
+      "facings": [
+        1,
+        6
+      ],
+      "clippedPixels": 0
+    }
+  ]
+}

@@ -1,4 +1,6 @@
 import {SettingsMovementPreview} from './settings-movement-preview.js';
+import {showLogoIntro} from './intro.js';
+import {starterReactionProfile,starterReactionPose,starterReactionPixels} from './starter-reactions.js';
 import {assignEliteModifier,eliteModifier,rememberEliteCapture,inheritEliteStarter,idleRhythm} from './elite-modifiers.js';
 import {enrageAt} from './battle-enrage.js';
 import {migrateStarterGear} from './starter-equipment.js';
@@ -1114,6 +1116,28 @@ function starterCost(id) {
   return starterPoints(BY_ID[id].rarity, profile.bonds[id] || 0);
 }
 const starterPortraitCells=new Map();
+const starterReactions=new Map(),starterReactionCells=new Map();
+function reactionFrame(id,progress){
+  const out=document.createElement('canvas');out.width=out.height=64;
+  out.getContext('2d').putImageData(new ImageData(starterReactionPixels(pixelSpec(id),progress,getCharacterHeight()),64,64),0,0);
+  return out;
+}
+function starterReactionCell(id){
+  if(!starterReactionCells.has(id)){
+    const idle=starterPortraitCell(id);let left=idle.x,top=idle.y,right=left+idle.w,bottom=top+idle.h;
+    for(let i=0;i<=16;i++){const pixels=reactionFrame(id,i/16).getContext('2d').getImageData(0,0,64,64).data;
+      for(let y=0;y<64;y++)for(let x=0;x<64;x++)if(pixels[(y*64+x)*4+3]){left=Math.min(left,x-2);top=Math.min(top,y-2);right=Math.max(right,x+3);bottom=Math.max(bottom,y+3);}
+    }
+    left=Math.max(0,left);top=Math.max(0,top);right=Math.min(64,right);bottom=Math.min(64,bottom);
+    starterReactionCells.set(id,{x:left,y:top,w:right-left,h:bottom-top});
+  }
+  return starterReactionCells.get(id);
+}
+function playStarterReaction(id){
+  if(profile.reducedMotion)return;
+  starterReactions.set(id,{start:performance.now(),...starterReactionProfile(pixelSpec(id))});
+  idlePortraitTick=-Infinity;drawIdlePortraits(performance.now());
+}
 function starterPortraitCell(id){
   if(!starterPortraitCells.has(id)){
     let left=64,top=64,right=0,bottom=0;
@@ -1131,7 +1155,7 @@ function starterPortraitCell(id){
 function starterPortraitHTML(id){
   const cell=starterPortraitCell(id),out=document.createElement('canvas');out.width=cell.w;out.height=cell.h;
   out.getContext('2d').drawImage(nativePreviewFrame({id},'idle',.25,2),cell.x,cell.y,cell.w,cell.h,0,0,cell.w,cell.h);
-  return `<span class="starter-portrait"><img src="${out.toDataURL()}" alt="${BY_ID[id].name}, front-facing idle" draggable="false"><canvas width="${cell.w}" height="${cell.h}" data-starter-idle="${id}" aria-hidden="true"></canvas></span>`;
+  return `<span class="starter-portrait"><img src="${out.toDataURL()}" alt="${BY_ID[id].name}, front-facing idle" draggable="false"><canvas width="${cell.w}" height="${cell.h}" data-starter-idle="${id}" aria-hidden="true"></canvas><span class="starter-reaction-particle" aria-hidden="true"></span></span>`;
 }
 function starterCardHTML(id,counts){
   const s=BY_ID[id],e=ELEMENTS[s.element],selected=starterSelection.includes(id),n=counts[s.element]||0;
@@ -1178,10 +1202,12 @@ function selectStarter(id) {
     starterSelection = starterSelection.filter((x) => x !== id);
   else if (starterSelection.length < starterSlots(profile) && starterSelection.reduce((n,c)=>n+starterCost(c),0)+starterCost(id)<=starterBudget(profile)) starterSelection.push(id);
   else {
+    playStarterReaction(id);
     toast(`Deselect a companion first. Choose up to ${starterSlots(profile)} companions within ${starterBudget(profile)} points.`);
     return;
   }
   openStarters(false);
+  playStarterReaction(id);
 }
 function endRun(won) {
   phase = "ended";
@@ -1817,6 +1843,7 @@ if (phase === "event") openEvent();
 if (phase === "rest") openRest();
 if (phase === "ended") openEnd();
 if (!saved?.run) openStarters();
+showLogoIntro({reducedMotion:profile.reducedMotion});
 // Read-only inspection for deterministic playtesting and debugging. No gameplay shortcuts.
 let lootCollecting=false;
 function legendaryPactBanner(){
@@ -2208,13 +2235,25 @@ function scoutingComparisonHTML(){const preview=getOrderPreview();if(!preview)re
 
 let idlePortraitTick=0;
 function drawIdlePortraits(now){
- if(document.hidden||phase==='battle'||now-idlePortraitTick<125)return;
+ if(document.hidden||phase==='battle'||now-idlePortraitTick<(starterReactions.size?1000/24:125))return;
  idlePortraitTick=now;
+ for(const [id,reaction]of starterReactions)if(now-reaction.start>=reaction.duration)starterReactions.delete(id);
  for(const portrait of document.querySelectorAll('[data-starter-idle]')){
   const rect=portrait.getBoundingClientRect();if(rect.bottom<0||rect.top>innerHeight)continue;
   const u={id:portrait.dataset.starterIdle},rhythm=idleRhythm(u),c=portrait.getContext('2d');
-  const cell=starterPortraitCell(u.id);c.imageSmoothingEnabled=false;c.clearRect(0,0,cell.w,cell.h);
-  c.drawImage(nativePreviewFrame(u,'idle',profile.reducedMotion?.25:(now/1000*rhythm.rate+rhythm.offset)%1,2),cell.x,cell.y,cell.w,cell.h,0,0,cell.w,cell.h);
+  const reaction=profile.reducedMotion?null:starterReactions.get(u.id),progress=reaction?(now-reaction.start)/reaction.duration:0;
+  const cell=reaction?starterReactionCell(u.id):starterPortraitCell(u.id),idle=starterPortraitCell(u.id),pose=reaction?starterReactionPose(pixelSpec(u.id),progress):null;
+  if(portrait.width!==cell.w||portrait.height!==cell.h){portrait.width=cell.w;portrait.height=cell.h;}
+  c.imageSmoothingEnabled=false;c.clearRect(0,0,cell.w,cell.h);
+  // Keep the menu eyes open, including between greetings.
+  const frame=reaction?reactionFrame(u.id,progress):nativePreviewFrame(u,'idle',profile.reducedMotion?.25:Math.min(.875,(now/1000*rhythm.rate+rhythm.offset)%1),2);
+  c.drawImage(frame,cell.x,cell.y,cell.w,cell.h,0,0,cell.w,cell.h);
+  const baseHeight=parseFloat(getComputedStyle(portrait.previousElementSibling).height),height=Math.min(baseHeight*cell.h/idle.h,portrait.parentElement.clientHeight-10),scale=height/cell.h;
+  portrait.style.height=reaction?height+'px':'';
+  portrait.style.transform=pose?`translate(${pose.x*scale}px,${pose.y*scale}px) rotate(${pose.roll}rad)`:'';
+  const stage=portrait.parentElement,particle=stage.querySelector('.starter-reaction-particle');
+  if(reaction){stage.dataset.reaction=reaction.kind;stage.dataset.gesture=reaction.gesture;particle.textContent=reaction.glyph;particle.style.opacity=Math.sin(progress*Math.PI).toFixed(3);particle.style.transform=`translateY(${-progress*18}px)`;}
+  else{delete stage.dataset.reaction;delete stage.dataset.gesture;particle.textContent='';particle.style.opacity='0';}
   portrait.parentElement.classList.add('ready');
  }
  for(const portrait of document.querySelectorAll('[data-idle-index]')){

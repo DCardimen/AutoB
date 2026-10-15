@@ -1,0 +1,7 @@
+{
+  "checks": [
+    "Source: in-frame controls, inspection, visible stage mutation, animated flames/idles, combat capture, permanent individual archive, reload idempotence, next-run choice and mobile layout",
+    "Offline: in-frame controls, inspection, visible stage mutation, animated flames/idles, combat capture, permanent individual archive, reload idempotence, next-run choice and mobile layout"
+  ],
+  "errors": []
+}
