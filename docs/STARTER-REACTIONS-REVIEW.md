@@ -23,8 +23,8 @@ Reviewed native and enlarged greeting cycles for [Brakk](evidence/starter-reacti
 
 ## Validation
 
-- Focused arm/reaction tests: seven pass. They check source-arm removal, original cuff/hand widths, all eight directions through all 17 motion states, connected painted arms, cell boundaries, physical weapon attachment, greetings for every authored base design, owl palette preservation and unchanged owl body/feet.
-- Full unit suite: result recorded after the exhaustive evolution/cell-boundary pass completes.
+- Focused arm/reaction tests: seven pass. They check source-arm removal, original cuff/hand widths, all eight directions through all 17 motion states, connected painted arms, cell boundaries, physical weapon attachment, greetings for every authored base design, owl palette preservation, unchanged owl body/feet, and light eyelids at 85/100/110% character height ([height review](evidence/starter-reactions/owl-height-review.png)).
+- Full unit suite: **327 tests pass, zero failures**, including gait/carry, anatomy, legs V2/V3, weapon art/contact, palette, rig and exhaustive evolution/cell boundaries. [Full output](evidence/starter-reactions/unit-tests.txt).
 - `tests/starter-reactions.browser.mjs`: source and offline pass twelve distinct greetings across the full cycle, painted portrait boundaries, return to idle, repeat clicks, an unchanged evolved run, filtering/sorting, mobile and reduced motion. [Report](evidence/starter-reactions/starter-reactions-browser.json).
 - `tests/team-select.browser.mjs` and `tests/arena-elite.browser.mjs`: source/offline selection, costs, Chaos, filters, elite capture/inheritance, reload, mobile and live combat pass. [Selection report](evidence/starter-reactions/team-select-browser.json), [elite report](evidence/starter-reactions/arena-elite-browser.json).
 - `tests/legs-v2.browser.mjs`: source/offline live combat and 50/150/100% stride settings pass. [Report](evidence/starter-reactions/legs-v2-browser.json).

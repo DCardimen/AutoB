@@ -7,7 +7,7 @@ fs.mkdirSync(out,{recursive:true});
 try{
  const page=await browser.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));await page.goto(base);await page.waitForFunction(()=>window.starfall);
  const result=await page.evaluate(async()=>{
-  const {pixelSpec}=await import('/native-content.js'),{starterReactionPixels,starterReactionProfile}=await import('/starter-reactions.js');
+  const {pixelSpec}=await import('/native-content.js'),{starterReactionPixels,starterReactionProfile,starterReactionPose}=await import('/starter-reactions.js');
   const ids=['aurel','brakk','syl','nyra','cinderfox','mossguard','brookfin','voltwing','bloomkin','duskcap','cogwalker','runespider'],cell=document.createElement('canvas');cell.width=cell.height=64;const sc=cell.getContext('2d'),sheets=[];
   for(const id of ids){
    const spec=pixelSpec(id),canvas=document.createElement('canvas');canvas.width=1088;canvas.height=480;const c=canvas.getContext('2d');c.imageSmoothingEnabled=false;c.fillStyle='#183139';c.fillRect(0,0,1088,480);
@@ -22,7 +22,10 @@ try{
   const start=performance.now();recorder.start();
   const draw=now=>{
    const time=(now-start)/1000,cycle=time%2;c.fillStyle='#183139';c.fillRect(0,0,1280,690);c.fillStyle='#e7dfc2';c.font='16px monospace';c.fillText('First-form greetings / normal speed / native + enlarged',16,22);
-   ids.forEach((id,i)=>{const spec=pixelSpec(id),profile=starterReactionProfile(spec),p=Math.min(1,cycle*1000/profile.duration),pixels=starterReactionPixels(spec,p),x=i%4*320+35,y=Math.floor(i/4)*218+32;sc.putImageData(new ImageData(pixels,64,64),0,0);c.drawImage(cell,x,y,160,160);c.drawImage(cell,x+180,y+96);c.fillStyle='#e7dfc2';c.font='13px monospace';c.fillText(`${spec.name}: ${profile.kind}`,x,y+184);});
+   ids.forEach((id,i)=>{const spec=pixelSpec(id),profile=starterReactionProfile(spec),p=Math.min(1,cycle*1000/profile.duration),pixels=starterReactionPixels(spec,p),pose=starterReactionPose(spec,p),x=i%4*320+35,y=Math.floor(i/4)*218+32;sc.putImageData(new ImageData(pixels,64,64),0,0);
+    // Include the same planted-origin whole-sprite motion used by the menu.
+    const place=(x,y,size)=>{c.save();c.translate(x+size/2+pose.x*size/64,y+size*.96+pose.y*size/64);c.rotate(pose.roll);c.drawImage(cell,-size/2,-size*.96,size,size);c.restore();};place(x,y,160);place(x+180,y+96,64);
+    c.fillStyle='#e7dfc2';c.font='13px monospace';c.fillText(`${spec.name}: ${profile.kind}`,x,y+184);});
    if(time<4.2)requestAnimationFrame(draw);else recorder.stop();
   };requestAnimationFrame(draw);return {sheets,movie:await done};
  });

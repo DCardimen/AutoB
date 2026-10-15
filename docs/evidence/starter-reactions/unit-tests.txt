@@ -1,0 +1,1644 @@
+TAP version 13
+# Subtest: swept collision detects a fast projectile crossing a creature between frames
+ok 1 - swept collision detects a fast projectile crossing a creature between frames
+  ---
+  duration_ms: 0.8714
+  ...
+# Subtest: friendly and hostile bodies separate by mass and respect arena walls
+ok 2 - friendly and hostile bodies separate by mass and respect arena walls
+  ---
+  duration_ms: 0.2091
+  ...
+# Subtest: melee waits for contact and cannot follow a target escaping the committed arc
+ok 3 - melee waits for contact and cannot follow a target escaping the committed arc
+  ---
+  duration_ms: 7.8998
+  ...
+# Subtest: an aligned melee swing actually connects and imparts momentum
+ok 4 - an aligned melee swing actually connects and imparts momentum
+  ---
+  duration_ms: 2.8146
+  ...
+# Subtest: physical projectiles keep their aim and may miss a target that moves sideways
+ok 5 - physical projectiles keep their aim and may miss a target that moves sideways
+  ---
+  duration_ms: 1.9113
+  ...
+# Subtest: a creature screening the target physically blocks a projectile
+ok 6 - a creature screening the target physically blocks a projectile
+  ---
+  duration_ms: 1.2176
+  ...
+# Subtest: dodge stats cannot randomly cancel a hit that physically connects
+ok 7 - dodge stats cannot randomly cancel a hit that physically connects
+  ---
+  duration_ms: 0.3778
+  ...
+# Subtest: reactive AI rolls with real displacement and pays stamina; roots prevent the roll
+ok 8 - reactive AI rolls with real displacement and pays stamina; roots prevent the roll
+  ---
+  duration_ms: 2.1428
+  ...
+# Subtest: stagger breaks poise and cancels an attack still in windup
+ok 9 - stagger breaks poise and cancels an attack still in windup
+  ---
+  duration_ms: 1.6287
+  ...
+# Subtest: heavy melee causes bleed; moving worsens it and cleansing removes it
+ok 10 - heavy melee causes bleed; moving worsens it and cleansing removes it
+  ---
+  duration_ms: 1.1035
+  ...
+# Subtest: dash attacks travel through the arena instead of instantly moving onto a target
+ok 11 - dash attacks travel through the arena instead of instantly moving onto a target
+  ---
+  duration_ms: 1.125
+  ...
+# Subtest: death risk follows rarity, and hospital, drills and evolution stack transparently
+ok 12 - death risk follows rarity, and hospital, drills and evolution stack transparently
+  ---
+  duration_ms: 0.2797
+  ...
+# Subtest: hospital and survival upgrades charge once, cap tiers, and reject unaffordable purchases
+ok 13 - hospital and survival upgrades charge once, cap tiers, and reject unaffordable purchases
+  ---
+  duration_ms: 0.2946
+  ...
+# Subtest: defeat chooses one active ally, permanently removes an individual and recovers its gems exactly once
+ok 14 - defeat chooses one active ally, permanently removes an individual and recovers its gems exactly once
+  ---
+  duration_ms: 1.6558
+  ...
+# Subtest: reserves keep their earned progression and replace casualties without creating duplicate cells
+ok 15 - reserves keep their earned progression and replace casualties without creating duplicate cells
+  ---
+  duration_ms: 0.4099
+  ...
+# Subtest: protection changes casualty outcomes on matched seeds without changing the chosen ally
+ok 16 - protection changes casualty outcomes on matched seeds without changing the chosen ally
+  ---
+  duration_ms: 15.7727
+  ...
+# Subtest: 29 complete juvenile, mature and apex identities retain eight distinct full-cell facings
+ok 2 - 29 complete juvenile, mature and apex identities retain eight distinct full-cell facings
+  ---
+  duration_ms: 144.127
+  ...
+# Subtest: evolution preserves species anatomy and never substitutes extra heads for a new stage
+ok 3 - evolution preserves species anatomy and never substitutes extra heads for a new stage
+  ---
+  duration_ms: 16.9086
+  ...
+# Subtest: older collection names retain their actual anatomy and complete developmental art
+ok 4 - older collection names retain their actual anatomy and complete developmental art
+  ---
+  duration_ms: 1.0822
+  ...
+# Subtest: visible hands remain joined to shoulders at the actual weapon and shield grips
+ok 5 - visible hands remain joined to shoulders at the actual weapon and shield grips
+  ---
+  duration_ms: 26087.4882
+  ...
+# Subtest: hair and textured cape move independently while the face and body pose remain fixed
+ok 6 - hair and textured cape move independently while the face and body pose remain fixed
+  ---
+  duration_ms: 38.0659
+  ...
+# Subtest: base Brakk removes the old sleeves/hands from the body and paints one authored pair
+ok 3 - base Brakk removes the old sleeves/hands from the body and paints one authored pair
+  ---
+  duration_ms: 140.8628
+  ...
+# Subtest: base Brakk arms stay connected and unclipped through every facing and combat motion
+ok 4 - base Brakk arms stay connected and unclipped through every facing and combat motion
+  ---
+  duration_ms: 4171.6063
+  ...
+# Subtest: Brakk waves with his free hand while his hatchet remains on its original hand
+ok 5 - Brakk waves with his free hand while his hatchet remains on its original hand
+  ---
+  duration_ms: 257.8957
+  ...
+# Subtest: a successful combat capture recruits into a free unlocked team place after round settlement
+ok 4 - a successful combat capture recruits into a free unlocked team place after round settlement
+  ---
+  duration_ms: 7.4446
+  ...
+# Subtest: a full active team keeps the capture in reserves without replacing anyone
+ok 5 - a full active team keeps the capture in reserves without replacing anyone
+  ---
+  duration_ms: 1.2079
+  ...
+# Subtest: a place unlocked by this victory is available to the new capture
+ok 6 - a place unlocked by this victory is available to the new capture
+  ---
+  duration_ms: 1.5815
+  ...
+# Subtest: capture recruitment follows retreat casualty settlement, filling the actual vacancy
+ok 7 - capture recruitment follows retreat casualty settlement, filling the actual vacancy
+  ---
+  duration_ms: 2.7341
+  ...
+# Subtest: saved recruitment is idempotent for roster, identity and capture economy rewards
+ok 8 - saved recruitment is idempotent for roster, identity and capture economy rewards
+  ---
+  duration_ms: 1.455
+  ...
+# Subtest: duplicate same-family captures are distinct individuals keyed by target identity
+ok 9 - duplicate same-family captures are distinct individuals keyed by target identity
+  ---
+  duration_ms: 1.4649
+  ...
+# Subtest: full reserves retain a successful capture and failed captures award nothing
+ok 10 - full reserves retain a successful capture and failed captures award nothing
+  ---
+  duration_ms: 1.439
+  ...
+# Subtest: a saved mid-fight success remains only one battle ally on replay, then recruits once
+ok 11 - a saved mid-fight success remains only one battle ally on replay, then recruits once
+  ---
+  duration_ms: 3.5298
+  ...
+# Subtest: every cleared Chaos tier grants a point, and Chaos 3 opens the third initial place
+ok 5 - every cleared Chaos tier grants a point, and Chaos 3 opens the third initial place
+  ---
+  duration_ms: 1.8555
+  ...
+# Subtest: new runs get exactly one seeded relic with variation across seeds
+ok 6 - new runs get exactly one seeded relic with variation across seeds
+  ---
+  duration_ms: 1.1167
+  ...
+# Subtest: all 30 relics and 50 pieces of equipment have unique IDs and usable descriptions
+ok 7 - all 30 relics and 50 pieces of equipment have unique IDs and usable descriptions
+  ---
+  duration_ms: 2.4473
+  ...
+# Subtest: basic attack, action, dash recovery and stamina stats change independently
+ok 8 - basic attack, action, dash recovery and stamina stats change independently
+  ---
+  duration_ms: 1.5732
+  ...
+# Subtest: action speed advances real cooldowns and stamina uses the displayed recharge rate
+ok 9 - action speed advances real cooldowns and stamina uses the displayed recharge rate
+  ---
+  duration_ms: 7.8098
+  ...
+# Subtest: dodge relics refund actual dodge recovery without resetting skill cooldowns
+ok 10 - dodge relics refund actual dodge recovery without resetting skill cooldowns
+  ---
+  duration_ms: 1.486
+  ...
+# Subtest: roles execute physical rolls, sidesteps, blinks and protected barrel dodges with real cooldown modifiers
+ok 11 - roles execute physical rolls, sidesteps, blinks and protected barrel dodges with real cooldown modifiers
+  ---
+  duration_ms: 4.3371
+  ...
+# Subtest: Sovereign’s Seat sacrifices exactly one place and grants the chosen Legendary once
+ok 12 - Sovereign’s Seat sacrifices exactly one place and grants the chosen Legendary once
+  ---
+  duration_ms: 0.2953
+  ...
+# Subtest: casualties preserve expedition relics and recover bound and socketed relics exactly once
+ok 13 - casualties preserve expedition relics and recover bound and socketed relics exactly once
+  ---
+  duration_ms: 0.6088
+  ...
+# Subtest: round-one rolls reach every rarity and role, across seeds and outside the biome pool
+ok 14 - round-one rolls reach every rarity and role, across seeds and outside the biome pool
+  ---
+  duration_ms: 146.8765
+  ...
+# Subtest: weakest-first targets current HP and manual focus expires, respects taunts and adapts to distance
+ok 15 - weakest-first targets current HP and manual focus expires, respects taunts and adapts to distance
+  ---
+  duration_ms: 1.5392
+  ...
+# Subtest: capturing switches allegiance for this battle, clears hostile commitments, before round-end roster recruitment
+ok 16 - capturing switches allegiance for this battle, clears hostile commitments, before round-end roster recruitment
+  ---
+  duration_ms: 1.6564
+  ...
+# Subtest: offensive cast relics cannot burn an allied healing target
+ok 17 - offensive cast relics cannot burn an allied healing target
+  ---
+  duration_ms: 0.9853
+  ...
+# Subtest: a borrowed capture inherits the player’s speed relics and cannot be hit by queued friendly attacks
+ok 18 - a borrowed capture inherits the player’s speed relics and cannot be hit by queued friendly attacks
+  ---
+  duration_ms: 1.0915
+  ...
+# Subtest: capturing the last enemy finishes the lattice before settling victory
+ok 19 - capturing the last enemy finishes the lattice before settling victory
+  ---
+  duration_ms: 2.9118
+  ...
+# Subtest: capture control remains available when permanent reserves are full
+ok 20 - capture control remains available when permanent reserves are full
+  ---
+  duration_ms: 1.1502
+  ...
+# Subtest: loot settlement remains idempotent after the collection animation
+ok 21 - loot settlement remains idempotent after the collection animation
+  ---
+  duration_ms: 0.2213
+  ...
+# Subtest: multi-legged families skin their visible authored limbs without moving anatomical joints
+ok 6 - multi-legged families skin their visible authored limbs without moving anatomical joints
+  ---
+  duration_ms: 1474.7372
+  ...
+# Subtest: all natural attack categories are distinct and attack poses remain inside the sprite in every facing
+ok 7 - all natural attack categories are distinct and attack poses remain inside the sprite in every facing
+  ---
+  duration_ms: 20006.2053
+  ...
+# Subtest: canine jaws open before impact, snap at contact, close on recovery and stay hidden on rear views
+ok 8 - canine jaws open before impact, snap at contact, close on recovery and stay hidden on rear views
+  ---
+  duration_ms: 52.0225
+  ...
+# Subtest: mantises have four walking legs and two separate scythes with a wide crossing slash
+ok 9 - mantises have four walking legs and two separate scythes with a wide crossing slash
+  ---
+  duration_ms: 0.5817
+  ...
+# Subtest: crabs pinch, cats rake, horned creatures ram, and segmented predators use mandibles
+ok 10 - crabs pinch, cats rake, horned creatures ram, and segmented predators use mandibles
+  ---
+  duration_ms: 1.0441
+  ...
+# Subtest: natural attacks use their animated tips for physical hits and never apply duplicate contact damage
+ok 11 - natural attacks use their animated tips for physical hits and never apply duplicate contact damage
+  ---
+  duration_ms: 24.3859
+  ...
+# Subtest: original soles, limb textures and socket pixels are retained instead of cut away
+ok 12 - original soles, limb textures and socket pixels are retained instead of cut away
+  ---
+  duration_ms: 459.827
+  ...
+# Subtest: registered legs stay inside the cell during movement, dodges and falls
+ok 13 - registered legs stay inside the cell during movement, dodges and falls
+  ---
+  duration_ms: 1800.2035
+  ...
+# Subtest: both shop recruitment paths and existing companions initialize armor and equipment capacity
+ok 7 - both shop recruitment paths and existing companions initialize armor and equipment capacity
+  ---
+  duration_ms: 3.4042
+  ...
+# Subtest: personal relics equip on the whole creature, preserve identity, and cannot link to skills
+ok 8 - personal relics equip on the whole creature, preserve identity, and cannot link to skills
+  ---
+  duration_ms: 4.0331
+  ...
+# Subtest: all equipment beneficial triggers affect the wearer exclusively, including healing and overflow
+ok 9 - all equipment beneficial triggers affect the wearer exclusively, including healing and overflow
+  ---
+  duration_ms: 112.3904
+  ...
+# Subtest: each of the 30 new personal relics changes actual combat or stats in its intended condition
+ok 10 - each of the 30 new personal relics changes actual combat or stats in its intended condition
+  ---
+  duration_ms: 27.926
+  ...
+# Subtest: automatic capture waits three combat seconds after the failed lattice breaks, pays highlighted tools and stops at three
+ok 11 - automatic capture waits three combat seconds after the failed lattice breaks, pays highlighted tools and stops at three
+  ---
+  duration_ms: 119.1922
+  ...
+# Subtest: capture retry cancellation does not spend stock and dead, unavailable or successful targets stop automatic throws
+ok 12 - capture retry cancellation does not spend stock and dead, unavailable or successful targets stop automatic throws
+  ---
+  duration_ms: 1.4307
+  ...
+# Subtest: reserve swaps and vacancy drops retain gear, identity and placement while rejecting locked places
+ok 13 - reserve swaps and vacancy drops retain gear, identity and placement while rejecting locked places
+  ---
+  duration_ms: 0.6008
+  ...
+# Subtest: nearest and healer targeting are actual combat choices, not cosmetic preview labels
+ok 14 - nearest and healer targeting are actual combat choices, not cosmetic preview labels
+  ---
+  duration_ms: 1.0023
+  ...
+# Subtest: archers crouch deeper, pull the string, and recover from the release without disconnecting hands
+ok 15 - archers crouch deeper, pull the string, and recover from the release without disconnecting hands
+  ---
+  duration_ms: 0.5893
+  ...
+# Subtest: EXP summaries record exact per-creature gains and multi-level progress for victories and retreats
+ok 16 - EXP summaries record exact per-creature gains and multi-level progress for victories and retreats
+  ---
+  duration_ms: 10.0709
+  ...
+# Subtest: render interpolation blends position, gait, hands, cape and action time without advancing combat
+ok 17 - render interpolation blends position, gait, hands, cape and action time without advancing combat
+  ---
+  duration_ms: 1.882
+  ...
+# Subtest: all 89 creature families visibly breathe or pulse before battle in every facing
+ok 18 - all 89 creature families visibly breathe or pulse before battle in every facing
+  ---
+  duration_ms: 9152.8964
+  ...
+# Subtest: 50 unique elite mutations have distinct names, magnitudes and recipient rules
+ok 8 - 50 unique elite mutations have distinct names, magnitudes and recipient rules
+  ---
+  duration_ms: 1.5574
+  ...
+# Subtest: every elite encounter has exactly one seeded mutation, matching stage scouting and reload
+ok 9 - every elite encounter has exactly one seeded mutation, matching stage scouting and reload
+  ---
+  duration_ms: 19.5334
+  ...
+# Subtest: lowest-level, lowest-health, highest-attack and fastest rules select their actual recipient
+ok 10 - lowest-level, lowest-health, highest-attack and fastest rules select their actual recipient
+  ---
+  duration_ms: 0.5818
+  ...
+# Subtest: all 50 mutations affect real combat stats once, including skill and dash cooldowns
+ok 11 - all 50 mutations affect real combat stats once, including skill and dash cooldowns
+  ---
+  duration_ms: 2.9864
+  ...
+# Subtest: capturing a mutated opponent retains its buff in combat, recruitment, saves and future starters
+ok 12 - capturing a mutated opponent retains its buff in combat, recruitment, saves and future starters
+  ---
+  duration_ms: 4.157
+  ...
+# Subtest: individual idle rhythms are stable and differ on both teams
+ok 13 - individual idle rhythms are stable and differ on both teams
+  ---
+  duration_ms: 0.2326
+  ...
+# Subtest: spawned and previously dragged creatures fit within the arena border at maximum size
+ok 14 - spawned and previously dragged creatures fit within the arena border at maximum size
+  ---
+  duration_ms: 0.4935
+  ...
+# Subtest: enrage ramps continuously from baseline, caps damage/actions and eventually suppresses healing
+ok 9 - enrage ramps continuously from baseline, caps damage/actions and eventually suppresses healing
+  ---
+  duration_ms: 1.7732
+  ...
+# Subtest: direct hits, status damage and independent relic damage follow the ramp for either team
+ok 10 - direct hits, status damage and independent relic damage follow the ramp for either team
+  ---
+  duration_ms: 11.6663
+  ...
+# Subtest: intercepted and already-derived reflected damage are amplified only once; HP costs remain costs
+ok 11 - intercepted and already-derived reflected damage are amplified only once; HP costs remain costs
+  ---
+  duration_ms: 0.2474
+  ...
+# Subtest: healing on both sides follows the continuous penalty and cannot generate overheal at zero effectiveness
+ok 12 - healing on both sides follows the continuous penalty and cannot generate overheal at zero effectiveness
+  ---
+  duration_ms: 0.9689
+  ...
+# Subtest: basic attack, skill, dodge and boss recharge use action time; debuffs keep combat time
+ok 13 - basic attack, skill, dodge and boss recharge use action time; debuffs keep combat time
+  ---
+  duration_ms: 4.0891
+  ...
+# Subtest: native action animation, weapon windup and recovery stay synchronized at faster action speed
+ok 14 - native action animation, weapon windup and recovery stay synchronized at faster action speed
+  ---
+  duration_ms: 1.2763
+  ...
+# Subtest: a committed heal resolves earlier in enrage, with the same accelerated casting pose
+ok 15 - a committed heal resolves earlier in enrage, with the same accelerated casting pose
+  ---
+  duration_ms: 3.8275
+  ...
+# Subtest: all new capture rarities have the requested default odds; full HP always has zero chance
+ok 16 - all new capture rarities have the requested default odds; full HP always has zero chance
+  ---
+  duration_ms: 0.9722
+  ...
+# Subtest: manual retries consume the selected tool and cap all attempts at three
+ok 17 - manual retries consume the selected tool and cap all attempts at three
+  ---
+  duration_ms: 0.9103
+  ...
+# Subtest: retries reject fresh rounds, full health, dead targets and empty tools without spending
+ok 18 - retries reject fresh rounds, full health, dead targets and empty tools without spending
+  ---
+  duration_ms: 0.3015
+  ...
+# Subtest: a successful retry stops future throws and saved failure history cannot reset the attempt limit
+ok 19 - a successful retry stops future throws and saved failure history cannot reset the attempt limit
+  ---
+  duration_ms: 0.5689
+  ...
+# Subtest: size controls retain type proportions and scale body, melee reach and grip physics together
+ok 20 - size controls retain type proportions and scale body, melee reach and grip physics together
+  ---
+  duration_ms: 0.4535
+  ...
+# Subtest: live size tuning updates an already committed weapon sweep, and movement tuning preserves walking stamina
+ok 21 - live size tuning updates an already committed weapon sweep, and movement tuning preserves walking stamina
+  ---
+  duration_ms: 0.5654
+  ...
+# Subtest: equipment transfer swaps occupied slots without duplicating, deleting or changing other equipment
+ok 22 - equipment transfer swaps occupied slots without duplicating, deleting or changing other equipment
+  ---
+  duration_ms: 0.6201
+  ...
+# Subtest: real combat records per-creature mitigation and which creature killed which target
+ok 23 - real combat records per-creature mitigation and which creature killed which target
+  ---
+  duration_ms: 1.4205
+  ...
+# Subtest: rare opponents drop more equipment, elites and bosses improve their chances, and loot comes from worn gear
+ok 24 - rare opponents drop more equipment, elites and bosses improve their chances, and loot comes from worn gear
+  ---
+  duration_ms: 10.7858
+  ...
+# Subtest: rolled equipment keeps rarity, quality and source through claiming, equipping, swapping, returning and JSON save
+ok 25 - rolled equipment keeps rarity, quality and source through claiming, equipping, swapping, returning and JSON save
+  ---
+  duration_ms: 0.7842
+  ...
+# Subtest: living and captured enemies do not duplicate their worn gear into victory drops
+ok 26 - living and captured enemies do not duplicate their worn gear into victory drops
+  ---
+  duration_ms: 1.4668
+  ...
+# Subtest: all 89 families have valid lineages, art cells, and an encounter habitat
+ok 10 - all 89 families have valid lineages, art cells, and an encounter habitat
+  ---
+  duration_ms: 0.7703
+  ...
+# Subtest: evolution requires a level, gold, and valid path without spending on failure
+ok 11 - evolution requires a level, gold, and valid path without spending on failure
+  ---
+  duration_ms: 1.0632
+  ...
+# Subtest: opening wild fights use common and uncommon creatures, while sanctuaries offer rarities
+ok 12 - opening wild fights use common and uncommon creatures, while sanctuaries offer rarities
+  ---
+  duration_ms: 4.482
+  ...
+# Subtest: transformation preserves identity, experience, equipped gems, and skill links
+ok 13 - transformation preserves identity, experience, equipped gems, and skill links
+  ---
+  duration_ms: 1.7507
+  ...
+# Subtest: Wild and Warden create different damage, healing, cooldown, and shield outcomes
+ok 14 - Wild and Warden create different damage, healing, cooldown, and shield outcomes
+  ---
+  duration_ms: 3.9542
+  ...
+# Subtest: capture retains an enemy's evolved form; future starters reset progression
+ok 15 - capture retains an enemy's evolved form; future starters reset progression
+  ---
+  duration_ms: 0.4863
+  ...
+# Subtest: animation states are distinct, deterministic, and freeze at a fixed game time
+ok 16 - animation states are distinct, deterministic, and freeze at a fixed game time
+  ---
+  duration_ms: 0.627
+  ...
+# Subtest: new expeditions have two starters and capacity grows after three wins; older six-team mechanics remain supported
+ok 11 - new expeditions have two starters and capacity grows after three wins; older six-team mechanics remain supported
+  ---
+  duration_ms: 2.4363
+  ...
+# Subtest: first three ordinary rounds use two or three enemies and enemy relic danger scales with Chaos and elite status
+ok 12 - first three ordinary rounds use two or three enemies and enemy relic danger scales with Chaos and elite status
+  ---
+  duration_ms: 14.5637
+  ...
+# Subtest: graph connections are explicit, branching, legal and every destination can be reached; scouting and warps work
+ok 13 - graph connections are explicit, branching, legal and every destination can be reached; scouting and warps work
+  ---
+  duration_ms: 8.6108
+  ...
+# Subtest: capturer rates halve the former baseline; tiers improve chances, resources and refunds settle once
+ok 14 - capturer rates halve the former baseline; tiers improve chances, resources and refunds settle once
+  ---
+  duration_ms: 0.8195
+  ...
+# Subtest: capture threshold keeps a target alive through a huge hit, slows time and preserves inherited curios
+ok 15 - capture threshold keeps a target alive through a huge hit, slows time and preserves inherited curios
+  ---
+  duration_ms: 6.6007
+  ...
+# Subtest: defeat removes a deployed starter and worn equipment but preserves relics after reload
+ok 16 - defeat removes a deployed starter and worn equipment but preserves relics after reload
+  ---
+  duration_ms: 1.1337
+  ...
+# Subtest: wild stat rolls offer large tradeoffs; recruits and loot retain those rolls and cannot be collected twice
+ok 17 - wild stat rolls offer large tradeoffs; recruits and loot retain those rolls and cannot be collected twice
+  ---
+  duration_ms: 0.9995
+  ...
+# Subtest: 100 new relics are unique with 10 flat bonuses and conditional combat effects interact with real status, echoes and dodges
+ok 18 - 100 new relics are unique with 10 flat bonuses and conditional combat effects interact with real status, echoes and dodges
+  ---
+  duration_ms: 2.3249
+  ...
+# Subtest: conditional relics respect distance, movement, cooldowns, healing, death, revive and reflection recursion
+ok 19 - conditional relics respect distance, movement, cooldowns, healing, death, revive and reflection recursion
+  ---
+  duration_ms: 1.4248
+  ...
+# Subtest: capture and economy relics modify actual payouts and drops, not only descriptions
+ok 20 - capture and economy relics modify actual payouts and drops, not only descriptions
+  ---
+  duration_ms: 0.2664
+  ...
+# Subtest: grabbing head versus foot pins different physical anchors; drops persist inside the allied side
+ok 21 - grabbing head versus foot pins different physical anchors; drops persist inside the allied side
+  ---
+  duration_ms: 55.815
+  ...
+# Subtest: headless combat and rendered combat have the same mechanical outcome
+ok 22 - headless combat and rendered combat have the same mechanical outcome
+  ---
+  duration_ms: 1380.2624
+  ...
+# Subtest: combat catalogue entries all execute in suitable situations, including side-specific enemy HP and shop prices
+ok 23 - combat catalogue entries all execute in suitable situations, including side-specific enemy HP and shop prices
+  ---
+  duration_ms: 93.5643
+  ...
+# Subtest: an old six-row saved route remains traversable when its six-member team adopts new expedition rules
+ok 24 - an old six-row saved route remains traversable when its six-member team adopts new expedition rules
+  ---
+  duration_ms: 0.5373
+  ...
+# Subtest: lifted weapon and shield grips stay on their hands when the high ragdoll is fitted into a sprite cell
+ok 25 - lifted weapon and shield grips stay on their hands when the high ragdoll is fitted into a sprite cell
+  ---
+  duration_ms: 5.8179
+  ...
+# Subtest: a healer Phase Thread retreats from enemies, and Empty Purse uses entry gold even after a mid-battle capture
+ok 26 - a healer Phase Thread retreats from enemies, and Empty Purse uses entry gold even after a mid-battle capture
+  ---
+  duration_ms: 1.7829
+  ...
+# Subtest: overflow turns a fully overhealed ally into shields and cleansing applies to multiple allies in one heal-all cast
+ok 27 - overflow turns a fully overhealed ally into shields and cleansing applies to multiple allies in one heal-all cast
+  ---
+  duration_ms: 1.1801
+  ...
+# Subtest: new runs enforce a three-point budget independently of their two team places
+ok 12 - new runs enforce a three-point budget independently of their two team places
+  ---
+  duration_ms: 1.8695
+  ...
+# Subtest: the third monster place unlocks after two wins, with later places still earned
+ok 13 - the third monster place unlocks after two wins, with later places still earned
+  ---
+  duration_ms: 0.1722
+  ...
+# Subtest: a growing party can reach its first outpost through a common room and buy recruits at local encounter level
+ok 14 - a growing party can reach its first outpost through a common room and buy recruits at local encounter level
+  ---
+  duration_ms: 6.5853
+  ...
+# Subtest: common captures are accessible while rare creatures keep a meaningful health and tool gamble
+ok 15 - common captures are accessible while rare creatures keep a meaningful health and tool gamble
+  ---
+  duration_ms: 0.5656
+  ...
+# Subtest: a planned capturer no longer protects a target from lethal hits or captures its corpse
+ok 16 - a planned capturer no longer protects a target from lethal hits or captures its corpse
+  ---
+  duration_ms: 6.0731
+  ...
+# Subtest: preselected captures resolve once and retain the individual’s equipment and quality
+ok 17 - preselected captures resolve once and retain the individual’s equipment and quality
+  ---
+  duration_ms: 3.5259
+  ...
+# Subtest: 150 equipment features are distinct, character-wide and use real supported hooks
+ok 18 - 150 equipment features are distinct, character-wide and use real supported hooks
+  ---
+  duration_ms: 0.4529
+  ...
+# Subtest: equipment changes actual hits, defensive counters, cooldown recovery and wearer protection
+ok 19 - equipment changes actual hits, defensive counters, cooldown recovery and wearer protection
+  ---
+  duration_ms: 2.1421
+  ...
+# Subtest: every new equipment feature has a observable effect in its appropriate combat situation
+ok 20 - every new equipment feature has a observable effect in its appropriate combat situation
+  ---
+  duration_ms: 123.8569
+  ...
+# Subtest: armor has diminishing returns, benefits guardians more and leaves poison dangerous
+ok 21 - armor has diminishing returns, benefits guardians more and leaves poison dangerous
+  ---
+  duration_ms: 0.8273
+  ...
+# Subtest: enemies have complete coherent equipment/relic builds and stronger late loadouts
+ok 22 - enemies have complete coherent equipment/relic builds and stronger late loadouts
+  ---
+  duration_ms: 0.7977
+  ...
+# Subtest: AI relics coordinate focus fire and reserve interrupts instead of adding flat stats
+ok 23 - AI relics coordinate focus fire and reserve interrupts instead of adding flat stats
+  ---
+  duration_ms: 3.2212
+  ...
+# Subtest: equipment and skill drag/drop preserve items, reject incompatible links and change priorities
+ok 24 - equipment and skill drag/drop preserve items, reject incompatible links and change priorities
+  ---
+  duration_ms: 2.0878
+  ...
+# Subtest: elite rewards and shops offer two expensive relics; status help matches real ailments
+ok 25 - elite rewards and shops offer two expensive relics; status help matches real ailments
+  ---
+  duration_ms: 1.0869
+  ...
+# Subtest: ordinary gear rewards expose the expanded equipment pool without granting an item automatically
+ok 26 - ordinary gear rewards expose the expanded equipment pool without granting an item automatically
+  ---
+  duration_ms: 1.0465
+  ...
+# Subtest: movement cadence is bounded at the new tiny scale and grips remain connected in every direction
+ok 27 - movement cadence is bounded at the new tiny scale and grips remain connected in every direction
+  ---
+  duration_ms: 8.0997
+  ...
+# Subtest: every four-leg physics proxy has an explicit source-anatomy classification
+ok 13 - every four-leg physics proxy has an explicit source-anatomy classification
+  ---
+  duration_ms: 20.1063
+  ...
+# Subtest: all quadruped anatomies alternate visible footfall groups through walk, run and sprint in every form and facing
+ok 14 - all quadruped anatomies alternate visible footfall groups through walk, run and sprint in every form and facing
+  ---
+  duration_ms: 17197.505
+  ...
+# Subtest: humanoid weapon identity and authored carry hand remain fixed throughout walking cycles
+ok 15 - humanoid weapon identity and authored carry hand remain fixed throughout walking cycles
+  ---
+  duration_ms: 16606.0464
+  ...
+# Subtest: production humanoids retain painted boots and clothing with no replacement leg mesh showing through
+ok 16 - production humanoids retain painted boots and clothing with no replacement leg mesh showing through
+  ---
+  duration_ms: 4989.1978
+  ...
+# Subtest: 562 named abilities, a unique auto per species, and rarity-scaled active loadouts
+ok 14 - 562 named abilities, a unique auto per species, and rarity-scaled active loadouts
+  ---
+  duration_ms: 1.441
+  ...
+# Subtest: socket capacity is 1–5 and respects equipment ownership
+ok 15 - socket capacity is 1–5 and respects equipment ownership
+  ---
+  duration_ms: 1.4247
+  ...
+# Subtest: a support changes only the linked skill; invalid links are rejected
+ok 16 - a support changes only the linked skill; invalid links are rejected
+  ---
+  duration_ms: 1.2043
+  ...
+# Subtest: multiple different gems can modify the same skill, with no duplicate supports
+ok 17 - multiple different gems can modify the same skill, with no duplicate supports
+  ---
+  duration_ms: 0.2655
+  ...
+# Subtest: Spell Echo schedules and executes a second cast
+ok 18 - Spell Echo schedules and executes a second cast
+  ---
+  duration_ms: 18.3874
+  ...
+# Subtest: Convergence adds an actual target to a signature auto-attack
+ok 19 - Convergence adds an actual target to a signature auto-attack
+  ---
+  duration_ms: 5.5707
+  ...
+# Subtest: Fortification on an auto-attack shields its wearer and no teammate
+ok 20 - Fortification on an auto-attack shields its wearer and no teammate
+  ---
+  duration_ms: 1.6219
+  ...
+# Subtest: every active skill has an executable combat effect
+ok 21 - every active skill has an executable combat effect
+  ---
+  duration_ms: 1072.8874
+  ...
+# Subtest: reachable map paths stay in adjacent lanes and a boss ends the planet
+ok 22 - reachable map paths stay in adjacent lanes and a boss ends the planet
+  ---
+  duration_ms: 1.216
+  ...
+# Subtest: sanctuaries offer a rare target and a tangible capture bonus
+ok 23 - sanctuaries offer a rare target and a tangible capture bonus
+  ---
+  duration_ms: 0.9701
+  ...
+# Subtest: capture consumes exactly one orb and never proceeds without an orb or bench space
+ok 24 - capture consumes exactly one orb and never proceeds without an orb or bench space
+  ---
+  duration_ms: 0.3246
+  ...
+# Subtest: gold is scarce: purchases cannot overspend or duplicate expedition relics
+ok 25 - gold is scarce: purchases cannot overspend or duplicate expedition relics
+  ---
+  duration_ms: 0.2654
+  ...
+# Subtest: experience carries over through several levels
+ok 26 - experience carries over through several levels
+  ---
+  duration_ms: 0.1323
+  ...
+# Subtest: boss phase two triggers once and accelerates its real cooldowns
+ok 27 - boss phase two triggers once and accelerates its real cooldowns
+  ---
+  duration_ms: 5.9667
+  ...
+# Subtest: representative seeded combat terminates with finite health, skills, healing, and damage
+ok 28 - representative seeded combat terminates with finite health, skills, healing, and damage
+  ---
+  duration_ms: 7694.1141
+  ...
+# Subtest: level-5 awakening unlocks an actual third skill and stronger common stats
+ok 29 - level-5 awakening unlocks an actual third skill and stronger common stats
+  ---
+  duration_ms: 1.5344
+  ...
+# Subtest: arena default is 30% of the prior size; all families and evolutions stay within 70–150% of the new default
+ok 15 - arena default is 30% of the prior size; all families and evolutions stay within 70–150% of the new default
+  ---
+  duration_ms: 4.7394
+  ...
+# Subtest: an evolution unlocks an executable skill, a separate gear slot and a support socket without destroying links
+ok 16 - an evolution unlocks an executable skill, a separate gear slot and a support socket without destroying links
+  ---
+  duration_ms: 5.3339
+  ...
+# Subtest: equipment respects capacity and applies health, healing, cooldown, speed, shields and poise in combat
+ok 17 - equipment respects capacity and applies health, healing, cooldown, speed, shields and poise in combat
+  ---
+  duration_ms: 1.7911
+  ...
+# Subtest: weapon contacts and projectile origins scale with the same body as the rendered rig
+ok 18 - weapon contacts and projectile origins scale with the same body as the rendered rig
+  ---
+  duration_ms: 12.7676
+  ...
+# Subtest: grand evolution changes normalized anatomy instead of passing on enlargement alone
+ok 19 - grand evolution changes normalized anatomy instead of passing on enlargement alone
+  ---
+  duration_ms: 1268.3537
+  ...
+# Subtest: cloth anchors remain on the shoulders while lower panels lag through a turn and settle above the floor
+ok 20 - cloth anchors remain on the shoulders while lower panels lag through a turn and settle above the floor
+  ---
+  duration_ms: 63.7647
+  ...
+# Subtest: damage text reports actual HP loss and absorbed shield on the victim, aggregates status ticks and fades
+ok 21 - damage text reports actual HP loss and absorbed shield on the victim, aggregates status ticks and fades
+  ---
+  duration_ms: 1.5067
+  ...
+# Subtest: every pixel family and form remains within its 64-pixel cell during all combat motions
+ok 22 - every pixel family and form remains within its 64-pixel cell during all combat motions
+  ---
+  duration_ms: 890479.009
+  ...
+# Subtest: grandfathered ascended companions retain complete valid loadouts even after their family loses an evolution route
+ok 23 - grandfathered ascended companions retain complete valid loadouts even after their family loses an evolution route
+  ---
+  duration_ms: 6.7901
+  ...
+# Subtest: raised weapons and fallen bodies stay inside cells at both character-height slider limits
+ok 24 - raised weapons and fallen bodies stay inside cells at both character-height slider limits
+  ---
+  duration_ms: 144019.3777
+  ...
+# Subtest: the near leg hides the far leg independently of face submission order
+ok 16 - the near leg hides the far leg independently of face submission order
+  ---
+  duration_ms: 2.2269
+  ...
+# Subtest: diagnostic humanoid volumes retain solid thigh, knee, calf, boot and sole surfaces in every view
+ok 17 - diagnostic humanoid volumes retain solid thigh, knee, calf, boot and sole surfaces in every view
+  ---
+  duration_ms: 5296.6379
+  ...
+# Subtest: boot yaw changes its toe, side and sole projection without shifting the leg joints
+ok 18 - boot yaw changes its toe, side and sole projection without shifting the leg joints
+  ---
+  duration_ms: 24.5724
+  ...
+# Subtest: rendering thick legs preserves anatomical joints and planted foot physics
+ok 19 - rendering thick legs preserves anatomical joints and planted foot physics
+  ---
+  duration_ms: 882.5276
+  ...
+# Subtest: leg proportions follow the short and tall character-height settings
+ok 20 - leg proportions follow the short and tall character-height settings
+  ---
+  duration_ms: 118.3275
+  ...
+# Subtest: the body remains filled at the hips when the leg mesh is hidden
+ok 21 - the body remains filled at the hips when the leg mesh is hidden
+  ---
+  duration_ms: 320.7386
+  ...
+# Subtest: every anatomy retains reachable, fixed-length legs at both stride extremes throughout three gait cycles
+ok 17 - every anatomy retains reachable, fixed-length legs at both stride extremes throughout three gait cycles
+  ---
+  duration_ms: 796.9943
+  ...
+# Subtest: heavy animals retain authored limb widths and textured materials in each facing and evolution
+ok 18 - heavy animals retain authored limb widths and textured materials in each facing and evolution
+  ---
+  duration_ms: 1692.2537
+  ...
+# Subtest: material selection rejects neighboring crystals and outline pixels without recoloring white fur
+ok 19 - material selection rejects neighboring crystals and outline pixels without recoloring white fur
+  ---
+  duration_ms: 0.547
+  ...
+# Subtest: all 89 collection families retain unclipped legs through movement, dodging and falls in eight views and three forms
+ok 20 - all 89 collection families retain unclipped legs through movement, dodging and falls in eight views and three forms
+  ---
+  duration_ms: 73581.528
+  ...
+# Subtest: stride length migrates, clamps, resets and changes steps without changing combat travel or stats
+ok 21 - stride length migrates, clamps, resets and changes steps without changing combat travel or stats
+  ---
+  duration_ms: 6.9936
+  ...
+# Subtest: 13,056 rendered idle and gait poses introduce no detached lower-limb clusters
+ok 18 - 13,056 rendered idle and gait poses introduce no detached lower-limb clusters
+  ---
+  duration_ms: 93307.3325
+  ...
+# Subtest: natural bodies and legs use exactly the same authored palette through every form and facing
+ok 19 - natural bodies and legs use exactly the same authored palette through every form and facing
+  ---
+  duration_ms: 8179.8778
+  ...
+# Subtest: idle retains the authored stance and motion cannot exceed the source limb proportions
+ok 20 - idle retains the authored stance and motion cannot exceed the source limb proportions
+  ---
+  duration_ms: 5001.1216
+  ...
+# Subtest: every evolved crab crown has a tapered top and clear cell margins
+ok 21 - every evolved crab crown has a tapered top and clear cell margins
+  ---
+  duration_ms: 472.6376
+  ...
+# Subtest: stride tuning remains visible in the authored limbs, including short many-legged anatomies
+ok 22 - stride tuning remains visible in the authored limbs, including short many-legged anatomies
+  ---
+  duration_ms: 795.237
+  ...
+# Subtest: apex stag hooves end in separate warm toes instead of a moving blue ground platform
+ok 23 - apex stag hooves end in separate warm toes instead of a moving blue ground platform
+  ---
+  duration_ms: 73.426
+  ...
+# Subtest: resting melee weapons hang down from their hands instead of crossing the chest
+ok 19 - resting melee weapons hang down from their hands instead of crossing the chest
+  ---
+  duration_ms: 4860.4557
+  ...
+# Subtest: Brakk rests both hands below his shoulders on opposite sides of his torso
+ok 20 - Brakk rests both hands below his shoulders on opposite sides of his torso
+  ---
+  duration_ms: 245.9029
+  ...
+# Subtest: melee silhouettes retain the complete weapon and limbs during swings, dodges, hits and falls
+ok 21 - melee silhouettes retain the complete weapon and limbs during swings, dodges, hits and falls
+  ---
+  duration_ms: 31376.9701
+  ...
+# Subtest: active melee contacts keep their physical direction and the weapon remains in its wielding hand
+ok 22 - active melee contacts keep their physical direction and the weapon remains in its wielding hand
+  ---
+  duration_ms: 10390.7596
+  ...
+# Subtest: native runs keep six unique starters and 29 complete native family loadouts
+ok 20 - native runs keep six unique starters and 29 complete native family loadouts
+  ---
+  duration_ms: 1.3337
+  ...
+# Subtest: native encounters and shops recruit native families, while legacy runs retain their original pools
+ok 21 - native encounters and shops recruit native families, while legacy runs retain their original pools
+  ---
+  duration_ms: 4.9372
+  ...
+# Subtest: native blade contact preserves gem damage and actual committed misses
+ok 22 - native blade contact preserves gem damage and actual committed misses
+  ---
+  duration_ms: 85.253
+  ...
+# Subtest: native charged strikes withstand impact while taking damage, including lethal hits
+ok 23 - native charged strikes withstand impact while taking damage, including lethal hits
+  ---
+  duration_ms: 0.8556
+  ...
+# Subtest: native projectiles start at held weapons and ragdolls keep settling after a win
+ok 24 - native projectiles start at held weapons and ragdolls keep settling after a win
+  ---
+  duration_ms: 9.554
+  ...
+# Subtest: family evolution makes distinct tactical changes without dropping gems or identity
+ok 25 - family evolution makes distinct tactical changes without dropping gems or identity
+  ---
+  duration_ms: 1.2517
+  ...
+# Subtest: native battles remain finite and use the expanded courtyard bounds
+ok 26 - native battles remain finite and use the expanded courtyard bounds
+  ---
+  duration_ms: 108062.5387
+  ...
+# Subtest: released batch includes separate serpentine and flying bodies, weaker recruits and habitat conditions
+ok 21 - released batch includes separate serpentine and flying bodies, weaker recruits and habitat conditions
+  ---
+  duration_ms: 4.0229
+  ...
+# Subtest: families have one, two or three total forms; final-form families never spend gold on evolution
+ok 22 - families have one, two or three total forms; final-form families never spend gold on evolution
+  ---
+  duration_ms: 0.6417
+  ...
+# Subtest: a combat accomplishment unlocks an early transformation while retaining identity and support links
+ok 23 - a combat accomplishment unlocks an early transformation while retaining identity and support links
+  ---
+  duration_ms: 0.2926
+  ...
+# Subtest: actual combat settlement awards native growth once and practice cannot mutate the parent run
+ok 24 - actual combat settlement awards native growth once and practice cannot mutate the parent run
+  ---
+  duration_ms: 864.3812
+  ...
+# Subtest: an evolved signature changes the real skill and its connected combat effect
+ok 25 - an evolved signature changes the real skill and its connected combat effect
+  ---
+  duration_ms: 1.2727
+  ...
+# Subtest: a genuine retry after a defeat earns fresh accomplishments while repeated settlement does not
+ok 26 - a genuine retry after a defeat earns fresh accomplishments while repeated settlement does not
+  ---
+  duration_ms: 332.3095
+  ...
+# Subtest: every Chaos clear grants one permanent point, without duplicate rewards
+ok 27 - every Chaos clear grants one permanent point, without duplicate rewards
+  ---
+  duration_ms: 0.303
+  ...
+# Subtest: new family art stays recognizable across forms and every required pose fits its 64-pixel cell
+ok 28 - new family art stays recognizable across forms and every required pose fits its 64-pixel cell
+  ---
+  duration_ms: 35692.51
+  ...
+# Subtest: two conditional orders respect priority and exclude uninterruptible charges
+ok 22 - two conditional orders respect priority and exclude uninterruptible charges
+  ---
+  duration_ms: 0.8796
+  ...
+# Subtest: formation hold, escort and flank orders produce different physical goals
+ok 23 - formation hold, escort and flank orders produce different physical goals
+  ---
+  duration_ms: 0.3132
+  ...
+# Subtest: solid terrain steers bodies around a pillar and keeps collider positions outside it
+ok 24 - solid terrain steers bodies around a pillar and keeps collider positions outside it
+  ---
+  duration_ms: 0.2383
+  ...
+# Subtest: a pillar blocks an aimed projectile before it reaches the hostile body
+ok 25 - a pillar blocks an aimed projectile before it reaches the hostile body
+  ---
+  duration_ms: 74.9695
+  ...
+# Subtest: a native heal resolves after its windup; breaking poise cancels the pending effect
+ok 26 - a native heal resolves after its windup; breaking poise cancels the pending effect
+  ---
+  duration_ms: 84.0987
+  ...
+# Subtest: healers reserve pending healing instead of preparing two heals for an already-covered ally
+ok 27 - healers reserve pending healing instead of preparing two heals for an already-covered ally
+  ---
+  duration_ms: 1.5957
+  ...
+# Subtest: a living heavy-hit knockdown enters a recoverable physical fall
+ok 28 - a living heavy-hit knockdown enters a recoverable physical fall
+  ---
+  duration_ms: 45.3472
+  ...
+# Subtest: opening doctrines are mutually exclusive and cannot duplicate a relic after reload
+ok 29 - opening doctrines are mutually exclusive and cannot duplicate a relic after reload
+  ---
+  duration_ms: 0.4134
+  ...
+# Subtest: practice comparisons use real combat and leave the parent expedition unchanged
+ok 30 - practice comparisons use real combat and leave the parent expedition unchanged
+  ---
+  duration_ms: 2143.5151
+  ...
+# Subtest: native recruitment events display and award the same released family
+ok 31 - native recruitment events display and award the same released family
+  ---
+  duration_ms: 0.801
+  ...
+# Subtest: native recruits keep animated bodies when deployed beside legacy creatures
+ok 32 - native recruits keep animated bodies when deployed beside legacy creatures
+  ---
+  duration_ms: 13.5373
+  ...
+# Subtest: an empty expedition cannot start an invalid practice comparison
+ok 33 - an empty expedition cannot start an invalid practice comparison
+  ---
+  duration_ms: 0.152
+  ...
+# Subtest: the common axe specialist can damage health through a full shield
+ok 34 - the common axe specialist can damage health through a full shield
+  ---
+  duration_ms: 0.7091
+  ...
+# Subtest: family evolution tradeoffs are visible before the player commits
+ok 35 - family evolution tradeoffs are visible before the player commits
+  ---
+  duration_ms: 0.2598
+  ...
+# Subtest: every family has a functional specialty; 30 supports and 174 relics have unique IDs
+ok 23 - every family has a functional specialty; 30 supports and 174 relics have unique IDs
+  ---
+  duration_ms: 0.8846
+  ...
+# Subtest: route seeds change layouts, scouting and weather, and repeat deterministically
+ok 24 - route seeds change layouts, scouting and weather, and repeat deterministically
+  ---
+  duration_ms: 4.8281
+  ...
+# Subtest: six creatures can occupy unique grid cells; moving to an occupied default cell swaps
+ok 25 - six creatures can occupy unique grid cells; moving to an occupied default cell swaps
+  ---
+  duration_ms: 3.685
+  ...
+# Subtest: AI holds healing at full health, then releases it when an ally is injured
+ok 26 - AI holds healing at full health, then releases it when an ally is injured
+  ---
+  duration_ms: 1.9212
+  ...
+# Subtest: healer hunting selects a support; taunts still override it
+ok 27 - healer hunting selects a support; taunts still override it
+  ---
+  duration_ms: 2.9734
+  ...
+# Subtest: area AI selects the denser enemy group instead of its isolated initial target
+ok 28 - area AI selects the denser enemy group instead of its isolated initial target
+  ---
+  duration_ms: 2.0266
+  ...
+# Subtest: a Common pressure-fracture creature bypasses shields while an ordinary hit does not
+ok 29 - a Common pressure-fracture creature bypasses shields while an ordinary hit does not
+  ---
+  duration_ms: 3.4597
+  ...
+# Subtest: Shieldbreaker materially bypasses shields, with the advertised damage tradeoff
+ok 30 - Shieldbreaker materially bypasses shields, with the advertised damage tradeoff
+  ---
+  duration_ms: 3.6994
+  ...
+# Subtest: Withering reduces actual healing and Fork adds non-recursive projectiles
+ok 31 - Withering reduces actual healing and Fork adds non-recursive projectiles
+  ---
+  duration_ms: 6.3441
+  ...
+# Subtest: Reservoir saves excess healing and Purification removes roots, burns and poison
+ok 32 - Reservoir saves excess healing and Purification removes roots, burns and poison
+  ---
+  duration_ms: 5.065
+  ...
+# Subtest: capture odds reward weakening, statuses and Mercy; boss capture is excluded
+ok 33 - capture odds reward weakening, statuses and Mercy; boss capture is excluded
+  ---
+  duration_ms: 0.3475
+  ...
+# Subtest: tactical capture resolves once and removes a successful target from combat
+ok 34 - tactical capture resolves once and removes a successful target from combat
+  ---
+  duration_ms: 1.7708
+  ...
+# Subtest: a resolved capture reservation is reused on replay rather than rerolled
+ok 35 - a resolved capture reservation is reused on replay rather than rerolled
+  ---
+  duration_ms: 1.5455
+  ...
+# Subtest: every habitat offers Legendary beacon encounters; beacons cannot be purchased twice
+ok 36 - every habitat offers Legendary beacon encounters; beacons cannot be purchased twice
+  ---
+  duration_ms: 1.1863
+  ...
+# Subtest: Legendary shop contracts use real gold and bench space; Chaos shop prices agree
+ok 37 - Legendary shop contracts use real gold and bench space; Chaos shop prices agree
+  ---
+  duration_ms: 0.2758
+  ...
+# Subtest: Chaos unlocks after victory, advances one tier, and stops at twenty
+ok 38 - Chaos unlocks after victory, advances one tier, and stops at twenty
+  ---
+  duration_ms: 0.1486
+  ...
+# Subtest: Chaos starting resources and cumulative enemy scaling follow the selected tier
+ok 39 - Chaos starting resources and cumulative enemy scaling follow the selected tier
+  ---
+  duration_ms: 2.8406
+  ...
+# Subtest: the three bosses perform different mechanics and transition to a third phase
+ok 40 - the three bosses perform different mechanics and transition to a third phase
+  ---
+  duration_ms: 4.6559
+  ...
+# Subtest: interception protects a nearby ally and reports transferred damage
+ok 41 - interception protects a nearby ally and reports transferred damage
+  ---
+  duration_ms: 0.7055
+  ...
+# Subtest: Wild and Warden evolutions change combat behavior, not just statistics
+ok 42 - Wild and Warden evolutions change combat behavior, not just statistics
+  ---
+  duration_ms: 2.8872
+  ...
+# Subtest: event contracts apply a stated next-battle risk and gem trades respect inventory
+ok 43 - event contracts apply a stated next-battle risk and gem trades respect inventory
+  ---
+  duration_ms: 0.5697
+  ...
+# Subtest: battle reports explain enemy healing and shield absorption
+ok 44 - battle reports explain enemy healing and shield absorption
+  ---
+  duration_ms: 0.6407
+  ...
+# Subtest: animation v2 dashes interpolate and falls progress smoothly at fixed game time
+ok 45 - animation v2 dashes interpolate and falls progress smoothly at fixed game time
+  ---
+  duration_ms: 0.3975
+  ...
+# Subtest: repeated capture bonds cap at five and let two mastered Legendary starters fit twelve points
+ok 46 - repeated capture bonds cap at five and let two mastered Legendary starters fit twelve points
+  ---
+  duration_ms: 0.2021
+  ...
+# Subtest: a correctly linked counter support can turn the same shield encounter into a victory
+ok 47 - a correctly linked counter support can turn the same shield encounter into a victory
+  ---
+  duration_ms: 846.2056
+  ...
+# Subtest: support compatibility prevents inert links and automatically chooses a valid skill
+ok 48 - support compatibility prevents inert links and automatically chooses a valid skill
+  ---
+  duration_ms: 0.2076
+  ...
+# Subtest: combat outcomes are independent of browser frame rate and simulation call interval
+ok 49 - combat outcomes are independent of browser frame rate and simulation call interval
+  ---
+  duration_ms: 742.6166
+  ...
+# Subtest: the final knockout finishes falling without advancing settled combat state
+ok 50 - the final knockout finishes falling without advancing settled combat state
+  ---
+  duration_ms: 0.4696
+  ...
+# Subtest: random battles use six different creatures per side and retain front/backline options
+ok 24 - random battles use six different creatures per side and retain front/backline options
+  ---
+  duration_ms: 5.9131
+  ...
+# Subtest: melee alternates overhead and horizontal contact paths; every third attack charges
+ok 25 - melee alternates overhead and horizontal contact paths; every third attack charges
+  ---
+  duration_ms: 5.0748
+  ...
+# Subtest: charged strikes withstand stun, knockdown and displacement but remain vulnerable to damage and death
+ok 26 - charged strikes withstand stun, knockdown and displacement but remain vulnerable to damage and death
+  ---
+  duration_ms: 26.9185
+  ...
+# Subtest: an uncharged windup can still be interrupted and a ranged unit cannot queue a charged melee
+ok 27 - an uncharged windup can still be interrupted and a ranged unit cannot queue a charged melee
+  ---
+  duration_ms: 0.9398
+  ...
+# Subtest: right-handed weapons and both rigid axe grips remain attached through every facing and swing
+ok 28 - right-handed weapons and both rigid axe grips remain attached through every facing and swing
+  ---
+  duration_ms: 45.975
+  ...
+# Subtest: directional faces have isolated profiles, no rear eyes and stable distinct identities
+ok 29 - directional faces have isolated profiles, no rear eyes and stable distinct identities
+  ---
+  duration_ms: 784.9632
+  ...
+# Subtest: the dog uses flat paws, low swing lift, alternating diagonal support at every pace
+ok 30 - the dog uses flat paws, low swing lift, alternating diagonal support at every pace
+  ---
+  duration_ms: 0.4491
+  ...
+# Subtest: arena instances have independent skeletons and independently animated bow strings
+ok 25 - arena instances have independent skeletons and independently animated bow strings
+  ---
+  duration_ms: 1327.0792
+  ...
+# Subtest: all five characters have one welded skin surface including head, neck and limb roots
+ok 26 - all five characters have one welded skin surface including head, neck and limb roots
+  ---
+  duration_ms: 13.2975
+  ...
+# Subtest: every skin vertex has normalized, finite weights on existing bones
+ok 27 - every skin vertex has normalized, finite weights on existing bones
+  ---
+  duration_ms: 19.1178
+  ...
+# Subtest: canonical model height is invariant across all eight facing directions
+ok 28 - canonical model height is invariant across all eight facing directions
+  ---
+  duration_ms: 12.5903
+  ...
+# Subtest: rendered weapon grips and both axe hands agree with the simulation rig throughout attacks
+ok 29 - rendered weapon grips and both axe hands agree with the simulation rig throughout attacks
+  ---
+  duration_ms: 22.2709
+  ...
+# Subtest: planted boot orientation follows its ground anchor rather than rotating with the torso
+ok 30 - planted boot orientation follows its ground anchor rather than rotating with the torso
+  ---
+  duration_ms: 0.3316
+  ...
+# Subtest: heel strike lifts the toe and toe-off lifts the heel while modeled soles remain above ground
+ok 31 - heel strike lifts the toe and toe-off lifts the heel while modeled soles remain above ground
+  ---
+  duration_ms: 4.9831
+  ...
+# Subtest: authored gait tracks close continuously and put the pelvis over the supporting side
+ok 32 - authored gait tracks close continuously and put the pelvis over the supporting side
+  ---
+  duration_ms: 0.9657
+  ...
+# Subtest: all exported poses have exact 64px cells, binary alpha and no clipped drawing
+ok 26 - all exported poses have exact 64px cells, binary alpha and no clipped drawing
+  ---
+  duration_ms: 54977.3936
+  ...
+# Subtest: every creature has eight identifiable facings and distinct run, turn, stop and dodge poses
+ok 27 - every creature has eight identifiable facings and distinct run, turn, stop and dodge poses
+  ---
+  duration_ms: 1259.0349
+  ...
+# Subtest: the hound keeps four legs, the walker six, the spider eight and jelly none
+ok 28 - the hound keeps four legs, the walker six, the spider eight and jelly none
+  ---
+  duration_ms: 11.6462
+  ...
+# Subtest: ragdolls react to impulse and retain finite constrained joints above their floor radii
+ok 29 - ragdolls react to impulse and retain finite constrained joints above their floor radii
+  ---
+  duration_ms: 208.36
+  ...
+# Subtest: a heavy impact causes knockdown and a get-up phase without granting immunity
+ok 30 - a heavy impact causes knockdown and a get-up phase without granting immunity
+  ---
+  duration_ms: 29.0517
+  ...
+# Subtest: cape springs retain motion through braking and settle rather than snapping
+ok 31 - cape springs retain motion through braking and settle rather than snapping
+  ---
+  duration_ms: 0.598
+  ...
+# Subtest: sideways dodges lead with the correct foot and tilt toward their actual escape direction
+ok 27 - sideways dodges lead with the correct foot and tilt toward their actual escape direction
+  ---
+  duration_ms: 4.104
+  ...
+# Subtest: humanoid strides grow with pace while staying compact relative to short legs
+ok 28 - humanoid strides grow with pace while staying compact relative to short legs
+  ---
+  duration_ms: 0.1351
+  ...
+# Subtest: hips and head stay continuous when the last supporting foot leaves the ground
+ok 29 - hips and head stay continuous when the last supporting foot leaves the ground
+  ---
+  duration_ms: 3.4957
+  ...
+# Subtest: movement-to-attack transitions begin at the carried pose and settle before active contact
+ok 30 - movement-to-attack transitions begin at the carried pose and settle before active contact
+  ---
+  duration_ms: 1.5589
+  ...
+# Subtest: dash and dodge poses enter and exit at the idle stance without crouch or hand pops
+ok 31 - dash and dodge poses enter and exit at the idle stance without crouch or hand pops
+  ---
+  duration_ms: 2.2709
+  ...
+# Subtest: anatomical legs keep their lengths and planted ankle height through full walk/run/sprint cycles
+ok 32 - anatomical legs keep their lengths and planted ankle height through full walk/run/sprint cycles
+  ---
+  duration_ms: 152.9946
+  ...
+# Subtest: supporting feet remain fixed in world space while creatures move and turn
+ok 33 - supporting feet remain fixed in world space while creatures move and turn
+  ---
+  duration_ms: 366.5099
+  ...
+# Subtest: local foot contacts reproduce fixed world anchors after a body turn
+ok 34 - local foot contacts reproduce fixed world anchors after a body turn
+  ---
+  duration_ms: 0.568
+  ...
+# Subtest: both axe hands follow one rigid handle and the contact/recovery pose is continuous
+ok 35 - both axe hands follow one rigid handle and the contact/recovery pose is continuous
+  ---
+  duration_ms: 6.7849
+  ...
+# Subtest: walking and running blend continuously and clear the ground during swing
+ok 36 - walking and running blend continuously and clear the ground during swing
+  ---
+  duration_ms: 0.3823
+  ...
+# Subtest: the archer draws the animated bowstring with the same hand that holds it
+ok 37 - the archer draws the animated bowstring with the same hand that holds it
+  ---
+  duration_ms: 3.0471
+  ...
+# Subtest: a target inside the aim cone is missed when the actual blade path cannot reach it
+ok 38 - a target inside the aim cone is missed when the actual blade path cannot reach it
+  ---
+  duration_ms: 8.1013
+  ...
+# Subtest: connected swings pause their weapon briefly without inflicting duplicate damage
+ok 39 - connected swings pause their weapon briefly without inflicting duplicate damage
+  ---
+  duration_ms: 4.6723
+  ...
+# Subtest: creatures align toward a target before attacking rather than snapping through 180 degrees
+ok 40 - creatures align toward a target before attacking rather than snapping through 180 degrees
+  ---
+  duration_ms: 5.5107
+  ...
+# Subtest: live walking, running and sprinting keep every limb reachable while turning and accelerating
+ok 41 - live walking, running and sprinting keep every limb reachable while turning and accelerating
+  ---
+  duration_ms: 1368.0342
+  ...
+# Subtest: carried weapons retain their grip through walk/run/sprint, including both axe hands
+ok 42 - carried weapons retain their grip through walk/run/sprint, including both axe hands
+  ---
+  duration_ms: 39.5931
+  ...
+# Subtest: walking rolls heel to toe; sprint adds lift, forward lean and an alternating wolf trot
+ok 43 - walking rolls heel to toe; sprint adds lift, forward lean and an alternating wolf trot
+  ---
+  duration_ms: 3.9726
+  ...
+# Subtest: nine prototype bodies have distinct mass, stride, and weapon profiles; direction and projection round-trip
+ok 28 - nine prototype bodies have distinct mass, stride, and weapon profiles; direction and projection round-trip
+  ---
+  duration_ms: 1.073
+  ...
+# Subtest: melee damage follows blade contact after preparation, and sound occurs at that contact
+ok 29 - melee damage follows blade contact after preparation, and sound occurs at that contact
+  ---
+  duration_ms: 13.232
+  ...
+# Subtest: a committed melee cannot follow a target leaving its aim
+ok 30 - a committed melee cannot follow a target leaving its aim
+  ---
+  duration_ms: 14.193
+  ...
+# Subtest: a real stamina-paid roll clears a melee attack; rolls provide no immunity to connected hits
+ok 31 - a real stamina-paid roll clears a melee attack; rolls provide no immunity to connected hits
+  ---
+  duration_ms: 6.1514
+  ...
+# Subtest: released projectiles keep their aim and strike the first hostile body
+ok 32 - released projectiles keep their aim and strike the first hostile body
+  ---
+  duration_ms: 57.6516
+  ...
+# Subtest: the same heavy contact displaces a light body more than an armored one
+ok 33 - the same heavy contact displaces a light body more than an armored one
+  ---
+  duration_ms: 7.3064
+  ...
+# Subtest: breaking poise cancels a windup, including its eventual projectile
+ok 34 - breaking poise cancels a windup, including its eventual projectile
+  ---
+  duration_ms: 24.5198
+  ...
+# Subtest: final deaths keep falling after combat settles, without further hits
+ok 35 - final deaths keep falling after combat settles, without further hits
+  ---
+  duration_ms: 21.0409
+  ...
+# Subtest: prototype battle outcomes and contact times do not depend on display frame interval
+ok 36 - prototype battle outcomes and contact times do not depend on display frame interval
+  ---
+  duration_ms: 18018.013
+  ...
+# Subtest: a planted gait foot cancels actual ground travel instead of sliding
+ok 37 - a planted gait foot cancels actual ground travel instead of sliding
+  ---
+  duration_ms: 0.6168
+  ...
+# Subtest: sprint accelerates smoothly above running speed and spends stamina instead of acting as a dash
+ok 38 - sprint accelerates smoothly above running speed and spends stamina instead of acting as a dash
+  ---
+  duration_ms: 26.078
+  ...
+# Subtest: exhausted sprint falls back to walking and requires a fresh request after recovery
+ok 39 - exhausted sprint falls back to walking and requires a fresh request after recovery
+  ---
+  duration_ms: 524.8379
+  ...
+# Subtest: sprint movement and fatigue remain deterministic at different display intervals
+ok 40 - sprint movement and fatigue remain deterministic at different display intervals
+  ---
+  duration_ms: 508.2724
+  ...
+# Subtest: starter packs contain three unique seeded Common equipment rolls, separate from relics
+ok 29 - starter packs contain three unique seeded Common equipment rolls, separate from relics
+  ---
+  duration_ms: 3.9511
+  ...
+# Subtest: only an untouched misplaced opening trio migrates, and never rerolls on reload
+ok 30 - only an untouched misplaced opening trio migrates, and never rerolls on reload
+  ---
+  duration_ms: 0.3566
+  ...
+# Subtest: modest flat equipment changes only its wearer and describes the actual normalized bonuses
+ok 31 - modest flat equipment changes only its wearer and describes the actual normalized bonuses
+  ---
+  duration_ms: 14.9151
+  ...
+# Subtest: HP regeneration uses combat time and the gradual healing penalty
+ok 32 - HP regeneration uses combat time and the gradual healing penalty
+  ---
+  duration_ms: 12.1172
+  ...
+# Subtest: Clockwork Orchard stores basic-hit seeds and spends them on one nonrecursive skill echo
+ok 33 - Clockwork Orchard stores basic-hit seeds and spends them on one nonrecursive skill echo
+  ---
+  duration_ms: 2.6056
+  ...
+# Subtest: Pilgrims Debt charges health each cast and erupts every third, without lethal health costs
+ok 34 - Pilgrims Debt charges health each cast and erupts every third, without lethal health costs
+  ---
+  duration_ms: 2.2256
+  ...
+# Subtest: Borrowed Tomorrow banks dodges, caps storage and spends one per connected basic attack
+ok 35 - Borrowed Tomorrow banks dodges, caps storage and spends one per connected basic attack
+  ---
+  duration_ms: 1.0274
+  ...
+# Subtest: Weather Vane requires two different allies/elements and enforces a shared team cooldown
+ok 36 - Weather Vane requires two different allies/elements and enforces a shared team cooldown
+  ---
+  duration_ms: 1.1957
+  ...
+# Subtest: Last Lantern activates only for the final living ally
+ok 37 - Last Lantern activates only for the final living ally
+  ---
+  duration_ms: 1.3765
+  ...
+# Subtest: Hollow Reed trades healing for capped overheal bursts and cannot recursively charge itself
+ok 38 - Hollow Reed trades healing for capped overheal bursts and cannot recursively charge itself
+  ---
+  duration_ms: 3.4915
+  ...
+# Subtest: Triune Crucible consumes three ailments with a cooldown; no reaction on only two
+ok 39 - Triune Crucible consumes three ailments with a cooldown; no reaction on only two
+  ---
+  duration_ms: 1.178
+  ...
+# Subtest: Second Dawn triggers on a real rescue threshold crossing once per ally
+ok 40 - Second Dawn triggers on a real rescue threshold crossing once per ally
+  ---
+  duration_ms: 0.9867
+  ...
+# Subtest: a Covenant bearer can follow a different element ally who does not own the relic
+ok 41 - a Covenant bearer can follow a different element ally who does not own the relic
+  ---
+  duration_ms: 1.0892
+  ...
+# Subtest: five movement controls and stride length extend settings to 19 and migrate older saved preferences
+ok 30 - five movement controls and stride length extend settings to 19 and migrate older saved preferences
+  ---
+  duration_ms: 0.8396
+  ...
+# Subtest: run and sprint distances change actual movement pace, preserving stamina and threshold ordering
+ok 31 - run and sprint distances change actual movement pace, preserving stamina and threshold ordering
+  ---
+  duration_ms: 0.1441
+  ...
+# Subtest: steering agility changes momentum redirection while corner slowdown changes turning speed independently
+ok 32 - steering agility changes momentum redirection while corner slowdown changes turning speed independently
+  ---
+  duration_ms: 0.4853
+  ...
+# Subtest: movement transitions change the live native gait blend, including scaled movement speed
+ok 33 - movement transitions change the live native gait blend, including scaled movement speed
+  ---
+  duration_ms: 6.6456
+  ...
+# Subtest: changing run distance changes real battle travel for a closing creature
+ok 34 - changing run distance changes real battle travel for a closing creature
+  ---
+  duration_ms: 8.2999
+  ...
+# Subtest: settings examples keep their size groups and replace every creature after exactly five seconds
+ok 35 - settings examples keep their size groups and replace every creature after exactly five seconds
+  ---
+  duration_ms: 3.0034
+  ...
+# Subtest: examples demonstrate real walk/run/sprint/turn/stop transitions without editing the expedition
+ok 36 - examples demonstrate real walk/run/sprint/turn/stop transitions without editing the expedition
+  ---
+  duration_ms: 8.4621
+  ...
+# Subtest: expressive eye clusters are present in front/profile faces and absent from rear faces
+ok 31 - expressive eye clusters are present in front/profile faces and absent from rear faces
+  ---
+  duration_ms: 4.1399
+  ...
+# Subtest: tiny idle phase changes leave the authored pixel clusters stable
+ok 32 - tiny idle phase changes leave the authored pixel clusters stable
+  ---
+  duration_ms: 815.2123
+  ...
+# Subtest: the neck and clothed torso stay connected to the head across living animation frames
+ok 33 - the neck and clothed torso stay connected to the head across living animation frames
+  ---
+  duration_ms: 5766.1516
+  ...
+# Subtest: equipping boots never dyes the lower half of an authored creature
+ok 32 - equipping boots never dyes the lower half of an authored creature
+  ---
+  duration_ms: 35772.8565
+  ...
+# Subtest: native designs and their complete evolved art keep their exact authored swatches with equipment
+ok 33 - native designs and their complete evolved art keep their exact authored swatches with equipment
+  ---
+  duration_ms: 1.0123
+  ...
+# Subtest: variant colors are independent of equipment; white fur, eyes, hair and skin keep their authored accents
+ok 34 - variant colors are independent of equipment; white fur, eyes, hair and skin keep their authored accents
+  ---
+  duration_ms: 8.6505
+  ...
+# Subtest: elemental variants color both upper and lower body through all eight facings and three forms
+ok 35 - elemental variants color both upper and lower body through all eight facings and three forms
+  ---
+  duration_ms: 2237.7377
+  ...
+# Subtest: greetings follow authored anatomy instead of a reused physics rig
+ok 33 - greetings follow authored anatomy instead of a reused physics rig
+  ---
+  duration_ms: 0.7373
+  ...
+# Subtest: weapon greetings remain pre-release, retain identity and keep their physical hand attachment
+ok 34 - weapon greetings remain pre-release, retain identity and keep their physical hand attachment
+  ---
+  duration_ms: 53.4304
+  ...
+# Subtest: all first-form greetings stay inside the source cell in the selectable head-on facing
+ok 35 - all first-form greetings stay inside the source cell in the selectable head-on facing
+  ---
+  duration_ms: 5908.0329
+  ...
+# Subtest: owl blink and connected head tilt preserve the painted palette, body and planted feet
+ok 36 - owl blink and connected head tilt preserve the painted palette, body and planted feet
+  ---
+  duration_ms: 109.162
+  ...
+# Subtest: uncovered body pixels remain opaque without arms or weapons through a complete swing
+ok 34 - uncovered body pixels remain opaque without arms or weapons through a complete swing
+  ---
+  duration_ms: 22565.088
+  ...
+# Subtest: Brakk reveals leather clothing under his raised arms instead of duplicate green hand pixels
+ok 35 - Brakk reveals leather clothing under his raised arms instead of duplicate green hand pixels
+  ---
+  duration_ms: 8.8104
+  ...
+# Subtest: the completed body keeps its palette when equipment changes
+ok 36 - the completed body keeps its palette when equipment changes
+  ---
+  duration_ms: 376.4848
+  ...
+1..327
+# tests 327
+# pass 327
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1696149.7468

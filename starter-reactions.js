@@ -60,28 +60,39 @@ export function starterReactionRig(spec,progress,height=1){
 export function starterReactionPixels(spec,progress,height=1){
  const rig=starterReactionRig(spec,progress,height),pixels=paintCharacterPixels(rig.id,rig,Math.PI/2);
  if(starterReactionProfile(spec).kind!=='owl')return pixels;
- const result=owlReactionPixels(pixels,progress);result.clipped=pixels.clipped;return result;
+ const result=owlReactionPixels(pixels,progress,owlPortraitLandmarks(rig));result.clipped=pixels.clipped;return result;
 }
 
-// The reviewed front owl has a broad face above y=29, a feathered neck at
-// y=27–29, two eyes at (24,20)/(40,20), and feet below y=40. Work only on this
-// first-form portrait; all body/feet pixels and all other facings stay intact.
-export function owlReactionPixels(source,progress){
+export function owlPortraitLandmarks(rig){
+ const {scale,fit}=rig.artSourceTransform,sy=scale.height/.9*fit,sx=scale.width/1.08*fit,head=rig.artAnchors.head;
+ return {cx:head.x-scale.width*fit,eyeY:head.y-2.75*sy,neckY:Math.round(head.y+6.25*sy),sx,sy};
+}
+// The reviewed front owl has a broad face and two eyes. Follow its actual
+// painted head transform at every height setting; leave body/feet untouched.
+export function owlReactionPixels(source,progress,landmarks={cx:32,eyeY:20,neckY:29,sx:1,sy:1}){
  const input=new Uint8ClampedArray(source),p=Math.max(0,Math.min(1,progress));
+ const {cx:centerX,eyeY,neckY,sx:scaleX,sy:scaleY}=landmarks;
  const blink=(p>.22&&p<.36)||(p>.62&&p<.72);
- if(blink)for(const cx of [24,40]){
-  const feather=(26*64+cx)*4,ink=(21*64+cx)*4;
-  const featherColor=input.slice(feather,feather+4),inkColor=input.slice(ink,ink+4);
-  for(let y=13;y<=27;y++)for(let x=cx-7;x<=cx+7;x++)if(((x-cx)/7)**2+((y-20)/7)**2<=1){
+ if(blink)for(const cx of [centerX-8*scaleX,centerX+8*scaleX]){
+  const shades=new Map();let inkColor=null,inkLight=Infinity;
+  for(let y=Math.floor(eyeY-7*scaleY);y<=Math.ceil(eyeY+7*scaleY);y++)for(let x=Math.floor(cx-7*scaleX);x<=Math.ceil(cx+7*scaleX);x++){
+   const color=input.slice((y*64+x)*4,(y*64+x)*4+4);if(!color[3])continue;
+   const [r,g,b]=color,key=[...color].join(',');
+   if(r>180&&g>180&&b>160){const entry=shades.get(key)||{color,count:0};entry.count++;shades.set(key,entry);}
+   if(Math.abs(x-cx)<=3*scaleX&&Math.abs(y-eyeY)<=3*scaleY&&r+g+b<inkLight){inkLight=r+g+b;inkColor=color;}
+  }
+  const featherColor=[...shades.values()].sort((a,b)=>b.count-a.count)[0]?.color;
+  if(!featherColor||!inkColor)continue;
+  for(let y=Math.floor(eyeY-7*scaleY);y<=Math.ceil(eyeY+7*scaleY);y++)for(let x=Math.floor(cx-7*scaleX);x<=Math.ceil(cx+7*scaleX);x++)if(((x-cx)/(7*scaleX))**2+((y-eyeY)/(7*scaleY))**2<=1){
    const i=(y*64+x)*4;if(input[i+3])input.set(featherColor,i);
   }
-  for(let x=cx-5;x<=cx+5;x++)input.set(inkColor,((20+(Math.abs(x-cx)>=4?1:0))*64+x)*4);
+  for(let x=Math.ceil(cx-5*scaleX);x<=Math.floor(cx+5*scaleX);x++)input.set(inkColor,(Math.round(eyeY+(Math.abs(x-cx)>=4*scaleX?scaleY:0))*64+x)*4);
  }
  const out=new Uint8ClampedArray(input),angle=Math.sin(p*Math.PI*2)*Math.sin(p*Math.PI)*.11;
- for(let y=0;y<29;y++)for(let x=0;x<64;x++){
-  const weight=Math.min(1,(29-y)/6),a=angle*weight,dx=x-32,dy=y-27;
-  const sx=Math.round(32+dx*Math.cos(a)+dy*Math.sin(a)),sy=Math.round(27-dx*Math.sin(a)+dy*Math.cos(a)),i=(y*64+x)*4;
-  if(sx>=0&&sx<64&&sy>=0&&sy<29)out.set(input.subarray((sy*64+sx)*4,(sy*64+sx)*4+4),i);
+ for(let y=0;y<neckY;y++)for(let x=0;x<64;x++){
+  const pivotY=neckY-2*scaleY,weight=Math.min(1,(neckY-y)/(6*scaleY)),a=angle*weight,dx=x-centerX,dy=y-pivotY;
+  const sx=Math.round(centerX+dx*Math.cos(a)+dy*Math.sin(a)),sy=Math.round(pivotY-dx*Math.sin(a)+dy*Math.cos(a)),i=(y*64+x)*4;
+  if(sx>=0&&sx<64&&sy>=0&&sy<neckY)out.set(input.subarray((sy*64+sx)*4,(sy*64+sx)*4+4),i);
   else if(sy<0||sx<0||sx>=64)out.fill(0,i,i+4);
  }
  return out;
