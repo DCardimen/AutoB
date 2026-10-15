@@ -18324,20 +18324,24 @@ body:has(.team-select-backdrop){overflow:hidden}
       if (finished) return;
       finished = true;
       clearTimeout(timer);
-      document.removeEventListener("keydown", key3);
+      document.removeEventListener("keydown", key3, true);
       intro.remove();
       for (const { el, inert } of blocked) el.inert = inert;
       const target = previous && previous !== document.body && previous.isConnected ? previous : document.querySelector(".team-select button:not(:disabled),#new-run");
       target?.focus({ preventScroll: true });
     };
     const key3 = (e) => {
-      if (["Escape", "Enter", " "].includes(e.key)) {
+      e.stopImmediatePropagation();
+      if (e.key === "Tab") {
+        e.preventDefault();
+        intro.querySelector("button").focus({ preventScroll: true });
+      } else if (["Escape", "Enter", " "].includes(e.key)) {
         e.preventDefault();
         finish();
       }
     };
     intro.querySelector("button").addEventListener("click", finish);
-    document.addEventListener("keydown", key3);
+    document.addEventListener("keydown", key3, true);
     intro.addEventListener("animationend", (e) => {
       if (e.target === intro && e.animationName === "logo-introduction") finish();
     });
