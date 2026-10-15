@@ -43,6 +43,7 @@ jobs:
       - run: node tests/settings-movement.browser.mjs
       - run: node tests/legs-v2.browser.mjs
       - run: node scripts/review-legs-v2.mjs final
+      - run: node scripts/review-legs-v3.mjs final
       - run: node scripts/review-creature-anatomy.mjs
       - run: node scripts/review-melee-weapons.mjs
       - run: node scripts/review-natural-carry.mjs
@@ -101,4 +102,9 @@ jobs:
             public/legs-v2-heavy.png
             public/legs-v2-paws.png
             LEGS-V2.md
+            LEGS-V3.md
+            playtest-artifacts/legs-v3-*.png
+            playtest-artifacts/legs-v3-*.json
+            public/legs-v3-*.png
+            public/legs-v3-preview.webm
             RELIC-DESIGN.md

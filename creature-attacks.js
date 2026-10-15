@@ -85,7 +85,7 @@ export function applyCreatureAnatomy(rig,spec){
 }
 
 export function paintCreatureAttack(b,rig,layer='near'){
- const a=rig.creatureAttack,at=rig.artCreatureProject;if(!a||!at)return;
+ const a=rig.creatureAttack,at=rig.artCreatureProject;if(!a||!at||!a.active)return; // Resting claws/scythes are already in the authored sprite.
  const ramp=rig.artNaturalPalette||rig.palette.skin,O='#192328';
  const line=(x,y,r)=>{b.line(x,y,O,r+.5);b.line(x,y,ramp[0],r);b.line({x:x.x-.4,y:x.y-.4},{x:y.x-.4,y:y.y-.4},ramp[1],Math.max(.3,r*.6));};
  for(const limb of rig.creatureAppendages||[]){

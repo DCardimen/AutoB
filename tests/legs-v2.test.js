@@ -25,16 +25,15 @@ test('every anatomy retains reachable, fixed-length legs at both stride extremes
  }
 });
 
-test('heavy animals have substantial rounded legs and coherent foot materials in each facing and evolution',()=>{
+test('heavy animals retain authored limb widths and textured materials in each facing and evolution',()=>{
  for(const id of ['frostursa','pyrehorn','flintback','cogwalker','sunlion'])for(const evolution of [0,1,2])for(let dir=0;dir<8;dir++){
   const spec=pixelSpec(id),rig=nativePoseRig(spec,{id,evolution,evolutionPath:'wild'},'run',.31),pixels=paintCharacterPixels(spec.nativeRig,rig,dir*Math.PI/4);
-  assert.equal(pixels.clipped,0,id);assert.equal(rig.artLegVolumes.length,rig.legs.length);
-  assert.ok(rig.artLegVolumes.every(l=>l.radius>=1.65),'heavy bodies do not inherit insect-thin leg widths');
-  assert.ok(rig.artLegFaces.every(f=>f.vertices.every(p=>Number.isFinite(p.x)&&Number.isFinite(p.y)&&Number.isFinite(p.depth))));
-  assert.ok(rig.artLegFaces.filter(f=>['thigh','calf','knee','hock'].includes(f.part)).every(f=>rig.artNaturalPalette.includes(f.color)),'fur/shell keeps one coherent material');
+  assert.equal(pixels.clipped,0,id);assert.equal(rig.artLegSkin.mode,'authored');
+  assert.ok(rig.artLegSkin.limbs.some(l=>l.width>=3),'heavy bodies retain their original broad limbs');
+  assert.ok(rig.artLegSkin.limbs.every(l=>[l.hip,l.ankle].every(p=>Number.isFinite(p.x)&&Number.isFinite(p.y))));
+  assert.ok(rig.artNaturalPalette.every(c=>rig.artLegSkin.palette.includes(c)),'attack appendages use the authored material');
  }
 });
-
 test('material selection rejects neighboring crystals and outline pixels without recoloring white fur',()=>{
  const colors=['#000000','#292b31','#686b76','#a9aab3','#e2e1e5','#fff8f2','#087feb','#30b8ff'];
  const pixels=Array.from({length:80},(_,i)=>({index:i<60?2+i%4:i<70?1:6+i%2})),ramp=sampleLegMaterial({colors},pixels,pixels.slice(0,60));
@@ -46,7 +45,7 @@ test('all 89 collection families retain unclipped legs through movement, dodging
  for(const spec of PIXEL_SPECIES)for(const evolution of [0,1,2])for(const [state,phase]of [['walk',.12],['run',.31],['sprint',.72],['dodge',.5],['death',.5]])for(let dir=0;dir<8;dir++){
   const rig=nativePoseRig(spec,{id:spec.id,evolution,evolutionPath:evolution===1?'warden':'wild'},state,phase),pixels=paintCharacterPixels(nativeRigFor(spec,{evolution}),rig,dir*Math.PI/4);
   assert.equal(pixels.clipped,0,`${spec.id} ${evolution} ${state} ${dir}`);
-  if(rig.legs.length)assert.equal(rig.artLegVolumes.length,rig.legs.length,spec.id+' has one modeled set of legs');
+  if(rig.legs.length>2)assert.equal(rig.artLegSkin.mode,'authored',spec.id+' retains its original visible anatomy');else if(rig.legs.length)assert.equal(rig.artLegVolumes.length,rig.legs.length,spec.id+' has one modeled set of legs');
  }
 });
 
