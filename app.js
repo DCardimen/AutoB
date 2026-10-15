@@ -1,4 +1,6 @@
 import {SettingsMovementPreview} from './settings-movement-preview.js';
+import {showLogoIntro} from './intro.js';
+import {starterReactionProfile,starterReactionPose,starterReactionPixels} from './starter-reactions.js';
 import {assignEliteModifier,eliteModifier,rememberEliteCapture,inheritEliteStarter,idleRhythm} from './elite-modifiers.js';
 import {enrageAt} from './battle-enrage.js';
 import {migrateStarterGear} from './starter-equipment.js';
@@ -162,6 +164,7 @@ profile.owned = [
   ...new Set([...STARTERS, ...NATIVE_STARTERS, ...profile.owned.filter((id) => BY_ID[id])]),
 ];
 let starterEliteSelection={};
+let starterTypeFilter='all',starterCostFilter='all',starterSort='featured';
 let run,
   phase,
   node,
@@ -556,13 +559,19 @@ function bindDrag() {
 }
 function modal(html, kind = "generic", closable = true) {
   const previousKind=modalKind,previousScroll=$(".modal")?.scrollTop||0,backdropScroll=$(".modal-backdrop")?.scrollTop||0,pageScroll={top:scrollY,left:scrollX};
+  const starterScroll=kind==='starters'&&previousKind===kind?['.companion-scroll','.challenge-scroll','.chaos-rules ol'].map(selector=>[selector,$(selector)?.scrollTop||0]):[];
+  const starterFocus=kind==='starters'&&previousKind===kind?document.activeElement:null;
+  const focusSelector=starterFocus?.dataset.starter?`[data-starter="${starterFocus.dataset.starter}"]`:starterFocus?.dataset.difficulty?`[data-difficulty="${starterFocus.dataset.difficulty}"]`:starterFocus?.dataset.eliteStarter?`[data-elite-starter="${starterFocus.dataset.eliteStarter}"]`:starterFocus?.id==='chaos-tier'||starterFocus?.dataset.starterFilter||starterFocus?.dataset.starterSort?'#'+starterFocus.id:null;
+  const notesOpen=!!$('.team-field-notes')?.open;
   closable=true;modalKind = kind;
   $("#modal-root").innerHTML =
-    `<div class="modal-backdrop" data-dismissible="${closable}"><section class="modal" role="dialog" aria-modal="true" aria-label="${kind}">${closable ? '<button class="modal-close" data-action="close" aria-label="Close dialog">×</button>' : ""}${html}</section></div>`;
+    `<div class="modal-backdrop ${kind==='starters'?'team-select-backdrop':''}" data-dismissible="${closable}"><section class="modal ${kind==='starters'?'team-select':''}" role="dialog" aria-modal="true" aria-label="${kind==='starters'?'Choose your expedition team':kind}">${closable ? '<button class="modal-close" data-action="close" aria-label="Close dialog">×</button>' : ""}${html}</section></div>`;
   decorateFieldUI($("#modal-root"));
   decorateAilments($("#modal-root"));prepareLoadoutDragging();prepareDetailTabs();
-  const first = $("#modal-root button:not(:disabled)");
+  const first = (focusSelector&&$(focusSelector))||$("#modal-root button:not(:disabled)");
   if(previousKind===kind){$(".modal").scrollTop=previousScroll;$(".modal-backdrop").scrollTop=backdropScroll;}
+  for(const [selector,top]of starterScroll)if($(selector))$(selector).scrollTop=top;
+  if(kind==='starters'&&notesOpen)$('.team-field-notes').open=true;
   window.scrollTo({...pageScroll,behavior:"instant"});setTimeout(() => first?.isConnected&&first.focus({preventScroll:true}), 30);
 }
 function closeModal() {
@@ -1106,6 +1115,55 @@ function openRest() {
 function starterCost(id) {
   return starterPoints(BY_ID[id].rarity, profile.bonds[id] || 0);
 }
+const starterPortraitCells=new Map();
+const starterReactions=new Map(),starterReactionCells=new Map();
+function reactionFrame(id,progress){
+  const out=document.createElement('canvas');out.width=out.height=64;
+  out.getContext('2d').putImageData(new ImageData(starterReactionPixels(pixelSpec(id),progress,getCharacterHeight()),64,64),0,0);
+  return out;
+}
+function starterReactionCell(id){
+  if(!starterReactionCells.has(id)){
+    const idle=starterPortraitCell(id);let left=idle.x,top=idle.y,right=left+idle.w,bottom=top+idle.h;
+    for(let i=0;i<=16;i++){const pixels=reactionFrame(id,i/16).getContext('2d').getImageData(0,0,64,64).data;
+      for(let y=0;y<64;y++)for(let x=0;x<64;x++)if(pixels[(y*64+x)*4+3]){left=Math.min(left,x-2);top=Math.min(top,y-2);right=Math.max(right,x+3);bottom=Math.max(bottom,y+3);}
+    }
+    left=Math.max(0,left);top=Math.max(0,top);right=Math.min(64,right);bottom=Math.min(64,bottom);
+    starterReactionCells.set(id,{x:left,y:top,w:right-left,h:bottom-top});
+  }
+  return starterReactionCells.get(id);
+}
+function playStarterReaction(id){
+  if(profile.reducedMotion)return;
+  starterReactions.set(id,{start:performance.now(),...starterReactionProfile(pixelSpec(id))});
+  idlePortraitTick=-Infinity;drawIdlePortraits(performance.now());
+}
+function starterPortraitCell(id){
+  if(!starterPortraitCells.has(id)){
+    let left=64,top=64,right=0,bottom=0;
+    // Union the full idle cycle, trimming only transparent padding. Horns,
+    // crowns, weapons and feet stay inside the portrait throughout the cycle.
+    for(let i=0;i<16;i++){
+      const frame=nativePreviewFrame({id},'idle',i/16,2),pixels=frame.getContext('2d').getImageData(0,0,64,64).data;
+      for(let y=0;y<64;y++)for(let x=0;x<64;x++)if(pixels[(y*64+x)*4+3]){left=Math.min(left,x);right=Math.max(right,x+1);top=Math.min(top,y);bottom=Math.max(bottom,y+1);}
+    }
+    left=Math.max(0,left-2);top=Math.max(0,top-2);right=Math.min(64,right+2);bottom=Math.min(64,bottom+2);
+    starterPortraitCells.set(id,{x:left,y:top,w:right-left,h:bottom-top});
+  }
+  return starterPortraitCells.get(id);
+}
+function starterPortraitHTML(id){
+  const cell=starterPortraitCell(id),out=document.createElement('canvas');out.width=cell.w;out.height=cell.h;
+  out.getContext('2d').drawImage(nativePreviewFrame({id},'idle',.25,2),cell.x,cell.y,cell.w,cell.h,0,0,cell.w,cell.h);
+  return `<span class="starter-portrait"><img src="${out.toDataURL()}" alt="${BY_ID[id].name}, front-facing idle" draggable="false"><canvas width="${cell.w}" height="${cell.h}" data-starter-idle="${id}" aria-hidden="true"></canvas><span class="starter-reaction-particle" aria-hidden="true"></span></span>`;
+}
+function starterCardHTML(id,counts){
+  const s=BY_ID[id],e=ELEMENTS[s.element],selected=starterSelection.includes(id),n=counts[s.element]||0;
+  return `<article class="starter-choice ${selected?'chosen':''}" data-element="${s.element}" style="--element:${e.color}"><button class="starter-card ${selected?'selected':''}" data-starter="${id}" aria-pressed="${selected}" aria-label="${selected?'Remove':'Choose'} ${s.name}, ${s.role}, ${e.name}, ${starterCost(id)} points"><span class="starter-check" aria-hidden="true">${selected?'✓':''}</span>${starterPortraitHTML(id)}${roleBadge(s)}<strong>${s.name}</strong><span class="starter-cost">${starterCost(id)} PT</span><span class="starter-category">${e.icon} ${e.name} <small>${{ember:'Fire',grove:'Grass',tide:'Water',storm:'Lightning',void:'Shadow'}[s.element]} · ${n} chosen</small></span><small class="starter-category-bonus">${e.description}</small><small class="starter-bond">${s.rarity} · Bond ${profile.bonds[id]||0} / 5${profile.bonds[id]?` · +${Math.min(5,profile.bonds[id])*2}% HP`:''}</small></button>${eliteStarterHTML(id)}</article>`;
+}
+function starterToolsHTML(count){
+  return `<div class="team-companion-tools" aria-label="Filter and sort companions"><label>POINT COST<select id="starter-cost-filter" data-starter-filter="cost"><option value="all">Any cost</option>${[1,2,3,4,5,6].map(n=>`<option value="${n}" ${starterCostFilter===String(n)?'selected':''}>${n} ${n===1?'point':'points'}</option>`).join('')}</select></label><label>ELEMENTAL TYPE<select id="starter-type-filter" data-starter-filter="type"><option value="all">All types</option>${Object.entries(ELEMENTS).map(([id,e])=>`<option value="${id}" ${starterTypeFilter===id?'selected':''}>${e.name} · ${{ember:'Fire',grove:'Grass',tide:'Water',storm:'Lightning',void:'Shadow'}[id]}</option>`).join('')}</select></label><label>SORT BY<select id="starter-sort" data-starter-sort="true">${Object.entries({featured:'Featured',cost:'Cost: low to high','cost-desc':'Cost: high to low',type:'Elemental type',name:'Name: A–Z'}).map(([id,name])=>`<option value="${id}" ${starterSort===id?'selected':''}>${name}</option>`).join('')}</select></label><small role="status">${count} / ${profile.owned.length} companions${starterTypeFilter!=='all'||starterCostFilter!=='all'?'<button data-action="starter-reset-filters">Clear filters</button>':''}</small></div>`;
+}
 function openStarters(reset = true) {
   if (phase === "battle") {
     toast("Finish this battle before starting a new expedition.");
@@ -1114,6 +1172,7 @@ function openStarters(reset = true) {
   if (reset) {
     starterSelection = NATIVE_STARTERS.slice(0,2);
     starterEliteSelection={};
+    starterTypeFilter='all';starterCostFilter='all';starterSort='featured';
     selectedDifficulty = run.difficulty || "standard";
     selectedChaos = Math.max(
       1,
@@ -1121,16 +1180,20 @@ function openStarters(reset = true) {
     );
   }
   const cost = starterSelection.reduce((s, id) => s + starterCost(id), 0);
+  const slots=starterSlots(profile),budget=starterBudget(profile),counts=synergies(starterSelection.map(id=>({id})));
+  const starterChoices=profile.owned.filter(id=>(starterTypeFilter==='all'||BY_ID[id].element===starterTypeFilter)&&(starterCostFilter==='all'||starterCost(id)===Number(starterCostFilter)));
+  const byName=(a,b)=>BY_ID[a].name.localeCompare(BY_ID[b].name);
+  if(starterSort==='cost')starterChoices.sort((a,b)=>starterCost(a)-starterCost(b)||byName(a,b));
+  if(starterSort==='cost-desc')starterChoices.sort((a,b)=>starterCost(b)-starterCost(a)||byName(a,b));
+  if(starterSort==='type')starterChoices.sort((a,b)=>ELEMENTS[BY_ID[a].element].name.localeCompare(ELEMENTS[BY_ID[b].element].name)||byName(a,b));
+  if(starterSort==='name')starterChoices.sort(byName);
   modal(
-    `<span class="section-kicker">A NEW EXPEDITION</span><h2>Choose your unlikely heroes.</h2><p>Up to ${starterSlots(profile)} companions. ${starterBudget(profile)} points. Three base points + one per cleared Chaos tier. Chaos 3 opens the third place. Captures from past expeditions let you start with rarer creatures — if you can afford the team around them.</p>${difficultyHTML()}<div class="starter-budget"><span>${starterSelection.length} / ${starterSlots(profile)} companions</span><strong style="color:${cost > starterBudget(profile) ? "#f4a391" : ""}">${cost} / ${starterBudget(profile)} starter points</strong></div><div class="starter-grid">${profile.owned
-      .map((id) => {
-        const s = BY_ID[id],
-          selected = starterSelection.includes(id);
-        return `<div class="starter-choice"><button class="starter-card ${selected ? "selected" : ""}" data-starter="${id}"><span class="starter-check">${selected ? "✓" : starterCost(id) + "pt"}</span>${image(id)}${roleBadge(s)}<strong>${s.name}</strong><small style="color:${RARITY[s.rarity].color}">${s.rarity} · ${starterCost(id)} ${starterCost(id) === 1 ? "point" : "points"}<br>Bond ${profile.bonds[id] || 0} / 5</small></button>${eliteStarterHTML(id)}</div>`;
-      })
-      .join(
-        "",
-      )}</div><p class="starter-note">Starting a new expedition replaces your current run. Your permanent menagerie remains.</p><div class="modal-actions">${button("Keep exploring", "close", "ghost")}${button("Set off for the stars →", "confirm-run", "", starterSelection.length < 1 || starterSelection.length > starterSlots(profile) || cost > starterBudget(profile))}</div>`,
+    `<header class="team-select-heading"><span class="section-kicker">❧ A NEW EXPEDITION <i></i></span><h2>Choose your unlikely heroes.</h2><p>Build your party. Choose your challenge. Begin your journey.</p></header>
+    <div class="team-select-layout"><aside class="team-challenge team-art-panel"><div class="challenge-scroll">${difficultyHTML()}
+    <details class="team-field-notes"><summary>Before you set off <span>Points · captures · Chaos</span></summary><div><h3>A small party. A bigger future.</h3><p>Choose 1–${slots} companions within ${budget} starter points. Common / Uncommon / Rare / Epic / Legendary cost 1 / 2 / 3 / 4 / 6 points. Repeat captures grow bonds: +2% starter health per bond. Bond 5 reduces cost by 1 point, or 2 for a Legendary.</p><h3>Bring an elite home.</h3><p>In an elite encounter, one opponent carries a mutation. Preselect that individual and a capturer before combat; lower health improves your odds. Capture it before it falls. A successful capture saves its bonus, nature and genes for future runs. Choose that individual beside its companion card; it starts at level 1 with fresh equipment.</p><h3>Why brave the Chaos?</h3><p>Win any expedition to unlock Chaos. Its 20 tiers stack their rules: tier 4 includes rules 1–4. Clear your highest unlocked tier to open the next. Your permanent budget is 3 + your highest cleared tier; clearing Chaos 3 also unlocks a third starting place. Each expedition victory grants 3 starlight for Legendary adoption.</p><h3>Find your elemental rhythm.</h3><p>Two companions of the same category activate its first bonus; four activate its second. Card bonuses and the party preview update as you choose. You can recruit more companions during the expedition.</p></div></details>
+    <p class="team-permanent-note">${profile.chaosCleared||0} Chaos tiers cleared · ${budget} permanent points<br>${slots===3?'Third starting place unlocked.':'Clear Chaos 3 to open your third starting place.'}</p></div></aside>
+    <section class="team-companions team-art-panel"><div class="team-section-heading"><h3>❧ YOUR COMPANIONS</h3><span>Choose up to ${slots} companions.</span></div>${starterToolsHTML(starterChoices.length)}<div class="companion-scroll" tabindex="0" aria-label="Available companions"><div class="starter-grid">${starterChoices.map(id=>starterCardHTML(id,counts)).join('')||'<div class="starter-no-results"><strong>No companions match these filters.</strong><p>Try another cost or elemental type.</p><button class="button secondary small" data-action="starter-reset-filters">Clear filters</button></div>'}</div></div><div class="team-synergy-preview" aria-live="polite"><b>TEAM SYNERGIES</b>${Object.entries(counts).map(([id,n])=>`<span style="--element:${ELEMENTS[id].color}">${ELEMENTS[id].icon} ${ELEMENTS[id].name} ${n} / ${n>=2?4:2} · ${n>=2?'ACTIVE':`${2-n} more to activate`}</span>`).join('')||'<span>Choose companions to discover a combination.</span>'}</div></section></div>
+    <footer class="team-party team-art-panel"><div class="team-party-roster"><h3>YOUR PARTY (${slots} SLOTS)</h3><div>${Array.from({length:slots},(_,i)=>{const id=starterSelection[i];return id?`<button class="party-companion" data-party-remove="${id}" aria-label="Remove ${BY_ID[id].name} from party">${starterPortraitHTML(id)}<span><strong>${BY_ID[id].name}</strong><small style="color:${ELEMENTS[BY_ID[id].element].color}">${ELEMENTS[BY_ID[id].element].icon} ${ELEMENTS[BY_ID[id].element].name} · ${BY_ID[id].role}</small>${starterEliteSelection[id]?'<small class="party-elite">✦ Elite bonus equipped</small>':''}</span><b>${starterCost(id)} PT</b></button>`:'<div class="party-companion open-slot"><b>＋</b><span>Open slot<small>Choose a companion</small></span></div>';}).join('')}</div></div><div class="starter-budget" aria-live="polite"><span><strong>${starterSelection.length} / ${slots}</strong> companions</span><span><strong>${cost} / ${budget}</strong> starter points<i class="starter-point-dots" aria-hidden="true">${Array.from({length:budget},(_,i)=>`<i class="${i<cost?'spent':''}"></i>`).join('')}</i></span></div>${button('Begin expedition <span>→</span>', 'confirm-run','team-begin',!starterSelection.length||starterSelection.length>slots||cost>budget)}</footer><p class="team-replace-note">${saved?.run?'Beginning replaces your current expedition. Your permanent menagerie remains.':'Your discoveries stay with you, wherever this journey leads.'}</p><div class="team-foliage" aria-hidden="true"></div>`,
     "starters",
   );
 }
@@ -1139,10 +1202,12 @@ function selectStarter(id) {
     starterSelection = starterSelection.filter((x) => x !== id);
   else if (starterSelection.length < starterSlots(profile) && starterSelection.reduce((n,c)=>n+starterCost(c),0)+starterCost(id)<=starterBudget(profile)) starterSelection.push(id);
   else {
-    toast("Deselect a companion first. Respect both the two-place limit and your point budget.");
+    playStarterReaction(id);
+    toast(`Deselect a companion first. Choose up to ${starterSlots(profile)} companions within ${starterBudget(profile)} points.`);
     return;
   }
   openStarters(false);
+  playStarterReaction(id);
 }
 function endRun(won) {
   phase = "ended";
@@ -1196,6 +1261,8 @@ document.addEventListener("click", async (e) => {
   if(e.target.classList.contains('modal-backdrop')&&e.target.dataset.dismissible==='true'){closeModal();return;}
   const el = e.target.closest("button");
   if(el?.disabled)return;
+  if(el?.dataset.action==='starter-reset-filters'){starterTypeFilter='all';starterCostFilter='all';starterSort='featured';openStarters(false);return;}
+  if(el?.dataset.partyRemove){selectStarter(el.dataset.partyRemove);return;}
   if(el?.dataset.rosterSide!==undefined){liveRosterSide=Number(el.dataset.rosterSide);refreshLiveRoster();return;}
   if(el?.dataset.liveInspect){const u=battle?.units.find(u=>u.uid===el.dataset.liveInspect);if(u){liveSelectedUid=u.uid;refreshLiveRoster();const index=run.team.findIndex(c=>c.uid===u.uid);if(index>=0){selectedCreature=index;openCreature(index);}else openDetail(u);}return;}
   if(el?.dataset.enemyFocus&&phase==='battle'){battle?.focusEnemy(el.dataset.enemyFocus);return;}
@@ -1696,6 +1763,13 @@ document.addEventListener("input",e=>{if(e.target.matches("[data-tuning]")){appl
 profile.characterHeight=Math.max(85,Math.min(110,Number(e.target.value)||100));setCharacterHeight(profile.characterHeight/100);document.querySelectorAll("[data-character-height]").forEach(el=>el.value=profile.characterHeight);document.querySelectorAll("[data-height-value]").forEach(el=>el.textContent=profile.characterHeight+"%");save();updateHeader();}});
 document.addEventListener("change", (e) => {
   const el = e.target;
+  if(el.dataset.starterFilter||el.dataset.starterSort){
+    if(el.dataset.starterFilter==='type')starterTypeFilter=el.value;
+    if(el.dataset.starterFilter==='cost')starterCostFilter=el.value;
+    if(el.dataset.starterSort)starterSort=el.value;
+    if($('.companion-scroll'))$('.companion-scroll').scrollTop=0;
+    openStarters(false);return;
+  }
   if(el.dataset.roster!==undefined){const key=el.dataset.roster;if(key==="family"){rosterFamily=el.value;rosterForm=0;}if(key==="state")rosterState=el.value;if(key==="form")rosterForm=Number(el.value);if(key==="path")rosterPath=el.value;openRoster();return;}
   if(el.id==="practice-scenario"&&PRACTICE_SCENARIOS[el.value]){practiceScenario=el.value;openPractice();return;}
   if (el.id === "chaos-tier") {
@@ -1768,6 +1842,8 @@ if (phase === "shop") openShop();
 if (phase === "event") openEvent();
 if (phase === "rest") openRest();
 if (phase === "ended") openEnd();
+if (!saved?.run) openStarters();
+showLogoIntro({reducedMotion:profile.reducedMotion});
 // Read-only inspection for deterministic playtesting and debugging. No gameplay shortcuts.
 let lootCollecting=false;
 function legendaryPactBanner(){
@@ -1877,7 +1953,7 @@ function difficultyHTML() {
   )
     .map(
       ([id, d]) =>
-        `<button data-difficulty="${id}" class="${selectedDifficulty === id ? "selected" : ""}" ${id === "chaos" && !profile.chaosUnlocked ? "disabled" : ""}><strong>${d.name}</strong><small>${id === "chaos" && !profile.chaosUnlocked ? "Win an expedition to unlock" : d.desc}</small></button>`,
+        `<button data-difficulty="${id}" class="${selectedDifficulty === id ? "selected" : ""}" aria-pressed="${selectedDifficulty===id}" ${id === "chaos" && !profile.chaosUnlocked ? "disabled" : ""}><i class="challenge-emblem ${id}" aria-hidden="true"></i><span><strong>${d.name}</strong><small>${id === "chaos" && !profile.chaosUnlocked ? "Win an expedition to unlock twenty cumulative challenge tiers." : id === "story" ? "Learn combinations. Enemies have 20% less health and damage." : d.desc}</small></span></button>`,
     )
     .join("")}</div>${
     selectedDifficulty === "chaos"
@@ -1888,7 +1964,7 @@ function difficultyHTML() {
           .map((rule, i) => `<li><b>${i + 1}.</b> ${rule}</li>`)
           .join("")}</ol></details>`
       : ""
-  }</section>`;
+  }<div class="team-chaos-benefit"><strong>Greater challenges. More possibilities.</strong><p>Clear each new Chaos tier for +1 permanent starter point. Clear tier 3 for a third starting place.</p></div></section>`;
 }
 function openAdoption() {
   modal(
@@ -2159,8 +2235,27 @@ function scoutingComparisonHTML(){const preview=getOrderPreview();if(!preview)re
 
 let idlePortraitTick=0;
 function drawIdlePortraits(now){
- if(document.hidden||phase==='battle'||now-idlePortraitTick<125)return;
+ if(document.hidden||phase==='battle'||now-idlePortraitTick<(starterReactions.size?1000/24:125))return;
  idlePortraitTick=now;
+ for(const [id,reaction]of starterReactions)if(now-reaction.start>=reaction.duration)starterReactions.delete(id);
+ for(const portrait of document.querySelectorAll('[data-starter-idle]')){
+  const rect=portrait.getBoundingClientRect();if(rect.bottom<0||rect.top>innerHeight)continue;
+  const u={id:portrait.dataset.starterIdle},rhythm=idleRhythm(u),c=portrait.getContext('2d');
+  const reaction=profile.reducedMotion?null:starterReactions.get(u.id),progress=reaction?(now-reaction.start)/reaction.duration:0;
+  const cell=reaction?starterReactionCell(u.id):starterPortraitCell(u.id),idle=starterPortraitCell(u.id),pose=reaction?starterReactionPose(pixelSpec(u.id),progress):null;
+  if(portrait.width!==cell.w||portrait.height!==cell.h){portrait.width=cell.w;portrait.height=cell.h;}
+  c.imageSmoothingEnabled=false;c.clearRect(0,0,cell.w,cell.h);
+  // Keep the menu eyes open, including between greetings.
+  const frame=reaction?reactionFrame(u.id,progress):nativePreviewFrame(u,'idle',profile.reducedMotion?.25:Math.min(.875,(now/1000*rhythm.rate+rhythm.offset)%1),2);
+  c.drawImage(frame,cell.x,cell.y,cell.w,cell.h,0,0,cell.w,cell.h);
+  const baseHeight=parseFloat(getComputedStyle(portrait.previousElementSibling).height),height=Math.min(baseHeight*cell.h/idle.h,portrait.parentElement.clientHeight-10),scale=height/cell.h;
+  portrait.style.height=reaction?height+'px':'';
+  portrait.style.transform=pose?`translate(${pose.x*scale}px,${pose.y*scale}px) rotate(${pose.roll}rad)`:'';
+  const stage=portrait.parentElement,particle=stage.querySelector('.starter-reaction-particle');
+  if(reaction){stage.dataset.reaction=reaction.kind;stage.dataset.gesture=reaction.gesture;particle.textContent=reaction.glyph;particle.style.opacity=Math.sin(progress*Math.PI).toFixed(3);particle.style.transform=`translateY(${-progress*18}px)`;}
+  else{delete stage.dataset.reaction;delete stage.dataset.gesture;particle.textContent='';particle.style.opacity='0';}
+  portrait.parentElement.classList.add('ready');
+ }
  for(const portrait of document.querySelectorAll('[data-idle-index]')){
   const rect=portrait.getBoundingClientRect();
   if(rect.bottom<0||rect.top>innerHeight)continue;
@@ -2206,12 +2301,12 @@ function arenaDeckHTML(){
 function eliteBadgeHTML(c){const m=eliteModifier(c);return m?`<span class="elite-badge" title="${m.text} · retained on capture">♨ ${m.name}<small>${m.text}</small></span>`:'';}
 function eliteEncounterHTML(creatures){const c=creatures?.find(c=>eliteModifier(c));return c?`<div class="elite-encounter" role="note"><b>♨ ELITE MUTATION · ${eliteModifier(c).name}</b><span>${creatureName(c)} · ${eliteModifier(c).text}</span><small>Capture this individual to keep its mutation for this run and future expeditions.</small></div>`:'';}
 function eliteStageHTML(n){if(n?.type!=='elite')return '';const m=encounterInfo(run,n).eliteModifier;return `<div class="elite-stage-preview"><b>♨ ${m.name}</b><span>${m.description}</span><small>One opponent carries this permanent, capturable mutation.</small></div>`;}
-function eliteStarterHTML(id){const records=profile.eliteCaptures?.filter(c=>c.id===id&&eliteModifier(c))||[];if(!records.length)return '';return `<label class="elite-starter-picker">Captured individual<select data-elite-starter="${id}" aria-label="Choose captured ${BY_ID[id].name} individual"><option value="">Standard starter</option>${records.map((c,i)=>`<option value="${c.sourceUid}" ${starterEliteSelection[id]===c.sourceUid?'selected':''}>${eliteModifier(c).name} #${i+1} · ${eliteModifier(c).text}</option>`).join('')}</select></label>`;}
+function eliteStarterHTML(id){const records=profile.eliteCaptures?.filter(c=>c.id===id&&eliteModifier(c))||[],chosen=records.find(c=>c.sourceUid===starterEliteSelection[id]);if(!records.length)return '<div class="elite-starter-empty">✦ Elite bonus · capture one to unlock</div>';return `<label class="elite-starter-picker">✦ ELITE CAPTURE BONUS<select data-elite-starter="${id}" aria-label="Choose captured ${BY_ID[id].name} individual"><option value="">Standard starter</option>${records.map((c,i)=>`<option value="${c.sourceUid}" ${starterEliteSelection[id]===c.sourceUid?'selected':''}>${eliteModifier(c).name} #${i+1} · ${eliteModifier(c).text}</option>`).join('')}</select><small>${chosen?eliteModifier(chosen).text:'Choose a captured individual to keep its bonus.'}</small></label>`;}
 function eliteCollectionHTML(){const records=profile.eliteCaptures?.filter(c=>BY_ID[c.id]&&eliteModifier(c))||[];if(!records.length)return '';return `<section class="elite-collection"><div class="section-heading"><h2>YOUR ELITE CAPTURES <span>${records.length}</span></h2><p>Each individual keeps its mutation, nature and genes. New runs begin at level 1 with fresh equipment.</p></div><div>${records.map((c,i)=>`<button data-hunted-individual="${c.sourceUid}" class="elite-individual">${image(c)}<strong>${BY_ID[c.id].name} #${i+1}</strong>${eliteBadgeHTML(c)}<small>${c.nature||'Wild nature'} · Caught at Lv. ${c.capturedLevel}</small><span>Choose for a new expedition →</span></button>`).join('')}</div></section>`;}
 function liveCommandsHTML(c,side){
  if(side===0)return `<small class="live-behavior">${POLICIES[c.policy||'adaptive']?.name||'Adaptive'} · ${c.targetMemory?creatureName(c.targetMemory):'Finding target'}</small>${eliteBadgeHTML(c)}`;
  const tool=run.selectedCapturer||'scout',chance=c.boss?0:captureChance(run,{...c,capturePreparation:{healthFraction:c.hp/c.maxHp,status:['burn','poison','root','slow','bleed'].some(k=>c[k]>0),mode:run.captureOrder?.mode||'mercy',tool}}),retry=!c.boss&&c.hp>0&&battle?.captureResult&&!battle.captureResult.success&&battle.captureAttempts<3;
  return `<button data-enemy-inspect="${c.uid}" aria-label="Inspect ${creatureName(c)}">ⓘ About</button>${retry?`<button data-enemy-capture="${c.uid}" aria-label="Retry capture of ${creatureName(c)}">◇ ${Math.round(chance*100)}%</button>`:!c.boss?`<small>◇ ${Math.round(chance*100)}% now</small>`:''}${eliteBadgeHTML(c)}`;
 }
-document.addEventListener('change',e=>{if(e.target.matches('[data-elite-starter]')){starterEliteSelection[e.target.dataset.eliteStarter]=e.target.value;}});
+document.addEventListener('change',e=>{if(e.target.matches('[data-elite-starter]')){starterEliteSelection[e.target.dataset.eliteStarter]=e.target.value;openStarters(false);}});
 document.addEventListener('click',e=>{const el=e.target.closest('[data-hunted-individual]');if(!el)return;const c=profile.eliteCaptures?.find(c=>c.sourceUid===el.dataset.huntedIndividual);if(!c||phase==='battle')return;openStarters();starterSelection=[c.id];starterEliteSelection[c.id]=c.sourceUid;openStarters(false);});

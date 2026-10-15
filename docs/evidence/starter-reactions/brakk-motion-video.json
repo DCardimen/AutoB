@@ -1,0 +1,73 @@
+{
+  "frames": [
+    {
+      "state": "idle",
+      "time": 0.615
+    },
+    {
+      "state": "walk",
+      "time": 1.81
+    },
+    {
+      "state": "run",
+      "time": 3.035
+    },
+    {
+      "state": "sprint",
+      "time": 4.259
+    },
+    {
+      "state": "turn",
+      "time": 5.464
+    },
+    {
+      "state": "stop",
+      "time": 6.66
+    },
+    {
+      "state": "attack",
+      "time": 7.859
+    },
+    {
+      "state": "slash",
+      "time": 9.071
+    },
+    {
+      "state": "charge",
+      "time": 10.244
+    },
+    {
+      "state": "cast",
+      "time": 11.473
+    },
+    {
+      "state": "dash",
+      "time": 12.674
+    },
+    {
+      "state": "dodge",
+      "time": 13.881
+    },
+    {
+      "state": "hit",
+      "time": 15.066
+    },
+    {
+      "state": "stagger",
+      "time": 16.273
+    },
+    {
+      "state": "knockdown",
+      "time": 17.408
+    },
+    {
+      "state": "getup",
+      "time": 18.661
+    },
+    {
+      "state": "death",
+      "time": 19.875
+    }
+  ],
+  "errors": []
+}

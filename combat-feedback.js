@@ -45,7 +45,10 @@ export function paintActionFeedback(c,battle,height=1){
 
 export function paintImpact(c,e,p,z=40){
   const progress=1-e.ttl/(e.max||.45),r=(e.r||22)*(.25+progress*.9);
-  c.translate(p.x,p.y-z);c.rotate(e.angle||0);c.lineWidth=Math.max(1,3*(1-progress));
+  // A short ground ripple makes the transferred weight readable without changing source pixels.
+  c.save();c.translate(p.x,p.y);c.scale(1,.58);c.lineWidth=1.5;c.beginPath();c.arc(0,0,(e.groundRadius||8)+progress*(e.heavy?20:12),0,Math.PI*2);c.stroke();c.restore();
+  c.translate(p.x,p.y-z);c.rotate(e.angle||0);
+  if(e.blocked){c.beginPath();c.arc(0,0,r*.8,-1.1,1.1);c.stroke();return;}c.lineWidth=Math.max(1,3*(1-progress));
   c.beginPath();c.arc(0,0,r,0,Math.PI*2);c.stroke();
   for(let i=0;i<8;i++){const a=i*Math.PI/4;c.beginPath();c.moveTo(Math.cos(a)*r*.6,Math.sin(a)*r*.6);c.lineTo(Math.cos(a)*(r+8),Math.sin(a)*(r+8));c.stroke();}
   if(progress<.35){c.fillStyle='#fff7db';c.beginPath();c.moveTo(-9,0);c.lineTo(-2,-2);c.lineTo(0,-10);c.lineTo(2,-2);c.lineTo(9,0);c.lineTo(2,2);c.lineTo(0,10);c.lineTo(-2,2);c.closePath();c.fill();}

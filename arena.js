@@ -83,7 +83,23 @@ export function confineBody(unit, bounds = ARENA_BOUNDS) {
 export function separateBodies(units, bounds = ARENA_BOUNDS) {
   const alive = units.filter((u) => u.hp > 0 && !u.captured);
   let contacts = 0;
-  for (let pass = 0; pass < 4; pass++) {
+  // Swept relative motion catches fast dashes/rolls crossing between fixed steps.
+  for(let i=0;i<alive.length;i++)for(let j=i+1;j<alive.length;j++){
+    const a=alive[i],b=alive[j];if(![a.px,a.py,b.px,b.py].every(Number.isFinite))continue;
+    const gap=a.radius+b.radius,start={x:a.px-b.px,y:a.py-b.py},end={x:a.x-b.x,y:a.y-b.y};
+    if(Math.hypot(start.x,start.y)<gap-.02)continue;
+    const t=sweepCircle(start,end,{x:0,y:0},gap);if(t===null||t>=1)continue;
+    const nx=(start.x+(end.x-start.x)*t)/gap,ny=(start.y+(end.y-start.y)*t)/gap;
+    const ax=a.x-a.px,ay=a.y-a.py,bx=b.x-b.px,by=b.y-b.py,closing=(ax-bx)*nx+(ay-by)*ny;
+    if(closing>=0)continue;
+    const wa=1/(a.mass||1),wb=1/(b.mass||1),impulse=closing*(1-t)/(wa+wb);
+    a.x-=nx*impulse*wa;a.y-=ny*impulse*wa;b.x+=nx*impulse*wb;b.y+=ny*impulse*wb;
+    const speed=((a.velocityX||0)-(b.velocityX||0))*nx+((a.velocityY||0)-(b.velocityY||0))*ny;
+    if(speed<0){const reaction=speed/(wa+wb);a.velocityX=(a.velocityX||0)-nx*reaction*wa;a.velocityY=(a.velocityY||0)-ny*reaction*wa;b.velocityX=(b.velocityX||0)+nx*reaction*wb;b.velocityY=(b.velocityY||0)+ny*reaction*wb;}
+  }
+
+  for (let pass = 0; pass < 16; pass++) {
+    let deepest=0;
     for (let i = 0; i < alive.length; i++)
       for (let j = i + 1; j < alive.length; j++) {
         const a = alive[i],
@@ -92,10 +108,12 @@ export function separateBodies(units, bounds = ARENA_BOUNDS) {
           dy = b.y - a.y,
           distance = Math.hypot(dx, dy),
           gap = (a.radius || 17) + (b.radius || 17);
-        if (distance >= gap - 0.1) continue;
+        if (distance >= gap - 0.02) continue;
         contacts += pass === 0;
-        const nx = distance > 0.001 ? dx / distance : (i + j) % 2 ? 1 : -1,
-          ny = distance > 0.001 ? dy / distance : 0;
+        deepest=Math.max(deepest,gap-distance);
+        const angle=(i*2.399963+j*1.618034)%(Math.PI*2),
+          nx = distance > 0.001 ? dx / distance : Math.cos(angle),
+          ny = distance > 0.001 ? dy / distance : Math.sin(angle);
         const wa = 1 / (a.mass || 1),
           wb = 1 / (b.mass || 1),
           penetration = gap - distance + 0.02;
@@ -107,7 +125,7 @@ export function separateBodies(units, bounds = ARENA_BOUNDS) {
           ((a.velocityX || 0) - (b.velocityX || 0)) * nx +
           ((a.velocityY || 0) - (b.velocityY || 0)) * ny;
         if (closing > 0) {
-          const impulse = (closing / (wa + wb)) * 0.85;
+          const impulse = closing / (wa + wb);
           a.velocityX = (a.velocityX || 0) - nx * impulse * wa;
           a.velocityY = (a.velocityY || 0) - ny * impulse * wa;
           b.velocityX = (b.velocityX || 0) + nx * impulse * wb;
@@ -116,6 +134,7 @@ export function separateBodies(units, bounds = ARENA_BOUNDS) {
         confineBody(a, bounds);
         confineBody(b, bounds);
       }
+    if(deepest<.02)break;
   }
   return contacts;
 }
