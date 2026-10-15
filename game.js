@@ -15,7 +15,7 @@ import {EXPEDITION_RELICS,routeModifiers,relicStatFactors,compileRelics,relicDam
 import {equipmentEffects,armorReduction,enemyEquipment,CREATURE_GEAR} from './creature-equipment.js';
 import {queueCombatText,advanceCombatTexts} from './combat-text.js';
 import {CORE_SPECIES} from './core-species.js';
-import {evaluateOrders,terrainFor,firstTerrainHit,terrainSteering,confineTerrain,orderGoal} from './native-tactics.js';
+import {evaluateOrders,terrainFor,firstTerrainHit,terrainSteering,confineTerrain,orderGoal,combatApproach,avoidCombatBodies} from './native-tactics.js';
 import {NATIVE_BOUNDS,nativeSpawn,initializeNative,nativeAction,advanceNative,nativeBladePoint,nativeHeavy,nativeMuzzle,nativeBodyHeight} from './native-combat.js';
 import { NATIVE_SPECIES, NATIVE_STARTERS, NATIVE_POOLS, nativeEvolution, nativeSkill, nativePool, lineageLimit, lineageProgress, settleNativeGrowth } from './native-content.js';
 import { SKILLS, loadoutFor } from "./skills.js";
@@ -1882,9 +1882,9 @@ export class Battle {
       if(!u.nativeActor)continue;
       const next=creatureWorldScale(BY_ID[u.id],u,this.tuning),old=u.nativeScale,ratio=next/old;
       u.nativeScale=next;u.radius*=ratio;if(BY_ID[u.id].range<=100)u.range*=ratio;
-      u.mass*=Math.max(.5,next)/Math.max(.5,old);
+      u.mass*=Math.max(.65,next/.15)/Math.max(.65,old/.15);
       u.entityBounds=nativeEntityBounds(BY_ID[u.id],u,NATIVE_BOUNDS,this.tuning);
-      u.nativeActor.rigScale=next;u.nativeActor.capeCloth=null;u.nativeActor.groundFeet=null;
+        u.nativeActor.rigScale=next;u.nativeActor.strideLength=this.tuning.strideLength;u.nativeActor.capeCloth=null;u.nativeActor.groundFeet=null;
       for(const strike of this.strikes)if(strike.source===u&&strike.nativeMelee)strike.reach*=ratio;
       confineBody(u,this.bounds);
     }
@@ -2256,7 +2256,7 @@ export class Battle {
       crit ? "#fff0b3" : target.side === 0 ? "#eeb6a7" : "#f3e5c7",
     );
     this.burst(target.x, target.y - 10, color, crit ? 11 : 4, crit ? 110 : 60);
-    this.fx("impact", target.x, target.y - 8, color, { r: crit ? 35 : 23, victimUid:target.uid });
+    this.fx("impact", target.x, target.y - 8, color, { r: crit ? 35 : 23, victimUid:target.uid, angle:Math.atan2(target.y-source.y,target.x-source.x), groundRadius:target.radius, heavy:!def.auto, blocked:dealt<=0, ttl:crit?.32:.26, max:crit?.32:.26 });
     if(dealt>0&&this.run.rulesVersion>=17&&this.visuals&&!this.reducedMotion)this.hitPause=Math.max(this.hitPause||0,crit?.055:.025);
     if (crit || !def.auto) this.shake = Math.min(4, this.shake + 1.1);
     this.audioEvents.push({
@@ -3310,6 +3310,10 @@ export class Battle {
     if (!enemies.length) return false;
     const selected=this.target(u);
     if(u.aiEffects?.captureCare&&this.capturePlan&&!this.captureSettled&&selected?.uid===this.capturePlan.uid&&['cleave','charge','nova'].includes(def.kind))return false;
+    if(this.native&&selected&&!['heal','heal-all','awakening','shield','buff','dash','blink','charge'].includes(def.kind)){
+      const reach=['melee','cleave','double'].includes(def.kind)?Math.max(u.range+selected.radius,u.radius+selected.radius+1):['nova','shell','gravity','wave'].includes(def.kind)?(def.radius||180)+selected.radius:Math.max(u.range,220)+(def.kind==='beam'?40:0);
+      if(distance(u,selected)>reach)return false;
+    }
     if(u.aiEffects?.interrupt&&['stun','root'].some(key=>def[key])&&!enemies.some(e=>e.nativeAction&&!e.nativeAction.released&&!e.nativeAction.charged))return false;
     if (
       ["dash", "blink", "charge"].includes(def.kind) &&
@@ -3876,9 +3880,10 @@ export class Battle {
         }
       }
       if(this.native){
-        const response=evaluateOrders(u,this.living(u.side),this.living(1-u.side)),goal=tacticalMove(this,u,t,orderGoal(u,t,this.living(u.side),this.living(1-u.side),response));
+        const response=evaluateOrders(u,this.living(u.side),this.living(1-u.side)),goal=tacticalMove(this,u,t,orderGoal(u,t,this.living(u.side),this.living(1-u.side),response)||combatApproach(u,t,this.units,this.bounds));
         u.intention=u.nativeAction?(u.nativeAction.charged?"Bracing a charged strike":"Preparing "+(SKILLS[u.nativeAction.skillId]?.name||"a strike")):u.rollTime>0?"Dodging a committed threat":hazard?"Leaving the danger field":goal?.intent||response?.text||(dist>u.range?"Closing on "+creatureName(t):"Attacking "+creatureName(t));
-        if(goal&&!hazard){const d=distance(u,goal);vx=d>7?(goal.x-u.x)/d*Math.min(1,d/35):0;vy=d>7?(goal.y-u.y)/d*Math.min(1,d/35):0;}
+        if(goal&&!hazard){const d=distance(u,goal);vx=d>.4?(goal.x-u.x)/d*Math.min(1,d/12):0;vy=d>.4?(goal.y-u.y)/d*Math.min(1,d/12):0;}
+        if(!u.nativeAction&&!hazard&&Math.hypot(vx,vy)>.05){const clear=avoidCombatBodies(u,vx,vy,this.units);vx=clear.x;vy=clear.y;}
         if(!u.nativeAction&&Math.hypot(vx,vy)>.05){const safe=terrainSteering(u,{x:u.x+vx*180,y:u.y+vy*180},this.terrain),d=distance(u,safe)||1;if(safe.x!==u.x+vx*180||safe.y!==u.y+vy*180){vx=(safe.x-u.x)/d;vy=(safe.y-u.y)/d;u.intention="Going around a broken pillar";}}
       }
       u.px = u.x;
@@ -3921,7 +3926,8 @@ export class Battle {
           (u.stamina < 20 ? 0.7 : 1);
         const factor=rooted||locked?0:1;
         if((this.run.rulesVersion||0)>=15&&this.native){
-          const velocity=steerMovement(u.velocityX,u.velocityY,vx,vy,movement,factor,dt,this.tuning);
+          const weight=Math.max(.65,Math.min(1.2,1/Math.sqrt(u.mass||1)));
+          const velocity=steerMovement(u.velocityX,u.velocityY,vx,vy,movement,factor,dt,{...this.tuning,acceleration:this.tuning.acceleration*weight});
           u.velocityX=velocity.x;u.velocityY=velocity.y;
         }else{const smoothing=1-Math.exp(-dt*14);u.velocityX+=(vx*movement*factor-u.velocityX)*smoothing;u.velocityY+=(vy*movement*factor-u.velocityY)*smoothing;}
         u.x += u.velocityX * dt;
@@ -3977,7 +3983,7 @@ export class Battle {
         u.stagger <= 0 &&
         !u.nativeKnockdown&&!u.nativeGetup&&
         u.stamina >= (u.aiEffects?.reserveStamina?38:8) &&
-        dist <= u.range + ((this.run.rulesVersion||0)>=15&&sp.range<100?12*(u.nativeScale||1):12) &&
+        dist <= (this.native&&sp.range<100?Math.max(u.range+12*u.nativeScale,u.radius+t.radius+1+3*u.nativeScale):u.range+12) &&
         (!this.native||!u.nativeActor||Math.abs(Math.atan2(Math.sin(Math.atan2(t.y-u.y,t.x-u.x)-u.facing),Math.cos(Math.atan2(t.y-u.y,t.x-u.x)-u.facing)))<0.5) &&
         u.dodgeLock <= 0 &&
         u.hp > 0

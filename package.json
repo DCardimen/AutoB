@@ -7,6 +7,8 @@
     "dev": "node server.js",
     "start": "node server.js",
     "test": "node --test tests/*.test.js",
+    "test:journey": "node --test tests/journey-polish.test.js && node tests/journey-polish.browser.mjs",
+    "record:journey": "node scripts/record-journey-polish.mjs",
     "test:art": "node --test tests/sprite-art-v2.test.js && node tests/sprite-art-v2.browser.mjs",
     "test:browser": "node tests/browser.mjs && node tests/boss.browser.mjs && node tests/evolution.browser.mjs && node tests/overhaul.browser.mjs && node tests/feedback.browser.mjs && node tests/arena.browser.mjs",
     "playtest": "node tests/playtest.mjs",

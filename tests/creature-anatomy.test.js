@@ -12,18 +12,17 @@ import {AUTHORED_BODIES} from '../authored-body-data.js';
 import {AUTHORED_FAMILIES} from '../authored-family-data.js';
 import {AUTHORED_LEGACY} from '../authored-legacy-data.js';
 
-test('every multi-legged family has a shaded closed model for every walking leg',()=>{
+test('multi-legged families skin their visible authored limbs without moving anatomical joints',()=>{
  for(const spec of PIXEL_SPECIES.filter(s=>['wolf','spider','mech','crab','centipede'].includes(s.nativeRig)))for(const evolution of [0,1,2]){
   const rig=nativePoseRig(spec,{id:spec.id,evolution,evolutionPath:'wild'},'run',.3),before=structuredClone(rig.legs);
   const pixels=paintCharacterPixels(spec.nativeRig,rig,Math.PI/4);
-  assert.equal(rig.artLegVolumes.length,rig.legs.length,spec.id);
+  assert.equal(rig.artLegSkin.mode,'authored',spec.id);
+  assert.ok(rig.artLegSkin.limbs.length>=1&&rig.artLegSkin.limbs.length<=rig.legs.length);
+  assert.equal(rig.artLegFaces,undefined,'no replacement tubes are drawn over the original limbs');
   assert.equal(rig.legs.length,spec.nativeDesign==='mantis'?4:spec.nativeRig==='wolf'?4:spec.nativeRig==='mech'?6:spec.nativeRig==='centipede'?12:8);
-  for(const volume of rig.artLegVolumes){
-   const faces=rig.artLegFaces.filter(f=>f.leg===volume.index);
-   assert.ok(faces.length>=200,'closed thigh, calf, knee and foot surfaces');
-   assert.ok(faces.some(f=>['paw','hoof','plate-foot','tip'].includes(f.part)));
-   assert.ok(Math.max(...faces.map(f=>f.brightness))-Math.min(...faces.map(f=>f.brightness))>.3);
-   assert.ok(faces.every(f=>f.vertices.every(v=>Number.isFinite(v.depth))));
+  for(const limb of rig.artLegSkin.limbs){
+   assert.ok(limb.width>=1&&limb.pixels>=3);
+   assert.ok([limb.hip,limb.ankle].every(p=>Number.isFinite(p.x)&&Number.isFinite(p.y)));
   }
   assert.deepEqual(rig.legs,before,'painting does not move anatomical joints');assert.equal(pixels.clipped,0,spec.id+' evolved legs');
  }
@@ -70,16 +69,18 @@ test('natural attacks use their animated tips for physical hits and never apply 
   const rig=nativePoseRig(pixelSpec(id),{id},'attack',.5),tip=nativeBladePoint(u,strike,1);assert.ok(Number.isFinite(tip.z));assert.ok(rig.creatureAttack.contact);
  }
 });
-test('painted feet are removed and the single solid leg set ends at the original soles',()=>{
+test('original soles, limb textures and socket pixels are retained instead of cut away',()=>{
  const atlases={...AUTHORED_SPRITES,...AUTHORED_BODIES,...AUTHORED_FAMILIES,...AUTHORED_LEGACY};
  for(const [id,identity]of [['emberhound','wolf'],['orchimantis','mantis'],['mireclaw','crab'],['runespider','spider'],['onyxscarab','beetle'],['ironscolopendra','centipede']])for(let dir=0;dir<8;dir++){
   const atlas=atlases[identity],colors=atlas.palette.map(c=>'#'+c),pixels=[];
   for(let y=0;y<64;y++)for(let x=0;x<64;x++){const index=parseInt(atlas.frames[dir].slice((y*64+x)*2,(y*64+x)*2+2),16);if(index)pixels.push({x,y,index,rgb:colors[index].slice(1).match(/../g).map(c=>parseInt(c,16))});}
   const spec=pixelSpec(id),rig=nativePoseRig(spec,{id},'idle',.25);rig.dir=dir;
-  const art=creatureLegArt({pixels},rig,colors),lastRow=pixels.filter(p=>p.y===art.bottom);
-  assert.ok(lastRow.every(p=>art.mask.has(p.y*64+p.x)),id+' must remove the original painted sole pixels');
+  const art=creatureLegArt({pixels},rig,colors);
+  assert.equal(art.sourcePixels,pixels.length);
+  assert.ok(pixels.every(p=>art.occupied.has(p.y*64+p.x)),'every original limb and body pixel remains in the skin');
   paintCharacterPixels(spec.nativeRig,rig,dir*Math.PI/4);
-  assert.ok(Math.max(...rig.artLegFaces.flatMap(f=>f.vertices.map(v=>v.y)))<=rig.artLegRegistration.soleY+2.2,id+' models must not hang below the old feet');
+  assert.equal(rig.artLegFaces,undefined,'no extra set hangs underneath the original feet');
+  assert.equal(rig.artLegSkin.sourcePixels,pixels.length);
  }
 });
 test('registered legs stay inside the cell during movement, dodges and falls',()=>{

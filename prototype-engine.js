@@ -330,7 +330,8 @@ export class PrototypeArena {
         if(roll.elapsed>=roll.duration){u.roll=null;u.vx=0;u.vy=0;}
       }else if(!u.action&&u.stagger<=0){
         const move=Math.hypot(u.vx,u.vy)*dt;u.x+=u.vx*dt;u.y+=u.vy*dt;
-        u.travel+=move;u.gait+=move/locomotionStride(u.stride,u.runBlend,u.sprintBlend,u.id);
+        const stride=locomotionStride(u.stride,u.runBlend,u.sprintBlend,u.id,{strideLength:u.strideLength});
+        u.travel+=move;u.gait+=Math.min(move/stride,dt*(2.4+u.runBlend*.6+u.sprintBlend*.6)/Math.sqrt((u.strideLength??100)/100));
       }
       const speed=Math.hypot(u.vx,u.vy);
       if(speed>3)u.moveFacing=Math.atan2(u.vy,u.vx);

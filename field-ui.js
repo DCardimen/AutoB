@@ -1,5 +1,6 @@
 import {planetOrb} from './planet-ui.js';
-export const WORLD_ART = ['/public/ui/world-0.png','/public/ui/world-1.png','/public/ui/world-2.png'].map(src => {
+import {UI_ART,artImage} from './ui-art.js';
+export const WORLD_ART = [UI_ART['world-0'],UI_ART['world-1'],UI_ART['world-2']].map(src => {
  if(!src.startsWith('data:'))return src;
  const binary=atob(src.slice(src.indexOf(',')+1));
  return URL.createObjectURL(new Blob([Uint8Array.from(binary,c=>c.charCodeAt(0))],{type:'image/png'}));
@@ -26,7 +27,7 @@ const paths = {
  sound:'M4 13h6l8-8v22l-8-8H4zM23 10a9 9 0 0 1 0 12',
  help:'M10 10a6 6 0 1 1 11 3l-5 4v3M16 25v2',
 };
-export function fieldIcon(name,cls='') {return '<svg class="field-icon '+cls+'" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="'+(paths[name]||paths.star)+'"/></svg>';}
+export function fieldIcon(name,cls='') {const key='icon-'+({map:'formation',gear:'settings',rest:'sparkle',event:'star',shop:'gold',boss:'elite'}[name]||name);if(UI_ART[key])return artImage(key,'field-icon '+cls);return '<svg class="field-icon '+cls+'" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="'+(paths[name]||paths.star)+'"/></svg>';}
 export function fieldJourney(run,phase,planets) {
  const planet=Math.min(run.planet,2),total=run.route?.length||8,current=Math.min(run.depth+1,total);
  const labels={prep:['Prepare your companions','Inspect the enemy, set your formation, and choose a capture target.'],battle:['The gates are open','Watch their skills, pause to inspect, and follow the capture attempt.'],reward:['Gather your rewards','Choose an upgrade and collect the cache before continuing.'],map:['Choose your next encounter','Follow a connected route. Glowing nodes are available to explore.'],shop:['An outpost awaits','Trade gold for companions, equipment, relics, and capture tools.'],event:['A signal in the wilds','Read the encounter and choose how your expedition responds.'],rest:['A moment of quiet','Rest or train before following the route.'],ended:['Your expedition’s story','Your discoveries remain in the menagerie. Begin another journey.']};
@@ -34,6 +35,7 @@ export function fieldJourney(run,phase,planets) {
  return '<section class="field-journey" aria-label="Expedition progress" data-field-phase="'+phase+'"><div class="field-worlds">'+planets.map((p,i)=>'<button data-planet-preview="'+i+'" class="field-world '+(i===planet?'current':i>planet?'locked':'explored')+'" style="--world-art:url('+worldArt(i)+')" aria-label="'+p.name+(i>planet?' · locked, preview world':' · preview world')+'">'+planetOrb(i,39)+(i>planet?fieldIcon('lock','field-world-lock'):'')+'<span><small>'+ (i===planet?'CURRENT WORLD':i>planet?'Locked':'WORLD EXPLORED')+'</small><strong>'+p.name+'</strong></span></button>').join('')+'</div><div class="field-stage"><div><span class="section-kicker">WORLD '+(planet+1)+' OF 3 · ENCOUNTER '+current+' / '+total+'</span><h2>'+title+'</h2><p>'+hint+'</p></div><ol class="field-steps" aria-label="Encounter progress">'+Array.from({length:total},(_,i)=>'<li class="'+(i<run.depth?'complete':i===run.depth?'current':'future')+'" aria-label="Encounter '+(i+1)+(i<run.depth?' completed':i===run.depth?' current':' ahead')+'"><span>'+ (i===total-1?fieldIcon('boss'):i<run.depth?'✓':i+1)+'</span></li>').join('')+'</ol></div></section>';
 }
 export function decorateFieldUI(root=document) {
+ const crest=root.querySelector('.brand-mark img');if(crest&&crest.getAttribute('src')!==UI_ART['brand-crest'])crest.src=UI_ART['brand-crest'];
  for(const [selector,name] of [['[data-view="arena"] > span','battle'],['[data-view="map"] > span','map'],['[data-view="collection"] > span','team'],['.resource-icon.gold','gold'],['.resource-icon.mint','capture'],['.resource-icon.pink','heart'],['.field-collection-shortcut','team'],['#settings','gear'],['#sound','sound'],['#help','help']]) {
   const el=root.querySelector(selector);if(el&&!el.querySelector('svg'))el.innerHTML=fieldIcon(name);
  }

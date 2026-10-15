@@ -1,0 +1,19 @@
+{
+  "clock": "real browser clock; normal speed",
+  "viewport": {
+    "width": 1672,
+    "height": 941
+  },
+  "marks": {
+    "arena": 0.752,
+    "combat": 3.277,
+    "damage": 5.885,
+    "reveal": 8.138,
+    "collection": 11.831,
+    "world0": 14.83,
+    "world1": 16.477,
+    "world2": 18.123,
+    "night": 20.498
+  },
+  "seconds": 22.307
+}

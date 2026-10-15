@@ -1,0 +1,10 @@
+{
+  "checks": [
+    "Source: responsive arena, animated idles, companion selection, equipment click/remove/drag, capture tool/target/threshold, auto retry, four intel tabs, live combat, chest/card/EXP art, inspection, performance chart, persistent single grant and journey continuation",
+    "Offline: responsive arena, animated idles, companion selection, equipment click/remove/drag, capture tool/target/threshold, auto retry, four intel tabs, live combat, chest/card/EXP art, inspection, performance chart, persistent single grant and journey continuation",
+    "Reduced-motion victory uses the open chest immediately; defeat shows the saved casualty without grants or upgrade prompts; both fit 320px",
+    "Reload during collection retains the committed grant without duplication",
+    "Real successful and failed lattice attempts produce the corresponding post-match art and outcome"
+  ],
+  "errors": []
+}

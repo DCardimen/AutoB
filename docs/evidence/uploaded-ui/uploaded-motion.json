@@ -1,0 +1,13 @@
+{
+  "rate": "normal speed; real browser clock",
+  "viewport": {
+    "width": 1672,
+    "height": 941
+  },
+  "marks": {
+    "combat": 1.341,
+    "reveal": 6.382,
+    "collection": 10.577
+  },
+  "seconds": 13.66
+}

@@ -13,6 +13,7 @@ export const TUNING_OPTIONS = [
   {id:'gaitBlendSpeed',name:'Movement animation transitions',min:25,max:250,step:5,group:'Movement patterns',description:'How quickly walk, run, sprint and stopping poses blend into one another.'},
   {id:'knockback',name:'Hit knockback',min:0,max:200,step:5,group:'Combat feel',description:'Physical displacement from hits. Damage and stun strength stay at their normal values.'},
   {id:'gaitPace',name:'Running animation pace',min:50,max:200,step:5,group:'Presentation',description:'Leg cycle pace, independently of distance traveled. Tune away sliding or frantic steps.'},
+  {id:'strideLength',name:'Stride length',min:50,max:150,step:5,group:'Presentation',description:'Shorter or longer steps for every walking creature. Step cadence and planted contacts adapt together; movement speed stays the same.'},
   {id:'capeMotion',name:'Cape flow',min:0,max:200,step:5,group:'Presentation',description:'Wind and flutter on the physical cape; its shoulder attachments remain fixed.'},
   {id:'damageTextSize',name:'Damage number size',min:50,max:200,step:5,group:'Presentation',description:'Crisp pixel damage, healing, shield and critical-hit numbers.'},
   {id:'effectIntensity',name:'Combat effect intensity',min:0,max:200,step:5,group:'Presentation',description:'Brightness and weight of impacts, magic rings and particles. Telegraphs remain readable.'},

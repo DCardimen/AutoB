@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {createHash} from 'node:crypto';
 const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||'/usr/bin/chromium',headless:true,args:['--no-sandbox','--enable-unsafe-swiftshader']});
-const base=process.env.BASE_URL||'http://127.0.0.1:3007',report={checks:[],errors:[],screenshots:[]};
+const base=process.env.BASE_URL||'http://127.0.0.1:3000',report={checks:[],errors:[],screenshots:[]};
 const addCheck=s=>{report.checks.push(s);console.log(s);};
 const page=await browser.newPage({viewport:{width:1440,height:1100}});
 page.on('pageerror',e=>report.errors.push(e.message));page.on('response',r=>{if(r.status()>=400)report.errors.push(r.status()+' '+r.url());});
@@ -50,9 +50,9 @@ report.jointCoverage=await page.evaluate(async()=>{
       // Authored anatomy binds to its painted torso. Probe the actual rendered
       // joints, rather than relying on a now-removed leg strip to cover an
       // unrelated point in the unbound calibration skeleton.
-      const legs=posed.artLegVolumes?.flatMap(l=>[l.hip,l.knee,l.ankle])||rig.legs.flatMap(l=>[l.root,l.joint,...(l.hock?[l.hock]:[]),l.end]).map(projected);
+      const legs=posed.artLegSkin?posed.artLegSkin.limbs.flatMap(l=>[l.hip,l.ankle]):posed.artLegVolumes?.flatMap(l=>[l.hip,l.knee,l.ankle])||rig.legs.flatMap(l=>[l.root,l.joint,...(l.hock?[l.hock]:[]),l.end]).map(projected);
       const arms=posed.artProject?posed.arms.flatMap(a=>[posed.artProject(a.root),posed.artProject(a.joint),posed.artProject(a.end)]):rig.arms.flatMap(a=>[a.root,a.joint,a.end]).map(projected);
-      const neck=posed.artLegLayered?Array.from({length:8},(_,i)=>({x:posed.artAnchors.body.x+(posed.artAnchors.head.x-posed.artAnchors.body.x)*i/7,y:posed.artAnchors.body.y+(posed.artAnchors.head.y-posed.artAnchors.body.y)*i/7})):neckPoints.map(projected);
+      const neck=posed.artLegSkin||posed.artLegLayered?Array.from({length:8},(_,i)=>({x:posed.artAnchors.body.x+(posed.artAnchors.head.x-posed.artAnchors.body.x)*i/7,y:posed.artAnchors.body.y+(posed.artAnchors.head.y-posed.artAnchors.body.y)*i/7})):neckPoints.map(projected);
       const points=[...neck,...legs,...arms];
       for(const point of points){
         const x=Math.round(point.x),y=Math.round(point.y),pixels=ctx.getImageData(x-1,y-1,3,3).data;

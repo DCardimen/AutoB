@@ -19,7 +19,7 @@ try{
   await page.addInitScript(saved=>{if(!localStorage.getItem('starfall-menagerie-v1'))localStorage.setItem('starfall-menagerie-v1',JSON.stringify(saved));},saved);
   await page.clock.install();await page.goto(base+(offline?'/Starfall-Menagerie.html':'/index.html'));await page.waitForFunction(()=>window.starfall);await page.clock.runFor(200);
   if(scenario!=='old-save'){
-   await page.locator(`[data-enemy-capture="${foes[0].uid}"]`).click();
+   await page.locator('.arena-dock [data-action="capture-kit"]').click();await page.locator('#kit-capture-target').selectOption(foes[0].uid);await page.locator('.modal-close').click();
    await page.locator('[data-action="battle"]').click();await page.locator('[data-action="pause"]').click();
    await page.evaluate(()=>{const b=starfall.state.battle;for(const u of b.units){u.speed=0;u.attackTimer=9999;u.dodgeCooldown=9999;Object.values(u.cooldowns).forEach(cd=>cd.remaining=9999);}const t=b.living(1)[0];t.hp=t.maxHp*.2;b.random=()=>0;b.attemptCapture();});
    assert.equal(await page.evaluate(()=>starfall.state.battle.units.filter(u=>u.roundAlly&&u.side===0).length),1);

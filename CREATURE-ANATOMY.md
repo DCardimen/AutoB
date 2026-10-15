@@ -1,8 +1,8 @@
 # Creature anatomy and attacks
 
-Multi-legged species now use shaded, closed 3D leg surfaces projected into the existing pixel artwork. Quadrupeds have thighs, knees, calves, hind hocks and rounded paws or hooves. Walkers and arthropods have plated or slender jointed legs, with eight legs for spiders/crabs and twelve for centipedes. Mantises have four walking legs and two raptorial forearms. This anatomy persists through evolution.
+Multi-legged species retain their original directional limb textures and silhouettes, animated by the physical anatomy rig. Quadrupeds have thighs, knees, calves, hind hocks and paws or hooves in that rig. Walkers and arthropods have plated or slender jointed legs, with eight physical legs for spiders/crabs and twelve for centipedes. Mantises have four walking legs and two raptorial forearms. This anatomy persists through evolution; far limbs hidden by the artwork remain hidden.
 
-The model replaces the original painted leg/sole regions and registers to their hip and foot positions, so it never adds a second leg set underneath the sprite. It uses animated joints, directional lighting, depth ordering, authored material colors and planted-foot orientation. Covered hip surfaces remain filled behind moving limbs, with the face and belly covering the leg roots. The existing two-legged models remain in use for humanoids.
+The Legs V3 renderer skins the painted legs continuously from body sockets to soles, retaining source width, costume texture and exact palette indices. It does not cut off the lower sprite or add generic replacement limbs. Four-legged animals alternate diagonal groups at every movement pace. Humanoids also retain their painted boots and clothing, and use fixed directional carry hands for equipment. Procedural leg volumes are diagnostic only. See [Legs V3](LEGS-V3.md), [gaits and carries](GAITS-AND-CARRY.md), and the required [future-character guide](CREATURE-ART-GUIDE.md).
 
 Natural attacks follow the same anticipation, contact and recovery clock as combat:
 

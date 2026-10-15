@@ -1,12 +1,20 @@
 # Fang & Feather
 
+**Arena and reward journey:** The confirmed arena example now guides a broad battlefield, compact companion strip, menu-based management and bottom dock. Cards rise out of the chest; EXP reaches each companion; gold and cards enter the animated knapsack. Top relic inscriptions, smooth damage feedback and subtle environmental motion support gentle motion. See the [review and validation](docs/JOURNEY-POLISH-REVIEW.md) and [normal-speed preview](public/journey-polish-source.webm). Both offline builds are updated.
+
+**Uploaded art pass:** Supplied arena and inventory art, companion management, capture kit, encounter intel, world paintings, and an animated post-match rewards scene. Chest opening, card reveals, EXP, and collection flights support gentle motion and persistent one-time grants. See the [visual review and test results](docs/UPLOADED-ART-REVIEW.md) and [normal-speed preview](public/uploaded-ui-preview.webm). Both offline builds have been rebuilt.
+
 **Fang & Feather (F&F)** is a creature collecting autobattler. The supplied feather-and-fang logo appears in the game and Training Glade, including both offline builds. Existing saves and the legacy offline filenames remain compatible.
 
-Settings now rotate randomized small, regular and large examples every five seconds. Eighteen sliders include five movement-pattern controls for direction changes, corner slowdown, run/sprint distances and animation transitions. Examples demonstrate the same movement rules as combat.
+Legs V3 preserves each creature’s original limb widths, textures, body connections and idle stance. All ten four-legged anatomies now alternate their visible steps, including heavy animals and every evolved form. Humanoids retain their painted boots and clothing, and travelling weapons stay in a fixed hand on a consistent side. The **Stride length** slider changes step length and cadence without changing combat speed. See [gait and carry checks](GAITS-AND-CARRY.md), the [normal-speed preview](public/gaits-carry-preview.webm), and [V3 anatomy review](LEGS-V3.md).
+
+Adding a character or evolution? Follow the required [creature art and animation guide](CREATURE-ART-GUIDE.md) before editing sprites, legs or weapon attachments.
+
+Settings now rotate randomized small, regular and large examples every five seconds. Nineteen sliders include stride length and five movement-pattern controls for direction changes, corner slowdown, run/sprint distances and animation transitions. Examples demonstrate the same movement rules as combat.
 
 Arena controls and both rosters now sit inside the supplied blue/gold UI frame. Elite encounters have one seeded mutation from 50 variants; captured individuals keep their mutation, nature and genes for future starter selection. See [arena UI and elite hunting](ARENA-ELITES.md).
 
-Multi-legged creatures now have solid shaded leg models, and natural attack animations include canine bites, mantis scythes, claws, pincers and horn attacks. See [creature anatomy](CREATURE-ANATOMY.md) and the [animation preview](public/creature-anatomy-preview.webm).
+Multi-legged creatures retain their physical joint rigs with the V3 authored limb renderer. Natural attack animations include canine bites, mantis scythes, claws, pincers and horn attacks. See [creature anatomy](CREATURE-ANATOMY.md) and the [animation preview](public/creature-anatomy-preview.webm).
 
 Latest update: three randomized Common starter equipment pieces appear beneath the creatures; eight original build-around relics add resource banks and team interactions. Enrage ramps continuously after 30 seconds with live damage, healing and action modifiers. See [relic research and current rules](RELIC-DESIGN.md).
 

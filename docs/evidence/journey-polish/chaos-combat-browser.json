@@ -1,0 +1,12 @@
+{
+  "checks": [
+    "Character stats, visible equipment effects, weakest-first, live stamina, and click-to-focus work in browser",
+    "Epic capture changes allegiance immediately and defers persistent recruitment until round end",
+    "Legendary choice UI persists one slot sacrifice and exactly one chosen companion after reload",
+    "390px character/equipment menus fit; Chaos 3 selection exposes three companions and six points",
+    "Selected stage zooms and transitions to arena preparation",
+    "Loot visibly flies into the knapsack, then settles gold/equipment exactly once",
+    "Rebuilt offline game includes the new gameplay and UI"
+  ],
+  "errors": []
+}

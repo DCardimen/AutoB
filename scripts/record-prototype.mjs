@@ -31,7 +31,7 @@ try{
   await select('wolf');await capture(2,'Hound · folded ears and four planted paws');
   await page.locator('[data-scene="movement"]').click();await page.locator('[data-pace="run"]').click();await capture(3,'Nine bodies · readable running rhythms');
   await select('wolf');await focus(true);
-  for(const [pace,seconds,label] of [['walk',3,'Hound · flat paws and low swing lift'],['run',3,'Hound · diagonal trot support'],['sprint',4,'Hound · paired gallop and spine flex']]){await page.locator(`[data-pace="${pace}"]`).click();await capture(seconds,label);}
+  for(const [pace,seconds,label] of [['walk',3,'Hound · flat paws and low swing lift'],['run',3,'Hound · diagonal trot support'],['sprint',4,'Hound · alternating sprint and spine flex']]){await page.locator(`[data-pace="${pace}"]`).click();await capture(seconds,label);}
   await page.locator('[data-scene="study"]').click();
   for(const [id,state,dir,label]of [['knight','attack','0','Overhead · right-hand grip and low guard'],['knight','slash','6','Side slash · right hand in the rear view'],['orc','attack','1','Axe overhead · both fists on one handle'],['orc','slash','5','Axe side slash · depth-aware rear view']]){await select(id);await page.locator(`[data-pose="${state}"]`).click();await page.locator('#pose-facing').selectOption(dir);await capture(2,label);}
   await select('caster');await page.locator('[data-pose="cast"]').click();await page.locator('#pose-facing').selectOption('1');await capture(2,'Mage · silver bob, circlet and held staff');
@@ -39,7 +39,7 @@ try{
   await focus(false);await page.locator('[data-scene="battle"]').click();await capture(8,'Random teams of six · alternating strikes');
   await page.locator('#restart').click();await capture(6,'Restart · a fresh six-creature composition');
   await page.locator('[data-scene="study"]').click();await select('knight');await focus(true);await page.locator('#pose-facing').selectOption('2');await page.locator('[data-pose="charge"]').click();await capture(3,'Charged strike study · long, braced anticipation');
-  await select('wolf');await page.locator('[data-pose="sprint"]').click();await page.locator('#pose-facing').selectOption('0');await capture(3,'Hound gallop study · front and rear paw pairs');
+  await select('wolf');await page.locator('[data-pose="sprint"]').click();await page.locator('#pose-facing').selectOption('0');await capture(3,'Hound alternating stride study · front and rear paw pairs');
   await select('orc');await page.locator('[data-pose="death"]').click();await capture(3,'Ragdoll · connected limbs and gravity');
   encoder.stdin.end();await finished;console.log(`Recorded 60 seconds at normal speed: ${output}`);
 }finally{await browser.close();if(!encoder.stdin.destroyed)encoder.stdin.destroy();}

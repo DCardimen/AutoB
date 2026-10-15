@@ -1,3 +1,5 @@
+import {arenaCamera} from './arena-camera.js';
+import {paintAmbient} from './ambient-art.js';
 import {idleRhythm,eliteModifier} from './elite-modifiers.js';
 import {paintActionFeedback,paintImpact} from './combat-feedback.js';
 import {interpolatedNativeUnit} from './native-motion.js';
@@ -16,10 +18,11 @@ import {nativeRigFor} from './grand-designs.js';
 import {creatureWorldScale} from './native-size.js';
 import {paintCombatTexts} from './combat-text.js';
 import {terrainFor} from './native-tactics.js';
+import {getTuning} from './tuning.js';
 let characterHeight=1;
 export function setCharacterHeight(value){characterHeight=Math.max(.85,Math.min(1.1,Number(value)||1));}
 export function getCharacterHeight(){return characterHeight;}
-export function nativePreviewFrame(c,state='idle',phase=.25,dir=1){const key=['preview',c.id,c.evolution,c.evolutionPath,state,phase,dir,characterHeight].join(':');if(!frames.has(key)){const spec=byId[c.id];frames.set(key,renderCharacterFrame(nativeRigFor(spec,c),nativePoseRig(spec,c,state,phase,characterHeight),dir*Math.PI/4));if(frames.size>256)frames.delete(frames.keys().next().value);}return frames.get(key);}
+export function nativePreviewFrame(c,state='idle',phase=.25,dir=1){const key=['preview',c.id,c.evolution,c.evolutionPath,state,phase,dir,characterHeight,getTuning().strideLength].join(':');if(!frames.has(key)){const spec=byId[c.id];frames.set(key,renderCharacterFrame(nativeRigFor(spec,c),nativePoseRig(spec,c,state,phase,characterHeight),dir*Math.PI/4));if(frames.size>256)frames.delete(frames.keys().next().value);}return frames.get(key);}
 export const nativeScreen=(x,y)=>({x,y:y*.58+75});
 export const NATIVE_RENDER_SCALE=1;
 export const NATIVE_SPRITE_GRID=[1002,654];
@@ -54,8 +57,9 @@ export function drawNativeUnit(c,u,spec,x,y,time,pixelScale=3){
 }
 const ring=(c,x,y,r,color,fill)=>{const p=nativeScreen(x,y);c.beginPath();c.ellipse(p.x,p.y,r,r*.58,0,0,Math.PI*2);c.strokeStyle=color;c.lineWidth=2;if(fill){c.fillStyle=fill;c.fill();}c.stroke();};
 export function renderNativeBattle(display,w,h,battle,planet,time,team,foes,species){
- const c=scene.getContext('2d');c.setTransform(NATIVE_RENDER_SCALE,0,0,NATIVE_RENDER_SCALE,0,0);c.clearRect(0,0,1002,654);c.imageSmoothingEnabled=false;
- if(backdrop.complete&&backdrop.naturalWidth)c.drawImage(backdrop,0,0,1002,654);else{c.fillStyle='#253c31';c.fillRect(0,0,1002,654);}
+ const camera=arenaCamera(w,h),c=scene.getContext('2d');c.setTransform(NATIVE_RENDER_SCALE,0,0,NATIVE_RENDER_SCALE,0,0);c.clearRect(0,0,1002,654);c.imageSmoothingEnabled=false;
+ if(backdrop.complete&&backdrop.naturalWidth)c.drawImage(backdrop,camera.x,camera.y,camera.width,camera.height);else{c.fillStyle='#253c31';c.fillRect(0,0,1002,654);}
+ if(!battle?.reducedMotion&&!document.body.classList.contains('gentle-ui')){c.save();c.translate(camera.x,camera.y);paintAmbient(c,'glade',battle?battle.time:time,{width:camera.width,height:camera.height,cover:false});c.restore();}
  if(planet){c.fillStyle=planet===1?'#8e382524':'#3c21523d';c.fillRect(0,0,1002,654);}
  const units=battle?battle.units.map(u=>battle.done?u:interpolatedNativeUnit(u,battle.renderAlpha)):[...team.map((u,i)=>({...u,side:0,...nativeSpawn(species[u.id],u,0,i),hp:1,maxHp:1})),...foes.map((u,i)=>({...u,side:1,...nativeSpawn(species[u.id],u,1,i),hp:1,maxHp:1}))];
  if(battle){
@@ -69,6 +73,7 @@ export function renderNativeBattle(display,w,h,battle,planet,time,team,foes,spec
   const p=nativeScreen(u.x,u.y),spec=species[u.id],scale=creatureWorldScale(spec,u);if(u.captured)continue;c.fillStyle=u.hp>0?'#0d1b1577':'#0d1b1544';c.beginPath();c.ellipse(p.x,p.y,(u.boss?68:46)*scale,14*scale,0,0,Math.PI*2);c.fill();
   if(spec.rarity==='Legendary'){ring(c,u.x,u.y,20*scale+6,'#edce85aa','#e5c67716');for(let i=0;i<4;i++){const a=i*Math.PI/2+time*.6;c.fillStyle=i%2?'#fff0bd':'#d9b363';c.fillRect(Math.round(p.x+Math.cos(a)*(20*scale+6)),Math.round(p.y+Math.sin(a)*(12*scale+4)),2,2);}}
   if(eliteModifier(u)&&u.hp>0)paintEliteFlame(c,p,scale,battle?battle.time:time,u);
+  if(battle&&u.hp>0){const radius=u.radius;c.strokeStyle=u.side?'#dc9c8155':'#c6df9d55';c.lineWidth=1;c.beginPath();c.ellipse(p.x,p.y,radius,radius*.58,0,0,Math.PI*2);c.stroke();}
   const visualTop=drawNativeUnit(c,u,spec,p.x,p.y,battle?battle.time:time,3*scale);
   if(u.hp<=0)continue;
   const width=u.boss?58:30,bar=Math.min(visualTop-9,p.y-(({knight:115,orc:100,elf:105,caster:116,wolf:77,fox:112,mech:90,spider:83,jelly:92,serpent:65,flyer:112,crab:80,centipede:75}[actorFor(u,spec).id]||112)+12)*scale*characterHeight*formProfile(spec,u).height);
@@ -92,7 +97,7 @@ export function renderNativeBattle(display,w,h,battle,planet,time,team,foes,spec
  }else if(e.type==='slash'){c.translate(p.x,p.y-18);c.scale(1,.58);c.rotate(e.angle||0);c.lineWidth=5;c.beginPath();c.arc(0,0,(e.r||40)*.8,-.75,.75);c.stroke();}else if(e.tx!==undefined){const t=nativeScreen(e.tx,e.ty);c.beginPath();c.moveTo(p.x,p.y-45);c.lineTo(t.x,t.y-45);c.stroke();}else if(['impact','slash','cast','defeat','nova','ring','shield'].includes(e.type)){c.beginPath();c.arc(p.x,p.y-(e.victimUid?nativeBodyHeight(battle.units.find(u=>u.uid===e.victimUid)):40)*characterHeight,e.type==='impact'?10:(e.r||20)*.3,0,Math.PI*2);c.stroke();}c.restore();}
   for(const p of battle.particles){const q=nativeScreen(p.x,p.y);c.fillStyle=p.color;c.globalAlpha=Math.min(1,p.ttl/(p.max||1))*Math.min(1,(battle.tuning?.effectIntensity??100)/100);c.fillRect(q.x,q.y-30,3,3);}c.globalAlpha=1;
  }
- const pc=pixel.getContext('2d');pc.imageSmoothingEnabled=false;pc.drawImage(scene,0,0,pixel.width,pixel.height);if(battle)paintCombatTexts(pc,battle,byId,characterHeight);display.imageSmoothingEnabled=false;display.clearRect(0,0,w,h);const shake=battle&&!battle.reducedMotion?(battle.shake||0)*(battle.tuning?.cameraShake??100)/100:0,offset=shake?Math.round(Math.sin(battle.time*83)*shake*w/1002):0;display.fillStyle="#15251e";display.fillRect(0,0,w,h);display.drawImage(pixel,offset,Math.round(offset*.5),w,h);
+ const pc=pixel.getContext('2d');pc.imageSmoothingEnabled=false;pc.drawImage(scene,0,0,pixel.width,pixel.height);display.imageSmoothingEnabled=false;display.clearRect(0,0,w,h);const shake=battle&&!battle.reducedMotion?(battle.shake||0)*(battle.tuning?.cameraShake??100)/100:0,offset=shake?Math.round(Math.sin(battle.time*83)*shake*w/1002):0;display.fillStyle="#15251e";display.fillRect(0,0,w,h);display.drawImage(pixel,camera.x*pixel.width/1002,camera.y*pixel.height/654,camera.width*pixel.width/1002,camera.height*pixel.height/654,offset,Math.round(offset*.5),w,h);if(battle){display.save();display.translate(offset,Math.round(offset*.5));display.scale(camera.scale,camera.scale);display.translate(-camera.x,-camera.y);paintCombatTexts(display,battle,byId,characterHeight,camera);display.restore();}
 }
 
 function paintCapture(c,battle,species){

@@ -1,0 +1,5826 @@
+{
+  "weapon-00": {
+    "source": "wep 1.png",
+    "crop": [
+      9,
+      0,
+      262,
+      283
+    ],
+    "size": [
+      114,
+      128
+    ],
+    "sha256": "34c50784e2c575940161b19625664bc0aaf178051277bb8868659f8c2fe408a0"
+  },
+  "weapon-01": {
+    "source": "wep 1.png",
+    "crop": [
+      239,
+      0,
+      532,
+      294
+    ],
+    "size": [
+      128,
+      128
+    ],
+    "sha256": "34c50784e2c575940161b19625664bc0aaf178051277bb8868659f8c2fe408a0"
+  },
+  "weapon-02": {
+    "source": "wep 1.png",
+    "crop": [
+      498,
+      5,
+      774,
+      288
+    ],
+    "size": [
+      127,
+      128
+    ],
+    "sha256": "34c50784e2c575940161b19625664bc0aaf178051277bb8868659f8c2fe408a0"
+  },
+  "weapon-03": {
+    "source": "wep 1.png",
+    "crop": [
+      765,
+      6,
+      1020,
+      290
+    ],
+    "size": [
+      114,
+      128
+    ],
+    "sha256": "34c50784e2c575940161b19625664bc0aaf178051277bb8868659f8c2fe408a0"
+  },
+  "weapon-04": {
+    "source": "wep 1.png",
+    "crop": [
+      1019,
+      0,
+      1254,
+      285
+    ],
+    "size": [
+      105,
+      128
+    ],
+    "sha256": "34c50784e2c575940161b19625664bc0aaf178051277bb8868659f8c2fe408a0"
+  },
+  "weapon-05": {
+    "source": "wep 1.png",
+    "crop": [
+      26,
+      287,
+      218,
+      531
+    ],
+    "size": [
+      100,
+      128
+    ],
+    "sha256": "34c50784e2c575940161b19625664bc0aaf178051277bb8868659f8c2fe408a0"
+  },
+  "weapon-06": {
+    "source": "wep 1.png",
+    "crop": [
+      248,
+      267,
+      506,
+      537
+    ],
+    "size": [
+      121,
+      128
+    ],
+    "sha256": "34c50784e2c575940161b19625664bc0aaf178051277bb8868659f8c2fe408a0"
+  },
+  "weapon-07": {
+    "source": "wep 1.png",
+    "crop": [
+      538,
+      268,
+      739,
+      535
+    ],
+    "size": [
+      94,
+      128
+    ],
+    "sha256": "34c50784e2c575940161b19625664bc0aaf178051277bb8868659f8c2fe408a0"
+  },
+  "weapon-08": {
+    "source": "wep 1.png",
+    "crop": [
+      715,
+      267,
+      1025,
+      523
+    ],
+    "size": [
+      128,
+      105
+    ],
+    "sha256": "34c50784e2c575940161b19625664bc0aaf178051277bb8868659f8c2fe408a0"
+  },
+  "weapon-09": {
+    "source": "wep 1.png",
+    "crop": [
+      1011,
+      249,
+      1246,
+      551
+    ],
+    "size": [
+      98,
+      128
+    ],
+    "sha256": "34c50784e2c575940161b19625664bc0aaf178051277bb8868659f8c2fe408a0"
+  },
+  "weapon-10": {
+    "source": "wep 1.png",
+    "crop": [
+      11,
+      508,
+      271,
+      763
+    ],
+    "size": [
+      128,
+      126
+    ],
+    "sha256": "34c50784e2c575940161b19625664bc0aaf178051277bb8868659f8c2fe408a0"
+  },
+  "weapon-11": {
+    "source": "wep 1.png",
+    "crop": [
+      253,
+      505,
+      520,
+      775
+    ],
+    "size": [
+      127,
+      128
+    ],
+    "sha256": "34c50784e2c575940161b19625664bc0aaf178051277bb8868659f8c2fe408a0"
+  },
+  "weapon-12": {
+    "source": "wep 1.png",
+    "crop": [
+      506,
+      504,
+      764,
+      773
+    ],
+    "size": [
+      123,
+      128
+    ],
+    "sha256": "34c50784e2c575940161b19625664bc0aaf178051277bb8868659f8c2fe408a0"
+  },
+  "weapon-13": {
+    "source": "wep 1.png",
+    "crop": [
+      763,
+      505,
+      1000,
+      770
+    ],
+    "size": [
+      114,
+      128
+    ],
+    "sha256": "34c50784e2c575940161b19625664bc0aaf178051277bb8868659f8c2fe408a0"
+  },
+  "weapon-14": {
+    "source": "wep 1.png",
+    "crop": [
+      1008,
+      533,
+      1242,
+      770
+    ],
+    "size": [
+      125,
+      128
+    ],
+    "sha256": "34c50784e2c575940161b19625664bc0aaf178051277bb8868659f8c2fe408a0"
+  },
+  "weapon-15": {
+    "source": "wep 1.png",
+    "crop": [
+      8,
+      738,
+      255,
+      997
+    ],
+    "size": [
+      121,
+      128
+    ],
+    "sha256": "34c50784e2c575940161b19625664bc0aaf178051277bb8868659f8c2fe408a0"
+  },
+  "weapon-16": {
+    "source": "wep 1.png",
+    "crop": [
+      290,
+      743,
+      508,
+      999
+    ],
+    "size": [
+      108,
+      128
+    ],
+    "sha256": "34c50784e2c575940161b19625664bc0aaf178051277bb8868659f8c2fe408a0"
+  },
+  "weapon-17": {
+    "source": "wep 1.png",
+    "crop": [
+      522,
+      735,
+      759,
+      999
+    ],
+    "size": [
+      114,
+      128
+    ],
+    "sha256": "34c50784e2c575940161b19625664bc0aaf178051277bb8868659f8c2fe408a0"
+  },
+  "weapon-18": {
+    "source": "wep 1.png",
+    "crop": [
+      762,
+      762,
+      980,
+      995
+    ],
+    "size": [
+      119,
+      128
+    ],
+    "sha256": "34c50784e2c575940161b19625664bc0aaf178051277bb8868659f8c2fe408a0"
+  },
+  "weapon-19": {
+    "source": "wep 1.png",
+    "crop": [
+      1018,
+      748,
+      1254,
+      997
+    ],
+    "size": [
+      124,
+      128
+    ],
+    "sha256": "34c50784e2c575940161b19625664bc0aaf178051277bb8868659f8c2fe408a0"
+  },
+  "weapon-20": {
+    "source": "wep 1.png",
+    "crop": [
+      3,
+      957,
+      244,
+      1247
+    ],
+    "size": [
+      106,
+      128
+    ],
+    "sha256": "34c50784e2c575940161b19625664bc0aaf178051277bb8868659f8c2fe408a0"
+  },
+  "weapon-21": {
+    "source": "wep 1.png",
+    "crop": [
+      244,
+      950,
+      488,
+      1254
+    ],
+    "size": [
+      102,
+      128
+    ],
+    "sha256": "34c50784e2c575940161b19625664bc0aaf178051277bb8868659f8c2fe408a0"
+  },
+  "weapon-22": {
+    "source": "wep 1.png",
+    "crop": [
+      464,
+      958,
+      745,
+      1249
+    ],
+    "size": [
+      123,
+      128
+    ],
+    "sha256": "34c50784e2c575940161b19625664bc0aaf178051277bb8868659f8c2fe408a0"
+  },
+  "weapon-23": {
+    "source": "wep 1.png",
+    "crop": [
+      751,
+      961,
+      1015,
+      1247
+    ],
+    "size": [
+      117,
+      128
+    ],
+    "sha256": "34c50784e2c575940161b19625664bc0aaf178051277bb8868659f8c2fe408a0"
+  },
+  "weapon-24": {
+    "source": "wep 1.png",
+    "crop": [
+      983,
+      945,
+      1249,
+      1250
+    ],
+    "size": [
+      111,
+      128
+    ],
+    "sha256": "34c50784e2c575940161b19625664bc0aaf178051277bb8868659f8c2fe408a0"
+  },
+  "focus-00": {
+    "source": "wep arm 2.png",
+    "crop": [
+      11,
+      0,
+      252,
+      271
+    ],
+    "size": [
+      111,
+      128
+    ],
+    "sha256": "78e6e2b32eb3d7aeef4f31343fc5444c7df6e700013f5efbea183d0f12efa0ef"
+  },
+  "focus-01": {
+    "source": "wep arm 2.png",
+    "crop": [
+      269,
+      0,
+      504,
+      263
+    ],
+    "size": [
+      114,
+      128
+    ],
+    "sha256": "78e6e2b32eb3d7aeef4f31343fc5444c7df6e700013f5efbea183d0f12efa0ef"
+  },
+  "focus-02": {
+    "source": "wep arm 2.png",
+    "crop": [
+      515,
+      0,
+      762,
+      268
+    ],
+    "size": [
+      117,
+      128
+    ],
+    "sha256": "78e6e2b32eb3d7aeef4f31343fc5444c7df6e700013f5efbea183d0f12efa0ef"
+  },
+  "focus-03": {
+    "source": "wep arm 2.png",
+    "crop": [
+      810,
+      0,
+      1014,
+      259
+    ],
+    "size": [
+      99,
+      128
+    ],
+    "sha256": "78e6e2b32eb3d7aeef4f31343fc5444c7df6e700013f5efbea183d0f12efa0ef"
+  },
+  "focus-04": {
+    "source": "wep arm 2.png",
+    "crop": [
+      1042,
+      0,
+      1251,
+      272
+    ],
+    "size": [
+      94,
+      128
+    ],
+    "sha256": "78e6e2b32eb3d7aeef4f31343fc5444c7df6e700013f5efbea183d0f12efa0ef"
+  },
+  "focus-05": {
+    "source": "wep arm 2.png",
+    "crop": [
+      2,
+      261,
+      266,
+      509
+    ],
+    "size": [
+      128,
+      122
+    ],
+    "sha256": "78e6e2b32eb3d7aeef4f31343fc5444c7df6e700013f5efbea183d0f12efa0ef"
+  },
+  "focus-06": {
+    "source": "wep arm 2.png",
+    "crop": [
+      268,
+      289,
+      525,
+      482
+    ],
+    "size": [
+      128,
+      95
+    ],
+    "sha256": "78e6e2b32eb3d7aeef4f31343fc5444c7df6e700013f5efbea183d0f12efa0ef"
+  },
+  "focus-07": {
+    "source": "wep arm 2.png",
+    "crop": [
+      520,
+      277,
+      763,
+      506
+    ],
+    "size": [
+      128,
+      120
+    ],
+    "sha256": "78e6e2b32eb3d7aeef4f31343fc5444c7df6e700013f5efbea183d0f12efa0ef"
+  },
+  "focus-08": {
+    "source": "wep arm 2.png",
+    "crop": [
+      793,
+      242,
+      1008,
+      522
+    ],
+    "size": [
+      97,
+      128
+    ],
+    "sha256": "78e6e2b32eb3d7aeef4f31343fc5444c7df6e700013f5efbea183d0f12efa0ef"
+  },
+  "focus-09": {
+    "source": "wep arm 2.png",
+    "crop": [
+      1025,
+      243,
+      1252,
+      520
+    ],
+    "size": [
+      100,
+      128
+    ],
+    "sha256": "78e6e2b32eb3d7aeef4f31343fc5444c7df6e700013f5efbea183d0f12efa0ef"
+  },
+  "focus-10": {
+    "source": "wep arm 2.png",
+    "crop": [
+      7,
+      484,
+      261,
+      759
+    ],
+    "size": [
+      117,
+      128
+    ],
+    "sha256": "78e6e2b32eb3d7aeef4f31343fc5444c7df6e700013f5efbea183d0f12efa0ef"
+  },
+  "focus-11": {
+    "source": "wep arm 2.png",
+    "crop": [
+      260,
+      488,
+      526,
+      759
+    ],
+    "size": [
+      123,
+      128
+    ],
+    "sha256": "78e6e2b32eb3d7aeef4f31343fc5444c7df6e700013f5efbea183d0f12efa0ef"
+  },
+  "focus-12": {
+    "source": "wep arm 2.png",
+    "crop": [
+      535,
+      502,
+      737,
+      759
+    ],
+    "size": [
+      98,
+      128
+    ],
+    "sha256": "78e6e2b32eb3d7aeef4f31343fc5444c7df6e700013f5efbea183d0f12efa0ef"
+  },
+  "focus-13": {
+    "source": "wep arm 2.png",
+    "crop": [
+      772,
+      489,
+      1024,
+      760
+    ],
+    "size": [
+      119,
+      128
+    ],
+    "sha256": "78e6e2b32eb3d7aeef4f31343fc5444c7df6e700013f5efbea183d0f12efa0ef"
+  },
+  "focus-14": {
+    "source": "wep arm 2.png",
+    "crop": [
+      1027,
+      503,
+      1248,
+      757
+    ],
+    "size": [
+      110,
+      128
+    ],
+    "sha256": "78e6e2b32eb3d7aeef4f31343fc5444c7df6e700013f5efbea183d0f12efa0ef"
+  },
+  "focus-15": {
+    "source": "wep arm 2.png",
+    "crop": [
+      1,
+      742,
+      250,
+      988
+    ],
+    "size": [
+      127,
+      128
+    ],
+    "sha256": "78e6e2b32eb3d7aeef4f31343fc5444c7df6e700013f5efbea183d0f12efa0ef"
+  },
+  "focus-16": {
+    "source": "wep arm 2.png",
+    "crop": [
+      233,
+      751,
+      526,
+      981
+    ],
+    "size": [
+      128,
+      102
+    ],
+    "sha256": "78e6e2b32eb3d7aeef4f31343fc5444c7df6e700013f5efbea183d0f12efa0ef"
+  },
+  "focus-17": {
+    "source": "wep arm 2.png",
+    "crop": [
+      538,
+      741,
+      766,
+      992
+    ],
+    "size": [
+      116,
+      128
+    ],
+    "sha256": "78e6e2b32eb3d7aeef4f31343fc5444c7df6e700013f5efbea183d0f12efa0ef"
+  },
+  "focus-18": {
+    "source": "wep arm 2.png",
+    "crop": [
+      783,
+      738,
+      999,
+      981
+    ],
+    "size": [
+      114,
+      128
+    ],
+    "sha256": "78e6e2b32eb3d7aeef4f31343fc5444c7df6e700013f5efbea183d0f12efa0ef"
+  },
+  "focus-19": {
+    "source": "wep arm 2.png",
+    "crop": [
+      1009,
+      754,
+      1254,
+      974
+    ],
+    "size": [
+      128,
+      116
+    ],
+    "sha256": "78e6e2b32eb3d7aeef4f31343fc5444c7df6e700013f5efbea183d0f12efa0ef"
+  },
+  "focus-20": {
+    "source": "wep arm 2.png",
+    "crop": [
+      13,
+      979,
+      258,
+      1233
+    ],
+    "size": [
+      120,
+      128
+    ],
+    "sha256": "78e6e2b32eb3d7aeef4f31343fc5444c7df6e700013f5efbea183d0f12efa0ef"
+  },
+  "focus-21": {
+    "source": "wep arm 2.png",
+    "crop": [
+      275,
+      958,
+      480,
+      1238
+    ],
+    "size": [
+      92,
+      128
+    ],
+    "sha256": "78e6e2b32eb3d7aeef4f31343fc5444c7df6e700013f5efbea183d0f12efa0ef"
+  },
+  "focus-22": {
+    "source": "wep arm 2.png",
+    "crop": [
+      538,
+      954,
+      710,
+      1244
+    ],
+    "size": [
+      73,
+      128
+    ],
+    "sha256": "78e6e2b32eb3d7aeef4f31343fc5444c7df6e700013f5efbea183d0f12efa0ef"
+  },
+  "focus-23": {
+    "source": "wep arm 2.png",
+    "crop": [
+      751,
+      977,
+      1007,
+      1233
+    ],
+    "size": [
+      127,
+      128
+    ],
+    "sha256": "78e6e2b32eb3d7aeef4f31343fc5444c7df6e700013f5efbea183d0f12efa0ef"
+  },
+  "focus-24": {
+    "source": "wep arm 2.png",
+    "crop": [
+      1019,
+      969,
+      1254,
+      1239
+    ],
+    "size": [
+      111,
+      128
+    ],
+    "sha256": "78e6e2b32eb3d7aeef4f31343fc5444c7df6e700013f5efbea183d0f12efa0ef"
+  },
+  "armor-00": {
+    "source": "arm 1.png",
+    "crop": [
+      7,
+      4,
+      255,
+      261
+    ],
+    "size": [
+      121,
+      128
+    ],
+    "sha256": "a81917714d6b84ce4424ab518468e2c1f3e445726f6284888f172f697c63dbf3"
+  },
+  "armor-01": {
+    "source": "arm 1.png",
+    "crop": [
+      261,
+      1,
+      501,
+      261
+    ],
+    "size": [
+      115,
+      128
+    ],
+    "sha256": "a81917714d6b84ce4424ab518468e2c1f3e445726f6284888f172f697c63dbf3"
+  },
+  "armor-02": {
+    "source": "arm 1.png",
+    "crop": [
+      504,
+      4,
+      747,
+      259
+    ],
+    "size": [
+      119,
+      128
+    ],
+    "sha256": "a81917714d6b84ce4424ab518468e2c1f3e445726f6284888f172f697c63dbf3"
+  },
+  "armor-03": {
+    "source": "arm 1.png",
+    "crop": [
+      744,
+      4,
+      1000,
+      256
+    ],
+    "size": [
+      128,
+      126
+    ],
+    "sha256": "a81917714d6b84ce4424ab518468e2c1f3e445726f6284888f172f697c63dbf3"
+  },
+  "armor-04": {
+    "source": "arm 1.png",
+    "crop": [
+      995,
+      4,
+      1251,
+      257
+    ],
+    "size": [
+      127,
+      128
+    ],
+    "sha256": "a81917714d6b84ce4424ab518468e2c1f3e445726f6284888f172f697c63dbf3"
+  },
+  "armor-05": {
+    "source": "arm 1.png",
+    "crop": [
+      3,
+      252,
+      256,
+      516
+    ],
+    "size": [
+      117,
+      128
+    ],
+    "sha256": "a81917714d6b84ce4424ab518468e2c1f3e445726f6284888f172f697c63dbf3"
+  },
+  "armor-06": {
+    "source": "arm 1.png",
+    "crop": [
+      250,
+      251,
+      506,
+      522
+    ],
+    "size": [
+      121,
+      128
+    ],
+    "sha256": "a81917714d6b84ce4424ab518468e2c1f3e445726f6284888f172f697c63dbf3"
+  },
+  "armor-07": {
+    "source": "arm 1.png",
+    "crop": [
+      504,
+      249,
+      759,
+      521
+    ],
+    "size": [
+      115,
+      128
+    ],
+    "sha256": "a81917714d6b84ce4424ab518468e2c1f3e445726f6284888f172f697c63dbf3"
+  },
+  "armor-08": {
+    "source": "arm 1.png",
+    "crop": [
+      754,
+      252,
+      1011,
+      524
+    ],
+    "size": [
+      121,
+      128
+    ],
+    "sha256": "a81917714d6b84ce4424ab518468e2c1f3e445726f6284888f172f697c63dbf3"
+  },
+  "armor-09": {
+    "source": "arm 1.png",
+    "crop": [
+      1007,
+      247,
+      1253,
+      525
+    ],
+    "size": [
+      111,
+      128
+    ],
+    "sha256": "a81917714d6b84ce4424ab518468e2c1f3e445726f6284888f172f697c63dbf3"
+  },
+  "armor-10": {
+    "source": "arm 1.png",
+    "crop": [
+      21,
+      492,
+      273,
+      761
+    ],
+    "size": [
+      117,
+      128
+    ],
+    "sha256": "a81917714d6b84ce4424ab518468e2c1f3e445726f6284888f172f697c63dbf3"
+  },
+  "armor-11": {
+    "source": "arm 1.png",
+    "crop": [
+      278,
+      508,
+      503,
+      760
+    ],
+    "size": [
+      111,
+      128
+    ],
+    "sha256": "a81917714d6b84ce4424ab518468e2c1f3e445726f6284888f172f697c63dbf3"
+  },
+  "armor-12": {
+    "source": "arm 1.png",
+    "crop": [
+      523,
+      506,
+      730,
+      758
+    ],
+    "size": [
+      102,
+      128
+    ],
+    "sha256": "a81917714d6b84ce4424ab518468e2c1f3e445726f6284888f172f697c63dbf3"
+  },
+  "armor-13": {
+    "source": "arm 1.png",
+    "crop": [
+      766,
+      506,
+      979,
+      756
+    ],
+    "size": [
+      105,
+      128
+    ],
+    "sha256": "a81917714d6b84ce4424ab518468e2c1f3e445726f6284888f172f697c63dbf3"
+  },
+  "armor-14": {
+    "source": "arm 1.png",
+    "crop": [
+      983,
+      513,
+      1254,
+      744
+    ],
+    "size": [
+      128,
+      111
+    ],
+    "sha256": "a81917714d6b84ce4424ab518468e2c1f3e445726f6284888f172f697c63dbf3"
+  },
+  "armor-15": {
+    "source": "arm 1.png",
+    "crop": [
+      10,
+      800,
+      263,
+      951
+    ],
+    "size": [
+      128,
+      74
+    ],
+    "sha256": "a81917714d6b84ce4424ab518468e2c1f3e445726f6284888f172f697c63dbf3"
+  },
+  "armor-16": {
+    "source": "arm 1.png",
+    "crop": [
+      272,
+      744,
+      512,
+      1001
+    ],
+    "size": [
+      120,
+      128
+    ],
+    "sha256": "a81917714d6b84ce4424ab518468e2c1f3e445726f6284888f172f697c63dbf3"
+  },
+  "armor-17": {
+    "source": "arm 1.png",
+    "crop": [
+      518,
+      742,
+      735,
+      984
+    ],
+    "size": [
+      114,
+      128
+    ],
+    "sha256": "a81917714d6b84ce4424ab518468e2c1f3e445726f6284888f172f697c63dbf3"
+  },
+  "armor-18": {
+    "source": "arm 1.png",
+    "crop": [
+      768,
+      746,
+      980,
+      978
+    ],
+    "size": [
+      117,
+      128
+    ],
+    "sha256": "a81917714d6b84ce4424ab518468e2c1f3e445726f6284888f172f697c63dbf3"
+  },
+  "armor-19": {
+    "source": "arm 1.png",
+    "crop": [
+      1011,
+      745,
+      1243,
+      975
+    ],
+    "size": [
+      128,
+      126
+    ],
+    "sha256": "a81917714d6b84ce4424ab518468e2c1f3e445726f6284888f172f697c63dbf3"
+  },
+  "armor-20": {
+    "source": "arm 1.png",
+    "crop": [
+      34,
+      968,
+      240,
+      1245
+    ],
+    "size": [
+      94,
+      128
+    ],
+    "sha256": "a81917714d6b84ce4424ab518468e2c1f3e445726f6284888f172f697c63dbf3"
+  },
+  "armor-21": {
+    "source": "arm 1.png",
+    "crop": [
+      257,
+      967,
+      501,
+      1248
+    ],
+    "size": [
+      110,
+      128
+    ],
+    "sha256": "a81917714d6b84ce4424ab518468e2c1f3e445726f6284888f172f697c63dbf3"
+  },
+  "armor-22": {
+    "source": "arm 1.png",
+    "crop": [
+      511,
+      967,
+      734,
+      1248
+    ],
+    "size": [
+      101,
+      128
+    ],
+    "sha256": "a81917714d6b84ce4424ab518468e2c1f3e445726f6284888f172f697c63dbf3"
+  },
+  "armor-23": {
+    "source": "arm 1.png",
+    "crop": [
+      753,
+      972,
+      987,
+      1242
+    ],
+    "size": [
+      110,
+      128
+    ],
+    "sha256": "a81917714d6b84ce4424ab518468e2c1f3e445726f6284888f172f697c63dbf3"
+  },
+  "armor-24": {
+    "source": "arm 1.png",
+    "crop": [
+      988,
+      971,
+      1250,
+      1243
+    ],
+    "size": [
+      124,
+      128
+    ],
+    "sha256": "a81917714d6b84ce4424ab518468e2c1f3e445726f6284888f172f697c63dbf3"
+  },
+  "accessory-00": {
+    "source": "arm 2.png",
+    "crop": [
+      13,
+      28,
+      275,
+      277
+    ],
+    "size": [
+      128,
+      122
+    ],
+    "sha256": "fa1e02b947fc647a03a48de33a22711429654d3c8872436bab77dff0455a5e4e"
+  },
+  "accessory-01": {
+    "source": "arm 2.png",
+    "crop": [
+      265,
+      38,
+      506,
+      278
+    ],
+    "size": [
+      128,
+      124
+    ],
+    "sha256": "fa1e02b947fc647a03a48de33a22711429654d3c8872436bab77dff0455a5e4e"
+  },
+  "accessory-02": {
+    "source": "arm 2.png",
+    "crop": [
+      504,
+      31,
+      751,
+      280
+    ],
+    "size": [
+      126,
+      128
+    ],
+    "sha256": "fa1e02b947fc647a03a48de33a22711429654d3c8872436bab77dff0455a5e4e"
+  },
+  "accessory-03": {
+    "source": "arm 2.png",
+    "crop": [
+      744,
+      29,
+      999,
+      277
+    ],
+    "size": [
+      128,
+      125
+    ],
+    "sha256": "fa1e02b947fc647a03a48de33a22711429654d3c8872436bab77dff0455a5e4e"
+  },
+  "accessory-04": {
+    "source": "arm 2.png",
+    "crop": [
+      989,
+      33,
+      1246,
+      279
+    ],
+    "size": [
+      128,
+      122
+    ],
+    "sha256": "fa1e02b947fc647a03a48de33a22711429654d3c8872436bab77dff0455a5e4e"
+  },
+  "accessory-05": {
+    "source": "arm 2.png",
+    "crop": [
+      11,
+      278,
+      246,
+      535
+    ],
+    "size": [
+      117,
+      128
+    ],
+    "sha256": "fa1e02b947fc647a03a48de33a22711429654d3c8872436bab77dff0455a5e4e"
+  },
+  "accessory-06": {
+    "source": "arm 2.png",
+    "crop": [
+      260,
+      284,
+      508,
+      536
+    ],
+    "size": [
+      128,
+      127
+    ],
+    "sha256": "fa1e02b947fc647a03a48de33a22711429654d3c8872436bab77dff0455a5e4e"
+  },
+  "accessory-07": {
+    "source": "arm 2.png",
+    "crop": [
+      498,
+      315,
+      763,
+      529
+    ],
+    "size": [
+      128,
+      99
+    ],
+    "sha256": "fa1e02b947fc647a03a48de33a22711429654d3c8872436bab77dff0455a5e4e"
+  },
+  "accessory-08": {
+    "source": "arm 2.png",
+    "crop": [
+      752,
+      279,
+      992,
+      535
+    ],
+    "size": [
+      120,
+      128
+    ],
+    "sha256": "fa1e02b947fc647a03a48de33a22711429654d3c8872436bab77dff0455a5e4e"
+  },
+  "accessory-09": {
+    "source": "arm 2.png",
+    "crop": [
+      1003,
+      282,
+      1246,
+      535
+    ],
+    "size": [
+      124,
+      128
+    ],
+    "sha256": "fa1e02b947fc647a03a48de33a22711429654d3c8872436bab77dff0455a5e4e"
+  },
+  "accessory-10": {
+    "source": "arm 2.png",
+    "crop": [
+      12,
+      537,
+      256,
+      748
+    ],
+    "size": [
+      128,
+      109
+    ],
+    "sha256": "fa1e02b947fc647a03a48de33a22711429654d3c8872436bab77dff0455a5e4e"
+  },
+  "accessory-11": {
+    "source": "arm 2.png",
+    "crop": [
+      275,
+      534,
+      498,
+      757
+    ],
+    "size": [
+      128,
+      127
+    ],
+    "sha256": "fa1e02b947fc647a03a48de33a22711429654d3c8872436bab77dff0455a5e4e"
+  },
+  "accessory-12": {
+    "source": "arm 2.png",
+    "crop": [
+      517,
+      541,
+      741,
+      755
+    ],
+    "size": [
+      128,
+      121
+    ],
+    "sha256": "fa1e02b947fc647a03a48de33a22711429654d3c8872436bab77dff0455a5e4e"
+  },
+  "accessory-13": {
+    "source": "arm 2.png",
+    "crop": [
+      757,
+      542,
+      994,
+      758
+    ],
+    "size": [
+      128,
+      117
+    ],
+    "sha256": "fa1e02b947fc647a03a48de33a22711429654d3c8872436bab77dff0455a5e4e"
+  },
+  "accessory-14": {
+    "source": "arm 2.png",
+    "crop": [
+      1012,
+      540,
+      1243,
+      752
+    ],
+    "size": [
+      128,
+      116
+    ],
+    "sha256": "fa1e02b947fc647a03a48de33a22711429654d3c8872436bab77dff0455a5e4e"
+  },
+  "accessory-15": {
+    "source": "arm 2.png",
+    "crop": [
+      15,
+      747,
+      260,
+      973
+    ],
+    "size": [
+      128,
+      118
+    ],
+    "sha256": "fa1e02b947fc647a03a48de33a22711429654d3c8872436bab77dff0455a5e4e"
+  },
+  "accessory-16": {
+    "source": "arm 2.png",
+    "crop": [
+      280,
+      774,
+      504,
+      961
+    ],
+    "size": [
+      128,
+      106
+    ],
+    "sha256": "fa1e02b947fc647a03a48de33a22711429654d3c8872436bab77dff0455a5e4e"
+  },
+  "accessory-17": {
+    "source": "arm 2.png",
+    "crop": [
+      515,
+      761,
+      745,
+      967
+    ],
+    "size": [
+      128,
+      114
+    ],
+    "sha256": "fa1e02b947fc647a03a48de33a22711429654d3c8872436bab77dff0455a5e4e"
+  },
+  "accessory-18": {
+    "source": "arm 2.png",
+    "crop": [
+      759,
+      770,
+      1001,
+      955
+    ],
+    "size": [
+      128,
+      96
+    ],
+    "sha256": "fa1e02b947fc647a03a48de33a22711429654d3c8872436bab77dff0455a5e4e"
+  },
+  "accessory-19": {
+    "source": "arm 2.png",
+    "crop": [
+      1022,
+      751,
+      1245,
+      972
+    ],
+    "size": [
+      126,
+      128
+    ],
+    "sha256": "fa1e02b947fc647a03a48de33a22711429654d3c8872436bab77dff0455a5e4e"
+  },
+  "accessory-20": {
+    "source": "arm 2.png",
+    "crop": [
+      14,
+      1004,
+      266,
+      1221
+    ],
+    "size": [
+      128,
+      109
+    ],
+    "sha256": "fa1e02b947fc647a03a48de33a22711429654d3c8872436bab77dff0455a5e4e"
+  },
+  "accessory-21": {
+    "source": "arm 2.png",
+    "crop": [
+      261,
+      955,
+      536,
+      1230
+    ],
+    "size": [
+      128,
+      128
+    ],
+    "sha256": "fa1e02b947fc647a03a48de33a22711429654d3c8872436bab77dff0455a5e4e"
+  },
+  "accessory-22": {
+    "source": "arm 2.png",
+    "crop": [
+      550,
+      961,
+      713,
+      1229
+    ],
+    "size": [
+      76,
+      128
+    ],
+    "sha256": "fa1e02b947fc647a03a48de33a22711429654d3c8872436bab77dff0455a5e4e"
+  },
+  "accessory-23": {
+    "source": "arm 2.png",
+    "crop": [
+      746,
+      1004,
+      995,
+      1190
+    ],
+    "size": [
+      128,
+      94
+    ],
+    "sha256": "fa1e02b947fc647a03a48de33a22711429654d3c8872436bab77dff0455a5e4e"
+  },
+  "accessory-24": {
+    "source": "arm 2.png",
+    "crop": [
+      989,
+      961,
+      1243,
+      1227
+    ],
+    "size": [
+      120,
+      128
+    ],
+    "sha256": "fa1e02b947fc647a03a48de33a22711429654d3c8872436bab77dff0455a5e4e"
+  },
+  "relic-1-00": {
+    "source": "rel 1.png",
+    "crop": [
+      16,
+      0,
+      243,
+      256
+    ],
+    "size": [
+      111,
+      128
+    ],
+    "sha256": "91975c13fd3d7ed6039ca7e1b470793fcc1706dd62328b463b78337e518ea77e"
+  },
+  "relic-1-01": {
+    "source": "rel 1.png",
+    "crop": [
+      288,
+      23,
+      497,
+      261
+    ],
+    "size": [
+      109,
+      128
+    ],
+    "sha256": "91975c13fd3d7ed6039ca7e1b470793fcc1706dd62328b463b78337e518ea77e"
+  },
+  "relic-1-02": {
+    "source": "rel 1.png",
+    "crop": [
+      509,
+      24,
+      783,
+      256
+    ],
+    "size": [
+      128,
+      105
+    ],
+    "sha256": "91975c13fd3d7ed6039ca7e1b470793fcc1706dd62328b463b78337e518ea77e"
+  },
+  "relic-1-03": {
+    "source": "rel 1.png",
+    "crop": [
+      772,
+      30,
+      1028,
+      260
+    ],
+    "size": [
+      128,
+      115
+    ],
+    "sha256": "91975c13fd3d7ed6039ca7e1b470793fcc1706dd62328b463b78337e518ea77e"
+  },
+  "relic-1-04": {
+    "source": "rel 1.png",
+    "crop": [
+      1079,
+      1,
+      1244,
+      257
+    ],
+    "size": [
+      81,
+      128
+    ],
+    "sha256": "91975c13fd3d7ed6039ca7e1b470793fcc1706dd62328b463b78337e518ea77e"
+  },
+  "relic-1-05": {
+    "source": "rel 1.png",
+    "crop": [
+      13,
+      286,
+      265,
+      502
+    ],
+    "size": [
+      128,
+      108
+    ],
+    "sha256": "91975c13fd3d7ed6039ca7e1b470793fcc1706dd62328b463b78337e518ea77e"
+  },
+  "relic-1-06": {
+    "source": "rel 1.png",
+    "crop": [
+      278,
+      241,
+      508,
+      505
+    ],
+    "size": [
+      111,
+      128
+    ],
+    "sha256": "91975c13fd3d7ed6039ca7e1b470793fcc1706dd62328b463b78337e518ea77e"
+  },
+  "relic-1-07": {
+    "source": "rel 1.png",
+    "crop": [
+      553,
+      261,
+      733,
+      512
+    ],
+    "size": [
+      91,
+      128
+    ],
+    "sha256": "91975c13fd3d7ed6039ca7e1b470793fcc1706dd62328b463b78337e518ea77e"
+  },
+  "relic-1-08": {
+    "source": "rel 1.png",
+    "crop": [
+      771,
+      280,
+      1040,
+      505
+    ],
+    "size": [
+      128,
+      106
+    ],
+    "sha256": "91975c13fd3d7ed6039ca7e1b470793fcc1706dd62328b463b78337e518ea77e"
+  },
+  "relic-1-09": {
+    "source": "rel 1.png",
+    "crop": [
+      1032,
+      264,
+      1269,
+      514
+    ],
+    "size": [
+      121,
+      128
+    ],
+    "sha256": "91975c13fd3d7ed6039ca7e1b470793fcc1706dd62328b463b78337e518ea77e"
+  },
+  "relic-1-10": {
+    "source": "rel 1.png",
+    "crop": [
+      14,
+      497,
+      257,
+      752
+    ],
+    "size": [
+      121,
+      128
+    ],
+    "sha256": "91975c13fd3d7ed6039ca7e1b470793fcc1706dd62328b463b78337e518ea77e"
+  },
+  "relic-1-11": {
+    "source": "rel 1.png",
+    "crop": [
+      282,
+      507,
+      522,
+      751
+    ],
+    "size": [
+      125,
+      128
+    ],
+    "sha256": "91975c13fd3d7ed6039ca7e1b470793fcc1706dd62328b463b78337e518ea77e"
+  },
+  "relic-1-12": {
+    "source": "rel 1.png",
+    "crop": [
+      534,
+      506,
+      778,
+      752
+    ],
+    "size": [
+      127,
+      128
+    ],
+    "sha256": "91975c13fd3d7ed6039ca7e1b470793fcc1706dd62328b463b78337e518ea77e"
+  },
+  "relic-1-13": {
+    "source": "rel 1.png",
+    "crop": [
+      774,
+      503,
+      1019,
+      739
+    ],
+    "size": [
+      128,
+      122
+    ],
+    "sha256": "91975c13fd3d7ed6039ca7e1b470793fcc1706dd62328b463b78337e518ea77e"
+  },
+  "relic-1-14": {
+    "source": "rel 1.png",
+    "crop": [
+      1062,
+      481,
+      1255,
+      747
+    ],
+    "size": [
+      91,
+      128
+    ],
+    "sha256": "91975c13fd3d7ed6039ca7e1b470793fcc1706dd62328b463b78337e518ea77e"
+  },
+  "relic-1-15": {
+    "source": "rel 1.png",
+    "crop": [
+      14,
+      760,
+      265,
+      978
+    ],
+    "size": [
+      128,
+      111
+    ],
+    "sha256": "91975c13fd3d7ed6039ca7e1b470793fcc1706dd62328b463b78337e518ea77e"
+  },
+  "relic-1-16": {
+    "source": "rel 1.png",
+    "crop": [
+      280,
+      748,
+      506,
+      975
+    ],
+    "size": [
+      127,
+      128
+    ],
+    "sha256": "91975c13fd3d7ed6039ca7e1b470793fcc1706dd62328b463b78337e518ea77e"
+  },
+  "relic-1-17": {
+    "source": "rel 1.png",
+    "crop": [
+      530,
+      742,
+      777,
+      979
+    ],
+    "size": [
+      128,
+      123
+    ],
+    "sha256": "91975c13fd3d7ed6039ca7e1b470793fcc1706dd62328b463b78337e518ea77e"
+  },
+  "relic-1-18": {
+    "source": "rel 1.png",
+    "crop": [
+      779,
+      745,
+      1010,
+      984
+    ],
+    "size": [
+      123,
+      128
+    ],
+    "sha256": "91975c13fd3d7ed6039ca7e1b470793fcc1706dd62328b463b78337e518ea77e"
+  },
+  "relic-1-19": {
+    "source": "rel 1.png",
+    "crop": [
+      1045,
+      745,
+      1264,
+      980
+    ],
+    "size": [
+      117,
+      128
+    ],
+    "sha256": "91975c13fd3d7ed6039ca7e1b470793fcc1706dd62328b463b78337e518ea77e"
+  },
+  "relic-1-20": {
+    "source": "rel 1.png",
+    "crop": [
+      9,
+      978,
+      243,
+      1223
+    ],
+    "size": [
+      121,
+      128
+    ],
+    "sha256": "91975c13fd3d7ed6039ca7e1b470793fcc1706dd62328b463b78337e518ea77e"
+  },
+  "relic-1-21": {
+    "source": "rel 1.png",
+    "crop": [
+      269,
+      968,
+      534,
+      1229
+    ],
+    "size": [
+      128,
+      126
+    ],
+    "sha256": "91975c13fd3d7ed6039ca7e1b470793fcc1706dd62328b463b78337e518ea77e"
+  },
+  "relic-1-22": {
+    "source": "rel 1.png",
+    "crop": [
+      537,
+      974,
+      741,
+      1221
+    ],
+    "size": [
+      105,
+      128
+    ],
+    "sha256": "91975c13fd3d7ed6039ca7e1b470793fcc1706dd62328b463b78337e518ea77e"
+  },
+  "relic-1-23": {
+    "source": "rel 1.png",
+    "crop": [
+      784,
+      974,
+      1014,
+      1227
+    ],
+    "size": [
+      113,
+      128
+    ],
+    "sha256": "91975c13fd3d7ed6039ca7e1b470793fcc1706dd62328b463b78337e518ea77e"
+  },
+  "relic-1-24": {
+    "source": "rel 1.png",
+    "crop": [
+      1054,
+      972,
+      1254,
+      1224
+    ],
+    "size": [
+      98,
+      128
+    ],
+    "sha256": "91975c13fd3d7ed6039ca7e1b470793fcc1706dd62328b463b78337e518ea77e"
+  },
+  "relic-2-00": {
+    "source": "rel 2.png",
+    "crop": [
+      38,
+      35,
+      272,
+      246
+    ],
+    "size": [
+      128,
+      115
+    ],
+    "sha256": "b39a7f2d83528bfb1f9cb6637d1b7bbcc2b80a1694495ab5e28be2218b8e5a33"
+  },
+  "relic-2-01": {
+    "source": "rel 2.png",
+    "crop": [
+      310,
+      26,
+      571,
+      252
+    ],
+    "size": [
+      128,
+      110
+    ],
+    "sha256": "b39a7f2d83528bfb1f9cb6637d1b7bbcc2b80a1694495ab5e28be2218b8e5a33"
+  },
+  "relic-2-02": {
+    "source": "rel 2.png",
+    "crop": [
+      586,
+      14,
+      815,
+      246
+    ],
+    "size": [
+      127,
+      128
+    ],
+    "sha256": "b39a7f2d83528bfb1f9cb6637d1b7bbcc2b80a1694495ab5e28be2218b8e5a33"
+  },
+  "relic-2-03": {
+    "source": "rel 2.png",
+    "crop": [
+      869,
+      13,
+      1113,
+      246
+    ],
+    "size": [
+      128,
+      122
+    ],
+    "sha256": "b39a7f2d83528bfb1f9cb6637d1b7bbcc2b80a1694495ab5e28be2218b8e5a33"
+  },
+  "relic-2-04": {
+    "source": "rel 2.png",
+    "crop": [
+      1162,
+      10,
+      1361,
+      259
+    ],
+    "size": [
+      102,
+      128
+    ],
+    "sha256": "b39a7f2d83528bfb1f9cb6637d1b7bbcc2b80a1694495ab5e28be2218b8e5a33"
+  },
+  "relic-2-05": {
+    "source": "rel 2.png",
+    "crop": [
+      28,
+      254,
+      268,
+      465
+    ],
+    "size": [
+      128,
+      111
+    ],
+    "sha256": "b39a7f2d83528bfb1f9cb6637d1b7bbcc2b80a1694495ab5e28be2218b8e5a33"
+  },
+  "relic-2-06": {
+    "source": "rel 2.png",
+    "crop": [
+      299,
+      247,
+      568,
+      464
+    ],
+    "size": [
+      128,
+      103
+    ],
+    "sha256": "b39a7f2d83528bfb1f9cb6637d1b7bbcc2b80a1694495ab5e28be2218b8e5a33"
+  },
+  "relic-2-07": {
+    "source": "rel 2.png",
+    "crop": [
+      625,
+      242,
+      781,
+      465
+    ],
+    "size": [
+      85,
+      128
+    ],
+    "sha256": "b39a7f2d83528bfb1f9cb6637d1b7bbcc2b80a1694495ab5e28be2218b8e5a33"
+  },
+  "relic-2-08": {
+    "source": "rel 2.png",
+    "crop": [
+      843,
+      217,
+      1113,
+      442
+    ],
+    "size": [
+      128,
+      107
+    ],
+    "sha256": "b39a7f2d83528bfb1f9cb6637d1b7bbcc2b80a1694495ab5e28be2218b8e5a33"
+  },
+  "relic-2-09": {
+    "source": "rel 2.png",
+    "crop": [
+      1137,
+      267,
+      1389,
+      464
+    ],
+    "size": [
+      128,
+      99
+    ],
+    "sha256": "b39a7f2d83528bfb1f9cb6637d1b7bbcc2b80a1694495ab5e28be2218b8e5a33"
+  },
+  "relic-2-10": {
+    "source": "rel 2.png",
+    "crop": [
+      38,
+      457,
+      256,
+      683
+    ],
+    "size": [
+      123,
+      128
+    ],
+    "sha256": "b39a7f2d83528bfb1f9cb6637d1b7bbcc2b80a1694495ab5e28be2218b8e5a33"
+  },
+  "relic-2-11": {
+    "source": "rel 2.png",
+    "crop": [
+      295,
+      468,
+      552,
+      686
+    ],
+    "size": [
+      128,
+      108
+    ],
+    "sha256": "b39a7f2d83528bfb1f9cb6637d1b7bbcc2b80a1694495ab5e28be2218b8e5a33"
+  },
+  "relic-2-12": {
+    "source": "rel 2.png",
+    "crop": [
+      601,
+      454,
+      804,
+      687
+    ],
+    "size": [
+      106,
+      128
+    ],
+    "sha256": "b39a7f2d83528bfb1f9cb6637d1b7bbcc2b80a1694495ab5e28be2218b8e5a33"
+  },
+  "relic-2-13": {
+    "source": "rel 2.png",
+    "crop": [
+      834,
+      465,
+      1103,
+      671
+    ],
+    "size": [
+      128,
+      96
+    ],
+    "sha256": "b39a7f2d83528bfb1f9cb6637d1b7bbcc2b80a1694495ab5e28be2218b8e5a33"
+  },
+  "relic-2-14": {
+    "source": "rel 2.png",
+    "crop": [
+      1139,
+      457,
+      1381,
+      686
+    ],
+    "size": [
+      128,
+      121
+    ],
+    "sha256": "b39a7f2d83528bfb1f9cb6637d1b7bbcc2b80a1694495ab5e28be2218b8e5a33"
+  },
+  "relic-2-15": {
+    "source": "rel 2.png",
+    "crop": [
+      24,
+      675,
+      253,
+      902
+    ],
+    "size": [
+      126,
+      128
+    ],
+    "sha256": "b39a7f2d83528bfb1f9cb6637d1b7bbcc2b80a1694495ab5e28be2218b8e5a33"
+  },
+  "relic-2-16": {
+    "source": "rel 2.png",
+    "crop": [
+      335,
+      675,
+      542,
+      908
+    ],
+    "size": [
+      111,
+      128
+    ],
+    "sha256": "b39a7f2d83528bfb1f9cb6637d1b7bbcc2b80a1694495ab5e28be2218b8e5a33"
+  },
+  "relic-2-17": {
+    "source": "rel 2.png",
+    "crop": [
+      607,
+      672,
+      806,
+      902
+    ],
+    "size": [
+      108,
+      128
+    ],
+    "sha256": "b39a7f2d83528bfb1f9cb6637d1b7bbcc2b80a1694495ab5e28be2218b8e5a33"
+  },
+  "relic-2-18": {
+    "source": "rel 2.png",
+    "crop": [
+      878,
+      682,
+      1093,
+      904
+    ],
+    "size": [
+      123,
+      128
+    ],
+    "sha256": "b39a7f2d83528bfb1f9cb6637d1b7bbcc2b80a1694495ab5e28be2218b8e5a33"
+  },
+  "relic-2-19": {
+    "source": "rel 2.png",
+    "crop": [
+      1129,
+      681,
+      1391,
+      908
+    ],
+    "size": [
+      128,
+      113
+    ],
+    "sha256": "b39a7f2d83528bfb1f9cb6637d1b7bbcc2b80a1694495ab5e28be2218b8e5a33"
+  },
+  "relic-2-20": {
+    "source": "rel 2.png",
+    "crop": [
+      41,
+      893,
+      257,
+      1113
+    ],
+    "size": [
+      123,
+      128
+    ],
+    "sha256": "b39a7f2d83528bfb1f9cb6637d1b7bbcc2b80a1694495ab5e28be2218b8e5a33"
+  },
+  "relic-2-21": {
+    "source": "rel 2.png",
+    "crop": [
+      294,
+      904,
+      565,
+      1112
+    ],
+    "size": [
+      128,
+      97
+    ],
+    "sha256": "b39a7f2d83528bfb1f9cb6637d1b7bbcc2b80a1694495ab5e28be2218b8e5a33"
+  },
+  "relic-2-22": {
+    "source": "rel 2.png",
+    "crop": [
+      617,
+      878,
+      788,
+      1120
+    ],
+    "size": [
+      88,
+      128
+    ],
+    "sha256": "b39a7f2d83528bfb1f9cb6637d1b7bbcc2b80a1694495ab5e28be2218b8e5a33"
+  },
+  "relic-2-23": {
+    "source": "rel 2.png",
+    "crop": [
+      848,
+      891,
+      1114,
+      1114
+    ],
+    "size": [
+      128,
+      106
+    ],
+    "sha256": "b39a7f2d83528bfb1f9cb6637d1b7bbcc2b80a1694495ab5e28be2218b8e5a33"
+  },
+  "relic-2-24": {
+    "source": "rel 2.png",
+    "crop": [
+      1168,
+      894,
+      1368,
+      1113
+    ],
+    "size": [
+      116,
+      128
+    ],
+    "sha256": "b39a7f2d83528bfb1f9cb6637d1b7bbcc2b80a1694495ab5e28be2218b8e5a33"
+  },
+  "relic-3-00": {
+    "source": "rel 3.png",
+    "crop": [
+      52,
+      19,
+      276,
+      239
+    ],
+    "size": [
+      128,
+      125
+    ],
+    "sha256": "9037641572d1d3d98b32be97ce1551a4a4eb9f6033c873b87fdec9afc2b20c40"
+  },
+  "relic-3-01": {
+    "source": "rel 3.png",
+    "crop": [
+      320,
+      6,
+      557,
+      239
+    ],
+    "size": [
+      128,
+      126
+    ],
+    "sha256": "9037641572d1d3d98b32be97ce1551a4a4eb9f6033c873b87fdec9afc2b20c40"
+  },
+  "relic-3-02": {
+    "source": "rel 3.png",
+    "crop": [
+      598,
+      6,
+      821,
+      239
+    ],
+    "size": [
+      122,
+      128
+    ],
+    "sha256": "9037641572d1d3d98b32be97ce1551a4a4eb9f6033c873b87fdec9afc2b20c40"
+  },
+  "relic-3-03": {
+    "source": "rel 3.png",
+    "crop": [
+      862,
+      27,
+      1091,
+      231
+    ],
+    "size": [
+      128,
+      110
+    ],
+    "sha256": "9037641572d1d3d98b32be97ce1551a4a4eb9f6033c873b87fdec9afc2b20c40"
+  },
+  "relic-3-04": {
+    "source": "rel 3.png",
+    "crop": [
+      1135,
+      6,
+      1380,
+      239
+    ],
+    "size": [
+      128,
+      121
+    ],
+    "sha256": "9037641572d1d3d98b32be97ce1551a4a4eb9f6033c873b87fdec9afc2b20c40"
+  },
+  "relic-3-05": {
+    "source": "rel 3.png",
+    "crop": [
+      54,
+      235,
+      281,
+      446
+    ],
+    "size": [
+      128,
+      118
+    ],
+    "sha256": "9037641572d1d3d98b32be97ce1551a4a4eb9f6033c873b87fdec9afc2b20c40"
+  },
+  "relic-3-06": {
+    "source": "rel 3.png",
+    "crop": [
+      360,
+      225,
+      528,
+      454
+    ],
+    "size": [
+      90,
+      128
+    ],
+    "sha256": "9037641572d1d3d98b32be97ce1551a4a4eb9f6033c873b87fdec9afc2b20c40"
+  },
+  "relic-3-07": {
+    "source": "rel 3.png",
+    "crop": [
+      584,
+      229,
+      820,
+      462
+    ],
+    "size": [
+      123,
+      128
+    ],
+    "sha256": "9037641572d1d3d98b32be97ce1551a4a4eb9f6033c873b87fdec9afc2b20c40"
+  },
+  "relic-3-08": {
+    "source": "rel 3.png",
+    "crop": [
+      875,
+      231,
+      1085,
+      456
+    ],
+    "size": [
+      120,
+      128
+    ],
+    "sha256": "9037641572d1d3d98b32be97ce1551a4a4eb9f6033c873b87fdec9afc2b20c40"
+  },
+  "relic-3-09": {
+    "source": "rel 3.png",
+    "crop": [
+      1137,
+      239,
+      1400,
+      447
+    ],
+    "size": [
+      128,
+      100
+    ],
+    "sha256": "9037641572d1d3d98b32be97ce1551a4a4eb9f6033c873b87fdec9afc2b20c40"
+  },
+  "relic-3-10": {
+    "source": "rel 3.png",
+    "crop": [
+      43,
+      449,
+      277,
+      669
+    ],
+    "size": [
+      128,
+      119
+    ],
+    "sha256": "9037641572d1d3d98b32be97ce1551a4a4eb9f6033c873b87fdec9afc2b20c40"
+  },
+  "relic-3-11": {
+    "source": "rel 3.png",
+    "crop": [
+      334,
+      433,
+      551,
+      669
+    ],
+    "size": [
+      114,
+      128
+    ],
+    "sha256": "9037641572d1d3d98b32be97ce1551a4a4eb9f6033c873b87fdec9afc2b20c40"
+  },
+  "relic-3-12": {
+    "source": "rel 3.png",
+    "crop": [
+      601,
+      444,
+      815,
+      671
+    ],
+    "size": [
+      121,
+      128
+    ],
+    "sha256": "9037641572d1d3d98b32be97ce1551a4a4eb9f6033c873b87fdec9afc2b20c40"
+  },
+  "relic-3-13": {
+    "source": "rel 3.png",
+    "crop": [
+      859,
+      456,
+      1119,
+      667
+    ],
+    "size": [
+      128,
+      103
+    ],
+    "sha256": "9037641572d1d3d98b32be97ce1551a4a4eb9f6033c873b87fdec9afc2b20c40"
+  },
+  "relic-3-14": {
+    "source": "rel 3.png",
+    "crop": [
+      1159,
+      447,
+      1386,
+      668
+    ],
+    "size": [
+      128,
+      125
+    ],
+    "sha256": "9037641572d1d3d98b32be97ce1551a4a4eb9f6033c873b87fdec9afc2b20c40"
+  },
+  "relic-3-15": {
+    "source": "rel 3.png",
+    "crop": [
+      46,
+      683,
+      304,
+      895
+    ],
+    "size": [
+      128,
+      104
+    ],
+    "sha256": "9037641572d1d3d98b32be97ce1551a4a4eb9f6033c873b87fdec9afc2b20c40"
+  },
+  "relic-3-16": {
+    "source": "rel 3.png",
+    "crop": [
+      356,
+      643,
+      551,
+      890
+    ],
+    "size": [
+      98,
+      128
+    ],
+    "sha256": "9037641572d1d3d98b32be97ce1551a4a4eb9f6033c873b87fdec9afc2b20c40"
+  },
+  "relic-3-17": {
+    "source": "rel 3.png",
+    "crop": [
+      589,
+      654,
+      821,
+      878
+    ],
+    "size": [
+      128,
+      123
+    ],
+    "sha256": "9037641572d1d3d98b32be97ce1551a4a4eb9f6033c873b87fdec9afc2b20c40"
+  },
+  "relic-3-18": {
+    "source": "rel 3.png",
+    "crop": [
+      863,
+      656,
+      1099,
+      879
+    ],
+    "size": [
+      128,
+      124
+    ],
+    "sha256": "9037641572d1d3d98b32be97ce1551a4a4eb9f6033c873b87fdec9afc2b20c40"
+  },
+  "relic-3-19": {
+    "source": "rel 3.png",
+    "crop": [
+      1131,
+      652,
+      1374,
+      885
+    ],
+    "size": [
+      128,
+      125
+    ],
+    "sha256": "9037641572d1d3d98b32be97ce1551a4a4eb9f6033c873b87fdec9afc2b20c40"
+  },
+  "relic-3-20": {
+    "source": "rel 3.png",
+    "crop": [
+      55,
+      867,
+      273,
+      1101
+    ],
+    "size": [
+      119,
+      128
+    ],
+    "sha256": "9037641572d1d3d98b32be97ce1551a4a4eb9f6033c873b87fdec9afc2b20c40"
+  },
+  "relic-3-21": {
+    "source": "rel 3.png",
+    "crop": [
+      316,
+      878,
+      568,
+      1099
+    ],
+    "size": [
+      128,
+      114
+    ],
+    "sha256": "9037641572d1d3d98b32be97ce1551a4a4eb9f6033c873b87fdec9afc2b20c40"
+  },
+  "relic-3-22": {
+    "source": "rel 3.png",
+    "crop": [
+      575,
+      857,
+      840,
+      1103
+    ],
+    "size": [
+      128,
+      121
+    ],
+    "sha256": "9037641572d1d3d98b32be97ce1551a4a4eb9f6033c873b87fdec9afc2b20c40"
+  },
+  "relic-3-23": {
+    "source": "rel 3.png",
+    "crop": [
+      848,
+      869,
+      1109,
+      1101
+    ],
+    "size": [
+      128,
+      113
+    ],
+    "sha256": "9037641572d1d3d98b32be97ce1551a4a4eb9f6033c873b87fdec9afc2b20c40"
+  },
+  "relic-3-24": {
+    "source": "rel 3.png",
+    "crop": [
+      1148,
+      849,
+      1379,
+      1100
+    ],
+    "size": [
+      117,
+      128
+    ],
+    "sha256": "9037641572d1d3d98b32be97ce1551a4a4eb9f6033c873b87fdec9afc2b20c40"
+  },
+  "relic-4-00": {
+    "source": "rel 4.png",
+    "crop": [
+      32,
+      19,
+      282,
+      253
+    ],
+    "size": [
+      128,
+      119
+    ],
+    "sha256": "fd71a2332522485b44c488f3357507147c050eae561f7f8424a443fd58a1f169"
+  },
+  "relic-4-01": {
+    "source": "rel 4.png",
+    "crop": [
+      327,
+      4,
+      559,
+      260
+    ],
+    "size": [
+      113,
+      128
+    ],
+    "sha256": "fd71a2332522485b44c488f3357507147c050eae561f7f8424a443fd58a1f169"
+  },
+  "relic-4-02": {
+    "source": "rel 4.png",
+    "crop": [
+      598,
+      3,
+      815,
+      259
+    ],
+    "size": [
+      107,
+      128
+    ],
+    "sha256": "fd71a2332522485b44c488f3357507147c050eae561f7f8424a443fd58a1f169"
+  },
+  "relic-4-03": {
+    "source": "rel 4.png",
+    "crop": [
+      831,
+      15,
+      1119,
+      264
+    ],
+    "size": [
+      128,
+      112
+    ],
+    "sha256": "fd71a2332522485b44c488f3357507147c050eae561f7f8424a443fd58a1f169"
+  },
+  "relic-4-04": {
+    "source": "rel 4.png",
+    "crop": [
+      1144,
+      7,
+      1371,
+      256
+    ],
+    "size": [
+      116,
+      128
+    ],
+    "sha256": "fd71a2332522485b44c488f3357507147c050eae561f7f8424a443fd58a1f169"
+  },
+  "relic-4-05": {
+    "source": "rel 4.png",
+    "crop": [
+      34,
+      247,
+      253,
+      493
+    ],
+    "size": [
+      114,
+      128
+    ],
+    "sha256": "fd71a2332522485b44c488f3357507147c050eae561f7f8424a443fd58a1f169"
+  },
+  "relic-4-06": {
+    "source": "rel 4.png",
+    "crop": [
+      300,
+      250,
+      569,
+      478
+    ],
+    "size": [
+      128,
+      111
+    ],
+    "sha256": "fd71a2332522485b44c488f3357507147c050eae561f7f8424a443fd58a1f169"
+  },
+  "relic-4-07": {
+    "source": "rel 4.png",
+    "crop": [
+      579,
+      247,
+      812,
+      482
+    ],
+    "size": [
+      124,
+      128
+    ],
+    "sha256": "fd71a2332522485b44c488f3357507147c050eae561f7f8424a443fd58a1f169"
+  },
+  "relic-4-08": {
+    "source": "rel 4.png",
+    "crop": [
+      836,
+      247,
+      1088,
+      487
+    ],
+    "size": [
+      128,
+      121
+    ],
+    "sha256": "fd71a2332522485b44c488f3357507147c050eae561f7f8424a443fd58a1f169"
+  },
+  "relic-4-09": {
+    "source": "rel 4.png",
+    "crop": [
+      1122,
+      248,
+      1399,
+      485
+    ],
+    "size": [
+      128,
+      109
+    ],
+    "sha256": "fd71a2332522485b44c488f3357507147c050eae561f7f8424a443fd58a1f169"
+  },
+  "relic-4-10": {
+    "source": "rel 4.png",
+    "crop": [
+      23,
+      480,
+      278,
+      691
+    ],
+    "size": [
+      128,
+      110
+    ],
+    "sha256": "fd71a2332522485b44c488f3357507147c050eae561f7f8424a443fd58a1f169"
+  },
+  "relic-4-11": {
+    "source": "rel 4.png",
+    "crop": [
+      289,
+      472,
+      570,
+      703
+    ],
+    "size": [
+      128,
+      105
+    ],
+    "sha256": "fd71a2332522485b44c488f3357507147c050eae561f7f8424a443fd58a1f169"
+  },
+  "relic-4-12": {
+    "source": "rel 4.png",
+    "crop": [
+      587,
+      472,
+      822,
+      695
+    ],
+    "size": [
+      128,
+      125
+    ],
+    "sha256": "fd71a2332522485b44c488f3357507147c050eae561f7f8424a443fd58a1f169"
+  },
+  "relic-4-13": {
+    "source": "rel 4.png",
+    "crop": [
+      832,
+      475,
+      1120,
+      694
+    ],
+    "size": [
+      128,
+      96
+    ],
+    "sha256": "fd71a2332522485b44c488f3357507147c050eae561f7f8424a443fd58a1f169"
+  },
+  "relic-4-14": {
+    "source": "rel 4.png",
+    "crop": [
+      1115,
+      483,
+      1386,
+      696
+    ],
+    "size": [
+      128,
+      100
+    ],
+    "sha256": "fd71a2332522485b44c488f3357507147c050eae561f7f8424a443fd58a1f169"
+  },
+  "relic-4-15": {
+    "source": "rel 4.png",
+    "crop": [
+      45,
+      666,
+      287,
+      895
+    ],
+    "size": [
+      128,
+      121
+    ],
+    "sha256": "fd71a2332522485b44c488f3357507147c050eae561f7f8424a443fd58a1f169"
+  },
+  "relic-4-16": {
+    "source": "rel 4.png",
+    "crop": [
+      297,
+      682,
+      555,
+      892
+    ],
+    "size": [
+      128,
+      104
+    ],
+    "sha256": "fd71a2332522485b44c488f3357507147c050eae561f7f8424a443fd58a1f169"
+  },
+  "relic-4-17": {
+    "source": "rel 4.png",
+    "crop": [
+      604,
+      673,
+      787,
+      902
+    ],
+    "size": [
+      98,
+      128
+    ],
+    "sha256": "fd71a2332522485b44c488f3357507147c050eae561f7f8424a443fd58a1f169"
+  },
+  "relic-4-18": {
+    "source": "rel 4.png",
+    "crop": [
+      852,
+      686,
+      1125,
+      891
+    ],
+    "size": [
+      128,
+      98
+    ],
+    "sha256": "fd71a2332522485b44c488f3357507147c050eae561f7f8424a443fd58a1f169"
+  },
+  "relic-4-19": {
+    "source": "rel 4.png",
+    "crop": [
+      1138,
+      672,
+      1381,
+      900
+    ],
+    "size": [
+      128,
+      120
+    ],
+    "sha256": "fd71a2332522485b44c488f3357507147c050eae561f7f8424a443fd58a1f169"
+  },
+  "relic-4-20": {
+    "source": "rel 4.png",
+    "crop": [
+      58,
+      877,
+      245,
+      1116
+    ],
+    "size": [
+      97,
+      128
+    ],
+    "sha256": "fd71a2332522485b44c488f3357507147c050eae561f7f8424a443fd58a1f169"
+  },
+  "relic-4-21": {
+    "source": "rel 4.png",
+    "crop": [
+      326,
+      875,
+      531,
+      1120
+    ],
+    "size": [
+      105,
+      128
+    ],
+    "sha256": "fd71a2332522485b44c488f3357507147c050eae561f7f8424a443fd58a1f169"
+  },
+  "relic-4-22": {
+    "source": "rel 4.png",
+    "crop": [
+      573,
+      888,
+      810,
+      1115
+    ],
+    "size": [
+      128,
+      123
+    ],
+    "sha256": "fd71a2332522485b44c488f3357507147c050eae561f7f8424a443fd58a1f169"
+  },
+  "relic-4-23": {
+    "source": "rel 4.png",
+    "crop": [
+      829,
+      881,
+      1089,
+      1119
+    ],
+    "size": [
+      128,
+      119
+    ],
+    "sha256": "fd71a2332522485b44c488f3357507147c050eae561f7f8424a443fd58a1f169"
+  },
+  "relic-4-24": {
+    "source": "rel 4.png",
+    "crop": [
+      1151,
+      892,
+      1367,
+      1110
+    ],
+    "size": [
+      127,
+      128
+    ],
+    "sha256": "fd71a2332522485b44c488f3357507147c050eae561f7f8424a443fd58a1f169"
+  },
+  "icon-battle": {
+    "source": "aren 1.png",
+    "crop": [
+      37,
+      68,
+      203,
+      234
+    ],
+    "size": [
+      64,
+      64
+    ],
+    "sha256": "123d9f22146a7984a7b5f6372a6a39ab52cc539b5f7cf41d86dbdd678cb573ae"
+  },
+  "icon-formation": {
+    "source": "aren 1.png",
+    "crop": [
+      224,
+      68,
+      390,
+      234
+    ],
+    "size": [
+      64,
+      62
+    ],
+    "sha256": "123d9f22146a7984a7b5f6372a6a39ab52cc539b5f7cf41d86dbdd678cb573ae"
+  },
+  "icon-team": {
+    "source": "aren 1.png",
+    "crop": [
+      411,
+      68,
+      577,
+      234
+    ],
+    "size": [
+      64,
+      46
+    ],
+    "sha256": "123d9f22146a7984a7b5f6372a6a39ab52cc539b5f7cf41d86dbdd678cb573ae"
+  },
+  "icon-capture": {
+    "source": "aren 1.png",
+    "crop": [
+      598,
+      68,
+      764,
+      234
+    ],
+    "size": [
+      64,
+      64
+    ],
+    "sha256": "123d9f22146a7984a7b5f6372a6a39ab52cc539b5f7cf41d86dbdd678cb573ae"
+  },
+  "icon-log": {
+    "source": "aren 1.png",
+    "crop": [
+      785,
+      68,
+      951,
+      234
+    ],
+    "size": [
+      55,
+      64
+    ],
+    "sha256": "123d9f22146a7984a7b5f6372a6a39ab52cc539b5f7cf41d86dbdd678cb573ae"
+  },
+  "icon-scout": {
+    "source": "aren 1.png",
+    "crop": [
+      972,
+      68,
+      1138,
+      234
+    ],
+    "size": [
+      64,
+      45
+    ],
+    "sha256": "123d9f22146a7984a7b5f6372a6a39ab52cc539b5f7cf41d86dbdd678cb573ae"
+  },
+  "icon-arrow": {
+    "source": "aren 1.png",
+    "crop": [
+      1159,
+      68,
+      1325,
+      234
+    ],
+    "size": [
+      64,
+      51
+    ],
+    "sha256": "123d9f22146a7984a7b5f6372a6a39ab52cc539b5f7cf41d86dbdd678cb573ae"
+  },
+  "icon-chevron": {
+    "source": "aren 1.png",
+    "crop": [
+      1346,
+      68,
+      1512,
+      234
+    ],
+    "size": [
+      64,
+      41
+    ],
+    "sha256": "123d9f22146a7984a7b5f6372a6a39ab52cc539b5f7cf41d86dbdd678cb573ae"
+  },
+  "icon-gold": {
+    "source": "aren 1.png",
+    "crop": [
+      37,
+      249,
+      203,
+      415
+    ],
+    "size": [
+      64,
+      64
+    ],
+    "sha256": "123d9f22146a7984a7b5f6372a6a39ab52cc539b5f7cf41d86dbdd678cb573ae"
+  },
+  "icon-sprout": {
+    "source": "aren 1.png",
+    "crop": [
+      224,
+      249,
+      390,
+      415
+    ],
+    "size": [
+      64,
+      57
+    ],
+    "sha256": "123d9f22146a7984a7b5f6372a6a39ab52cc539b5f7cf41d86dbdd678cb573ae"
+  },
+  "icon-heart": {
+    "source": "aren 1.png",
+    "crop": [
+      411,
+      249,
+      577,
+      415
+    ],
+    "size": [
+      64,
+      56
+    ],
+    "sha256": "123d9f22146a7984a7b5f6372a6a39ab52cc539b5f7cf41d86dbdd678cb573ae"
+  },
+  "icon-star": {
+    "source": "aren 1.png",
+    "crop": [
+      598,
+      249,
+      764,
+      415
+    ],
+    "size": [
+      64,
+      64
+    ],
+    "sha256": "123d9f22146a7984a7b5f6372a6a39ab52cc539b5f7cf41d86dbdd678cb573ae"
+  },
+  "icon-grove": {
+    "source": "aren 1.png",
+    "crop": [
+      785,
+      249,
+      951,
+      415
+    ],
+    "size": [
+      46,
+      64
+    ],
+    "sha256": "123d9f22146a7984a7b5f6372a6a39ab52cc539b5f7cf41d86dbdd678cb573ae"
+  },
+  "icon-target": {
+    "source": "aren 1.png",
+    "crop": [
+      972,
+      249,
+      1138,
+      415
+    ],
+    "size": [
+      64,
+      64
+    ],
+    "sha256": "123d9f22146a7984a7b5f6372a6a39ab52cc539b5f7cf41d86dbdd678cb573ae"
+  },
+  "icon-stop": {
+    "source": "aren 1.png",
+    "crop": [
+      1159,
+      249,
+      1325,
+      415
+    ],
+    "size": [
+      63,
+      64
+    ],
+    "sha256": "123d9f22146a7984a7b5f6372a6a39ab52cc539b5f7cf41d86dbdd678cb573ae"
+  },
+  "icon-info": {
+    "source": "aren 1.png",
+    "crop": [
+      1346,
+      249,
+      1512,
+      415
+    ],
+    "size": [
+      64,
+      63
+    ],
+    "sha256": "123d9f22146a7984a7b5f6372a6a39ab52cc539b5f7cf41d86dbdd678cb573ae"
+  },
+  "icon-sound": {
+    "source": "aren 1.png",
+    "crop": [
+      37,
+      430,
+      203,
+      596
+    ],
+    "size": [
+      64,
+      50
+    ],
+    "sha256": "123d9f22146a7984a7b5f6372a6a39ab52cc539b5f7cf41d86dbdd678cb573ae"
+  },
+  "icon-help": {
+    "source": "aren 1.png",
+    "crop": [
+      224,
+      430,
+      390,
+      596
+    ],
+    "size": [
+      64,
+      64
+    ],
+    "sha256": "123d9f22146a7984a7b5f6372a6a39ab52cc539b5f7cf41d86dbdd678cb573ae"
+  },
+  "icon-settings": {
+    "source": "aren 1.png",
+    "crop": [
+      411,
+      430,
+      577,
+      596
+    ],
+    "size": [
+      64,
+      64
+    ],
+    "sha256": "123d9f22146a7984a7b5f6372a6a39ab52cc539b5f7cf41d86dbdd678cb573ae"
+  },
+  "icon-pause": {
+    "source": "aren 1.png",
+    "crop": [
+      598,
+      430,
+      764,
+      596
+    ],
+    "size": [
+      59,
+      64
+    ],
+    "sha256": "123d9f22146a7984a7b5f6372a6a39ab52cc539b5f7cf41d86dbdd678cb573ae"
+  },
+  "icon-play": {
+    "source": "aren 1.png",
+    "crop": [
+      785,
+      430,
+      951,
+      596
+    ],
+    "size": [
+      55,
+      64
+    ],
+    "sha256": "123d9f22146a7984a7b5f6372a6a39ab52cc539b5f7cf41d86dbdd678cb573ae"
+  },
+  "icon-close": {
+    "source": "aren 1.png",
+    "crop": [
+      972,
+      430,
+      1138,
+      596
+    ],
+    "size": [
+      64,
+      60
+    ],
+    "sha256": "123d9f22146a7984a7b5f6372a6a39ab52cc539b5f7cf41d86dbdd678cb573ae"
+  },
+  "icon-check": {
+    "source": "aren 1.png",
+    "crop": [
+      1159,
+      430,
+      1325,
+      596
+    ],
+    "size": [
+      64,
+      49
+    ],
+    "sha256": "123d9f22146a7984a7b5f6372a6a39ab52cc539b5f7cf41d86dbdd678cb573ae"
+  },
+  "icon-menu": {
+    "source": "aren 1.png",
+    "crop": [
+      1346,
+      430,
+      1512,
+      596
+    ],
+    "size": [
+      64,
+      54
+    ],
+    "sha256": "123d9f22146a7984a7b5f6372a6a39ab52cc539b5f7cf41d86dbdd678cb573ae"
+  },
+  "icon-attack": {
+    "source": "aren 1.png",
+    "crop": [
+      37,
+      611,
+      203,
+      777
+    ],
+    "size": [
+      64,
+      64
+    ],
+    "sha256": "123d9f22146a7984a7b5f6372a6a39ab52cc539b5f7cf41d86dbdd678cb573ae"
+  },
+  "icon-shield": {
+    "source": "aren 1.png",
+    "crop": [
+      224,
+      611,
+      390,
+      777
+    ],
+    "size": [
+      61,
+      64
+    ],
+    "sha256": "123d9f22146a7984a7b5f6372a6a39ab52cc539b5f7cf41d86dbdd678cb573ae"
+  },
+  "icon-healing": {
+    "source": "aren 1.png",
+    "crop": [
+      411,
+      611,
+      577,
+      777
+    ],
+    "size": [
+      64,
+      56
+    ],
+    "sha256": "123d9f22146a7984a7b5f6372a6a39ab52cc539b5f7cf41d86dbdd678cb573ae"
+  },
+  "icon-storm": {
+    "source": "aren 1.png",
+    "crop": [
+      598,
+      611,
+      764,
+      777
+    ],
+    "size": [
+      44,
+      64
+    ],
+    "sha256": "123d9f22146a7984a7b5f6372a6a39ab52cc539b5f7cf41d86dbdd678cb573ae"
+  },
+  "icon-sparkle": {
+    "source": "aren 1.png",
+    "crop": [
+      785,
+      611,
+      951,
+      777
+    ],
+    "size": [
+      61,
+      64
+    ],
+    "sha256": "123d9f22146a7984a7b5f6372a6a39ab52cc539b5f7cf41d86dbdd678cb573ae"
+  },
+  "icon-lock": {
+    "source": "aren 1.png",
+    "crop": [
+      972,
+      611,
+      1138,
+      777
+    ],
+    "size": [
+      52,
+      64
+    ],
+    "sha256": "123d9f22146a7984a7b5f6372a6a39ab52cc539b5f7cf41d86dbdd678cb573ae"
+  },
+  "icon-plus": {
+    "source": "aren 1.png",
+    "crop": [
+      1159,
+      611,
+      1325,
+      777
+    ],
+    "size": [
+      64,
+      63
+    ],
+    "sha256": "123d9f22146a7984a7b5f6372a6a39ab52cc539b5f7cf41d86dbdd678cb573ae"
+  },
+  "icon-circle": {
+    "source": "aren 1.png",
+    "crop": [
+      1346,
+      611,
+      1512,
+      777
+    ],
+    "size": [
+      64,
+      64
+    ],
+    "sha256": "123d9f22146a7984a7b5f6372a6a39ab52cc539b5f7cf41d86dbdd678cb573ae"
+  },
+  "icon-victory": {
+    "source": "aren 1.png",
+    "crop": [
+      37,
+      792,
+      203,
+      958
+    ],
+    "size": [
+      63,
+      64
+    ],
+    "sha256": "123d9f22146a7984a7b5f6372a6a39ab52cc539b5f7cf41d86dbdd678cb573ae"
+  },
+  "icon-elite": {
+    "source": "aren 1.png",
+    "crop": [
+      224,
+      792,
+      390,
+      958
+    ],
+    "size": [
+      59,
+      64
+    ],
+    "sha256": "123d9f22146a7984a7b5f6372a6a39ab52cc539b5f7cf41d86dbdd678cb573ae"
+  },
+  "icon-magic": {
+    "source": "aren 1.png",
+    "crop": [
+      411,
+      792,
+      577,
+      958
+    ],
+    "size": [
+      52,
+      64
+    ],
+    "sha256": "123d9f22146a7984a7b5f6372a6a39ab52cc539b5f7cf41d86dbdd678cb573ae"
+  },
+  "icon-diamond": {
+    "source": "aren 1.png",
+    "crop": [
+      598,
+      792,
+      764,
+      958
+    ],
+    "size": [
+      59,
+      64
+    ],
+    "sha256": "123d9f22146a7984a7b5f6372a6a39ab52cc539b5f7cf41d86dbdd678cb573ae"
+  },
+  "icon-focus": {
+    "source": "aren 1.png",
+    "crop": [
+      785,
+      792,
+      951,
+      958
+    ],
+    "size": [
+      64,
+      64
+    ],
+    "sha256": "123d9f22146a7984a7b5f6372a6a39ab52cc539b5f7cf41d86dbdd678cb573ae"
+  },
+  "icon-guard": {
+    "source": "aren 1.png",
+    "crop": [
+      972,
+      792,
+      1138,
+      958
+    ],
+    "size": [
+      56,
+      64
+    ],
+    "sha256": "123d9f22146a7984a7b5f6372a6a39ab52cc539b5f7cf41d86dbdd678cb573ae"
+  },
+  "icon-swords": {
+    "source": "aren 1.png",
+    "crop": [
+      1159,
+      792,
+      1325,
+      958
+    ],
+    "size": [
+      64,
+      64
+    ],
+    "sha256": "123d9f22146a7984a7b5f6372a6a39ab52cc539b5f7cf41d86dbdd678cb573ae"
+  },
+  "icon-bow": {
+    "source": "aren 1.png",
+    "crop": [
+      1346,
+      792,
+      1512,
+      958
+    ],
+    "size": [
+      54,
+      64
+    ],
+    "sha256": "123d9f22146a7984a7b5f6372a6a39ab52cc539b5f7cf41d86dbdd678cb573ae"
+  },
+  "rich-00": {
+    "source": "aren 7.png",
+    "crop": [
+      0,
+      0,
+      384,
+      341
+    ],
+    "size": [
+      94,
+      96
+    ],
+    "sha256": "5bfc1437762611f6dd4c51e9fe03b5a8575f1e014253dcb5d915a51048677ab8"
+  },
+  "rich-01": {
+    "source": "aren 7.png",
+    "crop": [
+      384,
+      0,
+      768,
+      341
+    ],
+    "size": [
+      96,
+      95
+    ],
+    "sha256": "5bfc1437762611f6dd4c51e9fe03b5a8575f1e014253dcb5d915a51048677ab8"
+  },
+  "rich-02": {
+    "source": "aren 7.png",
+    "crop": [
+      768,
+      0,
+      1152,
+      341
+    ],
+    "size": [
+      96,
+      92
+    ],
+    "sha256": "5bfc1437762611f6dd4c51e9fe03b5a8575f1e014253dcb5d915a51048677ab8"
+  },
+  "rich-03": {
+    "source": "aren 7.png",
+    "crop": [
+      1152,
+      0,
+      1536,
+      341
+    ],
+    "size": [
+      84,
+      96
+    ],
+    "sha256": "5bfc1437762611f6dd4c51e9fe03b5a8575f1e014253dcb5d915a51048677ab8"
+  },
+  "rich-04": {
+    "source": "aren 7.png",
+    "crop": [
+      0,
+      341,
+      384,
+      683
+    ],
+    "size": [
+      79,
+      96
+    ],
+    "sha256": "5bfc1437762611f6dd4c51e9fe03b5a8575f1e014253dcb5d915a51048677ab8"
+  },
+  "rich-05": {
+    "source": "aren 7.png",
+    "crop": [
+      384,
+      341,
+      768,
+      683
+    ],
+    "size": [
+      96,
+      75
+    ],
+    "sha256": "5bfc1437762611f6dd4c51e9fe03b5a8575f1e014253dcb5d915a51048677ab8"
+  },
+  "rich-06": {
+    "source": "aren 7.png",
+    "crop": [
+      768,
+      341,
+      1152,
+      683
+    ],
+    "size": [
+      71,
+      96
+    ],
+    "sha256": "5bfc1437762611f6dd4c51e9fe03b5a8575f1e014253dcb5d915a51048677ab8"
+  },
+  "rich-07": {
+    "source": "aren 7.png",
+    "crop": [
+      1152,
+      341,
+      1536,
+      683
+    ],
+    "size": [
+      58,
+      96
+    ],
+    "sha256": "5bfc1437762611f6dd4c51e9fe03b5a8575f1e014253dcb5d915a51048677ab8"
+  },
+  "rich-08": {
+    "source": "aren 7.png",
+    "crop": [
+      0,
+      683,
+      384,
+      1024
+    ],
+    "size": [
+      96,
+      94
+    ],
+    "sha256": "5bfc1437762611f6dd4c51e9fe03b5a8575f1e014253dcb5d915a51048677ab8"
+  },
+  "rich-09": {
+    "source": "aren 7.png",
+    "crop": [
+      384,
+      683,
+      768,
+      1024
+    ],
+    "size": [
+      67,
+      96
+    ],
+    "sha256": "5bfc1437762611f6dd4c51e9fe03b5a8575f1e014253dcb5d915a51048677ab8"
+  },
+  "rich-10": {
+    "source": "aren 7.png",
+    "crop": [
+      768,
+      683,
+      1152,
+      1024
+    ],
+    "size": [
+      96,
+      62
+    ],
+    "sha256": "5bfc1437762611f6dd4c51e9fe03b5a8575f1e014253dcb5d915a51048677ab8"
+  },
+  "rich-11": {
+    "source": "aren 7.png",
+    "crop": [
+      1152,
+      683,
+      1536,
+      1024
+    ],
+    "size": [
+      96,
+      83
+    ],
+    "sha256": "5bfc1437762611f6dd4c51e9fe03b5a8575f1e014253dcb5d915a51048677ab8"
+  },
+  "skill-00": {
+    "source": "aren 9.png",
+    "crop": [
+      0,
+      0,
+      384,
+      341
+    ],
+    "size": [
+      92,
+      96
+    ],
+    "sha256": "756464e32653fdcc11d1475ce01406003414b8a7a9985839ef2a04d91d49d820"
+  },
+  "skill-01": {
+    "source": "aren 9.png",
+    "crop": [
+      384,
+      0,
+      768,
+      341
+    ],
+    "size": [
+      82,
+      96
+    ],
+    "sha256": "756464e32653fdcc11d1475ce01406003414b8a7a9985839ef2a04d91d49d820"
+  },
+  "skill-02": {
+    "source": "aren 9.png",
+    "crop": [
+      768,
+      0,
+      1152,
+      341
+    ],
+    "size": [
+      96,
+      90
+    ],
+    "sha256": "756464e32653fdcc11d1475ce01406003414b8a7a9985839ef2a04d91d49d820"
+  },
+  "skill-03": {
+    "source": "aren 9.png",
+    "crop": [
+      1152,
+      0,
+      1536,
+      341
+    ],
+    "size": [
+      96,
+      82
+    ],
+    "sha256": "756464e32653fdcc11d1475ce01406003414b8a7a9985839ef2a04d91d49d820"
+  },
+  "skill-04": {
+    "source": "aren 9.png",
+    "crop": [
+      0,
+      341,
+      384,
+      683
+    ],
+    "size": [
+      86,
+      96
+    ],
+    "sha256": "756464e32653fdcc11d1475ce01406003414b8a7a9985839ef2a04d91d49d820"
+  },
+  "skill-05": {
+    "source": "aren 9.png",
+    "crop": [
+      384,
+      341,
+      768,
+      683
+    ],
+    "size": [
+      84,
+      96
+    ],
+    "sha256": "756464e32653fdcc11d1475ce01406003414b8a7a9985839ef2a04d91d49d820"
+  },
+  "skill-06": {
+    "source": "aren 9.png",
+    "crop": [
+      768,
+      341,
+      1152,
+      683
+    ],
+    "size": [
+      65,
+      96
+    ],
+    "sha256": "756464e32653fdcc11d1475ce01406003414b8a7a9985839ef2a04d91d49d820"
+  },
+  "skill-07": {
+    "source": "aren 9.png",
+    "crop": [
+      1152,
+      341,
+      1536,
+      683
+    ],
+    "size": [
+      93,
+      96
+    ],
+    "sha256": "756464e32653fdcc11d1475ce01406003414b8a7a9985839ef2a04d91d49d820"
+  },
+  "skill-08": {
+    "source": "aren 9.png",
+    "crop": [
+      0,
+      683,
+      384,
+      1024
+    ],
+    "size": [
+      96,
+      92
+    ],
+    "sha256": "756464e32653fdcc11d1475ce01406003414b8a7a9985839ef2a04d91d49d820"
+  },
+  "skill-09": {
+    "source": "aren 9.png",
+    "crop": [
+      384,
+      683,
+      768,
+      1024
+    ],
+    "size": [
+      93,
+      96
+    ],
+    "sha256": "756464e32653fdcc11d1475ce01406003414b8a7a9985839ef2a04d91d49d820"
+  },
+  "skill-10": {
+    "source": "aren 9.png",
+    "crop": [
+      768,
+      683,
+      1152,
+      1024
+    ],
+    "size": [
+      94,
+      96
+    ],
+    "sha256": "756464e32653fdcc11d1475ce01406003414b8a7a9985839ef2a04d91d49d820"
+  },
+  "skill-11": {
+    "source": "aren 9.png",
+    "crop": [
+      1152,
+      683,
+      1536,
+      1024
+    ],
+    "size": [
+      96,
+      45
+    ],
+    "sha256": "756464e32653fdcc11d1475ce01406003414b8a7a9985839ef2a04d91d49d820"
+  },
+  "capture-scout-idle": {
+    "source": "captures art 1.png",
+    "crop": [
+      0,
+      0,
+      362,
+      309
+    ],
+    "size": [
+      160,
+      139
+    ],
+    "sha256": "57bb3fe0fc4cb3b18b5ad7577b2be593ba59926286d2d35b5f8db45fa160e8a2"
+  },
+  "capture-scout-ready": {
+    "source": "captures art 1.png",
+    "crop": [
+      0,
+      309,
+      362,
+      583
+    ],
+    "size": [
+      160,
+      141
+    ],
+    "sha256": "57bb3fe0fc4cb3b18b5ad7577b2be593ba59926286d2d35b5f8db45fa160e8a2"
+  },
+  "capture-scout-active": {
+    "source": "captures art 1.png",
+    "crop": [
+      0,
+      583,
+      362,
+      837
+    ],
+    "size": [
+      160,
+      133
+    ],
+    "sha256": "57bb3fe0fc4cb3b18b5ad7577b2be593ba59926286d2d35b5f8db45fa160e8a2"
+  },
+  "capture-scout-spent": {
+    "source": "captures art 1.png",
+    "crop": [
+      0,
+      837,
+      362,
+      1086
+    ],
+    "size": [
+      160,
+      120
+    ],
+    "sha256": "57bb3fe0fc4cb3b18b5ad7577b2be593ba59926286d2d35b5f8db45fa160e8a2"
+  },
+  "capture-runic-idle": {
+    "source": "captures art 1.png",
+    "crop": [
+      362,
+      0,
+      724,
+      309
+    ],
+    "size": [
+      160,
+      157
+    ],
+    "sha256": "57bb3fe0fc4cb3b18b5ad7577b2be593ba59926286d2d35b5f8db45fa160e8a2"
+  },
+  "capture-runic-ready": {
+    "source": "captures art 1.png",
+    "crop": [
+      362,
+      309,
+      724,
+      583
+    ],
+    "size": [
+      160,
+      153
+    ],
+    "sha256": "57bb3fe0fc4cb3b18b5ad7577b2be593ba59926286d2d35b5f8db45fa160e8a2"
+  },
+  "capture-runic-active": {
+    "source": "captures art 1.png",
+    "crop": [
+      362,
+      583,
+      724,
+      837
+    ],
+    "size": [
+      160,
+      148
+    ],
+    "sha256": "57bb3fe0fc4cb3b18b5ad7577b2be593ba59926286d2d35b5f8db45fa160e8a2"
+  },
+  "capture-runic-spent": {
+    "source": "captures art 1.png",
+    "crop": [
+      362,
+      837,
+      724,
+      1086
+    ],
+    "size": [
+      160,
+      131
+    ],
+    "sha256": "57bb3fe0fc4cb3b18b5ad7577b2be593ba59926286d2d35b5f8db45fa160e8a2"
+  },
+  "capture-astral-idle": {
+    "source": "captures art 1.png",
+    "crop": [
+      724,
+      0,
+      1086,
+      309
+    ],
+    "size": [
+      152,
+      160
+    ],
+    "sha256": "57bb3fe0fc4cb3b18b5ad7577b2be593ba59926286d2d35b5f8db45fa160e8a2"
+  },
+  "capture-astral-ready": {
+    "source": "captures art 1.png",
+    "crop": [
+      724,
+      309,
+      1086,
+      583
+    ],
+    "size": [
+      160,
+      146
+    ],
+    "sha256": "57bb3fe0fc4cb3b18b5ad7577b2be593ba59926286d2d35b5f8db45fa160e8a2"
+  },
+  "capture-astral-active": {
+    "source": "captures art 1.png",
+    "crop": [
+      724,
+      583,
+      1086,
+      837
+    ],
+    "size": [
+      160,
+      145
+    ],
+    "sha256": "57bb3fe0fc4cb3b18b5ad7577b2be593ba59926286d2d35b5f8db45fa160e8a2"
+  },
+  "capture-astral-spent": {
+    "source": "captures art 1.png",
+    "crop": [
+      724,
+      837,
+      1086,
+      1086
+    ],
+    "size": [
+      160,
+      137
+    ],
+    "sha256": "57bb3fe0fc4cb3b18b5ad7577b2be593ba59926286d2d35b5f8db45fa160e8a2"
+  },
+  "capture-mythic-idle": {
+    "source": "captures art 1.png",
+    "crop": [
+      1086,
+      0,
+      1448,
+      309
+    ],
+    "size": [
+      145,
+      160
+    ],
+    "sha256": "57bb3fe0fc4cb3b18b5ad7577b2be593ba59926286d2d35b5f8db45fa160e8a2"
+  },
+  "capture-mythic-ready": {
+    "source": "captures art 1.png",
+    "crop": [
+      1086,
+      309,
+      1448,
+      583
+    ],
+    "size": [
+      160,
+      146
+    ],
+    "sha256": "57bb3fe0fc4cb3b18b5ad7577b2be593ba59926286d2d35b5f8db45fa160e8a2"
+  },
+  "capture-mythic-active": {
+    "source": "captures art 1.png",
+    "crop": [
+      1086,
+      583,
+      1448,
+      837
+    ],
+    "size": [
+      160,
+      152
+    ],
+    "sha256": "57bb3fe0fc4cb3b18b5ad7577b2be593ba59926286d2d35b5f8db45fa160e8a2"
+  },
+  "capture-mythic-spent": {
+    "source": "captures art 1.png",
+    "crop": [
+      1086,
+      837,
+      1448,
+      1086
+    ],
+    "size": [
+      160,
+      127
+    ],
+    "sha256": "57bb3fe0fc4cb3b18b5ad7577b2be593ba59926286d2d35b5f8db45fa160e8a2"
+  },
+  "chest-00": {
+    "source": "chest opening.png",
+    "crop": [
+      0,
+      0,
+      362,
+      362
+    ],
+    "size": [
+      300,
+      300
+    ],
+    "sha256": "81fdf47649b59fa9526f829c4d0906fecadbae3d062bc133541a33e56b80f75e"
+  },
+  "chest-01": {
+    "source": "chest opening.png",
+    "crop": [
+      362,
+      0,
+      724,
+      362
+    ],
+    "size": [
+      300,
+      300
+    ],
+    "sha256": "81fdf47649b59fa9526f829c4d0906fecadbae3d062bc133541a33e56b80f75e"
+  },
+  "chest-02": {
+    "source": "chest opening.png",
+    "crop": [
+      724,
+      0,
+      1086,
+      362
+    ],
+    "size": [
+      300,
+      300
+    ],
+    "sha256": "81fdf47649b59fa9526f829c4d0906fecadbae3d062bc133541a33e56b80f75e"
+  },
+  "chest-03": {
+    "source": "chest opening.png",
+    "crop": [
+      1086,
+      0,
+      1448,
+      362
+    ],
+    "size": [
+      300,
+      300
+    ],
+    "sha256": "81fdf47649b59fa9526f829c4d0906fecadbae3d062bc133541a33e56b80f75e"
+  },
+  "chest-04": {
+    "source": "chest opening.png",
+    "crop": [
+      0,
+      362,
+      362,
+      724
+    ],
+    "size": [
+      300,
+      300
+    ],
+    "sha256": "81fdf47649b59fa9526f829c4d0906fecadbae3d062bc133541a33e56b80f75e"
+  },
+  "chest-05": {
+    "source": "chest opening.png",
+    "crop": [
+      362,
+      362,
+      724,
+      724
+    ],
+    "size": [
+      300,
+      300
+    ],
+    "sha256": "81fdf47649b59fa9526f829c4d0906fecadbae3d062bc133541a33e56b80f75e"
+  },
+  "chest-06": {
+    "source": "chest opening.png",
+    "crop": [
+      724,
+      362,
+      1086,
+      724
+    ],
+    "size": [
+      300,
+      300
+    ],
+    "sha256": "81fdf47649b59fa9526f829c4d0906fecadbae3d062bc133541a33e56b80f75e"
+  },
+  "chest-07": {
+    "source": "chest opening.png",
+    "crop": [
+      1086,
+      362,
+      1448,
+      724
+    ],
+    "size": [
+      300,
+      300
+    ],
+    "sha256": "81fdf47649b59fa9526f829c4d0906fecadbae3d062bc133541a33e56b80f75e"
+  },
+  "chest-08": {
+    "source": "chest opening.png",
+    "crop": [
+      0,
+      724,
+      362,
+      1086
+    ],
+    "size": [
+      300,
+      300
+    ],
+    "sha256": "81fdf47649b59fa9526f829c4d0906fecadbae3d062bc133541a33e56b80f75e"
+  },
+  "chest-09": {
+    "source": "chest opening.png",
+    "crop": [
+      362,
+      724,
+      724,
+      1086
+    ],
+    "size": [
+      300,
+      300
+    ],
+    "sha256": "81fdf47649b59fa9526f829c4d0906fecadbae3d062bc133541a33e56b80f75e"
+  },
+  "chest-10": {
+    "source": "chest opening.png",
+    "crop": [
+      724,
+      724,
+      1086,
+      1086
+    ],
+    "size": [
+      300,
+      300
+    ],
+    "sha256": "81fdf47649b59fa9526f829c4d0906fecadbae3d062bc133541a33e56b80f75e"
+  },
+  "chest-11": {
+    "source": "chest opening.png",
+    "crop": [
+      1086,
+      724,
+      1448,
+      1086
+    ],
+    "size": [
+      300,
+      300
+    ],
+    "sha256": "81fdf47649b59fa9526f829c4d0906fecadbae3d062bc133541a33e56b80f75e"
+  },
+  "cache-00": {
+    "source": "chest.png",
+    "crop": [
+      0,
+      0,
+      362,
+      362
+    ],
+    "size": [
+      300,
+      300
+    ],
+    "sha256": "28d79cecfa143900e98750a4bfb1d6c8eb3fa7bea065edb5983f62c9f65b14ad"
+  },
+  "cache-01": {
+    "source": "chest.png",
+    "crop": [
+      362,
+      0,
+      724,
+      362
+    ],
+    "size": [
+      300,
+      300
+    ],
+    "sha256": "28d79cecfa143900e98750a4bfb1d6c8eb3fa7bea065edb5983f62c9f65b14ad"
+  },
+  "cache-02": {
+    "source": "chest.png",
+    "crop": [
+      724,
+      0,
+      1086,
+      362
+    ],
+    "size": [
+      300,
+      300
+    ],
+    "sha256": "28d79cecfa143900e98750a4bfb1d6c8eb3fa7bea065edb5983f62c9f65b14ad"
+  },
+  "cache-03": {
+    "source": "chest.png",
+    "crop": [
+      1086,
+      0,
+      1448,
+      362
+    ],
+    "size": [
+      300,
+      300
+    ],
+    "sha256": "28d79cecfa143900e98750a4bfb1d6c8eb3fa7bea065edb5983f62c9f65b14ad"
+  },
+  "cache-04": {
+    "source": "chest.png",
+    "crop": [
+      0,
+      362,
+      362,
+      724
+    ],
+    "size": [
+      300,
+      300
+    ],
+    "sha256": "28d79cecfa143900e98750a4bfb1d6c8eb3fa7bea065edb5983f62c9f65b14ad"
+  },
+  "cache-05": {
+    "source": "chest.png",
+    "crop": [
+      362,
+      362,
+      724,
+      724
+    ],
+    "size": [
+      300,
+      300
+    ],
+    "sha256": "28d79cecfa143900e98750a4bfb1d6c8eb3fa7bea065edb5983f62c9f65b14ad"
+  },
+  "cache-06": {
+    "source": "chest.png",
+    "crop": [
+      724,
+      362,
+      1086,
+      724
+    ],
+    "size": [
+      300,
+      300
+    ],
+    "sha256": "28d79cecfa143900e98750a4bfb1d6c8eb3fa7bea065edb5983f62c9f65b14ad"
+  },
+  "cache-07": {
+    "source": "chest.png",
+    "crop": [
+      1086,
+      362,
+      1448,
+      724
+    ],
+    "size": [
+      300,
+      300
+    ],
+    "sha256": "28d79cecfa143900e98750a4bfb1d6c8eb3fa7bea065edb5983f62c9f65b14ad"
+  },
+  "cache-08": {
+    "source": "chest.png",
+    "crop": [
+      0,
+      724,
+      362,
+      1086
+    ],
+    "size": [
+      300,
+      300
+    ],
+    "sha256": "28d79cecfa143900e98750a4bfb1d6c8eb3fa7bea065edb5983f62c9f65b14ad"
+  },
+  "cache-09": {
+    "source": "chest.png",
+    "crop": [
+      362,
+      724,
+      724,
+      1086
+    ],
+    "size": [
+      300,
+      300
+    ],
+    "sha256": "28d79cecfa143900e98750a4bfb1d6c8eb3fa7bea065edb5983f62c9f65b14ad"
+  },
+  "cache-10": {
+    "source": "chest.png",
+    "crop": [
+      724,
+      724,
+      1086,
+      1086
+    ],
+    "size": [
+      300,
+      300
+    ],
+    "sha256": "28d79cecfa143900e98750a4bfb1d6c8eb3fa7bea065edb5983f62c9f65b14ad"
+  },
+  "cache-11": {
+    "source": "chest.png",
+    "crop": [
+      1086,
+      724,
+      1448,
+      1086
+    ],
+    "size": [
+      300,
+      300
+    ],
+    "sha256": "28d79cecfa143900e98750a4bfb1d6c8eb3fa7bea065edb5983f62c9f65b14ad"
+  },
+  "pack-00": {
+    "source": "napsack 1.png",
+    "crop": [
+      0,
+      0,
+      362,
+      362
+    ],
+    "size": [
+      300,
+      300
+    ],
+    "sha256": "f231d5d10ab4b9104356723d71326fddc65f951ce24be270dfa06dd95e0895aa"
+  },
+  "pack-01": {
+    "source": "napsack 1.png",
+    "crop": [
+      362,
+      0,
+      724,
+      362
+    ],
+    "size": [
+      300,
+      300
+    ],
+    "sha256": "f231d5d10ab4b9104356723d71326fddc65f951ce24be270dfa06dd95e0895aa"
+  },
+  "pack-02": {
+    "source": "napsack 1.png",
+    "crop": [
+      724,
+      0,
+      1086,
+      362
+    ],
+    "size": [
+      300,
+      300
+    ],
+    "sha256": "f231d5d10ab4b9104356723d71326fddc65f951ce24be270dfa06dd95e0895aa"
+  },
+  "pack-03": {
+    "source": "napsack 1.png",
+    "crop": [
+      1086,
+      0,
+      1448,
+      362
+    ],
+    "size": [
+      300,
+      300
+    ],
+    "sha256": "f231d5d10ab4b9104356723d71326fddc65f951ce24be270dfa06dd95e0895aa"
+  },
+  "pack-04": {
+    "source": "napsack 1.png",
+    "crop": [
+      0,
+      362,
+      362,
+      724
+    ],
+    "size": [
+      300,
+      300
+    ],
+    "sha256": "f231d5d10ab4b9104356723d71326fddc65f951ce24be270dfa06dd95e0895aa"
+  },
+  "pack-05": {
+    "source": "napsack 1.png",
+    "crop": [
+      362,
+      362,
+      724,
+      724
+    ],
+    "size": [
+      300,
+      300
+    ],
+    "sha256": "f231d5d10ab4b9104356723d71326fddc65f951ce24be270dfa06dd95e0895aa"
+  },
+  "pack-06": {
+    "source": "napsack 1.png",
+    "crop": [
+      724,
+      362,
+      1086,
+      724
+    ],
+    "size": [
+      300,
+      300
+    ],
+    "sha256": "f231d5d10ab4b9104356723d71326fddc65f951ce24be270dfa06dd95e0895aa"
+  },
+  "pack-07": {
+    "source": "napsack 1.png",
+    "crop": [
+      1086,
+      362,
+      1448,
+      724
+    ],
+    "size": [
+      300,
+      300
+    ],
+    "sha256": "f231d5d10ab4b9104356723d71326fddc65f951ce24be270dfa06dd95e0895aa"
+  },
+  "pack-08": {
+    "source": "napsack 1.png",
+    "crop": [
+      0,
+      724,
+      362,
+      1086
+    ],
+    "size": [
+      300,
+      300
+    ],
+    "sha256": "f231d5d10ab4b9104356723d71326fddc65f951ce24be270dfa06dd95e0895aa"
+  },
+  "pack-09": {
+    "source": "napsack 1.png",
+    "crop": [
+      362,
+      724,
+      724,
+      1086
+    ],
+    "size": [
+      300,
+      300
+    ],
+    "sha256": "f231d5d10ab4b9104356723d71326fddc65f951ce24be270dfa06dd95e0895aa"
+  },
+  "pack-10": {
+    "source": "napsack 1.png",
+    "crop": [
+      724,
+      724,
+      1086,
+      1086
+    ],
+    "size": [
+      300,
+      300
+    ],
+    "sha256": "f231d5d10ab4b9104356723d71326fddc65f951ce24be270dfa06dd95e0895aa"
+  },
+  "pack-11": {
+    "source": "napsack 1.png",
+    "crop": [
+      1086,
+      724,
+      1448,
+      1086
+    ],
+    "size": [
+      300,
+      300
+    ],
+    "sha256": "f231d5d10ab4b9104356723d71326fddc65f951ce24be270dfa06dd95e0895aa"
+  },
+  "treasure-00": {
+    "source": "post match 3.png",
+    "crop": [
+      0,
+      0,
+      362,
+      362
+    ],
+    "size": [
+      160,
+      148
+    ],
+    "sha256": "148026bd9aa4f5198326d357abe97c3991e1f754d19285fa5a6eea8c88c73ee3"
+  },
+  "treasure-01": {
+    "source": "post match 3.png",
+    "crop": [
+      362,
+      0,
+      724,
+      362
+    ],
+    "size": [
+      160,
+      126
+    ],
+    "sha256": "148026bd9aa4f5198326d357abe97c3991e1f754d19285fa5a6eea8c88c73ee3"
+  },
+  "treasure-02": {
+    "source": "post match 3.png",
+    "crop": [
+      724,
+      0,
+      1086,
+      362
+    ],
+    "size": [
+      160,
+      108
+    ],
+    "sha256": "148026bd9aa4f5198326d357abe97c3991e1f754d19285fa5a6eea8c88c73ee3"
+  },
+  "treasure-03": {
+    "source": "post match 3.png",
+    "crop": [
+      1086,
+      0,
+      1448,
+      362
+    ],
+    "size": [
+      124,
+      160
+    ],
+    "sha256": "148026bd9aa4f5198326d357abe97c3991e1f754d19285fa5a6eea8c88c73ee3"
+  },
+  "treasure-04": {
+    "source": "post match 3.png",
+    "crop": [
+      0,
+      362,
+      362,
+      724
+    ],
+    "size": [
+      129,
+      160
+    ],
+    "sha256": "148026bd9aa4f5198326d357abe97c3991e1f754d19285fa5a6eea8c88c73ee3"
+  },
+  "treasure-05": {
+    "source": "post match 3.png",
+    "crop": [
+      362,
+      362,
+      724,
+      724
+    ],
+    "size": [
+      147,
+      160
+    ],
+    "sha256": "148026bd9aa4f5198326d357abe97c3991e1f754d19285fa5a6eea8c88c73ee3"
+  },
+  "treasure-06": {
+    "source": "post match 3.png",
+    "crop": [
+      724,
+      362,
+      1086,
+      724
+    ],
+    "size": [
+      117,
+      160
+    ],
+    "sha256": "148026bd9aa4f5198326d357abe97c3991e1f754d19285fa5a6eea8c88c73ee3"
+  },
+  "treasure-07": {
+    "source": "post match 3.png",
+    "crop": [
+      1086,
+      362,
+      1448,
+      724
+    ],
+    "size": [
+      160,
+      82
+    ],
+    "sha256": "148026bd9aa4f5198326d357abe97c3991e1f754d19285fa5a6eea8c88c73ee3"
+  },
+  "treasure-08": {
+    "source": "post match 3.png",
+    "crop": [
+      0,
+      724,
+      362,
+      1086
+    ],
+    "size": [
+      160,
+      159
+    ],
+    "sha256": "148026bd9aa4f5198326d357abe97c3991e1f754d19285fa5a6eea8c88c73ee3"
+  },
+  "treasure-09": {
+    "source": "post match 3.png",
+    "crop": [
+      362,
+      724,
+      724,
+      1086
+    ],
+    "size": [
+      160,
+      82
+    ],
+    "sha256": "148026bd9aa4f5198326d357abe97c3991e1f754d19285fa5a6eea8c88c73ee3"
+  },
+  "treasure-10": {
+    "source": "post match 3.png",
+    "crop": [
+      724,
+      724,
+      1086,
+      1086
+    ],
+    "size": [
+      160,
+      131
+    ],
+    "sha256": "148026bd9aa4f5198326d357abe97c3991e1f754d19285fa5a6eea8c88c73ee3"
+  },
+  "treasure-11": {
+    "source": "post match 3.png",
+    "crop": [
+      1086,
+      724,
+      1448,
+      1086
+    ],
+    "size": [
+      147,
+      160
+    ],
+    "sha256": "148026bd9aa4f5198326d357abe97c3991e1f754d19285fa5a6eea8c88c73ee3"
+  },
+  "effect-00": {
+    "source": "post match 4.png",
+    "crop": [
+      0,
+      0,
+      280,
+      280
+    ],
+    "size": [
+      128,
+      128
+    ],
+    "sha256": "efc9b63acd50e136adb3b0137a9114c415567201a9b956c76f2ca0e6bcfe9403"
+  },
+  "effect-01": {
+    "source": "post match 4.png",
+    "crop": [
+      280,
+      0,
+      561,
+      280
+    ],
+    "size": [
+      128,
+      128
+    ],
+    "sha256": "efc9b63acd50e136adb3b0137a9114c415567201a9b956c76f2ca0e6bcfe9403"
+  },
+  "effect-02": {
+    "source": "post match 4.png",
+    "crop": [
+      561,
+      0,
+      841,
+      280
+    ],
+    "size": [
+      128,
+      128
+    ],
+    "sha256": "efc9b63acd50e136adb3b0137a9114c415567201a9b956c76f2ca0e6bcfe9403"
+  },
+  "effect-03": {
+    "source": "post match 4.png",
+    "crop": [
+      841,
+      0,
+      1122,
+      280
+    ],
+    "size": [
+      128,
+      128
+    ],
+    "sha256": "efc9b63acd50e136adb3b0137a9114c415567201a9b956c76f2ca0e6bcfe9403"
+  },
+  "effect-04": {
+    "source": "post match 4.png",
+    "crop": [
+      1122,
+      0,
+      1402,
+      280
+    ],
+    "size": [
+      128,
+      128
+    ],
+    "sha256": "efc9b63acd50e136adb3b0137a9114c415567201a9b956c76f2ca0e6bcfe9403"
+  },
+  "effect-05": {
+    "source": "post match 4.png",
+    "crop": [
+      0,
+      280,
+      280,
+      561
+    ],
+    "size": [
+      128,
+      128
+    ],
+    "sha256": "efc9b63acd50e136adb3b0137a9114c415567201a9b956c76f2ca0e6bcfe9403"
+  },
+  "effect-06": {
+    "source": "post match 4.png",
+    "crop": [
+      280,
+      280,
+      561,
+      561
+    ],
+    "size": [
+      128,
+      128
+    ],
+    "sha256": "efc9b63acd50e136adb3b0137a9114c415567201a9b956c76f2ca0e6bcfe9403"
+  },
+  "effect-07": {
+    "source": "post match 4.png",
+    "crop": [
+      561,
+      280,
+      841,
+      561
+    ],
+    "size": [
+      128,
+      128
+    ],
+    "sha256": "efc9b63acd50e136adb3b0137a9114c415567201a9b956c76f2ca0e6bcfe9403"
+  },
+  "effect-08": {
+    "source": "post match 4.png",
+    "crop": [
+      841,
+      280,
+      1122,
+      561
+    ],
+    "size": [
+      128,
+      128
+    ],
+    "sha256": "efc9b63acd50e136adb3b0137a9114c415567201a9b956c76f2ca0e6bcfe9403"
+  },
+  "effect-09": {
+    "source": "post match 4.png",
+    "crop": [
+      1122,
+      280,
+      1402,
+      561
+    ],
+    "size": [
+      128,
+      128
+    ],
+    "sha256": "efc9b63acd50e136adb3b0137a9114c415567201a9b956c76f2ca0e6bcfe9403"
+  },
+  "effect-10": {
+    "source": "post match 4.png",
+    "crop": [
+      0,
+      561,
+      280,
+      842
+    ],
+    "size": [
+      128,
+      128
+    ],
+    "sha256": "efc9b63acd50e136adb3b0137a9114c415567201a9b956c76f2ca0e6bcfe9403"
+  },
+  "effect-11": {
+    "source": "post match 4.png",
+    "crop": [
+      280,
+      561,
+      561,
+      842
+    ],
+    "size": [
+      128,
+      128
+    ],
+    "sha256": "efc9b63acd50e136adb3b0137a9114c415567201a9b956c76f2ca0e6bcfe9403"
+  },
+  "effect-12": {
+    "source": "post match 4.png",
+    "crop": [
+      561,
+      561,
+      841,
+      842
+    ],
+    "size": [
+      128,
+      128
+    ],
+    "sha256": "efc9b63acd50e136adb3b0137a9114c415567201a9b956c76f2ca0e6bcfe9403"
+  },
+  "effect-13": {
+    "source": "post match 4.png",
+    "crop": [
+      841,
+      561,
+      1122,
+      842
+    ],
+    "size": [
+      128,
+      128
+    ],
+    "sha256": "efc9b63acd50e136adb3b0137a9114c415567201a9b956c76f2ca0e6bcfe9403"
+  },
+  "effect-14": {
+    "source": "post match 4.png",
+    "crop": [
+      1122,
+      561,
+      1402,
+      842
+    ],
+    "size": [
+      128,
+      128
+    ],
+    "sha256": "efc9b63acd50e136adb3b0137a9114c415567201a9b956c76f2ca0e6bcfe9403"
+  },
+  "effect-15": {
+    "source": "post match 4.png",
+    "crop": [
+      0,
+      842,
+      280,
+      1122
+    ],
+    "size": [
+      128,
+      128
+    ],
+    "sha256": "efc9b63acd50e136adb3b0137a9114c415567201a9b956c76f2ca0e6bcfe9403"
+  },
+  "effect-16": {
+    "source": "post match 4.png",
+    "crop": [
+      280,
+      842,
+      561,
+      1122
+    ],
+    "size": [
+      128,
+      128
+    ],
+    "sha256": "efc9b63acd50e136adb3b0137a9114c415567201a9b956c76f2ca0e6bcfe9403"
+  },
+  "effect-17": {
+    "source": "post match 4.png",
+    "crop": [
+      561,
+      842,
+      841,
+      1122
+    ],
+    "size": [
+      128,
+      128
+    ],
+    "sha256": "efc9b63acd50e136adb3b0137a9114c415567201a9b956c76f2ca0e6bcfe9403"
+  },
+  "effect-18": {
+    "source": "post match 4.png",
+    "crop": [
+      841,
+      842,
+      1122,
+      1122
+    ],
+    "size": [
+      128,
+      128
+    ],
+    "sha256": "efc9b63acd50e136adb3b0137a9114c415567201a9b956c76f2ca0e6bcfe9403"
+  },
+  "effect-19": {
+    "source": "post match 4.png",
+    "crop": [
+      1122,
+      842,
+      1402,
+      1122
+    ],
+    "size": [
+      128,
+      128
+    ],
+    "sha256": "efc9b63acd50e136adb3b0137a9114c415567201a9b956c76f2ca0e6bcfe9403"
+  },
+  "world-0": {
+    "source": "bAK 1.png",
+    "crop": [
+      0,
+      0,
+      1672,
+      941
+    ],
+    "size": [
+      1600,
+      900
+    ],
+    "sha256": "75587b487f91d580a5090473671f2adada04b0b88d88b8042227f880b1340e38"
+  },
+  "world-1": {
+    "source": "bak 2.png",
+    "crop": [
+      0,
+      0,
+      1672,
+      941
+    ],
+    "size": [
+      1600,
+      900
+    ],
+    "sha256": "6f1426523b4156715ee35a626e2115e2c6c8a46dd2c4aab9b34b53d66e875a51"
+  },
+  "world-2": {
+    "source": "bak 3.png",
+    "crop": [
+      0,
+      0,
+      1672,
+      941
+    ],
+    "size": [
+      1600,
+      900
+    ],
+    "sha256": "2f752a1da7ad793645817a1832eab8911d3cfc2aea1134dd5fd45dbc71356be6"
+  },
+  "rewards-backdrop": {
+    "source": "background post match.png",
+    "crop": [
+      0,
+      0,
+      1672,
+      941
+    ],
+    "size": [
+      1600,
+      900
+    ],
+    "sha256": "89c340b9045a3d79411b099026c5bdc2365e59f6736864db9a2230f0a424b092"
+  },
+  "brand-crest": {
+    "source": "aren 2.png",
+    "crop": [
+      1350,
+      755,
+      1536,
+      940
+    ],
+    "size": [
+      128,
+      128
+    ],
+    "sha256": "1292c98ead0a6c9212ccfea8c37fd5615af0b59ea94094f56519b25f6694744c"
+  },
+  "bar-track": {
+    "source": "aren 2.png",
+    "crop": [
+      48,
+      172,
+      268,
+      208
+    ],
+    "size": [
+      220,
+      36
+    ],
+    "sha256": "1292c98ead0a6c9212ccfea8c37fd5615af0b59ea94094f56519b25f6694744c"
+  },
+  "bar-health": {
+    "source": "aren 2.png",
+    "crop": [
+      303,
+      171,
+      518,
+      206
+    ],
+    "size": [
+      215,
+      35
+    ],
+    "sha256": "1292c98ead0a6c9212ccfea8c37fd5615af0b59ea94094f56519b25f6694744c"
+  },
+  "bar-enemy": {
+    "source": "aren 2.png",
+    "crop": [
+      553,
+      171,
+      768,
+      206
+    ],
+    "size": [
+      215,
+      35
+    ],
+    "sha256": "1292c98ead0a6c9212ccfea8c37fd5615af0b59ea94094f56519b25f6694744c"
+  },
+  "bar-stamina": {
+    "source": "aren 2.png",
+    "crop": [
+      805,
+      171,
+      1052,
+      206
+    ],
+    "size": [
+      247,
+      35
+    ],
+    "sha256": "1292c98ead0a6c9212ccfea8c37fd5615af0b59ea94094f56519b25f6694744c"
+  },
+  "bar-poise": {
+    "source": "aren 2.png",
+    "crop": [
+      1086,
+      171,
+      1312,
+      206
+    ],
+    "size": [
+      226,
+      35
+    ],
+    "sha256": "1292c98ead0a6c9212ccfea8c37fd5615af0b59ea94094f56519b25f6694744c"
+  },
+  "arena-frame": {
+    "source": "aren 3.png",
+    "crop": [
+      24,
+      85,
+      442,
+      403
+    ],
+    "size": [
+      415,
+      304
+    ],
+    "sha256": "cab8bab303fd3ed881ba6e6bc6cc97de9f425631788d76e4b8b1df1fb0f79e34"
+  },
+  "side-panel": {
+    "source": "aren 3.png",
+    "crop": [
+      503,
+      85,
+      682,
+      405
+    ],
+    "size": [
+      175,
+      315
+    ],
+    "sha256": "cab8bab303fd3ed881ba6e6bc6cc97de9f425631788d76e4b8b1df1fb0f79e34"
+  },
+  "gold-action": {
+    "source": "aren 3.png",
+    "crop": [
+      456,
+      758,
+      930,
+      869
+    ],
+    "size": [
+      469,
+      97
+    ],
+    "sha256": "cab8bab303fd3ed881ba6e6bc6cc97de9f425631788d76e4b8b1df1fb0f79e34"
+  },
+  "dark-action": {
+    "source": "aren 3.png",
+    "crop": [
+      948,
+      758,
+      1338,
+      868
+    ],
+    "size": [
+      388,
+      104
+    ],
+    "sha256": "cab8bab303fd3ed881ba6e6bc6cc97de9f425631788d76e4b8b1df1fb0f79e34"
+  },
+  "panel": {
+    "source": "aren 3.png",
+    "crop": [
+      728,
+      130,
+      1131,
+      354
+    ],
+    "size": [
+      400,
+      222
+    ],
+    "sha256": "cab8bab303fd3ed881ba6e6bc6cc97de9f425631788d76e4b8b1df1fb0f79e34"
+  },
+  "leaf-panel": {
+    "source": "aren 5.png",
+    "crop": [
+      49,
+      31,
+      970,
+      520
+    ],
+    "size": [
+      800,
+      420
+    ],
+    "sha256": "fa2c838a446ab725abd28d274dd31cb9a79153389a578771ac9b09121a46e3d7"
+  },
+  "toolbar": {
+    "source": "aren 5.png",
+    "crop": [
+      49,
+      551,
+      1286,
+      744
+    ],
+    "size": [
+      800,
+      110
+    ],
+    "sha256": "fa2c838a446ab725abd28d274dd31cb9a79153389a578771ac9b09121a46e3d7"
+  },
+  "tab": {
+    "source": "aren 6.png",
+    "crop": [
+      48,
+      88,
+      482,
+      229
+    ],
+    "size": [
+      416,
+      131
+    ],
+    "sha256": "79be7562c6b6ed2d312a58dd9ce5f6fc2d62f31682fd9147b18e016a42463de9"
+  },
+  "tab-hover": {
+    "source": "aren 6.png",
+    "crop": [
+      510,
+      88,
+      942,
+      229
+    ],
+    "size": [
+      416,
+      131
+    ],
+    "sha256": "79be7562c6b6ed2d312a58dd9ce5f6fc2d62f31682fd9147b18e016a42463de9"
+  },
+  "tab-selected": {
+    "source": "aren 6.png",
+    "crop": [
+      965,
+      88,
+      1399,
+      229
+    ],
+    "size": [
+      419,
+      132
+    ],
+    "sha256": "79be7562c6b6ed2d312a58dd9ce5f6fc2d62f31682fd9147b18e016a42463de9"
+  },
+  "tab-disabled": {
+    "source": "aren 6.png",
+    "crop": [
+      1424,
+      88,
+      1858,
+      229
+    ],
+    "size": [
+      415,
+      130
+    ],
+    "sha256": "79be7562c6b6ed2d312a58dd9ce5f6fc2d62f31682fd9147b18e016a42463de9"
+  },
+  "gear-slot": {
+    "source": "aren 10.png",
+    "crop": [
+      51,
+      124,
+      438,
+      322
+    ],
+    "size": [
+      380,
+      181
+    ],
+    "sha256": "31bc81efedeecd8bf2c9306eb1e323c56ffcc86f0496f42651672d37e19e1129"
+  },
+  "gear-slot-active": {
+    "source": "aren 10.png",
+    "crop": [
+      836,
+      120,
+      1232,
+      331
+    ],
+    "size": [
+      383,
+      189
+    ],
+    "sha256": "31bc81efedeecd8bf2c9306eb1e323c56ffcc86f0496f42651672d37e19e1129"
+  },
+  "empty-slot": {
+    "source": "aren 10.png",
+    "crop": [
+      60,
+      354,
+      430,
+      585
+    ],
+    "size": [
+      363,
+      224
+    ],
+    "sha256": "31bc81efedeecd8bf2c9306eb1e323c56ffcc86f0496f42651672d37e19e1129"
+  },
+  "empty-slot-active": {
+    "source": "aren 10.png",
+    "crop": [
+      454,
+      354,
+      829,
+      585
+    ],
+    "size": [
+      362,
+      224
+    ],
+    "sha256": "31bc81efedeecd8bf2c9306eb1e323c56ffcc86f0496f42651672d37e19e1129"
+  },
+  "element-tide": {
+    "source": "aren 8.png",
+    "crop": [
+      189,
+      384,
+      407,
+      611
+    ],
+    "size": [
+      126,
+      128
+    ],
+    "sha256": "b2d6d2806ddf5c00861b051477bcbaf3e3270b9ce07fefc059a6fe0f0e648215"
+  },
+  "element-ember": {
+    "source": "aren 8.png",
+    "crop": [
+      548,
+      384,
+      764,
+      611
+    ],
+    "size": [
+      126,
+      128
+    ],
+    "sha256": "b2d6d2806ddf5c00861b051477bcbaf3e3270b9ce07fefc059a6fe0f0e648215"
+  },
+  "element-storm": {
+    "source": "aren 8.png",
+    "crop": [
+      906,
+      384,
+      1128,
+      611
+    ],
+    "size": [
+      128,
+      127
+    ],
+    "sha256": "b2d6d2806ddf5c00861b051477bcbaf3e3270b9ce07fefc059a6fe0f0e648215"
+  },
+  "reward-card": {
+    "source": "cards and post match 1.png",
+    "crop": [
+      85,
+      20,
+      333,
+      344
+    ],
+    "size": [
+      239,
+      316
+    ],
+    "sha256": "89de244503fd014370a842bb54e4a308cbffd3b0afed000dd609ad44b6d587e0"
+  },
+  "reward-card-hover": {
+    "source": "cards and post match 1.png",
+    "crop": [
+      449,
+      20,
+      705,
+      344
+    ],
+    "size": [
+      249,
+      324
+    ],
+    "sha256": "89de244503fd014370a842bb54e4a308cbffd3b0afed000dd609ad44b6d587e0"
+  },
+  "reward-card-selected": {
+    "source": "cards and post match 1.png",
+    "crop": [
+      825,
+      20,
+      1080,
+      344
+    ],
+    "size": [
+      250,
+      324
+    ],
+    "sha256": "89de244503fd014370a842bb54e4a308cbffd3b0afed000dd609ad44b6d587e0"
+  },
+  "reward-card-grove": {
+    "source": "cards and post match 1.png",
+    "crop": [
+      85,
+      348,
+      333,
+      667
+    ],
+    "size": [
+      239,
+      308
+    ],
+    "sha256": "89de244503fd014370a842bb54e4a308cbffd3b0afed000dd609ad44b6d587e0"
+  },
+  "collect-button": {
+    "source": "cards and post match 1.png",
+    "crop": [
+      32,
+      680,
+      390,
+      803
+    ],
+    "size": [
+      357,
+      121
+    ],
+    "sha256": "89de244503fd014370a842bb54e4a308cbffd3b0afed000dd609ad44b6d587e0"
+  },
+  "collect-hover": {
+    "source": "cards and post match 1.png",
+    "crop": [
+      402,
+      680,
+      762,
+      803
+    ],
+    "size": [
+      360,
+      123
+    ],
+    "sha256": "89de244503fd014370a842bb54e4a308cbffd3b0afed000dd609ad44b6d587e0"
+  },
+  "result-panel": {
+    "source": "post match 2.png",
+    "crop": [
+      30,
+      68,
+      615,
+      410
+    ],
+    "size": [
+      575,
+      340
+    ],
+    "sha256": "8a00001518c0c107b0c1067594903b2d9d5a99e3c824f888c813267079a40d71"
+  },
+  "capture-failed": {
+    "source": "post match 2.png",
+    "crop": [
+      720,
+      515,
+      1105,
+      688
+    ],
+    "size": [
+      382,
+      167
+    ],
+    "sha256": "8a00001518c0c107b0c1067594903b2d9d5a99e3c824f888c813267079a40d71"
+  },
+  "capture-success": {
+    "source": "post match 2.png",
+    "crop": [
+      1125,
+      515,
+      1512,
+      688
+    ],
+    "size": [
+      374,
+      168
+    ],
+    "sha256": "8a00001518c0c107b0c1067594903b2d9d5a99e3c824f888c813267079a40d71"
+  },
+  "capture-neutral": {
+    "source": "post match 2.png",
+    "crop": [
+      34,
+      777,
+      438,
+      951
+    ],
+    "size": [
+      395,
+      172
+    ],
+    "sha256": "8a00001518c0c107b0c1067594903b2d9d5a99e3c824f888c813267079a40d71"
+  },
+  "reward-plinth": {
+    "source": "post match 5.png",
+    "crop": [
+      0,
+      100,
+      786,
+      490
+    ],
+    "size": [
+      756,
+      314
+    ],
+    "sha256": "66115b45491d9223487dee6d96fed767b15c7cdd03b8818a604d2aed6622489a"
+  },
+  "small-plinth": {
+    "source": "post match 5.png",
+    "crop": [
+      780,
+      213,
+      1155,
+      480
+    ],
+    "size": [
+      367,
+      205
+    ],
+    "sha256": "66115b45491d9223487dee6d96fed767b15c7cdd03b8818a604d2aed6622489a"
+  },
+  "reward-leaves": {
+    "source": "post match 5.png",
+    "crop": [
+      1156,
+      47,
+      1536,
+      478
+    ],
+    "size": [
+      340,
+      364
+    ],
+    "sha256": "66115b45491d9223487dee6d96fed767b15c7cdd03b8818a604d2aed6622489a"
+  },
+  "reward-rays": {
+    "source": "post match 5.png",
+    "crop": [
+      0,
+      495,
+      578,
+      1024
+    ],
+    "size": [
+      547,
+      443
+    ],
+    "sha256": "66115b45491d9223487dee6d96fed767b15c7cdd03b8818a604d2aed6622489a"
+  },
+  "reward-sparkles": {
+    "source": "post match 5.png",
+    "crop": [
+      630,
+      525,
+      965,
+      1015
+    ],
+    "size": [
+      289,
+      392
+    ],
+    "sha256": "66115b45491d9223487dee6d96fed767b15c7cdd03b8818a604d2aed6622489a"
+  },
+  "xp-trails": {
+    "source": "post match 5.png",
+    "crop": [
+      982,
+      513,
+      1536,
+      1024
+    ],
+    "size": [
+      459,
+      438
+    ],
+    "sha256": "66115b45491d9223487dee6d96fed767b15c7cdd03b8818a604d2aed6622489a"
+  },
+  "button-00": {
+    "source": "aren 4.png",
+    "crop": [
+      0,
+      0,
+      384,
+      205
+    ],
+    "size": [
+      240,
+      70
+    ],
+    "sha256": "49f68ee5458b8fb7fdfa6375b19154466aeb4ac8fe98e4abe5209458e3e0c3a8"
+  },
+  "button-01": {
+    "source": "aren 4.png",
+    "crop": [
+      384,
+      0,
+      768,
+      205
+    ],
+    "size": [
+      240,
+      89
+    ],
+    "sha256": "49f68ee5458b8fb7fdfa6375b19154466aeb4ac8fe98e4abe5209458e3e0c3a8"
+  },
+  "button-02": {
+    "source": "aren 4.png",
+    "crop": [
+      768,
+      0,
+      1152,
+      205
+    ],
+    "size": [
+      240,
+      71
+    ],
+    "sha256": "49f68ee5458b8fb7fdfa6375b19154466aeb4ac8fe98e4abe5209458e3e0c3a8"
+  },
+  "button-03": {
+    "source": "aren 4.png",
+    "crop": [
+      1152,
+      0,
+      1536,
+      205
+    ],
+    "size": [
+      240,
+      69
+    ],
+    "sha256": "49f68ee5458b8fb7fdfa6375b19154466aeb4ac8fe98e4abe5209458e3e0c3a8"
+  },
+  "button-04": {
+    "source": "aren 4.png",
+    "crop": [
+      0,
+      205,
+      384,
+      410
+    ],
+    "size": [
+      240,
+      67
+    ],
+    "sha256": "49f68ee5458b8fb7fdfa6375b19154466aeb4ac8fe98e4abe5209458e3e0c3a8"
+  },
+  "button-05": {
+    "source": "aren 4.png",
+    "crop": [
+      384,
+      205,
+      768,
+      410
+    ],
+    "size": [
+      240,
+      121
+    ],
+    "sha256": "49f68ee5458b8fb7fdfa6375b19154466aeb4ac8fe98e4abe5209458e3e0c3a8"
+  },
+  "button-06": {
+    "source": "aren 4.png",
+    "crop": [
+      768,
+      205,
+      1152,
+      410
+    ],
+    "size": [
+      240,
+      89
+    ],
+    "sha256": "49f68ee5458b8fb7fdfa6375b19154466aeb4ac8fe98e4abe5209458e3e0c3a8"
+  },
+  "button-07": {
+    "source": "aren 4.png",
+    "crop": [
+      1152,
+      205,
+      1536,
+      410
+    ],
+    "size": [
+      240,
+      69
+    ],
+    "sha256": "49f68ee5458b8fb7fdfa6375b19154466aeb4ac8fe98e4abe5209458e3e0c3a8"
+  },
+  "button-08": {
+    "source": "aren 4.png",
+    "crop": [
+      0,
+      410,
+      384,
+      614
+    ],
+    "size": [
+      240,
+      126
+    ],
+    "sha256": "49f68ee5458b8fb7fdfa6375b19154466aeb4ac8fe98e4abe5209458e3e0c3a8"
+  },
+  "button-09": {
+    "source": "aren 4.png",
+    "crop": [
+      384,
+      410,
+      768,
+      614
+    ],
+    "size": [
+      240,
+      128
+    ],
+    "sha256": "49f68ee5458b8fb7fdfa6375b19154466aeb4ac8fe98e4abe5209458e3e0c3a8"
+  },
+  "button-10": {
+    "source": "aren 4.png",
+    "crop": [
+      768,
+      410,
+      1152,
+      614
+    ],
+    "size": [
+      240,
+      141
+    ],
+    "sha256": "49f68ee5458b8fb7fdfa6375b19154466aeb4ac8fe98e4abe5209458e3e0c3a8"
+  },
+  "button-11": {
+    "source": "aren 4.png",
+    "crop": [
+      1152,
+      410,
+      1536,
+      614
+    ],
+    "size": [
+      240,
+      128
+    ],
+    "sha256": "49f68ee5458b8fb7fdfa6375b19154466aeb4ac8fe98e4abe5209458e3e0c3a8"
+  },
+  "button-12": {
+    "source": "aren 4.png",
+    "crop": [
+      0,
+      614,
+      384,
+      819
+    ],
+    "size": [
+      240,
+      142
+    ],
+    "sha256": "49f68ee5458b8fb7fdfa6375b19154466aeb4ac8fe98e4abe5209458e3e0c3a8"
+  },
+  "button-13": {
+    "source": "aren 4.png",
+    "crop": [
+      384,
+      614,
+      768,
+      819
+    ],
+    "size": [
+      240,
+      137
+    ],
+    "sha256": "49f68ee5458b8fb7fdfa6375b19154466aeb4ac8fe98e4abe5209458e3e0c3a8"
+  },
+  "button-14": {
+    "source": "aren 4.png",
+    "crop": [
+      768,
+      614,
+      1152,
+      819
+    ],
+    "size": [
+      240,
+      140
+    ],
+    "sha256": "49f68ee5458b8fb7fdfa6375b19154466aeb4ac8fe98e4abe5209458e3e0c3a8"
+  },
+  "button-15": {
+    "source": "aren 4.png",
+    "crop": [
+      1152,
+      614,
+      1536,
+      819
+    ],
+    "size": [
+      240,
+      143
+    ],
+    "sha256": "49f68ee5458b8fb7fdfa6375b19154466aeb4ac8fe98e4abe5209458e3e0c3a8"
+  },
+  "button-16": {
+    "source": "aren 4.png",
+    "crop": [
+      0,
+      819,
+      384,
+      1024
+    ],
+    "size": [
+      169,
+      118
+    ],
+    "sha256": "49f68ee5458b8fb7fdfa6375b19154466aeb4ac8fe98e4abe5209458e3e0c3a8"
+  },
+  "button-17": {
+    "source": "aren 4.png",
+    "crop": [
+      384,
+      819,
+      768,
+      1024
+    ],
+    "size": [
+      190,
+      129
+    ],
+    "sha256": "49f68ee5458b8fb7fdfa6375b19154466aeb4ac8fe98e4abe5209458e3e0c3a8"
+  },
+  "button-18": {
+    "source": "aren 4.png",
+    "crop": [
+      768,
+      819,
+      1152,
+      1024
+    ],
+    "size": [
+      211,
+      139
+    ],
+    "sha256": "49f68ee5458b8fb7fdfa6375b19154466aeb4ac8fe98e4abe5209458e3e0c3a8"
+  },
+  "button-19": {
+    "source": "aren 4.png",
+    "crop": [
+      1152,
+      819,
+      1536,
+      1024
+    ],
+    "size": [
+      170,
+      118
+    ],
+    "sha256": "49f68ee5458b8fb7fdfa6375b19154466aeb4ac8fe98e4abe5209458e3e0c3a8"
+  },
+  "bars": {
+    "source": "aren 2.png",
+    "crop": [
+      0,
+      0,
+      1536,
+      1024
+    ],
+    "size": [
+      768,
+      512
+    ],
+    "sha256": "1292c98ead0a6c9212ccfea8c37fd5615af0b59ea94094f56519b25f6694744c"
+  },
+  "companion-card": {
+    "source": "download (11).png",
+    "crop": [
+      52,
+      49,
+      407,
+      578
+    ],
+    "size": [
+      270,
+      400
+    ],
+    "sha256": "9dcc28f593fde4c115046a590738a4c1b66ccfb59c286ee68004389720f8a1c1"
+  },
+  "element-grove": {
+    "source": "download (12).png",
+    "crop": [
+      40,
+      46,
+      265,
+      305
+    ],
+    "size": [
+      113,
+      128
+    ],
+    "sha256": "586ffd230d48463091167a8f9b26168effed313e651f3ebf0e5d8320bd53eac6"
+  },
+  "element-void": {
+    "source": "aren 9.png",
+    "crop": [
+      1145,
+      319,
+      1515,
+      664
+    ],
+    "size": [
+      124,
+      128
+    ],
+    "sha256": "756464e32653fdcc11d1475ce01406003414b8a7a9985839ef2a04d91d49d820"
+  }
+}

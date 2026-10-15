@@ -10,11 +10,12 @@ test('sideways dodges lead with the correct foot and tilt toward their actual es
     for(const leg of rig.legs){assert.equal(leg.clamped,false);if(leg.side*sign>0){assert.equal(leg.foot.planted,false);assert.ok(leg.foot.ground.z>5);}else assert.equal(leg.foot.planted,true);}
   }
 });
-test('humanoid travel uses brisk walk cadence and longer running/sprinting strides',()=>{
+test('humanoid strides grow with pace while staying compact relative to short legs',()=>{
   for(const spec of PROTOTYPE_CHARACTERS.filter(s=>['knight','orc','elf','caster','fox'].includes(s.id))){
     const walkSteps=120*spec.speed/spec.stride;assert.ok(walkSteps>=100&&walkSteps<=180);
-    assert.ok(locomotionStride(spec.stride,1,1,spec.id)>spec.stride*1.7);
-    const sprintSteps=120*spec.sprint/locomotionStride(spec.stride,1,1,spec.id);assert.ok(sprintSteps>=160&&sprintSteps<=260);
+    const walk=locomotionStride(spec.stride,0,0,spec.id),run=locomotionStride(spec.stride,1,0,spec.id),sprint=locomotionStride(spec.stride,1,1,spec.id);
+    assert.ok(run>walk&&sprint>run);assert.ok(sprint<spec.stride*1.15,'avoid the old long split stride');
+    assert.ok(walk<spec.stride,'walk starts from anatomy-sized steps');
   }
 });
 test('hips and head stay continuous when the last supporting foot leaves the ground',()=>{
@@ -161,13 +162,12 @@ test('carried weapons retain their grip through walk/run/sprint, including both 
     for(const arm of rig.arms)assert.equal(arm.clamped,false);
   }
 });
-test('walking rolls heel to toe; sprint adds lift, forward lean and a separate wolf gallop',()=>{
+test('walking rolls heel to toe; sprint adds lift, forward lean and an alternating wolf trot',()=>{
   assert.ok(rigFoot(0,76,false).pitch<0);assert.ok(rigFoot(0.6,76,false).pitch>0);
   for(const spec of PROTOTYPE_CHARACTERS){
     const walk=characterRig(spec.id,'walk',0.78),sprint=characterRig(spec.id,'sprint',0.78);
     assert.ok(sprint.lean>walk.lean+0.1);
     if(spec.id==='wolf')assert.equal(sprint.legs.filter(l=>l.hock).length,2);
   }
-  const walk=characterRig('wolf','walk',0),sprint=characterRig('wolf','sprint',0);
-  assert.notDeepEqual(walk.legs.map(l=>l.foot.planted),sprint.legs.map(l=>l.foot.planted));
+  for(const state of ['walk','run','sprint'])for(let step=0;step<32;step++){const pose=characterRig('wolf',state,step/32);assert.ok(pose.legs.some(l=>l.foot.planted),'alternating support remains on the ground');}
 });

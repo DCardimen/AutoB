@@ -9,16 +9,16 @@ fs.mkdirSync('playtest-artifacts',{recursive:true});
 for(const offline of [false,true]){
  const context=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
  const page=await context.newPage();page.on('pageerror',e=>errors.push(e.message));const external=[];
- if(offline){const body=fs.readFileSync('Starfall-Menagerie.html');await page.route('**/*',r=>r.request().url()===base+'/offline-field'?r.fulfill({contentType:'text/html',body}):(external.push(r.request().url()),r.abort()));}
- await page.goto(offline?base+'/offline-field':base);await page.waitForFunction(()=>window.starfall?.state?.run);
+ if(offline)await page.route('**/*',r=>r.request().isNavigationRequest()&&r.request().url()===base+'/Starfall-Menagerie.html'?r.continue():(external.push(r.request().url()),r.abort()));
+ await page.goto(offline?base+'/Starfall-Menagerie.html':base);await page.waitForFunction(()=>window.starfall?.state?.run);
  await page.evaluate(()=>{const s=starfall.state;const saved=JSON.parse(localStorage.getItem('starfall-menagerie-v1'));saved.profile.tutorial=true;saved.run.team.forEach(c=>{c.level=12;c.training=20});localStorage.setItem('starfall-menagerie-v1',JSON.stringify(saved));});await page.reload();
  for(const width of [320,390,768,1440]){
   await page.setViewportSize({width,height:width>700?1000:844});await page.waitForTimeout(200);
   assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'horizontal overflow at '+width);
   assert.equal(await page.locator('.field-world').count(),3);
-  assert.ok((await page.locator('.field-world').first().getAttribute('style')).includes(offline?'blob:':'/public/ui/world'));
+  assert.ok((await page.locator('.field-world').first().getAttribute('style')).includes(offline?'blob:':'/public/ui/uploaded/world'));
  }
- await page.setViewportSize({width:390,height:844});await page.locator('[data-creature="0"]').click();await page.locator('[data-detail-tab="equipment"]').click();await page.locator('[data-detail-tab="ai"]').click();await page.locator('[data-action="close"]').first().click();
+ await page.setViewportSize({width:390,height:844});await page.locator('.arena-dock [data-action="companions"]').click();await page.locator('[data-party-select="0"]').click();await page.locator('[data-action="inspect-selected"]').click();await page.locator('[data-detail-tab="equipment"]').click();await page.locator('[data-detail-tab="ai"]').click();await page.locator('[data-action="close"]').first().click();
  await page.locator('[data-view="map"]:visible').first().click();
  await page.locator('[data-planet-preview="2"]').click();assert.ok(await page.locator('.field-world-preview').isVisible());await page.locator('[data-action="close"]').first().click();await page.locator('.brand').click();
  await page.evaluate(()=>scrollTo(0,0));await page.waitForTimeout(400);await page.screenshot({path:'playtest-artifacts/field-'+(offline?'offline':'source')+'-mobile.png',fullPage:true});

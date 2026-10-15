@@ -25,7 +25,7 @@ export function spriteSample(u,time=0,override=null){
     else{stage='recovery';phase=a?(a.elapsed-a.windup)/(a.duration-a.windup):0;count=32;}
   }else if(state==='death'){phase=Math.min(1,u.deathTime/0.95);count=32;}
   else if(state==='dodge'||state==='dash')phase=u.roll?u.roll.elapsed/u.roll.duration:0;
-  else if(state==='hit')phase=1-u.hitTime/0.13;
+  else if(state==='hit')phase=1-u.hitTime/(u.hitDuration||.13);
   else if(state==='stagger')phase=1-u.stagger/0.46;
   else if(state==='knockdown')phase=1-u.knockdown/0.65;
   else if(state==='getup')phase=1-u.getup/0.45;
@@ -48,8 +48,9 @@ export function spriteSample(u,time=0,override=null){
   const rollAngle=u.roll?Math.atan2(u.roll.dy,u.roll.dx)-(u.facing||0):state==='dodge'?Math.PI/2:0;
   const cape=override?null:u.cape?.map(p=>Math.round(p.angle*8)/8);
   const swing=state==='slash'?'side':u.action?.style||'overhead',charged=state==='charge',anticipation=u.action?.anticipation||(charged?3:u.id==='orc'?2:1);
-  const key=[u.id,state,angleIndex,stage,index,motion,runBlend,sprintBlend,acceleration,movementAngle,rollAngle,swing,anticipation,transition?transition.gait+':'+transition.weight:'',feet?JSON.stringify(feet):'',cape?cape.join(','):''].join(':');
-  return {state,dir,angleIndex,index,phase:['walk','run','sprint'].includes(state)?index/count:index/(count-1),stage,transition,motion,runBlend,sprintBlend,acceleration,movementAngle,rollAngle,feet,cape,swing,charged,anticipation,key};
+  const strideLength=u.strideLength??100,design=u.family?.nativeDesign||u.id;
+  const key=[u.id,state,angleIndex,stage,index,motion,runBlend,sprintBlend,acceleration,movementAngle,rollAngle,swing,anticipation,strideLength,design,transition?transition.gait+':'+transition.weight:'',feet?JSON.stringify(feet):'',cape?cape.join(','):''].join(':');
+  return {state,dir,angleIndex,index,phase:['walk','run','sprint'].includes(state)?index/count:index/(count-1),stage,transition,motion,runBlend,sprintBlend,acceleration,movementAngle,rollAngle,feet,cape,swing,charged,anticipation,strideLength,design,key};
 }
 export function drawPrototypeSprite(c,u,x,y,time=0,scale=1,override=null){
   if(!spritesReady())return;

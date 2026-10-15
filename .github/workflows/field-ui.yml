@@ -40,7 +40,13 @@ jobs:
       - run: node tests/capture-recruitment.browser.mjs
       - run: node tests/creature-anatomy.browser.mjs
       - run: node tests/arena-elite.browser.mjs
+      - run: node tests/uploaded-ui.browser.mjs
+      - run: node tests/journey-polish.browser.mjs
       - run: node tests/settings-movement.browser.mjs
+      - run: node tests/legs-v2.browser.mjs
+      - run: node scripts/review-legs-v2.mjs final
+      - run: node scripts/review-legs-v3.mjs final
+      - run: node scripts/review-gaits-carry.mjs final
       - run: node scripts/review-creature-anatomy.mjs
       - run: node scripts/review-melee-weapons.mjs
       - run: node scripts/review-natural-carry.mjs
@@ -61,6 +67,12 @@ jobs:
           path: |
             Starfall-Menagerie.html
             Starfall-Training-Glade.html
+            playtest-artifacts/journey-*.png
+            playtest-artifacts/journey-browser.json
+            playtest-artifacts/uploaded-*.png
+            playtest-artifacts/uploaded-*.json
+            public/uploaded-ui-preview.webm
+            docs/UPLOADED-ART-REVIEW.md
             public/Fang-and-Feather.zip
             playtest-artifacts/field-*.png
             playtest-artifacts/melee-*.png
@@ -93,4 +105,20 @@ jobs:
             playtest-artifacts/arena-elite-browser.json
             playtest-artifacts/settings-movement-*.png
             playtest-artifacts/settings-movement-browser.json
+            playtest-artifacts/legs-v2-*.png
+            playtest-artifacts/legs-v2-*.json
+            public/legs-v2-preview.webm
+            public/legs-v2-heavy.png
+            public/legs-v2-paws.png
+            LEGS-V2.md
+            LEGS-V3.md
+            GAITS-AND-CARRY.md
+            playtest-artifacts/gaits-carry-*.png
+            playtest-artifacts/gaits-carry-*.json
+            public/gaits-carry-*.png
+            public/gaits-carry-preview.webm
+            playtest-artifacts/legs-v3-*.png
+            playtest-artifacts/legs-v3-*.json
+            public/legs-v3-*.png
+            public/legs-v3-preview.webm
             RELIC-DESIGN.md
