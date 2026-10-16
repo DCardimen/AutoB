@@ -1,0 +1,20 @@
+{
+  "checks": [
+    "Source battle: actual reachable green branches, no later south trail, matching preview, dismiss/reopen, retained background canvas, unobstructed second click enters once",
+    "Source elite: actual reachable green branches, no later south trail, matching preview, dismiss/reopen, retained background canvas, unobstructed second click enters once",
+    "Source capture: actual reachable green branches, no later south trail, matching preview, dismiss/reopen, retained background canvas, unobstructed second click enters once",
+    "Source boss: actual reachable green branches, no later south trail, matching preview, dismiss/reopen, retained background canvas, unobstructed second click enters once",
+    "Source shop: actual reachable green branches, no later south trail, matching preview, dismiss/reopen, retained background canvas, unobstructed second click enters once",
+    "Source event: actual reachable green branches, no later south trail, matching preview, dismiss/reopen, retained background canvas, unobstructed second click enters once",
+    "Source rest: actual reachable green branches, no later south trail, matching preview, dismiss/reopen, retained background canvas, unobstructed second click enters once",
+    "Offline battle: actual reachable green branches, no later south trail, matching preview, dismiss/reopen, retained background canvas, unobstructed second click enters once",
+    "Offline elite: actual reachable green branches, no later south trail, matching preview, dismiss/reopen, retained background canvas, unobstructed second click enters once",
+    "Offline capture: actual reachable green branches, no later south trail, matching preview, dismiss/reopen, retained background canvas, unobstructed second click enters once",
+    "Offline boss: actual reachable green branches, no later south trail, matching preview, dismiss/reopen, retained background canvas, unobstructed second click enters once",
+    "Offline shop: actual reachable green branches, no later south trail, matching preview, dismiss/reopen, retained background canvas, unobstructed second click enters once",
+    "Offline event: actual reachable green branches, no later south trail, matching preview, dismiss/reopen, retained background canvas, unobstructed second click enters once",
+    "Offline rest: actual reachable green branches, no later south trail, matching preview, dismiss/reopen, retained background canvas, unobstructed second click enters once",
+    "Source/offline 320px opening stage: south trail permitted only for the expedition opening, absent even at depth zero on later worlds; popup Enter enters and dismisses"
+  ],
+  "errors": []
+}

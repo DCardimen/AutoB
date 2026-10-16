@@ -1,3 +1,4 @@
+import {reachableRoute,stagePreviewHTML} from './route-preview.js';
 import {celebrateCapture} from './capture-celebration.js';
 import {captureTrackerHTML,captureTrackerState,updateCaptureTracker} from './capture-tracker.js';
 import {patchModalContent} from './modal-content.js';
@@ -261,6 +262,7 @@ if(phase==='reward'){
   if(settleCaptureRecruitment(run,result)){attachCaptureLoot(reward,result);reconcileEquipment(run);save();}
 }
 function freshRun(ids, increment = true, options = {}) {
+  closeStagePreview();
   if (increment) {recordRunReset(profile,run);profile.runs++;}
   run = makeRun(Date.now() % 2147483647, ids, {...options,native:true,starterBudget:starterBudget(profile),chaosCleared:profile.chaosCleared,starterBonds:profile.bonds});
   run.team.forEach((c) => {c.bond = Math.min(5, profile.bonds[c.id] || 0);inheritEliteStarter(c,profile,starterEliteSelection[c.id]);});
@@ -494,14 +496,15 @@ function mapHTML() {
  const choices=positions.filter(n=>routeVisible(run,n)&&canVisit(run,n)&&canChoose);
  const selected=choices.find(n=>n.id===fieldPreviewId)||choices.find(n=>n.id===node?.id)||choices[0]||positions.find(n=>n.id===node?.id)||positions.find(n=>n.depth===run.depth)||positions[0];
  const current=selected?.id;
+ const future=reachableRoute(run.route,fieldPreviewId);
  const connections=[];
  for(const a of positions)for(const b of positions){
   if(b.depth!==a.depth+1||!(a.children?a.children.includes(b.id):b.type==='boss'||Math.abs(a.lane-b.lane)<=1))continue;
-  if(!routeVisible(run,a)||!routeVisible(run,b))continue;
+  if((!routeVisible(run,a)||!routeVisible(run,b))&&!(future.has(a.id)&&future.has(b.id)))continue;
   if((a.depth<run.depth&&!run.path.includes(a.id))||(b.depth<run.depth&&!run.path.includes(b.id)))continue;
   const chosen=run.path.includes(a.id)&&run.path.includes(b.id);
   const next=b.id===current&&run.path.includes(a.id);
-  connections.push('<path class="'+(chosen?'walked':next?'next-path':'charted')+'" d="M'+a.x+' '+a.y+' Q'+((a.x+b.x)/2)+' '+((a.y+b.y)/2)+' '+b.x+' '+b.y+'"/>');
+  connections.push('<path class="'+(future.has(a.id)&&future.has(b.id)?'future-route':chosen?'walked':next?'next-path':'charted')+'" data-route-from="'+a.id+'" data-route-to="'+b.id+'" d="M'+a.x+' '+a.y+' Q'+((a.x+b.x)/2)+' '+((a.y+b.y)/2)+' '+b.x+' '+b.y+'"/>');
  }
  const names={battle:'The Wild Crossing',elite:'The Ancient Watch',capture:'Quiet Grove',shop:'Wayfarer’s Outpost',event:'The Whispering Signal',rest:'Moonlit Clearing',boss:p.bossName};
  const descriptions={battle:'Ancient grounds stir with wild companions. Scout their strengths before the gates open.',elite:'A powerful gathering guards the old paths. Greater danger holds greater rewards.',capture:'A tranquil grove of colossal trees. Seek a new companion where luminous rivers meet.',shop:'A sheltered outpost along the path. Trade, recruit and prepare for the journey ahead.',event:'A strange light calls from beyond the ruins. Your next choice may change the expedition.',rest:'A quiet clearing beneath the stars. Recover, train or replenish your capture supplies.',boss:'The guardian of this world awaits. Prepare your companions for the final encounter.'};
@@ -516,9 +519,9 @@ function mapHTML() {
  else next='<button class="button field-continue" data-field-enter="'+current+'" '+(!selected?'disabled':'')+'>Continue '+fieldIcon('arrow')+'</button>';
  const steps=run.route.map((row,i)=>'<li class="'+(i<run.depth?'complete':i===run.depth?'current':'future')+'" aria-label="Encounter '+(i+1)+(i<run.depth?' completed':i===run.depth?' current':' ahead')+'"><span>'+fieldIcon(i===run.route.length-1?'boss':i<run.depth?(row.find(n=>run.path.includes(n.id))||row[0]).type:'star')+'</span></li>').join('');
  const worldCopy=['Living canopies, luminous rivers and ancient growth. A world of wonder — and danger.','Molten rivers and obsidian peaks. Follow the embers into a world forged by fire.','A silent world beneath violet stars. Find your path through ruins at the edge of the sky.'][world];
- return '<div class="reference-map" style="--route-art:url('+stageArt(world)+');--biome:'+biome.water+'" data-field-phase="'+phase+'">'+fieldJourney(run,phase,PLANETS)+'<div class="reference-field"><section class="reference-scene" aria-label="'+p.name+' route"><div class="route biome-route"><div class="map-world-copy"><span>'+p.name.toUpperCase()+'</span><h1>'+p.name+'</h1><p>'+worldCopy+'</p></div><div class="map-encounters">'+fieldIcon('star')+'<span><small>ENCOUNTERS</small><strong>'+Math.min(run.depth+1,run.route.length)+' / '+run.route.length+'</strong></span></div><svg class="route-links" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">'+connections.join('')+(fieldPreviewId&&selected?'<path class="selection-trail" d="M50 100 Q'+selected.x+' '+((selected.y+100)/2)+' '+selected.x+' '+selected.y+'"/>':'')+'</svg>'+positions.filter(n=>n.depth>=run.depth||run.path.includes(n.id)).map(n=>{
+ return '<div class="reference-map" style="--route-art:url('+stageArt(world)+');--biome:'+biome.water+'" data-field-phase="'+phase+'">'+fieldJourney(run,phase,PLANETS)+'<div class="reference-field"><section class="reference-scene" aria-label="'+p.name+' route"><div class="route biome-route"><div class="map-world-copy"><span>'+p.name.toUpperCase()+'</span><h1>'+p.name+'</h1><p>'+worldCopy+'</p></div><div class="map-encounters">'+fieldIcon('star')+'<span><small>ENCOUNTERS</small><strong>'+Math.min(run.depth+1,run.route.length)+' / '+run.route.length+'</strong></span></div><svg class="route-links" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">'+connections.join('')+(run.planet===0&&run.depth===0&&fieldPreviewId&&selected?'<path class="selection-trail" d="M50 100 Q'+selected.x+' '+((selected.y+100)/2)+' '+selected.x+' '+selected.y+'"/>':'')+'</svg>'+positions.filter(n=>n.depth>=run.depth||run.path.includes(n.id)).map(n=>{
  const visible=routeVisible(run,n),known=visible||n.type==='boss',available=choices.some(c=>c.id===n.id),visited=run.path.includes(n.id);
- return '<button class="route-node '+(available?'available ':'')+(visited?'visited ':'')+(n.id===current?'selected ':'')+(n.id===fieldPreviewId?'route-locked ':'')+(n.type==='boss'?'boss ':'')+(known?'':'fogged ')+'" data-node="'+n.id+'" data-field-node="'+n.id+'" style="left:'+n.x+'%;top:'+n.y+'%" '+(!available?'disabled':'')+' aria-pressed="'+(n.id===current)+'" aria-label="'+(known?LABELS[n.type]:'Uncharted')+', encounter '+(n.depth+1)+'" title="'+(visible?LABELS[n.type]+(n.type==='elite'?' - '+encounterInfo(run,n).eliteModifier.description:''):'Beyond scouting range')+'">'+fieldIcon(known?n.type:'star')+'<small>'+(known?LABELS[n.type].toUpperCase():'UNCHARTED')+'</small>'+(visible&&n.type==='elite'?'<em class="route-elite-modifier">'+encounterInfo(run,n).eliteModifier.text+'</em>':'')+'</button>';
+ return '<button class="route-node '+(available?'available ':'')+(visited?'visited ':'')+(n.id===current?'selected ':'')+(n.id===fieldPreviewId?'route-locked ':'')+(future.has(n.id)&&n.id!==fieldPreviewId?'route-ahead ':'')+(n.type==='boss'?'boss ':'')+(known?'':'fogged ')+'" data-node="'+n.id+'" data-field-node="'+n.id+'" style="left:'+n.x+'%;top:'+n.y+'%" '+(!available?'disabled':'')+' aria-pressed="'+(n.id===current)+'" aria-label="'+(known?LABELS[n.type]:'Uncharted')+', encounter '+(n.depth+1)+'" title="'+(visible?LABELS[n.type]+(n.type==='elite'?' - '+encounterInfo(run,n).eliteModifier.description:''):'Beyond scouting range')+'">'+fieldIcon(known?n.type:'star')+'<small>'+(known?LABELS[n.type].toUpperCase():'UNCHARTED')+'</small>'+(visible&&n.type==='elite'?'<em class="route-elite-modifier">'+encounterInfo(run,n).eliteModifier.text+'</em>':'')+'</button>';
  }).join('')+'</div></section><section class="encounter-sheet field-surface" aria-label="Selected encounter"><div class="sheet-grip" aria-hidden="true"></div><div class="encounter-sheet-head"><div class="encounter-art" style="background-image:url('+stageArt(world)+')"></div><div class="encounter-copy"><span class="section-kicker">ENCOUNTER '+((selected?.depth||0)+1)+'</span><h2>'+names[type]+'</h2><p>'+descriptions[type]+'</p>'+eliteStageHTML(selected)+'</div><button class="field-scout" data-field-scout="'+current+'" aria-label="Scout selected encounter" title="Scout encounter">'+fieldIcon('arrow')+'</button><span class="encounter-kind">'+fieldIcon(type)+' '+LABELS[type]+'</span></div><div class="sheet-build"><div class="sheet-rewards"><span class="section-kicker">'+(type==='shop'?'OUTPOST SUPPLIES':'POTENTIAL REWARDS')+'</span><div>'+rewards.map((r,i)=>'<span class="reward-glyph reward-glyph-'+i+'" title="'+rewardLabels[r]+'">'+fieldIcon(r)+'<span class="sr-only">'+rewardLabels[r]+'</span></span>').join('')+'<button data-action="pack" class="reward-glyph more" aria-label="Open relic pack">···</button></div></div><button class="sheet-synergy" data-action="formation" aria-label="Inspect team synergy and deployment"><span class="section-kicker">TEAM SYNERGIES</span><div><span class="synergy-glyph" style="color:'+(element?.color||'#acd5c2')+'">'+(element?.icon||'✧')+'</span><span><strong>'+(element?.name||'Your team')+'</strong><small>'+(bond&&bond[1]>=2?'Your companions share an active bond.':'Match elements to awaken a bond.')+'</small><i style="--bond-width:'+Math.min(100,(bond?.[1]||0)*25)+'%"></i></span><b>'+(bond?.[1]||0)+' / 4</b></div></button></div><div class="sheet-bottom"><div class="sheet-journey"><span class="section-kicker">YOUR JOURNEY</span><ol class="field-steps">'+steps+'</ol><small>'+Math.min(run.depth+1,run.route.length)+' / '+run.route.length+' encounters</small></div>'+next+'</div></section></div><div class="map-accessibility-note">Click a stage once to lock the trail, then click it again to enter. You can also use Continue after selecting.</div></div>';
 }
 function collectionHTML() {
@@ -1011,6 +1014,7 @@ async function chooseNode(id) {
     toast("Finish your current encounter before choosing another path.");
     return;
   }
+  closeStagePreview();
   const selectedRun=run,selectedPhase=phase;
   if(!profile.reducedMotion){
     stageTransitionBusy=true;
@@ -1044,6 +1048,31 @@ async function chooseNode(id) {
     if (n.type === "rest") openRest();
   }
 }
+function closeStagePreview(){
+ const popup=document.getElementById('stage-preview');if(!popup)return;
+ const focused=popup.contains(document.activeElement),id=popup.dataset.stagePreview;popup.remove();
+ if(focused)document.querySelector('[data-field-node="'+id+'"]')?.focus({preventScroll:true});
+}
+function positionStagePreview(){
+ const popup=document.getElementById('stage-preview');if(!popup)return;
+ const stage=document.querySelector('[data-field-node="'+popup.dataset.stagePreview+'"]');if(!stage){closeStagePreview();return;}
+ const r=stage.getBoundingClientRect(),margin=12,bottom=innerWidth<=900?82:16,available=innerHeight-bottom-70;
+ popup.style.maxHeight=Math.max(180,Math.min(420,available))+'px';
+ const p=popup.getBoundingClientRect(),right=r.right+16,left=r.left-p.width-16;
+ let x=right+p.width<=innerWidth-margin?right:left>=margin?left:Math.max(margin,Math.min(innerWidth-p.width-margin,r.left+r.width/2-p.width/2));
+ let y=r.top+r.height/2-p.height/2;
+ if(right+p.width>innerWidth-margin&&left<margin)y=r.top-p.height-14>=70?r.top-p.height-14:r.bottom+14;
+ y=Math.max(70,Math.min(innerHeight-bottom-p.height,y));
+ popup.style.left=x+'px';popup.style.top=y+'px';
+}
+function showStagePreview(n){
+ if(!n)return;closeStagePreview();
+ const content=stagePreviewHTML({node:n,info:encounterInfo(run,n),label:LABELS[n.type],art:stageArt(Math.min(run.planet,2)),icon:fieldIcon(n.type),bossName:PLANETS[Math.min(run.planet,2)].bossName,eliteHTML:eliteStageHTML(n)});
+ document.body.insertAdjacentHTML('beforeend',content);positionStagePreview();
+}
+window.addEventListener('resize',positionStagePreview);
+window.addEventListener('scroll',positionStagePreview,{passive:true});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('stage-preview')){e.preventDefault();closeStagePreview();}});
 function refreshMapSelection(){
  const current=$('#view'),incoming=document.createElement('div');incoming.id='view';
  incoming.innerHTML=relicBarHTML(run.relics.map(id=>RELICS.find(r=>r.id===id)||RUN_RELIC_BY_ID[id]).filter(Boolean),relicDescription,{inventory:run.inventory.length,pact:legendaryPactBanner()})+mapHTML();
@@ -1051,6 +1080,7 @@ function refreshMapSelection(){
  const path=$('.selection-trail')||$('.route-links .next-path');if(path&&!profile.reducedMotion){const length=path.getTotalLength();path.style.strokeDasharray=length;path.animate([{strokeDashoffset:length},{strokeDashoffset:0}],{duration:720,easing:'cubic-bezier(.22,.7,.22,1)',fill:'both'});}
 }
 async function stageZoom(id){
+ closeStagePreview();
  const el=document.querySelector(`[data-node="${id}"]`),scene=el?.closest('.biome-route');if(!scene)return;
  const r=el.getBoundingClientRect(),s=scene.getBoundingClientRect();scene.style.transformOrigin=`${r.left-s.left+r.width/2}px ${r.top-s.top+r.height/2}px`;
  const animation=scene.animate([{transform:'scale(1)',opacity:1,filter:'blur(0px)'},{transform:'scale(1.07)',opacity:1,filter:'blur(0px)',offset:.28},{transform:'scale(1.62)',opacity:.82,filter:'blur(.3px)',offset:.76},{transform:'scale(2.15)',opacity:0,filter:'blur(1.5px)'}],{duration:1050,easing:'cubic-bezier(.3,.05,.2,1)',fill:'forwards'});
@@ -1355,6 +1385,7 @@ function sound(kind) {
   if (profile.sound) soundscape.action(kind);
 }
 function setView(v) {
+  closeStagePreview();
   viewName = v;
   render();
 }
@@ -2399,14 +2430,16 @@ document.addEventListener('click',e=>{
 });
 
 document.addEventListener('click',e=>{
+ const popup=document.getElementById('stage-preview');if(popup&&!popup.contains(e.target)&&!e.target.closest('[data-field-node],[data-field-scout]'))closeStagePreview();
+ if(e.target.closest('[data-stage-preview-close]')){closeStagePreview();return;}
  const scout=e.target.closest('[data-field-scout]');
- if(scout){const n=run.route.flat().find(n=>n.id===scout.dataset.fieldScout);if(!n)return;if(['shop','event','rest'].includes(n.type)){const text={shop:'Trade gold for relics, equipment, companions and capture tools. Enter the outpost to inspect its stock and prices.',event:'A signal awaits on this path. Enter the encounter to read its choices before deciding how to respond.',rest:'Choose recovery, training or supplies for your companions. Enter the clearing to see your available options.'}[n.type];modal('<span class="section-kicker">SCOUTED ENCOUNTER</span><h2>'+LABELS[n.type]+'</h2><p>'+text+'</p><div class="modal-actions">'+button('Back to the route','close','secondary')+'</div>','route-scout');return;}const info=encounterInfo(run,n),boss=n.type==='boss';modal('<span class="section-kicker">SCOUTED ENCOUNTER · '+LABELS[n.type].toUpperCase()+'</span><h2>'+(boss?PLANETS[Math.min(run.planet,2)].bossName:info.arch.name)+'</h2><p>'+(boss?info.boss.desc:info.arch.desc)+'</p><div class="scout-panel"><strong>COUNTERPLAN</strong><p>'+(boss?info.boss.counter:info.arch.counter)+'</p><span>'+info.weather.name+' · '+info.weather.desc+'</span></div>'+eliteStageHTML(n)+'<div class="modal-actions">'+button('Back to the route','close','secondary')+'</div>','route-scout');return;}
+ if(scout){const n=run.route.flat().find(n=>n.id===scout.dataset.fieldScout);if(n)showStagePreview(n);return;}
  const preview=e.target.closest('[data-field-node]');
  if(preview&&!preview.disabled){
   const selected=run.route.flat().find(n=>n.id===preview.dataset.fieldNode);
   if(stageTransitionBusy)return;
   if(selected&&fieldPreviewId===selected.id){chooseNode(selected.id);fieldPreviewId=null;return;}
-  fieldPreviewId=preview.dataset.fieldNode;refreshMapSelection();
+  fieldPreviewId=preview.dataset.fieldNode;refreshMapSelection();showStagePreview(selected);
   document.querySelector('[data-field-node="'+fieldPreviewId+'"]')?.focus({preventScroll:true});
   return;
  }
