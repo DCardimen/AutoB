@@ -1,0 +1,20 @@
+{
+  "sourceForms": 3,
+  "sourceFacings": 8,
+  "motionFamilies": [
+    "canopyowl",
+    "tempest",
+    "thunderroc",
+    "voltwing"
+  ],
+  "motionPoses": 256,
+  "clipped": 0,
+  "decodedVideoTimes": [
+    1.1,
+    2.6,
+    4.1,
+    6.8
+  ],
+  "actualMouseDragCases": 534,
+  "unitFamilyFormPathHeightCases": 1068
+}

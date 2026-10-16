@@ -1,0 +1,10 @@
+{
+  "checks": [
+    "Source: 267 actual mouse pickup/move/release cases covering every family and all three forms, including high starts",
+    "Source: real touch drag moves the owl on a 390px phone",
+    "Offline: 267 actual mouse pickup/move/release cases covering every family and all three forms, including high starts",
+    "Offline: real touch drag moves the owl on a 390px phone",
+    "Recorded normal-speed base/evolved/ascended owl dragging, recovery and subsequent live combat"
+  ],
+  "errors": []
+}

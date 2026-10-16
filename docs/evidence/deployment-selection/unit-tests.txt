@@ -1,0 +1,136 @@
+TAP version 13
+# Subtest: owl pickup binds a real body landmark without a nonexistent source weapon
+ok 1 - owl pickup binds a real body landmark without a nonexistent source weapon
+  ---
+  duration_ms: 8.7231
+  type: 'test'
+  ...
+# Subtest: every family/form/path supports pickup, movement, release and recovery at both height limits
+ok 2 - every family/form/path supports pickup, movement, release and recovery at both height limits
+  ---
+  duration_ms: 2176.4181
+  type: 'test'
+  ...
+# Subtest: a pointer outside the creature still cannot start a pickup
+ok 3 - a pointer outside the creature still cannot start a pickup
+  ---
+  duration_ms: 0.2535
+  type: 'test'
+  ...
+# Subtest: every four-leg physics proxy has an explicit source-anatomy classification
+ok 4 - every four-leg physics proxy has an explicit source-anatomy classification
+  ---
+  duration_ms: 16.3697
+  type: 'test'
+  ...
+# Subtest: all quadruped anatomies alternate visible footfall groups through walk, run and sprint in every form and facing
+ok 5 - all quadruped anatomies alternate visible footfall groups through walk, run and sprint in every form and facing
+  ---
+  duration_ms: 4413.1319
+  type: 'test'
+  ...
+# Subtest: humanoid weapon identity and authored carry hand remain fixed throughout walking cycles
+ok 6 - humanoid weapon identity and authored carry hand remain fixed throughout walking cycles
+  ---
+  duration_ms: 5251.3743
+  type: 'test'
+  ...
+# Subtest: production humanoids retain painted boots and clothing with no replacement leg mesh showing through
+ok 7 - production humanoids retain painted boots and clothing with no replacement leg mesh showing through
+  ---
+  duration_ms: 2088.7021
+  type: 'test'
+  ...
+# Subtest: two conditional orders respect priority and exclude uninterruptible charges
+ok 8 - two conditional orders respect priority and exclude uninterruptible charges
+  ---
+  duration_ms: 0.9952
+  type: 'test'
+  ...
+# Subtest: formation hold, escort and flank orders produce different physical goals
+ok 9 - formation hold, escort and flank orders produce different physical goals
+  ---
+  duration_ms: 0.3094
+  type: 'test'
+  ...
+# Subtest: solid terrain steers bodies around a pillar and keeps collider positions outside it
+ok 10 - solid terrain steers bodies around a pillar and keeps collider positions outside it
+  ---
+  duration_ms: 0.3279
+  type: 'test'
+  ...
+# Subtest: a pillar blocks an aimed projectile before it reaches the hostile body
+ok 11 - a pillar blocks an aimed projectile before it reaches the hostile body
+  ---
+  duration_ms: 52.2979
+  type: 'test'
+  ...
+# Subtest: a native heal resolves after its windup; breaking poise cancels the pending effect
+ok 12 - a native heal resolves after its windup; breaking poise cancels the pending effect
+  ---
+  duration_ms: 50.5709
+  type: 'test'
+  ...
+# Subtest: healers reserve pending healing instead of preparing two heals for an already-covered ally
+ok 13 - healers reserve pending healing instead of preparing two heals for an already-covered ally
+  ---
+  duration_ms: 1.3188
+  type: 'test'
+  ...
+# Subtest: a living heavy-hit knockdown enters a recoverable physical fall
+ok 14 - a living heavy-hit knockdown enters a recoverable physical fall
+  ---
+  duration_ms: 25.4122
+  type: 'test'
+  ...
+# Subtest: opening doctrines are mutually exclusive and cannot duplicate a relic after reload
+ok 15 - opening doctrines are mutually exclusive and cannot duplicate a relic after reload
+  ---
+  duration_ms: 0.5895
+  type: 'test'
+  ...
+# Subtest: practice comparisons use real combat and leave the parent expedition unchanged
+ok 16 - practice comparisons use real combat and leave the parent expedition unchanged
+  ---
+  duration_ms: 1128.0332
+  type: 'test'
+  ...
+# Subtest: native recruitment events display and award the same released family
+ok 17 - native recruitment events display and award the same released family
+  ---
+  duration_ms: 0.8005
+  type: 'test'
+  ...
+# Subtest: native recruits keep animated bodies when deployed beside legacy creatures
+ok 18 - native recruits keep animated bodies when deployed beside legacy creatures
+  ---
+  duration_ms: 9.1322
+  type: 'test'
+  ...
+# Subtest: an empty expedition cannot start an invalid practice comparison
+ok 19 - an empty expedition cannot start an invalid practice comparison
+  ---
+  duration_ms: 0.1708
+  type: 'test'
+  ...
+# Subtest: the common axe specialist can damage health through a full shield
+ok 20 - the common axe specialist can damage health through a full shield
+  ---
+  duration_ms: 0.4411
+  type: 'test'
+  ...
+# Subtest: family evolution tradeoffs are visible before the player commits
+ok 21 - family evolution tradeoffs are visible before the player commits
+  ---
+  duration_ms: 0.2452
+  type: 'test'
+  ...
+1..21
+# tests 21
+# suites 0
+# pass 21
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 11918.4245

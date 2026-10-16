@@ -21419,6 +21419,7 @@ body.ui-v3[data-screen="map"] .stage-preview-popover>footer{display:flex;flex-di
     begin(c, index, pointer, height = 1, visibleSpriteHit = false) {
       const spec = pixelSpec(c.id), id = nativeRigFor(spec, c), scale = creatureWorldScale(spec, c), position = nativeSpawn(spec, c, 0, index), source2 = characterRig(id, "idle", 0.25), d = createRagdoll(id, source2, { x: 0, y: 0 }), formed = nativeFormRig(spec, c, source2, height), candidates = [];
       const add3 = (key4, p3) => {
+        if (!p3 || !d.points[key4]) return;
         const q = projectRig(p3, 0);
         candidates.push({ key: key4, distance: Math.hypot(pointer.x - position.x - q.x * scale, pointer.y - (position.y * 0.58 + 75 + q.y * scale)) });
       };
@@ -21430,7 +21431,7 @@ body.ui-v3[data-screen="map"] .stage-preview-popover>footer{display:flex;flex-di
         add3("knee" + i, l.joint);
       });
       formed.arms.forEach((a, i) => add3("hand" + i, a.end));
-      if (source2.weapon) {
+      if (source2.weapon && formed.weapon) {
         const p3 = source2.weapon.tip;
         d.points.weapon = { ...p3, previous: { ...p3 }, floor: 3, mass: 1 };
         const arm = source2.arms.findIndex((a) => a.side === (["elf", "fox"].includes(id) ? -1 : 1)), anchor2 = arm >= 0 ? "hand" + arm : "head";
