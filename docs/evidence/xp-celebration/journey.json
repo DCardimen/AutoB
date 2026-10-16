@@ -1,0 +1,22 @@
+[
+  {
+    "offline": false,
+    "realCombatVictory": true,
+    "levelThreeEXP": true,
+    "upgradeDuringEXP": true,
+    "rewardsBeforeSkillChoice": true,
+    "threeChoices": true,
+    "selectedSkillSaved": true,
+    "noDuplicateEXP": true
+  },
+  {
+    "offline": true,
+    "realCombatVictory": true,
+    "levelThreeEXP": true,
+    "upgradeDuringEXP": true,
+    "rewardsBeforeSkillChoice": true,
+    "threeChoices": true,
+    "selectedSkillSaved": true,
+    "noDuplicateEXP": true
+  }
+]
