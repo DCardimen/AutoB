@@ -6,8 +6,8 @@
     "dy": 0,
     "sizeError": 0,
     "left": 13,
-    "slotWidth": 175.71875,
-    "landedX": 743.640625
+    "slotWidth": 179.71875,
+    "landedX": 739.640625
   },
   {
     "offline": false,
@@ -16,8 +16,8 @@
     "dy": 0,
     "sizeError": 0,
     "left": 13,
-    "slotWidth": 290,
-    "landedX": 84
+    "slotWidth": 298,
+    "landedX": 80
   },
   {
     "offline": true,
@@ -26,8 +26,8 @@
     "dy": 0,
     "sizeError": 0,
     "left": 13,
-    "slotWidth": 175.71875,
-    "landedX": 743.640625
+    "slotWidth": 179.71875,
+    "landedX": 739.640625
   },
   {
     "offline": true,
@@ -36,7 +36,7 @@
     "dy": 0,
     "sizeError": 0,
     "left": 13,
-    "slotWidth": 290,
-    "landedX": 84
+    "slotWidth": 298,
+    "landedX": 80
   }
 ]
