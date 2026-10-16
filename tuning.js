@@ -16,6 +16,7 @@ export const TUNING_OPTIONS = [
   {id:'strideLength',name:'Stride length',min:50,max:150,step:5,group:'Presentation',description:'Shorter or longer steps for every walking creature. Step cadence and planted contacts adapt together; movement speed stays the same.'},
   {id:'capeMotion',name:'Cape flow',min:0,max:200,step:5,group:'Presentation',description:'Wind and flutter on the physical cape; its shoulder attachments remain fixed.'},
   {id:'damageTextSize',name:'Damage number size',min:50,max:200,step:5,group:'Presentation',description:'Crisp pixel damage, healing, shield and critical-hit numbers.'},
+  {id:'auraSize',name:'Aura size',min:25,max:200,step:5,group:'Presentation',description:'Size of rarity rings, orbiting flairs and elite glows for both teams.'},
   {id:'effectIntensity',name:'Combat effect intensity',min:0,max:200,step:5,group:'Presentation',description:'Brightness and weight of impacts, magic rings and particles. Telegraphs remain readable.'},
   {id:'cameraShake',name:'Camera shake',min:0,max:200,step:5,group:'Presentation',description:'Screen impact from heavy attacks and critical hits. Zero disables it.'},
 ];

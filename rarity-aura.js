@@ -10,9 +10,9 @@ function atlas(key){
  if(!images.has(key)){const im=new Image();im.src=UI_ART[key];images.set(key,im);}
  return images.get(key);
 }
-export function auraProfile(rarity,{side=0,battle=false,elite=false}={}){
+export function auraProfile(rarity,{side=0,battle=false,elite=false,size=100}={}){
  const tier=Math.min(5,(levels[rarity]??0)+(elite?1:0));
- return {tier,row:side?1:0,opacity:(.5+tier*.065)*(battle?.2:1),radius:18+tier*1.6,flairSize:8+tier*1.6};
+ return {tier,row:side?1:0,opacity:(.5+tier*.065)*(battle?.2:1),radius:18+tier*1.6,flairSize:8+tier*1.6,size:Math.max(.25,Math.min(2,(Number.isFinite(size)?size:100)/100))};
 }
 export function auraOrbit(time,{radius=24,phase=0,reducedMotion=false}={}){
  const angle=reducedMotion?Math.PI/2:time*.85+phase;
@@ -20,13 +20,13 @@ export function auraOrbit(time,{radius=24,phase=0,reducedMotion=false}={}){
 }
 export function paintRarityRing(c,x,y,profile,scale=1){
  const image=atlas('aura-rings');if(!image?.complete||!image.naturalWidth)return;
- scale=Math.max(.65,scale);const {tier,row,opacity,radius}=profile,w=(radius*2+12)*scale,h=w*.53;
+ scale=Math.max(.65,scale)*(profile.size??1);const {tier,row,opacity,radius}=profile,w=(radius*2+12)*scale,h=w*.53;
  c.save();c.globalAlpha*=opacity;c.imageSmoothingEnabled=true;
  c.drawImage(image,edges[tier],row*362,edges[tier+1]-edges[tier],362,x-w/2,y-h/2,w,h);c.restore();
 }
 export function paintRarityFlair(c,x,y,time,profile,scale=1,{phase=0,reducedMotion=false}={}){
  const image=atlas('aura-flair');if(!image?.complete||!image.naturalWidth)return;
- scale=Math.max(.65,scale);const {tier,row,opacity,radius,flairSize}=profile;
+ scale=Math.max(.65,scale)*(profile.size??1);const {tier,row,opacity,radius,flairSize}=profile;
  if(!auraOrbit(time,{radius:radius*scale,phase,reducedMotion}).visible)return;
  // The central authored star/flame is an orbiting sprite. The rear half is
  // never painted, including its trail; nothing shines through the creature.
