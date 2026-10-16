@@ -699,10 +699,13 @@ export function synergies(team) {
 }
 export const LEVEL_GROWTH={Common:.105,Uncommon:.115,Rare:.13,Epic:.15,Legendary:.175};
 export const levelGrowthRate=c=>(c.balanceVersion||0)>=17?(LEVEL_GROWTH[BY_ID[c.id]?.rarity]||.105):.105;
+// Secondary gains are additive to base rates; reciprocal haste keeps cooldowns positive.
+export const SECONDARY_LEVEL_GROWTH={attackSpeed:.0125,actionSpeed:.01,staminaRecharge:.015,cooldown:.01,dashCooldown:.01,speed:.005,dodge:.0005,hpRegen:.04};
 export function stats(c, team, relics = []) {
   const s = BY_ID[c.id],
     syn = synergies(team),
     has = (id) => relics.includes(id),strength=itemStrength(c);
+  const secondaryLevels=(c.balanceVersion>=17?Math.max(0,c.level-1)*levelGrowthRate(c)/.105:0),minor=SECONDARY_LEVEL_GROWTH;
   const growth =
     (1 + (c.level - 1) * levelGrowthRate(c) + (c.training || 0) * (c.balanceVersion>=15?.035:.07)) *
     (c.level >= 5 && ["Common", "Uncommon"].includes(s.rarity) ? 1.2 : 1);
@@ -769,7 +772,7 @@ export function stats(c, team, relics = []) {
   hp *= (genes.hp||1)*curios.hp;atk *= (genes.atk||1)*curios.atk;cd *= (genes.cd||1)*curios.cd;speed *= (genes.speed||1)*curios.speed;
   hp *= personal.health * gear.health;
   atk *= personal.attack * gear.attack;
-  cd *= personal.cooldown * gear.cooldown;
+  cd *= personal.cooldown * gear.cooldown / (1+minor.cooldown*secondaryLevels);
   speed *= personal.speed * gear.speed * (nativeEvolution(c).speed || 1);
   dodge += personal.dodge;
   return applyEliteStats({
@@ -778,14 +781,14 @@ export function stats(c, team, relics = []) {
     atk: Math.round(atk+gear.atkFlat),
     cd: cd * linkedSupport(c, c.id).cooldown,
     cdFactor: cd / SKILLS[s.id].cd,
-    speed:speed+gear.speedFlat,
-    hpRegen:gear.hpRegen,
-    dodge,
+    speed:(speed+gear.speedFlat)*(1+minor.speed*secondaryLevels),
+    hpRegen:gear.hpRegen+minor.hpRegen*secondaryLevels,
+    dodge:dodge+Math.min(.06,minor.dodge*secondaryLevels),
     range: s.range + (nativeEvolution(c).range || 0),
-    attackSpeed:curios.attackSpeed*gear.attackSpeed/((s.role==='Guardian'?1.55:1.3)*linkedSupport(c,loadoutFor(s,c.level,c).auto).attackSpeed),
-    actionSpeed:curios.actionSpeed*gear.actionSpeed+gear.actionSpeedFlat,
-    staminaRecharge:((c.balanceVersion||0)>=17?({Striker:26,Ranger:22,Support:20,Guardian:15}[s.role]||20):20)*curios.regenStamina*gear.regenStamina,
-    dashCooldown:curios.dashCooldown*gear.dashCooldown,
+    attackSpeed:curios.attackSpeed*gear.attackSpeed*(1+minor.attackSpeed*secondaryLevels)/((s.role==='Guardian'?1.55:1.3)*linkedSupport(c,loadoutFor(s,c.level,c).auto).attackSpeed),
+    actionSpeed:(curios.actionSpeed*gear.actionSpeed+gear.actionSpeedFlat)*(1+minor.actionSpeed*secondaryLevels),
+    staminaRecharge:((c.balanceVersion||0)>=17?({Striker:26,Ranger:22,Support:20,Guardian:15}[s.role]||20):20)*curios.regenStamina*gear.regenStamina*(1+minor.staminaRecharge*secondaryLevels),
+    dashCooldown:curios.dashCooldown*gear.dashCooldown/(1+minor.dashCooldown*secondaryLevels),
     dodgeStyle:(c.balanceVersion||0)>=17?dodgeStyle(s):'roll',
     personal,
   },c);
