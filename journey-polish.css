@@ -398,3 +398,14 @@ body .dragging .item-art,body .dragging>img,body .dragging .idle-portrait{opacit
 @keyframes sprite-drop-land{0%{box-shadow:inset 0 0 25px #fff0a8b0;translate:0 2px}40%{box-shadow:inset 0 0 15px #f1d88770;translate:0 -1px}100%{box-shadow:inset 0 0 0 #f1d88700;translate:0 0}}
 @media(prefers-reduced-motion:reduce){.sprite-drop-landed{animation:none}}
 .gentle-ui .sprite-drop-landed{animation:none}
+
+/* A capture order is visible on the creature before the gates open. */
+.pregame-capture-marker{position:absolute;inset:0;width:100%;height:100%;z-index:4;overflow:hidden;pointer-events:none;color:var(--capture-lock-color,#bcead1)}
+.pregame-capture-marker[hidden]{display:none}.pregame-capture-marker circle,.pregame-capture-marker path,.pregame-capture-marker ellipse{fill:none;stroke:currentColor}
+.capture-lock-spin{transform-origin:0 0;animation:capture-lock-orbit 5s linear infinite}.capture-lock-pulse{stroke-width:1;opacity:.3;transform-origin:0 0;animation:capture-lock-pulse 2s ease-in-out infinite}
+.capture-lock-badge{animation:capture-lock-hover 2.2s ease-in-out infinite}.capture-lock-badge rect{fill:#072832ed;stroke:currentColor}.capture-lock-badge text{fill:#fff0bd;stroke:none;font-family:var(--sans);font-weight:800;text-anchor:middle;letter-spacing:.5px}
+@keyframes capture-lock-orbit{to{transform:rotate(360deg)}}@keyframes capture-lock-pulse{50%{transform:scale(1.12);opacity:.65}}@keyframes capture-lock-hover{50%{transform:translateY(calc(-1 * var(--capture-lock-bob,2px)))}}
+.gentle-ui .capture-lock-spin,.gentle-ui .capture-lock-pulse,.gentle-ui .capture-lock-badge{animation:none}
+@media(prefers-reduced-motion:reduce){.capture-lock-spin,.capture-lock-pulse,.capture-lock-badge{animation:none}}
+
+@media(max-width:900px) and (max-height:700px){body[data-screen="arena"]:has(#pregame-capture-marker:not([hidden])) .arena-label,body[data-screen="arena"]:has(#pregame-capture-marker:not([hidden])) .arena-timer,body[data-screen="arena"]:has(#pregame-capture-marker:not([hidden])) .arena-field-tools{display:none}}
