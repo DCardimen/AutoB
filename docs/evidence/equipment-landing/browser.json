@@ -1,0 +1,42 @@
+[
+  {
+    "offline": false,
+    "width": 1440,
+    "dx": 0,
+    "dy": 0,
+    "sizeError": 0,
+    "left": 13,
+    "slotWidth": 175.71875,
+    "landedX": 743.640625
+  },
+  {
+    "offline": false,
+    "width": 390,
+    "dx": 0,
+    "dy": 0,
+    "sizeError": 0,
+    "left": 13,
+    "slotWidth": 290,
+    "landedX": 84
+  },
+  {
+    "offline": true,
+    "width": 1440,
+    "dx": 0,
+    "dy": 0,
+    "sizeError": 0,
+    "left": 13,
+    "slotWidth": 175.71875,
+    "landedX": 743.640625
+  },
+  {
+    "offline": true,
+    "width": 390,
+    "dx": 0,
+    "dy": 0,
+    "sizeError": 0,
+    "left": 13,
+    "slotWidth": 290,
+    "landedX": 84
+  }
+]
