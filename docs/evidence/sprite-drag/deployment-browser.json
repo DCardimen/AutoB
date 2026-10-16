@@ -1,0 +1,12 @@
+{
+  "checks": [
+    "Source: 267 actual mouse pickup/move/release cases covering every family and all three forms, including high starts",
+    "Source: 69 owl/Support marker grabs at default positions, all forms, with stale zero HP",
+    "Source: real touch drag moves the owl on a 390px phone",
+    "Offline: 267 actual mouse pickup/move/release cases covering every family and all three forms, including high starts",
+    "Offline: 69 owl/Support marker grabs at default positions, all forms, with stale zero HP",
+    "Offline: real touch drag moves the owl on a 390px phone",
+    "Recorded normal-speed base/evolved/ascended owl and Support dragging, recovery and subsequent live combat"
+  ],
+  "errors": []
+}

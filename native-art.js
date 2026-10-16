@@ -1,6 +1,6 @@
 import {auraProfile,paintRarityRing,paintRarityFlair} from './rarity-aura.js';
 import {arenaCamera} from './arena-camera.js';
-import {coverGeometry,paintAmbient} from './ambient-art.js';
+import {paintAmbient} from './ambient-art.js';
 import {idleRhythm,eliteModifier} from './elite-modifiers.js';
 import {paintActionFeedback,paintImpact} from './combat-feedback.js';
 import {interpolatedNativeUnit} from './native-motion.js';
@@ -57,16 +57,24 @@ export function drawNativeUnit(c,u,spec,x,y,time,pixelScale=3){
  c.imageSmoothingEnabled=false;c.drawImage(frame,dx,dy,CELL*pixelScale,CELL*pixelScale);return dy+(frame.spriteTop??0)*pixelScale;
 }
 const hitCanvas=document.createElement('canvas');hitCanvas.width=hitCanvas.height=CELL;
-export function nativeUnitHit(u,spec,pointer,time=0,index=0){
+export function nativeUnitHit(u,spec,pointer,time=0,index=0,options={}){
  spec=byId[u.id]||spec;
  const position=nativeSpawn(spec,u,u.side||0,index),scale=3*creatureWorldScale(spec,u),p=nativeScreen(position.x,position.y);
  const x=Math.round((pointer.x-p.x)/scale+PIVOT.x),y=Math.round((pointer.y-p.y)/scale+PIVOT.y),ctx=hitCanvas.getContext('2d',{willReadFrequently:true});
- if(x<-3||y<-3||x>=CELL+3||y>=CELL+3)return false;
+ if(!options.padding&&(x<-3||y<-3||x>=CELL+3||y>=CELL+3))return false;
  ctx.clearRect(0,0,CELL,CELL);drawNativeUnit(ctx,u,spec,PIVOT.x,PIVOT.y,time,1);
  const left=Math.max(0,x-3),top=Math.max(0,y-3),right=Math.min(CELL,x+4),bottom=Math.min(CELL,y+4);
- if(right<=left||bottom<=top)return false;
- const pixels=ctx.getImageData(left,top,right-left,bottom-top).data;
- for(let i=3;i<pixels.length;i+=4)if(pixels[i]>80)return true;return false;
+ if(right>left&&bottom>top){const pixels=ctx.getImageData(left,top,right-left,bottom-top).data;
+  for(let i=3;i<pixels.length;i+=4)if(pixels[i]>80)return true;}
+ if(!options.padding)return false;
+ // Small companions need a usable pointer target even between feathers or
+ // beside a narrow staff. Derive it from the authored painted silhouette.
+ const rgba=ctx.getImageData(0,0,CELL,CELL).data;let minX=CELL,minY=CELL,maxX=-1,maxY=-1;
+ for(let n=0;n<CELL*CELL;n++)if(rgba[n*4+3]>80){minX=Math.min(minX,n%CELL);maxX=Math.max(maxX,n%CELL);minY=Math.min(minY,Math.floor(n/CELL));maxY=Math.max(maxY,Math.floor(n/CELL));}
+ if(maxX<0)return false;
+ const pad=options.padding,l=p.x+(minX-PIVOT.x)*scale-pad,r=p.x+(maxX+1-PIVOT.x)*scale+pad,
+  t=p.y+(minY-PIVOT.y)*scale-pad,b=options.includeMarker?Math.max(p.y+26,p.y+(maxY+1-PIVOT.y)*scale+pad):p.y+(maxY+1-PIVOT.y)*scale+pad;
+ return pointer.x>=l&&pointer.x<=r&&pointer.y>=t&&pointer.y<=b;
 }
 const ring=(c,x,y,r,color,fill)=>{const p=nativeScreen(x,y);c.beginPath();c.ellipse(p.x,p.y,r,r*.58,0,0,Math.PI*2);c.strokeStyle=color;c.lineWidth=2;if(fill){c.fillStyle=fill;c.fill();}c.stroke();};
 export function renderNativeBattle(display,w,h,battle,planet,time,team,foes,species){
@@ -111,7 +119,8 @@ export function renderNativeBattle(display,w,h,battle,planet,time,team,foes,spec
  }else if(e.type==='slash'){c.translate(p.x,p.y-18);c.scale(1,.58);c.rotate(e.angle||0);c.lineWidth=5;c.beginPath();c.arc(0,0,(e.r||40)*.8,-.75,.75);c.stroke();}else if(e.tx!==undefined){const t=nativeScreen(e.tx,e.ty);c.beginPath();c.moveTo(p.x,p.y-45);c.lineTo(t.x,t.y-45);c.stroke();}else if(['impact','slash','cast','defeat','nova','ring','shield'].includes(e.type)){c.beginPath();c.arc(p.x,p.y-(e.victimUid?nativeBodyHeight(battle.units.find(u=>u.uid===e.victimUid)):40)*characterHeight,e.type==='impact'?10:(e.r||20)*.3,0,Math.PI*2);c.stroke();}c.restore();}
   for(const p of battle.particles){const q=nativeScreen(p.x,p.y);c.fillStyle=p.color;c.globalAlpha=Math.min(1,p.ttl/(p.max||1))*Math.min(1,(battle.tuning?.effectIntensity??100)/100);c.fillRect(q.x,q.y-30,3,3);}c.globalAlpha=1;
  }
- const pc=pixel.getContext('2d');pc.imageSmoothingEnabled=false;pc.clearRect(0,0,pixel.width,pixel.height);pc.drawImage(scene,0,0,pixel.width,pixel.height);display.imageSmoothingEnabled=false;display.clearRect(0,0,w,h);const shake=battle&&!battle.reducedMotion?(battle.shake||0)*(battle.tuning?.cameraShake??100)/100:0,offset=shake?Math.round(Math.sin(battle.time*83)*shake*w/1002):0;display.fillStyle="#15251e";display.fillRect(0,0,w,h);if(backdrop.complete&&backdrop.naturalWidth){const bg=coverGeometry(w,h,backdrop.naturalWidth,backdrop.naturalHeight);display.drawImage(backdrop,bg.x,bg.y,bg.w,bg.h);}if(!battle?.reducedMotion&&!document.body.classList.contains('gentle-ui'))paintAmbient(display,'glade',battle?battle.time:time,{width:w,height:h,image:backdrop});if(planet){display.fillStyle=planet===1?'#8e382524':'#3c21523d';display.fillRect(0,0,w,h);}display.drawImage(pixel,camera.x*pixel.width/1002,camera.y*pixel.height/654,camera.width*pixel.width/1002,camera.height*pixel.height/654,offset,Math.round(offset*.5),w,h);if(battle){display.save();display.translate(offset,Math.round(offset*.5));display.scale(camera.scale,camera.scale);display.translate(-camera.x,-camera.y);paintCombatTexts(display,battle,byId,characterHeight,camera);display.restore();}
+ const pc=pixel.getContext('2d');pc.imageSmoothingEnabled=false;pc.clearRect(0,0,pixel.width,pixel.height);pc.drawImage(scene,0,0,pixel.width,pixel.height);display.imageSmoothingEnabled=false;display.clearRect(0,0,w,h);const shake=battle&&!battle.reducedMotion?(battle.shake||0)*(battle.tuning?.cameraShake??100)/100:0,offset=shake?Math.round(Math.sin(battle.time*83)*shake*w/1002):0;display.fillStyle="#15251e";display.fillRect(0,0,w,h);if(backdrop.complete&&backdrop.naturalWidth){// Show the complete arena illustration; cover cropped away the scenery in wide viewports.
+ const bg={x:0,y:0,w,h};display.drawImage(backdrop,bg.x,bg.y,bg.w,bg.h);}if(!battle?.reducedMotion&&!document.body.classList.contains('gentle-ui'))paintAmbient(display,'glade',battle?battle.time:time,{width:w,height:h,image:backdrop,geometry:{x:0,y:0,w,h}});if(planet){display.fillStyle=planet===1?'#8e382524':'#3c21523d';display.fillRect(0,0,w,h);}display.drawImage(pixel,camera.x*pixel.width/1002,camera.y*pixel.height/654,camera.width*pixel.width/1002,camera.height*pixel.height/654,offset,Math.round(offset*.5),w,h);if(battle){display.save();display.translate(offset,Math.round(offset*.5));display.scale(camera.scale,camera.scale);display.translate(-camera.x,-camera.y);paintCombatTexts(display,battle,byId,characterHeight,camera);display.restore();}
 }
 
 function paintCapture(c,battle,species){

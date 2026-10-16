@@ -27,3 +27,14 @@ test('every family/form/path supports pickup, movement, release and recovery at 
 test('a pointer outside the creature still cannot start a pickup',()=>{
  const d=new DeploymentPhysics();assert.equal(d.begin(creature('voltwing'),0,{x:-1000,y:-1000}),false);assert.equal(d.held,null);
 });
+
+test('form changes, deployment resets and roster replacements discard stale falling previews',()=>{
+ for(const change of [c=>{c.evolution=1;},c=>{delete c.deploymentPosition;},c=>{c.deploymentPosition={x:280,y:350};}]){
+  const c={...creature('nyra'),deploymentPosition:{x:270,y:450}},d=new DeploymentPhysics();
+  assert.ok(d.begin(c,0,{x:270,y:300},1,true));d.move({x:330,y:320});d.update(.04);d.release();
+  assert.ok(d.preview(c).deploymentRig);change(c);assert.equal(d.preview(c),c);assert.equal(d.drops.size,0);
+ }
+ const c={...creature('voltwing'),deploymentPosition:{x:270,y:450}},d=new DeploymentPhysics();
+ d.begin(c,0,{x:270,y:300},1,true);d.update(.04);d.release();const replacement={...c};
+ assert.equal(d.preview(replacement),replacement);assert.equal(d.drops.size,0);
+});

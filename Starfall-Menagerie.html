@@ -5199,6 +5199,19 @@ body.ui-v3[data-screen="map"] .stage-preview-popover>footer{display:flex;flex-di
 @media(max-width:900px) and (max-height:700px){body.ui-v3.native-expedition .capture-tracker{width:calc(100% - 12px)}.capture-tracker header small{font-size:5px;letter-spacing:.5px}}
 
 @media(max-width:900px) and (max-height:700px){body.ui-v3.native-expedition[data-screen="arena"]:has(.capture-tracker:not([hidden])) .page-heading{display:none}body.ui-v3.native-expedition[data-screen="arena"]:has(.capture-tracker:not([hidden])) .arena-frame .arena-viewport{min-height:65px}}
+
+/* Pick up the sprite; legal sockets glow, the receiving item lands with weight. */
+.loadout-sprite-ghost{position:fixed;z-index:40000;pointer-events:none;width:64px;height:64px;display:grid;place-items:center;transform:translate(-50%,-65%);filter:drop-shadow(0 8px 5px #0009) drop-shadow(0 0 9px #ffe3a966);will-change:transform;isolation:isolate}
+.loadout-sprite-ghost .dragged-sprite{width:100%;height:100%;object-fit:contain;image-rendering:pixelated;display:block}.loadout-sprite-ghost span.dragged-sprite{display:grid;place-items:center;font-size:34px;color:#ffe4a3}
+.carrying-sprite,.carrying-sprite *{cursor:grabbing!important}.loadout-draggable{touch-action:none;user-select:none}.loadout-draggable img{pointer-events:none;-webkit-user-drag:none}
+body .loadout-compatible{outline:1px solid #c4efad!important;outline-offset:-2px;box-shadow:inset 0 0 13px #b5ed8b28!important}
+body .loadout-target{outline:2px solid #f5e29d!important;box-shadow:inset 0 0 20px #f4d68b55,0 0 12px #efce7e77!important}
+body .loadout-incompatible[data-gear-type]{filter:brightness(.48) saturate(.35)}
+body .dragging .item-art,body .dragging>img,body .dragging .idle-portrait{opacity:.18}.drop-art-pending{visibility:hidden!important}
+.sprite-drop-landed{animation:sprite-drop-land .44s ease-out}.deployment-grabbing{cursor:grabbing!important}
+@keyframes sprite-drop-land{0%{box-shadow:inset 0 0 25px #fff0a8b0;translate:0 2px}40%{box-shadow:inset 0 0 15px #f1d88770;translate:0 -1px}100%{box-shadow:inset 0 0 0 #f1d88700;translate:0 0}}
+@media(prefers-reduced-motion:reduce){.sprite-drop-landed{animation:none}}
+.gentle-ui .sprite-drop-landed{animation:none}
 </style>
   </head>
   <body class="ui-v2 ui-v3">
@@ -19588,12 +19601,19 @@ body.ui-v3[data-screen="map"] .stage-preview-popover>footer{display:flex;flex-di
     }
   }
   function patchChildren(current2, incoming) {
-    const previous = [...current2.childNodes].filter((node2) => !background(node2)), used = /* @__PURE__ */ new Set(), keyed = new Map(previous.filter((node2) => key3(node2)).map((node2) => [key3(node2), node2]));
+    const previous = [...current2.childNodes].filter((node2) => !background(node2)), used = /* @__PURE__ */ new Set(), keyed = /* @__PURE__ */ new Map();
+    for (const node2 of previous) {
+      const id = key3(node2);
+      if (id) {
+        if (!keyed.has(id)) keyed.set(id, []);
+        keyed.get(id).push(node2);
+      }
+    }
     let cursor = [...current2.childNodes].find((node2) => !background(node2)) || null;
     for (const desired of incoming.childNodes) {
       if (background(desired)) continue;
       const id = key3(desired);
-      let node2 = id ? keyed.get(id) : previous.find((candidate) => !used.has(candidate) && !key3(candidate) && compatible(candidate, desired));
+      let node2 = id ? keyed.get(id)?.find((candidate) => !used.has(candidate) && compatible(candidate, desired)) : previous.find((candidate) => !used.has(candidate) && !key3(candidate) && compatible(candidate, desired));
       if (node2 && !compatible(node2, desired)) node2 = null;
       if (node2) {
         patchNode(node2, desired);
@@ -20546,11 +20566,11 @@ body.ui-v3[data-screen="map"] .stage-preview-popover>footer{display:flex;flex-di
     const scale = Math.max(w / iw, h / ih);
     return { x: (w - iw * scale) * px, y: (h - ih * scale) * py, w: iw * scale, h: ih * scale };
   }
-  function paintAmbient(c, theme, time, { width = 1002, height = 654, image: image2 = null, positionY = 0.5, cover = true } = {}) {
+  function paintAmbient(c, theme, time, { width = 1002, height = 654, image: image2 = null, positionY = 0.5, cover = true, geometry = null } = {}) {
     const scene2 = AMBIENT_SCENES[theme];
     if (!scene2) return;
     c.save();
-    const g = image2?.naturalWidth && cover ? coverGeometry(width, height, image2.naturalWidth, image2.naturalHeight, 0.5, positionY) : { x: 0, y: 0, w: width, h: height };
+    const g = geometry || (image2?.naturalWidth && cover ? coverGeometry(width, height, image2.naturalWidth, image2.naturalHeight, 0.5, positionY) : { x: 0, y: 0, w: width, h: height });
     c.translate(g.x, g.y);
     c.scale(g.w, g.h);
     for (const [i, points] of (scene2.water || []).entries()) {
@@ -21324,6 +21344,16 @@ body.ui-v3[data-screen="map"] .stage-preview-popover>footer{display:flex;flex-di
 
   // loadout-interactions.js
   function applyLoadoutDrop(run3, payload, target) {
+    if (!target) return false;
+    if (payload.kind === "companion") {
+      const from2 = run3.team.findIndex((c2) => c2.uid === payload.uid), to = Number(target.index);
+      if (target.pack || target.skill || target.gearType || !Number.isInteger(to) || from2 < 0 || !run3.team[to] || from2 === to) return false;
+      const a = run3.team[from2], b = run3.team[to], seat = a.seat;
+      a.seat = b.seat;
+      b.seat = seat;
+      [run3.team[from2], run3.team[to]] = [b, a];
+      return true;
+    }
     if (payload.kind === "reserve") {
       if (target.pack) return false;
       const j = run3.bench.findIndex((c2) => c2.uid === payload.uid), i = Number(target.index);
@@ -21393,6 +21423,7 @@ body.ui-v3[data-screen="map"] .stage-preview-popover>footer{display:flex;flex-di
       return equipGear(run3, Number(target.index), payload.uid);
     }
     if (payload.kind === "gem") {
+      if (target.relicSlot !== void 0 && target.relicSlot !== (c.relics || []).length) return false;
       if ((run3.rulesVersion || 0) >= 17) {
         if (target.skill || from === c || c.relics?.some((g) => g.id === payload.id) || (c.relics || []).length >= relicSlots(c)) return false;
         if (from) {
@@ -21414,9 +21445,77 @@ body.ui-v3[data-screen="map"] .stage-preview-popover>footer{display:flex;flex-di
     }
     return false;
   }
+  function canLoadoutDrop(run3, payload, target) {
+    return !!target && applyLoadoutDrop(JSON.parse(JSON.stringify(run3)), payload, target);
+  }
+
+  // loadout-drag-ui.js
+  function dragSprite(source2, fallbackHTML = "") {
+    let art = source2.querySelector(".item-art,.skill-icon img,.idle-portrait canvas,img,canvas");
+    if (!art && fallbackHTML) {
+      const fallback = document.createElement("div");
+      fallback.innerHTML = fallbackHTML;
+      art = fallback.querySelector("img");
+    }
+    art || (art = source2.querySelector(".skill-icon,.relic-symbol") || source2);
+    const ghost = document.createElement("div");
+    ghost.className = "loadout-sprite-ghost";
+    ghost.setAttribute("aria-hidden", "true");
+    let sprite;
+    if (art.tagName === "CANVAS") {
+      sprite = document.createElement("canvas");
+      sprite.width = art.width;
+      sprite.height = art.height;
+      sprite.getContext("2d").drawImage(art, 0, 0);
+    } else if (art.tagName === "IMG") sprite = art.cloneNode();
+    else {
+      sprite = document.createElement("span");
+      sprite.textContent = art === source2 ? source2.querySelector("span")?.textContent?.trim().slice(0, 3) || "\u2726" : art.textContent.trim();
+    }
+    sprite.removeAttribute("id");
+    sprite.removeAttribute("style");
+    sprite.className = "dragged-sprite";
+    ghost.append(sprite);
+    document.body.append(ghost);
+    return ghost;
+  }
+  function moveDragSprite(ghost, x, y) {
+    ghost.style.left = x + "px";
+    ghost.style.top = y + "px";
+  }
+  function settleDragSprite(ghost, destination, { reducedMotion = false, cancelled = false } = {}) {
+    if (!ghost) return;
+    if (!destination?.isConnected) {
+      ghost.remove();
+      return;
+    }
+    const box = destination.getBoundingClientRect(), origin = ghost.getBoundingClientRect(), dx = box.left + box.width / 2 - (origin.left + origin.width / 2), dy = box.top + box.height / 2 - (origin.top + origin.height / 2);
+    const art = destination.querySelector(".item-art,img,canvas");
+    art?.classList.add("drop-art-pending");
+    ghost.classList.add("settling");
+    const base = "translate(-50%,-65%)", at = (x, y, scale = 1) => `${base} translate(${x}px,${y}px) scale(${scale})`;
+    const animation = ghost.animate(reducedMotion ? [{ opacity: 1 }, { opacity: 0 }] : [
+      { transform: at(0, 0), opacity: 1, offset: 0 },
+      { transform: at(dx, dy - 24, 1.1), opacity: 1, offset: 0.58 },
+      { transform: at(dx, dy + 3, 0.88), opacity: 1, offset: 0.82 },
+      { transform: at(dx, dy, 1), opacity: 1, offset: 1 }
+    ], { duration: reducedMotion ? 80 : cancelled ? 240 : 460, easing: "cubic-bezier(.2,.75,.25,1)", fill: "forwards" });
+    const done = () => {
+      ghost.remove();
+      art?.classList.remove("drop-art-pending");
+      if (!cancelled && destination.isConnected) {
+        destination.classList.remove("sprite-drop-landed");
+        void destination.offsetWidth;
+        destination.classList.add("sprite-drop-landed");
+        destination.addEventListener("animationend", () => destination.classList.remove("sprite-drop-landed"), { once: true });
+      }
+    };
+    animation.finished.then(done, done);
+  }
 
   // deployment-physics.js
   var limit3 = (v, a, b) => Math.max(a, Math.min(b, v));
+  var appearance = (c) => [c.id, c.evolution || 0, c.evolutionPath || ""].join(":");
   function heldStep(d, dt, key4) {
     const pin = d.pin, points = d.points;
     d.time += dt;
@@ -21475,7 +21574,7 @@ body.ui-v3[data-screen="map"] .stage-preview-popover>footer{display:flex;flex-di
       if (nearest.distance > Math.max(18, 26 * scale) && !visibleSpriteHit) return false;
       const p2 = d.points[nearest.key];
       d.pin = { x: p2.x, y: p2.y, z: p2.z + 45 / Math.max(0.5, scale) };
-      this.held = { c, index, spec, id, scale, d, key: nearest.key, pointer: { ...pointer }, position, height };
+      this.held = { c, index, spec, id, scale, d, key: nearest.key, pointer: { ...pointer }, position, height, appearance: appearance(c) };
       this.drops.delete(c.uid);
       return true;
     }
@@ -21533,6 +21632,12 @@ body.ui-v3[data-screen="map"] .stage-preview-popover>footer{display:flex;flex-di
     preview(c) {
       const state = this.held?.c.uid === c.uid ? this.held : this.drops.get(c.uid);
       if (!state) return c;
+      const moved = state !== this.held && (!c.deploymentPosition || Math.abs(c.deploymentPosition.x - state.position.x) > 0.01 || Math.abs(c.deploymentPosition.y - state.position.y) > 0.01);
+      if (state.c !== c || state.appearance !== appearance(c) || moved) {
+        this.drops.delete(c.uid);
+        if (state === this.held) this.held = null;
+        return c;
+      }
       const recover = state.elapsed > 0.65 ? Math.min(1, (state.elapsed - 0.65) / 0.5) : 0;
       let rig = this.rig(state);
       if (recover) rig = ragdollRig(state.d, recover);
@@ -21794,18 +21899,30 @@ body.ui-v3[data-screen="map"] .stage-preview-popover>footer{display:flex;flex-di
   }
   var hitCanvas = document.createElement("canvas");
   hitCanvas.width = hitCanvas.height = CELL;
-  function nativeUnitHit(u, spec, pointer, time = 0, index = 0) {
+  function nativeUnitHit(u, spec, pointer, time = 0, index = 0, options = {}) {
     spec = byId[u.id] || spec;
     const position = nativeSpawn(spec, u, u.side || 0, index), scale = 3 * creatureWorldScale(spec, u), p2 = nativeScreen(position.x, position.y);
     const x = Math.round((pointer.x - p2.x) / scale + PIVOT.x), y = Math.round((pointer.y - p2.y) / scale + PIVOT.y), ctx2 = hitCanvas.getContext("2d", { willReadFrequently: true });
-    if (x < -3 || y < -3 || x >= CELL + 3 || y >= CELL + 3) return false;
+    if (!options.padding && (x < -3 || y < -3 || x >= CELL + 3 || y >= CELL + 3)) return false;
     ctx2.clearRect(0, 0, CELL, CELL);
     drawNativeUnit(ctx2, u, spec, PIVOT.x, PIVOT.y, time, 1);
     const left = Math.max(0, x - 3), top = Math.max(0, y - 3), right = Math.min(CELL, x + 4), bottom = Math.min(CELL, y + 4);
-    if (right <= left || bottom <= top) return false;
-    const pixels = ctx2.getImageData(left, top, right - left, bottom - top).data;
-    for (let i = 3; i < pixels.length; i += 4) if (pixels[i] > 80) return true;
-    return false;
+    if (right > left && bottom > top) {
+      const pixels = ctx2.getImageData(left, top, right - left, bottom - top).data;
+      for (let i = 3; i < pixels.length; i += 4) if (pixels[i] > 80) return true;
+    }
+    if (!options.padding) return false;
+    const rgba2 = ctx2.getImageData(0, 0, CELL, CELL).data;
+    let minX = CELL, minY = CELL, maxX = -1, maxY = -1;
+    for (let n2 = 0; n2 < CELL * CELL; n2++) if (rgba2[n2 * 4 + 3] > 80) {
+      minX = Math.min(minX, n2 % CELL);
+      maxX = Math.max(maxX, n2 % CELL);
+      minY = Math.min(minY, Math.floor(n2 / CELL));
+      maxY = Math.max(maxY, Math.floor(n2 / CELL));
+    }
+    if (maxX < 0) return false;
+    const pad = options.padding, l = p2.x + (minX - PIVOT.x) * scale - pad, r = p2.x + (maxX + 1 - PIVOT.x) * scale + pad, t = p2.y + (minY - PIVOT.y) * scale - pad, b = options.includeMarker ? Math.max(p2.y + 26, p2.y + (maxY + 1 - PIVOT.y) * scale + pad) : p2.y + (maxY + 1 - PIVOT.y) * scale + pad;
+    return pointer.x >= l && pointer.x <= r && pointer.y >= t && pointer.y <= b;
   }
   var ring = (c, x, y, r, color, fill) => {
     const p2 = nativeScreen(x, y);
@@ -22086,10 +22203,10 @@ body.ui-v3[data-screen="map"] .stage-preview-popover>footer{display:flex;flex-di
     display.fillStyle = "#15251e";
     display.fillRect(0, 0, w, h);
     if (backdrop.complete && backdrop.naturalWidth) {
-      const bg = coverGeometry(w, h, backdrop.naturalWidth, backdrop.naturalHeight);
+      const bg = { x: 0, y: 0, w, h };
       display.drawImage(backdrop, bg.x, bg.y, bg.w, bg.h);
     }
-    if (!battle2?.reducedMotion && !document.body.classList.contains("gentle-ui")) paintAmbient(display, "glade", battle2 ? battle2.time : time, { width: w, height: h, image: backdrop });
+    if (!battle2?.reducedMotion && !document.body.classList.contains("gentle-ui")) paintAmbient(display, "glade", battle2 ? battle2.time : time, { width: w, height: h, image: backdrop, geometry: { x: 0, y: 0, w, h } });
     if (planet) {
       display.fillStyle = planet === 1 ? "#8e382524" : "#3c21523d";
       display.fillRect(0, 0, w, h);
@@ -22916,8 +23033,8 @@ body.ui-v3[data-screen="map"] .stage-preview-popover>footer{display:flex;flex-di
   function bindDrag() {
     document.querySelectorAll("[data-creature]").forEach((el) => {
       el.addEventListener("dragstart", (e) => {
-        if (phase === "battle") {
-          e.preventDefault();
+        if (phase === "battle" || el.dataset.dragPayload) {
+          if (phase === "battle") e.preventDefault();
           return;
         }
         dragIndex = Number(el.dataset.creature);
@@ -24697,7 +24814,7 @@ body.ui-v3[data-screen="map"] .stage-preview-popover>footer{display:flex;flex-di
     const slots = relicSlots(u), items = u.relics || [];
     return `<section class="personal-loadout" data-loadout-drop="${index}"><div class="section-heading"><h3>PERSONAL RELICS</h3><span>${items.length} / ${slots} SLOTS</span></div><p>Relics change this companion\u2019s entire build. No skill links. Remove or move freely before battle.</p><div class="relic-slots">${Array.from({ length: slots }, (_, slot) => {
       const g = items[slot], r = g && PERSONAL_BY_ID2[g.id];
-      return `<div class="relic-slot ${r ? "equipped" : ""}" style="--relic:${r?.color || "#728666"}"><span>${r?.icon || "\uFF0B"}</span><strong>${r?.name || "Empty relic slot"}</strong><small>${r ? relicDescription(r) : "Drop a personal relic onto this creature"}</small>${r && index !== null ? `<button data-unequip="${slot}" data-index="${index}" ${phase === "battle" ? "disabled" : ""}>Remove</button>` : ""}</div>`;
+      return `<div data-loadout-drop="${index}" data-relic-slot="${slot}" class="relic-slot ${r ? "equipped" : ""}" style="--relic:${r?.color || "#728666"}"><span>${r?.icon || "\uFF0B"}</span><strong>${r?.name || "Empty relic slot"}</strong><small>${r ? relicDescription(r) : "Drop a personal relic onto this creature"}</small>${r && index !== null ? `<button data-unequip="${slot}" data-index="${index}" ${phase === "battle" ? "disabled" : ""}>Remove</button>` : ""}</div>`;
     }).join("")}</div>${index !== null ? `<div class="personal-inventory" data-pack-drop="true">${run2.inventory.map((g) => {
       const r = PERSONAL_BY_ID2[g.id];
       return `<button data-equip="${g.uid}" data-index="${index}" ${phase === "battle" || items.length >= slots || items.some((x) => x.id === g.id) ? "disabled" : ""}><span style="color:${r.color}">${r.icon}</span><strong>${r.name}</strong><small>${relicDescription(r)}</small></button>`;
@@ -25005,15 +25122,14 @@ body.ui-v3[data-screen="map"] .stage-preview-popover>footer{display:flex;flex-di
   function bindArenaDeployment() {
     if (!canvas || canvas.dataset.physicsBound) return;
     canvas.dataset.physicsBound = "1";
-    const coords = (e) => {
-      const rect = canvas.getBoundingClientRect();
-      return arenaPoint(e.clientX, e.clientY, rect);
-    };
+    const coords = (e) => arenaPoint(e.clientX, e.clientY, canvas.getBoundingClientRect());
     canvas.addEventListener("pointerdown", (e) => {
-      if (phase === "battle" && !modalKind && battle) {
-        const p3 = coords(e), u = battle.living(1).sort((a, b) => b.y - a.y).find((u2) => {
+      if (modalKind || e.button !== 0) return;
+      const p2 = coords(e);
+      if (phase === "battle" && battle) {
+        const u = battle.living(1).sort((a, b) => b.y - a.y).find((u2) => {
           const h = nativeBodyHeight(u2) * getCharacterHeight(), y = u2.y * 0.58 + 75 - h / 2;
-          return Math.pow((p3.x - u2.x) / Math.max(12, 70 * u2.nativeScale), 2) + Math.pow((p3.y - y) / Math.max(15, h * 0.6), 2) <= 1;
+          return Math.pow((p2.x - u2.x) / Math.max(12, 70 * u2.nativeScale), 2) + Math.pow((p2.y - y) / Math.max(15, h * 0.6), 2) <= 1;
         });
         if (u) {
           battle.focusEnemy(u.uid);
@@ -25022,26 +25138,30 @@ body.ui-v3[data-screen="map"] .stage-preview-popover>footer{display:flex;flex-di
         }
         return;
       }
-      if (phase !== "prep" || modalKind) return;
-      const p2 = coords(e), preview = getOrderPreview(), enemy = preview?.units.filter((u) => u.side === 1).sort((a, b) => b.y - a.y).find((u) => {
-        const h = nativeBodyHeight(u) * getCharacterHeight(), y = u.y * 0.58 + 75 - h / 2;
-        return Math.pow((p2.x - u.x) / Math.max(12, 70 * u.nativeScale), 2) + Math.pow((p2.y - y) / Math.max(15, h * 0.6), 2) <= 1;
-      });
-      if (enemy) {
-        if (enemy.boss) toast("Guardians cannot be captured.");
-        else setCaptureTarget(enemy.uid);
+      if (phase !== "prep") return;
+      const time = performance.now() / 1e3, cam = arenaCamera(canvas.clientWidth, canvas.clientHeight), padding = 10 / cam.scale;
+      const allies = run2.team.map((c, i) => ({ c, i, u: { ...deployment.preview(c), side: 0, hp: 1, maxHp: 1 } })).sort((a, b) => nativeSpawn(BY_ID[b.c.id], b.u, 0, b.i).y - nativeSpawn(BY_ID[a.c.id], a.u, 0, a.i).y);
+      let hit = allies.find((a) => nativeUnitHit(a.u, BY_ID[a.c.id], p2, time, a.i));
+      if (!hit) hit = allies.filter((a) => nativeUnitHit(a.u, BY_ID[a.c.id], p2, time, a.i, { padding, includeMarker: true })).sort((a, b) => {
+        const distance3 = (a2) => {
+          const pos = nativeSpawn(BY_ID[a2.c.id], a2.u, 0, a2.i);
+          return Math.hypot(p2.x - pos.x, p2.y - (pos.y * 0.58 + 65));
+        };
+        return distance3(a) - distance3(b);
+      })[0];
+      if (hit && deployment.begin(hit.c, hit.i, p2, getCharacterHeight(), true)) {
+        selectedCreature = hit.i;
+        liveSelectedUid = hit.c.uid;
+        canvas.setPointerCapture(e.pointerId);
+        canvas.classList.add("deployment-grabbing");
         e.preventDefault();
         return;
       }
-      for (const { c, i } of run2.team.map((c2, i2) => ({ c: c2, i: i2, y: nativeSpawn(BY_ID[c2.id], deployment.preview(c2), 0, i2).y })).sort((a, b) => b.y - a.y)) {
-        const visibleHit = nativeUnitHit({ ...deployment.preview(c), side: 0, seat: c.seat ?? i }, BY_ID[c.id], p2, performance.now() / 1e3, i);
-        if (visibleHit && deployment.begin(c, i, p2, getCharacterHeight(), true)) {
-          selectedCreature = i;
-          liveSelectedUid = c.uid;
-          canvas.setPointerCapture(e.pointerId);
-          e.preventDefault();
-          break;
-        }
+      const enemy = (foes || []).map((c, i) => ({ c, i, u: { ...c, side: 1, hp: 1, maxHp: 1 } })).reverse().find((a) => nativeUnitHit(a.u, BY_ID[a.c.id], p2, time, a.i, { padding, includeMarker: true }));
+      if (enemy) {
+        if (enemy.c.boss) toast("Guardians cannot be captured.");
+        else setCaptureTarget(enemy.c.uid);
+        e.preventDefault();
       }
     });
     canvas.addEventListener("pointermove", (e) => {
@@ -25056,6 +25176,7 @@ body.ui-v3[data-screen="map"] .stage-preview-popover>footer{display:flex;flex-di
         save();
         if (canvas.hasPointerCapture(e.pointerId)) canvas.releasePointerCapture(e.pointerId);
       }
+      canvas.classList.remove("deployment-grabbing");
     };
     canvas.addEventListener("pointerup", release);
     canvas.addEventListener("pointercancel", release);
@@ -25357,6 +25478,10 @@ body.ui-v3[data-screen="map"] .stage-preview-popover>footer{display:flex;flex-di
       el.dataset.dragPayload = JSON.stringify(payload);
       el.classList.add("loadout-draggable");
     };
+    document.querySelectorAll("[data-creature],[data-party-select]").forEach((el) => {
+      const c = run2.team[Number(el.dataset.creature ?? el.dataset.partySelect)];
+      if (c) make(el, { kind: "companion", uid: c.uid });
+    });
     document.querySelectorAll("[data-gear-equip]").forEach((el) => {
       const g = run2.gearInventory.find((g2) => g2.uid === el.dataset.gearEquip);
       if (g) make(el, { kind: "gear", uid: g.uid, id: g.id });
@@ -25387,7 +25512,7 @@ body.ui-v3[data-screen="map"] .stage-preview-popover>footer{display:flex;flex-di
     if (marker.dataset.packDrop !== void 0) return { pack: true };
     if (marker.dataset.skillDrop) return { index: Number(marker.dataset.index), skill: marker.dataset.skillDrop };
     const gear = el.closest("[data-gear-slot]");
-    return marker.dataset.loadoutDrop !== "null" ? { index: Number(marker.dataset.loadoutDrop), ...gear ? { gearSlot: Number(gear.dataset.gearSlot), gearType: gear.dataset.gearType } : {} } : null;
+    return marker.dataset.loadoutDrop !== "null" ? { index: Number(marker.dataset.loadoutDrop), ...gear ? { gearSlot: Number(gear.dataset.gearSlot), gearType: gear.dataset.gearType } : {}, ...el.closest("[data-relic-slot]") ? { relicSlot: Number(el.closest("[data-relic-slot]").dataset.relicSlot) } : {} } : null;
   }
   function finishLoadoutDrop(payload, target) {
     if (!target || phase === "battle") return false;
@@ -25408,18 +25533,27 @@ body.ui-v3[data-screen="map"] .stage-preview-popover>footer{display:flex;flex-di
   var loadoutDrag = null;
   document.addEventListener("dragstart", (e) => {
     const el = e.target.closest("[data-drag-payload]");
-    if (!el || phase === "battle") return;
+    if (!el) return;
+    if (touchLoadout || phase === "battle") {
+      e.preventDefault();
+      return;
+    }
     loadoutDrag = JSON.parse(el.dataset.dragPayload);
     e.dataTransfer.setData("application/x-starfall-loadout", el.dataset.dragPayload);
     e.dataTransfer.effectAllowed = "move";
+    const ghost = dragSprite(el, loadoutDrag.kind === "gem" ? artImage(relicArt(loadoutDrag.id)) : "");
+    moveDragSprite(ghost, e.clientX, e.clientY);
+    e.dataTransfer.setDragImage(ghost, 32, 40);
+    ghost.remove();
+    highlightLoadoutTargets(loadoutDrag, el);
     el.classList.add("dragging");
   });
   document.addEventListener("dragover", (e) => {
-    if (loadoutDrag && dropTarget(e.target)) {
-      e.preventDefault();
-      e.dataTransfer.dropEffect = "move";
-      document.querySelectorAll(".loadout-target").forEach((el) => el.classList.remove("loadout-target"));
-      e.target.closest("[data-loadout-drop],[data-pack-drop],[data-seat-drop]")?.classList.add("loadout-target");
+    if (loadoutDrag) {
+      const target = dropTarget(e.target), valid = canLoadoutDrop(run2, loadoutDrag, target);
+      if (valid) e.preventDefault();
+      e.dataTransfer.dropEffect = valid ? "move" : "none";
+      hoverLoadoutTarget(e.target, valid);
     }
   });
   document.addEventListener("drop", (e) => {
@@ -25427,15 +25561,14 @@ body.ui-v3[data-screen="map"] .stage-preview-popover>footer{display:flex;flex-di
     e.preventDefault();
     const payload = loadoutDrag;
     loadoutDrag = null;
-    finishLoadoutDrop(payload, dropTarget(e.target));
+    const source2 = document.querySelector(".dragging"), ghost = source2 ? dragSprite(source2, payload.kind === "gem" ? artImage(relicArt(payload.id)) : "") : null;
+    moveDragSprite(ghost || { style: {} }, e.clientX, e.clientY);
+    completeSpriteDrop(payload, dropTarget(e.target), ghost, source2);
   });
   document.addEventListener("dragend", () => {
     loadoutDrag = null;
     dragIndex = null;
-    document.querySelectorAll(".dragging,.loadout-target").forEach((el) => {
-      el.classList.remove("dragging");
-      el.classList.remove("loadout-target");
-    });
+    clearLoadoutTargets();
   });
   function detailTabsHTML(index) {
     return `<div class="detail-tabs" role="tablist" aria-label="Creature details">${[["overview", "Overview"], ["skills", "Skills"], ["equipment", "Loadout"], ...index !== null ? [["ai", "AI & growth"]] : []].map(([id, name]) => `<button role="tab" data-detail-tab="${id}">${name}</button>`).join("")}</div>`;
@@ -25507,40 +25640,128 @@ body.ui-v3[data-screen="map"] .stage-preview-popover>footer{display:flex;flex-di
   });
   var touchLoadout = null;
   var touchDragUntil = 0;
+  var cancelledSpritePointer = null;
+  var loadoutTargets = "[data-seat-drop],[data-skill-drop],[data-loadout-drop],[data-pack-drop],[data-gear-slot]";
+  function clearLoadoutTargets() {
+    document.body.classList.remove("carrying-sprite");
+    document.querySelectorAll(".dragging,.loadout-target,.loadout-compatible,.loadout-incompatible").forEach((el) => el.classList.remove("dragging", "loadout-target", "loadout-compatible", "loadout-incompatible"));
+  }
+  function highlightLoadoutTargets(payload, source2) {
+    document.body.classList.add("carrying-sprite");
+    for (const el of document.querySelectorAll(loadoutTargets)) {
+      if (el === source2 || source2.contains(el)) continue;
+      const valid = canLoadoutDrop(run2, payload, dropTarget(el));
+      el.classList.add(valid ? "loadout-compatible" : "loadout-incompatible");
+    }
+  }
+  function hoverLoadoutTarget(el, valid) {
+    document.querySelectorAll(".loadout-target").forEach((n2) => n2.classList.remove("loadout-target"));
+    if (valid) el?.closest(loadoutTargets)?.classList.add("loadout-target");
+  }
+  function landedTarget(payload, target, ghost) {
+    const candidates = [...document.querySelectorAll(loadoutTargets)].filter((el) => {
+      const t = dropTarget(el);
+      return t && (target.pack ? t.pack : target.seat !== void 0 ? t.seat === target.seat : t.index === target.index);
+    }).filter((el) => el.getClientRects().length);
+    if (target.pack) {
+      const uid = payload.kind === "gear" ? run2.gearInventory.filter((g) => g.id === payload.id).at(-1)?.uid : payload.uid;
+      const selector = payload.kind === "gear" ? "[data-gear-equip]" : "[data-equip],[data-pack-relic]";
+      const item = [...document.querySelectorAll(selector)].find((el) => (el.dataset.gearEquip || el.dataset.equip || el.dataset.packRelic) === uid && el.getClientRects().length);
+      if (item) return item;
+    }
+    if (payload.kind === "gear" && !target.pack) {
+      const p2 = ghost?.getBoundingClientRect(), distance3 = (el) => {
+        const b = el.getBoundingClientRect();
+        return p2 ? Math.hypot(b.x + b.width / 2 - p2.x - p2.width / 2, b.y + b.height / 2 - p2.y - p2.height / 2) : 0;
+      };
+      return candidates.filter((el) => el.dataset.gearType === equipmentSlotType(GEAR_BY_ID[payload.id])).sort((a, b) => distance3(a) - distance3(b))[0] || candidates[0];
+    }
+    if (payload.kind === "gem" && !target.pack) {
+      const pane = candidates.find((el) => el.classList.contains("personal-loadout"));
+      return [...pane?.querySelectorAll(".relic-slot.equipped") || []].at(-1) || pane || candidates[0];
+    }
+    return candidates.find((el) => el.dataset.creature !== void 0 || el.dataset.partySelect !== void 0 || el.dataset.seatDrop !== void 0 || el.dataset.skillDrop === target.skill) || candidates[0];
+  }
+  function completeSpriteDrop(payload, target, ghost, source2) {
+    const valid = phase !== "battle" && canLoadoutDrop(run2, payload, target);
+    clearLoadoutTargets();
+    if (valid && finishLoadoutDrop(payload, target)) settleDragSprite(ghost, landedTarget(payload, target, ghost), { reducedMotion: profile.reducedMotion });
+    else settleDragSprite(ghost, source2, { reducedMotion: profile.reducedMotion, cancelled: true });
+  }
+  function scrollSpriteDrag() {
+    const d = touchLoadout;
+    if (!d?.moved) return;
+    const dialog = d.el.closest(".modal"), scroll = dialog?.scrollHeight > dialog?.clientHeight ? dialog : d.el.closest(".modal-backdrop");
+    if (scroll) {
+      const r = scroll.getBoundingClientRect(), edge = 36, up = Math.max(0, r.top + edge - d.clientY), down = Math.max(0, d.clientY - (r.bottom - edge));
+      scroll.scrollTop += Math.max(-12, Math.min(12, (down - up) * 0.35));
+    }
+    const hit = document.elementFromPoint(d.clientX, d.clientY);
+    hoverLoadoutTarget(hit, canLoadoutDrop(run2, d.payload, dropTarget(hit)));
+    d.scrollFrame = requestAnimationFrame(scrollSpriteDrag);
+  }
+  function cancelSpriteDrag() {
+    const d = touchLoadout;
+    touchLoadout = null;
+    if (d?.scrollFrame) cancelAnimationFrame(d.scrollFrame);
+    if (d?.moved) {
+      cancelledSpritePointer = d.id;
+      touchDragUntil = performance.now() + 400;
+      settleDragSprite(d.ghost, d.el, { reducedMotion: profile.reducedMotion, cancelled: true });
+    }
+    clearLoadoutTargets();
+  }
   document.addEventListener("pointerdown", (e) => {
     const el = e.target.closest("[data-drag-payload]");
-    if (e.pointerType !== "touch" || !el || phase === "battle" || el.disabled) return;
+    if (!el || phase === "battle" || el.disabled || e.button !== 0) return;
+    cancelledSpritePointer = null;
     touchLoadout = { el, payload: JSON.parse(el.dataset.dragPayload), x: e.clientX, y: e.clientY, id: e.pointerId, moved: false };
   });
   document.addEventListener("pointermove", (e) => {
     const d = touchLoadout;
     if (!d || e.pointerId !== d.id) return;
-    if (!d.moved && Math.hypot(e.clientX - d.x, e.clientY - d.y) > 12) {
+    d.clientX = e.clientX;
+    d.clientY = e.clientY;
+    if (!d.moved && Math.hypot(e.clientX - d.x, e.clientY - d.y) > 6) {
       d.moved = true;
       d.el.setPointerCapture(e.pointerId);
-      d.ghost = d.el.cloneNode(true);
-      d.ghost.className = "touch-loadout-ghost";
-      document.body.append(d.ghost);
+      d.ghost = dragSprite(d.el, d.payload.kind === "gem" ? artImage(relicArt(d.payload.id)) : "");
+      d.el.classList.add("dragging");
+      highlightLoadoutTargets(d.payload, d.el);
+      d.scrollFrame = requestAnimationFrame(scrollSpriteDrag);
     }
     if (d.moved) {
       e.preventDefault();
-      d.ghost.style.left = e.clientX + "px";
-      d.ghost.style.top = e.clientY + "px";
+      moveDragSprite(d.ghost, e.clientX, e.clientY);
+      const hit = document.elementFromPoint(e.clientX, e.clientY);
+      hoverLoadoutTarget(hit, canLoadoutDrop(run2, d.payload, dropTarget(hit)));
     }
   }, { passive: false });
   document.addEventListener("pointerup", (e) => {
+    if (cancelledSpritePointer === e.pointerId) {
+      cancelledSpritePointer = null;
+      touchDragUntil = performance.now() + 500;
+      return;
+    }
     const d = touchLoadout;
     if (!d || d.id !== e.pointerId) return;
     touchLoadout = null;
-    d.ghost?.remove();
+    if (d.scrollFrame) cancelAnimationFrame(d.scrollFrame);
+    if (d.el.hasPointerCapture(e.pointerId)) d.el.releasePointerCapture(e.pointerId);
     if (!d.moved) return;
     touchDragUntil = performance.now() + 400;
-    finishLoadoutDrop(d.payload, dropTarget(document.elementFromPoint(e.clientX, e.clientY)));
+    completeSpriteDrop(d.payload, dropTarget(document.elementFromPoint(e.clientX, e.clientY)), d.ghost, d.el);
+    touchDragUntil = performance.now() + 500;
   });
-  document.addEventListener("pointercancel", () => {
-    touchLoadout?.ghost?.remove();
-    touchLoadout = null;
-  });
+  document.addEventListener("pointercancel", cancelSpriteDrag);
+  window.addEventListener("blur", cancelSpriteDrag);
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && touchLoadout?.moved) {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      cancelSpriteDrag();
+    }
+  }, true);
   document.addEventListener("click", (e) => {
     if (performance.now() < touchDragUntil) {
       e.preventDefault();

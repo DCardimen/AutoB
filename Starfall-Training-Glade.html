@@ -84,11 +84,11 @@
     const scale = Math.max(w / iw, h / ih);
     return { x: (w - iw * scale) * px, y: (h - ih * scale) * py, w: iw * scale, h: ih * scale };
   }
-  function paintAmbient(c2, theme, time, { width = 1002, height = 654, image = null, positionY = 0.5, cover = true } = {}) {
+  function paintAmbient(c2, theme, time, { width = 1002, height = 654, image = null, positionY = 0.5, cover = true, geometry = null } = {}) {
     const scene = AMBIENT_SCENES[theme];
     if (!scene) return;
     c2.save();
-    const g = image?.naturalWidth && cover ? coverGeometry(width, height, image.naturalWidth, image.naturalHeight, 0.5, positionY) : { x: 0, y: 0, w: width, h: height };
+    const g = geometry || (image?.naturalWidth && cover ? coverGeometry(width, height, image.naturalWidth, image.naturalHeight, 0.5, positionY) : { x: 0, y: 0, w: width, h: height });
     c2.translate(g.x, g.y);
     c2.scale(g.w, g.h);
     for (const [i, points] of (scene.water || []).entries()) {

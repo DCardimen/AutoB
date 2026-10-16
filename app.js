@@ -24,7 +24,8 @@ import {BIOMES,planetOrb,biomeScenery,worldJourneyHTML} from './planet-ui.js';
 import {equipmentDropChance} from './equipment-loot.js';
 import {TUNING_OPTIONS,DEFAULT_TUNING,normalizeTuning,setTuning} from './tuning.js';
 import {battleSummaryHTML} from './battle-summary.js';
-import {applyLoadoutDrop} from './loadout-interactions.js';
+import {applyLoadoutDrop,canLoadoutDrop} from './loadout-interactions.js';
+import {dragSprite,moveDragSprite,settleDragSprite} from './loadout-drag-ui.js';
 import {activeAilments,STATUS_AILMENTS,annotateAilments} from './status-ailments.js';
 import {combatEffectDescription,itemStrength} from './item-effects.js';
 import {chooseLegendaryPact,assignEnemyRelics,recruitPrice,refundCapture,progressive,capacity,CAPTURERS,buyCapturer,consumeCapturer,addCapturer,routeVisible,claimLoot,makeLoot,attachCaptureLoot,lootName,buyPermit,permitCost,buyRecruit} from './expedition-rules.js';
@@ -567,8 +568,8 @@ let dragIndex = null;
 function bindDrag() {
   document.querySelectorAll("[data-creature]").forEach((el) => {
     el.addEventListener("dragstart", (e) => {
-      if (phase === "battle") {
-        e.preventDefault();
+      if (phase === "battle" || el.dataset.dragPayload) {
+        if(phase === "battle")e.preventDefault();
         return;
       }
       dragIndex = Number(el.dataset.creature);
@@ -2015,7 +2016,7 @@ window.starfall = {
     return { run, phase, node, foes, battle, profile, view: viewName, practice, deployment };
   },
 };
-function loadoutHTML(u,index){const slots=relicSlots(u),items=u.relics||[];return `<section class="personal-loadout" data-loadout-drop="${index}"><div class="section-heading"><h3>PERSONAL RELICS</h3><span>${items.length} / ${slots} SLOTS</span></div><p>Relics change this companion’s entire build. No skill links. Remove or move freely before battle.</p><div class="relic-slots">${Array.from({length:slots},(_,slot)=>{const g=items[slot],r=g&&PERSONAL_BY_ID[g.id];return `<div class="relic-slot ${r?'equipped':''}" style="--relic:${r?.color||'#728666'}"><span>${r?.icon||'＋'}</span><strong>${r?.name||'Empty relic slot'}</strong><small>${r?relicDescription(r):'Drop a personal relic onto this creature'}</small>${r&&index!==null?`<button data-unequip="${slot}" data-index="${index}" ${phase==='battle'?'disabled':''}>Remove</button>`:''}</div>`;}).join('')}</div>${index!==null?`<div class="personal-inventory" data-pack-drop="true">${run.inventory.map(g=>{const r=PERSONAL_BY_ID[g.id];return `<button data-equip="${g.uid}" data-index="${index}" ${phase==='battle'||items.length>=slots||items.some(x=>x.id===g.id)?'disabled':''}><span style="color:${r.color}">${r.icon}</span><strong>${r.name}</strong><small>${relicDescription(r)}</small></button>`;}).join('')||'<p>Find personal relics in rewards or buy them at an outpost.</p>'}</div>`:''}</section>`;}
+function loadoutHTML(u,index){const slots=relicSlots(u),items=u.relics||[];return `<section class="personal-loadout" data-loadout-drop="${index}"><div class="section-heading"><h3>PERSONAL RELICS</h3><span>${items.length} / ${slots} SLOTS</span></div><p>Relics change this companion’s entire build. No skill links. Remove or move freely before battle.</p><div class="relic-slots">${Array.from({length:slots},(_,slot)=>{const g=items[slot],r=g&&PERSONAL_BY_ID[g.id];return `<div data-loadout-drop="${index}" data-relic-slot="${slot}" class="relic-slot ${r?'equipped':''}" style="--relic:${r?.color||'#728666'}"><span>${r?.icon||'＋'}</span><strong>${r?.name||'Empty relic slot'}</strong><small>${r?relicDescription(r):'Drop a personal relic onto this creature'}</small>${r&&index!==null?`<button data-unequip="${slot}" data-index="${index}" ${phase==='battle'?'disabled':''}>Remove</button>`:''}</div>`;}).join('')}</div>${index!==null?`<div class="personal-inventory" data-pack-drop="true">${run.inventory.map(g=>{const r=PERSONAL_BY_ID[g.id];return `<button data-equip="${g.uid}" data-index="${index}" ${phase==='battle'||items.length>=slots||items.some(x=>x.id===g.id)?'disabled':''}><span style="color:${r.color}">${r.icon}</span><strong>${r.name}</strong><small>${relicDescription(r)}</small></button>`;}).join('')||'<p>Find personal relics in rewards or buy them at an outpost.</p>'}</div>`:''}</section>`;}
 function policyHTML(u, index) {
   const policy = POLICIES[u.policy || "adaptive"] || POLICIES.adaptive;
   return nativeOrdersHTML(u,index)+`<label class="policy-control"><span class="section-kicker">CREATURE AI POLICY</span><select data-policy="${index}" ${phase === "battle" ? "disabled" : ""}>${Object.entries(
@@ -2271,7 +2272,27 @@ function lootHTML(){
 }
 function lootDescription(d){return d.kind==='gear'?equipmentDescription(GEAR_BY_ID[d.gear],{balanceVersion:17,equipmentVersion:2,equipment:[d.gear],equipmentRolls:[d]}):d.kind==='relic'?relicDescription(RUN_RELIC_BY_ID[d.relic]):d.kind==='capturer'?`${CAPTURERS[d.tier].mult}\u00d7 Scout odds \u00b7 one attempt`:'Spend at an outpost to shape your next build.';}
 
-function bindArenaDeployment(){if(!canvas||canvas.dataset.physicsBound)return;canvas.dataset.physicsBound='1';const coords=e=>{const rect=canvas.getBoundingClientRect();return arenaPoint(e.clientX,e.clientY,rect);};canvas.addEventListener('pointerdown',e=>{if(phase==='battle'&&!modalKind&&battle){const p=coords(e),u=battle.living(1).sort((a,b)=>b.y-a.y).find(u=>{const h=nativeBodyHeight(u)*getCharacterHeight(),y=u.y*.58+75-h/2;return Math.pow((p.x-u.x)/Math.max(12,70*u.nativeScale),2)+Math.pow((p.y-y)/Math.max(15,h*.6),2)<=1;});if(u){battle.focusEnemy(u.uid);toast('Focus: '+creatureName(u)+' - 8s');e.preventDefault();}return;}if(phase!=='prep'||modalKind)return;const p=coords(e),preview=getOrderPreview(),enemy=preview?.units.filter(u=>u.side===1).sort((a,b)=>b.y-a.y).find(u=>{const h=nativeBodyHeight(u)*getCharacterHeight(),y=u.y*.58+75-h/2;return Math.pow((p.x-u.x)/Math.max(12,70*u.nativeScale),2)+Math.pow((p.y-y)/Math.max(15,h*.6),2)<=1;});if(enemy){if(enemy.boss)toast('Guardians cannot be captured.');else setCaptureTarget(enemy.uid);e.preventDefault();return;}for(const {c,i} of run.team.map((c,i)=>({c,i,y:nativeSpawn(BY_ID[c.id],deployment.preview(c),0,i).y})).sort((a,b)=>b.y-a.y)){const visibleHit=nativeUnitHit({...deployment.preview(c),side:0,seat:c.seat??i},BY_ID[c.id],p,performance.now()/1000,i);if(visibleHit&&deployment.begin(c,i,p,getCharacterHeight(),true)){selectedCreature=i;liveSelectedUid=c.uid;canvas.setPointerCapture(e.pointerId);e.preventDefault();break;}}});canvas.addEventListener('pointermove',e=>{if(deployment.held){deployment.move(coords(e));e.preventDefault();}});const release=e=>{if(deployment.held){deployment.release();save();if(canvas.hasPointerCapture(e.pointerId))canvas.releasePointerCapture(e.pointerId);}};canvas.addEventListener('pointerup',release);canvas.addEventListener('pointercancel',release);}
+function bindArenaDeployment(){
+ if(!canvas||canvas.dataset.physicsBound)return;canvas.dataset.physicsBound='1';
+ const coords=e=>arenaPoint(e.clientX,e.clientY,canvas.getBoundingClientRect());
+ canvas.addEventListener('pointerdown',e=>{
+  if(modalKind||e.button!==0)return;const p=coords(e);
+  if(phase==='battle'&&battle){const u=battle.living(1).sort((a,b)=>b.y-a.y).find(u=>{const h=nativeBodyHeight(u)*getCharacterHeight(),y=u.y*.58+75-h/2;return Math.pow((p.x-u.x)/Math.max(12,70*u.nativeScale),2)+Math.pow((p.y-y)/Math.max(15,h*.6),2)<=1;});if(u){battle.focusEnemy(u.uid);toast('Focus: '+creatureName(u)+' - 8s');e.preventDefault();}return;}
+  if(phase!=='prep')return;
+  const time=performance.now()/1000,cam=arenaCamera(canvas.clientWidth,canvas.clientHeight),padding=10/cam.scale;
+  const allies=run.team.map((c,i)=>({c,i,u:{...deployment.preview(c),side:0,hp:1,maxHp:1}})).sort((a,b)=>nativeSpawn(BY_ID[b.c.id],b.u,0,b.i).y-nativeSpawn(BY_ID[a.c.id],a.u,0,a.i).y);
+  // Painted pixels win first. A padded silhouette/marker target makes tiny
+  // owls and narrow Supports comfortable to grab with mouse or touch.
+  let hit=allies.find(a=>nativeUnitHit(a.u,BY_ID[a.c.id],p,time,a.i));
+  if(!hit)hit=allies.filter(a=>nativeUnitHit(a.u,BY_ID[a.c.id],p,time,a.i,{padding,includeMarker:true})).sort((a,b)=>{const distance=a=>{const pos=nativeSpawn(BY_ID[a.c.id],a.u,0,a.i);return Math.hypot(p.x-pos.x,p.y-(pos.y*.58+65));};return distance(a)-distance(b);})[0];
+  if(hit&&deployment.begin(hit.c,hit.i,p,getCharacterHeight(),true)){selectedCreature=hit.i;liveSelectedUid=hit.c.uid;canvas.setPointerCapture(e.pointerId);canvas.classList.add('deployment-grabbing');e.preventDefault();return;}
+  const enemy=(foes||[]).map((c,i)=>({c,i,u:{...c,side:1,hp:1,maxHp:1}})).reverse().find(a=>nativeUnitHit(a.u,BY_ID[a.c.id],p,time,a.i,{padding,includeMarker:true}));
+  if(enemy){if(enemy.c.boss)toast('Guardians cannot be captured.');else setCaptureTarget(enemy.c.uid);e.preventDefault();}
+ });
+ canvas.addEventListener('pointermove',e=>{if(deployment.held){deployment.move(coords(e));e.preventDefault();}});
+ const release=e=>{if(deployment.held){deployment.release();save();if(canvas.hasPointerCapture(e.pointerId))canvas.releasePointerCapture(e.pointerId);}canvas.classList.remove('deployment-grabbing');};
+ canvas.addEventListener('pointerup',release);canvas.addEventListener('pointercancel',release);
+}
 function drawDefeatFilm(){if(!defeatFilm||!ctx||!canvas)return;const c=defeatFilm.outcome,u=battle?.units.find(u=>u.uid===c.uid),camera=arenaCamera(canvas.width,canvas.height),x=((u?.x||500)-camera.x)*camera.scale,y=((u?.y||450)*.58+75-camera.y)*camera.scale,t=defeatFilm.elapsed;ctx.save();ctx.fillStyle='#1c090866';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.strokeStyle='#ed8879';ctx.lineWidth=5;const r=22*(Math.min(1,t*3));ctx.beginPath();ctx.moveTo(x-r,y-r);ctx.lineTo(x+r,y+r);ctx.moveTo(x+r,y-r);ctx.lineTo(x-r,y+r);ctx.stroke();ctx.fillStyle='#ffd0ba';ctx.font='bold 18px sans-serif';ctx.textAlign='center';ctx.fillText(c.name+' · PERMANENT LOSS',x,y-65);for(let i=0;i<12;i++){const a=i*Math.PI/6,r=t*45;ctx.fillStyle=i%2?'#eec389':'#dc8278';ctx.fillRect(x+Math.cos(a)*r,y+Math.sin(a)*r,5,5);}ctx.font='13px sans-serif';ctx.fillText('Worn items shattered'+(c.destroyedRelic?' · a relic destroyed':''),x,y+55);ctx.restore();}
 
 function recapHTML(report){return battleSummaryHTML(report,{image:c=>image(c),name:creatureName,skill:id=>SKILLS[id]?.name||id},recapMetric,recapSide);}
@@ -2339,6 +2360,7 @@ function updateLiveStatus(){
 }
 function prepareLoadoutDragging(){
  const make=(el,payload)=>{if(!el||phase==='battle')return;el.draggable=true;el.dataset.dragPayload=JSON.stringify(payload);el.classList.add('loadout-draggable');};
+ document.querySelectorAll('[data-creature],[data-party-select]').forEach(el=>{const c=run.team[Number(el.dataset.creature??el.dataset.partySelect)];if(c)make(el,{kind:'companion',uid:c.uid});});
  document.querySelectorAll('[data-gear-equip]').forEach(el=>{const g=run.gearInventory.find(g=>g.uid===el.dataset.gearEquip);if(g)make(el,{kind:'gear',uid:g.uid,id:g.id});});
  document.querySelectorAll('[data-gear-remove]').forEach(el=>{const i=Number(el.dataset.index),slot=Number(el.dataset.gearRemove),id=run.team[i]?.equipment?.[slot];if(id)make(el,{kind:'gear',id,fromIndex:i,slot});});
  document.querySelectorAll('[data-equip],[data-pack-relic]').forEach(el=>{const uid=el.dataset.equip||el.dataset.packRelic,g=run.inventory.find(g=>g.uid===uid);if(g)make(el,{kind:'gem',uid:g.uid,id:g.id});});
@@ -2347,14 +2369,21 @@ function prepareLoadoutDragging(){
  document.querySelectorAll('.personal-loadout').forEach(el=>el.dataset.loadoutDrop=selectedCreature);
  document.querySelectorAll('.personal-inventory').forEach(el=>el.dataset.packDrop='true');
 }
-function dropTarget(el){const marker=el?.closest('[data-seat-drop],[data-skill-drop],[data-loadout-drop],[data-pack-drop]');if(!marker)return null;if(marker.dataset.seatDrop!==undefined)return {seat:Number(marker.dataset.seatDrop)};if(marker.dataset.packDrop!==undefined)return {pack:true};if(marker.dataset.skillDrop)return {index:Number(marker.dataset.index),skill:marker.dataset.skillDrop};const gear=el.closest('[data-gear-slot]');return marker.dataset.loadoutDrop!=='null'?{index:Number(marker.dataset.loadoutDrop),...(gear?{gearSlot:Number(gear.dataset.gearSlot),gearType:gear.dataset.gearType}:{})}:null;}
+function dropTarget(el){const marker=el?.closest('[data-seat-drop],[data-skill-drop],[data-loadout-drop],[data-pack-drop]');if(!marker)return null;if(marker.dataset.seatDrop!==undefined)return {seat:Number(marker.dataset.seatDrop)};if(marker.dataset.packDrop!==undefined)return {pack:true};if(marker.dataset.skillDrop)return {index:Number(marker.dataset.index),skill:marker.dataset.skillDrop};const gear=el.closest('[data-gear-slot]');return marker.dataset.loadoutDrop!=='null'?{index:Number(marker.dataset.loadoutDrop),...(gear?{gearSlot:Number(gear.dataset.gearSlot),gearType:gear.dataset.gearType}:{}),...(el.closest('[data-relic-slot]')?{relicSlot:Number(el.closest('[data-relic-slot]').dataset.relicSlot)}:{})}:null;}
 
 function finishLoadoutDrop(payload,target){if(!target||phase==='battle')return false;if(!applyLoadoutDrop(run,payload,target)){toast('That loadout cannot accept this item or skill. Check space and compatibility.');return false;}save();render();if(modalKind==='creature'||modalKind==='detail')openCreature(selectedCreature);else if(modalKind==='pack')openPack();else if(modalKind==='companions')openCompanions();const refreshed=$('.modal');if(refreshed)refreshed.classList.add('loadout-updated');toast(payload.kind==='skill'?'Cooldown priority changed. The first ready skill is considered first.':'Loadout updated.');return true;}
 let loadoutDrag=null;
-document.addEventListener('dragstart',e=>{const el=e.target.closest('[data-drag-payload]');if(!el||phase==='battle')return;loadoutDrag=JSON.parse(el.dataset.dragPayload);e.dataTransfer.setData('application/x-starfall-loadout',el.dataset.dragPayload);e.dataTransfer.effectAllowed='move';el.classList.add('dragging');});
-document.addEventListener('dragover',e=>{if(loadoutDrag&&dropTarget(e.target)){e.preventDefault();e.dataTransfer.dropEffect='move';document.querySelectorAll('.loadout-target').forEach(el=>el.classList.remove('loadout-target'));e.target.closest('[data-loadout-drop],[data-pack-drop],[data-seat-drop]')?.classList.add('loadout-target');}});
-document.addEventListener('drop',e=>{if(!loadoutDrag)return;e.preventDefault();const payload=loadoutDrag;loadoutDrag=null;finishLoadoutDrop(payload,dropTarget(e.target));});
-document.addEventListener('dragend',()=>{loadoutDrag=null;dragIndex=null;document.querySelectorAll('.dragging,.loadout-target').forEach(el=>{el.classList.remove('dragging');el.classList.remove('loadout-target');});});
+// Native drag events are a fallback; pointer dragging gives mouse, pen and
+// touch the same exact sprite, legal targets and drop animation.
+document.addEventListener('dragstart',e=>{
+ const el=e.target.closest('[data-drag-payload]');if(!el)return;
+ if(touchLoadout||phase==='battle'){e.preventDefault();return;}
+ loadoutDrag=JSON.parse(el.dataset.dragPayload);e.dataTransfer.setData('application/x-starfall-loadout',el.dataset.dragPayload);e.dataTransfer.effectAllowed='move';
+ const ghost=dragSprite(el,loadoutDrag.kind==='gem'?artImage(relicArt(loadoutDrag.id)):'');moveDragSprite(ghost,e.clientX,e.clientY);e.dataTransfer.setDragImage(ghost,32,40);ghost.remove();highlightLoadoutTargets(loadoutDrag,el);el.classList.add('dragging');
+});
+document.addEventListener('dragover',e=>{if(loadoutDrag){const target=dropTarget(e.target),valid=canLoadoutDrop(run,loadoutDrag,target);if(valid)e.preventDefault();e.dataTransfer.dropEffect=valid?'move':'none';hoverLoadoutTarget(e.target,valid);}});
+document.addEventListener('drop',e=>{if(!loadoutDrag)return;e.preventDefault();const payload=loadoutDrag;loadoutDrag=null;const source=document.querySelector('.dragging'),ghost=source?dragSprite(source,payload.kind==='gem'?artImage(relicArt(payload.id)):''):null;moveDragSprite(ghost||{style:{}},e.clientX,e.clientY);completeSpriteDrop(payload,dropTarget(e.target),ghost,source);});
+document.addEventListener('dragend',()=>{loadoutDrag=null;dragIndex=null;clearLoadoutTargets();});
 
 function detailTabsHTML(index){return `<div class="detail-tabs" role="tablist" aria-label="Creature details">${[['overview','Overview'],['skills','Skills'],['equipment','Loadout'],...(index!==null?[['ai','AI & growth']]:[])].map(([id,name])=>`<button role="tab" data-detail-tab="${id}">${name}</button>`).join('')}</div>`;}
 function prepareDetailTabs(){if(modalKind!=='creature')return;const modal=$('.modal');for(const pane of modal.querySelectorAll('[data-detail-pane]')){pane.hidden=pane.dataset.detailPane!==detailTab;pane.id='detail-pane-'+pane.dataset.detailPane;pane.setAttribute('role','tabpanel');pane.setAttribute('aria-labelledby','detail-tab-'+pane.dataset.detailPane);}for(const tab of modal.querySelectorAll('[data-detail-tab]')){const selected=tab.dataset.detailTab===detailTab;tab.classList.toggle('selected',selected);tab.id='detail-tab-'+tab.dataset.detailTab;tab.setAttribute('aria-controls','detail-pane-'+tab.dataset.detailTab);tab.setAttribute('aria-selected',String(selected));tab.tabIndex=selected?0:-1;}}
@@ -2366,13 +2395,56 @@ document.addEventListener('pointerdown',e=>{const el=e.target.closest('.ailment-
 
 document.addEventListener('keydown',e=>{if(!e.target.matches('[data-detail-tab]')||!['ArrowLeft','ArrowRight'].includes(e.key))return;e.preventDefault();const tabs=[...document.querySelectorAll('[data-detail-tab]')],i=tabs.indexOf(e.target),next=tabs[(i+(e.key==='ArrowRight'?1:-1)+tabs.length)%tabs.length];detailTab=next.dataset.detailTab;prepareDetailTabs();next.focus();});
 
-let touchLoadout=null,touchDragUntil=0;
-document.addEventListener('pointerdown',e=>{const el=e.target.closest('[data-drag-payload]');if(e.pointerType!=='touch'||!el||phase==='battle'||el.disabled)return;touchLoadout={el,payload:JSON.parse(el.dataset.dragPayload),x:e.clientX,y:e.clientY,id:e.pointerId,moved:false};});
-document.addEventListener('pointermove',e=>{const d=touchLoadout;if(!d||e.pointerId!==d.id)return;if(!d.moved&&Math.hypot(e.clientX-d.x,e.clientY-d.y)>12){d.moved=true;d.el.setPointerCapture(e.pointerId);d.ghost=d.el.cloneNode(true);d.ghost.className='touch-loadout-ghost';document.body.append(d.ghost);}if(d.moved){e.preventDefault();d.ghost.style.left=e.clientX+'px';d.ghost.style.top=e.clientY+'px';}},{passive:false});
-document.addEventListener('pointerup',e=>{const d=touchLoadout;if(!d||d.id!==e.pointerId)return;touchLoadout=null;d.ghost?.remove();if(!d.moved)return;touchDragUntil=performance.now()+400;finishLoadoutDrop(d.payload,dropTarget(document.elementFromPoint(e.clientX,e.clientY)));});
-document.addEventListener('pointercancel',()=>{touchLoadout?.ghost?.remove();touchLoadout=null;});
+let touchLoadout=null,touchDragUntil=0,cancelledSpritePointer=null;
+const loadoutTargets='[data-seat-drop],[data-skill-drop],[data-loadout-drop],[data-pack-drop],[data-gear-slot]';
+function clearLoadoutTargets(){document.body.classList.remove('carrying-sprite');document.querySelectorAll('.dragging,.loadout-target,.loadout-compatible,.loadout-incompatible').forEach(el=>el.classList.remove('dragging','loadout-target','loadout-compatible','loadout-incompatible'));}
+function highlightLoadoutTargets(payload,source){
+ document.body.classList.add('carrying-sprite');
+ for(const el of document.querySelectorAll(loadoutTargets)){
+  if(el===source||source.contains(el))continue;
+  const valid=canLoadoutDrop(run,payload,dropTarget(el));el.classList.add(valid?'loadout-compatible':'loadout-incompatible');
+ }
+}
+function hoverLoadoutTarget(el,valid){document.querySelectorAll('.loadout-target').forEach(n=>n.classList.remove('loadout-target'));if(valid)el?.closest(loadoutTargets)?.classList.add('loadout-target');}
+function landedTarget(payload,target,ghost){
+ const candidates=[...document.querySelectorAll(loadoutTargets)].filter(el=>{const t=dropTarget(el);return t&&(target.pack?t.pack:target.seat!==undefined?t.seat===target.seat:t.index===target.index);}).filter(el=>el.getClientRects().length);
+ if(target.pack){const uid=payload.kind==='gear'?run.gearInventory.filter(g=>g.id===payload.id).at(-1)?.uid:payload.uid;const selector=payload.kind==='gear'?'[data-gear-equip]':'[data-equip],[data-pack-relic]';const item=[...document.querySelectorAll(selector)].find(el=>(el.dataset.gearEquip||el.dataset.equip||el.dataset.packRelic)===uid&&el.getClientRects().length);if(item)return item;}
+ if(payload.kind==='gear'&&!target.pack){const p=ghost?.getBoundingClientRect(),distance=el=>{const b=el.getBoundingClientRect();return p?Math.hypot(b.x+b.width/2-p.x-p.width/2,b.y+b.height/2-p.y-p.height/2):0;};return candidates.filter(el=>el.dataset.gearType===equipmentSlotType(GEAR_BY_ID[payload.id])).sort((a,b)=>distance(a)-distance(b))[0]||candidates[0];}
+ if(payload.kind==='gem'&&!target.pack){const pane=candidates.find(el=>el.classList.contains('personal-loadout'));return [...(pane?.querySelectorAll('.relic-slot.equipped')||[])].at(-1)||pane||candidates[0];}
+ return candidates.find(el=>el.dataset.creature!==undefined||el.dataset.partySelect!==undefined||el.dataset.seatDrop!==undefined||el.dataset.skillDrop===target.skill)||candidates[0];
+}
+function completeSpriteDrop(payload,target,ghost,source){
+ const valid=phase!=='battle'&&canLoadoutDrop(run,payload,target);clearLoadoutTargets();
+ if(valid&&finishLoadoutDrop(payload,target))settleDragSprite(ghost,landedTarget(payload,target,ghost),{reducedMotion:profile.reducedMotion});
+ else settleDragSprite(ghost,source,{reducedMotion:profile.reducedMotion,cancelled:true});
+}
+function scrollSpriteDrag(){
+ const d=touchLoadout;if(!d?.moved)return;
+ const dialog=d.el.closest('.modal'),scroll=dialog?.scrollHeight>dialog?.clientHeight?dialog:d.el.closest('.modal-backdrop');
+ if(scroll){const r=scroll.getBoundingClientRect(),edge=36,up=Math.max(0,r.top+edge-d.clientY),down=Math.max(0,d.clientY-(r.bottom-edge));scroll.scrollTop+=Math.max(-12,Math.min(12,(down-up)*.35));}
+ const hit=document.elementFromPoint(d.clientX,d.clientY);hoverLoadoutTarget(hit,canLoadoutDrop(run,d.payload,dropTarget(hit)));d.scrollFrame=requestAnimationFrame(scrollSpriteDrag);
+}
+function cancelSpriteDrag(){const d=touchLoadout;touchLoadout=null;if(d?.scrollFrame)cancelAnimationFrame(d.scrollFrame);if(d?.moved){cancelledSpritePointer=d.id;touchDragUntil=performance.now()+400;settleDragSprite(d.ghost,d.el,{reducedMotion:profile.reducedMotion,cancelled:true});}clearLoadoutTargets();}
+document.addEventListener('pointerdown',e=>{
+ const el=e.target.closest('[data-drag-payload]');if(!el||phase==='battle'||el.disabled||e.button!==0)return;
+ cancelledSpritePointer=null;touchLoadout={el,payload:JSON.parse(el.dataset.dragPayload),x:e.clientX,y:e.clientY,id:e.pointerId,moved:false};
+});
+document.addEventListener('pointermove',e=>{
+ const d=touchLoadout;if(!d||e.pointerId!==d.id)return;d.clientX=e.clientX;d.clientY=e.clientY;
+ if(!d.moved&&Math.hypot(e.clientX-d.x,e.clientY-d.y)>6){d.moved=true;d.el.setPointerCapture(e.pointerId);d.ghost=dragSprite(d.el,d.payload.kind==='gem'?artImage(relicArt(d.payload.id)):'');d.el.classList.add('dragging');highlightLoadoutTargets(d.payload,d.el);d.scrollFrame=requestAnimationFrame(scrollSpriteDrag);}
+ if(d.moved){e.preventDefault();moveDragSprite(d.ghost,e.clientX,e.clientY);const hit=document.elementFromPoint(e.clientX,e.clientY);hoverLoadoutTarget(hit,canLoadoutDrop(run,d.payload,dropTarget(hit)));}
+},{passive:false});
+document.addEventListener('pointerup',e=>{
+ if(cancelledSpritePointer===e.pointerId){cancelledSpritePointer=null;touchDragUntil=performance.now()+500;return;}
+ const d=touchLoadout;if(!d||d.id!==e.pointerId)return;touchLoadout=null;if(d.scrollFrame)cancelAnimationFrame(d.scrollFrame);
+ if(d.el.hasPointerCapture(e.pointerId))d.el.releasePointerCapture(e.pointerId);
+ if(!d.moved)return;touchDragUntil=performance.now()+400;
+ completeSpriteDrop(d.payload,dropTarget(document.elementFromPoint(e.clientX,e.clientY)),d.ghost,d.el);touchDragUntil=performance.now()+500;
+});
+document.addEventListener('pointercancel',cancelSpriteDrag);
+window.addEventListener('blur',cancelSpriteDrag);
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&touchLoadout?.moved){e.preventDefault();e.stopImmediatePropagation();cancelSpriteDrag();}},true);
 document.addEventListener('click',e=>{if(performance.now()<touchDragUntil){e.preventDefault();e.stopImmediatePropagation();}},true);
-
 
 function roleBadge(s){return `<span class="role-badge role-${s.role.toLowerCase()}" title="${s.role}: ${{Guardian:'Armored frontline and interception',Striker:'Close combat pressure',Ranger:'Ranged damage and kiting',Support:'Healing and control'}[s.role]}">${ROLES[s.role]} ${s.role}${s.rarity==='Legendary'?' · ✦ Legendary':''}</span>`;}
 function reserveTrayHTML(){return `<section class="reserve-tray"><div class="section-heading"><h3>RESERVE ROSTER <span>${run.bench.length} / 12</span></h3><small>Drag onto a team member to swap · their equipment stays with them${run.bench.length>12?' · Extra captured companions are kept safely.':''}</small></div><div class="reserve-tray-list">${run.bench.map((c,j)=>`<button class="reserve-card ${BY_ID[c.id].rarity==='Legendary'?'legendary-creature':''}" data-swap="${j}" data-index="${selectedCreature}" data-drag-payload='${JSON.stringify({kind:'reserve',uid:c.uid})}' draggable="${phase!=='battle'}" ${phase==='battle'?'disabled':''}>${image(c)}<span><strong>${creatureName(c)}</strong>${roleBadge(BY_ID[c.id])}<small>Lv. ${c.level} · ${c.equipment?.length||0}/${equipmentSlots(c)} gear slots</small></span></button>`).join('')||'<p>Capture or recruit a companion to build your reserves.</p>'}</div></section>`;}
