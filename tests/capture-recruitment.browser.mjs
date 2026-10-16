@@ -36,7 +36,7 @@ try{
   const caught=[...award.team,...award.bench].find(c=>c.uid===award.claim.uid);
   assert.equal(caught.id,'nyra');assert.equal(caught.level,7);assert.equal(caught.evolution,1);assert.equal(caught.nature,'Savant');assert.deepEqual(caught.boundRelics,['venom-clasp']);assert.equal(caught.equipmentRolls[0].quality,.77);assert.equal(caught.equipmentRolls[0].rarity,'Rare');assert.equal(caught.bond,scenario==='old-save'?3:4);
   if(expectedDestination==='team'){assert.equal(award.bench.length,0);assert.equal(award.team.length,scenario==='retreat'?2:3);assert.equal(new Set(award.team.map(c=>c.seat)).size,award.team.length);}
-  else{assert.match(await page.locator('.capture-outcome').textContent(),/joined your reserves/);assert.equal(award.team.length,2);assert.equal(award.bench.length,1);assert.equal(await page.locator('.reserve-card').count(),1);}
+  else{assert.match(await page.locator('.capture-outcome').textContent(),/joined your reserves/);assert.equal(award.team.length,2);assert.equal(award.bench.length,1);await page.locator('.modal-close').click();await page.locator('.arena-dock [data-action="companions"]').click();assert.equal(await page.locator('.reserve-card').count(),1);}
   await page.reload();await page.waitForFunction(()=>window.starfall);await page.clock.runFor(300);
   assert.equal(await page.evaluate(()=>[...starfall.state.run.team,...starfall.state.run.bench].filter(c=>c.id==='nyra').length),1);
   assert.equal(await page.evaluate(()=>starfall.state.run.gold),award.gold);

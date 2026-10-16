@@ -169,3 +169,36 @@ body.ui-v3.native-expedition .ally-orders .prep-roster-vitals>span{top:auto!impo
 @media(max-width:620px){body.ui-v3.native-expedition .arena-control>.button[data-action="battle"]{flex:1 0 100%;width:100%;justify-content:center}body.ui-v3.native-expedition .speed-switch{flex:none}body.ui-v3.native-expedition .speed-switch button{min-width:38px;max-width:38px;padding:5px 4px}body.ui-v3.native-expedition .companion-equipment>header{flex-wrap:wrap;gap:8px}body.ui-v3.native-expedition .companion-equipment>header>div{min-width:0;flex:1}body.ui-v3.native-expedition .companion-equipment>header>img{width:48px;height:48px}body.ui-v3.native-expedition .companion-equipment>header>button{flex:1 0 100%;width:100%;min-width:0;font-size:13px}}
 
 @media(max-width:620px){body.ui-v3.native-expedition[data-screen="arena"] .resources>div{min-width:0;flex:1 1 0;padding:5px 6px}}
+
+/* Opening relics use the supplied card material, with crisp native PNG details. */
+.uploaded-art{image-rendering:auto}
+.modal[data-kind="opening-relic"]{width:min(900px,94vw);max-height:94dvh;padding:34px;background:radial-gradient(ellipse at 50% 20%,#234739,#041f28 75%);border:1px solid #b7ab70;box-shadow:0 26px 100px #000b,inset 0 0 60px #bfcba011}
+.opening-relic-layout{text-align:center;position:relative;z-index:1}
+.opening-relic-layout h2{font:clamp(30px,4vw,46px) var(--serif);color:#f6e4af;margin:10px 0}
+.opening-relic-layout>p{max-width:640px;margin:10px auto 20px;line-height:1.65;color:#bfd4c2}
+.opening-relic-choices{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin:24px auto;max-width:720px}
+.opening-relic-card{position:relative;display:flex;flex-direction:column;align-items:center;gap:14px;min-height:340px;padding:26px 24px 20px;color:#e9e6c5;border:1px solid #83976c;border-radius:12px;background:radial-gradient(ellipse at 50% 20%,#c3e2a024,#05272cee 70%);box-shadow:inset 0 0 0 5px #0c3033,0 12px 28px #0004;transition:transform .2s,border-color .2s,box-shadow .2s}
+.opening-relic-card:hover,.opening-relic-card:focus-visible{transform:translateY(-5px);border-color:#f9df96;box-shadow:inset 0 0 0 5px #244338,0 12px 32px #ddc47c26;outline:2px solid #ddc47c;outline-offset:4px}
+.opening-relic-card .opening-relic-art{width:132px;height:132px;filter:drop-shadow(0 8px 16px #c9db8e30)}
+.opening-relic-card>strong{font:25px var(--serif);color:#f5dfaa}
+.opening-relic-card>small{font-size:9px;letter-spacing:2px;color:#b6cf94}
+.opening-relic-effect{font:14px/1.65 var(--sans);color:#d3e5d3;max-width:290px;flex:1}
+.opening-relic-effect em{font-style:normal;color:#f9df96;font-weight:700}
+.relic-take-label{border-top:1px solid #b6cb7e40;padding-top:12px;color:#e7d192;font:12px var(--sans);width:100%}
+.relic-choice-note{display:block;text-align:center;font-size:12px;color:#bfcab7;line-height:1.6;margin:12px 0}
+.skip-relic{display:block;margin:14px auto}
+.major-pact{border-color:#b97663}
+.relic-receive-flight{position:fixed;left:0;top:0;z-index:30000;pointer-events:none;transform-origin:center;will-change:transform,opacity;filter:drop-shadow(0 0 16px #e9cf7ca0)}
+.relic-receive-flight img{width:100%;height:100%;object-fit:contain}
+.relic-receive-flight:before{content:"";position:absolute;inset:-20%;border:1px solid #f1df984a;border-radius:50%;box-shadow:0 0 24px #d7f4b74a,inset 0 0 24px #e6c77d36;animation:relic-orbit 1.15s ease-in-out both}
+.relic-just-received{animation:relic-arrived 1.35s ease-out}
+.gear-compatibility{display:block;line-height:1.5;margin:8px 0!important}.gear-compatibility.compatible{color:#c6e7a7!important}.gear-compatibility.incompatible{color:#e4ae91!important}
+@keyframes relic-orbit{0%{transform:scale(.75);opacity:0}30%{opacity:1}100%{transform:scale(1.3);opacity:0}}
+@keyframes relic-arrived{0%,40%{box-shadow:0 0 0 8px #edd58c55,0 0 30px #c9ed96a0;filter:brightness(1.5)}100%{box-shadow:0 0 0 18px #edd58c00;filter:brightness(1)}}
+@media(max-width:600px){.modal[data-kind="opening-relic"]{padding:26px 16px;width:94vw}.opening-relic-choices{gap:12px}.opening-relic-card{min-height:330px;padding:17px 10px;gap:12px}.opening-relic-card .opening-relic-art{width:94px;height:94px}.opening-relic-card>strong{font-size:20px}.opening-relic-effect{font-size:12px}.opening-relic-card>small{font-size:8px;letter-spacing:1px}.opening-relic-layout>p{font-size:12px}}
+@media(max-width:350px){.opening-relic-choices{grid-template-columns:1fr}.opening-relic-card{min-height:260px}.modal-backdrop[data-kind="opening-relic"]{overflow-y:auto;align-items:flex-start}}
+@media(prefers-reduced-motion:reduce){.relic-just-received,.relic-receive-flight:before{animation:none}.opening-relic-card{transition:none}}
+.gentle-motion .relic-just-received{animation:none}.gentle-motion .opening-relic-card{transition:none}
+
+.pact-label{display:block;color:#e6ab92;letter-spacing:1.5px;font-size:9px;margin:8px 0}
+.relic-bar-item[data-relic-pact="true"]{border-color:#c99272;box-shadow:inset 0 0 12px #b94b3a24}

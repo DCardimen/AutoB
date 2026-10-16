@@ -171,3 +171,11 @@ test('walking rolls heel to toe; sprint adds lift, forward lean and an alternati
   }
   for(const state of ['walk','run','sprint'])for(let step=0;step<32;step++){const pose=characterRig('wolf',state,step/32);assert.ok(pose.legs.some(l=>l.foot.planted),'alternating support remains on the ground');}
 });
+
+test('short many-legged steps preserve sole height and bone length through wide turn anchors',()=>{
+ for(const id of ['mech','spider','crab','centipede']){
+  const base=characterRig(id,'walk',.37),feet=base.legs.map(l=>({x:l.end.x+35,y:l.end.y+25,z:3}));
+  const rig=characterRig(id,'walk',.37,'',{feet,strideLength:150});
+  for(const leg of rig.legs){assert.equal(leg.clamped,false);assert.ok(Math.abs(Math.hypot(leg.joint.x-leg.root.x,leg.joint.y-leg.root.y,leg.joint.z-leg.root.z)-leg.upper)<1e-8);assert.ok(Math.abs(Math.hypot(leg.end.x-leg.joint.x,leg.end.y-leg.joint.y,leg.end.z-leg.joint.z)-leg.lower)<1e-8);assert.ok(Math.abs(leg.end.z-(3+leg.foot.soleLift))<1e-8);}
+ }
+});

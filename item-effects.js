@@ -18,5 +18,6 @@ export function combatEffectDescription(item,model={}){
  if(e.actionSpeedFlat)parts.push(`+${number(e.actionSpeedFlat*100)} percentage points action speed`);
  if(e.cleanse)parts.push('cleanse ailments');if(e.cleanseAll)parts.push('cleanse the team');if(e.statusSpread)parts.push('spread the target’s ailments');if(e.dispel)parts.push('dispel enemy haste and evasion');if(e.stun)parts.push(`${number(e.stun)} impact`);if(e.retreat)parts.push(`recoil ${number(e.retreat)} ground units`);if(e.hasteAll)parts.push(`team haste ${number(e.hasteAll)}s`);
  const qualifier=[e.auto?'auto-attacks':null,e.onlyCrit?'critical hits':null,conditions[e.condition],e.every?`every ${e.every} triggers`:null,e.interval?`${e.interval}s cooldown`:null,e.uses?`${e.uses} uses per fight`:null].filter(Boolean).join(' · ');
- return `${events[item.hook]||'Passive'}${qualifier?' · '+qualifier:''}: ${parts.join(', ')||item.desc}.`;
+ const drawback=item.statEffect?combatEffectDescription({hook:'flat',effect:item.statEffect},model):'';
+ return `${events[item.hook]||'Passive'}${qualifier?' · '+qualifier:''}: ${parts.join(', ')||item.desc}.${drawback?' Tradeoff: '+drawback:''}`;
 }

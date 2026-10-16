@@ -1,3 +1,4 @@
+import {prepareOpeningRelics,chooseFirstRelic} from '../opening-relics.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {makeRun,creature,Battle,stats,encounter,SPECIES} from '../game.js';
@@ -23,10 +24,8 @@ test('every cleared Chaos tier grants a point, and Chaos 3 opens the third initi
   assert.throws(()=>makeRun(1,['solara']),/point budget/);
 });
 
-test('new runs get exactly one seeded relic with variation across seeds',()=>{
-  const relics=new Set();
-  for(let seed=1;seed<=40;seed++){const r=fresh(seed);assert.equal(r.relics.length,1);assert.equal(r.relics[0],fresh(seed).startingRelic);assert.ok(EXPEDITION_RELICS.some(x=>x.id===r.relics[0]));relics.add(r.relics[0]);}
-  assert.ok(relics.size>20);
+test('new runs offer two seeded relics and receive one only after choosing',()=>{
+ const pairs=new Set();for(let seed=1;seed<=40;seed++){const r=fresh(seed);assert.equal(r.relics.length,0);const offer=prepareOpeningRelics(r,{});assert.equal(offer.choices.length,2);assert.deepEqual(offer,prepareOpeningRelics(fresh(seed),{}));pairs.add(offer.choices.join());assert.ok(chooseFirstRelic(r,offer.choices[0]));assert.equal(r.relics.length,1);assert.equal(chooseFirstRelic(r,offer.choices[1]),false);}assert.ok(pairs.size>20);
 });
 
 test('all 30 relics and 50 pieces of equipment have unique IDs and usable descriptions',()=>{

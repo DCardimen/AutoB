@@ -16,6 +16,7 @@ const types = {
   ".woff2": "font/woff2",
 };
 const entryFiles = new Set([
+  "/equipment-affinity.js", "/affinity-gear.js", "/opening-relics.js", "/relic-selection-ui.js", "/relic-pacts.js", "/relic-illustrations.js",
   "/movement-tuning.js",
   "/settings-movement-preview.js",
   "/elite-modifiers.js",

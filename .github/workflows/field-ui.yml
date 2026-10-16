@@ -42,6 +42,7 @@ jobs:
       - run: node tests/arena-elite.browser.mjs
       - run: node tests/uploaded-ui.browser.mjs
       - run: node tests/journey-polish.browser.mjs
+      - run: node tests/weapon-relic-start.browser.mjs
       - run: node tests/settings-movement.browser.mjs
       - run: node tests/legs-v2.browser.mjs
       - run: node scripts/review-legs-v2.mjs final

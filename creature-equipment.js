@@ -1,4 +1,7 @@
 import {STARTER_GEAR} from './starter-equipment.js';
+import {AFFINITY_GEAR} from './affinity-gear.js';
+import {gearCompatibility} from './equipment-affinity.js';
+export {gearCompatibility,equipmentAffinity,AFFINITY_LABELS,gearWeaponClass} from './equipment-affinity.js';
 import {EXPANDED_GEAR} from './equipment-catalog.js';
 import {itemStrength,scaledEffect,combatEffectDescription} from './item-effects.js';
 export const CREATURE_GEAR=[
@@ -10,6 +13,7 @@ export const CREATURE_GEAR=[
  {id:'citadel-core',name:'Citadel Core',slot:'Core',shield:38,poise:12,color:'#90bdcb',cost:90,desc:'Start battles with 38 shield and 12 extra poise.'},
  ...EXPANDED_GEAR,
  ...STARTER_GEAR,
+ ...AFFINITY_GEAR,
 ];
 export const GEAR_BY_ID=Object.fromEntries(CREATURE_GEAR.map(g=>[g.id,g]));
 export function equipmentSlots(c){return ((c.balanceVersion||0)>=15?3:0)+Math.max(0,Math.min(2,c.evolution||0));}
@@ -28,11 +32,20 @@ export function enemyEquipment(c,seed,progress=0,chaos=0){
   'Ember pursuit':['frostfire-edge','rageplate','ember-reactor','wildfire-trophy','blood-feast'],
   'Clockwork pack':['storm-conductor','stoneheart-plate','battery-orb','tempo-soles','battle-censer']};
  const build=builds[c.relicBuild]||['siege-maul','stoneheart-plate','living-battery','runner-coils','echo-prism'];
- c.equipment=build.slice(0,equipmentSlots(c));
- if(Math.abs(seed)%3===0){const pool=CREATURE_GEAR.filter(g=>g.slot===({Guardian:'Armor',Striker:'Weapon',Ranger:'Boots',Support:'Focus'}[c.role]||'Core'));if(pool.length)c.equipment[c.equipment.length-1]=pool[Math.abs(seed*31)%pool.length].id;}
+ const compatible=CREATURE_GEAR.filter(g=>gearCompatibility(c,g).allowed);
+ c.equipment=build.filter(id=>gearCompatibility(c,GEAR_BY_ID[id]).allowed).slice(0,equipmentSlots(c));
+ for(let i=0;c.equipment.length<equipmentSlots(c)&&i<compatible.length;i++){const g=compatible[(Math.abs(seed)+i)%compatible.length];if(!c.equipment.includes(g.id))c.equipment.push(g.id);}
+ if(Math.abs(seed)%3===0){const pool=compatible.filter(g=>!c.equipment.includes(g.id)&&g.slot===({Guardian:'Armor',Striker:'Weapon',Ranger:'Boots',Support:'Focus'}[c.role]||'Core'));if(pool.length)c.equipment[c.equipment.length-1]=pool[Math.abs(seed*31)%pool.length].id;}
  return c;
 }
 export function claimEvolutionGear(run,index,id){const c=run.team[index];if(!c||!GEAR_BY_ID[id]||(c.gearClaimed||0)>=((c.balanceVersion||0)>=15?(c.evolution||0):equipmentSlots(c)))return false;c.gearClaimed=(c.gearClaimed||0)+1;run.gearInventory??=[];run.gearInventory.push({uid:`${c.uid}:gear:${c.gearClaimed}`,id});return true;}
-export function equipGear(run,index,uid){const c=run.team[index],i=run.gearInventory?.findIndex(g=>g.uid===uid);if(!c||i===undefined||i<0||(c.equipment||[]).length>=equipmentSlots(c)||c.equipment?.includes(run.gearInventory[i].id))return false;c.equipment??=[];c.equipmentRolls??=c.equipment.map(()=>null);const item=run.gearInventory.splice(i,1)[0];c.equipment.push(item.id);c.equipmentRolls.push({...item});return true;}
+export function equipGear(run,index,uid){const c=run.team[index],i=run.gearInventory?.findIndex(g=>g.uid===uid);if(!c||i===undefined||i<0||!gearCompatibility(c,GEAR_BY_ID[run.gearInventory[i].id]).allowed||(c.equipment||[]).length>=equipmentSlots(c)||c.equipment?.includes(run.gearInventory[i].id))return false;c.equipment??=[];c.equipmentRolls??=c.equipment.map(()=>null);const item=run.gearInventory.splice(i,1)[0];c.equipment.push(item.id);c.equipmentRolls.push({...item});return true;}
 export function removeGear(run,index,slot){const c=run.team[index],id=c?.equipment?.[slot];if(!id)return false;const roll=c.equipmentRolls?.[slot]||{};c.equipment.splice(slot,1);c.equipmentRolls?.splice(slot,1);run.gearInventory??=[];run.gearInventory.push({...roll,uid:`${c.uid}:unsocket:${slot}:${run.gearSerial=(run.gearSerial||0)+1}`,id});return true;}
 export function buyGear(run,id,seed=0,price=GEAR_BY_ID[id]?.cost){const g=GEAR_BY_ID[id];if(!g||!Number.isFinite(price)||price<0||run.gold<price)return false;run.gold-=price;run.gearInventory??=[];run.gearInventory.push({uid:`gear:${seed}:${run.gearSerial=(run.gearSerial||0)+1}`,id});return true;}
+
+// Return old incompatible equipment without losing rolled quality or provenance.
+export function reconcileEquipment(run){
+ let moved=0;run.gearInventory??=[];
+ for(const c of [...run.team,...run.bench||[]])for(let slot=(c.equipment?.length||0)-1;slot>=0;slot--){const id=c.equipment[slot];if(!GEAR_BY_ID[id]||gearCompatibility(c,GEAR_BY_ID[id]).allowed)continue;const roll=c.equipmentRolls?.[slot]||{};run.gearInventory.push({...roll,id,uid:`${c.uid}:affinity:${run.gearSerial=(run.gearSerial||0)+1}`});c.equipment.splice(slot,1);c.equipmentRolls?.splice(slot,1);moved++;}
+ return moved;
+}
