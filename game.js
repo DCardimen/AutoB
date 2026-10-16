@@ -1,3 +1,4 @@
+import {AURA_STONES,AURA_BY_ID,auraCompatibility,auraSlots,updateAuras,tickAuras,assignEnemyStones,enemyStoneDrops} from './aura-stones.js';
 import {movementPace,steerMovement} from './movement-tuning.js';
 import {assignEliteModifier,applyEliteStats,eliteModifierForSeed,eliteEncounterModifier} from './elite-modifiers.js';
 import {LESSER_RELICS} from './opening-relics.js';
@@ -414,7 +415,7 @@ export function creatureName(c) {
   return stage ? `${stage === 2 ? "Ascendant " : ""}${nativeEvolution(c).name||s.evolvedName}` : s.name;
 }
 export function relicSlots(c) {
-  return RELIC_SLOTS[BY_ID[c.id].rarity] + evolutionStage(c);
+  return c.balanceVersion>=17?auraSlots(c):RELIC_SLOTS[BY_ID[c.id].rarity] + evolutionStage(c);
 }
 export function evolutionOffer(run, c) {
   const limit=lineageLimit(c), accomplishment=lineageProgress(c);
@@ -455,7 +456,7 @@ export function evolveCreature(run, index, path) {
   return { success: true, name: creatureName(c), stage: c.evolution, path };
 }
 export function personalRelic(id) {
-  if (!PERSONAL_BY_ID[id]) throw new Error("Unknown personal relic");
+  if (!PERSONAL_BY_ID[id]&&!AURA_BY_ID[id]) throw new Error("Unknown personal relic");
   return { uid: `relic-${sessionId}-${++serial}`, id };
 }
 export function personalEffects(c) {
@@ -536,6 +537,7 @@ export function equipRelic(run, creatureIndex, itemUid) {
     index = run.inventory.findIndex((i) => i.uid === itemUid);
   if (!c || index < 0 || (c.relics || []).length >= relicSlots(c)) return false;
   const item = run.inventory[index];
+  if(!auraCompatibility(c,item).allowed)return false;
   if ((c.relics || []).some((r) => r.id === item.id)) return false;
   if((run.rulesVersion||0)>=17){initializeCompanion(run,c);delete item.link;c.relics.push(run.inventory.splice(index,1)[0]);return true;}
   const loadout = loadoutFor(BY_ID[c.id], c.level, c);
@@ -699,10 +701,13 @@ export function synergies(team) {
 }
 export const LEVEL_GROWTH={Common:.105,Uncommon:.115,Rare:.13,Epic:.15,Legendary:.175};
 export const levelGrowthRate=c=>(c.balanceVersion||0)>=17?(LEVEL_GROWTH[BY_ID[c.id]?.rarity]||.105):.105;
+// Secondary gains are additive to base rates; reciprocal haste keeps cooldowns positive.
+export const SECONDARY_LEVEL_GROWTH={attackSpeed:.0125,actionSpeed:.01,staminaRecharge:.015,cooldown:.01,dashCooldown:.01,speed:.005,dodge:.0005,hpRegen:.04};
 export function stats(c, team, relics = []) {
   const s = BY_ID[c.id],
     syn = synergies(team),
     has = (id) => relics.includes(id),strength=itemStrength(c);
+  const secondaryLevels=(c.balanceVersion>=17?Math.max(0,c.level-1)*levelGrowthRate(c)/.105:0),minor=SECONDARY_LEVEL_GROWTH;
   const growth =
     (1 + (c.level - 1) * levelGrowthRate(c) + (c.training || 0) * (c.balanceVersion>=15?.035:.07)) *
     (c.level >= 5 && ["Common", "Uncommon"].includes(s.rarity) ? 1.2 : 1);
@@ -769,7 +774,7 @@ export function stats(c, team, relics = []) {
   hp *= (genes.hp||1)*curios.hp;atk *= (genes.atk||1)*curios.atk;cd *= (genes.cd||1)*curios.cd;speed *= (genes.speed||1)*curios.speed;
   hp *= personal.health * gear.health;
   atk *= personal.attack * gear.attack;
-  cd *= personal.cooldown * gear.cooldown;
+  cd *= personal.cooldown * gear.cooldown / (1+minor.cooldown*secondaryLevels);
   speed *= personal.speed * gear.speed * (nativeEvolution(c).speed || 1);
   dodge += personal.dodge;
   return applyEliteStats({
@@ -778,14 +783,14 @@ export function stats(c, team, relics = []) {
     atk: Math.round(atk+gear.atkFlat),
     cd: cd * linkedSupport(c, c.id).cooldown,
     cdFactor: cd / SKILLS[s.id].cd,
-    speed:speed+gear.speedFlat,
-    hpRegen:gear.hpRegen,
-    dodge,
+    speed:(speed+gear.speedFlat)*(1+minor.speed*secondaryLevels),
+    hpRegen:gear.hpRegen+minor.hpRegen*secondaryLevels,
+    dodge:dodge+Math.min(.06,minor.dodge*secondaryLevels),
     range: s.range + (nativeEvolution(c).range || 0),
-    attackSpeed:curios.attackSpeed*gear.attackSpeed/((s.role==='Guardian'?1.55:1.3)*linkedSupport(c,loadoutFor(s,c.level,c).auto).attackSpeed),
-    actionSpeed:curios.actionSpeed*gear.actionSpeed+gear.actionSpeedFlat,
-    staminaRecharge:((c.balanceVersion||0)>=17?({Striker:26,Ranger:22,Support:20,Guardian:15}[s.role]||20):20)*curios.regenStamina*gear.regenStamina,
-    dashCooldown:curios.dashCooldown*gear.dashCooldown,
+    attackSpeed:curios.attackSpeed*gear.attackSpeed*(1+minor.attackSpeed*secondaryLevels)/((s.role==='Guardian'?1.55:1.3)*linkedSupport(c,loadoutFor(s,c.level,c).auto).attackSpeed),
+    actionSpeed:(curios.actionSpeed*gear.actionSpeed+gear.actionSpeedFlat)*(1+minor.actionSpeed*secondaryLevels),
+    staminaRecharge:((c.balanceVersion||0)>=17?({Striker:26,Ranger:22,Support:20,Guardian:15}[s.role]||20):20)*curios.regenStamina*gear.regenStamina*(1+minor.staminaRecharge*secondaryLevels),
+    dashCooldown:curios.dashCooldown*gear.dashCooldown/(1+minor.dashCooldown*secondaryLevels),
     dodgeStyle:(c.balanceVersion||0)>=17?dodgeStyle(s):'roll',
     personal,
   },c);
@@ -966,7 +971,7 @@ export function encounter(run, type = "battle", seed = 1) {
   const r = rng(seed),
     p = PLANETS[run.planet],
     base = progressive(run)?1+run.planet*2+Math.floor(run.depth/3):1 + run.planet * 2 + Math.floor(run.depth / 2),
-    n = progressive(run)?(run.planet===0&&run.depth<3?(type==="battle"?2+(run.depth>0&&r()<.12?1:0):3):Math.min(6,type==="boss"?3+run.planet:type==="elite"?3+run.planet:2+run.planet+Math.floor(run.depth/3))):
+    n = progressive(run)?(run.planet===0&&run.depth<3?(type==="battle"?2+(run.depth>0&&r()<.12?1:0):type==="elite"&&chaosLevel(run)<4?2:3):Math.min(6,type==="boss"?3+run.planet:type==="elite"?3+run.planet:2+run.planet+Math.floor(run.depth/3))):
       type === "boss"
         ? 4 + run.planet
         : type === "elite"
@@ -991,13 +996,18 @@ export function encounter(run, type = "battle", seed = 1) {
     Epic: 1.2,
     Legendary: 0.4,
   };
-  const earlyPressure=chaosLevel(run)>=4,firstWorldNormal=progressive(run)&&run.planet===0&&type==='battle';
+  const earlyPressure=chaosLevel(run)>=4,firstWorldNormal=progressive(run)&&run.planet===0&&type==='battle',firstWorldElite=progressive(run)&&run.planet===0&&type==='elite';
   const chooseWild = (available) => {
     if((run.rulesVersion||0)>=17&&novice&&r()<.45)available=pool;
     if(firstWorldNormal){
       const rareLimit=earlyPressure?Math.min(3,1+Math.floor((chaosLevel(run)-4)/6)):run.depth<3?0:1;
       const rareCount=foes.filter(c=>rarityRank[BY_ID[c.id].rarity]>=2).length;
       const eligible=id=>(earlyPressure||rarityRank[BY_ID[id].rarity]<=2)&&(rarityRank[BY_ID[id].rarity]<2||rareCount<rareLimit);
+      available=available.filter(eligible);if(!available.length)available=pool.filter(eligible);
+    }
+    if(firstWorldElite&&!earlyPressure){
+      const rareLimit=run.depth<3?1:2,rareCount=foes.filter(c=>rarityRank[BY_ID[c.id].rarity]>=2).length;
+      const eligible=id=>rarityRank[BY_ID[id].rarity]<=2&&(rarityRank[BY_ID[id].rarity]<2||rareCount<rareLimit);
       available=available.filter(eligible);if(!available.length)available=pool.filter(eligible);
     }
     if((run.rulesVersion||0)>=17){const fresh=available.filter(id=>!foes.some(c=>c.id===id));if(fresh.length)available=fresh;}
@@ -1060,6 +1070,7 @@ export function encounter(run, type = "battle", seed = 1) {
     foes.push(c);
   }
   if(type==="elite")assignEliteModifier(foes,seed,BY_ID);
+  if((run.rulesVersion||0)>=17)foes.forEach((c,i)=>assignEnemyStones(c,seed+i*919,run.planet*8+run.depth));
   return foes;
 }
 export function captureChance(run, c) {
@@ -1109,7 +1120,7 @@ export function rollCapture(run, c) {
 export function awardCapture(run, c) {
   const caught = creature(c.id, Math.max(1, c.level));
   if((run.rulesVersion||0)>=15)caught.balanceVersion=run.rulesVersion;
-  if(progressive(run)){caught.genes=c.genes;caught.nature=c.nature;caught.boundRelics=[...(c.enemyRelics||c.boundRelics||[])];caught.equipment=[...(c.equipment||[])];caught.equipmentVersion=c.equipmentVersion;caught.equipmentQuality=1;caught.equipmentRolls=caught.equipment.map((id,i)=>({...c.equipmentRolls?.[i],id,quality:(c.equipmentRolls?.[i]?.quality??1)*(c.equipmentQuality??1)}));}
+  if(progressive(run)){caught.relics=structuredClone(c.relics||[]);caught.genes=c.genes;caught.nature=c.nature;caught.boundRelics=[...(c.enemyRelics||c.boundRelics||[])];caught.equipment=[...(c.equipment||[])];caught.equipmentVersion=c.equipmentVersion;caught.equipmentQuality=1;caught.equipmentRolls=caught.equipment.map((id,i)=>({...c.equipmentRolls?.[i],id,quality:(c.equipmentRolls?.[i]?.quality??1)*(c.equipmentQuality??1)}));}
   if(c.eliteModifier){caught.eliteModifier=c.eliteModifier;caught.eliteTier=c.eliteTier||4;}
   caught.evolution = evolutionStage(c);
   caught.evolutionPath = caught.evolution ? c.evolutionPath : null;
@@ -1144,11 +1155,12 @@ export function settleCaptureRecruitment(run, result) {
       quality:roll.quality??1,rarity:roll.rarity||'Common',fromCapture:true,
       sourceUid:key,sourceId:caught.id,sourceName:creatureName(caught),sourceLevel:caught.level};
   });
-  caught.equipment=[];caught.equipmentRolls=[];caught.equipmentVersion=2;
+  const stoneDrops=enemyStoneDrops(caught,`capture:${key}`).map(d=>({...d,fromCapture:true}));
+  caught.relics=[];caught.equipment=[];caught.equipmentRolls=[];caught.equipmentVersion=2;
   const reserveIndex = run.bench.indexOf(caught);
   if (reserveIndex >= 0 && run.team.length < capacity(run))
     deployReserve(run, reserveIndex);
-  const recruitment = { uid: caught.uid, id: caught.id, equipmentDrops,
+  const recruitment = { uid: caught.uid, id: caught.id, equipmentDrops,stoneDrops,
     destination: run.team.includes(caught) ? 'team' : 'reserve' };
   if (recruitment.destination === 'team') recruitment.seat = caught.seat;
   run.captureRecruitments[key] = recruitment;
@@ -1168,13 +1180,14 @@ export function generateShop(run, seed) {
     relics = [];
   while (available.length && relics.length < ((run.rulesVersion||0)>=15?2:3))
     relics.push(available.splice(Math.floor(r() * available.length), 1)[0].id);
-  const gear = [...((run.rulesVersion||0)>=17?WEARER_RELICS:PERSONAL_RELICS)],
+  const gear = [...((run.rulesVersion||0)>=17?AURA_STONES:PERSONAL_RELICS)],
     personal = [];
   while (personal.length < 3)
     personal.push(gear.splice(Math.floor(r() * gear.length), 1)[0].id);
   return {
     relics,
     personal,
+    stoneReferenceCost:RELICS.find(r=>r.id===relics[0])?.cost||260,
     creature: pick(
       SPECIES.filter((s) => s.rarity !== "Legendary" && (!run.native || run.rosterMode==="collection" || NATIVE_POOLS[run.planet].includes(s.id))),
       r,
@@ -1801,6 +1814,7 @@ export class Battle {
       if (u.boss && u.id === "abyssal") u.shield += 100;
       if (this.weather === "void") u.shield *= 0.8;
     }
+    updateAuras(this.units);
     this.say("The gates open. Scout, adapt, and let your companions fight.");
   }
   living(side) {
@@ -1914,7 +1928,7 @@ export class Battle {
   heal(target, amount, source, skillId = null, show = true, scale = 1) {
     if (!target || target.hp <= 0) return;
     const mod = skillId ? linkedSupport(source, skillId) : { healing: 1 };
-    amount *= mod.healing * scale * (nativeEvolution(source).healing||1) * equipmentEffects(source).healing*(source.curioStats?.healing||1);
+    amount *= mod.healing * scale * (nativeEvolution(source).healing||1) * equipmentEffects(source).healing*wearerStats(source).healing*(source.curioStats?.healing||1)*(source.auraHealingPower||1)*(target.auraHealingReceived||1);
     if (source.side === 0 && this.run.relics.includes("seed")) amount *= 1+.35*itemStrength(source);
     const syn = source.side === 0 ? this.teamSyn : this.foeSyn;
     if (syn.grove >= 4) amount *= 1.3;
@@ -2060,6 +2074,7 @@ export class Battle {
     critical = false,
   ) {
     if (!target || target.hp <= 0) return 0;
+    if(!['cost','reflection'].includes(kind))amount*=target.auraDamageTaken||1;
     // Interception and relic reflection already derive from an amplified hit.
     if(!['cost','intercept','reflection'].includes(kind))amount*=this.enrage.damage;
     if (intercept && kind === "hit") {
@@ -2235,7 +2250,7 @@ export class Battle {
     )
       amount *= 1.2;
     amount*=relicDamageFactor(this,source,target,def);
-    const crit = this.random() < 0.045 + m.crit+(source.curioStats?.crit||0);
+    const crit = this.random() < Math.max(0,0.045 + m.crit+(source.curioStats?.crit||0)+(source.auraCrit||0));
     if (crit) {
       amount *= 1.65;
       this.metrics.crits++;
@@ -3574,7 +3589,7 @@ export class Battle {
         evolutionPath: target.evolutionPath,
         eliteModifier:target.eliteModifier,eliteTier:target.eliteTier,
         capturePreparation: target.capturePreparation,
-        genes:target.genes,nature:target.nature,enemyRelics:target.enemyRelics,equipment:[...(target.equipment||[])],equipmentRolls:target.equipmentRolls,equipmentQuality:target.equipmentQuality,equipmentVersion:target.equipmentVersion,
+        relics:structuredClone(target.relics||[]),genes:target.genes,nature:target.nature,enemyRelics:target.enemyRelics,equipment:[...(target.equipment||[])],equipmentRolls:target.equipmentRolls,equipmentQuality:target.equipmentQuality,equipmentVersion:target.equipmentVersion,
       },
     };
     this.recordCapture(this.captureResult);
@@ -3602,6 +3617,7 @@ export class Battle {
       for(const a of this.strikes)if(a.source===target)a.cancelled=true;
       this.queue=this.queue.filter(q=>q.source!==target&&q.target!==target);
       this.projectiles=this.projectiles.filter(p=>p.source!==target);
+      target.range-=(target.auraApplied?.range||0);target.maxPoise-=(target.auraApplied?.maxPoise||0);target.auraApplied={};
       const converted=stats(target,this.living(0),this.run.relics);
       const healthFraction=target.hp/target.maxHp;
       target.maxHp=converted.hp;target.hp=converted.hp*healthFraction;
@@ -3681,10 +3697,12 @@ export class Battle {
   }
   advance(dt) {
     if (this.done) return;
+    updateAuras(this.units);
     dt = Math.min(dt, 0.1);
     if(this.visuals)for(const u of this.units)snapshotNativeMotion(u);
     const previousTime=this.time;
     this.time += dt;
+    tickAuras(this);
     this.advanceCaptureRetry();
     const actionDt=(this.run.rulesVersion||0)>=15?actionElapsed(previousTime,this.time):dt;
     if(this.enrage.active&&!this.enrageAnnounced){
@@ -3818,7 +3836,7 @@ export class Battle {
         this.heal(u,u.maxHp*.01*dt,u,null,false);
       u.attackTimer -= actionDt*u.actionSpeed * (u.haste > 0 ? 1.4 : 1);
       for (const cooldown of Object.values(u.cooldowns))
-        cooldown.remaining -= actionDt*u.actionSpeed;
+        cooldown.remaining -= actionDt*u.actionSpeed*(u.auraCooldownRate||1);
       if (u.boss) this.bossMechanic(u, actionDt);
       const forced = this.living(1 - u.side).some(
         (e) => e.taunt > 0 && distance(e, u) < 250,

@@ -66,6 +66,7 @@ try{
   await page.screenshot({path:`${out}/${tag}-loop.png`});
   await page.locator('.stage-background-video').evaluate(v=>{window.reviewVideo=v;});
   const available=page.locator('.route-node.available').first();await available.click();await page.locator('.route-node.route-locked').waitFor();
+  await page.locator('#stage-preview').waitFor();
   assert.ok(await page.evaluate(()=>document.querySelector('.stage-background-video')===window.reviewVideo),'selecting a stage preserves the running video element');
   assert.equal(await page.locator('.field-continue').isEnabled(),true);
   const other=page.locator('.route-node.available').nth(1);await other.focus();await page.keyboard.press('Enter');
@@ -73,6 +74,7 @@ try{
   const thumbnail=await page.locator('.encounter-art').evaluate(el=>({host:el.getBoundingClientRect().toJSON(),canvas:el.querySelector('canvas').getBoundingClientRect().toJSON(),width:el.clientWidth,height:el.clientHeight,borderTop:el.clientTop,borderLeft:el.clientLeft}));
   assert.ok(Math.abs(thumbnail.host.top+thumbnail.borderTop-thumbnail.canvas.top)<1&&Math.abs(thumbnail.host.left+thumbnail.borderLeft-thumbnail.canvas.left)<1&&Math.abs(thumbnail.height-thumbnail.canvas.height)<1&&Math.abs(thumbnail.width-thumbnail.canvas.width)<1,'retained encounter art fills the thumbnail inside its border: '+JSON.stringify(thumbnail));
   await page.screenshot({path:`${out}/${tag}-selected-stage.png`});
+  await page.keyboard.press('Escape');
   await page.evaluate(()=>document.body.classList.add('gentle-ui'));
   // In-game setting is read by the animation tick, and CSS hides the video.
   await page.evaluate(()=>{starfall.state.profile.reducedMotion=true;});

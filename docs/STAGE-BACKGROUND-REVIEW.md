@@ -19,7 +19,7 @@ The decoded frames and complete scene captures were visually reviewed at native 
 ## Validation
 
 - `npm run build:standalone` and `npm run build:prototype` succeeded. Training Glade output is unchanged after rebuilding.
-- `node --test tests/journey-polish.test.js tests/uploaded-art.test.js tests/rarity-atmosphere.test.js`: **14 passed**, zero failures. [Test output](evidence/stage-background/focused-tests.txt).
+- `node --test tests/journey-polish.test.js tests/uploaded-art.test.js tests/rarity-atmosphere.test.js tests/route-preview.test.js`: **19 passed**, zero failures. [Test output](evidence/stage-background/focused-tests.txt).
 - `BASE_URL=http://127.0.0.1:3107 node tests/stage-background.browser.mjs`: source and direct `file://` offline playback; offline context blocks network access. Checks actual decoded frame changes and normal-speed looping, 1672/1440/768/390/320px layouts, scene bounds, mouse/keyboard stage selection, retained video and contained thumbnail layers, entering live combat, gentle motion, offscreen pause/resume, visibility-event pause/resume, autoplay rejection/recovery, media failure fallback, and other world backgrounds. [Browser report](evidence/stage-background/browser-checks.json).
 - Visibility-event handling is exercised with a simulated hidden-document event. Browser and visual checks used Chrome on Windows; Safari/iOS were not directly exercised.
 - The full unit suite was also attempted with explicit PowerShell file expansion, then stopped during the unrelated exhaustive `grand-forms.test.js` creature-render traversal. No full-suite pass is claimed.

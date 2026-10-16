@@ -1,3 +1,4 @@
+import {AURA_STONES} from './aura-stones.js';
 import {relicIllustration} from './relic-illustrations.js';
 import {UI_ART} from './ui-art-assets.js';
 import {CREATURE_GEAR, GEAR_BY_ID} from './creature-equipment.js';
@@ -38,10 +39,10 @@ Object.assign(GEAR_ART,{
 Object.assign(GEAR_ART,{
  'sunsteel-edge':'weapon-00','venom-sabre':'weapon-02','cinder-cleaver':'weapon-01','frost-rapier':'weapon-09','thorn-halberd':'weapon-17','siege-maul':'weapon-10','hunters-claw':'animal-05','duelists-edge':'weapon-03','storm-conductor':'focus-14','vampire-tooth':'animal-04','sundering-glaive':'weapon-22','frostfire-edge':'weapon-09','silver-disruptor':'focus-05','predators-tooth':'animal-00','tempo-rapier':'weapon-03','quickdraw-string':'focus-00','sanguine-needle':'weapon-07','glacial-tuning-fork':'focus-12','shatter-chisel':'weapon-19','vitality-scythe':'weapon-16','siegebreaker-pick':'weapon-19','virulent-fan':'focus-17','practice-copper':'weapon-04','apprentice-grip':'weapon-05',
 });
-export const RELIC_ART=Object.fromEntries([...RELICS,...WEARER_RELICS].map(r=>[r.id,relicIllustration(r)]));
+export const RELIC_ART=Object.fromEntries([...RELICS,...WEARER_RELICS,...AURA_STONES].map(r=>[r.id,relicIllustration(r)]));
 export const gearArt=id=>GEAR_ART[id]||'weapon-00';
 export const relicArt=id=>RELIC_ART[id]||'relic-1-00';
-export const lootArt=d=>d.kind==='gear'?gearArt(d.gear):d.kind==='capturer'?`capture-${d.tier}-idle`:d.kind==='relic'?relicArt(d.relic):'treasure-01';
+export const lootArt=d=>d.kind==='gear'?gearArt(d.gear):d.kind==='capturer'?`capture-${d.tier}-idle`:d.kind==='stone'?relicArt(d.stone):d.kind==='relic'?relicArt(d.relic):'treasure-01';
 export function skillArt(skill) {
  if(skill?.auto)return 'skill-00';
  const type=skill?.type||'',id=skill?.id||'';

@@ -17,9 +17,9 @@ const TAU=Math.PI*2;
 function polygon(c,points){c.beginPath();points.forEach(([x,y],i)=>i?c.lineTo(x,y):c.moveTo(x,y));c.closePath();}
 function glow(c,x,y,rx,ry,color,alpha){c.save();c.translate(x,y);c.scale(rx,ry);const g=c.createRadialGradient(0,0,0,0,0,1);g.addColorStop(0,color);g.addColorStop(1,'transparent');c.globalAlpha*=alpha;c.fillStyle=g;c.fillRect(-1,-1,2,2);c.restore();}
 export function coverGeometry(w,h,iw,ih,px=.5,py=.5){const scale=Math.max(w/iw,h/ih);return {x:(w-iw*scale)*px,y:(h-ih*scale)*py,w:iw*scale,h:ih*scale};}
-export function paintAmbient(c,theme,time,{width=1002,height=654,image=null,positionY=.5,cover=true}={}){
+export function paintAmbient(c,theme,time,{width=1002,height=654,image=null,positionY=.5,cover=true,geometry=null}={}){
  const scene=AMBIENT_SCENES[theme];if(!scene)return;
- c.save();const g=image?.naturalWidth&&cover?coverGeometry(width,height,image.naturalWidth,image.naturalHeight,.5,positionY):{x:0,y:0,w:width,h:height};c.translate(g.x,g.y);c.scale(g.w,g.h);
+ c.save();const g=geometry||(image?.naturalWidth&&cover?coverGeometry(width,height,image.naturalWidth,image.naturalHeight,.5,positionY):{x:0,y:0,w:width,h:height});c.translate(g.x,g.y);c.scale(g.w,g.h);
  for(const [i,points]of (scene.water||[]).entries()){
   c.save();polygon(c,points);c.clip();
   // A subpixel shimmer of the painted water, followed by travelling glints.

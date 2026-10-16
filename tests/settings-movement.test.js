@@ -7,8 +7,15 @@ import {makeRun,creature,Battle,rng} from '../game.js';
 import {advanceNative} from '../native-combat.js';
 import {creatureTypeFactor} from '../native-size.js';
 const ids=['steeringAgility','cornerSlowdown','runStartDistance','sprintStartDistance','gaitBlendSpeed'];
-test('five movement controls and stride length extend settings to 19 and migrate older saved preferences',()=>{
- assert.equal(TUNING_OPTIONS.length,19);const old=normalizeTuning({movementSpeed:150,turnSpeed:200});
+test('aura size migrates at 100%, clamps to its display range and leaves combat dimensions unchanged',()=>{
+ assert.equal(DEFAULT_TUNING.auraSize,100);assert.equal(normalizeTuning({}).auraSize,100);
+ assert.equal(normalizeTuning({auraSize:0}).auraSize,25);assert.equal(normalizeTuning({auraSize:999}).auraSize,200);
+ const run=makeRun(37,['aurel']),b=new Battle(run,[creature('brakk')],31,{visuals:false});
+ const dimensions=()=>b.units.map(u=>({radius:u.radius,mass:u.mass,scale:u.nativeScale,range:u.range,hp:u.maxHp,attack:u.atk}));
+ const before=dimensions();b.setTuning({...DEFAULT_TUNING,auraSize:200});assert.deepEqual(dimensions(),before);assert.ok(b.units.every(u=>u.tuning.auraSize===200));
+});
+test('five movement controls and stride length extend settings alongside presentation controls and migrate older saved preferences',()=>{
+ assert.equal(TUNING_OPTIONS.length,20);const old=normalizeTuning({movementSpeed:150,turnSpeed:200});
  for(const id of ids){assert.equal(old[id],100);assert.ok(TUNING_OPTIONS.some(o=>o.id===id&&o.group==='Movement patterns'));}
  assert.equal(old.movementSpeed,150);assert.equal(normalizeTuning({cornerSlowdown:-1}).cornerSlowdown,0);assert.equal(normalizeTuning({steeringAgility:999}).steeringAgility,250);
 });

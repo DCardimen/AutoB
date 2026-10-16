@@ -315,6 +315,11 @@ body.ui-v3.native-expedition .arena-dock button{min-width:0;padding-inline:6px;f
 .stat-with-preview{position:relative;cursor:help;outline-offset:3px}.stat-with-preview small>i{color:#b9d5a2;font-size:11px;font-style:normal}
 .stat-level-preview{display:none;position:absolute;left:0;top:calc(100% - 4px);z-index:25;width:min(270px,70vw);padding:13px;background:#03232af5;border:1px solid #a4be8c;border-radius:9px;box-shadow:0 12px 28px #0009;text-align:left;font:11px/1.6 var(--sans);color:#cdded1}
 .stat-with-preview:hover .stat-level-preview,.stat-with-preview:focus .stat-level-preview{display:block}.stat-level-preview b{display:block;font:17px var(--serif);color:#efdba8}.stat-level-preview em{display:block;font-style:normal;color:#b9eda8;margin:5px 0}.stat-level-preview small{display:block;font:9px/1.4 var(--sans);margin-top:7px;color:#8eafa9}
+.stat-level-preview{pointer-events:none}
+.stat-grid:has(.stat-with-preview:hover) .stat-with-preview:not(:hover):focus .stat-level-preview{display:none}
+.stat-grid>.stat-with-preview:nth-child(4n) .stat-level-preview{left:auto;right:0}
+.stat-grid>.stat-with-preview:nth-last-child(-n+2) .stat-level-preview{top:auto;bottom:calc(100% - 4px)}
+@media(max-width:760px){.stat-grid>.stat-with-preview:nth-child(2n) .stat-level-preview{left:auto;right:0}.stat-grid>.stat-with-preview:nth-last-child(-n+4) .stat-level-preview{top:auto;bottom:calc(100% - 4px)}}
 .ui-v3 .route-links .selection-trail{fill:none;stroke:#e6daa0;stroke-width:1.1;filter:drop-shadow(0 0 1.5px #bdf3ca)}
 .ui-v3 .reference-map .route-node.route-locked{filter:drop-shadow(0 0 9px #e6df9b)}.ui-v3 .reference-map .route-node.route-locked:after{content:"ENTER";position:absolute;top:-15px;left:50%;translate:-50% 0;font:700 7px var(--sans);letter-spacing:.7px;color:#fff0bb;text-shadow:0 1px 3px #001018}
 
@@ -341,3 +346,83 @@ body.ui-v3.native-expedition[data-screen="arena"] .live-unit-portrait>span{min-w
 @media(max-width:900px){body.ui-v3.native-expedition[data-screen="arena"] .live-roster .live-unit-card{padding:3px;max-height:75px}body.ui-v3.native-expedition[data-screen="arena"] .live-roster .live-unit-portrait img{width:22px;height:22px}body.ui-v3.native-expedition[data-screen="arena"] .live-roster .live-unit-portrait strong{font-size:9px}body.ui-v3.native-expedition[data-screen="arena"] .live-unit-portrait small,body.ui-v3.native-expedition[data-screen="arena"] .live-unit-condition,body.ui-v3.native-expedition[data-screen="arena"] .live-vital-label{display:none}body.ui-v3.native-expedition[data-screen="arena"] .live-health-bar,body.ui-v3.native-expedition[data-screen="arena"] .live-stamina-bar{height:4px;margin:4px 0 0}}
 
 body.ui-v3.native-expedition #toast{background:#133b3e;color:#f2deb1;border-color:#b8ad76}
+
+/* First-click route forecast and anchored encounter briefing. */
+.ui-v3 .reference-map .route-links .future-route{stroke:#b5f2b4;stroke-width:.55;opacity:1;filter:drop-shadow(0 0 1px #92efb5);stroke-dasharray:none}
+.ui-v3 .reference-map .route-links .selection-trail{stroke:#b5f2b4;stroke-width:.9;filter:drop-shadow(0 0 2px #92efb5)}
+.ui-v3 .reference-map .route-node.route-ahead{border-color:#b5f2b4;box-shadow:0 0 0 3px #a7f5b328,0 0 12px #a7f5b332}
+.ui-v3 .reference-map .route-node.route-locked{filter:drop-shadow(0 0 7px #b5f2b4)}
+.stage-preview-popover{position:fixed;z-index:45;width:min(360px,calc(100vw - 24px));display:flex;flex-direction:column;overflow:hidden;border:1px solid #b6d9ab;border-radius:16px;background:#06232bf7;color:#d7e5da;box-shadow:0 18px 48px #0009,inset 0 0 0 3px #b5d3a510;font:12px/1.5 var(--sans);animation:stage-preview-arrive .22s ease-out}
+.stage-preview-popover>header{position:relative;flex:none;min-height:124px;padding:19px 22px 14px 78px;background:linear-gradient(90deg,#05232bf7,#09272bd9),var(--preview-art) center/cover;border-bottom:1px solid #79997755}
+.stage-preview-popover>header>.section-kicker{font:600 8px var(--sans);letter-spacing:1.4px;color:#b9e7b9;display:block;padding-right:18px}
+.stage-preview-popover>header>small{display:block;font:10px var(--sans);color:#d3c394;margin-top:10px}
+.stage-preview-popover h2{font:400 25px/1.1 var(--serif);color:#f2e6bc;margin:5px 0 0}
+.stage-preview-emblem{position:absolute;left:19px;top:37px;width:43px;height:43px;display:grid;place-items:center;border:1px solid #d6c18a88;border-radius:50%;background:#0a3036;box-shadow:0 0 0 4px #d6c18a0b}
+.stage-preview-emblem .field-icon{width:25px;height:25px;object-fit:contain}
+.stage-preview-popover [data-stage-preview-close]{position:absolute;top:9px;right:9px;width:30px;height:30px;border:1px solid #abc59d66;border-radius:50%;background:#06212de0;color:#d5e8d2;font:20px/1 var(--sans);cursor:pointer}
+.stage-preview-body{overflow:auto;overscroll-behavior:contain;padding:14px 20px;min-height:0;scrollbar-width:thin;scrollbar-color:#9bc6a2 #08262c}
+.stage-preview-body>p{margin:0 0 12px;font:12px/1.55 var(--sans);color:#c3d8ce}
+.stage-preview-body>div{margin:10px 0 0;padding-top:10px;border-top:1px solid #86a89033}
+.stage-preview-body>div>span,.stage-preview-body>div>span:first-child{display:block;font:600 8px/1.5 var(--sans);letter-spacing:1.2px;text-transform:uppercase;color:#a9d6b6}
+.stage-preview-body strong{display:block;font:16px/1.3 var(--serif);color:#efe0ad;margin-top:3px}
+.stage-preview-body p{font:11px/1.55 var(--sans);color:#c0d3c8;margin:5px 0 0}
+.stage-preview-body .elite-stage-preview{border:1px solid #ae8b5e66;padding:10px;border-radius:8px;background:#35291d55}
+.stage-preview-popover>footer{flex:none;display:flex;align-items:center;gap:10px;margin:0;padding:12px 16px;border-top:1px solid #87a38955;background:#08272d}
+.stage-preview-popover>footer>small{flex:1;font:9px/1.5 var(--sans);color:#a5c4b5}
+.stage-preview-popover>footer>small>b{display:block;font:600 8px/1.5 var(--sans);letter-spacing:1px;color:#c7e7b7;margin-bottom:3px}
+body.ui-v3[data-screen="map"] .stage-preview-popover>footer{display:flex;flex-direction:row;text-align:left}
+.stage-preview-popover>footer>button{flex:none;min-height:40px;padding:10px 14px;border:1px solid #e9d897;border-radius:8px;background:linear-gradient(#f4e7b5,#d7be7d);color:#17332f;font:600 12px var(--sans);cursor:pointer}
+.stage-preview-popover>footer>button>span{margin-left:8px}
+.stage-preview-popover button:focus-visible{outline:2px solid #c1f1bf;outline-offset:2px}
+@keyframes stage-preview-arrive{from{opacity:0;translate:0 7px}to{opacity:1;translate:0 0}}
+@media(prefers-reduced-motion:reduce){.stage-preview-popover{animation:none}}
+.gentle-ui .stage-preview-popover{animation:none}
+
+/* Forecasts stay in the compact monitor, outside the playfield. */
+.capture-tracker header [data-capture-rarity]{color:var(--capture-rarity);font:700 8px var(--sans);letter-spacing:.2px;margin-left:4px}
+.capture-tracker-forecast{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 8px;border-top:1px solid #ffffff18;padding-top:5px;margin-top:5px;font:9px/1.3 var(--sans)}
+.capture-tracker-forecast strong{color:#bcebb0;font-size:11px}.capture-tracker-forecast [data-capture-risk]{color:#ffc28a}
+@media(max-width:900px){.capture-tracker-forecast{grid-column:1/-1;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr) auto;gap:4px 6px;font-size:8px}.capture-tracker-forecast strong{font-size:10px}}
+
+@media(max-width:900px){body.ui-v3.native-expedition .capture-tracker{width:calc(100% - 24px);align-self:stretch}.capture-tracker header small{display:block!important}}
+@media(max-width:900px) and (max-height:700px){body.ui-v3.native-expedition .capture-tracker{width:calc(100% - 12px)}.capture-tracker header small{font-size:5px;letter-spacing:.5px}}
+
+@media(max-width:900px) and (max-height:700px){body.ui-v3.native-expedition[data-screen="arena"]:has(.capture-tracker:not([hidden])) .page-heading{display:none}body.ui-v3.native-expedition[data-screen="arena"]:has(.capture-tracker:not([hidden])) .arena-frame .arena-viewport{min-height:65px}}
+
+/* Pick up the sprite; legal sockets glow, the receiving item lands with weight. */
+.loadout-sprite-ghost{position:fixed;z-index:40000;pointer-events:none;width:64px;height:64px;display:grid;place-items:center;transform:translate(-50%,-65%);filter:drop-shadow(0 8px 5px #0009) drop-shadow(0 0 9px #ffe3a966);will-change:transform;isolation:isolate}
+.loadout-sprite-ghost .dragged-sprite{width:100%;height:100%;object-fit:contain;image-rendering:pixelated;display:block}.loadout-sprite-ghost span.dragged-sprite{display:grid;place-items:center;font-size:34px;color:#ffe4a3}
+.carrying-sprite,.carrying-sprite *{cursor:grabbing!important}.loadout-draggable{touch-action:none;user-select:none}.loadout-draggable img{pointer-events:none;-webkit-user-drag:none}
+body .loadout-compatible{outline:1px solid #c4efad!important;outline-offset:-2px;box-shadow:inset 0 0 13px #b5ed8b28!important}
+body .loadout-target{outline:2px solid #f5e29d!important;box-shadow:inset 0 0 20px #f4d68b55,0 0 12px #efce7e77!important}
+body .loadout-incompatible[data-gear-type]{filter:brightness(.48) saturate(.35)}
+body .dragging .item-art,body .dragging>img,body .dragging .idle-portrait{opacity:.18}.drop-art-pending{visibility:hidden!important}
+.sprite-drop-landed{animation:sprite-drop-land .44s ease-out}.deployment-grabbing{cursor:grabbing!important}
+@keyframes sprite-drop-land{0%{box-shadow:inset 0 0 25px #fff0a8b0;translate:0 2px}40%{box-shadow:inset 0 0 15px #f1d88770;translate:0 -1px}100%{box-shadow:inset 0 0 0 #f1d88700;translate:0 0}}
+@media(prefers-reduced-motion:reduce){.sprite-drop-landed{animation:none}}
+.gentle-ui .sprite-drop-landed{animation:none}
+
+/* A capture order is visible on the creature before the gates open. */
+.pregame-capture-marker{position:absolute;inset:0;width:100%;height:100%;z-index:4;overflow:hidden;pointer-events:none;color:var(--capture-lock-color,#bcead1)}
+.pregame-capture-marker[hidden]{display:none}.pregame-capture-marker circle,.pregame-capture-marker path,.pregame-capture-marker ellipse{fill:none;stroke:currentColor}
+.capture-lock-spin{transform-origin:0 0;animation:capture-lock-orbit 5s linear infinite}.capture-lock-pulse{stroke-width:1;opacity:.3;transform-origin:0 0;animation:capture-lock-pulse 2s ease-in-out infinite}
+.capture-lock-badge{animation:capture-lock-hover 2.2s ease-in-out infinite}.capture-lock-badge rect{fill:#072832ed;stroke:currentColor}.capture-lock-badge text{fill:#fff0bd;stroke:none;font-family:var(--sans);font-weight:800;text-anchor:middle;letter-spacing:.5px}
+@keyframes capture-lock-orbit{to{transform:rotate(360deg)}}@keyframes capture-lock-pulse{50%{transform:scale(1.12);opacity:.65}}@keyframes capture-lock-hover{50%{transform:translateY(calc(-1 * var(--capture-lock-bob,2px)))}}
+.gentle-ui .capture-lock-spin,.gentle-ui .capture-lock-pulse,.gentle-ui .capture-lock-badge{animation:none}
+@media(prefers-reduced-motion:reduce){.capture-lock-spin,.capture-lock-pulse,.capture-lock-badge{animation:none}}
+
+@media(max-width:900px) and (max-height:700px){body[data-screen="arena"]:has(#pregame-capture-marker:not([hidden])) .arena-label,body[data-screen="arena"]:has(#pregame-capture-marker:not([hidden])) .arena-timer,body[data-screen="arena"]:has(#pregame-capture-marker:not([hidden])) .arena-field-tools{display:none}}
+
+/* Aura Stones are individual role-bound power, distinct from run relics. */
+.aura-stone-art{--stone-color:#cab3ff;position:relative;isolation:isolate;display:grid;place-items:center;flex:none;width:62px;height:66px;padding:9px;box-sizing:border-box;background:linear-gradient(135deg,#ffffff99,var(--stone-color) 22%,#102c3e 50%,var(--stone-color) 85%,#fff5d9);clip-path:polygon(50% 0,86% 18%,100% 57%,73% 100%,27% 100%,0 57%,14% 18%);filter:drop-shadow(0 3px 5px #0008)}
+.aura-stone-art:before{content:"";position:absolute;inset:4px;background:radial-gradient(circle at 35% 22%,#ffffff80,#0a233b 65%);clip-path:inherit;z-index:-1}.aura-stone-art img{width:100%;height:100%;max-width:100%;max-height:100%;object-fit:contain}.aura-stone-art i{position:absolute;bottom:3px;color:#f7e8bd;font:8px var(--sans);font-style:normal}
+.aura-bearer{display:flex;align-items:center;gap:9px;margin-bottom:9px}.aura-bearer>img{width:44px;height:44px;object-fit:contain;image-rendering:pixelated}.aura-bearer p{margin:0}
+.aura-target{display:block;font:800 8px/1.4 var(--sans);letter-spacing:1px;color:#e8d3ff}.aura-inventory b{display:block;font:9px var(--sans);color:#b4e9ad;margin-top:6px}.aura-inventory.stone-incompatible{filter:brightness(.5) saturate(.35);border-style:dashed}.aura-inventory.stone-incompatible b{color:#ffbd9d}
+.aura-slot{overflow:hidden;min-width:0}.aura-shop{display:flex;flex-direction:column;align-items:center;gap:6px}.aura-shop .aura-target{color:#e5d1ad}.aura-shop>small{font-size:9px}.enemy-stone-preview{padding:12px;border:1px solid #b7a4dc;border-radius:10px;background:#1b233bcc}.enemy-stone-preview>div{display:grid;grid-template-columns:48px 1fr;gap:4px 9px;margin-top:10px}.enemy-stone-preview .aura-stone-art{grid-row:1/3;width:44px;height:48px}.enemy-stone-preview small{font-size:10px;line-height:1.5}.stone-carrier-badge{display:block;color:#e5c9ff;font:8px var(--sans);margin-top:3px}
+.aura-equip-pulse{position:fixed;z-index:40001;pointer-events:none;transform:translate(-50%,-50%);animation:aura-equip-life .95s ease-out both}.aura-equip-pulse i{position:absolute;inset:0;border:2px solid var(--stone-color);border-radius:50%;box-shadow:0 0 16px var(--stone-color),inset 0 0 16px var(--stone-color);animation:aura-equip-wave .85s cubic-bezier(.1,.65,.3,1) both}.aura-equip-pulse span{position:absolute;left:50%;top:70%;transform:translateX(-50%);font:800 10px var(--sans);letter-spacing:2px;color:#fff0cc;text-shadow:0 2px 4px #001a2b;white-space:nowrap}
+@keyframes aura-equip-wave{from{transform:scale(.15);opacity:1}to{transform:scale(2.4);opacity:0}}@keyframes aura-equip-life{0%,65%{opacity:1}100%{opacity:0}}
+.gentle-ui .aura-equip-pulse i{animation:none;opacity:.5}.gentle-ui .aura-equip-pulse{animation-duration:.35s}@media(prefers-reduced-motion:reduce){.aura-equip-pulse i{animation:none;opacity:.5}.aura-equip-pulse{animation-duration:.35s}}
+
+.aura-range-preview{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2;overflow:hidden}.aura-range-preview ellipse{fill:none;stroke:var(--aura-color);stroke-width:1.2;stroke-dasharray:5 7;opacity:.55}.aura-range-preview text{fill:var(--aura-color);font:9px var(--sans);text-anchor:middle;paint-order:stroke;stroke:#092534;stroke-width:3px}.aura-range-preview.in-battle ellipse{opacity:.1}.aura-range-preview.in-battle text{display:none}.aura-stone-art i{font-size:7px;letter-spacing:.3px;white-space:nowrap;background:#0b223bd9;padding:1px 3px;border-radius:3px}
+
+body.ui-v3.native-expedition .personal-loadout .relic-slots{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:10px}body.ui-v3.native-expedition .personal-loadout .aura-slot{padding:16px;display:flex;flex-direction:column;align-items:flex-start;gap:8px;text-align:left}body.ui-v3.native-expedition .personal-loadout .aura-slot strong{font:600 16px var(--serif)}body.ui-v3.native-expedition .personal-loadout .aura-slot small,body.ui-v3.native-expedition .personal-loadout .aura-inventory small{font:11px/1.65 var(--sans);color:#b8d2c7}body.ui-v3.native-expedition .aura-slot>button{border:1px solid #9dbb9255;background:#13343d;color:#d2e6c6;border-radius:7px;padding:8px 10px;cursor:pointer;font:10px var(--sans)}body.ui-v3.native-expedition .aura-slot>button:hover{background:#244d4b}body.ui-v3.native-expedition .personal-loadout .aura-inventory{padding:14px;text-align:left}body.ui-v3.native-expedition .aura-inventory .aura-target{font-size:9px}

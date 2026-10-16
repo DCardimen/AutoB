@@ -35,12 +35,15 @@ function patchNode(current,incoming){
  }
 }
 function patchChildren(current,incoming){
- const previous=[...current.childNodes].filter(node=>!background(node)),used=new Set(),keyed=new Map(previous.filter(node=>key(node)).map(node=>[key(node),node]));
+ const previous=[...current.childNodes].filter(node=>!background(node)),used=new Set(),keyed=new Map();
+ // Multiple controls can share an action (close icon and footer Back). Never
+ // move and patch the same existing node twice when refreshing after a drop.
+ for(const node of previous){const id=key(node);if(id){if(!keyed.has(id))keyed.set(id,[]);keyed.get(id).push(node);}}
  let cursor=[...current.childNodes].find(node=>!background(node))||null;
  for(const desired of incoming.childNodes){
   if(background(desired))continue;
   const id=key(desired);
-  let node=id?keyed.get(id):previous.find(candidate=>!used.has(candidate)&&!key(candidate)&&compatible(candidate,desired));
+  let node=id?keyed.get(id)?.find(candidate=>!used.has(candidate)&&compatible(candidate,desired)):previous.find(candidate=>!used.has(candidate)&&!key(candidate)&&compatible(candidate,desired));
   if(node&&!compatible(node,desired))node=null;
   if(node){patchNode(node,desired);used.add(node);}else node=desired.cloneNode(true);
   if(node!==cursor)current.insertBefore(node,cursor);
