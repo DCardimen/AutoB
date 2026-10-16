@@ -1,3 +1,4 @@
+import {AURA_BY_ID} from './aura-stones.js';
 import {scaledEffect,itemStrength} from './item-effects.js';
 // Personal relics attach to a creature, never to an individual skill. Stable
 // legacy IDs preserve every existing item and its inventory identity on upgrade.
@@ -35,7 +36,7 @@ const rows=[
 ];
 const colors=['#e9b47e','#a7d0c9','#b7a4dc','#9dd0a2'],icons=['✦','◈','☾','❋'];
 export const WEARER_RELICS=rows.map(([id,name,hook,effect,desc],i)=>({id,name,hook,effect,desc,icon:icons[i%4],color:colors[i%4],cost:110+(i%5)*15,wearerOnly:true}));
-export const WEARER_BY_ID=Object.fromEntries(WEARER_RELICS.map(r=>[r.id,r]));
-export function wearerTraits(c){if((c.balanceVersion||0)<17)return [];return (c.relics||[]).map(g=>WEARER_BY_ID[g.id]).filter(r=>r&&r.hook!=='flat').map(r=>({...r,id:'personal:'+r.id,effect:scaledEffect(r.effect,itemStrength(c))}));}
-export function wearerStats(c){const out={atk:1,hp:1,cd:1,speed:1,healing:1};if((c.balanceVersion||0)<17)return out;for(const item of c.relics||[]){const r=WEARER_BY_ID[item.id];if(r?.hook==='flat'){const e=scaledEffect(r.effect,itemStrength(c));for(const key of Object.keys(out))out[key]*=e[key]||1;}}return out;}
+export const WEARER_BY_ID={...Object.fromEntries(WEARER_RELICS.map(r=>[r.id,r])),...AURA_BY_ID};
+export function wearerTraits(c){if((c.balanceVersion||0)<17)return [];return (c.relics||[]).map(g=>WEARER_BY_ID[g.id]).filter(r=>r&&!r.aura&&r.hook!=='flat').map(r=>({...r,id:'personal:'+r.id,effect:scaledEffect(r.effect,itemStrength(c))}));}
+export function wearerStats(c){const out={atk:1,hp:1,cd:1,speed:1,healing:1};if((c.balanceVersion||0)<17)return out;for(const item of c.relics||[]){const r=WEARER_BY_ID[item.id];if(r?.hook==='flat'&&!r.aura){const e=scaledEffect(r.effect,itemStrength(c));for(const key of Object.keys(out))out[key]*=e[key]||1;}}return out;}
 export function initializeCompanion(run,c){if(!c)return c;c.balanceVersion=Math.max(c.balanceVersion||0,run.rulesVersion||17);c.equipment??=[];c.equipmentRolls??=c.equipment.map(()=>null);c.relics??=[];if(c.balanceVersion>=17)c.relics.forEach(r=>delete r.link);return c;}

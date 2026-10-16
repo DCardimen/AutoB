@@ -1,0 +1,8 @@
+{
+  "checks": [
+    "Actual authored aura ring pixels scale at 25/100/200% even for the smallest creatures: 10/39/79",
+    "Source: 20 sliders including aura size, five movement patterns, repeated five-second creature swaps, animated examples, unchanged expedition, persistence/reset, both-team tuning, pause/resume and 320/390px layout",
+    "Offline: 20 sliders including aura size, five movement patterns, repeated five-second creature swaps, animated examples, unchanged expedition, persistence/reset, both-team tuning, pause/resume and 320/390px layout"
+  ],
+  "errors": []
+}

@@ -1,0 +1,45 @@
+{
+  "checks": [
+    {
+      "offline": false,
+      "width": 1440,
+      "shopPricing": true,
+      "roleRestriction": true,
+      "tierPersists": true,
+      "singlePulse": true,
+      "radiusPreview": true,
+      "liveCombat": true
+    },
+    {
+      "offline": false,
+      "width": 390,
+      "shopPricing": true,
+      "roleRestriction": true,
+      "tierPersists": true,
+      "singlePulse": true,
+      "radiusPreview": true,
+      "liveCombat": true
+    },
+    {
+      "offline": true,
+      "width": 1440,
+      "shopPricing": true,
+      "roleRestriction": true,
+      "tierPersists": true,
+      "singlePulse": true,
+      "radiusPreview": true,
+      "liveCombat": true
+    },
+    {
+      "offline": true,
+      "width": 390,
+      "shopPricing": true,
+      "roleRestriction": true,
+      "tierPersists": true,
+      "singlePulse": true,
+      "radiusPreview": true,
+      "liveCombat": true
+    }
+  ],
+  "errors": []
+}

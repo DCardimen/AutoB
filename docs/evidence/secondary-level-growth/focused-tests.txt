@@ -1,0 +1,244 @@
+TAP version 13
+# Subtest: two conditional orders respect priority and exclude uninterruptible charges
+ok 1 - two conditional orders respect priority and exclude uninterruptible charges
+  ---
+  duration_ms: 0.7077
+  type: 'test'
+  ...
+# Subtest: formation hold, escort and flank orders produce different physical goals
+ok 2 - formation hold, escort and flank orders produce different physical goals
+  ---
+  duration_ms: 0.2579
+  type: 'test'
+  ...
+# Subtest: solid terrain steers bodies around a pillar and keeps collider positions outside it
+ok 3 - solid terrain steers bodies around a pillar and keeps collider positions outside it
+  ---
+  duration_ms: 0.2733
+  type: 'test'
+  ...
+# Subtest: a pillar blocks an aimed projectile before it reaches the hostile body
+ok 4 - a pillar blocks an aimed projectile before it reaches the hostile body
+  ---
+  duration_ms: 44.5222
+  type: 'test'
+  ...
+# Subtest: a native heal resolves after its windup; breaking poise cancels the pending effect
+ok 5 - a native heal resolves after its windup; breaking poise cancels the pending effect
+  ---
+  duration_ms: 43.656
+  type: 'test'
+  ...
+# Subtest: healers reserve pending healing instead of preparing two heals for an already-covered ally
+ok 6 - healers reserve pending healing instead of preparing two heals for an already-covered ally
+  ---
+  duration_ms: 1.3352
+  type: 'test'
+  ...
+# Subtest: a living heavy-hit knockdown enters a recoverable physical fall
+ok 7 - a living heavy-hit knockdown enters a recoverable physical fall
+  ---
+  duration_ms: 22.5879
+  type: 'test'
+  ...
+# Subtest: opening doctrines are mutually exclusive and cannot duplicate a relic after reload
+ok 8 - opening doctrines are mutually exclusive and cannot duplicate a relic after reload
+  ---
+  duration_ms: 0.3137
+  type: 'test'
+  ...
+# Subtest: practice comparisons use real combat and leave the parent expedition unchanged
+ok 9 - practice comparisons use real combat and leave the parent expedition unchanged
+  ---
+  duration_ms: 1049.3156
+  type: 'test'
+  ...
+# Subtest: native recruitment events display and award the same released family
+ok 10 - native recruitment events display and award the same released family
+  ---
+  duration_ms: 0.7082
+  type: 'test'
+  ...
+# Subtest: native recruits keep animated bodies when deployed beside legacy creatures
+ok 11 - native recruits keep animated bodies when deployed beside legacy creatures
+  ---
+  duration_ms: 7.307
+  type: 'test'
+  ...
+# Subtest: an empty expedition cannot start an invalid practice comparison
+ok 12 - an empty expedition cannot start an invalid practice comparison
+  ---
+  duration_ms: 0.1172
+  type: 'test'
+  ...
+# Subtest: the common axe specialist can damage health through a full shield
+ok 13 - the common axe specialist can damage health through a full shield
+  ---
+  duration_ms: 0.3342
+  type: 'test'
+  ...
+# Subtest: family evolution tradeoffs are visible before the player commits
+ok 14 - family evolution tradeoffs are visible before the player commits
+  ---
+  duration_ms: 0.2238
+  type: 'test'
+  ...
+# Subtest: rarity art increases monotonically, both teams use their authored rows, and battle opacity is exactly 20%
+ok 15 - rarity art increases monotonically, both teams use their authored rows, and battle opacity is exactly 20%
+  ---
+  duration_ms: 1.0188
+  type: 'test'
+  ...
+# Subtest: capture celebrations grow in confetti, beams, streamers and duration with actual rarity
+ok 16 - capture celebrations grow in confetti, beams, streamers and duration with actual rarity
+  ---
+  duration_ms: 0.1434
+  type: 'test'
+  ...
+# Subtest: chest blends adjacent original frames continuously, easing at both ends
+ok 17 - chest blends adjacent original frames continuously, easing at both ends
+  ---
+  duration_ms: 1.4189
+  type: 'test'
+  ...
+# Subtest: elite tier IV remains the base; III, II, I multiply only the buff by successive 20%
+ok 18 - elite tier IV remains the base; III, II, I multiply only the buff by successive 20%
+  ---
+  duration_ms: 7.9738
+  type: 'test'
+  ...
+# Subtest: ordinary first-world rooms are safe from rare packs; Chaos explicitly restores early rarity pressure
+ok 19 - ordinary first-world rooms are safe from rare packs; Chaos explicitly restores early rarity pressure
+  ---
+  duration_ms: 570.8855
+  type: 'test'
+  ...
+# Subtest: higher rarity grows faster, previews equal the actual next-level build, without mutation
+ok 20 - higher rarity grows faster, previews equal the actual next-level build, without mutation
+  ---
+  duration_ms: 1.1627
+  type: 'test'
+  ...
+# Subtest: starter packs contain three unique seeded Common equipment rolls, separate from relics
+ok 21 - starter packs contain three unique seeded Common equipment rolls, separate from relics
+  ---
+  duration_ms: 8.2388
+  type: 'test'
+  ...
+# Subtest: only an untouched misplaced opening trio migrates, and never rerolls on reload
+ok 22 - only an untouched misplaced opening trio migrates, and never rerolls on reload
+  ---
+  duration_ms: 0.4537
+  type: 'test'
+  ...
+# Subtest: full-strength flat equipment changes only its wearer and describes the actual normalized bonuses
+ok 23 - full-strength flat equipment changes only its wearer and describes the actual normalized bonuses
+  ---
+  duration_ms: 9.0772
+  type: 'test'
+  ...
+# Subtest: HP regeneration uses combat time and the gradual healing penalty
+ok 24 - HP regeneration uses combat time and the gradual healing penalty
+  ---
+  duration_ms: 8.742
+  type: 'test'
+  ...
+# Subtest: Clockwork Orchard stores basic-hit seeds and spends them on one nonrecursive skill echo
+ok 25 - Clockwork Orchard stores basic-hit seeds and spends them on one nonrecursive skill echo
+  ---
+  duration_ms: 1.6868
+  type: 'test'
+  ...
+# Subtest: Pilgrims Debt charges health each cast and erupts every third, without lethal health costs
+ok 26 - Pilgrims Debt charges health each cast and erupts every third, without lethal health costs
+  ---
+  duration_ms: 1.886
+  type: 'test'
+  ...
+# Subtest: Borrowed Tomorrow banks dodges, caps storage and spends one per connected basic attack
+ok 27 - Borrowed Tomorrow banks dodges, caps storage and spends one per connected basic attack
+  ---
+  duration_ms: 0.7773
+  type: 'test'
+  ...
+# Subtest: Weather Vane requires two different allies/elements and enforces a shared team cooldown
+ok 28 - Weather Vane requires two different allies/elements and enforces a shared team cooldown
+  ---
+  duration_ms: 0.7476
+  type: 'test'
+  ...
+# Subtest: Last Lantern activates only for the final living ally
+ok 29 - Last Lantern activates only for the final living ally
+  ---
+  duration_ms: 0.6131
+  type: 'test'
+  ...
+# Subtest: Hollow Reed trades healing for capped overheal bursts and cannot recursively charge itself
+ok 30 - Hollow Reed trades healing for capped overheal bursts and cannot recursively charge itself
+  ---
+  duration_ms: 0.6779
+  type: 'test'
+  ...
+# Subtest: Triune Crucible consumes three ailments with a cooldown; no reaction on only two
+ok 31 - Triune Crucible consumes three ailments with a cooldown; no reaction on only two
+  ---
+  duration_ms: 0.8593
+  type: 'test'
+  ...
+# Subtest: Second Dawn triggers on a real rescue threshold crossing once per ally
+ok 32 - Second Dawn triggers on a real rescue threshold crossing once per ally
+  ---
+  duration_ms: 0.4262
+  type: 'test'
+  ...
+# Subtest: a Covenant bearer can follow a different element ally who does not own the relic
+ok 33 - a Covenant bearer can follow a different element ally who does not own the relic
+  ---
+  duration_ms: 0.3659
+  type: 'test'
+  ...
+# Subtest: Common secondary gains are modest and preserve level-one rates
+ok 34 - Common secondary gains are modest and preserve level-one rates
+  ---
+  duration_ms: 1.6557
+  type: 'test'
+  ...
+# Subtest: all companion families gain secondary stats and preview their actual next level without mutation
+ok 35 - all companion families gain secondary stats and preview their actual next level without mutation
+  ---
+  duration_ms: 5.9604
+  type: 'test'
+  ...
+# Subtest: secondary gains rise with rarity but remain much smaller than primary growth
+ok 36 - secondary gains rise with rarity but remain much smaller than primary growth
+  ---
+  duration_ms: 0.3544
+  type: 'test'
+  ...
+# Subtest: cooldown haste stays positive and dodge growth stays bounded at extreme levels
+ok 37 - cooldown haste stays positive and dodge growth stays bounded at extreme levels
+  ---
+  duration_ms: 0.1175
+  type: 'test'
+  ...
+# Subtest: legacy secondary rates remain unchanged
+ok 38 - legacy secondary rates remain unchanged
+  ---
+  duration_ms: 0.1878
+  type: 'test'
+  ...
+# Subtest: live combat consumes improved rates, regeneration and skill cooldowns
+ok 39 - live combat consumes improved rates, regeneration and skill cooldowns
+  ---
+  duration_ms: 7.7251
+  type: 'test'
+  ...
+1..39
+# tests 39
+# suites 0
+# pass 39
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1317.1615

@@ -7,6 +7,7 @@ const names={poison:'poison',burn:'burn',root:'root',slow:'slow',bleed:'bleed',w
 const conditions={poison:'against poisoned enemies',burn:'against burning enemies',bleed:'against bleeding enemies',slow:'against slowed enemies',control:'against rooted or staggered enemies',wounded:'against enemies below 30% HP',shielded:'while shielded',enemyShield:'against shields',alone:'while isolated',nearAlly:'near an ally',far:'at long range',close:'at close range',moving:'while moving',still:'while holding position',lowHP:'below 35% HP',healthy:'above 75% HP',flanked:'while surrounded',channel:'against an interruptible windup',castRecent:'within 3s of casting',staminaLow:'below 35 stamina',lastAlly:'as the last living ally',triad:'against at least three different ailments'};
 const number=n=>+Number(n).toFixed(2);
 export function combatEffectDescription(item,model={}){
+ if(item?.aura)return item.desc;
  if(item?.mechanic)return mechanicDescription(item,itemStrength(model));
  if(!item?.effect||item.hook==='route'||item.hook==='ai')return item?.desc||'';
  const e=scaledEffect(item.effect,itemStrength(model)),parts=[];

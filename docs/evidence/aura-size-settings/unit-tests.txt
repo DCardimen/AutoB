@@ -1,0 +1,208 @@
+TAP version 13
+# Subtest: enrage ramps continuously from baseline, caps damage/actions and eventually suppresses healing
+ok 1 - enrage ramps continuously from baseline, caps damage/actions and eventually suppresses healing
+  ---
+  duration_ms: 2.1433
+  type: 'test'
+  ...
+# Subtest: direct hits, status damage and independent relic damage follow the ramp for either team
+ok 2 - direct hits, status damage and independent relic damage follow the ramp for either team
+  ---
+  duration_ms: 12.8957
+  type: 'test'
+  ...
+# Subtest: intercepted and already-derived reflected damage are amplified only once; HP costs remain costs
+ok 3 - intercepted and already-derived reflected damage are amplified only once; HP costs remain costs
+  ---
+  duration_ms: 0.4626
+  type: 'test'
+  ...
+# Subtest: healing on both sides follows the continuous penalty and cannot generate overheal at zero effectiveness
+ok 4 - healing on both sides follows the continuous penalty and cannot generate overheal at zero effectiveness
+  ---
+  duration_ms: 1.2286
+  type: 'test'
+  ...
+# Subtest: basic attack, skill, dodge and boss recharge use action time; debuffs keep combat time
+ok 5 - basic attack, skill, dodge and boss recharge use action time; debuffs keep combat time
+  ---
+  duration_ms: 4.7926
+  type: 'test'
+  ...
+# Subtest: native action animation, weapon windup and recovery stay synchronized at faster action speed
+ok 6 - native action animation, weapon windup and recovery stay synchronized at faster action speed
+  ---
+  duration_ms: 1.5929
+  type: 'test'
+  ...
+# Subtest: a committed heal resolves earlier in enrage, with the same accelerated casting pose
+ok 7 - a committed heal resolves earlier in enrage, with the same accelerated casting pose
+  ---
+  duration_ms: 5.1884
+  type: 'test'
+  ...
+# Subtest: all new capture rarities have the requested default odds; full HP always has zero chance
+ok 8 - all new capture rarities have the requested default odds; full HP always has zero chance
+  ---
+  duration_ms: 1.1544
+  type: 'test'
+  ...
+# Subtest: manual retries consume the selected tool and cap all attempts at three
+ok 9 - manual retries consume the selected tool and cap all attempts at three
+  ---
+  duration_ms: 1.4422
+  type: 'test'
+  ...
+# Subtest: retries reject fresh rounds, full health, dead targets and empty tools without spending
+ok 10 - retries reject fresh rounds, full health, dead targets and empty tools without spending
+  ---
+  duration_ms: 0.7362
+  type: 'test'
+  ...
+# Subtest: a successful retry stops future throws and saved failure history cannot reset the attempt limit
+ok 11 - a successful retry stops future throws and saved failure history cannot reset the attempt limit
+  ---
+  duration_ms: 0.7715
+  type: 'test'
+  ...
+# Subtest: size controls retain type proportions and scale body, melee reach and grip physics together
+ok 12 - size controls retain type proportions and scale body, melee reach and grip physics together
+  ---
+  duration_ms: 0.6591
+  type: 'test'
+  ...
+# Subtest: live size tuning updates an already committed weapon sweep, and movement tuning preserves walking stamina
+ok 13 - live size tuning updates an already committed weapon sweep, and movement tuning preserves walking stamina
+  ---
+  duration_ms: 1.0361
+  type: 'test'
+  ...
+# Subtest: equipment transfer swaps occupied slots without duplicating, deleting or changing other equipment
+ok 14 - equipment transfer swaps occupied slots without duplicating, deleting or changing other equipment
+  ---
+  duration_ms: 0.8554
+  type: 'test'
+  ...
+# Subtest: real combat records per-creature mitigation and which creature killed which target
+ok 15 - real combat records per-creature mitigation and which creature killed which target
+  ---
+  duration_ms: 0.7661
+  type: 'test'
+  ...
+# Subtest: rare opponents drop more equipment, elites and bosses improve their chances, and loot comes from worn gear
+ok 16 - rare opponents drop more equipment, elites and bosses improve their chances, and loot comes from worn gear
+  ---
+  duration_ms: 19.1444
+  type: 'test'
+  ...
+# Subtest: rolled equipment keeps rarity, quality and source through claiming, equipping, swapping, returning and JSON save
+ok 17 - rolled equipment keeps rarity, quality and source through claiming, equipping, swapping, returning and JSON save
+  ---
+  duration_ms: 0.9915
+  type: 'test'
+  ...
+# Subtest: living and captured enemies do not duplicate their worn gear into victory drops
+ok 18 - living and captured enemies do not duplicate their worn gear into victory drops
+  ---
+  duration_ms: 1.3885
+  type: 'test'
+  ...
+# Subtest: aura size scales uniformly without changing rarity, team identity or the battle fade
+ok 19 - aura size scales uniformly without changing rarity, team identity or the battle fade
+  ---
+  duration_ms: 0.69
+  type: 'test'
+  ...
+# Subtest: rarity art increases monotonically, both teams use their authored rows, and battle opacity is exactly 20%
+ok 20 - rarity art increases monotonically, both teams use their authored rows, and battle opacity is exactly 20%
+  ---
+  duration_ms: 0.7544
+  type: 'test'
+  ...
+# Subtest: capture celebrations grow in confetti, beams, streamers and duration with actual rarity
+ok 21 - capture celebrations grow in confetti, beams, streamers and duration with actual rarity
+  ---
+  duration_ms: 0.1568
+  type: 'test'
+  ...
+# Subtest: chest blends adjacent original frames continuously, easing at both ends
+ok 22 - chest blends adjacent original frames continuously, easing at both ends
+  ---
+  duration_ms: 2.2817
+  type: 'test'
+  ...
+# Subtest: elite tier IV remains the base; III, II, I multiply only the buff by successive 20%
+ok 23 - elite tier IV remains the base; III, II, I multiply only the buff by successive 20%
+  ---
+  duration_ms: 10.2291
+  type: 'test'
+  ...
+# Subtest: ordinary first-world rooms are safe from rare packs; Chaos explicitly restores early rarity pressure
+ok 24 - ordinary first-world rooms are safe from rare packs; Chaos explicitly restores early rarity pressure
+  ---
+  duration_ms: 717.6045
+  type: 'test'
+  ...
+# Subtest: higher rarity grows faster, previews equal the actual next-level build, without mutation
+ok 25 - higher rarity grows faster, previews equal the actual next-level build, without mutation
+  ---
+  duration_ms: 1.7414
+  type: 'test'
+  ...
+# Subtest: aura size migrates at 100%, clamps to its display range and leaves combat dimensions unchanged
+ok 26 - aura size migrates at 100%, clamps to its display range and leaves combat dimensions unchanged
+  ---
+  duration_ms: 5.154
+  type: 'test'
+  ...
+# Subtest: five movement controls and stride length extend settings alongside presentation controls and migrate older saved preferences
+ok 27 - five movement controls and stride length extend settings alongside presentation controls and migrate older saved preferences
+  ---
+  duration_ms: 0.3303
+  type: 'test'
+  ...
+# Subtest: run and sprint distances change actual movement pace, preserving stamina and threshold ordering
+ok 28 - run and sprint distances change actual movement pace, preserving stamina and threshold ordering
+  ---
+  duration_ms: 0.3818
+  type: 'test'
+  ...
+# Subtest: steering agility changes momentum redirection while corner slowdown changes turning speed independently
+ok 29 - steering agility changes momentum redirection while corner slowdown changes turning speed independently
+  ---
+  duration_ms: 0.3035
+  type: 'test'
+  ...
+# Subtest: movement transitions change the live native gait blend, including scaled movement speed
+ok 30 - movement transitions change the live native gait blend, including scaled movement speed
+  ---
+  duration_ms: 2.9957
+  type: 'test'
+  ...
+# Subtest: changing run distance changes real battle travel for a closing creature
+ok 31 - changing run distance changes real battle travel for a closing creature
+  ---
+  duration_ms: 13.0604
+  type: 'test'
+  ...
+# Subtest: settings examples keep their size groups and replace every creature after exactly five seconds
+ok 32 - settings examples keep their size groups and replace every creature after exactly five seconds
+  ---
+  duration_ms: 3.2608
+  type: 'test'
+  ...
+# Subtest: examples demonstrate real walk/run/sprint/turn/stop transitions without editing the expedition
+ok 33 - examples demonstrate real walk/run/sprint/turn/stop transitions without editing the expedition
+  ---
+  duration_ms: 16.8732
+  type: 'test'
+  ...
+1..33
+# tests 33
+# suites 0
+# pass 33
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 940.0212
