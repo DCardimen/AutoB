@@ -1,0 +1,79 @@
+TAP version 13
+# Subtest: wide camera preserves proportions and maps clicks back to exact world positions at every viewport
+ok 1 - wide camera preserves proportions and maps clicks back to exact world positions at every viewport
+  ---
+  duration_ms: 0.8545
+  ...
+# Subtest: reward arcs start at their source, rise above the straight path, and arrive exactly at the destination
+ok 2 - reward arcs start at their source, rise above the straight path, and arrive exactly at the destination
+  ---
+  duration_ms: 0.9697
+  ...
+# Subtest: damage feedback retains exact HP amounts, aggregates status ticks, and gentle motion suppresses travel and pops
+ok 3 - damage feedback retains exact HP amounts, aggregates status ticks, and gentle motion suppresses travel and pops
+  ---
+  duration_ms: 0.4813
+  ...
+# Subtest: background cover aligns the environmental masks with the same crop as the original painting
+ok 4 - background cover aligns the environmental masks with the same crop as the original painting
+  ---
+  duration_ms: 0.3622
+  ...
+# Subtest: relic inscriptions preserve effect text and escape HTML while illuminating real numeric values
+ok 5 - relic inscriptions preserve effect text and escape HTML while illuminating real numeric values
+  ---
+  duration_ms: 0.4367
+  ...
+# Subtest: a restored reward screen is settled and defeat never exposes a chest or a pack collection target
+ok 6 - a restored reward screen is settled and defeat never exposes a chest or a pack collection target
+  ---
+  duration_ms: 9.7055
+  ...
+# Subtest: rarity art increases monotonically, both teams use their authored rows, and battle opacity is exactly 20%
+ok 2 - rarity art increases monotonically, both teams use their authored rows, and battle opacity is exactly 20%
+  ---
+  duration_ms: 1.4357
+  ...
+# Subtest: capture celebrations grow in confetti, beams, streamers and duration with actual rarity
+ok 3 - capture celebrations grow in confetti, beams, streamers and duration with actual rarity
+  ---
+  duration_ms: 0.1331
+  ...
+# Subtest: chest blends adjacent original frames continuously, easing at both ends
+ok 4 - chest blends adjacent original frames continuously, easing at both ends
+  ---
+  duration_ms: 1.5573
+  ...
+# Subtest: elite tier IV remains the base; III, II, I multiply only the buff by successive 20%
+ok 5 - elite tier IV remains the base; III, II, I multiply only the buff by successive 20%
+  ---
+  duration_ms: 10.5014
+  ...
+# Subtest: ordinary first-world rooms are safe from rare packs; Chaos explicitly restores early rarity pressure
+ok 6 - ordinary first-world rooms are safe from rare packs; Chaos explicitly restores early rarity pressure
+  ---
+  duration_ms: 631.1581
+  ...
+# Subtest: higher rarity grows faster, previews equal the actual next-level build, without mutation
+ok 7 - higher rarity grows faster, previews equal the actual next-level build, without mutation
+  ---
+  duration_ms: 1.509
+  ...
+# Subtest: all production inventory identities resolve to supplied, nonempty PNG art
+ok 3 - all production inventory identities resolve to supplied, nonempty PNG art
+  ---
+  duration_ms: 211.0081
+  ...
+# Subtest: reward rendering leaves the settled outcome and inventory untouched
+ok 4 - reward rendering leaves the settled outcome and inventory untouched
+  ---
+  duration_ms: 9.4699
+  ...
+1..14
+# tests 14
+# pass 14
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1416.6697

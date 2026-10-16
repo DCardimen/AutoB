@@ -4,7 +4,7 @@ import vm from 'node:vm';
 import {fileURLToPath} from 'node:url';
 import {build} from 'esbuild';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
-const mime={'.png':'image/png','.svg':'image/svg+xml','.woff2':'font/woff2'};
+const mime={'.png':'image/png','.svg':'image/svg+xml','.woff2':'font/woff2','.mp4':'video/mp4'};
 const asset=file=>'data:'+mime[path.extname(file)]+';base64,'+fs.readFileSync(path.join(root,file)).toString('base64');
 const atlasNames=['prototype-glade-pixel'];
 const assets=Object.fromEntries(atlasNames.map(name=>[name+'.png',asset('public/'+name+'.png')]));
@@ -12,7 +12,7 @@ const assets=Object.fromEntries(atlasNames.map(name=>[name+'.png',asset('public/
 // Do not duplicate large PNG data URLs inside CSS custom properties.
 const css=['styles.css','field-ui.css','uploaded-ui.css','journey-polish.css'].map(file=>fs.readFileSync(path.join(root,file),'utf8')).join('\n').replace(/url\("(\/public\/[^"\)]+)"\)/g,(_,file)=>file.startsWith('/public/ui/uploaded/')?'none':'url("'+asset(file.slice(1))+'")');
 const bundle=await build({entryPoints:[path.join(root,'app.js')],bundle:true,write:false,format:'iife',target:'es2020',plugins:[{name:'offline-art',setup(b){b.onLoad({filter:/(?:art|native-art|field-ui|ui-art-assets)\.js$/},args=>{
- let contents=fs.readFileSync(args.path,'utf8').replace("backdrop.src='/public/prototype-glade-pixel.png';",'backdrop.src=embeddedAssets["prototype-glade-pixel.png"];');if(args.path.endsWith('ui-art-assets.js'))contents=contents.replace(/\/public\/ui\/uploaded\/[a-z0-9-]+\.png/g,file=>asset(file.slice(1)));return {contents,loader:'js',resolveDir:path.dirname(args.path)};
+ let contents=fs.readFileSync(args.path,'utf8').replace("backdrop.src='/public/prototype-glade-pixel.png';",'backdrop.src=embeddedAssets["prototype-glade-pixel.png"];');if(args.path.endsWith('ui-art-assets.js'))contents=contents.replace(/\/public\/ui\/uploaded\/[a-z0-9-]+\.(?:png|mp4)/g,file=>asset(file.slice(1)));return {contents,loader:'js',resolveDir:path.dirname(args.path)};
 });}}]});
 const js='const embeddedAssets='+JSON.stringify(assets)+';\n'+bundle.outputFiles[0].text;
 new vm.Script(js);if(/<\/script/i.test(js))throw new Error('Unsafe script embedding');
