@@ -1,0 +1,71 @@
+{
+  "checks": [
+    {
+      "offline": false,
+      "width": 1440,
+      "height": 900,
+      "uidSwitch": true,
+      "animated": true,
+      "reducedMotion": true,
+      "clears": true,
+      "persists": true,
+      "hidesInBattle": true
+    },
+    {
+      "offline": false,
+      "width": 390,
+      "height": 844,
+      "uidSwitch": true,
+      "animated": true,
+      "reducedMotion": true,
+      "clears": true,
+      "persists": true,
+      "hidesInBattle": true
+    },
+    {
+      "offline": false,
+      "width": 320,
+      "height": 568,
+      "uidSwitch": true,
+      "animated": true,
+      "reducedMotion": true,
+      "clears": true,
+      "persists": true,
+      "hidesInBattle": true
+    },
+    {
+      "offline": true,
+      "width": 1440,
+      "height": 900,
+      "uidSwitch": true,
+      "animated": true,
+      "reducedMotion": true,
+      "clears": true,
+      "persists": true,
+      "hidesInBattle": true
+    },
+    {
+      "offline": true,
+      "width": 390,
+      "height": 844,
+      "uidSwitch": true,
+      "animated": true,
+      "reducedMotion": true,
+      "clears": true,
+      "persists": true,
+      "hidesInBattle": true
+    },
+    {
+      "offline": true,
+      "width": 320,
+      "height": 568,
+      "uidSwitch": true,
+      "animated": true,
+      "reducedMotion": true,
+      "clears": true,
+      "persists": true,
+      "hidesInBattle": true
+    }
+  ],
+  "errors": []
+}

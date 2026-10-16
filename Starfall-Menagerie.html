@@ -5212,6 +5212,17 @@ body .dragging .item-art,body .dragging>img,body .dragging .idle-portrait{opacit
 @keyframes sprite-drop-land{0%{box-shadow:inset 0 0 25px #fff0a8b0;translate:0 2px}40%{box-shadow:inset 0 0 15px #f1d88770;translate:0 -1px}100%{box-shadow:inset 0 0 0 #f1d88700;translate:0 0}}
 @media(prefers-reduced-motion:reduce){.sprite-drop-landed{animation:none}}
 .gentle-ui .sprite-drop-landed{animation:none}
+
+/* A capture order is visible on the creature before the gates open. */
+.pregame-capture-marker{position:absolute;inset:0;width:100%;height:100%;z-index:4;overflow:hidden;pointer-events:none;color:var(--capture-lock-color,#bcead1)}
+.pregame-capture-marker[hidden]{display:none}.pregame-capture-marker circle,.pregame-capture-marker path,.pregame-capture-marker ellipse{fill:none;stroke:currentColor}
+.capture-lock-spin{transform-origin:0 0;animation:capture-lock-orbit 5s linear infinite}.capture-lock-pulse{stroke-width:1;opacity:.3;transform-origin:0 0;animation:capture-lock-pulse 2s ease-in-out infinite}
+.capture-lock-badge{animation:capture-lock-hover 2.2s ease-in-out infinite}.capture-lock-badge rect{fill:#072832ed;stroke:currentColor}.capture-lock-badge text{fill:#fff0bd;stroke:none;font-family:var(--sans);font-weight:800;text-anchor:middle;letter-spacing:.5px}
+@keyframes capture-lock-orbit{to{transform:rotate(360deg)}}@keyframes capture-lock-pulse{50%{transform:scale(1.12);opacity:.65}}@keyframes capture-lock-hover{50%{transform:translateY(calc(-1 * var(--capture-lock-bob,2px)))}}
+.gentle-ui .capture-lock-spin,.gentle-ui .capture-lock-pulse,.gentle-ui .capture-lock-badge{animation:none}
+@media(prefers-reduced-motion:reduce){.capture-lock-spin,.capture-lock-pulse,.capture-lock-badge{animation:none}}
+
+@media(max-width:900px) and (max-height:700px){body[data-screen="arena"]:has(#pregame-capture-marker:not([hidden])) .arena-label,body[data-screen="arena"]:has(#pregame-capture-marker:not([hidden])) .arena-timer,body[data-screen="arena"]:has(#pregame-capture-marker:not([hidden])) .arena-field-tools{display:none}}
 </style>
   </head>
   <body class="ui-v2 ui-v3">
@@ -22908,7 +22919,7 @@ body .dragging .item-art,body .dragging>img,body .dragging .idle-portrait{opacit
       "",
       !["battle", "elite", "boss", "capture"].includes(type)
     );
-    return `${fieldJourney(run2, phase, PLANETS)}${!profile.tutorial ? `<div class="tutorial-callout"><span>Scout the enemy and equip your companions. Your team fights automatically.</span>${button("Equip your starter gear", "tutorial-gear", "secondary small")}<button data-action="dismiss-tutorial" aria-label="Dismiss welcome">\xD7</button></div>` : ""}<div class="arena-grid"><div class="arena-main"><section class="panel arena-panel"><div class="panel-top"><span class="panel-title">${p2.name.toUpperCase()} \xB7 FIELD <span style="color:#687d5d;margin-left:9px">/ ${String(run2.depth + 1).padStart(2, "0")}</span></span><span class="status-dot ${live ? "live" : ""}"><i></i> ${live ? "BATTLE IN PROGRESS" : phase === "reward" ? "ENCOUNTER COMPLETE" : mapWaiting ? "AWAITING YOUR PATH" : ended ? "EXPEDITION ENDED" : "PREPARING FOR BATTLE"}</span></div>${enrageHTML()}<div class="arena-frame"><div class="arena-viewport"><canvas id="battle-canvas" aria-label="Real-time creature arena. Your expedition is on the left, wild creatures on the right."></canvas><div class="arena-label"><span class="location-icon">${ICONS[type]}</span><div><strong>${type === "boss" ? p2.bossName : "The Forgotten Colosseum"}</strong><small>${p2.name.toUpperCase()} \xB7 ${LABELS[type].toUpperCase()}</small></div></div><svg id="target-preview" class="target-preview" viewBox="0 0 1002 654" aria-hidden="true"></svg><div id="capture-feedback" class="capture-feedback" role="status" aria-live="polite"></div>${captureTrackerHTML(captureTrackerCollapsed)}<div class="arena-timer" id="arena-timer">${live ? "00:00" : "READY"}</div>${type === "boss" ? `<div class="boss-banner"><div><span>${p2.bossName}</span><small id="boss-phase">PHASE I</small></div><div class="boss-health-track"><i id="boss-health" style="width:100%"></i></div></div>` : ""}<div class="arena-field-tools"><button data-action="formation">${artImage("icon-formation")}Formation: ${run2.formation || "balanced"}</button><button data-action="formation">${artImage("icon-battle")}Deploy</button><button data-action="capture-kit">${artImage("icon-target")}Target lock</button></div><div class="arena-bottom-labels"><span id="ally-count">YOUR EXPEDITION \xB7 ${run2.team.length}</span><span class="versus">vs.</span><span id="foe-count">THE WILDS \xB7 ${foes?.length || 4}</span></div></div>${arenaDeckHTML()}</div><div class="arena-control"><div class="control-left"><button class="pause-btn" data-action="pause" title="Pause battle (Space)" aria-label="Pause battle" ${!live ? "disabled" : ""}>${paused ? "\u25B6" : "II"}</button><div class="speed-switch" aria-label="Battle speed">${[1, 2, 3].map((v) => `<button data-speed="${v}" class="${speed === v ? "active" : ""}">${v}\xD7</button>`).join("")}</div><span class="control-note"><kbd>SPACE</kbd> to pause</span></div>${phase === "prep" ? "" : mainAction}<nav class="arena-dock" aria-label="Expedition tools">${dockHTML()}</nav></div><details class="field-enemy-brief" ${matchMedia("(min-width:900px)").matches ? "open" : ""}><summary>Enemy build <span>Inspect relics & equipment</span></summary>${enemyRelicBannerHTML()}</details></section><div class="battle-feed"><time id="feed-time">\u2727</time><span id="feed-text">${live ? battle?.log[0]?.text || "The gates open." : "Your formation is set. Let your companions do the fighting."}</span><button class="text-button" data-action="report" style="margin-left:auto;white-space:nowrap">Battle log \u2192</button></div></div><aside class="side-column">${briefingHTML()}${synergyHTML()}</aside></div>`;
+    return `${fieldJourney(run2, phase, PLANETS)}${!profile.tutorial ? `<div class="tutorial-callout"><span>Scout the enemy and equip your companions. Your team fights automatically.</span>${button("Equip your starter gear", "tutorial-gear", "secondary small")}<button data-action="dismiss-tutorial" aria-label="Dismiss welcome">\xD7</button></div>` : ""}<div class="arena-grid"><div class="arena-main"><section class="panel arena-panel"><div class="panel-top"><span class="panel-title">${p2.name.toUpperCase()} \xB7 FIELD <span style="color:#687d5d;margin-left:9px">/ ${String(run2.depth + 1).padStart(2, "0")}</span></span><span class="status-dot ${live ? "live" : ""}"><i></i> ${live ? "BATTLE IN PROGRESS" : phase === "reward" ? "ENCOUNTER COMPLETE" : mapWaiting ? "AWAITING YOUR PATH" : ended ? "EXPEDITION ENDED" : "PREPARING FOR BATTLE"}</span></div>${enrageHTML()}<div class="arena-frame"><div class="arena-viewport"><canvas id="battle-canvas" aria-label="Real-time creature arena. Your expedition is on the left, wild creatures on the right."></canvas><div class="arena-label"><span class="location-icon">${ICONS[type]}</span><div><strong>${type === "boss" ? p2.bossName : "The Forgotten Colosseum"}</strong><small>${p2.name.toUpperCase()} \xB7 ${LABELS[type].toUpperCase()}</small></div></div><svg id="target-preview" class="target-preview" viewBox="0 0 1002 654" aria-hidden="true"></svg><svg id="pregame-capture-marker" class="pregame-capture-marker" viewBox="0 0 1002 654" role="img" aria-label="Planned capture target" hidden></svg><div id="capture-feedback" class="capture-feedback" role="status" aria-live="polite"></div>${captureTrackerHTML(captureTrackerCollapsed)}<div class="arena-timer" id="arena-timer">${live ? "00:00" : "READY"}</div>${type === "boss" ? `<div class="boss-banner"><div><span>${p2.bossName}</span><small id="boss-phase">PHASE I</small></div><div class="boss-health-track"><i id="boss-health" style="width:100%"></i></div></div>` : ""}<div class="arena-field-tools"><button data-action="formation">${artImage("icon-formation")}Formation: ${run2.formation || "balanced"}</button><button data-action="formation">${artImage("icon-battle")}Deploy</button><button data-action="capture-kit">${artImage("icon-target")}Target lock</button></div><div class="arena-bottom-labels"><span id="ally-count">YOUR EXPEDITION \xB7 ${run2.team.length}</span><span class="versus">vs.</span><span id="foe-count">THE WILDS \xB7 ${foes?.length || 4}</span></div></div>${arenaDeckHTML()}</div><div class="arena-control"><div class="control-left"><button class="pause-btn" data-action="pause" title="Pause battle (Space)" aria-label="Pause battle" ${!live ? "disabled" : ""}>${paused ? "\u25B6" : "II"}</button><div class="speed-switch" aria-label="Battle speed">${[1, 2, 3].map((v) => `<button data-speed="${v}" class="${speed === v ? "active" : ""}">${v}\xD7</button>`).join("")}</div><span class="control-note"><kbd>SPACE</kbd> to pause</span></div>${phase === "prep" ? "" : mainAction}<nav class="arena-dock" aria-label="Expedition tools">${dockHTML()}</nav></div><details class="field-enemy-brief" ${matchMedia("(min-width:900px)").matches ? "open" : ""}><summary>Enemy build <span>Inspect relics & equipment</span></summary>${enemyRelicBannerHTML()}</details></section><div class="battle-feed"><time id="feed-time">\u2727</time><span id="feed-text">${live ? battle?.log[0]?.text || "The gates open." : "Your formation is set. Let your companions do the fighting."}</span><button class="text-button" data-action="report" style="margin-left:auto;white-space:nowrap">Battle log \u2192</button></div></div><aside class="side-column">${briefingHTML()}${synergyHTML()}</aside></div>`;
   }
   function creatureCard(u, i) {
     const s = BY_ID[u.id], e = ELEMENTS[s.element];
@@ -25086,6 +25097,7 @@ body .dragging .item-art,body .dragging>img,body .dragging .idle-portrait{opacit
       el.setAttribute("aria-pressed", String(selected));
     }
     drawEnemyOverheads();
+    drawCaptureTargetMarker();
     updateCaptureFeedback();
   }
   function drawEnemyOverheads() {
@@ -25157,7 +25169,14 @@ body .dragging .item-art,body .dragging>img,body .dragging .idle-portrait{opacit
         e.preventDefault();
         return;
       }
-      const enemy = (foes || []).map((c, i) => ({ c, i, u: { ...c, side: 1, hp: 1, maxHp: 1 } })).reverse().find((a) => nativeUnitHit(a.u, BY_ID[a.c.id], p2, time, a.i, { padding, includeMarker: true }));
+      const enemies = (foes || []).map((c, i) => ({ c, i, u: { ...c, side: 1, hp: 1, maxHp: 1 } })).reverse();
+      const enemy = enemies.find((a) => nativeUnitHit(a.u, BY_ID[a.c.id], p2, time, a.i)) || enemies.filter((a) => nativeUnitHit(a.u, BY_ID[a.c.id], p2, time, a.i, { padding, includeMarker: true })).sort((a, b) => {
+        const distance3 = (a2) => {
+          const pos = nativeSpawn(BY_ID[a2.c.id], a2.u, 1, a2.i);
+          return Math.hypot(p2.x - pos.x, p2.y - (pos.y * 0.58 + 65));
+        };
+        return distance3(a) - distance3(b);
+      })[0];
       if (enemy) {
         if (enemy.c.boss) toast("Guardians cannot be captured.");
         else setCaptureTarget(enemy.c.uid);
@@ -25776,7 +25795,30 @@ body .dragging .item-art,body .dragging>img,body .dragging .idle-portrait{opacit
   }
   var orderPreviewKey;
   var orderPreview;
+  function drawCaptureTargetMarker() {
+    const marker = $("#pregame-capture-marker");
+    if (!marker || !canvas) return;
+    const plan = phase === "prep" ? run2.captureOrder : null, index = (foes || []).findIndex((c) => c.uid === plan?.uid), target = foes?.[index];
+    marker.hidden = !target || !!target.boss;
+    marker.toggleAttribute("hidden", marker.hidden);
+    if (marker.hidden) {
+      delete marker.dataset.key;
+      return;
+    }
+    const cam = arenaCamera(canvas.clientWidth, canvas.clientHeight), position = nativeSpawn(BY_ID[target.id], target, 1, index), x = position.x, y = position.y * 0.58 + 75, s = 1 / cam.scale;
+    const badgeY = Math.max(cam.y + 14 * s, y - Math.max(nativeBodyHeight(target) * getCharacterHeight(), 12 * s) - 13 * s), key4 = [target.uid, plan.tool, plan.threshold, x, y, badgeY, s].join(":");
+    marker.setAttribute("aria-label", `Capture planned for ${creatureName(target)} at ${Math.round((plan.threshold ?? 0.25) * 100)}% HP`);
+    marker.setAttribute("viewBox", `${cam.x} ${cam.y} ${cam.width} ${cam.height}`);
+    if (marker.dataset.key === key4) return;
+    marker.dataset.key = key4;
+    marker.dataset.targetUid = target.uid;
+    const color = { scout: "#bcead1", runic: "#9fe8ff", astral: "#dfbcff", mythic: "#ffe49a" }[plan.tool] || "#bcead1";
+    marker.style.setProperty("--capture-lock-color", color);
+    marker.style.setProperty("--capture-lock-bob", `${2 * s}px`);
+    marker.innerHTML = `<g transform="translate(${x} ${y})"><ellipse class="capture-lock-pulse" rx="${20 * s}" ry="${8 * s}"/><g transform="scale(1 .4)"><g class="capture-lock-spin"><circle r="${18 * s}" stroke-width="${1.7 * s}" stroke-dasharray="${18 * s} ${10 * s}"/></g></g><path class="capture-lock-pointer" d="M${-4 * s} ${-12 * s} L0 ${-8 * s} L${4 * s} ${-12 * s}" stroke-width="${1.5 * s}"/></g><g transform="translate(${x} ${badgeY})"><g class="capture-lock-badge"><rect x="${-31 * s}" y="${-10 * s}" width="${62 * s}" height="${15 * s}" rx="${5 * s}" stroke-width="${s}"/><path d="M${-24 * s} ${-3 * s} l${3 * s} ${-4 * s} l${3 * s} ${4 * s} l${-3 * s} ${4 * s} Z" stroke-width="${s}"/><text x="${5 * s}" y="${s}" font-size="${8 * s}">CAPTURE</text></g></g>`;
+  }
   function drawAllyOrders() {
+    drawCaptureTargetMarker();
     const layer = $("#ally-orders"), lines = $("#target-preview");
     if (!layer || !lines || !canvas) return;
     if (phase !== "prep" || !foes?.length) {
