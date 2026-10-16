@@ -100,8 +100,8 @@ test('casualties preserve expedition relics and recover bound and socketed relic
   newCasualty(r,'one',9);assert.equal(r.inventory.length,inventory+1);assert.equal(r.relics.length,3);
 });
 
-test('round-one rolls reach every rarity and role, across seeds and outside the biome pool',()=>{
-  const r=fresh(),seen=new Set(),roles=new Set(),rarities=new Set();
+test('high-Chaos round-one rolls reach every rarity and role, across seeds and outside the biome pool',()=>{
+  const r=fresh(),seen=new Set(),roles=new Set(),rarities=new Set();r.difficulty='chaos';r.chaos=16;
   for(let seed=1;seed<=4000;seed++)for(const c of encounter(r,'battle',seed)){seen.add(c.id);roles.add(c.role);rarities.add(SPECIES.find(s=>s.id===c.id).rarity);}
   assert.equal(rarities.size,5);assert.equal(roles.size,4);assert.ok(seen.size>SPECIES.length*.9);
   assert.deepEqual(encounter(r,'battle',33).map(c=>c.id),encounter(r,'battle',33).map(c=>c.id));

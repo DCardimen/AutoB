@@ -328,24 +328,25 @@ export const CHAOS_TIERS = [
   "Elite enemies gain 12% health.",
   "Enemy auto-attacks deal 8% more damage.",
   "Begin with 130 gold instead of 160.",
-  "Poison encounters inflict an additional second of poison.",
+  "Poison encounters inflict an additional second of poison; early ordinary encounters can contain a rare creature.",
   "Bosses gain 15% health.",
   "Shop prices rise by 10%.",
   "Start with 4 capture orbs instead of 5.",
   "Elite signatures recharge 10% faster.",
   "Enemy Guardians begin with 40 shield.",
-  "Boss phase II begins at 65% health.",
+  "Boss phase II begins at 65% health; early ordinary encounters can contain up to two rare creatures.",
   "All enemies gain 10% health.",
   "Rest training grants 30 EXP instead of 40.",
   "Enemy healers cleanse burn and poison when healing.",
   "Begin with two expedition lives; rests can still restore three.",
   "Magnetic storms arrive every 7s instead of 10s.",
-  "Bosses gain 12% attack.",
+  "Bosses gain 12% attack; early ordinary encounters can contain up to three rare creatures.",
   "Battle gold rewards are 12% lower.",
   "Boss phase III begins at 40% health.",
   "Elites begin with 3s evasion; expose or outlast their opening.",
   "A boss's living retinue grants it 18% damage reduction.",
 ];
+export const EARLY_RARITY_CHAOS_NOTE='Chaos 4+: rare creatures appear in early ordinary encounters. The early rare limit rises at Chaos 10 and 16; rarity odds increase with Chaos.';
 export function chaosLevel(run) {
   return run.difficulty === "chaos"
     ? Math.max(1, Math.min(20, Number(run.chaos) || 1))

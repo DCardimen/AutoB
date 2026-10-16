@@ -1,6 +1,10 @@
 // All coordinates are normalized to the original painting. Effects are clipped
 // to environmental features; the source art and creature layers stay intact.
 export const AMBIENT_SCENES={
+ grasslands:{birds:true,moon:[.86,.11,.08],sky:.24,
+  water:[[[.365,.20],[.395,.20],[.39,.28],[.36,.28]],[[.40,.37],[.43,.37],[.42,.43],[.40,.43]],[[.85,.39],[.92,.39],[.91,.48],[.84,.48]],[[.13,.57],[.20,.57],[.18,.72],[.13,.70]],[[.65,.54],[.71,.54],[.70,.63],[.64,.62]],[[.46,.49],[.58,.49],[.58,.56],[.45,.56]],[[.69,.71],[.79,.73],[.78,.82],[.69,.80]]],
+  mist:[[.50,.33,.33,.04],[.33,.52,.22,.055],[.62,.76,.34,.055]],
+  canopies:[[[0,.06],[.14,.05],[.25,.14],[.20,.23],[.06,.21],[0,.13]],[[.02,.77],[.16,.73],[.25,.79],[.20,.86],[.05,.87]],[[.72,.60],[.92,.61],[1,.69],[.92,.75],[.73,.69]]]},
  rewards:{moon:null,water:[[[.10,.31],[.15,.33],[.20,.64],[.12,.61]],[[.27,.39],[.30,.40],[.32,.62],[.27,.60]],[[.425,.33],[.45,.34],[.46,.48],[.43,.47]],[[.36,.54],[.50,.55],[.49,.77],[.37,.74]],[[.235,.73],[.26,.74],[.27,.95],[.23,.93]],[[.64,.37],[.67,.38],[.69,.55],[.64,.55]]],mist:[[.25,.65,.20,.06],[.49,.79,.23,.07],[.69,.46,.14,.04]],sky:.29},
  grove:{moon:[.88,.09,.045],water:[[[.69,.38],[.71,.38],[.70,.52],[.67,.51]]],mist:[[.55,.50,.18,.035],[.50,.70,.25,.045]],sky:.22},
  night:{moon:[.73,.095,.085],mist:[[.46,.52,.31,.05],[.60,.73,.28,.04]],sky:.25},
@@ -19,9 +23,9 @@ export function paintAmbient(c,theme,time,{width=1002,height=654,image=null,posi
  for(const [i,points]of (scene.water||[]).entries()){
   c.save();polygon(c,points);c.clip();
   // A subpixel shimmer of the painted water, followed by travelling glints.
-  if(image?.naturalWidth){c.globalAlpha=.26;c.drawImage(image,0,Math.sin(time*2+i)*.003,1,1);c.globalAlpha=1;}
+  if(image?.naturalWidth){c.globalAlpha=.4;c.drawImage(image,0,(time*.025% .006)-.003,1,1);c.globalAlpha=1;}
   const ys=points.map(p=>p[1]),xs=points.map(p=>p[0]),top=Math.min(...ys),bottom=Math.max(...ys),left=Math.min(...xs),right=Math.max(...xs);
-  for(let n=0;n<6;n++){const y=top+((time*.13+n*.17+i*.13)%1)*(bottom-top),x=left+(n+.5)/6*(right-left);const streak=c.createLinearGradient(0,y,0,y+.05);streak.addColorStop(0,'#d4faff00');streak.addColorStop(.65,'#e2fcff77');streak.addColorStop(1,'#d4faff00');c.fillStyle=streak;c.fillRect(x,y,.0018,.05);}
+  for(let n=0;n<10;n++){const y=top+((time*.19+n*.11+i*.13)%1)*(bottom-top),x=left+(n+.5)/10*(right-left);const streak=c.createLinearGradient(0,y,0,y+.035);streak.addColorStop(0,'#d4faff00');streak.addColorStop(.65,'#e2fcff99');streak.addColorStop(1,'#d4faff00');c.fillStyle=streak;c.fillRect(x,y,.0018,.035);}
   c.restore();
  }
  for(const [i,line]of (scene.lava||[]).entries()){
@@ -30,11 +34,11 @@ export function paintAmbient(c,theme,time,{width=1002,height=654,image=null,posi
   for(let n=0;n<3;n++){const f=(time*.05+n*.31+i*.12)%1,a=line[Math.min(line.length-2,Math.floor(f*(line.length-1)))],b=line[Math.min(line.length-1,Math.floor(f*(line.length-1))+1)],v=f*(line.length-1)%1;glow(c,a[0]+(b[0]-a[0])*v,a[1]+(b[1]-a[1])*v,.012,.008,'#ffca75',.22);}
   c.restore();
  }
- for(const [i,[x,y,rx,ry]]of (scene.mist||[]).entries())glow(c,x+Math.sin(time*.055+i)*.012,y+Math.sin(time*.08+i)*.002,rx,ry,theme==='cinder'?'#b79b9a':'#b6dce9',.08+.025*Math.sin(time*.24+i));
+ for(const [i,[x,y,rx,ry]]of (scene.mist||[]).entries())glow(c,x+Math.sin(time*.085+i)*.025,y+Math.sin(time*.12+i)*.004,rx,ry,theme==='cinder'?'#b79b9a':'#b6dce9',.12+.035*Math.sin(time*.24+i));
  if(scene.moon){const [x,y,r]=scene.moon;glow(c,x+Math.sin(time*.04)*.0015,y,r*2.8,r*3.7,'#a7d9f6',.07+.025*Math.sin(time*.45));}
  if(scene.sky){
   // Very thin drifting cloud veils; mountains and buildings never translate.
-  for(let i=0;i<2;i++)glow(c,.35+i*.22+Math.sin(time*.035+i)*.015,scene.sky*.47+i*.025,.18,.014,'#bdd4df',.045);
+  for(let i=0;i<4;i++)glow(c,((.1+i*.24+time*.004)%1.4)-.2,scene.sky*.47+i*.023,.19,.018,'#bdd4df',.075);
  }
  if(scene.stars||theme==='night'||theme==='grove')for(let i=0;i<16;i++){
   const x=.15+((i*137)%701)/1000,y=.035+((i*67)%173)/1000,twinkle=Math.pow(Math.max(0,Math.sin(time*(.35+i%3*.1)+i*1.7)),6);
@@ -44,5 +48,17 @@ export function paintAmbient(c,theme,time,{width=1002,height=654,image=null,posi
   glow(c,x,y,.032,.045,'#ffbc59',.15+.045*Math.sin(time*7+i)+.025*Math.sin(time*11+i*2));
   const f=(time*.2+i*.31)%1;glow(c,x+Math.sin(time+i)*.003,y-f*.025,.002,.004,'#ffe09b',(1-f)*.3);
  }
+ // Only the painted canopy masks bend; trunks and mountains stay anchored.
+ const canopies=scene.canopies||(['grove','night','rewards','glade'].includes(theme)?[[[0,.02],[.14,.01],[.22,.11],[.13,.18],[0,.13]],[[.80,.02],[1,0],[1,.24],[.90,.18]]]:[]);
+ if(image?.naturalWidth)for(const [i,points]of canopies.entries()){
+  c.save();polygon(c,points);c.clip();const anchor=Math.max(...points.map(p=>p[1])),sway=Math.sin(time*.7+i*2)*.008;
+  c.globalAlpha=.65;c.transform(1,0,sway,1,-sway*anchor,0);c.drawImage(image,0,0,1,1);c.restore();
+ }
+ if(scene.birds||['grove','night','rewards','glade'].includes(theme))for(let i=0;i<3;i++){
+  const x=((time*.012+i*.21)%1.3)-.15,y=.11+i*.032+Math.sin(time*.4+i)*.006,wing=Math.sin(time*6+i)*.002;
+  c.save();c.strokeStyle=theme==='grasslands'?'#173b42aa':'#b3d3db88';c.lineWidth=.0012;c.lineCap='round';c.beginPath();c.moveTo(x-.005,y+wing);c.quadraticCurveTo(x-.002,y-.002,x,y);c.quadraticCurveTo(x+.002,y-.002,x+.005,y+wing);c.stroke();c.restore();
+ }
+ if(theme==='cinder')for(let i=0;i<12;i++){const f=(time*.05+i*.079)%1;glow(c,.15+(i*.137)% .75+Math.sin(time+i)*.008,.60-f*.45,.0018,.003,'#ffb96b',(1-f)*.5);}
+ if(theme==='astral')for(let i=0;i<3;i++)glow(c,.30+i*.22+Math.sin(time*.14+i)*.035,.15+Math.sin(time*.10+i)*.03,.10,.035,'#b5a0fb',.045);
  c.restore();
 }

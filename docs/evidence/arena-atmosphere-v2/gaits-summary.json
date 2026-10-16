@@ -1,0 +1,56 @@
+{
+  "sourceComparisonSheets": 28,
+  "motionSheets": 23,
+  "poses": 1472,
+  "clipped": 0,
+  "motionFamilies": [
+    "aurel",
+    "brakk",
+    "brom",
+    "cinderfox",
+    "crownstag",
+    "eira",
+    "emberhound",
+    "frostursa",
+    "grit",
+    "grum",
+    "luma",
+    "morrow",
+    "nightmaw",
+    "nyra",
+    "pyrehorn",
+    "rabbit",
+    "rodent",
+    "rowan",
+    "sable",
+    "sunlion",
+    "syl",
+    "tarka",
+    "turtle"
+  ],
+  "sourceFacesPerSheet": 8,
+  "sourceFormsPerSheet": 3,
+  "motionStates": [
+    "idle",
+    "walk",
+    "run",
+    "sprint"
+  ],
+  "manualSourceReview": [
+    "knight (Aurel)",
+    "orc (Brakk)",
+    "elf (Syl)",
+    "caster (Nyra)"
+  ],
+  "manualMotionReview": [
+    "frostursa",
+    "emberhound",
+    "pyrehorn",
+    "nightmaw",
+    "aurel",
+    "brakk",
+    "syl",
+    "nyra"
+  ],
+  "anatomyOrPaletteChanged": false
+}

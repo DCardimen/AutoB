@@ -27,15 +27,24 @@ export const ELITE_MODIFIERS=powers.flatMap(power=>targets.map((target,i)=>{
 }));
 export const ELITE_MODIFIER_BY_ID=Object.fromEntries(ELITE_MODIFIERS.map(m=>[m.id,m]));
 export const eliteModifierForSeed=seed=>ELITE_MODIFIERS[hash(`elite:${seed}`)%ELITE_MODIFIERS.length];
-export const eliteModifier=c=>ELITE_MODIFIER_BY_ID[c?.eliteModifier]||null;
+export const ELITE_TIER_STRENGTH={4:1,3:1.2,2:1.44,1:1.728};
+export function eliteTierForSeed(seed){const roll=hash('elite-tier:'+seed)%100;return roll<65?4:roll<88?3:roll<97?2:1;}
+export function eliteModifier(c){
+ const base=ELITE_MODIFIER_BY_ID[c?.eliteModifier];if(!base)return null;
+ const tier=ELITE_TIER_STRENGTH[c.eliteTier]?c.eliteTier:4,strength=ELITE_TIER_STRENGTH[tier],amount=base.amount*strength;
+ const value=base.flat?'+'+ +amount.toFixed(2):(amount<0?'':'+')+ +(Math.abs(amount)*100).toFixed(2)+'%';
+ const text=base.text.replace(/[-+]?\d+(?:\.\d+)?%?/,value),tierLabel='Tier '+({1:'I',2:'II',3:'III',4:'IV'})[tier];
+ return {...base,amount,text,tier,tierLabel,strength,description:`${tierLabel} · ${text} to ${base.targetName}.`};
+}
+export const eliteEncounterModifier=seed=>eliteModifier({eliteModifier:eliteModifierForSeed(seed).id,eliteTier:eliteTierForSeed(seed)});
 export function assignEliteModifier(foes,seed,species){
  if(!foes.length)return null;
  // Reloading an old encounter adds its mutation once; a saved one never rerolls.
  const saved=foes.find(c=>eliteModifier(c));if(saved)return {modifier:eliteModifier(saved),creature:saved,index:foes.indexOf(saved)};
  const modifier=eliteModifierForSeed(seed),score=c=>modifier.target==='lowest-level'?-(c.level||1):modifier.target==='lowest-health'?-(species[c.id]?.hp||0):modifier.target==='highest-attack'?(species[c.id]?.atk||0):modifier.target==='fastest'?(species[c.id]?.speed||0):0;
  const best=Math.max(...foes.map(score)),candidates=foes.map((c,index)=>({c,index})).filter(({c})=>score(c)===best);
- const chosen=candidates[hash(`elite-target:${seed}`)%candidates.length];chosen.c.eliteModifier=modifier.id;
- return {modifier,creature:chosen.c,index:chosen.index};
+ const chosen=candidates[hash(`elite-target:${seed}`)%candidates.length];chosen.c.eliteModifier=modifier.id;chosen.c.eliteTier=eliteTierForSeed(seed);
+ return {modifier:eliteModifier(chosen.c),creature:chosen.c,index:chosen.index};
 }
 export function applyEliteStats(st,c){
  const m=eliteModifier(c);if(!m)return st;
@@ -48,13 +57,13 @@ export function rememberEliteCapture(profile,result){
  if(!result?.success||!m||!source)return null;
  profile.eliteCaptures??=[];
  let record=profile.eliteCaptures.find(r=>r.sourceUid===source);
- if(!record){record={sourceUid:source,id:c.id,eliteModifier:m.id,capturedLevel:c.level||1,nature:c.nature,genes:c.genes?{...c.genes}:undefined};profile.eliteCaptures.push(record);}
+ if(!record){record={sourceUid:source,id:c.id,eliteModifier:m.id,eliteTier:m.tier,capturedLevel:c.level||1,nature:c.nature,genes:c.genes?{...c.genes}:undefined};profile.eliteCaptures.push(record);}
  return record;
 }
 export function inheritEliteStarter(c,profile,sourceUid){
  const record=profile.eliteCaptures?.find(r=>r.sourceUid===sourceUid&&r.id===c.id&&eliteModifier(r));
  if(!record)return false;
- c.eliteModifier=record.eliteModifier;c.eliteOriginUid=record.sourceUid;
+ c.eliteModifier=record.eliteModifier;c.eliteTier=record.eliteTier||4;c.eliteOriginUid=record.sourceUid;
  if(record.genes)c.genes={...record.genes};if(record.nature)c.nature=record.nature;
  return true;
 }

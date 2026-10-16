@@ -29,5 +29,5 @@ test('reward rendering leaves the settled outcome and inventory untouched',()=>{
  assert.match(html,/A little treasure/);assert.match(html,/CACHE/);assert.match(html,/UPGRADE/);assert.match(html,/GROWTH/);
  assert.equal((html.match(/class="uploaded-art chest-frame/g)||[]).length,12);
  assert.equal(JSON.stringify(reward),before);
- const defeat=rewardsShell({...args,won:false});assert.match(defeat,/CASUALTY/);assert.doesNotMatch(defeat,/CACHE|UPGRADE|chest-frame/);
+ const defeat=rewardsShell({...args,won:false,loot:''});assert.match(defeat,/CASUALTY/);assert.doesNotMatch(defeat,/CACHE|UPGRADE|chest-frame/);const captureLoot=rewardsShell({...args,won:false});assert.match(captureLoot,/CACHE/);assert.doesNotMatch(captureLoot,/UPGRADE|chest-frame/);
 });

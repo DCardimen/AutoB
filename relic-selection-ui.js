@@ -9,9 +9,10 @@ export function openingRelicHTML(offer,catalog,describe){
 export async function animateRelicReceived(id,from,{reducedMotion=false}={}){
  const target=document.querySelector(`[data-relic-preview="${id}"]`);
  if(!target)return;
+ document.dispatchEvent(new CustomEvent('relic-received',{detail:{id}}));
  target.scrollIntoView({block:'nearest',inline:'nearest',behavior:'instant'});
  if(reducedMotion||document.hidden){target.classList.add('relic-just-received');return;}
- const sprite=document.createElement('div');sprite.className='relic-receive-flight';sprite.dataset.relicReceived=id;sprite.setAttribute('aria-hidden','true');sprite.innerHTML=artImage(relicArt(id));document.body.append(sprite);
+ const sprite=document.createElement('div');sprite.className='relic-receive-flight';sprite.dataset.relicReceived=id;sprite.setAttribute('aria-hidden','true');sprite.innerHTML=artImage(relicArt(id))+Array.from({length:12},(_,i)=>`<i style="--spark:${i}"></i>`).join('');document.body.append(sprite);
  const start=from||{left:innerWidth/2-50,top:innerHeight/2-50,width:100,height:100};
  const sx=start.left+start.width/2,sy=start.top+start.height/2,size=Math.max(56,Math.min(128,start.width));
  sprite.style.width=sprite.style.height=size+'px';

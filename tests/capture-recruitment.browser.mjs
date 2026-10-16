@@ -12,7 +12,7 @@ try{
   const context=await browser.newContext({viewport:{width:scenario==='reserve'?390:1440,height:1050}}),page=await context.newPage();
   page.on('pageerror',e=>report.errors.push(e.message));page.on('response',r=>{if(r.status()>=400)report.errors.push(`${r.status()} ${r.url()}`);});
   const run=makeRun(83,['aurel','brakk']);run.relics=[];run.teamCapacity=scenario==='open'?3:2;run.wins=scenario==='unlock'?1:0;run.route=generateRoute(run);const node=run.route[0][0];
-  const foes=[{...creature('nyra',7),balanceVersion:17,evolution:1,evolutionPath:'wild',nature:'Savant',genes:{hp:.9,atk:.8,speed:1.2,cd:.85},enemyRelics:['venom-clasp'],equipment:['prism-focus'],equipmentQuality:1,equipmentRolls:[{quality:.77,rarity:'Rare',sourceName:'Wild Nyra'}]},{...creature('syl'),balanceVersion:17}];
+  const foes=[{...creature('nyra',7),balanceVersion:17,equipmentVersion:2,evolution:1,evolutionPath:'wild',nature:'Savant',genes:{hp:.9,atk:.8,speed:1.2,cd:.85},enemyRelics:['venom-clasp'],equipment:['prism-focus'],equipmentQuality:1,equipmentRolls:[{quality:.77,rarity:'Rare',sourceName:'Wild Nyra'}]},{...creature('syl'),balanceVersion:17}];
   const oldResult={success:true,uid:foes[0].uid,attempt:1,creature:{...foes[0],bond:3}};
   const saved={version:7,run:JSON.parse(JSON.stringify(run)),node,foes,phase:scenario==='old-save'?'reward':'prep',profile:{owned:['aurel','brakk','nyra'],bonds:{nyra:3},runs:1,tutorial:true}};
   if(scenario==='old-save'){saved.run.captureReservation={uid:oldResult.uid,result:oldResult};saved.reward={won:true,gold:0,xp:0,time:10,tacticalCapture:oldResult};}
@@ -34,7 +34,7 @@ try{
   const award=await page.evaluate(()=>{const s=starfall.state,r=s.run,result=s.reward?.tacticalCapture||r.captureReservation.result;return {claim:r.captureRecruitments[result.uid],team:r.team,bench:r.bench,gold:r.gold};});
   assert.equal(award.claim.destination,expectedDestination);
   const caught=[...award.team,...award.bench].find(c=>c.uid===award.claim.uid);
-  assert.equal(caught.id,'nyra');assert.equal(caught.level,7);assert.equal(caught.evolution,1);assert.equal(caught.nature,'Savant');assert.deepEqual(caught.boundRelics,['venom-clasp']);assert.equal(caught.equipmentRolls[0].quality,.77);assert.equal(caught.equipmentRolls[0].rarity,'Rare');assert.equal(caught.bond,scenario==='old-save'?3:4);
+  assert.equal(caught.id,'nyra');assert.equal(caught.level,7);assert.equal(caught.evolution,1);assert.equal(caught.nature,'Savant');assert.deepEqual(caught.boundRelics,['venom-clasp']);assert.deepEqual(caught.equipment,[]);assert.equal(award.claim.equipmentDrops[0].quality,.77);assert.equal(award.claim.equipmentDrops[0].rarity,'Rare');assert.equal(caught.bond,scenario==='old-save'?3:4);
   if(expectedDestination==='team'){assert.equal(award.bench.length,0);assert.equal(award.team.length,scenario==='retreat'?2:3);assert.equal(new Set(award.team.map(c=>c.seat)).size,award.team.length);}
   else{assert.match(await page.locator('.capture-outcome').textContent(),/joined your reserves/);assert.equal(award.team.length,2);assert.equal(award.bench.length,1);await page.locator('.modal-close').click();await page.locator('.arena-dock [data-action="companions"]').click();assert.equal(await page.locator('.reserve-card').count(),1);}
   await page.reload();await page.waitForFunction(()=>window.starfall);await page.clock.runFor(300);

@@ -1,3 +1,6 @@
+import {celebrateCapture} from './capture-celebration.js';
+import {captureTrackerHTML,captureTrackerState,updateCaptureTracker} from './capture-tracker.js';
+import {patchModalContent} from './modal-content.js';
 import {prepareOpeningRelics,chooseFirstRelic,skipFirstRelic,recordRunReset,recordOpeningBattle} from './opening-relics.js';
 import {openingRelicHTML,animateRelicReceived} from './relic-selection-ui.js';
 import {arenaCamera,arenaPoint} from './arena-camera.js';
@@ -13,7 +16,7 @@ import {assignEliteModifier,eliteModifier,rememberEliteCapture,inheritEliteStart
 import {enrageAt} from './battle-enrage.js';
 import {migrateStarterGear} from './starter-equipment.js';
 import {updateLiveRoster} from './live-roster.js';
-import {fieldIcon,fieldJourney,decorateFieldUI,worldArt} from './field-ui.js';
+import {fieldIcon,fieldJourney,decorateFieldUI,worldArt,stageArt} from './field-ui.js';
 import {interpolatedNativeUnit} from './native-motion.js';
 import {WEARER_RELICS,WEARER_BY_ID,initializeCompanion} from './wearer-relics.js';
 import {BIOMES,planetOrb,biomeScenery,worldJourneyHTML} from './planet-ui.js';
@@ -23,12 +26,12 @@ import {battleSummaryHTML} from './battle-summary.js';
 import {applyLoadoutDrop} from './loadout-interactions.js';
 import {activeAilments,STATUS_AILMENTS,annotateAilments} from './status-ailments.js';
 import {combatEffectDescription,itemStrength} from './item-effects.js';
-import {chooseLegendaryPact,assignEnemyRelics,recruitPrice,refundCapture,progressive,capacity,CAPTURERS,buyCapturer,consumeCapturer,addCapturer,routeVisible,claimLoot,makeLoot,lootName,buyPermit,permitCost,buyRecruit} from './expedition-rules.js';
+import {chooseLegendaryPact,assignEnemyRelics,recruitPrice,refundCapture,progressive,capacity,CAPTURERS,buyCapturer,consumeCapturer,addCapturer,routeVisible,claimLoot,makeLoot,attachCaptureLoot,lootName,buyPermit,permitCost,buyRecruit} from './expedition-rules.js';
 import {RUN_RELIC_BY_ID,EXPEDITION_RELICS,routeModifiers} from './run-relics.js';
 import {DeploymentPhysics} from './deployment-physics.js';
 import {nativeSpawn,nativeBodyHeight} from './native-combat.js';
-import {nativePortrait,getCharacterHeight,drawNativeUnit} from './native-art.js';
-import {CREATURE_GEAR,GEAR_BY_ID,equipmentSlots,equipmentDescription,enemyEquipment,gearCompatibility,equipmentAffinity,AFFINITY_LABELS,reconcileEquipment,armorReduction,claimEvolutionGear,equipGear,removeGear,buyGear} from './creature-equipment.js';
+import {nativePortrait,getCharacterHeight,drawNativeUnit,nativeUnitHit} from './native-art.js';
+import {CREATURE_GEAR,GEAR_BY_ID,equipmentSlots,equipmentDescription,enemyEquipment,gearCompatibility,equipmentAffinity,AFFINITY_LABELS,equipmentAlignment,EQUIPMENT_SLOTS,equipmentSlotViews,equipmentSlotType,gearAudience,reconcileEquipment,armorReduction,claimEvolutionGear,equipGear,removeGear,buyGear} from './creature-equipment.js';
 import {evolutionSkillIds} from './evolution-skills.js';
 import {creatureTypeFactor,creatureWorldScale,MAX_CREATURE_TYPE_FACTOR} from './native-size.js';
 import {setCharacterHeight,nativePreviewFrame} from './native-art.js';
@@ -53,7 +56,7 @@ import {
   xpNeeded,
   gainXP,
   synergies,
-  stats,
+  stats,nextLevelPreview,
   makeRun,
   generateRoute,
   canVisit,
@@ -162,7 +165,7 @@ let profile = {
 };
 profile.tuning=setTuning(profile.tuning||DEFAULT_TUNING);
 let settingsPreview=null;
-let lootCollecting=false;
+let lootCollecting=false,captureTrackerCollapsed=false;
 let intelTab='briefing';
 let rewardShownKey=null;
 let settingsPrevious=null,recapMetric="damage",recapSide=0;
@@ -244,7 +247,7 @@ run.fallen ??= [];
 run.defeatLedger ??= {};
 run.battleSerial ??= 0;
 for (const c of [...run.team, ...run.bench]){c.relics??=[];initializeCompanion(run,c);}
-for(const [i,c]of (foes||[]).entries()){c.terrain=[];if((c.balanceVersion||0)<15||(c.equipment||[]).some(id=>GEAR_BY_ID[id]&&!gearCompatibility(c,GEAR_BY_ID[id]).allowed)){assignEnemyRelics(run,c,node?.type||'battle',node?.seed||run.seed);enemyEquipment(c,(node?.seed||run.seed)+i*431,run.planet*8+run.depth,chaosLevel(run));}}
+for(const [i,c]of (foes||[]).entries()){c.terrain=[];if((c.balanceVersion||0)<15||c.equipmentVersion!==2||(c.equipment||[]).some(id=>GEAR_BY_ID[id]&&!gearCompatibility(c,GEAR_BY_ID[id]).allowed)){assignEnemyRelics(run,c,node?.type||'battle',node?.seed||run.seed);enemyEquipment(c,(node?.seed||run.seed)+i*431,run.planet*8+run.depth,chaosLevel(run));}}
 if(node?.type==="elite"&&foes?.length)assignEliteModifier(foes,node.seed,BY_ID);
 if(shopStock?.recruits)shopStock.recruits.forEach(c=>initializeCompanion(run,c));
 run.inventory.forEach(r=>delete r.link);
@@ -255,7 +258,7 @@ if(phase==='reward'){
   const result=reward?.tacticalCapture||run.captureReservation?.result;
   if(result?.success)result.creature.bond??=Math.min(5,profile.bonds[result.creature.id]||0);
   rememberEliteCapture(profile,result);
-  if(settleCaptureRecruitment(run,result)){reconcileEquipment(run);save();}
+  if(settleCaptureRecruitment(run,result)){attachCaptureLoot(reward,result);reconcileEquipment(run);save();}
 }
 function freshRun(ids, increment = true, options = {}) {
   if (increment) {recordRunReset(profile,run);profile.runs++;}
@@ -309,10 +312,10 @@ function save() {
     $(".local-label").textContent = "SAVE UNAVAILABLE";
   }
 }
-function unlock(id) {
+function unlock(id,{silent=false}={}) {
   if (!profile.owned.includes(id)) {
     profile.owned.push(id);
-    toast(`${BY_ID[id].name} discovered. Available in future expeditions.`);
+    if(!silent)toast(`${BY_ID[id].name} discovered. Available in future expeditions.`);
   }
   save();
 }
@@ -345,7 +348,7 @@ function render() {
   document.body.dataset.planet = Math.min(run.planet,2);
   document.body.dataset.phase = phase;
   document.body.classList.toggle("gentle-ui",!!profile.reducedMotion);
-  document.body.dataset.screen = viewName;
+  document.body.dataset.screen = viewName;document.body.style.setProperty('--team-count',run.team.length);
   document.body.style.setProperty('--current-world-art','url('+worldArt(Math.min(run.planet,2))+')');
   document
     .querySelectorAll("[data-view]")
@@ -360,14 +363,21 @@ function render() {
         : collectionHTML());
   if(viewName==='arena'&&phase==='battle')refreshLiveRoster();
   decorateFieldUI();decorateUploadedArt();decorateAmbientBackgrounds();
-  canvas = $("#battle-canvas");
+  arenaResizeObserver?.disconnect();canvas = $("#battle-canvas");if(canvas)arenaResizeObserver?.observe(canvas.parentElement);
   ctx = canvas?.getContext("2d");
   if (canvas) {
     resizeCanvas();
   }
   if (viewName === "arena") {bindDrag();bindArenaDeployment();}
   if(ctx&&canvas)renderBattle(ctx,canvas.width,canvas.height,battle,Math.min(run.planet,2),performance.now()/1000,run.team,foes||[]);
-  if(canvas){drawEnemyOverheads();drawAllyOrders();}window.scrollTo({...pageScroll,behavior:"instant"});decorateAilments($("#view"));prepareLoadoutDragging();updateCaptureFeedback();
+  if(canvas){drawEnemyOverheads();drawAllyOrders();}if(viewName==='map')showRecentRelicOnMap();window.scrollTo({...pageScroll,behavior:"instant"});decorateAilments($("#view"));prepareLoadoutDragging();updateCaptureFeedback();
+}
+document.addEventListener('relic-received',e=>{if(!run.relics.includes(e.detail.id))return;run.recentRelicArrival={id:e.detail.id,serial:(run.recentRelicArrival?.serial||0)+1,seenOnMap:false};save();});
+function showRecentRelicOnMap(){
+ const recent=run.recentRelicArrival;if(!recent||recent.seenOnMap)return;
+ const target=document.querySelector(`[data-relic-preview="${recent.id}"]`);if(!target)return;
+ target.classList.add('relic-map-arrival');target.dataset.newRelic='true';const badge=document.createElement('span');badge.className='relic-new-badge';badge.textContent='NEW';target.append(badge);
+ recent.seenOnMap=true;save();
 }
 function updateHeader() {
   document.body.classList.toggle("native-expedition",!!run.native);
@@ -416,7 +426,7 @@ function arenaHTML() {
               "",
               !["battle", "elite", "boss", "capture"].includes(type),
             );
-  return `${fieldJourney(run,phase,PLANETS)}${!profile.tutorial ? `<div class="tutorial-callout"><span>Scout the enemy and equip your companions. Your team fights automatically.</span>${button("Equip your starter gear", "tutorial-gear", "secondary small")}<button data-action="dismiss-tutorial" aria-label="Dismiss welcome">×</button></div>` : ""}<div class="arena-grid"><div class="arena-main"><section class="panel arena-panel"><div class="panel-top"><span class="panel-title">${p.name.toUpperCase()} · FIELD <span style="color:#687d5d;margin-left:9px">/ ${String(run.depth + 1).padStart(2, "0")}</span></span><span class="status-dot ${live ? "live" : ""}"><i></i> ${live ? "BATTLE IN PROGRESS" : phase === "reward" ? "ENCOUNTER COMPLETE" : mapWaiting ? "AWAITING YOUR PATH" : ended ? "EXPEDITION ENDED" : "PREPARING FOR BATTLE"}</span></div>${enrageHTML()}<div class="arena-frame"><div class="arena-viewport"><canvas id="battle-canvas" aria-label="Real-time creature arena. Your expedition is on the left, wild creatures on the right."></canvas><div class="arena-label"><span class="location-icon">${ICONS[type]}</span><div><strong>${type === "boss" ? p.bossName : "The Forgotten Colosseum"}</strong><small>${p.name.toUpperCase()} · ${LABELS[type].toUpperCase()}</small></div></div><svg id="target-preview" class="target-preview" viewBox="0 0 1002 654" aria-hidden="true"></svg><div id="capture-feedback" class="capture-feedback" role="status" aria-live="polite"></div><div class="arena-timer" id="arena-timer">${live ? "00:00" : "READY"}</div>${type === "boss" ? `<div class="boss-banner"><div><span>${p.bossName}</span><small id="boss-phase">PHASE I</small></div><div class="boss-health-track"><i id="boss-health" style="width:100%"></i></div></div>` : ""}<div class="arena-field-tools"><button data-action="formation">${artImage('icon-formation')}Formation: ${run.formation||'balanced'}</button><button data-action="formation">${artImage('icon-battle')}Deploy</button><button data-action="capture-kit">${artImage('icon-target')}Target lock</button></div><div class="arena-bottom-labels"><span id="ally-count">YOUR EXPEDITION · ${run.team.length}</span><span class="versus">vs.</span><span id="foe-count">THE WILDS · ${foes?.length || 4}</span></div></div>${arenaDeckHTML()}</div><div class="arena-control"><div class="control-left"><button class="pause-btn" data-action="pause" title="Pause battle (Space)" aria-label="Pause battle" ${!live ? "disabled" : ""}>${paused ? "▶" : "II"}</button><div class="speed-switch" aria-label="Battle speed">${[1, 2, 3].map((v) => `<button data-speed="${v}" class="${speed === v ? "active" : ""}">${v}×</button>`).join("")}</div><span class="control-note"><kbd>SPACE</kbd> to pause</span></div>${phase==='prep'?'':mainAction}<nav class="arena-dock" aria-label="Expedition tools">${dockHTML()}</nav></div>${live&&run.captureOrder?retryControlsHTML():''}<details class="field-enemy-brief" ${matchMedia("(min-width:900px)").matches?"open":""}><summary>Enemy build <span>Inspect relics & equipment</span></summary>${enemyRelicBannerHTML()}</details></section><div class="battle-feed"><time id="feed-time">✧</time><span id="feed-text">${live ? battle?.log[0]?.text || "The gates open." : "Your formation is set. Let your companions do the fighting."}</span><button class="text-button" data-action="report" style="margin-left:auto;white-space:nowrap">Battle log →</button></div></div><aside class="side-column">${briefingHTML()}${synergyHTML()}</aside></div>`;
+  return `${fieldJourney(run,phase,PLANETS)}${!profile.tutorial ? `<div class="tutorial-callout"><span>Scout the enemy and equip your companions. Your team fights automatically.</span>${button("Equip your starter gear", "tutorial-gear", "secondary small")}<button data-action="dismiss-tutorial" aria-label="Dismiss welcome">×</button></div>` : ""}<div class="arena-grid"><div class="arena-main"><section class="panel arena-panel"><div class="panel-top"><span class="panel-title">${p.name.toUpperCase()} · FIELD <span style="color:#687d5d;margin-left:9px">/ ${String(run.depth + 1).padStart(2, "0")}</span></span><span class="status-dot ${live ? "live" : ""}"><i></i> ${live ? "BATTLE IN PROGRESS" : phase === "reward" ? "ENCOUNTER COMPLETE" : mapWaiting ? "AWAITING YOUR PATH" : ended ? "EXPEDITION ENDED" : "PREPARING FOR BATTLE"}</span></div>${enrageHTML()}<div class="arena-frame"><div class="arena-viewport"><canvas id="battle-canvas" aria-label="Real-time creature arena. Your expedition is on the left, wild creatures on the right."></canvas><div class="arena-label"><span class="location-icon">${ICONS[type]}</span><div><strong>${type === "boss" ? p.bossName : "The Forgotten Colosseum"}</strong><small>${p.name.toUpperCase()} · ${LABELS[type].toUpperCase()}</small></div></div><svg id="target-preview" class="target-preview" viewBox="0 0 1002 654" aria-hidden="true"></svg><div id="capture-feedback" class="capture-feedback" role="status" aria-live="polite"></div>${captureTrackerHTML(captureTrackerCollapsed)}<div class="arena-timer" id="arena-timer">${live ? "00:00" : "READY"}</div>${type === "boss" ? `<div class="boss-banner"><div><span>${p.bossName}</span><small id="boss-phase">PHASE I</small></div><div class="boss-health-track"><i id="boss-health" style="width:100%"></i></div></div>` : ""}<div class="arena-field-tools"><button data-action="formation">${artImage('icon-formation')}Formation: ${run.formation||'balanced'}</button><button data-action="formation">${artImage('icon-battle')}Deploy</button><button data-action="capture-kit">${artImage('icon-target')}Target lock</button></div><div class="arena-bottom-labels"><span id="ally-count">YOUR EXPEDITION · ${run.team.length}</span><span class="versus">vs.</span><span id="foe-count">THE WILDS · ${foes?.length || 4}</span></div></div>${arenaDeckHTML()}</div><div class="arena-control"><div class="control-left"><button class="pause-btn" data-action="pause" title="Pause battle (Space)" aria-label="Pause battle" ${!live ? "disabled" : ""}>${paused ? "▶" : "II"}</button><div class="speed-switch" aria-label="Battle speed">${[1, 2, 3].map((v) => `<button data-speed="${v}" class="${speed === v ? "active" : ""}">${v}×</button>`).join("")}</div><span class="control-note"><kbd>SPACE</kbd> to pause</span></div>${phase==='prep'?'':mainAction}<nav class="arena-dock" aria-label="Expedition tools">${dockHTML()}</nav></div><details class="field-enemy-brief" ${matchMedia("(min-width:900px)").matches?"open":""}><summary>Enemy build <span>Inspect relics & equipment</span></summary>${enemyRelicBannerHTML()}</details></section><div class="battle-feed"><time id="feed-time">✧</time><span id="feed-text">${live ? battle?.log[0]?.text || "The gates open." : "Your formation is set. Let your companions do the fighting."}</span><button class="text-button" data-action="report" style="margin-left:auto;white-space:nowrap">Battle log →</button></div></div><aside class="side-column">${briefingHTML()}${synergyHTML()}</aside></div>`;
 }
 function creatureCard(u, i) {
   const s = BY_ID[u.id],
@@ -456,7 +466,7 @@ function briefingHTML() {
     .slice(0, 6)
     .map(
       (u) =>
-        `<button class="opponent-thumb" data-foe="${u.id}" title="${creatureName(u)} · ${BY_ID[u.id].rarity}">${image(u)}<span><strong>${creatureName(u)}</strong><small>${BY_ID[u.id].role} \u00b7 Lv. ${u.level}</small><b>${stats(u,foes,u.enemyRelics||[]).hp} HP</b></span>${roleBadge(BY_ID[u.id])}</button>`,
+        `<button class="opponent-thumb" data-foe="${u.id}" data-foe-uid="${u.uid}" aria-label="${phase==='prep'&&!u.boss?'Plan capture of ':'Inspect '}${creatureName(u)}" aria-pressed="${run.captureOrder?.uid===u.uid}" title="${creatureName(u)} · ${BY_ID[u.id].rarity}">${image(u)}<span><strong>${creatureName(u)}</strong><small>${BY_ID[u.id].role} \u00b7 Lv. ${u.level}${eliteModifier(u)?' \u00b7 '+eliteModifier(u).tierLabel:''}</small><b>${stats(u,foes,u.enemyRelics||[]).hp} HP</b></span>${roleBadge(BY_ID[u.id])}</button>`,
     )
     .join(
       "",
@@ -506,10 +516,10 @@ function mapHTML() {
  else next='<button class="button field-continue" data-field-enter="'+current+'" '+(!selected?'disabled':'')+'>Continue '+fieldIcon('arrow')+'</button>';
  const steps=run.route.map((row,i)=>'<li class="'+(i<run.depth?'complete':i===run.depth?'current':'future')+'" aria-label="Encounter '+(i+1)+(i<run.depth?' completed':i===run.depth?' current':' ahead')+'"><span>'+fieldIcon(i===run.route.length-1?'boss':i<run.depth?(row.find(n=>run.path.includes(n.id))||row[0]).type:'star')+'</span></li>').join('');
  const worldCopy=['Living canopies, luminous rivers and ancient growth. A world of wonder — and danger.','Molten rivers and obsidian peaks. Follow the embers into a world forged by fire.','A silent world beneath violet stars. Find your path through ruins at the edge of the sky.'][world];
- return '<div class="reference-map" style="--route-art:url('+worldArt(world)+');--biome:'+biome.water+'" data-field-phase="'+phase+'">'+fieldJourney(run,phase,PLANETS)+'<div class="reference-field"><section class="reference-scene" aria-label="'+p.name+' route"><div class="route biome-route"><div class="map-world-copy"><span>'+p.name.toUpperCase()+'</span><h1>'+p.name+'</h1><p>'+worldCopy+'</p></div><div class="map-encounters">'+fieldIcon('star')+'<span><small>ENCOUNTERS</small><strong>'+Math.min(run.depth+1,run.route.length)+' / '+run.route.length+'</strong></span></div><svg class="route-links" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">'+connections.join('')+'</svg>'+positions.filter(n=>n.depth>=run.depth||run.path.includes(n.id)).map(n=>{
+ return '<div class="reference-map" style="--route-art:url('+stageArt(world)+');--biome:'+biome.water+'" data-field-phase="'+phase+'">'+fieldJourney(run,phase,PLANETS)+'<div class="reference-field"><section class="reference-scene" aria-label="'+p.name+' route"><div class="route biome-route"><div class="map-world-copy"><span>'+p.name.toUpperCase()+'</span><h1>'+p.name+'</h1><p>'+worldCopy+'</p></div><div class="map-encounters">'+fieldIcon('star')+'<span><small>ENCOUNTERS</small><strong>'+Math.min(run.depth+1,run.route.length)+' / '+run.route.length+'</strong></span></div><svg class="route-links" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">'+connections.join('')+(fieldPreviewId&&selected?'<path class="selection-trail" d="M50 100 Q'+selected.x+' '+((selected.y+100)/2)+' '+selected.x+' '+selected.y+'"/>':'')+'</svg>'+positions.filter(n=>n.depth>=run.depth||run.path.includes(n.id)).map(n=>{
  const visible=routeVisible(run,n),known=visible||n.type==='boss',available=choices.some(c=>c.id===n.id),visited=run.path.includes(n.id);
- return '<button class="route-node '+(available?'available ':'')+(visited?'visited ':'')+(n.id===current?'selected ':'')+(n.type==='boss'?'boss ':'')+(known?'':'fogged ')+'" data-node="'+n.id+'" data-field-node="'+n.id+'" style="left:'+n.x+'%;top:'+n.y+'%" '+(!available?'disabled':'')+' aria-pressed="'+(n.id===current)+'" aria-label="'+(known?LABELS[n.type]:'Uncharted')+', encounter '+(n.depth+1)+'" title="'+(visible?LABELS[n.type]+(n.type==='elite'?' - '+encounterInfo(run,n).eliteModifier.description:''):'Beyond scouting range')+'">'+fieldIcon(known?n.type:'star')+'<small>'+(known?LABELS[n.type].toUpperCase():'UNCHARTED')+'</small>'+(visible&&n.type==='elite'?'<em class="route-elite-modifier">'+encounterInfo(run,n).eliteModifier.text+'</em>':'')+'</button>';
- }).join('')+'</div></section><section class="encounter-sheet field-surface" aria-label="Selected encounter"><div class="sheet-grip" aria-hidden="true"></div><div class="encounter-sheet-head"><div class="encounter-art" style="background-image:url('+worldArt(world)+')"></div><div class="encounter-copy"><span class="section-kicker">ENCOUNTER '+((selected?.depth||0)+1)+'</span><h2>'+names[type]+'</h2><p>'+descriptions[type]+'</p>'+eliteStageHTML(selected)+'</div><button class="field-scout" data-field-scout="'+current+'" aria-label="Scout selected encounter" title="Scout encounter">'+fieldIcon('arrow')+'</button><span class="encounter-kind">'+fieldIcon(type)+' '+LABELS[type]+'</span></div><div class="sheet-build"><div class="sheet-rewards"><span class="section-kicker">'+(type==='shop'?'OUTPOST SUPPLIES':'POTENTIAL REWARDS')+'</span><div>'+rewards.map((r,i)=>'<span class="reward-glyph reward-glyph-'+i+'" title="'+rewardLabels[r]+'">'+fieldIcon(r)+'<span class="sr-only">'+rewardLabels[r]+'</span></span>').join('')+'<button data-action="pack" class="reward-glyph more" aria-label="Open relic pack">···</button></div></div><button class="sheet-synergy" data-action="formation" aria-label="Inspect team synergy and deployment"><span class="section-kicker">TEAM SYNERGIES</span><div><span class="synergy-glyph" style="color:'+(element?.color||'#acd5c2')+'">'+(element?.icon||'✧')+'</span><span><strong>'+(element?.name||'Your team')+'</strong><small>'+(bond&&bond[1]>=2?'Your companions share an active bond.':'Match elements to awaken a bond.')+'</small><i style="--bond-width:'+Math.min(100,(bond?.[1]||0)*25)+'%"></i></span><b>'+(bond?.[1]||0)+' / 4</b></div></button></div><div class="sheet-bottom"><div class="sheet-journey"><span class="section-kicker">YOUR JOURNEY</span><ol class="field-steps">'+steps+'</ol><small>'+Math.min(run.depth+1,run.route.length)+' / '+run.route.length+' encounters</small></div>'+next+'</div></section></div><div class="map-accessibility-note">Select a glowing encounter, then Continue. Your route is committed when you continue.</div></div>';
+ return '<button class="route-node '+(available?'available ':'')+(visited?'visited ':'')+(n.id===current?'selected ':'')+(n.id===fieldPreviewId?'route-locked ':'')+(n.type==='boss'?'boss ':'')+(known?'':'fogged ')+'" data-node="'+n.id+'" data-field-node="'+n.id+'" style="left:'+n.x+'%;top:'+n.y+'%" '+(!available?'disabled':'')+' aria-pressed="'+(n.id===current)+'" aria-label="'+(known?LABELS[n.type]:'Uncharted')+', encounter '+(n.depth+1)+'" title="'+(visible?LABELS[n.type]+(n.type==='elite'?' - '+encounterInfo(run,n).eliteModifier.description:''):'Beyond scouting range')+'">'+fieldIcon(known?n.type:'star')+'<small>'+(known?LABELS[n.type].toUpperCase():'UNCHARTED')+'</small>'+(visible&&n.type==='elite'?'<em class="route-elite-modifier">'+encounterInfo(run,n).eliteModifier.text+'</em>':'')+'</button>';
+ }).join('')+'</div></section><section class="encounter-sheet field-surface" aria-label="Selected encounter"><div class="sheet-grip" aria-hidden="true"></div><div class="encounter-sheet-head"><div class="encounter-art" style="background-image:url('+stageArt(world)+')"></div><div class="encounter-copy"><span class="section-kicker">ENCOUNTER '+((selected?.depth||0)+1)+'</span><h2>'+names[type]+'</h2><p>'+descriptions[type]+'</p>'+eliteStageHTML(selected)+'</div><button class="field-scout" data-field-scout="'+current+'" aria-label="Scout selected encounter" title="Scout encounter">'+fieldIcon('arrow')+'</button><span class="encounter-kind">'+fieldIcon(type)+' '+LABELS[type]+'</span></div><div class="sheet-build"><div class="sheet-rewards"><span class="section-kicker">'+(type==='shop'?'OUTPOST SUPPLIES':'POTENTIAL REWARDS')+'</span><div>'+rewards.map((r,i)=>'<span class="reward-glyph reward-glyph-'+i+'" title="'+rewardLabels[r]+'">'+fieldIcon(r)+'<span class="sr-only">'+rewardLabels[r]+'</span></span>').join('')+'<button data-action="pack" class="reward-glyph more" aria-label="Open relic pack">···</button></div></div><button class="sheet-synergy" data-action="formation" aria-label="Inspect team synergy and deployment"><span class="section-kicker">TEAM SYNERGIES</span><div><span class="synergy-glyph" style="color:'+(element?.color||'#acd5c2')+'">'+(element?.icon||'✧')+'</span><span><strong>'+(element?.name||'Your team')+'</strong><small>'+(bond&&bond[1]>=2?'Your companions share an active bond.':'Match elements to awaken a bond.')+'</small><i style="--bond-width:'+Math.min(100,(bond?.[1]||0)*25)+'%"></i></span><b>'+(bond?.[1]||0)+' / 4</b></div></button></div><div class="sheet-bottom"><div class="sheet-journey"><span class="section-kicker">YOUR JOURNEY</span><ol class="field-steps">'+steps+'</ol><small>'+Math.min(run.depth+1,run.route.length)+' / '+run.route.length+' encounters</small></div>'+next+'</div></section></div><div class="map-accessibility-note">Click a stage once to lock the trail, then click it again to enter. You can also use Continue after selecting.</div></div>';
 }
 function collectionHTML() {
   const shown = SPECIES.filter(
@@ -534,8 +544,12 @@ function placeArenaAction(){
  const action=$(".briefing-battle"),dock=$(".arena-control .arena-dock");if(!action||!dock)return;
  if(matchMedia("(max-width:900px)").matches)dock.before(action);else $(".briefing-actions")?.append(action);
 }
+function placeCaptureTracker(){
+ const tracker=$('#capture-tracker'),viewport=$('.arena-viewport'),controls=$('.arena-control');if(!tracker||!viewport||!controls)return;
+ const actions=$('.briefing-actions');if(innerWidth<=900||!actions){if(tracker.parentElement!==controls.parentElement)controls.before(tracker);}else if(tracker.parentElement!==actions)actions.prepend(tracker);
+}
 function resizeCanvas() {
-  placeArenaAction();
+  placeArenaAction();placeCaptureTracker();
   if (!canvas) return;
   const rect = canvas.getBoundingClientRect();
   const dpr = Math.min(devicePixelRatio, 2);
@@ -544,6 +558,7 @@ function resizeCanvas() {
   const camera=arenaCamera(rect.width,rect.height);$("#target-preview")?.setAttribute("viewBox",`${camera.x} ${camera.y} ${camera.width} ${camera.height}`);
 }
 window.addEventListener("resize", resizeCanvas);
+const arenaResizeObserver=typeof ResizeObserver==='function'?new ResizeObserver(()=>resizeCanvas()):null;
 let dragIndex = null;
 function bindDrag() {
   document.querySelectorAll("[data-creature]").forEach((el) => {
@@ -570,27 +585,34 @@ function bindDrag() {
     });
   });
 }
+let modalFocusSerial=0;
 function modal(html, kind = "generic", closable = true) {
+  const focused=document.activeElement,focusSerial=++modalFocusSerial;
   const previousKind=modalKind,previousScroll=$(".modal")?.scrollTop||0,backdropScroll=$(".modal-backdrop")?.scrollTop||0,pageScroll={top:scrollY,left:scrollX};
   const starterScroll=kind==='starters'&&previousKind===kind?['.companion-scroll','.challenge-scroll','.chaos-rules ol'].map(selector=>[selector,$(selector)?.scrollTop||0]):[];
   const starterFocus=kind==='starters'&&previousKind===kind?document.activeElement:null;
   const focusSelector=starterFocus?.dataset.starter?`[data-starter="${starterFocus.dataset.starter}"]`:starterFocus?.dataset.difficulty?`[data-difficulty="${starterFocus.dataset.difficulty}"]`:starterFocus?.dataset.eliteStarter?`[data-elite-starter="${starterFocus.dataset.eliteStarter}"]`:starterFocus?.id==='chaos-tier'||starterFocus?.dataset.starterFilter||starterFocus?.dataset.starterSort?'#'+starterFocus.id:null;
   const notesOpen=!!$('.team-field-notes')?.open;
   modalKind = kind;
-  $("#modal-root").innerHTML =
+  const next=document.createElement("template");
+  next.innerHTML =
     `<div class="modal-backdrop ${kind==='starters'?'team-select-backdrop':''}" data-dismissible="${closable}"><section class="modal ${kind==='starters'?'team-select':''}" role="dialog" aria-modal="true" aria-label="${kind==='starters'?'Choose your expedition team':kind}">${closable ? '<button class="modal-close" data-action="close" aria-label="Close dialog">×</button>' : ""}${html}</section></div>`;
-  $(".modal").dataset.kind=kind;
-  $(".modal-backdrop").dataset.kind=kind;
-  $(".modal").classList.toggle("reward-screen",kind==="reward");
-  decorateFieldUI($("#modal-root"));decorateUploadedArt($("#modal-root"));decorateAmbientBackgrounds($("#modal-root"));
-  decorateAilments($("#modal-root"));prepareLoadoutDragging();prepareDetailTabs();
-  const first = (focusSelector&&$(focusSelector))||$("#modal-root button:not(:disabled)");
-  if(previousKind===kind){$(".modal").scrollTop=previousScroll;$(".modal-backdrop").scrollTop=backdropScroll;}
+  const nextDialog=next.content.querySelector('.modal'),nextBackdrop=next.content.querySelector('.modal-backdrop');
+  nextDialog.dataset.kind=kind;nextBackdrop.dataset.kind=kind;nextDialog.classList.toggle('reward-screen',kind==='reward');
+  decorateFieldUI(next.content);decorateUploadedArt(next.content);decorateAilments(next.content);
+  const current=$('.modal-backdrop'),updating=previousKind===kind&&!!current;
+  if(updating)patchModalContent(current,nextBackdrop);else $('#modal-root').replaceChildren(next.content);
+  decorateAmbientBackgrounds($('#modal-root'));prepareLoadoutDragging();prepareDetailTabs();
+  const preserved=updating&&focused?.isConnected&&!focused.disabled;
+  const first=preserved?focused:(focusSelector&&$(focusSelector))||$('#modal-root button:not(:disabled)');
+  if(previousKind===kind){$('.modal').scrollTop=previousScroll;$('.modal-backdrop').scrollTop=backdropScroll;}
   for(const [selector,top]of starterScroll)if($(selector))$(selector).scrollTop=top;
   if(kind==='starters'&&notesOpen)$('.team-field-notes').open=true;
-  window.scrollTo({...pageScroll,behavior:"instant"});setTimeout(() => first?.isConnected&&first.focus({preventScroll:true}), 30);
+  window.scrollTo({...pageScroll,behavior:'instant'});
+  if(!preserved)setTimeout(()=>focusSerial===modalFocusSerial&&first?.isConnected&&first.focus({preventScroll:true}),30);
 }
 function closeModal() {
+  modalFocusSerial++;
   if(modalKind==='opening-relic'&&run.openingRelic?.decision===null)return;
   if(modalKind==='settings'&&settingsPrevious){const previous=settingsPrevious;settingsPrevious=null;paused=previous.paused;modalKind=previous.kind;$('#modal-root').innerHTML=previous.html;if($('.modal'))$('.modal').scrollTop=previous.scroll;if($('.modal-backdrop'))$('.modal-backdrop').scrollTop=previous.backdropScroll;prepareLoadoutDragging();prepareDetailTabs();return;}
   practice=null;
@@ -668,6 +690,10 @@ function transformCreature(index, path) {
     "evolution",
   );
 }
+function levelStatHTML(c,key,label,index){
+ const own=index!==null,team=own?run.team:foes?.some(u=>u.uid===c.uid)?foes:[c],relics=own?run.relics:c.enemyRelics||c.boundRelics||[],preview=nextLevelPreview(c,team,relics),current=preview.current[key],next=preview.next[key],delta=next-current,tip='level-preview-'+key;
+ return `<div class="stat stat-with-preview" tabindex="0" data-stat-preview="${key}" aria-describedby="${tip}"><small>${label} <i aria-hidden="true">↗</i></small><strong>${Math.round(current)}</strong><span class="stat-level-preview" id="${tip}" role="tooltip"><b>Level ${preview.level}: ${Math.round(next)} ${label.toLowerCase()}</b><em>+${+delta.toFixed(2)} from this level</em>${preview.rarity} growth: +${+(preview.growthRate*100).toFixed(1)}% of base health & attack per level.${preview.newSkills.length?'<br>New skill: '+preview.newSkills.map(id=>skillDefinition({...c,level:preview.level},id).name).join(', '):''}<small>Includes the current build, equipment, genes and team bonuses.</small></span></div>`;
+}
 function openDetail(u, index = null, codex = false) {
   const s = BY_ID[u.id],
     e = ELEMENTS[s.element],
@@ -678,7 +704,7 @@ function openDetail(u, index = null, codex = false) {
     ),
     locked = codex && !profile.owned.includes(u.id);
   modal(
-    `<div class="detail-top">${image(u)}<div><span class="section-kicker" style="color:${RARITY[s.rarity].color}">${s.rarity.toUpperCase()} CREATURE</span><h2>${creatureName(u)}</h2><p style="margin:0">${s.role} · ${e.name} · Level ${u.level}</p><div class="tags">${tag(`${ROLES[s.role]} ${s.role}`)}${tag(`${e.icon} ${e.name}`)}</div></div></div>${detailTabsHTML(index)}<div class="detail-pane" data-detail-pane="overview"><div class="stat-grid"><div class="stat"><small>HEALTH</small><strong>${st.hp}</strong></div><div class="stat"><small>ATTACK</small><strong>${st.atk}</strong></div><div class="stat"><small>BASIC ATTACK SPEED</small><strong>${st.attackSpeed.toFixed(2)}/s</strong></div><div class="stat"><small>ACTION SPEED</small><strong>${st.actionSpeed.toFixed(2)}×</strong></div><div class="stat"><small>HP REGEN</small><strong>${st.hpRegen.toFixed(1)}/s</strong></div><div class="stat"><small>STAMINA RECHARGE</small><strong>${st.staminaRecharge.toFixed(1)}/s</strong></div><div class="stat"><small>DODGE / DASH</small><strong>${st.dodgeStyle} · ${Math.round(st.dashCooldown*100)}% CD</strong></div><div class="stat"><small>MOVEMENT</small><strong>${Math.round(st.speed)}</strong></div><div class="stat"><small>SKILL COOLDOWN</small><strong>${st.cd.toFixed(1)}s</strong></div></div>${armorHTML(st,s)}${eliteBadgeHTML(u)}${ailmentMenuHTML(u)}${individualHTML(u)}${enemyCuriosHTML(u)}<div class="trait-panel"><strong>${traitFor(u).name}</strong><p>${traitFor(u).desc}</p></div>${familyInfo(u)}${evolutionHTML(u, index)}</div><div class="detail-pane" data-detail-pane="equipment">${equipmentHTML(u,index)}${loadoutHTML(u, index)}</div><div class="detail-pane" data-detail-pane="skills">${skillsHTML(u, index)}<p>Drag cooldown skills into a different order to change which ready skill the AI considers first.</p></div><div class="detail-pane" data-detail-pane="ai">${index !== null ? policyHTML(u, index) + survivalHTML(u, index) : ""}${index !== null ? `<div class="focus-control"><span class="section-kicker">TRAINING FOCUS · CHOOSE BEFORE BATTLE</span><div class="segmented">${["balanced", "aggressive", "defensive", "swift"].map((f) => `<button data-focus="${f}" data-index="${index}" class="${u.focus === f ? "active" : ""}" ${phase === "battle" ? "disabled" : ""}>${f.charAt(0).toUpperCase() + f.slice(1)}</button>`).join("")}</div><p style="font-size:10px;margin:9px 0 0">${{ balanced: "Natural strengths. No stat tradeoffs.", aggressive: "+15% attack · −8% health.", defensive: "+15% health · −8% attack.", swift: "15% faster skills · −6% attack." }[u.focus || "balanced"]}</p></div><div class="thin-rule"></div><span class="section-kicker">SWAP WITH A COMPANION ON YOUR BENCH</span><div class="bench-list">${run.bench.length ? run.bench.map((b, j) => `<button class="bench-button" data-swap="${j}" data-index="${index}" ${phase === "battle" ? "disabled" : ""}>${image(b)}${creatureName(b)}<br><span class="muted">Lv. ${b.level}</span></button>`).join("") : '<div class="empty-bench">Capture a creature or recruit one at an outpost to fill your bench.</div>'}</div><p class="starter-note">${u.level >= 5 && !evolutionStage(u) && lineageLimit(u)>0 ? "EVOLUTION AVAILABLE · INSPECT YOUR EVOLUTION PATH ABOVE · " : ""}${u.level >= 5 ? "AWAKENED · THIRD SKILL UNLOCKED · " : ""}${u.bond ? `BOND ${u.bond} · +${u.bond * 2}% BASE HEALTH · ` : ""}${u.xp} / ${xpNeeded(u.level)} EXP toward the next level · ${u.training || 0} training upgrades</p>` : locked ? '<p class="disabled-note">Find this creature in the wild and capture it to unlock it as a future starter.</p>' : `<p style="font-size:11px">${e.description}. Rare companions have stronger base stats and specialized skills.</p>`}</div>${button("Back to expedition", "close", "secondary")}`,
+    `<div class="detail-top">${image(u)}<div><span class="section-kicker" style="color:${RARITY[s.rarity].color}">${s.rarity.toUpperCase()} CREATURE</span><h2>${creatureName(u)}</h2><p style="margin:0">${s.role} · ${e.name} · Level ${u.level}</p><div class="tags">${tag(`${ROLES[s.role]} ${s.role}`)}${tag(`${e.icon} ${e.name}`)}</div></div></div>${detailTabsHTML(index)}<div class="detail-pane" data-detail-pane="overview"><div class="stat-grid">${levelStatHTML(u,'hp','HEALTH',index)}${levelStatHTML(u,'atk','ATTACK',index)}<div class="stat"><small>BASIC ATTACK SPEED</small><strong>${st.attackSpeed.toFixed(2)}/s</strong></div><div class="stat"><small>ACTION SPEED</small><strong>${st.actionSpeed.toFixed(2)}×</strong></div><div class="stat"><small>HP REGEN</small><strong>${st.hpRegen.toFixed(1)}/s</strong></div><div class="stat"><small>STAMINA RECHARGE</small><strong>${st.staminaRecharge.toFixed(1)}/s</strong></div><div class="stat"><small>DODGE / DASH</small><strong>${st.dodgeStyle} · ${Math.round(st.dashCooldown*100)}% CD</strong></div><div class="stat"><small>MOVEMENT</small><strong>${Math.round(st.speed)}</strong></div><div class="stat"><small>SKILL COOLDOWN</small><strong>${st.cd.toFixed(1)}s</strong></div></div>${armorHTML(st,s)}${eliteBadgeHTML(u)}${ailmentMenuHTML(u)}${individualHTML(u)}${enemyCuriosHTML(u)}<div class="trait-panel"><strong>${traitFor(u).name}</strong><p>${traitFor(u).desc}</p></div>${familyInfo(u)}${evolutionHTML(u, index)}</div><div class="detail-pane" data-detail-pane="equipment">${equipmentHTML(u,index)}${loadoutHTML(u, index)}</div><div class="detail-pane" data-detail-pane="skills">${skillsHTML(u, index)}<p>Drag cooldown skills into a different order to change which ready skill the AI considers first.</p></div><div class="detail-pane" data-detail-pane="ai">${index !== null ? policyHTML(u, index) + survivalHTML(u, index) : ""}${index !== null ? `<div class="focus-control"><span class="section-kicker">TRAINING FOCUS · CHOOSE BEFORE BATTLE</span><div class="segmented">${["balanced", "aggressive", "defensive", "swift"].map((f) => `<button data-focus="${f}" data-index="${index}" class="${u.focus === f ? "active" : ""}" ${phase === "battle" ? "disabled" : ""}>${f.charAt(0).toUpperCase() + f.slice(1)}</button>`).join("")}</div><p style="font-size:10px;margin:9px 0 0">${{ balanced: "Natural strengths. No stat tradeoffs.", aggressive: "+15% attack · −8% health.", defensive: "+15% health · −8% attack.", swift: "15% faster skills · −6% attack." }[u.focus || "balanced"]}</p></div><div class="thin-rule"></div><span class="section-kicker">SWAP WITH A COMPANION ON YOUR BENCH</span><div class="bench-list">${run.bench.length ? run.bench.map((b, j) => `<button class="bench-button" data-swap="${j}" data-index="${index}" ${phase === "battle" ? "disabled" : ""}>${image(b)}${creatureName(b)}<br><span class="muted">Lv. ${b.level}</span></button>`).join("") : '<div class="empty-bench">Capture a creature or recruit one at an outpost to fill your bench.</div>'}</div><p class="starter-note">${u.level >= 5 && !evolutionStage(u) && lineageLimit(u)>0 ? "EVOLUTION AVAILABLE · INSPECT YOUR EVOLUTION PATH ABOVE · " : ""}${u.level >= 5 ? "AWAKENED · THIRD SKILL UNLOCKED · " : ""}${u.bond ? `BOND ${u.bond} · +${u.bond * 2}% BASE HEALTH · ` : ""}${u.xp} / ${xpNeeded(u.level)} EXP toward the next level · ${u.training || 0} training upgrades</p>` : locked ? '<p class="disabled-note">Find this creature in the wild and capture it to unlock it as a future starter.</p>' : `<p style="font-size:11px">${e.description}. Rare companions have stronger base stats and specialized skills.</p>`}</div>${button("Back to expedition", "close", "secondary")}`,
     "creature",
   );
 }
@@ -803,6 +829,7 @@ function finishBattle() {
     );
 
   settleCaptureRecruitment(run,reward.tacticalCapture);
+  attachCaptureLoot(reward,reward.tacticalCapture);
   reconcileEquipment(run);
 
   if (run.relics.includes("salvage") && node.type === "elite" && won)
@@ -879,10 +906,10 @@ function openRewards(){
  const won=reward.won,options=rewardOptions();
  const revealKey=`${run.seed}:${run.battleSerial}:${node.seed}`,reveal=rewardShownKey!==revealKey;rewardShownKey=revealKey;
  const relicOffer=options.some(u=>/^(relic:|boon:)/.test(u.id));
-  const upgrades=`<div class="upgrade-grid">${options.map(u=>`<button class="upgrade-card ${upgradeChosen===u.id?'selected':''} ${u.majorPact?'major-pact':''}" data-upgrade="${u.id}" aria-pressed="${upgradeChosen===u.id}" ${upgradeChosen?'disabled':''}>${artImage(u.id==='gear'?gearArt(reward.equipmentReward):u.id==='orbs'?'capture-scout-idle':u.id==='gold'?'treasure-01':u.id.startsWith('relic:')||u.id.startsWith('boon:')?relicArt(u.id.split(':')[1]):'rich-03','upgrade-symbol')}<span><strong>${upgradeChosen===u.id?'\u2713 ':''}${u.name}</strong>${u.majorPact?'<small class="pact-label">GREAT POWER ? GREAT PRICE</small>':''}<p>${u.desc}</p></span></button>`).join('')}</div>${relicOffer?`<button class="button secondary skip-relic" data-upgrade="skip-relic" ${upgradeChosen?'disabled':''}>${upgradeChosen==='skipped'?'Relic skipped':'Skip relic ?'}</button><small class="relic-choice-note">Relics are optional. Keep your current build if you prefer.</small>`:''}`;
+  const upgrades=`<div class="upgrade-grid">${options.map(u=>`<button class="upgrade-card ${upgradeChosen===u.id?'selected':''} ${u.majorPact?'major-pact':''}" data-upgrade="${u.id}" aria-pressed="${upgradeChosen===u.id}" ${upgradeChosen?'disabled':''}>${artImage(u.id==='gear'?gearArt(reward.equipmentReward):u.id==='orbs'?'capture-scout-idle':u.id==='gold'?'treasure-01':u.id.startsWith('relic:')||u.id.startsWith('boon:')?relicArt(u.id.split(':')[1]):'rich-03','upgrade-symbol')}<span><strong>${upgradeChosen===u.id?'\u2713 ':''}${u.name}</strong>${u.majorPact?'<small class="pact-label">GREAT POWER \u00b7 GREAT PRICE</small>':''}<p>${u.desc}</p></span></button>`).join('')}</div>${relicOffer?`<button class="button secondary skip-relic" data-upgrade="skip-relic" ${upgradeChosen?'disabled':''}>${upgradeChosen==='skipped'?'Relic skipped':'Skip relic \u2192'}</button><small class="relic-choice-note">Relics are optional. Keep your current build if you prefer.</small>`:''}`;
  const growth=growthHTML(lastReport||{growth:reward.growth},{image:c=>image(c),name:creatureName})||`<div class="rewards-team">${run.team.map(c=>`<div>${image(c)}<span><strong>${creatureName(c)}</strong><small>Lv. ${c.level} \u00b7 ${c.xp} / ${xpNeeded(c.level)} EXP</small></span></div>`).join('')}</div>`;
- const next=button(won?'Continue the journey \u2192':run.integrity<=0?'End expedition \u2192':node.type==='boss'?'Challenge the guardian again \u2192':'Choose the next path \u2192','continue','',won&&(!upgradeChosen||reward.loot&&!reward.loot.claimed));
- modal(rewardsShell({won,reveal,gold:reward.gold,xp:reward.xp,time:reward.time,claimed:!!reward.loot?.claimed,loot:lootHTML(),upgrades,growth,capture:captureOutcomeHTML()||`<div class="capture-outcome neutral">${artImage('icon-capture')}<div><strong>No capture planned</strong><p>Select a wild target before your next battle.</p></div></div>`,casualty:casualtyHTML(reward.casualty),report:lastReport,continueButton:next,collectionButton:won&&reward.loot?button(reward.loot.claimed?'Spoils collected':artImage('rich-11')+'Collect all spoils','claim-loot','',reward.loot.claimed):'',slots:reward.slotsAdded?`<p class="result-levels">NEW TEAM PLACE \u00b7 ${capacity(run)} available. Deploy a companion from Reserves.</p>`:''}),'reward');
+ const next=button(won?'Continue the journey \u2192':run.integrity<=0?'End expedition \u2192':node.type==='boss'?'Challenge the guardian again \u2192':'Choose the next path \u2192','continue','',won&&!upgradeChosen||reward.loot&&!reward.loot.claimed);
+ modal(rewardsShell({won,reveal,gold:reward.gold,xp:reward.xp,time:reward.time,claimed:!!reward.loot?.claimed,loot:lootHTML(),upgrades,growth,capture:captureOutcomeHTML()||`<div class="capture-outcome neutral">${artImage('icon-capture')}<div><strong>No capture planned</strong><p>Select a wild target before your next battle.</p></div></div>`,casualty:casualtyHTML(reward.casualty),report:lastReport,continueButton:next,collectionButton:reward.loot?button(reward.loot.claimed?'Spoils collected':artImage('rich-11')+'Collect all spoils','claim-loot','',reward.loot.claimed):'',slots:reward.slotsAdded?`<p class="result-levels">NEW TEAM PLACE \u00b7 ${capacity(run)} available. Deploy a companion from Reserves.</p>`:''}),'reward');
  animateRewardReveal(document.querySelector('.rewards-layout'),{gold:reward.gold,reducedMotion:profile.reducedMotion});
 }
 
@@ -912,7 +939,7 @@ async function chooseUpgrade(id) {
   openRewards();
 }
 function continueRun() {
-  if(reward?.loot&&!reward.loot.claimed){toast("Claim your victory cache first.");return;}
+  if(reward?.loot&&!reward.loot.claimed){toast("Collect your spoils first.");return;}
   if (phase !== "reward" || (reward.won && (!upgradeChosen||reward.loot&&!reward.loot.claimed))) return;
   closeModal();
   run.defeatReservation = null;
@@ -976,10 +1003,12 @@ async function chooseNode(id) {
     toast("Finish your current encounter before choosing another path.");
     return;
   }
-  if(['battle','elite','boss','capture'].includes(n.type)&&!profile.reducedMotion){
+  const selectedRun=run,selectedPhase=phase;
+  if(!profile.reducedMotion){
     stageTransitionBusy=true;
-    await stageZoom(n.id);stageTransitionBusy=false;
+    try{await stageZoom(n.id);}finally{stageTransitionBusy=false;}
   }
+  if(run!==selectedRun||phase!==selectedPhase)return;
   node = n;
   run.captureOrder = null;
   run.captureReservation = null;
@@ -989,7 +1018,7 @@ async function chooseNode(id) {
     phase = "prep";
     foes = encounter(run, n.type, n.seed);
     viewName = 'arena';save();render();
-    if(!profile.reducedMotion)$('.arena-viewport')?.animate([{opacity:0,transform:'scale(.94)'},{opacity:1,transform:'scale(1)'}],{duration:440,easing:'ease-out'});
+    if(!profile.reducedMotion)$('.arena-viewport')?.animate([{opacity:0,transform:'scale(1.045)',filter:'blur(2px)'},{opacity:1,transform:'scale(1)',filter:'blur(0px)'}],{duration:850,easing:'cubic-bezier(.16,.8,.22,1)'});
   } else {
     enterNode(run, n);
     committed = true;
@@ -1007,13 +1036,17 @@ async function chooseNode(id) {
     if (n.type === "rest") openRest();
   }
 }
+function refreshMapSelection(){
+ const current=$('#view'),incoming=document.createElement('div');incoming.id='view';
+ incoming.innerHTML=relicBarHTML(run.relics.map(id=>RELICS.find(r=>r.id===id)||RUN_RELIC_BY_ID[id]).filter(Boolean),relicDescription,{inventory:run.inventory.length,pact:legendaryPactBanner()})+mapHTML();
+ decorateFieldUI(incoming);decorateUploadedArt(incoming);decorateAilments(incoming);patchModalContent(current,incoming);decorateAmbientBackgrounds();
+ const path=$('.selection-trail')||$('.route-links .next-path');if(path&&!profile.reducedMotion){const length=path.getTotalLength();path.style.strokeDasharray=length;path.animate([{strokeDashoffset:length},{strokeDashoffset:0}],{duration:720,easing:'cubic-bezier(.22,.7,.22,1)',fill:'both'});}
+}
 async function stageZoom(id){
-  const el=document.querySelector(`[data-node="${id}"]`),scene=el?.closest('.field-journey')||el?.parentElement;
-  if(!scene)return;
-  const r=el.getBoundingClientRect(),s=scene.getBoundingClientRect();
-  const animation=scene.animate([{transform:'scale(1)',opacity:1},{transform:'scale(1.9)',opacity:0}],{duration:520,easing:'cubic-bezier(.4,0,.2,1)'});
-  scene.style.transformOrigin=`${r.left-s.left+r.width/2}px ${r.top-s.top+r.height/2}px`;
-  await animation.finished.catch(()=>{});scene.style.transformOrigin='';
+ const el=document.querySelector(`[data-node="${id}"]`),scene=el?.closest('.biome-route');if(!scene)return;
+ const r=el.getBoundingClientRect(),s=scene.getBoundingClientRect();scene.style.transformOrigin=`${r.left-s.left+r.width/2}px ${r.top-s.top+r.height/2}px`;
+ const animation=scene.animate([{transform:'scale(1)',opacity:1,filter:'blur(0px)'},{transform:'scale(1.07)',opacity:1,filter:'blur(0px)',offset:.28},{transform:'scale(1.62)',opacity:.82,filter:'blur(.3px)',offset:.76},{transform:'scale(2.15)',opacity:0,filter:'blur(1.5px)'}],{duration:1050,easing:'cubic-bezier(.3,.05,.2,1)',fill:'forwards'});
+ try{await animation.finished;}catch{}finally{scene.style.transformOrigin='';}
 }
 function leaveNode() {
   closeModal();
@@ -1321,6 +1354,8 @@ document.addEventListener("click", async (e) => {
   if(e.target.classList.contains('modal-backdrop')&&e.target.dataset.dismissible==='true'){closeModal();return;}
   const el = e.target.closest("button");
   if(el?.disabled)return;
+  if(el?.dataset.action==='capture-tracker-toggle'){captureTrackerCollapsed=!captureTrackerCollapsed;$('#capture-tracker').classList.toggle('collapsed',captureTrackerCollapsed);el.setAttribute('aria-expanded',String(!captureTrackerCollapsed));return;}
+  if(el?.dataset.action==='clear-capture'){if(phase==='prep'&&!run.captureReservation){run.captureOrder=null;save();refreshCapturePlanUI();}return;}
   if(el?.dataset.action==='begin-encounter'){startBattle();return;}
   if(el?.dataset.action==='show-spoils'){openRewards();return;}
   if(el?.dataset.action==='help'){openHelp();return;}
@@ -1359,7 +1394,7 @@ document.addEventListener("click", async (e) => {
     const cache=reward.loot;
     if(!claimLoot(run,cache))return;
     save();lootCollecting=true;el.disabled=true;
-    try{await flyLootToTotals();}finally{lootCollecting=false;updateHeader();if(modalKind==='reward')openRewards();render();sound('buy');}
+    try{await flyLootToTotals();const relics=cache.drops.filter(d=>d.kind==='relic');if(relics.length&&modalKind==='reward'){const source=$('.knapsack-art')?.getBoundingClientRect();closeModal();render();for(const d of relics)await animateRelicReceived(d.relic,source,{reducedMotion:profile.reducedMotion});openRewards();}}finally{lootCollecting=false;updateHeader();if(modalKind==='reward')openRewards();render();sound('buy');}
     return;
   }
   if (!el || el.disabled) return;
@@ -1444,8 +1479,10 @@ document.addEventListener("click", async (e) => {
     return;
   }
   if (el.dataset.foe) {
+    const target=foes.find(f=>f.uid===el.dataset.foeUid)||foes.find(f=>f.id===el.dataset.foe);
+    if(phase==='prep'&&target&&!target.boss){setCaptureTarget(target.uid);return;}
     openDetail(
-      foes.find((f) => f.id === el.dataset.foe) || creature(el.dataset.foe),
+      target || creature(el.dataset.foe),
     );
     return;
   }
@@ -2061,7 +2098,7 @@ function settleTacticalCapture() {
     rememberEliteCapture(profile,result);
     run.captureReservation.result.creature.bond = caught.bond;
     discoverForm(caught);
-    unlock(caught.id);
+    unlock(caught.id,{silent:true});
   }
   announceCapture(result);save();
 }
@@ -2152,18 +2189,29 @@ function openEquipTarget(uid) {
   );
 }
 
+const slotEmblems={Weapon:'⚔',Armor:'◈',Ring:'◉',Boots:'⇟',Accessory:'✦'};
 function equipmentHTML(u,index,includePack=true){
  const slots=equipmentSlots(u),editable=index!==null&&phase!=='battle',equipped=u.equipment||[],pending=Math.max(0,(u.evolution||0)-(u.gearClaimed||0));
- const cache=editable&&pending>0?`<p>Evolution gear cache · ${pending} unclaimed. Choose one.</p><div class="gear-grid">${['sunsteel-edge','reliquary-plate','mooncloth-mantle'].map(id=>`<button data-gear-claim="${id}" data-index="${index}"><strong>${GEAR_BY_ID[id].name}</strong><small>${equipmentDescription(GEAR_BY_ID[id],u)}</small></button>`).join('')}</div>`:'';
- return `<section class="equipment-panel" data-loadout-drop="${index}">${editable?`<div class="loadout-recipients">${run.team.map((c,i)=>`<button data-loadout-drop="${i}" data-switch-creature="${i}" class="${i===index?'selected':''}">${image(c)}<span>${creatureName(c)}</span></button>`).join('')}</div>`:''}<div class="section-heading"><h3>CHARACTER EQUIPMENT</h3><span>${equipped.length} / ${slots} SLOTS</span></div><p>Three starting equipment slots. Each evolution opens another. ${AFFINITY_LABELS[equipmentAffinity(u)]} only. Passives affect the character’s attacks, skills, movement and defenses.${u.equipmentQuality?` Equipment quality: ${Math.round(u.equipmentQuality*100)}%.`:''}</p>${cache}<div class="gear-grid">${equipped.map((id,i)=>{const g=GEAR_BY_ID[id];return `<button data-gear-remove="${i}" data-gear-slot="${i}" data-loadout-drop="${index}" data-index="${index}" ${editable?'':'disabled'}><strong>${g.name}</strong><small>${equipmentDescription(g,u)}${editable?'<br>Drag to an ally or return to pack':''}</small></button>`;}).join('')}${editable?Array.from({length:Math.max(0,slots-equipped.length)},(_,i)=>`<div class="gear-slot-empty" data-loadout-drop="${index}" data-gear-slot="${equipped.length+i}"><span>＋</span><small>Drop equipment here</small></div>`).join(''):''}</div>${editable&&includePack?`<div class="pack-drop" data-pack-drop="true">Drop equipped gear or personal relics here to return them to the pack.</div><div class="gear-grid">${(run.gearInventory||[]).map(g=>`<button data-gear-equip="${g.uid}" data-index="${index}" ${(equipped.includes(g.id)||equipped.length>=slots||!gearCompatibility(u,GEAR_BY_ID[g.id]).allowed)?'disabled':''}><strong>${GEAR_BY_ID[g.id].name}</strong><small>${equipmentDescription(GEAR_BY_ID[g.id],u)}<br>${gearCompatibility(u,GEAR_BY_ID[g.id]).reason}<br>Drag onto a creature or click to equip →</small></button>`).join('')||'<small>Find equipment in difficult encounters or buy it at an outpost.</small>'}</div>`:''}</section>`;
+ const offers=CREATURE_GEAR.filter(g=>gearCompatibility(u,g).allowed).filter((g,i,a)=>a.findIndex(v=>equipmentSlotType(v)===equipmentSlotType(g))===i).slice(0,3);
+ const cache=editable&&pending>0?`<p>Evolution gear cache · ${pending} unclaimed. Choose one.</p><div class="gear-grid">${offers.map(g=>`<button data-gear-claim="${g.id}" data-index="${index}">${gearSymbol(g)}<strong>${g.name}</strong><small>${equipmentSlotType(g)} · ${equipmentDescription(g,u)}</small></button>`).join('')}</div>`:'';
+ return `<section class="equipment-panel" data-loadout-drop="${index}">${editable?`<div class="loadout-recipients">${run.team.map((c,i)=>`<button data-loadout-drop="${i}" data-switch-creature="${i}" class="${i===index?'selected':''}">${image(c)}<span>${creatureName(c)}</span></button>`).join('')}</div>`:''}<div class="section-heading"><h3>CHARACTER EQUIPMENT</h3><span>${equipped.length} / ${slots} SLOTS</span></div><p><strong>${equipmentAlignment(u)} aligned · ${AFFINITY_LABELS[equipmentAffinity(u)]}</strong><br>One weapon, armor, ring, boots and accessory. Equipping another item in the same slot returns the old one to your pack. Each piece now has full-strength effects.${u.equipmentQuality?` Item quality: ${Math.round(u.equipmentQuality*100)}%.`:''}</p>${cache}<div class="gear-grid equipment-slots">${equipmentSlotViews(u).map(({type,slot,gear:g})=>g?`<button class="equipment-slot slot-${type.toLowerCase()}" data-gear-remove="${slot}" data-gear-slot="${slot}" data-gear-type="${type}" data-loadout-drop="${index}" data-index="${index}" ${editable?'':'disabled'}><span class="slot-label">${slotEmblems[type]||''} ${type}</span>${gearSymbol(g)}<strong>${g.name}</strong><small>${equipmentDescription(g,u)}${editable?'<br>Drag to an ally or click to return to pack':''}</small></button>`:`<div class="gear-slot-empty equipment-slot slot-${type.toLowerCase()}" data-loadout-drop="${index}" data-gear-slot="-1" data-gear-type="${type}"><span class="slot-label">${slotEmblems[type]||''} ${type}</span><b>${slotEmblems[type]||'+'}</b><small>${editable?'Drop '+type.toLowerCase()+' here':'Empty'}</small></div>`).join('')}</div>${editable&&includePack?equipmentItemsHTML(u,index):''}</section>`;
 }
+function equipmentItemsHTML(c,index){return `<div class="equipment-tray-items">${(run.gearInventory||[]).map(item=>{
+ const g=GEAR_BY_ID[item.id];if(!g)return '';const fit=gearCompatibility(c,g),worn=c?.equipment?.includes(g.id),sample={balanceVersion:17,equipmentVersion:2,equipment:[g.id],equipmentRolls:[item]},description=equipmentDescription(g,sample);
+ return `<button class="inventory-equipment ${fit.allowed?'usable-equipment':'unusable-equipment'}" data-gear-equip="${item.uid}" data-index="${index}" aria-disabled="${!fit.allowed||worn||phase==='battle'}" ${phase==='battle'?'disabled':''} style="--gear-color:${g.color||'#b9cf9d'}" title="${description} ${fit.reason} Drag onto a compatible companion."><span>${gearSymbol(g)}</span><strong>${g.name}</strong><small class="item-slot-label">${equipmentSlotType(g)} · ${gearAudience(g)}</small><small>${item.rarity||'Standard'} · ${Math.round((item.quality||1)*100)}% quality${item.fromCapture?' · From capture':''}</small><small class="gear-compatibility ${fit.allowed?'compatible':'incompatible'}">${worn?'Already equipped':fit.allowed?'✓ Usable by '+creatureName(c):'✕ '+fit.reason}</small><span class="visible-gear-effect">${description}</span></button>`;
+ }).join('')||'<p>Find equipment in victory caches, captures, evolution caches or outposts.</p>'}</div>`;}
 function gearShopHTML(stock){return `<div class="thin-rule"></div><span class="section-kicker">CHARACTER EQUIPMENT</span><p>Equipment affects the whole companion. Build around triggers and tradeoffs.</p><div class="gear-grid">${stock.gear.map(id=>{const g=GEAR_BY_ID[id],sold=stock.sold.includes('gear:'+id);return `<div><strong>${g.name}</strong><p>${equipmentDescription(g)}</p>${button(sold?'✓ In your pack':`◉ ${shopPrice(run,g.cost)}`,'buy-gear-'+id,'secondary small',sold||run.gold<shopPrice(run,g.cost))}</div>`;}).join('')}</div>`;}
 
 function teamSeatHTML(seat){const index=run.team.findIndex(c=>c.seat===seat),c=run.team[index];if(c)return `<div class="companion-loadout">${creatureCard(c,index)}${quickEquipmentHTML(c,index)}</div>`;if(seat>=capacity(run))return `<div class="creature-card locked-seat"><span>⌑</span><strong>${run.legendaryPact&&seat===5?'Sacrificed place':'Locked place'}</strong><small>${run.legendaryPact&&seat===5?'Sovereign’s Seat':'Unlock at '+([2,5,8,11][seat-2+(run.legendaryPact?1:0)]||11)+' wins'}</small></div>`;const fallen=run.fallen.filter(c=>c.seat===seat).at(-1);return `<button data-seat-drop="${seat}" class="creature-card empty-slot ${fallen?'fallen-seat':''}" data-action="reserves" ${phase==='battle'?'disabled':''}>${fallen?image(fallen):'<span>+</span>'}${fallen?'<b class="death-cross">✕</b>':''}<strong>${fallen?'Fallen · '+fallen.name:'Open place'}</strong><small>Deploy a reserve · ${run.team.length}/${capacity(run)}</small></button>`;}
 function individualHTML(c){return c.genes?`<section class="individual-rolls"><strong>${c.nature} individual</strong><p>HP ${Math.round(c.genes.hp*100)}% · Attack ${Math.round(c.genes.atk*100)}% · Speed ${Math.round(c.genes.speed*100)}% · cooldown time ${Math.round(c.genes.cd*100)}%. Capturing borrows this individual for the current round and unlocks its family for future starts.</p></section>`:'';}
 function enemyCuriosHTML(c){const ids=c.enemyRelics||c.boundRelics||[],loot=c.enemyRelics||c.side===1?`<section class="enemy-loot-preview"><strong>Equipment drop · ${Math.round(equipmentDropChance(c,BY_ID[c.id],node?.type)*100)}%</strong><p>${BY_ID[c.id].rarity} opponent · loot is drawn from its worn gear. Higher rarity means better item-quality rolls.</p></section>`:'';return loot+(ids.length?`<section class="individual-rolls enemy-curios"><strong>${c.enemyRelics?'Enemy':'Bound'} curios</strong>${ids.map(id=>{const r=RUN_RELIC_BY_ID[id];return `<p style="color:${r.color}">${r.icon} <b>${r.name}</b> · ${relicDescription(r)}</p>`;}).join('')}</section>`:'');}
 function captureControlsHTML(){const plan=run.captureOrder,target=foes.find(c=>c.uid===plan?.uid),tool=plan?.tool||run.selectedCapturer||'scout',threshold=plan?.threshold||.25,estimated=target?captureChance(run,{...target,capturePreparation:{healthFraction:threshold,mode:plan.mode,tool}}):0;return `<label>CAPTURER<select id="capture-tool" ${run.captureReservation?'disabled':''}>${Object.entries(CAPTURERS).map(([id,t])=>`<option value="${id}" ${id===tool?'selected':''} ${!(run.captureTools?.[id]>0)?'disabled':''}>${t.name} · ${run.captureTools?.[id]||0} owned</option>`).join('')}</select></label><div class="capture-quick">${Object.entries(CAPTURERS).map(([id,t])=>`<button data-capture-method="${id}" class="${id===tool?'selected':''}" ${run.captureReservation||!(run.captureTools?.[id]>0)?'disabled':''} title="${t.name} · ${t.mult}× base odds · ${run.captureTools?.[id]||0} available">${t.icon}<small>${t.name.split(' ')[0]} · ${run.captureTools?.[id]||0}</small></button>`).join('')}</div><label>AUTO-TRY AT HP<select id="capture-threshold" ${!plan||run.captureReservation?'disabled':''}>${[5,10,15,25,35,45,55,65,75].map(p=>`<option value="${p}" ${p===Math.round(threshold*100)?'selected':''}>${p}% HP</option>`).join('')}</select></label><strong>${target?Math.round(estimated*100)+'% estimated at '+Math.round(threshold*100)+'% HP':'Choose a wild target'}</strong><small>Low health increases odds. A lethal hit or damage over time can knock it out before capture.</small><label class="auto-capture-toggle"><input type="checkbox" data-auto-capture ${run.autoCaptureRetry?'checked':''}> Auto retry 3 seconds after a lattice breaks · up to 3 throws</label>`;}
-function setCaptureTarget(uid,tool=null){ensureCapturer();if(phase!=='prep'||run.captureReservation)return;const c=foes.find(c=>c.uid===uid&&!c.boss);if(!c)return;const method=tool||run.selectedCapturer||Object.keys(CAPTURERS).find(t=>run.captureTools?.[t]>0)||'scout';if(!(run.captureTools?.[method]>0)){toast('This capturer is unavailable.');return;}run.selectedCapturer=method;run.captureOrder={uid,mode:run.captureOrder?.mode||'mercy',tool:method,threshold:run.captureOrder?.threshold||.25};save();render();}
+function setCaptureTarget(uid,tool=null){ensureCapturer();if(phase!=='prep'||run.captureReservation)return;const c=foes.find(c=>c.uid===uid&&!c.boss);if(!c)return;const method=tool||run.selectedCapturer||Object.keys(CAPTURERS).find(t=>run.captureTools?.[t]>0)||'scout';if(!(run.captureTools?.[method]>0)){toast('This capturer is unavailable.');return;}run.selectedCapturer=method;run.captureOrder={uid,mode:run.captureOrder?.mode||'mercy',tool:method,threshold:run.captureOrder?.threshold||.25};save();refreshCapturePlanUI();}
+function refreshCapturePlanUI(){
+ const current=$('.capture-summary');if(current){const next=document.createElement('template');next.innerHTML=captureSummaryHTML();patchModalContent(current,next.content.firstElementChild);}
+ for(const el of document.querySelectorAll('.opponent-thumb[data-foe-uid]')){const selected=el.dataset.foeUid===run.captureOrder?.uid;el.classList.toggle('capture-planned',selected);el.setAttribute('aria-pressed',String(selected));}
+ drawEnemyOverheads();updateCaptureFeedback();
+}
 function drawEnemyOverheads(){
  const layer=$("#enemy-overheads");if(!layer||phase!=='prep')return;
  const html=(foes||[]).map(c=>{
@@ -2178,11 +2226,11 @@ function lootVisual(d){const color=d.kind==='capturer'?CAPTURERS[d.tier].color:d
 function lootIcon(d){return artImage(lootArt(d));}
 function lootHTML(){
  const cache=reward?.loot;if(!cache)return '';
- return `<section class="loot-cache loot-v2 ${cache.claimed?'collected':''}" aria-label="Victory spoils"><div class="loot-drops">${cache.drops.map((d,i)=>{const {color,tier}=lootVisual(d);return rewardDropHTML(d,i,{name:lootName(d),color,tier,claimed:cache.claimed,description:lootDescription(d)});}).join('')}</div><div class="loot-collection"><span role="status">${cache.claimed?'\u2713 Safely in your pack.':cache.drops.length+' drops ready to claim'}</span></div></section>`;
+ return `<section class="loot-cache loot-v2 ${cache.claimed?'collected':''}" aria-label="Victory spoils"><div class="loot-drops">${(cache.claimed?[]:cache.drops).map((d,i)=>{const {color,tier}=lootVisual(d);return rewardDropHTML(d,i,{name:lootName(d),color,tier,claimed:cache.claimed,description:lootDescription(d)});}).join('')}</div><div class="loot-collection"><span role="status">${cache.claimed?'\u2713 Safely in your pack.':cache.drops.length+' drops ready to claim'}</span></div></section>`;
 }
-function lootDescription(d){return d.kind==='gear'?equipmentDescription(GEAR_BY_ID[d.gear],{balanceVersion:15,equipment:[d.gear],equipmentRolls:[d]}):d.kind==='relic'?relicDescription(RUN_RELIC_BY_ID[d.relic]):d.kind==='capturer'?`${CAPTURERS[d.tier].mult}\u00d7 Scout odds \u00b7 one attempt`:'Spend at an outpost to shape your next build.';}
+function lootDescription(d){return d.kind==='gear'?equipmentDescription(GEAR_BY_ID[d.gear],{balanceVersion:17,equipmentVersion:2,equipment:[d.gear],equipmentRolls:[d]}):d.kind==='relic'?relicDescription(RUN_RELIC_BY_ID[d.relic]):d.kind==='capturer'?`${CAPTURERS[d.tier].mult}\u00d7 Scout odds \u00b7 one attempt`:'Spend at an outpost to shape your next build.';}
 
-function bindArenaDeployment(){if(!canvas||canvas.dataset.physicsBound)return;canvas.dataset.physicsBound='1';const coords=e=>{const rect=canvas.getBoundingClientRect();return arenaPoint(e.clientX,e.clientY,rect);};canvas.addEventListener('pointerdown',e=>{if(phase==='battle'&&!modalKind&&battle){const p=coords(e),u=battle.living(1).sort((a,b)=>b.y-a.y).find(u=>{const h=nativeBodyHeight(u)*getCharacterHeight(),y=u.y*.58+75-h/2;return Math.pow((p.x-u.x)/Math.max(12,70*u.nativeScale),2)+Math.pow((p.y-y)/Math.max(15,h*.6),2)<=1;});if(u){battle.focusEnemy(u.uid);toast('Focus: '+creatureName(u)+' - 8s');e.preventDefault();}return;}if(phase!=='prep'||modalKind)return;for(let i=run.team.length-1;i>=0;i--)if(deployment.begin(run.team[i],i,coords(e),getCharacterHeight())){canvas.setPointerCapture(e.pointerId);e.preventDefault();break;}});canvas.addEventListener('pointermove',e=>{if(deployment.held){deployment.move(coords(e));e.preventDefault();}});const release=e=>{if(deployment.held){deployment.release();save();if(canvas.hasPointerCapture(e.pointerId))canvas.releasePointerCapture(e.pointerId);}};canvas.addEventListener('pointerup',release);canvas.addEventListener('pointercancel',release);}
+function bindArenaDeployment(){if(!canvas||canvas.dataset.physicsBound)return;canvas.dataset.physicsBound='1';const coords=e=>{const rect=canvas.getBoundingClientRect();return arenaPoint(e.clientX,e.clientY,rect);};canvas.addEventListener('pointerdown',e=>{if(phase==='battle'&&!modalKind&&battle){const p=coords(e),u=battle.living(1).sort((a,b)=>b.y-a.y).find(u=>{const h=nativeBodyHeight(u)*getCharacterHeight(),y=u.y*.58+75-h/2;return Math.pow((p.x-u.x)/Math.max(12,70*u.nativeScale),2)+Math.pow((p.y-y)/Math.max(15,h*.6),2)<=1;});if(u){battle.focusEnemy(u.uid);toast('Focus: '+creatureName(u)+' - 8s');e.preventDefault();}return;}if(phase!=='prep'||modalKind)return;const p=coords(e),preview=getOrderPreview(),enemy=preview?.units.filter(u=>u.side===1).sort((a,b)=>b.y-a.y).find(u=>{const h=nativeBodyHeight(u)*getCharacterHeight(),y=u.y*.58+75-h/2;return Math.pow((p.x-u.x)/Math.max(12,70*u.nativeScale),2)+Math.pow((p.y-y)/Math.max(15,h*.6),2)<=1;});if(enemy){if(enemy.boss)toast('Guardians cannot be captured.');else setCaptureTarget(enemy.uid);e.preventDefault();return;}for(const {c,i} of run.team.map((c,i)=>({c,i,y:nativeSpawn(BY_ID[c.id],deployment.preview(c),0,i).y})).sort((a,b)=>b.y-a.y)){const visibleHit=nativeUnitHit({...deployment.preview(c),side:0,seat:c.seat??i},BY_ID[c.id],p,performance.now()/1000,i);if(visibleHit&&deployment.begin(c,i,p,getCharacterHeight(),true)){selectedCreature=i;liveSelectedUid=c.uid;canvas.setPointerCapture(e.pointerId);e.preventDefault();break;}}});canvas.addEventListener('pointermove',e=>{if(deployment.held){deployment.move(coords(e));e.preventDefault();}});const release=e=>{if(deployment.held){deployment.release();save();if(canvas.hasPointerCapture(e.pointerId))canvas.releasePointerCapture(e.pointerId);}};canvas.addEventListener('pointerup',release);canvas.addEventListener('pointercancel',release);}
 function drawDefeatFilm(){if(!defeatFilm||!ctx||!canvas)return;const c=defeatFilm.outcome,u=battle?.units.find(u=>u.uid===c.uid),camera=arenaCamera(canvas.width,canvas.height),x=((u?.x||500)-camera.x)*camera.scale,y=((u?.y||450)*.58+75-camera.y)*camera.scale,t=defeatFilm.elapsed;ctx.save();ctx.fillStyle='#1c090866';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.strokeStyle='#ed8879';ctx.lineWidth=5;const r=22*(Math.min(1,t*3));ctx.beginPath();ctx.moveTo(x-r,y-r);ctx.lineTo(x+r,y+r);ctx.moveTo(x+r,y-r);ctx.lineTo(x-r,y+r);ctx.stroke();ctx.fillStyle='#ffd0ba';ctx.font='bold 18px sans-serif';ctx.textAlign='center';ctx.fillText(c.name+' · PERMANENT LOSS',x,y-65);for(let i=0;i<12;i++){const a=i*Math.PI/6,r=t*45;ctx.fillStyle=i%2?'#eec389':'#dc8278';ctx.fillRect(x+Math.cos(a)*r,y+Math.sin(a)*r,5,5);}ctx.font='13px sans-serif';ctx.fillText('Worn items shattered'+(c.destroyedRelic?' · a relic destroyed':''),x,y+55);ctx.restore();}
 
 function recapHTML(report){return battleSummaryHTML(report,{image:c=>image(c),name:creatureName,skill:id=>SKILLS[id]?.name||id},recapMetric,recapSide);}
@@ -2200,8 +2248,8 @@ function drawTuningPreview(time){const canvas=$('#tuning-preview');if(!canvas||!
  }
  canvas.dataset.previewBatch=settingsPreview.batch;
 }
-function quickEquipmentHTML(c,index){const slots=equipmentSlots(c);return `<div class="quick-equipment" aria-label="${creatureName(c)} equipment" data-loadout-drop="${index}">${Array.from({length:slots},(_,slot)=>{const g=GEAR_BY_ID[c.equipment?.[slot]],roll=c.equipmentRolls?.[slot];return g?`<button data-gear-remove="${slot}" data-index="${index}" data-loadout-drop="${index}" data-gear-slot="${slot}" style="--gear-color:${g.color||'#b9cf9d'}" ${phase==='battle'?'disabled':''} title="${roll?.rarity||'Standard'} ${g.name} · ${Math.round((roll?.quality||1)*100)}% quality: ${equipmentDescription(g,c)}. Drag to another creature; click to return to pack." aria-label="${creatureName(c)}: ${g.name}">${gearSymbol(g)}<small>${g.name}</small><span class="visible-gear-effect">${equipmentDescription(g,c)}</span></button>`:`<button data-action="inspect-quick-gear" data-index="${index}" data-loadout-drop="${index}" data-gear-slot="${slot}" title="Drop equipment here or inspect this companion’s equipment">＋<small>Slot ${slot+1}</small></button>`;}).join('')}</div>`;}
-function equipmentTrayHTML(){return `<section class="equipment-tray" data-pack-drop="true"><div class="section-heading"><h3>${artImage('pack-00','inventory-pack')} YOUR EQUIPMENT PACK <span data-equipment-total>${run.gearInventory?.length||0}</span></h3><small>${phase==='battle'?'Equipment locks during combat.':'Drag onto a creature above · drag worn items between companions'}</small></div><div class="pack-recipients" aria-label="Equipment recipients">${run.team.map((c,i)=>`<button data-loadout-drop="${i}" data-switch-creature="${i}" ${phase==='battle'?'disabled':''} title="Drop equipment on ${creatureName(c)}">${image(c)}<span>${creatureName(c)}<small>${c.equipment?.length||0}/${equipmentSlots(c)} equipped</small></span></button>`).join('')}</div><div class="equipment-tray-items">${(run.gearInventory||[]).map(item=>{const g=GEAR_BY_ID[item.id];return `<button data-gear-equip="${item.uid}" data-index="${selectedCreature}" ${phase==='battle'?'disabled':''} style="--gear-color:${g.color||'#b9cf9d'}" title="${equipmentDescription(g,{balanceVersion:15,equipment:[g.id],equipmentRolls:[item]})}${item.sourceName?' · from '+item.sourceName:''} · drag onto a companion"><span>${gearSymbol(g)}</span><strong>${g.name}</strong><small>${item.rarity||'Standard'} · ${Math.round((item.quality||1)*100)}% quality · ${g.weaponClass||g.slot||'Equipment'}</small><small class="gear-compatibility ${gearCompatibility(run.team[selectedCreature],g).allowed?'compatible':'incompatible'}">${gearCompatibility(run.team[selectedCreature],g).allowed?'Fits '+creatureName(run.team[selectedCreature]):gearCompatibility(run.team[selectedCreature],g).reason}</small><span class="visible-gear-effect">${equipmentDescription(g,{balanceVersion:15,equipment:[g.id],equipmentRolls:[item]})}</span></button>`;}).join('')||'<p>Equipment changes one companion’s stats or behavior. Find it in victory caches, evolution caches or at outposts. Drag worn gear here to return it to the pack.</p>'}</div></section>`;}
+function quickEquipmentHTML(c,index){return `<div class="quick-equipment" aria-label="${creatureName(c)} equipment" data-loadout-drop="${index}">${equipmentSlotViews(c).map(({type,slot,gear:g,roll})=>g?`<button class="slot-${type.toLowerCase()}" data-gear-remove="${slot}" data-index="${index}" data-loadout-drop="${index}" data-gear-slot="${slot}" data-gear-type="${type}" style="--gear-color:${g.color||'#b9cf9d'}" ${phase==='battle'?'disabled':''} title="${type}: ${roll?.rarity||'Standard'} ${g.name} · ${Math.round((roll?.quality||1)*100)}% quality: ${equipmentDescription(g,c)}. Click to return to pack." aria-label="${creatureName(c)}: ${type}, ${g.name}"><span class="slot-label">${type}</span>${gearSymbol(g)}<small>${g.name}</small><span class="visible-gear-effect">${equipmentDescription(g,c)}</span></button>`:`<button class="slot-${type.toLowerCase()} empty-equipment" data-action="inspect-quick-gear" data-index="${index}" data-loadout-drop="${index}" data-gear-slot="-1" data-gear-type="${type}" title="Drop ${type.toLowerCase()} here or inspect equipment"><span class="slot-label">${type}</span><b>${slotEmblems[type]||'+'}</b><small>Empty</small></button>`).join('')}</div>`;}
+function equipmentTrayHTML(){return `<section class="equipment-tray" data-pack-drop="true"><div class="section-heading"><h3>${artImage('pack-00','inventory-pack')} YOUR EQUIPMENT PACK <span data-equipment-total>${run.gearInventory?.length||0}</span></h3><small>${phase==='battle'?'Equipment locks during combat.':'Select a companion to see what fits. Shaded items cannot be equipped by them.'}</small></div><div class="pack-recipients" aria-label="Equipment recipients">${run.team.map((c,i)=>`<button data-loadout-drop="${i}" data-switch-creature="${i}" ${phase==='battle'?'disabled':''} title="Drop equipment on ${creatureName(c)}">${image(c)}<span>${creatureName(c)}<small>${equipmentAlignment(c)} · ${c.equipment?.length||0}/${equipmentSlots(c)} equipped</small></span></button>`).join('')}</div>${equipmentItemsHTML(run.team[selectedCreature],selectedCreature)}</section>`;}
 
 function retryCaptureUI(uid){const result=battle.retryCapture(uid,run.selectedCapturer||'scout');if(result.ok){settleTacticalCapture();updateRetryControls();}else toast(result.reason);}
 function retryControlsHTML(){return `<div id="capture-retry-controls" class="capture-retry-controls"><div><strong>CAPTURE TOOLS <span id="capture-attempt-count">${battle?.captureAttempts||0} / 3 attempts</span></strong><small id="capture-retry-note">The first throw is automatic. After a failure, click a weakened opponent to retry.</small></div><label class="auto-capture-toggle"><input type="checkbox" data-auto-capture ${run.autoCaptureRetry?'checked':''}> Auto retry · 3s</label><div class="capture-quick">${Object.entries(CAPTURERS).map(([id,t])=>`<button data-capture-method="${id}" class="${id===(run.selectedCapturer||run.captureOrder.tool)?'selected':''}" title="${t.name} · ${t.mult}× baseline chance">${t.icon}<small data-capturer-stock="${id}">${t.name.split(' ')[0]} · ${run.captureTools?.[id]||0}</small></button>`).join('')}</div></div>`;}
@@ -2241,8 +2289,8 @@ function armorHTML(st,s){const reduction=armorReduction(st.armor,s.role);return 
 function ailmentMenuHTML(u){const live=activeAilments(u);return `<details class="ailment-guide" ${live.length?'open':''}><summary class="section-kicker">STATUS GLOSSARY · TAP TO EXPAND</summary><div>${Object.entries(STATUS_AILMENTS).map(([id,a])=>`<span class="ailment-term ${live.some(x=>x.id===id)?'active':''}" data-ailment="${id}" tabindex="0" style="--ailment:${a.color}" title="${a.desc}">${a.icon} ${a.name}${live.find(x=>x.id===id)?' · '+live.find(x=>x.id===id).remaining.toFixed(1)+'s':''}</span>`).join('')}</div></details>`;}
 function enemyRelicBannerHTML(){const ids=[...new Set((foes||[]).flatMap(c=>c.enemyRelics||[]))];return ids.length?`<aside class="enemy-build-banner"><strong>ENEMY RELICS · ${(foes||[])[0]?.relicBuild||'Wild counterplan'}</strong><div>${ids.map(id=>{const r=RUN_RELIC_BY_ID[id],count=foes.filter(c=>c.enemyRelics?.includes(id)).length;return `<button data-enemy-relic="${id}" style="color:${r.color}" title="${r.name} · ${relicDescription(r)} · active on ${count} enemies">${r.icon} <span>${r.name}</span></button>`;}).join('')}</div><small>Inspect enemies for full equipment sets and quality.</small></aside>`:'';}
 function captureMessage(result){return result?.success?`✧ CAPTURE SUCCESSFUL · ${BY_ID[result.creature.id].name} fights for you now and joins your team or reserves at round end. Family unlocked for future starts.${eliteModifier(result.creature)?" Elite individual saved with its mutation.":""}`:`✕ CAPTURE FAILED · ${result?.reason||'The lattice broke. Your capturer was spent.'}`;}
-function updateCaptureFeedback(){const el=$('#capture-feedback'),result=battle?.captureResult||run.captureReservation?.result;if(el&&result){el.className='capture-feedback '+(result.success?'success':'failed');el.textContent=captureMessage(result);}}
-function announceCapture(result){updateCaptureFeedback();toast(captureMessage(result));sound(result.success?'capture':'loss');}
+function updateCaptureFeedback(){updateCaptureTracker($('#capture-tracker'),captureTrackerState(run,foes,phase,battle),image);const el=$('#capture-feedback'),result=battle?.captureResult||run.captureReservation?.result;if(el&&result){if(result.success){el.textContent='';return;}el.className='capture-feedback '+(result.success?'success':'failed');el.textContent=captureMessage(result);}}
+function announceCapture(result){updateCaptureFeedback();if(result.success)celebrateCapture($('.arena-viewport'),{rarity:BY_ID[result.creature.id].rarity,name:creatureName(result.creature),reducedMotion:profile.reducedMotion});else toast(captureMessage(result));sound(result.success?'capture':'loss');}
 function refreshLiveRoster(){if(phase==='battle'&&viewName==='arena'){updateLiveRoster($('#live-roster'),battle,{paired:true,selectedUid:liveSelectedUid||run.team[selectedCreature]?.uid,image,controls:liveCommandsHTML});decorateUploadedArt($('#live-roster'));}}
 function updateLiveStatus(){
  if(!battle)return;for(const [i,c]of run.team.entries()){const u=battle.units.find(u=>u.uid===c.uid),card=document.querySelector(`[data-creature="${i}"]`);if(!u||!card)continue;card.querySelector('[data-live-health]').style.width=`${Math.max(0,u.hp/u.maxHp)*100}%`;card.querySelector('[data-live-stamina]').style.width=`${u.stamina}%`;card.querySelector('[data-vital-hp]').textContent=`HEALTH ${Math.ceil(u.hp)}/${Math.round(u.maxHp)}`;card.querySelector('[data-vital-stamina]').textContent=`STAMINA ${Math.round(u.stamina)}/100`;let row=card.querySelector('.card-ailments');if(!row){row=document.createElement('span');row.className='card-ailments';card.append(row);}const html=activeAilments(u).map(a=>`<span class="live-ailment" style="--ailment:${a.color}" title="${a.name}: ${a.desc} · ${a.remaining.toFixed(1)}s">${a.icon}</span>`).join('');if(row.innerHTML!==html)row.innerHTML=html;}
@@ -2258,7 +2306,7 @@ function prepareLoadoutDragging(){
  document.querySelectorAll('.personal-loadout').forEach(el=>el.dataset.loadoutDrop=selectedCreature);
  document.querySelectorAll('.personal-inventory').forEach(el=>el.dataset.packDrop='true');
 }
-function dropTarget(el){const marker=el?.closest('[data-seat-drop],[data-skill-drop],[data-loadout-drop],[data-pack-drop]');if(!marker)return null;if(marker.dataset.seatDrop!==undefined)return {seat:Number(marker.dataset.seatDrop)};if(marker.dataset.packDrop!==undefined)return {pack:true};if(marker.dataset.skillDrop)return {index:Number(marker.dataset.index),skill:marker.dataset.skillDrop};const gear=el.closest('[data-gear-slot]');return marker.dataset.loadoutDrop!=='null'?{index:Number(marker.dataset.loadoutDrop),...(gear?{gearSlot:Number(gear.dataset.gearSlot)}:{})}:null;}
+function dropTarget(el){const marker=el?.closest('[data-seat-drop],[data-skill-drop],[data-loadout-drop],[data-pack-drop]');if(!marker)return null;if(marker.dataset.seatDrop!==undefined)return {seat:Number(marker.dataset.seatDrop)};if(marker.dataset.packDrop!==undefined)return {pack:true};if(marker.dataset.skillDrop)return {index:Number(marker.dataset.index),skill:marker.dataset.skillDrop};const gear=el.closest('[data-gear-slot]');return marker.dataset.loadoutDrop!=='null'?{index:Number(marker.dataset.loadoutDrop),...(gear?{gearSlot:Number(gear.dataset.gearSlot),gearType:gear.dataset.gearType}:{})}:null;}
 
 function finishLoadoutDrop(payload,target){if(!target||phase==='battle')return false;if(!applyLoadoutDrop(run,payload,target)){toast('That loadout cannot accept this item or skill. Check space and compatibility.');return false;}save();render();if(modalKind==='creature'||modalKind==='detail')openCreature(selectedCreature);else if(modalKind==='pack')openPack();else if(modalKind==='companions')openCompanions();const refreshed=$('.modal');if(refreshed)refreshed.classList.add('loadout-updated');toast(payload.kind==='skill'?'Cooldown priority changed. The first ready skill is considered first.':'Loadout updated.');return true;}
 let loadoutDrag=null;
@@ -2338,7 +2386,7 @@ function drawIdlePortraits(now){
 document.addEventListener('click',e=>{
  const el=e.target.closest('[data-planet-preview]');if(!el)return;
  const i=Number(el.dataset.planetPreview),p=PLANETS[i],b=BIOMES[i];
- modal('<div class="field-world-preview" style="background-image:linear-gradient(0deg,#071c23,transparent),url('+worldArt(i)+')"></div><span class="section-kicker">'+(i>run.planet?'BEYOND THE HORIZON':'YOUR JOURNEY')+'</span><h2>'+p.name+'</h2><p>'+b.tag+'</p><p>'+b.features.join(' · ')+'</p><p>'+(i>run.planet?'Defeat your current world’s guardian to travel onward.':i<run.planet?'Your expedition has explored this world.':'Choose encounters on the star chart to progress through this world.')+'</p><div class="modal-actions">'+button('Back to your journey','close','secondary')+'</div>','world-preview');
+ modal('<div class="field-world-preview" style="background-image:linear-gradient(0deg,#071c23,transparent),url('+stageArt(i)+')"></div><span class="section-kicker">'+(i>run.planet?'BEYOND THE HORIZON':'YOUR JOURNEY')+'</span><h2>'+p.name+'</h2><p>'+b.tag+'</p><p>'+b.features.join(' · ')+'</p><p>'+(i>run.planet?'Defeat your current world’s guardian to travel onward.':i<run.planet?'Your expedition has explored this world.':'Choose encounters on the star chart to progress through this world.')+'</p><div class="modal-actions">'+button('Back to your journey','close','secondary')+'</div>','world-preview');
 });
 
 document.addEventListener('click',e=>{
@@ -2347,8 +2395,9 @@ document.addEventListener('click',e=>{
  const preview=e.target.closest('[data-field-node]');
  if(preview&&!preview.disabled){
   const selected=run.route.flat().find(n=>n.id===preview.dataset.fieldNode);
-  if(selected&&['battle','elite','boss','capture'].includes(selected.type)&&!committed){chooseNode(selected.id);fieldPreviewId=null;return;}
-  fieldPreviewId=preview.dataset.fieldNode;render();
+  if(stageTransitionBusy)return;
+  if(selected&&fieldPreviewId===selected.id){chooseNode(selected.id);fieldPreviewId=null;return;}
+  fieldPreviewId=preview.dataset.fieldNode;refreshMapSelection();
   document.querySelector('[data-field-node="'+fieldPreviewId+'"]')?.focus({preventScroll:true});
   return;
  }
@@ -2368,9 +2417,9 @@ function arenaDeckHTML(){
  return `<div class="arena-roster-deck"><section class="prep-ally-controls" aria-label="Pregame companion orders"><h3><i class="arena-crest ally"></i>YOUR TEAM <span>${run.team.length} / ${capacity(run)}</span><nav class="roster-manage" aria-label="Team management"><button data-action="pack">Relic pack \u00b7 ${run.inventory.length}</button><button data-action="companions">Manage companions \u2192</button></nav></h3><div id="ally-orders" class="ally-orders"></div></section><section class="prep-enemy-controls" aria-label="Pregame opponent controls"><h3><i class="arena-crest enemy"></i>OPPONENTS <span>${foes?.length||0}</span></h3><div id="enemy-overheads" class="enemy-overheads"></div></section></div>`;
 }
 function eliteBadgeHTML(c){const m=eliteModifier(c);return m?`<span class="elite-badge" title="${m.text} · retained on capture">♨ ${m.name}<small>${m.text}</small></span>`:'';}
-function eliteEncounterHTML(creatures){const c=creatures?.find(c=>eliteModifier(c));return c?`<div class="elite-encounter" role="note"><b>♨ ELITE MUTATION · ${eliteModifier(c).name}</b><span>${creatureName(c)} · ${eliteModifier(c).text}</span><small>Capture this individual to keep its mutation for this run and future expeditions.</small></div>`:'';}
-function eliteStageHTML(n){if(n?.type!=='elite')return '';const m=encounterInfo(run,n).eliteModifier;return `<div class="elite-stage-preview"><b>♨ ${m.name}</b><span>${m.description}</span><small>One opponent carries this permanent, capturable mutation.</small></div>`;}
-function eliteStarterHTML(id){const records=profile.eliteCaptures?.filter(c=>c.id===id&&eliteModifier(c))||[],chosen=records.find(c=>c.sourceUid===starterEliteSelection[id]);if(!records.length)return '<div class="elite-starter-empty">✦ Elite bonus · capture one to unlock</div>';return `<label class="elite-starter-picker">✦ ELITE CAPTURE BONUS<select data-elite-starter="${id}" aria-label="Choose captured ${BY_ID[id].name} individual"><option value="">Standard starter</option>${records.map((c,i)=>`<option value="${c.sourceUid}" ${starterEliteSelection[id]===c.sourceUid?'selected':''}>${eliteModifier(c).name} #${i+1} · ${eliteModifier(c).text}</option>`).join('')}</select><small>${chosen?eliteModifier(chosen).text:'Choose a captured individual to keep its bonus.'}</small></label>`;}
+function eliteEncounterHTML(creatures){const c=creatures?.find(c=>eliteModifier(c));return c?`<div class="elite-encounter" role="note"><b>♨ ELITE ${eliteModifier(c).tierLabel.toUpperCase()} · ${eliteModifier(c).name}</b><span>${creatureName(c)} · ${eliteModifier(c).text}</span><small>Capture this individual to keep its mutation for this run and future expeditions.</small></div>`:'';}
+function eliteStageHTML(n){if(n?.type!=='elite')return '';const m=encounterInfo(run,n).eliteModifier;return `<div class="elite-stage-preview"><b>♨ ${m.tierLabel} · ${m.name}</b><span>${m.description}</span><small>One opponent carries this permanent, capturable mutation.</small></div>`;}
+function eliteStarterHTML(id){const records=profile.eliteCaptures?.filter(c=>c.id===id&&eliteModifier(c))||[],chosen=records.find(c=>c.sourceUid===starterEliteSelection[id]);if(!records.length)return '<div class="elite-starter-empty">✦ Elite bonus · capture one to unlock</div>';return `<label class="elite-starter-picker">✦ ELITE CAPTURE BONUS<select data-elite-starter="${id}" aria-label="Choose captured ${BY_ID[id].name} individual"><option value="">Standard starter</option>${records.map((c,i)=>`<option value="${c.sourceUid}" ${starterEliteSelection[id]===c.sourceUid?'selected':''}>${eliteModifier(c).tierLabel} \u00b7 ${eliteModifier(c).name} #${i+1} · ${eliteModifier(c).text}</option>`).join('')}</select><small>${chosen?eliteModifier(chosen).text:'Choose a captured individual to keep its bonus.'}</small></label>`;}
 function eliteCollectionHTML(){const records=profile.eliteCaptures?.filter(c=>BY_ID[c.id]&&eliteModifier(c))||[];if(!records.length)return '';return `<section class="elite-collection"><div class="section-heading"><h2>YOUR ELITE CAPTURES <span>${records.length}</span></h2><p>Each individual keeps its mutation, nature and genes. New runs begin at level 1 with fresh equipment.</p></div><div>${records.map((c,i)=>`<button data-hunted-individual="${c.sourceUid}" class="elite-individual">${image(c)}<strong>${BY_ID[c.id].name} #${i+1}</strong>${eliteBadgeHTML(c)}<small>${c.nature||'Wild nature'} · Caught at Lv. ${c.capturedLevel}</small><span>Choose for a new expedition →</span></button>`).join('')}</div></section>`;}
 function liveCommandsHTML(c,side){
  if(side===0)return `<small class="live-behavior">${POLICIES[c.policy||'adaptive']?.name||'Adaptive'} · ${c.targetMemory?creatureName(c.targetMemory):'Finding target'}</small>${eliteBadgeHTML(c)}`;
@@ -2397,7 +2446,7 @@ function openCompanions(){
 function openCaptureKit(){
  const targets=(foes||[]).filter(c=>!c.boss),plan=run.captureOrder;
  const editable=phase==='prep'&&!run.captureReservation;
- modal(`<header class="tool-heading"><div>${artImage('icon-capture')}<h2>Capture kit</h2></div><p>Weaken the target. Plan the next encounter.</p></header><div class="capture-tool-cards">${Object.entries(CAPTURERS).map(([id,t])=>`<button data-capture-method="${id}" class="capture-tool-card ${id===(plan?.tool||run.selectedCapturer||'scout')?'selected':''}" ${!editable||!(run.captureTools?.[id]>0)?'disabled':''}>${artImage('capture-'+id+'-'+(!(run.captureTools?.[id]>0)?'spent':id===(plan?.tool||run.selectedCapturer)?'ready':'idle'))}<strong>${t.name}</strong><small>Owned · ${run.captureTools?.[id]||0}</small><span>${t.mult}× basic odds</span></button>`).join('')}</div><div class="capture-kit-layout"><section><h3>Target and timing</h3><label for="kit-capture-target">Choose a wild target</label><select id="kit-capture-target" data-kit-control="target" ${editable?'':'disabled'}><option value="">No capture order</option>${targets.map(c=>`<option value="${c.uid}" ${plan?.uid===c.uid?'selected':''}>${creatureName(c)} · ${BY_ID[c.id].rarity}</option>`).join('')}</select><label for="kit-capture-mode">Approach</label><select id="kit-capture-mode" data-kit-control="mode" ${editable&&plan?'':'disabled'}><option value="mercy" ${plan?.mode!=='swift'?'selected':''}>Mercy · hold back 14% damage</option><option value="swift" ${plan?.mode==='swift'?'selected':''}>Swift · hold back 6% damage</option></select><label for="kit-capture-threshold">Auto-try at HP</label><select id="kit-capture-threshold" data-kit-control="threshold" ${editable&&plan?'':'disabled'}>${[5,10,15,25,35,45,55,65,75].map(p=>`<option value="${p}" ${p===Math.round((plan?.threshold||.25)*100)?'selected':''}>${p}% HP</option>`).join('')}</select>${plan?`<p class="capture-kit-odds">${Math.round(captureChance(run,{...targets.find(c=>c.uid===plan.uid),capturePreparation:{healthFraction:plan.threshold,mode:plan.mode,tool:plan.tool}})*100)}% estimated chance</p>`:'<p>Choose a target to see estimated odds.</p>'}<label class="auto-capture-toggle"><input type="checkbox" data-auto-capture ${run.autoCaptureRetry?'checked':''} ${editable?'':'disabled'}> Auto retry after 3 seconds · up to 3 throws</label></section><section><h3>Attempt details</h3>${artImage('capture-'+(plan?.tool||run.selectedCapturer||'scout')+'-active','capture-kit-preview')}<p>A capturer is reserved when battle starts. Lower health improves your chance; lethal damage can knock the target out first.</p><p>Successful captures fight for you immediately, then join an open place or your reserves. Their family remains unlocked for future expeditions.</p><p class="capture-warning">${phase==='battle'?'The battle plan is committed. Use the arena retry controls after a failed throw.':phase==='reward'?'Capture attempts happen during battle. Plan another attempt before the next encounter.':'Captures only happen when preselected. A failed throw spends the capturer.'}</p></section></div><div class="modal-actions">${button('Save & return to arena →','close')}</div>`,'capture-kit');
+ modal(`<header class="tool-heading"><div>${artImage('icon-capture')}<h2>Capture kit</h2></div><p>Weaken the target. Plan the next encounter.</p></header><div class="capture-tool-cards">${Object.entries(CAPTURERS).map(([id,t])=>`<button data-capture-method="${id}" class="capture-tool-card ${id===(plan?.tool||run.selectedCapturer||'scout')?'selected':''}" ${!editable||!(run.captureTools?.[id]>0)?'disabled':''}>${artImage('capture-'+id+'-'+(!(run.captureTools?.[id]>0)?'spent':id===(plan?.tool||run.selectedCapturer)?'ready':'idle'))}<strong>${t.name}</strong><small>Owned · ${run.captureTools?.[id]||0}</small><span>${t.mult}× basic odds</span></button>`).join('')}</div><div class="capture-kit-layout"><section><h3>Target and timing</h3><label for="kit-capture-target">Choose a wild target</label><select id="kit-capture-target" data-kit-control="target" ${editable?'':'disabled'}><option value="">No capture order</option>${targets.map(c=>`<option value="${c.uid}" ${plan?.uid===c.uid?'selected':''}>${creatureName(c)} · ${BY_ID[c.id].rarity}</option>`).join('')}</select><label for="kit-capture-mode">Approach</label><select id="kit-capture-mode" data-kit-control="mode" ${editable&&plan?'':'disabled'}><option value="mercy" ${plan?.mode!=='swift'?'selected':''}>Mercy · hold back 14% damage</option><option value="swift" ${plan?.mode==='swift'?'selected':''}>Swift · hold back 6% damage</option></select><label for="kit-capture-threshold">Auto-try at HP</label><select id="kit-capture-threshold" data-kit-control="threshold" ${editable&&plan?'':'disabled'}>${[5,10,15,25,35,45,55,65,75].map(p=>`<option value="${p}" ${p===Math.round((plan?.threshold||.25)*100)?'selected':''}>${p}% HP</option>`).join('')}</select>${plan?`<p class="capture-kit-odds">${Math.round(captureChance(run,{...targets.find(c=>c.uid===plan.uid),capturePreparation:{healthFraction:plan.threshold,mode:plan.mode,tool:plan.tool}})*100)}% estimated chance</p>`:'<p>Choose a target to see estimated odds.</p>'}<label class="auto-capture-toggle"><input type="checkbox" data-auto-capture ${run.autoCaptureRetry?'checked':''} ${editable?'':'disabled'}> Auto retry after 3 seconds · up to 3 throws</label></section><section><h3>Attempt details</h3>${artImage('capture-'+(plan?.tool||run.selectedCapturer||'scout')+'-active','capture-kit-preview')}<p>A capturer is reserved when battle starts. Lower health improves your chance; lethal damage can knock the target out first.</p><p>Successful captures fight for you immediately, then join an open place or your reserves. Their family remains unlocked for future expeditions.</p><p class="capture-warning">${phase==='battle'?'The battle plan is committed. Use these capture tools and the target monitor to retry a failed throw.':phase==='reward'?'Capture attempts happen during battle. Plan another attempt before the next encounter.':'Captures only happen when preselected. A failed throw spends the capturer.'}</p></section></div>${phase==='battle'&&run.captureOrder?retryControlsHTML():''}<div class="modal-actions">${button('Save & return to arena →','close')}</div>`,'capture-kit');
 }
 document.addEventListener('change',e=>{
  const el=e.target;if(!el.dataset.kitControl||phase!=='prep'||run.captureReservation)return;
