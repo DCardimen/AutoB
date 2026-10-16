@@ -103,7 +103,7 @@ import {
   settleDefeat,
   deployReserve,
 } from "./game.js";
-import { SKILLS, loadoutFor } from "./skills.js";
+import { SKILLS, loadoutFor,initializeSkills,prepareEnemySkills,chooseSkill,familyPassive,MAX_COOLDOWN_SKILLS,cooldownSkillSlots } from "./skills.js";
 import { creatureImage, renderBattle } from "./art.js";
 import {
   POLICIES,
@@ -243,6 +243,7 @@ run.rosterMode ??= run.native?"authored":"collection";
 run.native=true;
 run.gearInventory ??= [];
 for(const c of [...run.team,...run.bench||[]])if(c.equipmentQuality&&c.equipmentQuality!==1){c.equipmentRolls=(c.equipment||[]).map((id,i)=>({...c.equipmentRolls?.[i],id,quality:(c.equipmentRolls?.[i]?.quality??1)*c.equipmentQuality}));c.equipmentQuality=1;}
+run.skillRulesVersion=2;for(const c of [...run.team,...run.bench||[]])initializeSkills(c,{migrate:!!saved?.run});for(const [i,c]of (foes||[]).entries())prepareEnemySkills(c,(node?.seed||run.seed)+i*1217);
 run.inventory ??= [];
 migrateStarterGear(run);
 reconcileEquipment(run);
@@ -270,7 +271,7 @@ if(phase==='reward'){
 function freshRun(ids, increment = true, options = {}) {
   closeStagePreview();
   if (increment) {recordRunReset(profile,run);profile.runs++;}
-  run = makeRun(Date.now() % 2147483647, ids, {...options,native:true,starterBudget:starterBudget(profile),chaosCleared:profile.chaosCleared,starterBonds:profile.bonds});
+  run = makeRun(Date.now() % 2147483647, ids, {...options,manualSkills:true,native:true,starterBudget:starterBudget(profile),chaosCleared:profile.chaosCleared,starterBonds:profile.bonds});
   run.team.forEach((c) => {c.bond = Math.min(5, profile.bonds[c.id] || 0);inheritEliteStarter(c,profile,starterEliteSelection[c.id]);});
   run.expeditionStarted=increment;
   if(increment)prepareOpeningRelics(run,profile);
@@ -622,11 +623,12 @@ function modal(html, kind = "generic", closable = true) {
 }
 function closeModal() {
   modalFocusSerial++;
-  if(modalKind==='opening-relic'&&run.openingRelic?.decision===null)return;
+  if(modalKind==='opening-relic'&&run.openingRelic?.decision===null||modalKind==='skill-choice'&&pendingSkillCompanion())return;
   if(modalKind==='settings'&&settingsPrevious){const previous=settingsPrevious;settingsPrevious=null;paused=previous.paused;modalKind=previous.kind;$('#modal-root').innerHTML=previous.html;if($('.modal'))$('.modal').scrollTop=previous.scroll;if($('.modal-backdrop'))$('.modal-backdrop').scrollTop=previous.backdropScroll;prepareLoadoutDragging();prepareDetailTabs();return;}
   practice=null;
   modalKind = null;
   $("#modal-root").innerHTML = "";
+  setTimeout(()=>{if(!modalKind&&!['battle','reward','ended'].includes(phase)&&pendingSkillCompanion())openSkillChoice();},120);
 }
 function openCreature(i) {
   if(selectedCreature!==i)detailTab="overview";
@@ -638,6 +640,18 @@ function openCreature(i) {
   }
   openDetail(phase==='battle'?battle?.units.find(c=>c.uid===u.uid)||u:u, i);
 }
+function pendingSkillCompanion(uid=null){return [...run.team,...run.bench||[]].find(c=>(!uid||c.uid===uid)&&c.pendingSkills?.length);}
+function openSkillChoice(uid=null){
+ if(phase==='battle')return;const c=pendingSkillCompanion(uid)||pendingSkillCompanion();if(!c)return;
+ const offer=c.pendingSkills.find(o=>o.kind==='evolution')||c.pendingSkills[0];if(offer.selected&&loadoutFor(BY_ID[c.id],c.level,c).active.length>=cooldownSkillSlots(c)){openSkillReplacement(c,offer,offer.selected);return;}const species=BY_ID[c.id],count=[...run.team,...run.bench||[]].reduce((n,u)=>n+(u.pendingSkills?.length||0),0);
+ modal(`<header class="skill-choice-heading">${image(c)}<div><span class="section-kicker">${offer.kind==='evolution'?'EVOLUTION SKILL':'LEVEL '+offer.level+' · LEARN A SKILL'} · ${count} CHOICE${count===1?'':'S'} WAITING</span><h2>${creatureName(c)} grows stronger.</h2><p>Choose one cooldown skill. ${offer.kind==='evolution'?'Your evolution passive is already active.':'Higher rarity improves skill quality; '+species.role+' and '+ELEMENTS[species.element].name+' skills are more likely.'}</p></div></header>${offer.kind==='evolution'?`<div class="skill-choice-passive"><strong>New passive · ${NATIVE_EVOLUTIONS[c.id]?.[c.evolutionPath]?.name||EVOLUTION_PATHS[c.evolutionPath].name}</strong><p>${evolutionMechanic(c,species.role,c.evolutionPath)}</p></div>`:''}<div class="skill-choice-grid">${offer.options.map(id=>{const d=SKILLS[id];return `<button class="skill-choice-card" data-learn-skill="${id}" data-companion-uid="${c.uid}" data-offer-key="${offer.key}" style="--skill-quality:${['#b9c8ab','#8fdabc','#b3a2ee','#f1cf87'][d.quality||0]}"><span class="skill-choice-art">${artImage(skillArt({...d,id:d.baseId||id}))}</span><small>${d.qualityName||'EVOLUTION'} · ${d.role||species.role}${d.element?' · '+ELEMENTS[d.element].name:''}</small><strong>${d.name}</strong><p>${d.desc}</p><span>${d.cd.toFixed(1)}s base cooldown · Learn →</span></button>`;}).join('')}</div><p class="skill-choice-note">Cooldown slots unlock at levels 3, 5 and 7, up to four plus your basic attack. Your family passive stays. This choice is saved immediately and remains the same after reloading.</p>`,'skill-choice',false);
+}
+function openSkillReplacement(c,offer,id){const skills=loadoutFor(BY_ID[c.id],c.level,c).active.filter(s=>s!==c.id);modal(`<span class="section-kicker">${cooldownSkillSlots(c)} / ${cooldownSkillSlots(c)} COOLDOWN SLOTS \u00b7 CHOOSE A REPLACEMENT</span><h2>Make room for ${SKILLS[id].name}.</h2><p>Your signature stays. Choose one existing cooldown skill to replace. The replaced skill is kept in your skill history.</p><div class="skill-choice-grid">${skills.map(old=>`<button class="skill-choice-card" data-learn-skill="${id}" data-replace-skill="${old}" data-companion-uid="${c.uid}" data-offer-key="${offer.key}" style="--skill-quality:#d9bd90"><span class="skill-choice-art">${artImage(skillArt(SKILLS[old]))}</span><strong>${SKILLS[old].name}</strong><p>${SKILLS[old].desc}</p><span>Replace with ${SKILLS[id].name} \u2192</span></button>`).join('')}</div><button class="button secondary" data-rethink-skill="${c.uid}" data-offer-key="${offer.key}">Back to evolution choices</button>`,'skill-choice',false);}
+document.addEventListener('click',e=>{
+ const rethink=e.target.closest('[data-rethink-skill]');if(rethink){const c=pendingSkillCompanion(rethink.dataset.rethinkSkill),offer=c?.pendingSkills.find(o=>o.key===rethink.dataset.offerKey);if(offer){delete offer.selected;save();openSkillChoice(c.uid);}return;}
+ const learn=e.target.closest('[data-learn-skill]');if(learn){const c=[...run.team,...run.bench||[]].find(c=>c.uid===learn.dataset.companionUid);if(!c||phase==='battle')return;const offer=c.pendingSkills?.find(o=>o.key===learn.dataset.offerKey);if(offer?.kind==='evolution'&&loadoutFor(BY_ID[c.id],c.level,c).active.length>=cooldownSkillSlots(c)&&!learn.dataset.replaceSkill){offer.selected=learn.dataset.learnSkill;save();openSkillReplacement(c,offer,offer.selected);return;}if(!chooseSkill(c,learn.dataset.offerKey,learn.dataset.learnSkill,learn.dataset.replaceSkill||null))return;save();render();sound('buy');if(pendingSkillCompanion())openSkillChoice(c.uid);else{closeModal();toast(creatureName(c)+' learned '+SKILLS[learn.dataset.learnSkill].name+'.');}return;}
+ if(e.target.closest('[data-action="learn-skills"]'))openSkillChoice();
+});
 function discoverForm(c) {
   profile.formBranches??={};if(evolutionStage(c)>=(profile.formDiscoveries?.[c.id]||0)&&c.evolutionPath)profile.formBranches[c.id]=c.evolutionPath;
   profile.formDiscoveries ||= {};
@@ -650,7 +664,7 @@ function evolutionHTML(u,index){
  const stage=evolutionStage(u),limit=lineageLimit(u),offer=evolutionOffer(run,u),goal=lineageProgress(u);
  const forms=Array.from({length:limit+1},(_,level)=>{const form={...u,evolution:level,evolutionPath:u.evolutionPath||"wild"};return `<div class="evolution-form ${stage===level?'current':''}">${image(form)}<strong>${creatureName(form)}</strong><small>${level===0?'BASE FORM':level===1?'EVOLVED':'ASCENDANT'}</small></div>`;}).join('<span class="evolution-arrow">→</span>');
  const progress=goal&&stage<limit?`<p class="lineage-progress">Combat route: ${goal.value} / ${goal.target} ${goal.label} · minimum level ${goal.minimumLevel}. Alternatively reach level ${stage?8:5}. Both routes cost ${stage?100:50} gold.</p>`:'';
- const controls=stage>=limit?`<p class="evolution-status">${limit===0?'Born in its final form · no evolution':'Final form reached · Aura Stones preserved'}</p>`:index===null?'<p>Deploy this family to gain EXP or complete its combat accomplishment. Every transformation adds a cooldown skill and equipment slot. Aura slots depend only on rarity.</p>':`<div class="evolution-choices">${(stage?[u.evolutionPath]:['wild','warden']).map(path=>`<button class="evolution-choice ${path}" data-evolve="${path}" data-index="${index}" ${!offer.ready||phase==='battle'?'disabled':''}><span>${path==='wild'?'⌁':'◈'}</span><strong>${stage?'Ascend ':''}${NATIVE_EVOLUTIONS[u.id]?.[path]?.name||EVOLUTION_PATHS[path].name}</strong><small>${evolutionMechanic(u,BY_ID[u.id].role,path)}<br>+1 cooldown skill · +1 equipment slot · Aura slots unchanged · ${offer.cost} gold</small></button>`).join('')}</div><p>${phase==='battle'?'Transform between battles.':offer.ready?'Choose your family transformation. Your Aura Stones remain equipped.':offer.reason+'.'}</p>`;
+ const controls=stage>=limit?`<p class="evolution-status">${limit===0?'Born in its final form · no evolution':'Final form reached · Aura Stones preserved'}</p>`:index===null?'<p>Deploy this family to gain EXP or complete its combat accomplishment. Every transformation offers two cooldown skills to choose from, adds a passive and an equipment slot. Aura slots depend only on rarity.</p>':`<div class="evolution-choices">${(stage?[u.evolutionPath]:['wild','warden']).map(path=>`<button class="evolution-choice ${path}" data-evolve="${path}" data-index="${index}" ${!offer.ready||phase==='battle'?'disabled':''}><span>${path==='wild'?'⌁':'◈'}</span><strong>${stage?'Ascend ':''}${NATIVE_EVOLUTIONS[u.id]?.[path]?.name||EVOLUTION_PATHS[path].name}</strong><small>${evolutionMechanic(u,BY_ID[u.id].role,path)}<br>+1 cooldown skill · +1 equipment slot · Aura slots unchanged · ${offer.cost} gold</small></button>`).join('')}</div><p>${phase==='battle'?'Transform between battles.':offer.ready?'Choose your family transformation. Your Aura Stones remain equipped.':offer.reason+'.'}</p>`;
  return `<section class="evolution-panel"><div class="section-heading"><h3>FAMILY LINEAGE</h3><span>${limit+1} TOTAL FORM${limit?'S':''}</span></div><div class="evolution-line">${forms}</div>${progress}${controls}</section>`;
 }
 function transformCreature(index, path) {
@@ -689,10 +703,10 @@ function transformCreature(index, path) {
       sparks +
       "</div><h2>" +
       creatureName(u) +
-      '<span>.</span></h2><p>A new silhouette, an exclusive cooldown skill, and a new equipment slot. Choose your evolution gear in the companion panel.</p><div class="tags">' +
+      '<span>.</span></h2><p>A new silhouette, a new evolution passive, a choice of two cooldown skills, and a new equipment slot. Choose your evolution gear in the companion panel.</p><div class="tags">' +
       tag(EVOLUTION_PATHS[path].name + " path") +
       tag(relicSlots(u) + " Aura Stone sockets") +
-      tag(SKILLS[evolutionSkillIds(u).at(-1)].name) + tag(equipmentSlots(u)+" equipment slots") +
+      tag(u.skillsVersion===2?"Choose 1 of 2 cooldown skills":SKILLS[evolutionSkillIds(u).at(-1)].name) + tag(equipmentSlots(u)+" equipment slots") +
       '</div><div class="modal-actions">' +
       button("Inspect evolved companion →", "evolution-back") +
       "</div></div>",
@@ -709,7 +723,7 @@ function levelStatHTML(c,key,label,index){
  const own=index!==null,team=own?run.team:foes?.some(u=>u.uid===c.uid)?foes:[c],relics=own?run.relics:c.enemyRelics||[],preview=nextLevelPreview(c,team,relics),current=preview.current[key],next=preview.next[key],delta=next-current,tip='level-preview-'+key;
  const change=key==='dodge'?+(Math.abs(delta)*100).toFixed(3)+' percentage points':key==='dashCooldown'?+(Math.abs(delta)*100).toFixed(2)+' percentage points':+Math.abs(delta).toFixed(3);
  const growth=['hp','atk'].includes(key)?`${preview.rarity} growth: +${+(preview.growthRate*100).toFixed(1)}% of base health & attack per level.`:`${preview.rarity} growth: small secondary boosts each level.`;
- return `<div class="stat stat-with-preview" tabindex="0" data-stat-preview="${key}" aria-describedby="${tip}"><small>${label} <i aria-hidden="true">↗</i></small><strong>${key==='dashCooldown'?preview.current.dodgeStyle+' · ':''}${levelStatValue(key,current)}</strong><span class="stat-level-preview" id="${tip}" role="tooltip"><b>Level ${preview.level}: ${levelStatValue(key,next)} ${label.toLowerCase()}</b><em>${delta<0?'−':'+'}${change} from this level${['cd','dashCooldown'].includes(key)?' · faster recharge':''}</em>${growth}${preview.newSkills.length?'<br>New skill: '+preview.newSkills.map(id=>skillDefinition({...c,level:preview.level},id).name).join(', '):''}<small>Includes the current build, equipment, genes and team bonuses.</small></span></div>`;
+ return `<div class="stat stat-with-preview" tabindex="0" data-stat-preview="${key}" aria-describedby="${tip}"><small>${label} <i aria-hidden="true">↗</i></small><strong>${key==='dashCooldown'?preview.current.dodgeStyle+' · ':''}${levelStatValue(key,current)}</strong><span class="stat-level-preview" id="${tip}" role="tooltip"><b>Level ${preview.level}: ${levelStatValue(key,next)} ${label.toLowerCase()}</b><em>${delta<0?'−':'+'}${change} from this level${['cd','dashCooldown'].includes(key)?' · faster recharge':''}</em>${growth}${preview.skillChoice?'<br>New cooldown slot: choose 1 of 3 skills.':''}${preview.newSkills.length?'<br>New skill: '+preview.newSkills.map(id=>skillDefinition({...c,level:preview.level},id).name).join(', '):''}<small>Includes the current build, equipment, genes and team bonuses.</small></span></div>`;
 }
 function openDetail(u, index = null, codex = false) {
   const s = BY_ID[u.id],
@@ -726,6 +740,7 @@ function openDetail(u, index = null, codex = false) {
   );
 }
 function startBattle() {
+  if(pendingSkillCompanion()){openSkillChoice();return;}
   if(run.expeditionStarted===false){openStarters();return;}
   if(run.openingRelic?.decision===null){openFirstRelic();return;}
   if (!run.team.length) {
@@ -1379,7 +1394,7 @@ function openReport() {
 }
 function openHelp() {
   modal(
-    `<span class="section-kicker">FIELD NOTES FOR A NEW EXPLORER</span><h2>A little strategy. A lot of heart.</h2><p>Collect creatures. Build bonds. Let your companions fight. Bring their stories home.</p><div class="help-grid"><div><h3>01 · Two beginnings, six ambitions</h3><p>Inspect creatures to choose training focuses or swap bench companions. Guardians hold the front; supports and rangers keep their distance. Drag companions on the arena before battle; grabbing a head, hand or foot changes how they hang. Team places unlock at 2, 5, 8 and 11 combat wins, with hiring permits available after win 3. Deployment also offers a tactical grid. Inspect a creature to choose its AI policy.</p></div><div><h3>02 · Smart, automatic combat</h3><p>Creatures commit to aimed swings and straight-flying shots. Stamina pays for attacks and physical dodge rolls; roots prevent rolls. Guardians screen shots, strikers flank, and healers save defensive skills for danger. Heavy melee causes bleed and breaks poise; stagger interrupts windups. Hunt prioritizes wounded enemies; Guard holds the frontline. After 30 combat seconds, both teams enrage: 3× damage and healing, 1.5× attacks and cooldown recharge. Healing effectiveness drops by 20 percentage points every five seconds, reaching zero at 55s. Space pauses; 1, 2, 3 change playback speed. Use Settings to tune combat feel and sprite sizes.</p></div><div><h3>03 · Your route matters</h3><p>Each planet has eight encounters linked by one to four explicit connections. See four rooms ahead; scouting relics reveal more. Choose battles, shops, captures, recovery, or difficult bargains. Losing costs a life and a permanent casualty. Defeat each planet’s boss to advance.</p></div><div><h3>04 · Build with intent</h3><p>Two creatures of an element activate a team bonus. Four unlock another. Expedition relics affect every ally. Aura Stones fill individual slots: Common 0, Uncommon 1, Rare 2, Epic 3, Legendary 4. Levels and training improve base stats. Skills show their effective cooldown in the creature panel.</p></div><div><h3>05 · Catch your next beginning</h3><p>Use a wild creature’s overhead diamond before battle to choose a target, 5–75% HP threshold, and a capturer tier. Scout Prisms at 25% HP start at 90% Common, 85% Uncommon, 25% Rare, 22% Epic and 8% Legendary. Runic, Astral and Mythic tools improve them. Your team deals less damage while preparing an automatic throw; weakening and statuses improve odds. A lethal hit or damage over time can knock out the target before the throw. There are no post-match captures; select your target before combat. Rare creatures have stronger skills and lower capture chances. Successful captures fight for you immediately. At round end they join an unlocked empty team slot, or your reserves if the team is full, and unlock permanent starters.</p></div><div><h3>06 · Evolve your companions</h3><p>At level 5, spend 50 gold in a creature panel to choose Wild damage or Warden resilience. At level 8, ascend for 100 gold. Each stage transforms the silhouette, unlocks an exclusive cooldown skill and equipment slot, while Aura Stone slots remain tied to rarity. Choose a free evolution gear cache in the companion panel; outposts sell further gear. Worn relics remain equipped. Common companions also awaken at level 5. New expeditions start in base forms at level 1 with no run relics. Your permanent creatures stay. Choose one or two within a two-point rarity budget. Chaos clears earn additional starting points. Legendary starters cost 6 points, or 4 after five captures strengthen their bond. Victories earn Starlight for permanent Legendary adoption.</p></div></div><p class="starter-note">Surviving allies fully recover between encounters. A defeat permanently kills one random deployed starter, or another companion when none remain; its family remains unlocked. Its worn gear and Aura Stones disappear, and another owned relic is destroyed. Recruit reserves before taking large risks. Expedition lives measure your ability to retreat. Browser storage keeps your collection and run; sound is optional.</p><div class="modal-actions">${button("I’m ready to explore →", "help-done")}</div>`,
+    `<span class="section-kicker">FIELD NOTES FOR A NEW EXPLORER</span><h2>A little strategy. A lot of heart.</h2><p>Collect creatures. Build bonds. Let your companions fight. Bring their stories home.</p><div class="help-grid"><div><h3>01 · Two beginnings, six ambitions</h3><p>Inspect creatures to choose training focuses or swap bench companions. Guardians hold the front; supports and rangers keep their distance. Drag companions on the arena before battle; grabbing a head, hand or foot changes how they hang. Team places unlock at 2, 5, 8 and 11 combat wins, with hiring permits available after win 3. Deployment also offers a tactical grid. Inspect a creature to choose its AI policy.</p></div><div><h3>02 · Smart, automatic combat</h3><p>Creatures commit to aimed swings and straight-flying shots. Stamina pays for attacks and physical dodge rolls; roots prevent rolls. Guardians screen shots, strikers flank, and healers save defensive skills for danger. Heavy melee causes bleed and breaks poise; stagger interrupts windups. Hunt prioritizes wounded enemies; Guard holds the frontline. After 30 combat seconds, both teams enrage: 3× damage and healing, 1.5× attacks and cooldown recharge. Healing effectiveness drops by 20 percentage points every five seconds, reaching zero at 55s. Space pauses; 1, 2, 3 change playback speed. Use Settings to tune combat feel and sprite sizes.</p></div><div><h3>03 · Your route matters</h3><p>Each planet has eight encounters linked by one to four explicit connections. See four rooms ahead; scouting relics reveal more. Choose battles, shops, captures, recovery, or difficult bargains. Losing costs a life and a permanent casualty. Defeat each planet’s boss to advance.</p></div><div><h3>04 · Build with intent</h3><p>Two creatures of an element activate a team bonus. Four unlock another. Expedition relics affect every ally. Aura Stones fill individual slots: Common 0, Uncommon 1, Rare 2, Epic 3, Legendary 4. Levels and training improve base stats. Skills show their effective cooldown in the creature panel.</p></div><div><h3>05 · Catch your next beginning</h3><p>Use a wild creature’s overhead diamond before battle to choose a target, 5–75% HP threshold, and a capturer tier. Scout Prisms at 25% HP start at 90% Common, 85% Uncommon, 25% Rare, 22% Epic and 8% Legendary. Runic, Astral and Mythic tools improve them. Your team deals less damage while preparing an automatic throw; weakening and statuses improve odds. A lethal hit or damage over time can knock out the target before the throw. There are no post-match captures; select your target before combat. Rare creatures have stronger skills and lower capture chances. Successful captures fight for you immediately. At round end they join an unlocked empty team slot, or your reserves if the team is full, and unlock permanent starters.</p></div><div><h3>06 · Evolve your companions</h3><p>At level 5, spend 50 gold in a creature panel to choose Wild damage or Warden resilience. At level 8, ascend for 100 gold. Each stage transforms the silhouette, unlocks an exclusive cooldown skill and equipment slot, while Aura Stone slots remain tied to rarity. Choose a free evolution gear cache in the companion panel; outposts sell further gear. Worn relics remain equipped. Levels 3, 5 and 7 unlock additional cooldown slots, each offering three manually selected skills. Evolution can replace an existing cooldown skill when full. Higher rarity raises skill quality; your type and role influence the offers. New expeditions start in base forms at level 1 with no run relics. Your permanent creatures stay. Choose one or two within a two-point rarity budget. Chaos clears earn additional starting points. Legendary starters cost 6 points, or 4 after five captures strengthen their bond. Victories earn Starlight for permanent Legendary adoption.</p></div></div><p class="starter-note">Surviving allies fully recover between encounters. A defeat permanently kills one random deployed starter, or another companion when none remain; its family remains unlocked. Its worn gear and Aura Stones disappear, and another owned relic is destroyed. Recruit reserves before taking large risks. Expedition lives measure your ability to retreat. Browser storage keeps your collection and run; sound is optional.</p><div class="modal-actions">${button("I’m ready to explore →", "help-done")}</div>`,
     "help",
   );
 }
@@ -1701,6 +1716,7 @@ document.addEventListener("click", async (e) => {
     return;
   }
   if (action === "evolution-back") {
+    if(run.team[selectedCreature]?.pendingSkills?.length){openSkillChoice(run.team[selectedCreature].uid);return;}
     openCreature(selectedCreature);
     return;
   }
@@ -2006,6 +2022,7 @@ if (phase === "rest") openRest();
 if (phase === "ended") openEnd();
 if (!saved?.run||run.expeditionStarted===false) openStarters();
 else if(run.openingRelic?.decision===null)openFirstRelic();
+if(!modalKind&&run.expeditionStarted!==false&&pendingSkillCompanion())openSkillChoice();
 showLogoIntro({reducedMotion:profile.reducedMotion});
 // Read-only inspection for deterministic playtesting and debugging. No gameplay shortcuts.
 function legendaryPactBanner(){
@@ -2215,7 +2232,7 @@ function skillsHTML(u, index) {
       index === null ? [] : run.relics,
     );
   if(u.skillOrder)loadout.active.sort((a,b)=>(u.skillOrder.includes(a)?u.skillOrder.indexOf(a):99)-(u.skillOrder.includes(b)?u.skillOrder.indexOf(b):99));
-  return `<div class="ability-heading"><span class="section-kicker">SIGNATURE AUTO-ATTACK + ${loadout.active.length} COOLDOWN SKILLS</span><span class="muted">AI CASTS AUTOMATICALLY</span></div><div class="ability-list">${[
+  return `${u.pendingSkills?.length?button('Choose new skills ? '+u.pendingSkills.length,'learn-skills','secondary'):""}<div class="trait-panel"><strong>${traitFor(u).name}</strong><p>${traitFor(u).desc}</p></div><div class="ability-heading"><span class="section-kicker">SIGNATURE AUTO-ATTACK + ${loadout.active.length} / ${u.skillsVersion===2?cooldownSkillSlots(u):loadout.active.length} COOLDOWN SKILLS</span><span class="muted">AI CASTS AUTOMATICALLY</span></div><div class="ability-list">${[
     loadout.auto,
     ...loadout.active,
   ]

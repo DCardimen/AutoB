@@ -1,0 +1,46 @@
+[
+  {
+    "offline": false,
+    "width": 1440,
+    "threeSavedChoices": true,
+    "earnedAt357": true,
+    "fourCooldownCap": true,
+    "twoEvolutionChoices": true,
+    "explicitReplacement": true,
+    "persistence": true,
+    "liveCombat": true
+  },
+  {
+    "offline": false,
+    "width": 390,
+    "threeSavedChoices": true,
+    "earnedAt357": true,
+    "fourCooldownCap": true,
+    "twoEvolutionChoices": true,
+    "explicitReplacement": true,
+    "persistence": true,
+    "liveCombat": true
+  },
+  {
+    "offline": true,
+    "width": 1440,
+    "threeSavedChoices": true,
+    "earnedAt357": true,
+    "fourCooldownCap": true,
+    "twoEvolutionChoices": true,
+    "explicitReplacement": true,
+    "persistence": true,
+    "liveCombat": true
+  },
+  {
+    "offline": true,
+    "width": 390,
+    "threeSavedChoices": true,
+    "earnedAt357": true,
+    "fourCooldownCap": true,
+    "twoEvolutionChoices": true,
+    "explicitReplacement": true,
+    "persistence": true,
+    "liveCombat": true
+  }
+]
