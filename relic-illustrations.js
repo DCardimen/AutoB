@@ -11,6 +11,7 @@ const curated={
  'worn-heartstone':'relic-1-07','chipped-fang':'animal-04','faded-feather':'relic-1-12','cracked-prism':'relic-2-12','tarnished-hourglass':'relic-4-20',
 };
 export function relicIllustration(relic){
+ if(relic.aura&&relic.art)return relic.art;
  if(relic.art||curated[relic.id])return relic.art||curated[relic.id];
  const id=relic.id,e=relic.effect||{};
  if(/bell|fanfare|recital|voice/.test(id))return 'relic-4-05';

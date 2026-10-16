@@ -1,3 +1,4 @@
+import {auraCompatibility} from './aura-stones.js';
 import {capacity} from './expedition-rules.js';
 import {equipGear,removeGear,equipmentSlots,GEAR_BY_ID,gearCompatibility,equipmentSlotType} from './creature-equipment.js';
 import {equipRelic,unequipRelic,linkRelic,relicSlots,canSupport,BY_ID} from './game.js';
@@ -42,6 +43,7 @@ export function applyLoadoutDrop(run,payload,target){
   return equipGear(run,Number(target.index),payload.uid);
  }
  if(payload.kind==='gem'){
+  if(!auraCompatibility(c,payload.id).allowed)return false;
   if(target.relicSlot!==undefined&&target.relicSlot!==(c.relics||[]).length)return false;
   if((run.rulesVersion||0)>=17){if(target.skill||from===c||c.relics?.some(g=>g.id===payload.id)||(c.relics||[]).length>=relicSlots(c))return false;if(from){if(from.relics?.[payload.slot]?.uid!==payload.uid)return false;unequipRelic(run,payload.fromIndex,payload.slot);}return equipRelic(run,Number(target.index),payload.uid);}
   const loadout=loadoutFor(BY_ID[c.id],c.level,c),skills=[loadout.auto,...loadout.active];
