@@ -1260,7 +1260,8 @@ export function trainSurvival(run, index) {
   c.survivalTraining = level + 1;
   return true;
 }
-export function deployReserve(run, benchIndex, targetIndex = run.team.length) {
+export function deployReserve(run, benchIndex, targetIndex = run.team.length, targetSeat = null) {
+  if(targetSeat!==null&&(!Number.isInteger(targetSeat)||targetSeat<0||targetSeat>=capacity(run)||run.team.some(c=>c.seat===targetSeat)))return false;
   if (
     !Number.isInteger(benchIndex) ||
     !run.bench[benchIndex] ||
@@ -1293,8 +1294,8 @@ export function deployReserve(run, benchIndex, targetIndex = run.team.length) {
           break;
         }
   }
-  reserve.seat=previous?.seat??[...Array(capacity(run)).keys()].find(s=>!run.team.some(c=>c.seat===s));
-  reserve.deployment = deployment;
+  reserve.seat=targetSeat??previous?.seat??[...Array(capacity(run)).keys()].find(s=>!run.team.some(c=>c.seat===s));
+  delete reserve.placement;reserve.deployment = deployment;
   if(previous?.deploymentPosition)reserve.deploymentPosition={...previous.deploymentPosition};else delete reserve.deploymentPosition;
   run.team[targetIndex] = reserve;
   return true;
