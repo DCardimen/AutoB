@@ -5126,6 +5126,11 @@ body.ui-v3.native-expedition .arena-dock button{min-width:0;padding-inline:6px;f
 .stat-with-preview{position:relative;cursor:help;outline-offset:3px}.stat-with-preview small>i{color:#b9d5a2;font-size:11px;font-style:normal}
 .stat-level-preview{display:none;position:absolute;left:0;top:calc(100% - 4px);z-index:25;width:min(270px,70vw);padding:13px;background:#03232af5;border:1px solid #a4be8c;border-radius:9px;box-shadow:0 12px 28px #0009;text-align:left;font:11px/1.6 var(--sans);color:#cdded1}
 .stat-with-preview:hover .stat-level-preview,.stat-with-preview:focus .stat-level-preview{display:block}.stat-level-preview b{display:block;font:17px var(--serif);color:#efdba8}.stat-level-preview em{display:block;font-style:normal;color:#b9eda8;margin:5px 0}.stat-level-preview small{display:block;font:9px/1.4 var(--sans);margin-top:7px;color:#8eafa9}
+.stat-level-preview{pointer-events:none}
+.stat-grid:has(.stat-with-preview:hover) .stat-with-preview:not(:hover):focus .stat-level-preview{display:none}
+.stat-grid>.stat-with-preview:nth-child(4n) .stat-level-preview{left:auto;right:0}
+.stat-grid>.stat-with-preview:nth-last-child(-n+2) .stat-level-preview{top:auto;bottom:calc(100% - 4px)}
+@media(max-width:760px){.stat-grid>.stat-with-preview:nth-child(2n) .stat-level-preview{left:auto;right:0}.stat-grid>.stat-with-preview:nth-last-child(-n+4) .stat-level-preview{top:auto;bottom:calc(100% - 4px)}}
 .ui-v3 .route-links .selection-trail{fill:none;stroke:#e6daa0;stroke-width:1.1;filter:drop-shadow(0 0 1.5px #bdf3ca)}
 .ui-v3 .reference-map .route-node.route-locked{filter:drop-shadow(0 0 9px #e6df9b)}.ui-v3 .reference-map .route-node.route-locked:after{content:"ENTER";position:absolute;top:-15px;left:50%;translate:-50% 0;font:700 7px var(--sans);letter-spacing:.7px;color:#fff0bb;text-shadow:0 1px 3px #001018}
 
@@ -16256,8 +16261,10 @@ body.ui-v3.native-expedition #toast{background:#133b3e;color:#f2deb1;border-colo
   }
   var LEVEL_GROWTH = { Common: 0.105, Uncommon: 0.115, Rare: 0.13, Epic: 0.15, Legendary: 0.175 };
   var levelGrowthRate = (c) => (c.balanceVersion || 0) >= 17 ? LEVEL_GROWTH[BY_ID[c.id]?.rarity] || 0.105 : 0.105;
+  var SECONDARY_LEVEL_GROWTH = { attackSpeed: 0.0125, actionSpeed: 0.01, staminaRecharge: 0.015, cooldown: 0.01, dashCooldown: 0.01, speed: 5e-3, dodge: 5e-4, hpRegen: 0.04 };
   function stats(c, team, relics = []) {
     const s = BY_ID[c.id], syn = synergies(team), has = (id) => relics.includes(id), strength = itemStrength(c);
+    const secondaryLevels = c.balanceVersion >= 17 ? Math.max(0, c.level - 1) * levelGrowthRate(c) / 0.105 : 0, minor = SECONDARY_LEVEL_GROWTH;
     const growth = (1 + (c.level - 1) * levelGrowthRate(c) + (c.training || 0) * (c.balanceVersion >= 15 ? 0.035 : 0.07)) * (c.level >= 5 && ["Common", "Uncommon"].includes(s.rarity) ? 1.2 : 1);
     let hp = s.hp * growth, atk = s.atk * growth, cd = SKILLS[s.id].cd, speed2 = s.speed, dodge = 0.045;
     const stage = evolutionStage(c);
@@ -16307,7 +16314,7 @@ body.ui-v3.native-expedition #toast{background:#133b3e;color:#f2deb1;border-colo
     speed2 *= (genes.speed || 1) * curios.speed;
     hp *= personal.health * gear.health;
     atk *= personal.attack * gear.attack;
-    cd *= personal.cooldown * gear.cooldown;
+    cd *= personal.cooldown * gear.cooldown / (1 + minor.cooldown * secondaryLevels);
     speed2 *= personal.speed * gear.speed * (nativeEvolution(c).speed || 1);
     dodge += personal.dodge;
     return applyEliteStats({
@@ -16316,14 +16323,14 @@ body.ui-v3.native-expedition #toast{background:#133b3e;color:#f2deb1;border-colo
       atk: Math.round(atk + gear.atkFlat),
       cd: cd * linkedSupport(c, c.id).cooldown,
       cdFactor: cd / SKILLS[s.id].cd,
-      speed: speed2 + gear.speedFlat,
-      hpRegen: gear.hpRegen,
-      dodge,
+      speed: (speed2 + gear.speedFlat) * (1 + minor.speed * secondaryLevels),
+      hpRegen: gear.hpRegen + minor.hpRegen * secondaryLevels,
+      dodge: dodge + Math.min(0.06, minor.dodge * secondaryLevels),
       range: s.range + (nativeEvolution(c).range || 0),
-      attackSpeed: curios.attackSpeed * gear.attackSpeed / ((s.role === "Guardian" ? 1.55 : 1.3) * linkedSupport(c, loadoutFor(s, c.level, c).auto).attackSpeed),
-      actionSpeed: curios.actionSpeed * gear.actionSpeed + gear.actionSpeedFlat,
-      staminaRecharge: ((c.balanceVersion || 0) >= 17 ? { Striker: 26, Ranger: 22, Support: 20, Guardian: 15 }[s.role] || 20 : 20) * curios.regenStamina * gear.regenStamina,
-      dashCooldown: curios.dashCooldown * gear.dashCooldown,
+      attackSpeed: curios.attackSpeed * gear.attackSpeed * (1 + minor.attackSpeed * secondaryLevels) / ((s.role === "Guardian" ? 1.55 : 1.3) * linkedSupport(c, loadoutFor(s, c.level, c).auto).attackSpeed),
+      actionSpeed: (curios.actionSpeed * gear.actionSpeed + gear.actionSpeedFlat) * (1 + minor.actionSpeed * secondaryLevels),
+      staminaRecharge: ((c.balanceVersion || 0) >= 17 ? { Striker: 26, Ranger: 22, Support: 20, Guardian: 15 }[s.role] || 20 : 20) * curios.regenStamina * gear.regenStamina * (1 + minor.staminaRecharge * secondaryLevels),
+      dashCooldown: curios.dashCooldown * gear.dashCooldown / (1 + minor.dashCooldown * secondaryLevels),
       dodgeStyle: (c.balanceVersion || 0) >= 17 ? dodgeStyle(s) : "roll",
       personal
     }, c);
@@ -22942,9 +22949,17 @@ body.ui-v3.native-expedition #toast{background:#133b3e;color:#f2deb1;border-colo
       "evolution"
     );
   }
+  function levelStatValue(key4, value) {
+    if (["hp", "atk", "armor"].includes(key4)) return String(Math.round(value));
+    if (key4 === "dodge") return +(value * 100).toFixed(2) + "%";
+    if (key4 === "dashCooldown") return +(value * 100).toFixed(2) + "% CD";
+    return +value.toFixed(2) + ({ attackSpeed: "/s", actionSpeed: "\xD7", hpRegen: "/s", staminaRecharge: "/s", cd: "s" }[key4] || "");
+  }
   function levelStatHTML(c, key4, label, index) {
-    const own = index !== null, team = own ? run2.team : foes?.some((u) => u.uid === c.uid) ? foes : [c], relics = own ? run2.relics : c.enemyRelics || c.boundRelics || [], preview = nextLevelPreview(c, team, relics), current2 = preview.current[key4], next = preview.next[key4], delta = next - current2, tip = "level-preview-" + key4;
-    return `<div class="stat stat-with-preview" tabindex="0" data-stat-preview="${key4}" aria-describedby="${tip}"><small>${label} <i aria-hidden="true">\u2197</i></small><strong>${Math.round(current2)}</strong><span class="stat-level-preview" id="${tip}" role="tooltip"><b>Level ${preview.level}: ${Math.round(next)} ${label.toLowerCase()}</b><em>+${+delta.toFixed(2)} from this level</em>${preview.rarity} growth: +${+(preview.growthRate * 100).toFixed(1)}% of base health & attack per level.${preview.newSkills.length ? "<br>New skill: " + preview.newSkills.map((id) => skillDefinition({ ...c, level: preview.level }, id).name).join(", ") : ""}<small>Includes the current build, equipment, genes and team bonuses.</small></span></div>`;
+    const own = index !== null, team = own ? run2.team : foes?.some((u) => u.uid === c.uid) ? foes : [c], relics = own ? run2.relics : c.enemyRelics || [], preview = nextLevelPreview(c, team, relics), current2 = preview.current[key4], next = preview.next[key4], delta = next - current2, tip = "level-preview-" + key4;
+    const change = key4 === "dodge" ? +(Math.abs(delta) * 100).toFixed(3) + " percentage points" : key4 === "dashCooldown" ? +(Math.abs(delta) * 100).toFixed(2) + " percentage points" : +Math.abs(delta).toFixed(3);
+    const growth = ["hp", "atk"].includes(key4) ? `${preview.rarity} growth: +${+(preview.growthRate * 100).toFixed(1)}% of base health & attack per level.` : `${preview.rarity} growth: small secondary boosts each level.`;
+    return `<div class="stat stat-with-preview" tabindex="0" data-stat-preview="${key4}" aria-describedby="${tip}"><small>${label} <i aria-hidden="true">\u2197</i></small><strong>${key4 === "dashCooldown" ? preview.current.dodgeStyle + " \xB7 " : ""}${levelStatValue(key4, current2)}</strong><span class="stat-level-preview" id="${tip}" role="tooltip"><b>Level ${preview.level}: ${levelStatValue(key4, next)} ${label.toLowerCase()}</b><em>${delta < 0 ? "\u2212" : "+"}${change} from this level${["cd", "dashCooldown"].includes(key4) ? " \xB7 faster recharge" : ""}</em>${growth}${preview.newSkills.length ? "<br>New skill: " + preview.newSkills.map((id) => skillDefinition({ ...c, level: preview.level }, id).name).join(", ") : ""}<small>Includes the current build, equipment, genes and team bonuses.</small></span></div>`;
   }
   function openDetail(u, index = null, codex = false) {
     const s = BY_ID[u.id], e = ELEMENTS[s.element], st = stats(
@@ -22953,7 +22968,7 @@ body.ui-v3.native-expedition #toast{background:#133b3e;color:#f2deb1;border-colo
       index === null ? [] : run2.relics
     ), locked = codex && !profile.owned.includes(u.id);
     modal(
-      `<div class="detail-top">${image(u)}<div><span class="section-kicker" style="color:${RARITY[s.rarity].color}">${s.rarity.toUpperCase()} CREATURE</span><h2>${creatureName(u)}</h2><p style="margin:0">${s.role} \xB7 ${e.name} \xB7 Level ${u.level}</p><div class="tags">${tag(`${ROLES[s.role]} ${s.role}`)}${tag(`${e.icon} ${e.name}`)}</div></div></div>${detailTabsHTML(index)}<div class="detail-pane" data-detail-pane="overview"><div class="stat-grid">${levelStatHTML(u, "hp", "HEALTH", index)}${levelStatHTML(u, "atk", "ATTACK", index)}<div class="stat"><small>BASIC ATTACK SPEED</small><strong>${st.attackSpeed.toFixed(2)}/s</strong></div><div class="stat"><small>ACTION SPEED</small><strong>${st.actionSpeed.toFixed(2)}\xD7</strong></div><div class="stat"><small>HP REGEN</small><strong>${st.hpRegen.toFixed(1)}/s</strong></div><div class="stat"><small>STAMINA RECHARGE</small><strong>${st.staminaRecharge.toFixed(1)}/s</strong></div><div class="stat"><small>DODGE / DASH</small><strong>${st.dodgeStyle} \xB7 ${Math.round(st.dashCooldown * 100)}% CD</strong></div><div class="stat"><small>MOVEMENT</small><strong>${Math.round(st.speed)}</strong></div><div class="stat"><small>SKILL COOLDOWN</small><strong>${st.cd.toFixed(1)}s</strong></div></div>${armorHTML(st, s)}${eliteBadgeHTML(u)}${ailmentMenuHTML(u)}${individualHTML(u)}${enemyCuriosHTML(u)}<div class="trait-panel"><strong>${traitFor(u).name}</strong><p>${traitFor(u).desc}</p></div>${familyInfo(u)}${evolutionHTML(u, index)}</div><div class="detail-pane" data-detail-pane="equipment">${equipmentHTML(u, index)}${loadoutHTML(u, index)}</div><div class="detail-pane" data-detail-pane="skills">${skillsHTML(u, index)}<p>Drag cooldown skills into a different order to change which ready skill the AI considers first.</p></div><div class="detail-pane" data-detail-pane="ai">${index !== null ? policyHTML(u, index) + survivalHTML(u, index) : ""}${index !== null ? `<div class="focus-control"><span class="section-kicker">TRAINING FOCUS \xB7 CHOOSE BEFORE BATTLE</span><div class="segmented">${["balanced", "aggressive", "defensive", "swift"].map((f) => `<button data-focus="${f}" data-index="${index}" class="${u.focus === f ? "active" : ""}" ${phase === "battle" ? "disabled" : ""}>${f.charAt(0).toUpperCase() + f.slice(1)}</button>`).join("")}</div><p style="font-size:10px;margin:9px 0 0">${{ balanced: "Natural strengths. No stat tradeoffs.", aggressive: "+15% attack \xB7 \u22128% health.", defensive: "+15% health \xB7 \u22128% attack.", swift: "15% faster skills \xB7 \u22126% attack." }[u.focus || "balanced"]}</p></div><div class="thin-rule"></div><span class="section-kicker">SWAP WITH A COMPANION ON YOUR BENCH</span><div class="bench-list">${run2.bench.length ? run2.bench.map((b, j) => `<button class="bench-button" data-swap="${j}" data-index="${index}" ${phase === "battle" ? "disabled" : ""}>${image(b)}${creatureName(b)}<br><span class="muted">Lv. ${b.level}</span></button>`).join("") : '<div class="empty-bench">Capture a creature or recruit one at an outpost to fill your bench.</div>'}</div><p class="starter-note">${u.level >= 5 && !evolutionStage(u) && lineageLimit(u) > 0 ? "EVOLUTION AVAILABLE \xB7 INSPECT YOUR EVOLUTION PATH ABOVE \xB7 " : ""}${u.level >= 5 ? "AWAKENED \xB7 THIRD SKILL UNLOCKED \xB7 " : ""}${u.bond ? `BOND ${u.bond} \xB7 +${u.bond * 2}% BASE HEALTH \xB7 ` : ""}${u.xp} / ${xpNeeded(u.level)} EXP toward the next level \xB7 ${u.training || 0} training upgrades</p>` : locked ? '<p class="disabled-note">Find this creature in the wild and capture it to unlock it as a future starter.</p>' : `<p style="font-size:11px">${e.description}. Rare companions have stronger base stats and specialized skills.</p>`}</div>${button("Back to expedition", "close", "secondary")}`,
+      `<div class="detail-top">${image(u)}<div><span class="section-kicker" style="color:${RARITY[s.rarity].color}">${s.rarity.toUpperCase()} CREATURE</span><h2>${creatureName(u)}</h2><p style="margin:0">${s.role} \xB7 ${e.name} \xB7 Level ${u.level}</p><div class="tags">${tag(`${ROLES[s.role]} ${s.role}`)}${tag(`${e.icon} ${e.name}`)}</div></div></div>${detailTabsHTML(index)}<div class="detail-pane" data-detail-pane="overview"><div class="stat-grid">${levelStatHTML(u, "hp", "HEALTH", index)}${levelStatHTML(u, "atk", "ATTACK", index)}${levelStatHTML(u, "attackSpeed", "BASIC ATTACK SPEED", index)}${levelStatHTML(u, "actionSpeed", "ACTION SPEED", index)}${levelStatHTML(u, "hpRegen", "HP REGEN", index)}${levelStatHTML(u, "staminaRecharge", "STAMINA RECHARGE", index)}${levelStatHTML(u, "dodge", "DODGE CHANCE", index)}${levelStatHTML(u, "dashCooldown", "DODGE / DASH", index)}${levelStatHTML(u, "speed", "MOVEMENT", index)}${levelStatHTML(u, "cd", "SKILL COOLDOWN", index)}</div>${armorHTML(st, s)}${eliteBadgeHTML(u)}${ailmentMenuHTML(u)}${individualHTML(u)}${enemyCuriosHTML(u)}<div class="trait-panel"><strong>${traitFor(u).name}</strong><p>${traitFor(u).desc}</p></div>${familyInfo(u)}${evolutionHTML(u, index)}</div><div class="detail-pane" data-detail-pane="equipment">${equipmentHTML(u, index)}${loadoutHTML(u, index)}</div><div class="detail-pane" data-detail-pane="skills">${skillsHTML(u, index)}<p>Drag cooldown skills into a different order to change which ready skill the AI considers first.</p></div><div class="detail-pane" data-detail-pane="ai">${index !== null ? policyHTML(u, index) + survivalHTML(u, index) : ""}${index !== null ? `<div class="focus-control"><span class="section-kicker">TRAINING FOCUS \xB7 CHOOSE BEFORE BATTLE</span><div class="segmented">${["balanced", "aggressive", "defensive", "swift"].map((f) => `<button data-focus="${f}" data-index="${index}" class="${u.focus === f ? "active" : ""}" ${phase === "battle" ? "disabled" : ""}>${f.charAt(0).toUpperCase() + f.slice(1)}</button>`).join("")}</div><p style="font-size:10px;margin:9px 0 0">${{ balanced: "Natural strengths. No stat tradeoffs.", aggressive: "+15% attack \xB7 \u22128% health.", defensive: "+15% health \xB7 \u22128% attack.", swift: "15% faster skills \xB7 \u22126% attack." }[u.focus || "balanced"]}</p></div><div class="thin-rule"></div><span class="section-kicker">SWAP WITH A COMPANION ON YOUR BENCH</span><div class="bench-list">${run2.bench.length ? run2.bench.map((b, j) => `<button class="bench-button" data-swap="${j}" data-index="${index}" ${phase === "battle" ? "disabled" : ""}>${image(b)}${creatureName(b)}<br><span class="muted">Lv. ${b.level}</span></button>`).join("") : '<div class="empty-bench">Capture a creature or recruit one at an outpost to fill your bench.</div>'}</div><p class="starter-note">${u.level >= 5 && !evolutionStage(u) && lineageLimit(u) > 0 ? "EVOLUTION AVAILABLE \xB7 INSPECT YOUR EVOLUTION PATH ABOVE \xB7 " : ""}${u.level >= 5 ? "AWAKENED \xB7 THIRD SKILL UNLOCKED \xB7 " : ""}${u.bond ? `BOND ${u.bond} \xB7 +${u.bond * 2}% BASE HEALTH \xB7 ` : ""}${u.xp} / ${xpNeeded(u.level)} EXP toward the next level \xB7 ${u.training || 0} training upgrades</p>` : locked ? '<p class="disabled-note">Find this creature in the wild and capture it to unlock it as a future starter.</p>' : `<p style="font-size:11px">${e.description}. Rare companions have stronger base stats and specialized skills.</p>`}</div>${button("Back to expedition", "close", "secondary")}`,
       "creature"
     );
   }

@@ -312,6 +312,11 @@ body.ui-v3.native-expedition .arena-dock button{min-width:0;padding-inline:6px;f
 .stat-with-preview{position:relative;cursor:help;outline-offset:3px}.stat-with-preview small>i{color:#b9d5a2;font-size:11px;font-style:normal}
 .stat-level-preview{display:none;position:absolute;left:0;top:calc(100% - 4px);z-index:25;width:min(270px,70vw);padding:13px;background:#03232af5;border:1px solid #a4be8c;border-radius:9px;box-shadow:0 12px 28px #0009;text-align:left;font:11px/1.6 var(--sans);color:#cdded1}
 .stat-with-preview:hover .stat-level-preview,.stat-with-preview:focus .stat-level-preview{display:block}.stat-level-preview b{display:block;font:17px var(--serif);color:#efdba8}.stat-level-preview em{display:block;font-style:normal;color:#b9eda8;margin:5px 0}.stat-level-preview small{display:block;font:9px/1.4 var(--sans);margin-top:7px;color:#8eafa9}
+.stat-level-preview{pointer-events:none}
+.stat-grid:has(.stat-with-preview:hover) .stat-with-preview:not(:hover):focus .stat-level-preview{display:none}
+.stat-grid>.stat-with-preview:nth-child(4n) .stat-level-preview{left:auto;right:0}
+.stat-grid>.stat-with-preview:nth-last-child(-n+2) .stat-level-preview{top:auto;bottom:calc(100% - 4px)}
+@media(max-width:760px){.stat-grid>.stat-with-preview:nth-child(2n) .stat-level-preview{left:auto;right:0}.stat-grid>.stat-with-preview:nth-last-child(-n+4) .stat-level-preview{top:auto;bottom:calc(100% - 4px)}}
 .ui-v3 .route-links .selection-trail{fill:none;stroke:#e6daa0;stroke-width:1.1;filter:drop-shadow(0 0 1.5px #bdf3ca)}
 .ui-v3 .reference-map .route-node.route-locked{filter:drop-shadow(0 0 9px #e6df9b)}.ui-v3 .reference-map .route-node.route-locked:after{content:"ENTER";position:absolute;top:-15px;left:50%;translate:-50% 0;font:700 7px var(--sans);letter-spacing:.7px;color:#fff0bb;text-shadow:0 1px 3px #001018}
 
