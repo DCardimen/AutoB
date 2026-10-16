@@ -1,0 +1,34 @@
+[
+  {
+    "offline": false,
+    "width": 1440,
+    "authoredArt": true,
+    "sharedAttachmentArea": true,
+    "quickStoneTransfer": true,
+    "tierPreserved": true
+  },
+  {
+    "offline": false,
+    "width": 390,
+    "authoredArt": true,
+    "sharedAttachmentArea": true,
+    "quickStoneTransfer": true,
+    "tierPreserved": true
+  },
+  {
+    "offline": true,
+    "width": 1440,
+    "authoredArt": true,
+    "sharedAttachmentArea": true,
+    "quickStoneTransfer": true,
+    "tierPreserved": true
+  },
+  {
+    "offline": true,
+    "width": 390,
+    "authoredArt": true,
+    "sharedAttachmentArea": true,
+    "quickStoneTransfer": true,
+    "tierPreserved": true
+  }
+]
