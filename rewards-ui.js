@@ -1,3 +1,4 @@
+import {animateExperience,prepareExperience,settleExperience,syncExperience} from './xp-celebration.js';
 import {artImage,UI_ART,lootArt} from './ui-art.js';
 import {summaryTotals} from './battle-summary.js';
 
@@ -53,11 +54,12 @@ function settleReveal(stage){
  stage.classList.remove('reward-reveal-pending');stage.classList.add('rewards-revealed');
  const packed=stage.querySelector('[data-packed-gold]');if(packed)packed.textContent='+'+packed.dataset.packedGold+' gold';
  packFrame(stage.querySelector('.knapsack-art'),11);
- for(const row of stage.querySelectorAll('.growth-row'))row.classList.add('xp-arrived');
+ for(const row of stage.querySelectorAll('[data-xp-amount]'))settleExperience(row);
 }
 export function animateRewardReveal(stage=document.querySelector('.rewards-layout'),{gold=0,reducedMotion=false}={}){
- if(!stage)return Promise.resolve();if(reveals.has(stage))return reveals.get(stage);
+ if(!stage)return Promise.resolve();syncExperience(stage);if(reveals.has(stage))return reveals.get(stage);
  if(!stage.classList.contains('reward-reveal-pending')||reducedMotion||reduced()){settleReveal(stage);return Promise.resolve();}
+ prepareExperience(stage);
  const job=(async()=>{
   // Decode once before measuring cards. Do not wait on unrelated portraits.
   await Promise.all([...stage.querySelectorAll('.reward-chest img,.loot-drop img,.knapsack-art img')].map(img=>img.decode().catch(()=>{})));
@@ -72,7 +74,7 @@ export function animateRewardReveal(stage=document.querySelector('.rewards-layou
   if(gold>0){tasks.push(playPack(pack,[0,1,2,3,4,5,6,7],{delay:1000}));for(let i=0;i<9;i++)tasks.push(fly(stage,{from:mouth,to:destination,html:artImage('treasure-04'),kind:'gold',delay:1000+i*65,duration:900,bend:110+(i%3)*16,index:i,onArrival:()=>{pulse(pack);const counter=stage.querySelector('[data-packed-gold]');if(counter)counter.textContent='+'+Math.round(gold*(i+1)/9)+' gold';}}));}
   for(const [i,row]of [...stage.querySelectorAll('.growth-row')].entries()){
    const portrait=row.querySelector('img');if(!portrait)continue;
-   tasks.push(fly(stage,{from:mouth,to:portrait,html:artImage('effect-02')+'<i></i>',kind:'xp',delay:950+i*150,duration:1000,bend:100+i*10,index:i,onArrival:()=>{row.classList.add('xp-arrived');pulse(row,'xp');}}));
+   for(let spark=0;spark<4;spark++){const flight=fly(stage,{from:mouth,to:portrait,html:artImage('effect-02')+'<i></i>',kind:'xp',delay:950+i*150+spark*95,duration:1000,bend:100+i*10+spark*8,index:i+spark,onArrival:()=>{row.classList.add('xp-arrived');pulse(row,'xp');}});tasks.push(spark===0?flight.then(()=>animateExperience(row)):flight);}
   }
   await Promise.all(tasks);await playPack(pack,[8,9,10,11],{step:75});if(stage.isConnected)settleReveal(stage);animations.forEach(a=>a.cancel());
  })();reveals.set(stage,job);return job;

@@ -1,0 +1,46 @@
+[
+  {
+    "offline": false,
+    "width": 1440,
+    "startsAtPriorEXP": true,
+    "threeRealLevelCrossings": true,
+    "exactFinalEXP": true,
+    "beforeAfterVisible": true,
+    "cosmeticReplay": true,
+    "reducedMotion": true,
+    "reopenDoesNotReplay": true
+  },
+  {
+    "offline": false,
+    "width": 390,
+    "startsAtPriorEXP": true,
+    "threeRealLevelCrossings": true,
+    "exactFinalEXP": true,
+    "beforeAfterVisible": true,
+    "cosmeticReplay": true,
+    "reducedMotion": true,
+    "reopenDoesNotReplay": true
+  },
+  {
+    "offline": true,
+    "width": 1440,
+    "startsAtPriorEXP": true,
+    "threeRealLevelCrossings": true,
+    "exactFinalEXP": true,
+    "beforeAfterVisible": true,
+    "cosmeticReplay": true,
+    "reducedMotion": true,
+    "reopenDoesNotReplay": true
+  },
+  {
+    "offline": true,
+    "width": 390,
+    "startsAtPriorEXP": true,
+    "threeRealLevelCrossings": true,
+    "exactFinalEXP": true,
+    "beforeAfterVisible": true,
+    "cosmeticReplay": true,
+    "reducedMotion": true,
+    "reopenDoesNotReplay": true
+  }
+]

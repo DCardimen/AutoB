@@ -381,6 +381,7 @@ function render() {
   if(ctx&&canvas)renderBattle(ctx,canvas.width,canvas.height,battle,Math.min(run.planet,2),performance.now()/1000,run.team,foes||[]);
   if(canvas){drawEnemyOverheads();drawAllyOrders();}if(viewName==='map')showRecentRelicOnMap();window.scrollTo({...pageScroll,behavior:"instant"});decorateAilments($("#view"));prepareLoadoutDragging();updateCaptureFeedback();
 }
+document.addEventListener('companion-level-up',()=>sound('buy'));
 document.addEventListener('relic-received',e=>{if(!run.relics.includes(e.detail.id))return;run.recentRelicArrival={id:e.detail.id,serial:(run.recentRelicArrival?.serial||0)+1,seenOnMap:false};save();});
 function showRecentRelicOnMap(){
  const recent=run.recentRelicArrival;if(!recent||recent.seenOnMap)return;
