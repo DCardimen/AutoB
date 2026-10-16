@@ -3,6 +3,13 @@ import {equipGear,removeGear,equipmentSlots,GEAR_BY_ID,gearCompatibility,equipme
 import {equipRelic,unequipRelic,linkRelic,relicSlots,canSupport,BY_ID} from './game.js';
 import {loadoutFor} from './skills.js';
 export function applyLoadoutDrop(run,payload,target){
+ if(!target)return false;
+ if(payload.kind==='companion'){
+  const from=run.team.findIndex(c=>c.uid===payload.uid),to=Number(target.index);
+  if(target.pack||target.skill||target.gearType||!Number.isInteger(to)||from<0||!run.team[to]||from===to)return false;
+  const a=run.team[from],b=run.team[to],seat=a.seat;
+  a.seat=b.seat;b.seat=seat;[run.team[from],run.team[to]]=[b,a];return true;
+ }
  if(payload.kind==='reserve'){
   if(target.pack)return false;const j=run.bench.findIndex(c=>c.uid===payload.uid),i=Number(target.index);if(j<0)return false;
   if(target.seat!==undefined){const seat=Number(target.seat);if(!Number.isInteger(seat)||seat<0||seat>=capacity(run)||run.team.some(c=>c.seat===seat)||run.team.length>=capacity(run))return false;const c=run.bench.splice(j,1)[0];c.seat=seat;delete c.placement;run.team.push(c);return true;}
@@ -35,6 +42,7 @@ export function applyLoadoutDrop(run,payload,target){
   return equipGear(run,Number(target.index),payload.uid);
  }
  if(payload.kind==='gem'){
+  if(target.relicSlot!==undefined&&target.relicSlot!==(c.relics||[]).length)return false;
   if((run.rulesVersion||0)>=17){if(target.skill||from===c||c.relics?.some(g=>g.id===payload.id)||(c.relics||[]).length>=relicSlots(c))return false;if(from){if(from.relics?.[payload.slot]?.uid!==payload.uid)return false;unequipRelic(run,payload.fromIndex,payload.slot);}return equipRelic(run,Number(target.index),payload.uid);}
   const loadout=loadoutFor(BY_ID[c.id],c.level,c),skills=[loadout.auto,...loadout.active];
   if(target.skill&&(!skills.includes(target.skill)||!canSupport(payload.id,target.skill)))return false;
@@ -45,4 +53,10 @@ export function applyLoadoutDrop(run,payload,target){
   return target.skill?linkRelic(run,Number(target.index),c.relics.length-1,target.skill):true;
  }
  return false;
+}
+
+// Ask the actual equip/swap rules using an isolated copy; highlighting never
+// moves inventory or replaces a companion in the live expedition.
+export function canLoadoutDrop(run,payload,target){
+ return !!target&&applyLoadoutDrop(JSON.parse(JSON.stringify(run)),payload,target);
 }

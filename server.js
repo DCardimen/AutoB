@@ -16,6 +16,7 @@ const types = {
   ".woff2": "font/woff2",
 };
 const entryFiles = new Set([
+  "/loadout-drag-ui.js",
   "/route-preview.js",
   "/rarity-aura.js", "/capture-celebration.js",
   "/modal-content.js", "/capture-tracker.js",

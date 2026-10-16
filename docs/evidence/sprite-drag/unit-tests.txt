@@ -1,0 +1,232 @@
+TAP version 13
+# Subtest: multi-legged families skin their visible authored limbs without moving anatomical joints
+ok 1 - multi-legged families skin their visible authored limbs without moving anatomical joints
+  ---
+  duration_ms: 733.3938
+  type: 'test'
+  ...
+# Subtest: all natural attack categories are distinct and attack poses remain inside the sprite in every facing
+ok 2 - all natural attack categories are distinct and attack poses remain inside the sprite in every facing
+  ---
+  duration_ms: 6640.191
+  type: 'test'
+  ...
+# Subtest: canine jaws open before impact, snap at contact, close on recovery and stay hidden on rear views
+ok 3 - canine jaws open before impact, snap at contact, close on recovery and stay hidden on rear views
+  ---
+  duration_ms: 13.5985
+  type: 'test'
+  ...
+# Subtest: mantises have four walking legs and two separate scythes with a wide crossing slash
+ok 4 - mantises have four walking legs and two separate scythes with a wide crossing slash
+  ---
+  duration_ms: 0.4883
+  type: 'test'
+  ...
+# Subtest: crabs pinch, cats rake, horned creatures ram, and segmented predators use mandibles
+ok 5 - crabs pinch, cats rake, horned creatures ram, and segmented predators use mandibles
+  ---
+  duration_ms: 0.6453
+  type: 'test'
+  ...
+# Subtest: natural attacks use their animated tips for physical hits and never apply duplicate contact damage
+ok 6 - natural attacks use their animated tips for physical hits and never apply duplicate contact damage
+  ---
+  duration_ms: 20.977
+  type: 'test'
+  ...
+# Subtest: original soles, limb textures and socket pixels are retained instead of cut away
+ok 7 - original soles, limb textures and socket pixels are retained instead of cut away
+  ---
+  duration_ms: 276.1706
+  type: 'test'
+  ...
+# Subtest: registered legs stay inside the cell during movement, dodges and falls
+ok 8 - registered legs stay inside the cell during movement, dodges and falls
+  ---
+  duration_ms: 779.8825
+  type: 'test'
+  ...
+# Subtest: owl pickup binds a real body landmark without a nonexistent source weapon
+ok 9 - owl pickup binds a real body landmark without a nonexistent source weapon
+  ---
+  duration_ms: 8.5834
+  type: 'test'
+  ...
+# Subtest: every family/form/path supports pickup, movement, release and recovery at both height limits
+ok 10 - every family/form/path supports pickup, movement, release and recovery at both height limits
+  ---
+  duration_ms: 2239.0928
+  type: 'test'
+  ...
+# Subtest: a pointer outside the creature still cannot start a pickup
+ok 11 - a pointer outside the creature still cannot start a pickup
+  ---
+  duration_ms: 0.2914
+  type: 'test'
+  ...
+# Subtest: form changes, deployment resets and roster replacements discard stale falling previews
+ok 12 - form changes, deployment resets and roster replacements discard stale falling previews
+  ---
+  duration_ms: 1.7073
+  type: 'test'
+  ...
+# Subtest: five categories replace atomically, retain rolls, and double modern equipment effects
+ok 13 - five categories replace atomically, retain rolls, and double modern equipment effects
+  ---
+  duration_ms: 2.9671
+  type: 'test'
+  ...
+# Subtest: migration preserves duplicate and incompatible items once with rolled data
+ok 14 - migration preserves duplicate and incompatible items once with rolled data
+  ---
+  duration_ms: 0.3245
+  type: 'test'
+  ...
+# Subtest: enemies carry one item, elites/bosses two distinct usable categories in every family
+ok 15 - enemies carry one item, elites/bosses two distinct usable categories in every family
+  ---
+  duration_ms: 24.7762
+  type: 'test'
+  ...
+# Subtest: capture gear is postgame loot once, including retreat; reload cannot duplicate grants
+ok 16 - capture gear is postgame loot once, including retreat; reload cannot duplicate grants
+  ---
+  duration_ms: 1.7891
+  type: 'test'
+  ...
+# Subtest: tracker reports exact current engine odds, threshold progress, and terminal outcomes by UID
+ok 17 - tracker reports exact current engine odds, threshold progress, and terminal outcomes by UID
+  ---
+  duration_ms: 2.3506
+  type: 'test'
+  ...
+# Subtest: all enemy damage including crits and status is crimson; friendly damage is gold and smaller
+ok 18 - all enemy damage including crits and status is crimson; friendly damage is gold and smaller
+  ---
+  duration_ms: 0.4007
+  type: 'test'
+  ...
+# Subtest: every four-leg physics proxy has an explicit source-anatomy classification
+ok 19 - every four-leg physics proxy has an explicit source-anatomy classification
+  ---
+  duration_ms: 15.3151
+  type: 'test'
+  ...
+# Subtest: all quadruped anatomies alternate visible footfall groups through walk, run and sprint in every form and facing
+ok 20 - all quadruped anatomies alternate visible footfall groups through walk, run and sprint in every form and facing
+  ---
+  duration_ms: 5032.0895
+  type: 'test'
+  ...
+# Subtest: humanoid weapon identity and authored carry hand remain fixed throughout walking cycles
+ok 21 - humanoid weapon identity and authored carry hand remain fixed throughout walking cycles
+  ---
+  duration_ms: 7284.8871
+  type: 'test'
+  ...
+# Subtest: production humanoids retain painted boots and clothing with no replacement leg mesh showing through
+ok 22 - production humanoids retain painted boots and clothing with no replacement leg mesh showing through
+  ---
+  duration_ms: 2679.683
+  type: 'test'
+  ...
+# Subtest: wide camera preserves proportions and maps clicks back to exact world positions at every viewport
+ok 23 - wide camera preserves proportions and maps clicks back to exact world positions at every viewport
+  ---
+  duration_ms: 0.735
+  type: 'test'
+  ...
+# Subtest: reward arcs start at their source, rise above the straight path, and arrive exactly at the destination
+ok 24 - reward arcs start at their source, rise above the straight path, and arrive exactly at the destination
+  ---
+  duration_ms: 0.9763
+  type: 'test'
+  ...
+# Subtest: damage feedback retains exact HP amounts, aggregates status ticks, and gentle motion suppresses travel and pops
+ok 25 - damage feedback retains exact HP amounts, aggregates status ticks, and gentle motion suppresses travel and pops
+  ---
+  duration_ms: 0.7271
+  type: 'test'
+  ...
+# Subtest: background cover aligns the environmental masks with the same crop as the original painting
+ok 26 - background cover aligns the environmental masks with the same crop as the original painting
+  ---
+  duration_ms: 0.2963
+  type: 'test'
+  ...
+# Subtest: relic inscriptions preserve effect text and escape HTML while illuminating real numeric values
+ok 27 - relic inscriptions preserve effect text and escape HTML while illuminating real numeric values
+  ---
+  duration_ms: 0.4027
+  type: 'test'
+  ...
+# Subtest: a restored reward screen is settled and defeat never exposes a chest or a pack collection target
+ok 28 - a restored reward screen is settled and defeat never exposes a chest or a pack collection target
+  ---
+  duration_ms: 12.2455
+  type: 'test'
+  ...
+# Subtest: resting melee weapons hang down from their hands instead of crossing the chest
+ok 29 - resting melee weapons hang down from their hands instead of crossing the chest
+  ---
+  duration_ms: 2145.8659
+  type: 'test'
+  ...
+# Subtest: Brakk rests both hands below his shoulders on opposite sides of his torso
+ok 30 - Brakk rests both hands below his shoulders on opposite sides of his torso
+  ---
+  duration_ms: 77.1494
+  type: 'test'
+  ...
+# Subtest: melee silhouettes retain the complete weapon and limbs during swings, dodges, hits and falls
+ok 31 - melee silhouettes retain the complete weapon and limbs during swings, dodges, hits and falls
+  ---
+  duration_ms: 11770.1692
+  type: 'test'
+  ...
+# Subtest: active melee contacts keep their physical direction and the weapon remains in its wielding hand
+ok 32 - active melee contacts keep their physical direction and the weapon remains in its wielding hand
+  ---
+  duration_ms: 3255.7305
+  type: 'test'
+  ...
+# Subtest: expressive eye clusters are present in front/profile faces and absent from rear faces
+ok 33 - expressive eye clusters are present in front/profile faces and absent from rear faces
+  ---
+  duration_ms: 4.2577
+  type: 'test'
+  ...
+# Subtest: tiny idle phase changes leave the authored pixel clusters stable
+ok 34 - tiny idle phase changes leave the authored pixel clusters stable
+  ---
+  duration_ms: 439.4013
+  type: 'test'
+  ...
+# Subtest: the neck and clothed torso stay connected to the head across living animation frames
+ok 35 - the neck and clothed torso stay connected to the head across living animation frames
+  ---
+  duration_ms: 2235.1336
+  type: 'test'
+  ...
+# Subtest: slot highlights use real equipment rules and never change live ownership
+ok 36 - slot highlights use real equipment rules and never change live ownership
+  ---
+  duration_ms: 2.3529
+  type: 'test'
+  ...
+# Subtest: companion drops move the individual and its items, keeping team seats distinct
+ok 37 - companion drops move the individual and its items, keeping team seats distinct
+  ---
+  duration_ms: 1.41
+  type: 'test'
+  ...
+1..37
+# tests 37
+# suites 0
+# pass 37
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 26246.4668
