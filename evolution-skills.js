@@ -30,4 +30,4 @@ export function buildEvolutionSkills(species){return species.flatMap(s=>Array.fr
  if(s.element==='tide'&&def.power&&!def.slow)def.slow=1+stage*.25;
  return {id:`evolve-${s.id}-${path}-${stage}`,species:s.id,path,stage,evolutionSkill:true,compatibilityOnly:stage>(s.evolutionLimit??2),icon:'✹',name,...def,desc:`Unlocked by ${stage===1?'evolution':'ascension'}. ${name}: ${def.kind} with ${def.power?Math.round(def.power*100)+'% attack':def.heal?def.heal+' team healing':def.shield?def.shield+' shield':'haste and evasion'}${def.targets?' across '+def.targets+' targets':''}${def.root?' and '+def.root+'s root':''}.`};
 })));}
-export function evolutionSkillIds(c){return c?.evolution?Array.from({length:Math.min(2,c.evolution)},(_,i)=>`evolve-${c.id}-${c.evolutionPath||'wild'}-${i+1}`):[];}
+export function evolutionSkillIds(c){if(c?.skillsVersion===2)return c.chosenEvolutionSkills||[];return c?.evolution?Array.from({length:Math.min(2,c.evolution)},(_,i)=>`evolve-${c.id}-${c.evolutionPath||'wild'}-${i+1}`):[];}

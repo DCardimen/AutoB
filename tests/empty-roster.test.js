@@ -1,0 +1,6 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {makeRun,creature,deployReserve} from '../game.js';
+import {applyLoadoutDrop} from '../loadout-interactions.js';
+test('reserves fill the requested vacant seat without replacing survivors or losing state',()=>{const run=makeRun(1,['aurel','brakk']);run.teamCapacity=3;const survivor=run.team[0];survivor.seat=2;run.team=[survivor];const reserve=creature('nyra',7);reserve.relics=[{uid:'stone',id:'aura-wellspring',tier:1}];run.bench=[reserve];assert.ok(deployReserve(run,0,1,1));assert.equal(run.team[0],survivor);assert.equal(reserve.seat,1);assert.equal(reserve.level,7);assert.equal(reserve.relics[0].tier,1);assert.equal(run.bench.length,0);const extra=creature('eira');run.bench=[extra];const before=JSON.stringify(run);assert.equal(deployReserve(run,0,2,1),false);assert.equal(JSON.stringify(run),before);assert.ok(applyLoadoutDrop(run,{kind:'reserve',uid:extra.uid},{seat:0}));assert.equal(extra.seat,0);});
+test('a fully vacant team can be refilled from reserves',()=>{const run=makeRun(1,['aurel','brakk']);run.team=[];run.bench=[creature('nyra')];assert.ok(deployReserve(run,0,0,0));assert.equal(run.team.length,1);assert.equal(run.team[0].seat,0);});

@@ -1,0 +1,90 @@
+{
+  "samples": 12,
+  "scenarios": [
+    {
+      "team": [
+        "aurel",
+        "brakk"
+      ],
+      "depth": 1,
+      "level": 3,
+      "normalWins": 12,
+      "eliteBaselineWins": 9,
+      "eliteStoneWins": 9,
+      "carrierFights": 7,
+      "carrierWins": 5,
+      "baselineCarrierWins": 5
+    },
+    {
+      "team": [
+        "aurel",
+        "syl"
+      ],
+      "depth": 1,
+      "level": 3,
+      "normalWins": 12,
+      "eliteBaselineWins": 10,
+      "eliteStoneWins": 10,
+      "carrierFights": 7,
+      "carrierWins": 5,
+      "baselineCarrierWins": 5
+    },
+    {
+      "team": [
+        "brakk",
+        "nyra"
+      ],
+      "depth": 1,
+      "level": 3,
+      "normalWins": 12,
+      "eliteBaselineWins": 11,
+      "eliteStoneWins": 11,
+      "carrierFights": 7,
+      "carrierWins": 6,
+      "baselineCarrierWins": 6
+    },
+    {
+      "team": [
+        "aurel",
+        "brakk"
+      ],
+      "depth": 4,
+      "level": 5,
+      "normalWins": 12,
+      "eliteBaselineWins": 10,
+      "eliteStoneWins": 10,
+      "carrierFights": 10,
+      "carrierWins": 9,
+      "baselineCarrierWins": 9
+    },
+    {
+      "team": [
+        "aurel",
+        "syl"
+      ],
+      "depth": 4,
+      "level": 5,
+      "normalWins": 12,
+      "eliteBaselineWins": 11,
+      "eliteStoneWins": 10,
+      "carrierFights": 10,
+      "carrierWins": 9,
+      "baselineCarrierWins": 10
+    },
+    {
+      "team": [
+        "brakk",
+        "nyra"
+      ],
+      "depth": 4,
+      "level": 5,
+      "normalWins": 12,
+      "eliteBaselineWins": 11,
+      "eliteStoneWins": 10,
+      "carrierFights": 10,
+      "carrierWins": 8,
+      "baselineCarrierWins": 9
+    }
+  ],
+  "timeouts": 0
+}

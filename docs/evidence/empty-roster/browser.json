@@ -1,0 +1,38 @@
+[
+  {
+    "offline": false,
+    "width": 1440,
+    "arenaVacancies": true,
+    "clickedExactSeat": true,
+    "draggedExactSeat": true,
+    "reserveStatePreserved": true,
+    "persistence": true
+  },
+  {
+    "offline": false,
+    "width": 390,
+    "arenaVacancies": true,
+    "clickedExactSeat": true,
+    "draggedExactSeat": true,
+    "reserveStatePreserved": true,
+    "persistence": true
+  },
+  {
+    "offline": true,
+    "width": 1440,
+    "arenaVacancies": true,
+    "clickedExactSeat": true,
+    "draggedExactSeat": true,
+    "reserveStatePreserved": true,
+    "persistence": true
+  },
+  {
+    "offline": true,
+    "width": 390,
+    "arenaVacancies": true,
+    "clickedExactSeat": true,
+    "draggedExactSeat": true,
+    "reserveStatePreserved": true,
+    "persistence": true
+  }
+]

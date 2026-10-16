@@ -1,0 +1,38 @@
+[
+  {
+    "offline": false,
+    "fonts": [
+      {
+        "family": "DM Sans",
+        "loaded": true
+      },
+      {
+        "family": "DM Serif Display",
+        "loaded": true
+      }
+    ],
+    "sharedAtlas": true,
+    "blob": false,
+    "width": 1347,
+    "height": 1167,
+    "hash": "8bbaeee34d90019b134291e5583e0a9394745bddbc688c330af13d772bda285b"
+  },
+  {
+    "offline": true,
+    "fonts": [
+      {
+        "family": "DM Sans",
+        "loaded": true
+      },
+      {
+        "family": "DM Serif Display",
+        "loaded": true
+      }
+    ],
+    "sharedAtlas": true,
+    "blob": true,
+    "width": 1347,
+    "height": 1167,
+    "hash": "8bbaeee34d90019b134291e5583e0a9394745bddbc688c330af13d772bda285b"
+  }
+]
