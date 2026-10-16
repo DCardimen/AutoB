@@ -4,6 +4,8 @@ import {equipmentTraits} from './creature-equipment.js';
 import {scaledEffect,itemStrength} from './item-effects.js';
 import {AI_RELICS} from './ai-relics.js';
 import {CHAOS_RELICS} from './combat-expansion.js';
+import {LESSER_RELICS} from './opening-relics.js';
+import {PACT_RELICS} from './relic-pacts.js';
 // One hundred expedition curios. Each entry describes executable behavior.
 const rows=[
 ['star-chart','Star Chart','route',{sight:1},'Reveal one additional encounter ahead.'],
@@ -109,7 +111,7 @@ const rows=[
 ];
 const icons={route:'⌖',hit:'✶',hurt:'◒',dodge:'➶',tick:'❋',fatal:'✹',cast:'✧',channel:'⌛',heal:'✚',kill:'⚑',death:'☠',flat:'◆'};
 export const EXPEDITION_RELICS=rows.map(([id,name,hook,effect,desc],i)=>({id,name,hook,effect,desc,icon:icons[hook],color:['#a6c88a','#89ccd7','#d3a4e5','#e2be7b','#eea281'][i%5],cost:220+(i%5)*25,category:hook==='flat'?'stat':hook==='route'?'expedition':'combat'})).concat(AI_RELICS,CHAOS_RELICS,DESIGN_RELICS);
-export const RUN_RELIC_BY_ID=Object.fromEntries(EXPEDITION_RELICS.map(d=>[d.id,d]));
+export const RUN_RELIC_BY_ID=Object.fromEntries([...EXPEDITION_RELICS,...LESSER_RELICS,...PACT_RELICS].map(d=>[d.id,d]));
 export function enemyRelicPool(){return EXPEDITION_RELICS.filter(r=>!['route','death','fatal'].includes(r.hook));}
 export function routeModifiers(run){const out={sight:0,warp:0};for(const id of run.relics||[]){const r=RUN_RELIC_BY_ID[id];if(r?.hook==='route')for(const [k,v]of Object.entries(r.effect))out[k]=typeof v==='number'?(out[k]||0)+v:v;}return out;}
 export function relicStatFactors(ids,strength=1){const o={hp:1,atk:1,speed:1,cd:1,healing:1,poise:0,shield:0,crit:0,regenStamina:1,attackSpeed:1,actionSpeed:1,dashCooldown:1,enemyHP:1,channel:1};for(const id of new Set(ids)){const r=RUN_RELIC_BY_ID[id];for(const effect of [r?.hook==='flat'?r.effect:null,r?.statEffect].filter(Boolean))for(const [k,v]of Object.entries(scaledEffect(effect,strength)))['poise','shield','crit'].includes(k)?o[k]+=v:o[k]*=v;if(r?.hook==='channel')o.channel*=1+(r.effect.factor-1)*strength;}return o;}

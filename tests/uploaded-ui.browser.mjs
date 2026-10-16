@@ -43,9 +43,9 @@ try {
   const before=await page.locator('#battle-canvas').evaluate(c=>c.toDataURL());await page.clock.runFor(600);assert.notEqual(await page.locator('#battle-canvas').evaluate(c=>c.toDataURL()),before);
   await page.locator('.arena-dock [data-action="companions"]').click();await loaded(page);
   assert.equal(await page.locator('.party-overview [data-party-select]').count(),3);
-  await page.locator('[data-party-select="1"]').click();
+  await page.locator('[data-party-select="0"]').click();
   await page.locator('.modal [data-gear-equip="art-venom"]').click();
-  assert.ok(await page.evaluate(()=>starfall.state.run.team[1].equipment.includes('venom-sabre')));
+  assert.ok(await page.evaluate(()=>starfall.state.run.team[0].equipment.includes('venom-sabre')));
   assert.equal(await page.locator('.modal[data-kind="companions"]').count(),1,'equip stays in companion management');
   await page.locator('.companion-equipment [data-gear-remove="1"]').click();
   assert.equal(await page.evaluate(()=>starfall.state.run.gearInventory.filter(g=>g.id==='venom-sabre').length),1);

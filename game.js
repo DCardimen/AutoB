@@ -1,5 +1,8 @@
 import {movementPace,steerMovement} from './movement-tuning.js';
 import {assignEliteModifier,applyEliteStats,eliteModifierForSeed} from './elite-modifiers.js';
+import {LESSER_RELICS} from './opening-relics.js';
+import {PACT_RELICS} from './relic-pacts.js';
+import {equipmentAffinity} from './equipment-affinity.js';
 import {rollStarterGear} from './starter-equipment.js';
 import {snapshotNativeMotion} from './native-motion.js';
 import {WEARER_BY_ID,WEARER_RELICS,wearerStats,initializeCompanion} from './wearer-relics.js';
@@ -229,7 +232,7 @@ export const RELICS = [
     cost: 135,
   },
 ];
-RELICS.push(...NEW_RELICS,...EXPEDITION_RELICS);
+RELICS.push(...NEW_RELICS,...EXPEDITION_RELICS,...PACT_RELICS,...LESSER_RELICS);
 for(const relic of RELICS)relic.cost=Math.max(220,relic.cost);
 export const RELIC_SLOTS = {
   Common: 1,
@@ -795,7 +798,7 @@ export function makeRun(seed = Date.now(), ids = STARTERS, options = {}) {
     const budget=Math.max(3,Math.min(23,options.starterBudget??starterBudget(options)));
     if(team.reduce((points,c)=>points+starterPoints(BY_ID[c.id].rarity,options.starterBonds?.[c.id]||0),0)>budget)throw new Error('Starting companions exceed the starter point budget.');
   }
-  if(rulesVersion>=15)team.forEach((c,i)=>{c.balanceVersion=rulesVersion;c.equipment=[i===0?'reliquary-plate':'sunsteel-edge'];});
+  if(rulesVersion>=15)team.forEach((c,i)=>{c.balanceVersion=rulesVersion;c.equipment=[equipmentAffinity(c)==='fang'?(i===0?'heartstone-collar':'silver-fang'):i===0?'reliquary-plate':({sword:'sunsteel-edge',bow:'copper-practice-bow','two-handed':'training-maul',staff:'apprentice-staff',cannon:'brass-barrel'}[equipmentAffinity(c)])];});
   const result = {
     seed,
     rulesVersion,
@@ -804,7 +807,7 @@ export function makeRun(seed = Date.now(), ids = STARTERS, options = {}) {
     captureTools:rulesVersion>=12?{scout:5,runic:0,astral:0,mythic:0}:undefined,
     native,
     rosterMode: options.rosterMode || (ids.every(id=>!!BY_ID[id].nativeRig)?"authored":"collection"),
-    gearInventory: rulesVersion>=17?rollStarterGear(seed):[],
+    gearInventory: rulesVersion>=17?rollStarterGear(seed,team):[],
     starterGearVersion:rulesVersion>=17?1:undefined,
     difficulty: DIFFICULTIES[options.difficulty]
       ? options.difficulty
@@ -837,8 +840,7 @@ export function makeRun(seed = Date.now(), ids = STARTERS, options = {}) {
     complete: false,
   };
   // Seeded independently: the opening relic never changes the route RNG stream.
-  const opening=EXPEDITION_RELICS[Math.floor(rng(seed+807731)()*EXPEDITION_RELICS.length)];
-  if(rulesVersion>=17){result.relics=[opening.id];result.startingRelic=opening.id;}
+  // The browser commits two saved offers after team selection; no automatic grant.
   const chaos = chaosLevel(result);
   if(chaos>=3)result.teamCapacity=Math.max(3,result.teamCapacity);
   if (chaos >= 3) result.gold = 130;
@@ -1142,7 +1144,7 @@ export function buyLegendaryLure(run) {
 }
 export function generateShop(run, seed) {
   const r = rng(seed),
-    available = RELICS.filter((item) => !run.relics.includes(item.id)),
+    available = RELICS.filter((item) => !item.openingTier && !run.relics.includes(item.id)),
     relics = [];
   while (available.length && relics.length < ((run.rulesVersion||0)>=15?2:3))
     relics.push(available.splice(Math.floor(r() * available.length), 1)[0].id);
@@ -1332,7 +1334,7 @@ export function rewardBattle(run, type, won, battle = null) {
     }
     if (type === "boss"){if(progressive(run))addCapturer(run,"runic",2);else run.orbs+=2;}
     const slotsAdded=unlockSlots(run),mods=routeModifiers(run);const bonus=progressive(run)?(type==="battle"?mods.battleGold||0:type==="elite"?Math.round(gold*(mods.eliteGold||0)):Math.round(gold*(mods.bossGold||0)))+(mods.lowGold&&(battle?.startingGold??run.gold-gold)<mods.lowGold?20:0):0;run.gold+=bonus;
-    const choicePool=RELICS.filter(r=>!run.relics.includes(r.id)),choiceRandom=rng(run.seed+run.wins*7171);const relicChoices=(run.rulesVersion||0)>=15&&['elite','boss'].includes(type)?[...Array(Math.min(2,choicePool.length))].map(()=>choicePool.splice(Math.floor(choiceRandom()*choicePool.length),1)[0].id):undefined;
+    const choicePool=RELICS.filter(r=>!r.openingTier&&!run.relics.includes(r.id)),choiceRandom=rng(run.seed+run.wins*7171);const relicChoices=(run.rulesVersion||0)>=15&&['elite','boss'].includes(type)?[...Array(Math.min(2,choicePool.length))].map(()=>choicePool.splice(Math.floor(choiceRandom()*choicePool.length),1)[0].id):undefined;
     const gearRandom=rng(run.seed+run.wins*3517),equipmentReward=(run.rulesVersion||0)>=15&&run.wins>1&&!['elite','boss'].includes(type)&&gearRandom()<.7?pick(CREATURE_GEAR,gearRandom).id:undefined;
     return { gold:gold+bonus, xp, levels, growth,slotsAdded,relicChoices,equipmentReward };
   }

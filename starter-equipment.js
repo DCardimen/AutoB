@@ -1,3 +1,5 @@
+import {AFFINITY_GEAR} from './affinity-gear.js';
+import {gearCompatibility} from './equipment-affinity.js';
 export const STARTER_GEAR=[
  {id:'practice-copper',name:'Practice Copper Blade',slot:'Weapon',effect:{atkFlat:4}},
  {id:'faded-tempo-ribbon',name:'Faded Tempo Ribbon',slot:'Cape',effect:{actionSpeedFlat:.08}},
@@ -9,8 +11,8 @@ export const STARTER_GEAR=[
  {id:'apprentice-grip',name:'Apprentice Grip',slot:'Weapon',effect:{atkFlat:2,actionSpeedFlat:.04}},
 ].map(g=>({...g,hook:'flat',tier:'starter',color:'#a6b9a1',cost:40,desc:'Modest starter equipment. Equip from the pack beneath your companions.'}));
 
-export function rollStarterGear(seed){
-  const pool=STARTER_GEAR.slice();let state=Number(seed)>>>0;
+export function rollStarterGear(seed,team=null){
+  const pool=team?[...STARTER_GEAR,...AFFINITY_GEAR.filter(g=>g.hook==='flat')].filter(g=>team.some(c=>gearCompatibility(c,g).allowed)):STARTER_GEAR.slice();let state=Number(seed)>>>0;
   return Array.from({length:3},(_,i)=>{
     state=(Math.imul(state,1664525)+1013904223)>>>0;
     const gear=pool.splice(state%pool.length,1)[0];

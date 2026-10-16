@@ -253,8 +253,12 @@ function creatureRig(id,state,phase,stage,options){
     const foot=moving?rigFoot(phase+l.offset,stride,run*0.25,0):{x:0,z:0,pitch:0,planted:true,duty:0.62};
     foot.z*=id==='centipede'?.4:id==='mech'||id==='crab'?.5:.65;
     const root=point(l.x,l.y,hip),ground=options.feet?.[i]||point((l.footX??l.x)+foot.x*motion,l.footY,3+foot.z);
-    const lift=footSoleLift(id,foot.pitch,ground.z),target={...ground,z:ground.z+lift},solved=solveLimb(root,target,d.thigh,d.shin,point(0,Math.sign(l.y),0.3));
-    return {...solved,index:i,side:l.y,front:l.x>0,foot:{...foot,position:target,ground,soleLift:lift,angle:options.feet?.[i]?.angle||0}};
+    const lift=footSoleLift(id,foot.pitch,ground.z);
+    // A turn can leave an old world-space foot anchor beyond the short painted
+    // limb's reach. Fit the landing arc before IK, keeping the sole on its plane
+    // instead of letting the solver pull the foot upward or stretch a segment.
+    const target=reachableStep(root,{...ground,z:ground.z+lift},d.thigh+d.shin-.2),solved=solveLimb(root,target,d.thigh,d.shin,point(0,Math.sign(l.y),0.3));
+    return {...solved,index:i,side:l.y,front:l.x>0,foot:{...foot,position:target,ground:{...ground,x:target.x,y:target.y},soleLift:lift,angle:options.feet?.[i]?.angle||0}};
   });
   if(id==='jelly'){body.z=17+Math.max(0,Math.sin(phase*TAU))*((moving?1:0)*(7+run*4+sprint*4));head.z=body.z+3;}
   if(id==='serpent'){body.z=10-dead*5;head.x=17+(state==='attack'?Math.sin(phase*Math.PI)*9:0);head.z=19-dead*12;}

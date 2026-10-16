@@ -1,3 +1,4 @@
+import {relicIllustration} from './relic-illustrations.js';
 import {UI_ART} from './ui-art-assets.js';
 import {CREATURE_GEAR, GEAR_BY_ID} from './creature-equipment.js';
 import {RELICS} from './game.js';
@@ -19,7 +20,7 @@ const counts={};
 export const GEAR_ART=Object.fromEntries(CREATURE_GEAR.map(g=>{
  const [prefix,start,length]=slotPools[g.slot]||['accessory',10,15];
  const n=counts[g.slot]||0;counts[g.slot]=n+1;
- return [g.id,`${prefix}-${String(start+n%length).padStart(2,'0')}`];
+ return [g.id,g.art||`${prefix}-${String(start+n%length).padStart(2,'0')}`];
 }));
 Object.assign(GEAR_ART,{
  'sunsteel-edge':'skill-00','starter-sunsteel-edge':'skill-00',
@@ -34,8 +35,10 @@ Object.assign(GEAR_ART,{
  'echo-prism':'focus-22','winter-lens':'accessory-12','battery-orb':'focus-18',
  'spring-idol':'focus-19','purity-lantern':'relic-1-04',
 });
-export const RELIC_ART=Object.fromEntries([...RELICS,...WEARER_RELICS].map((r,i)=>[r.id,`relic-${1+Math.floor(i/25)%4}-${String(i%25).padStart(2,'0')}`]));
-Object.assign(RELIC_ART,{fangs:'relic-4-23',clock:'relic-2-20',seed:'relic-1-00',prism:'relic-2-12',lens:'relic-2-08',banner:'relic-2-06',feather:'relic-1-12',coin:'relic-4-00',bond:'relic-1-21'});
+Object.assign(GEAR_ART,{
+ 'sunsteel-edge':'weapon-00','venom-sabre':'weapon-02','cinder-cleaver':'weapon-01','frost-rapier':'weapon-09','thorn-halberd':'weapon-17','siege-maul':'weapon-10','hunters-claw':'animal-05','duelists-edge':'weapon-03','storm-conductor':'focus-14','vampire-tooth':'animal-04','sundering-glaive':'weapon-22','frostfire-edge':'weapon-09','silver-disruptor':'focus-05','predators-tooth':'animal-00','tempo-rapier':'weapon-03','quickdraw-string':'focus-00','sanguine-needle':'weapon-07','glacial-tuning-fork':'focus-12','shatter-chisel':'weapon-19','vitality-scythe':'weapon-16','siegebreaker-pick':'weapon-19','virulent-fan':'focus-17','practice-copper':'weapon-04','apprentice-grip':'weapon-05',
+});
+export const RELIC_ART=Object.fromEntries([...RELICS,...WEARER_RELICS].map(r=>[r.id,relicIllustration(r)]));
 export const gearArt=id=>GEAR_ART[id]||'weapon-00';
 export const relicArt=id=>RELIC_ART[id]||'relic-1-00';
 export const lootArt=d=>d.kind==='gear'?gearArt(d.gear):d.kind==='capturer'?`capture-${d.tier}-idle`:d.kind==='relic'?relicArt(d.relic):'treasure-01';

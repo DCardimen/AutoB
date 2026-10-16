@@ -1,0 +1,23 @@
+const rows=[
+ ['briar-longbow','Briar Longbow','Weapon','bow','hit',{poison:3,every:3},'focus-04'],
+ ['winter-shortbow','Winter Shortbow','Weapon','bow','hit',{slow:1.6,every:3},'focus-02'],
+ ['copper-practice-bow','Copper Practice Bow','Weapon','bow','flat',{atkFlat:4},'focus-00'],
+ ['apprentice-staff','Apprentice Staff','Weapon','staff','flat',{atkFlat:4},'focus-11'],
+ ['training-maul','Training Maul','Weapon','two-handed','flat',{atkFlat:4},'weapon-10'],
+ ['brass-barrel','Brass Barrel','Weapon','cannon','flat',{atkFlat:4},'relic-2-21'],
+ ['jade-fang','Jade Fang','Fang','fang','hit',{poison:3,every:3},'animal-00'],
+ ['emerald-talons','Emerald Talons','Fang','fang','hit',{bleed:3,every:3},'animal-01'],
+ ['winter-fang','Winter Fang','Fang','fang','hit',{slow:1.6,every:3},'animal-02'],
+ ['molten-fang','Molten Fang','Fang','fang','hit',{burn:3,every:3},'animal-03'],
+ ['silver-fang','Silver Fang','Fang','fang','flat',{atkFlat:4},'animal-04'],
+ ['predator-talons','Predator Talons','Fang','fang','hit',{damage:1.22,condition:'wounded'},'animal-05'],
+ ['amber-beak','Amber Beak','Fang','fang','hit',{shred:20},'animal-06'],
+ ['tidal-horn','Tidal Horn','Fang','fang','cast',{shield:12,interval:6},'animal-07'],
+ ['moon-antler','Moon Antler','Fang','fang','heal',{shield:12,interval:4},'animal-08'],
+ ['ruby-fang-collar','Ruby Fang Collar','Jewelry',null,'hurt',{reflect:.12,condition:'shielded'},'animal-09'],
+ ['heartstone-collar','Heartstone Collar','Jewelry',null,'flat',{hpFlat:24},'animal-11'],
+ ['gilded-paw-bands','Gilded Paw Bands','Jewelry',null,'flat',{speedFlat:8},'animal-14'],
+ ['grove-antler-circlet','Grove Antler Circlet','Jewelry',null,'cast',{healLowest:.3,interval:6},'animal-22'],
+ ['sapphire-fang-necklace','Sapphire Fang Necklace','Jewelry',null,'flat',{regenStamina:1.16},'animal-24'],
+];
+export const AFFINITY_GEAR=rows.map(([id,name,slot,weaponClass,hook,effect,art])=>({id,name,slot,weaponClass,hook,effect,art,color:'#b6d7bd',cost:85,desc:'Specialist equipment. Passives affect the wearer.'}));

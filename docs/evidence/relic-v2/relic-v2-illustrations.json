@@ -1,0 +1,1570 @@
+[
+  {
+    "id": "fangs",
+    "name": "Twin Fangs",
+    "art": "relic-4-22",
+    "major": false,
+    "description": "Basic attacks deal 9% more damage. Strikers gain 4% lifesteal."
+  },
+  {
+    "id": "clock",
+    "name": "Broken Hourglass",
+    "art": "relic-4-20",
+    "major": false,
+    "description": "Skill cooldown times are 11% shorter."
+  },
+  {
+    "id": "seed",
+    "name": "Evergreen Heart",
+    "art": "relic-1-07",
+    "major": false,
+    "description": "Healing is 17.5% stronger. Grove creatures gain 6% max HP."
+  },
+  {
+    "id": "prism",
+    "name": "Prismatic Shell",
+    "art": "relic-2-12",
+    "major": false,
+    "description": "Every ally starts battle with 32.5 shield."
+  },
+  {
+    "id": "lens",
+    "name": "Hunters’ Lens",
+    "art": "relic-2-21",
+    "major": false,
+    "description": "Adds up to 6 percentage points to capture odds, scaled by missing health (full bonus at 25% HP or lower), before Swift mode and rarity caps."
+  },
+  {
+    "id": "banner",
+    "name": "Vanguard Standard",
+    "art": "relic-2-03",
+    "major": false,
+    "description": "Guardians gain 11% max HP and taunt at battle start."
+  },
+  {
+    "id": "feather",
+    "name": "Ghost Feather",
+    "art": "relic-1-12",
+    "major": false,
+    "description": "Improves physical dodge reactions and grants 6% movement speed."
+  },
+  {
+    "id": "coin",
+    "name": "Pilgrim’s Coin",
+    "art": "treasure-01",
+    "major": false,
+    "description": "Battle gold rewards increase by 17.5%."
+  },
+  {
+    "id": "bond",
+    "name": "Woven Soul",
+    "art": "relic-4-18",
+    "major": false,
+    "description": "Each active elemental synergy grants 2.5% attack."
+  },
+  {
+    "id": "blood-pact",
+    "name": "Blood Covenant",
+    "art": "relic-1-23",
+    "major": false,
+    "description": "Allies deal 11% more damage, but healing is 25% weaker."
+  },
+  {
+    "id": "mercy",
+    "name": "Mercy Engine",
+    "art": "relic-1-14",
+    "major": false,
+    "description": "Once per creature: falling below 30% health restores 10% max health."
+  },
+  {
+    "id": "storm-relay",
+    "name": "Storm Relay",
+    "art": "relic-4-04",
+    "major": false,
+    "description": "Each allied dodge refreshes nearby allies’ cooldowns by 0.35s; shields are 15% weaker."
+  },
+  {
+    "id": "thorn-crown",
+    "name": "Thorn Crown",
+    "art": "relic-3-17",
+    "major": false,
+    "description": "Shielded Guardians reflect 11% of incoming hit damage; movement is 10% slower."
+  },
+  {
+    "id": "glass-cannon",
+    "name": "Glass Constellation",
+    "art": "relic-3-05",
+    "major": false,
+    "description": "Rangers deal 15% more damage at long range, but have 15% less health."
+  },
+  {
+    "id": "spore-network",
+    "name": "Spore Network",
+    "art": "relic-1-02",
+    "major": false,
+    "description": "Damage to poisoned enemies heals your weakest ally for 7.5% of damage; direct healing is 10% weaker."
+  },
+  {
+    "id": "execution-bell",
+    "name": "Execution Bell",
+    "art": "relic-4-05",
+    "major": false,
+    "description": "An allied kill refreshes every living ally’s cooldowns by 0.35s."
+  },
+  {
+    "id": "sanctuary",
+    "name": "Sanctuary Loom",
+    "art": "relic-3-14",
+    "major": false,
+    "description": "Allies near a Support take 6% less direct-hit damage. Clustering risks enemy areas."
+  },
+  {
+    "id": "overgrowth",
+    "name": "Overgrowth Vessel",
+    "art": "relic-1-20",
+    "major": false,
+    "description": "25% of excess allied healing becomes shield, but cooldowns recharge 8% slower."
+  },
+  {
+    "id": "hatchery",
+    "name": "Traveler's Hatchery",
+    "art": "relic-1-15",
+    "major": false,
+    "description": "A successful capture grants 17.5 EXP to the active team and refunds 10 gold."
+  },
+  {
+    "id": "salvage",
+    "name": "Salvager's Compass",
+    "art": "relic-4-00",
+    "major": false,
+    "description": "Elites grant an additional personal relic; normal battle gold is 10% lower."
+  },
+  {
+    "id": "unity",
+    "name": "Prismatic Accord",
+    "art": "relic-3-13",
+    "major": false,
+    "description": "Five different elements grant 10% attack and 7.5% max health. Duplicate elements lose this bonus."
+  },
+  {
+    "id": "last-light",
+    "name": "Last Light",
+    "art": "relic-2-22",
+    "major": false,
+    "description": "Once per battle, revive the first fallen ally at 15% health with 1s evasion. Team healing is 10% lower."
+  },
+  {
+    "id": "frostfire",
+    "name": "Frostfire Crucible",
+    "art": "relic-2-24",
+    "major": false,
+    "description": "Hits on burning, slowed enemies detonate steam for 25% attack, consuming burn."
+  },
+  {
+    "id": "echo-chamber",
+    "name": "Echo Chamber",
+    "art": "relic-2-11",
+    "major": false,
+    "description": "Every fourth allied cooldown skill repeats at 22.5% power. Cooldowns recharge 12% slower."
+  },
+  {
+    "id": "star-chart",
+    "name": "Star Chart",
+    "art": "relic-3-11",
+    "major": false,
+    "description": "Reveal one additional encounter ahead."
+  },
+  {
+    "id": "oracle-lens",
+    "name": "Oracle Lens",
+    "art": "relic-2-21",
+    "major": false,
+    "description": "Reveal two additional encounters ahead."
+  },
+  {
+    "id": "atlas-of-echoes",
+    "name": "Atlas of Echoes",
+    "art": "relic-4-10",
+    "major": false,
+    "description": "Scout one extra room; elite victories yield 30% more gold."
+  },
+  {
+    "id": "veil-corridor",
+    "name": "Veil Corridor",
+    "art": "relic-3-22",
+    "major": false,
+    "description": "Once per planet, take any visible next-room connection."
+  },
+  {
+    "id": "pilgrim-thread",
+    "name": "Pilgrim Thread",
+    "art": "relic-4-18",
+    "major": false,
+    "description": "Reveal one extra room. Rest training grants 25 extra EXP."
+  },
+  {
+    "id": "battle-compass",
+    "name": "Battle Compass",
+    "art": "relic-4-00",
+    "major": false,
+    "description": "Each ordinary battle grants 12 extra gold."
+  },
+  {
+    "id": "merchant-seal",
+    "name": "Merchant Seal",
+    "art": "relic-4-14",
+    "major": false,
+    "description": "Shop prices are 15% lower; your gold can fund a different build."
+  },
+  {
+    "id": "empty-purse",
+    "name": "Empty Purse",
+    "art": "relic-2-15",
+    "major": false,
+    "description": "Victories grant 20 extra gold when you entered with under 40 gold."
+  },
+  {
+    "id": "guild-charter",
+    "name": "Guild Charter",
+    "art": "relic-4-19",
+    "major": false,
+    "description": "Hiring permits cost 30% less."
+  },
+  {
+    "id": "rift-map",
+    "name": "Rift Map",
+    "art": "relic-3-08",
+    "major": false,
+    "description": "Scout one extra room and cross two disconnected next-room edges per planet."
+  },
+  {
+    "id": "prism-nest",
+    "name": "Prism Nest",
+    "art": "relic-1-15",
+    "major": false,
+    "description": "Every victory cache includes a Scout Prism."
+  },
+  {
+    "id": "cage-smith",
+    "name": "Cage Smith",
+    "art": "relic-1-04",
+    "major": false,
+    "description": "Capturer drops from elite and boss caches advance one tier."
+  },
+  {
+    "id": "patient-loom",
+    "name": "Patient Loom",
+    "art": "relic-4-18",
+    "major": false,
+    "description": "Captures at 30% HP or less gain eight percentage points."
+  },
+  {
+    "id": "silken-hook",
+    "name": "Silken Hook",
+    "art": "relic-2-23",
+    "major": false,
+    "description": "Poisoned, burning, rooted or slowed targets are ten points easier to capture."
+  },
+  {
+    "id": "returning-prism",
+    "name": "Returning Prism",
+    "art": "relic-2-12",
+    "major": false,
+    "description": "A failed capture has a 25% chance to return its capturer, once per attempt."
+  },
+  {
+    "id": "beast-ledger",
+    "name": "Beast Ledger",
+    "art": "relic-4-23",
+    "major": false,
+    "description": "Successful captures grant 35 gold for recruiting or equipment."
+  },
+  {
+    "id": "nursery-bell",
+    "name": "Nursery Bell",
+    "art": "relic-4-05",
+    "major": false,
+    "description": "A successful capture grants the deployed team 40 EXP."
+  },
+  {
+    "id": "treasure-moth",
+    "name": "Treasure Moth",
+    "art": "relic-2-13",
+    "major": false,
+    "description": "Victory caches have a 50% chance to include one extra unique relic."
+  },
+  {
+    "id": "contract-ink",
+    "name": "Contract Ink",
+    "art": "relic-2-23",
+    "major": false,
+    "description": "Elite and boss victories pay 35% and 20% more gold."
+  },
+  {
+    "id": "royal-stables",
+    "name": "Royal Stables",
+    "art": "relic-4-21",
+    "major": false,
+    "description": "Recruit offers cost 20% less. Buy the stat profile your team needs."
+  },
+  {
+    "id": "venom-clasp",
+    "name": "Venom Clasp",
+    "art": "relic-4-06",
+    "major": false,
+    "description": "On connected hits: poison 1s."
+  },
+  {
+    "id": "ember-script",
+    "name": "Ember Script",
+    "art": "relic-1-03",
+    "major": false,
+    "description": "On connected hits: burn 1s."
+  },
+  {
+    "id": "thorn-cuff",
+    "name": "Thorn Cuff",
+    "art": "relic-1-20",
+    "major": false,
+    "description": "On connected hits · every 3 triggers: root 0.28s."
+  },
+  {
+    "id": "winter-talon",
+    "name": "Winter Talon",
+    "art": "animal-02",
+    "major": false,
+    "description": "On connected hits: slow 0.7s."
+  },
+  {
+    "id": "fracture-nail",
+    "name": "Fracture Nail",
+    "art": "relic-3-05",
+    "major": false,
+    "description": "On connected hits: 9 shield damage."
+  },
+  {
+    "id": "copper-conductor",
+    "name": "Copper Conductor",
+    "art": "relic-4-04",
+    "major": false,
+    "description": "On connected hits · every 3 triggers: 22.5% attack chain power."
+  },
+  {
+    "id": "serpent-contract",
+    "name": "Serpent Contract",
+    "art": "relic-4-06",
+    "major": false,
+    "description": "On connected hits · against poisoned enemies: +17.5% damage."
+  },
+  {
+    "id": "charcoal-mirror",
+    "name": "Charcoal Mirror",
+    "art": "relic-4-02",
+    "major": false,
+    "description": "On connected hits · against burning enemies: +17.5% damage."
+  },
+  {
+    "id": "shatter-oath",
+    "name": "Shatter Oath",
+    "art": "relic-3-05",
+    "major": false,
+    "description": "On connected hits · against slowed enemies: +20% damage."
+  },
+  {
+    "id": "execution-script",
+    "name": "Execution Script",
+    "art": "relic-4-11",
+    "major": false,
+    "description": "On connected hits · against enemies below 30% HP: +22.5% damage."
+  },
+  {
+    "id": "dawn-cord",
+    "name": "Dawn Cord",
+    "art": "relic-1-08",
+    "major": false,
+    "description": "On connected hits · while shielded: +12.5% damage."
+  },
+  {
+    "id": "duelist-knot",
+    "name": "Duelist Knot",
+    "art": "relic-4-18",
+    "major": false,
+    "description": "On connected hits · while isolated: +15% damage."
+  },
+  {
+    "id": "pack-standard",
+    "name": "Pack Standard",
+    "art": "relic-2-03",
+    "major": false,
+    "description": "On connected hits · near an ally: +10% damage."
+  },
+  {
+    "id": "sniper-script",
+    "name": "Sniper Script",
+    "art": "relic-2-21",
+    "major": false,
+    "description": "On connected hits · at long range: +17.5% damage."
+  },
+  {
+    "id": "pit-fighter-chain",
+    "name": "Pit Fighter Chain",
+    "art": "relic-3-22",
+    "major": false,
+    "description": "On connected hits · at close range: +12.5% damage."
+  },
+  {
+    "id": "blood-signet",
+    "name": "Blood Signet",
+    "art": "accessory-11",
+    "major": false,
+    "description": "On connected hits: 6% damage lifesteal."
+  },
+  {
+    "id": "fervor-spindle",
+    "name": "Fervor Spindle",
+    "art": "relic-4-18",
+    "major": false,
+    "description": "On connected hits · every 4 triggers: haste 1.5s."
+  },
+  {
+    "id": "guardbreaker",
+    "name": "Guardbreaker",
+    "art": "relic-2-09",
+    "major": false,
+    "description": "On connected hits · every 3 triggers: 35 impact."
+  },
+  {
+    "id": "momentum-band",
+    "name": "Momentum Band",
+    "art": "relic-3-03",
+    "major": false,
+    "description": "On connected hits · while moving: +15% damage."
+  },
+  {
+    "id": "stamina-spike",
+    "name": "Stamina Spike",
+    "art": "relic-1-00",
+    "major": false,
+    "description": "On connected hits: 2 stamina."
+  },
+  {
+    "id": "recharge-tooth",
+    "name": "Recharge Tooth",
+    "art": "relic-4-22",
+    "major": false,
+    "description": "On connected hits · every 3 triggers: 0.75 seconds off all cooldowns."
+  },
+  {
+    "id": "splash-rune",
+    "name": "Splash Rune",
+    "art": "relic-3-02",
+    "major": false,
+    "description": "On connected hits · every 3 triggers: 20% attack splash power."
+  },
+  {
+    "id": "black-salt",
+    "name": "Black Salt",
+    "art": "relic-4-06",
+    "major": false,
+    "description": "On connected hits: wither 1s."
+  },
+  {
+    "id": "hunter-eye",
+    "name": "Hunter Eye",
+    "art": "relic-3-12",
+    "major": false,
+    "description": "On connected hits: exposure 1s."
+  },
+  {
+    "id": "storm-suture",
+    "name": "Storm Suture",
+    "art": "relic-4-18",
+    "major": false,
+    "description": "On connected hits · every 4 triggers: 17.5 shield."
+  },
+  {
+    "id": "spellblade-thread",
+    "name": "Spellblade Thread",
+    "art": "relic-4-18",
+    "major": false,
+    "description": "On connected hits · auto-attacks · within 3s of casting: +27.5% damage."
+  },
+  {
+    "id": "ashen-needle",
+    "name": "Ashen Needle",
+    "art": "relic-2-23",
+    "major": false,
+    "description": "On connected hits · every 3 triggers: burn 2s, slow 0.5s."
+  },
+  {
+    "id": "venom-hourglass",
+    "name": "Venom Hourglass",
+    "art": "relic-4-20",
+    "major": false,
+    "description": "On connected hits · against poisoned enemies: 0.3 seconds off all cooldowns."
+  },
+  {
+    "id": "pressure-crown",
+    "name": "Pressure Crown",
+    "art": "relic-3-17",
+    "major": false,
+    "description": "On connected hits · against shields: +20% damage."
+  },
+  {
+    "id": "interruption-hook",
+    "name": "Interruption Hook",
+    "art": "relic-2-23",
+    "major": false,
+    "description": "On connected hits · against an interruptible windup: 0.5 seconds off all cooldowns, 27.5 impact."
+  },
+  {
+    "id": "mirror-thorns",
+    "name": "Mirror Thorns",
+    "art": "relic-4-02",
+    "major": false,
+    "description": "When hit: 7.5% damage reflected."
+  },
+  {
+    "id": "pain-furnace",
+    "name": "Pain Furnace",
+    "art": "relic-3-00",
+    "major": false,
+    "description": "When hit · every 3 triggers: 0.5 seconds off all cooldowns."
+  },
+  {
+    "id": "last-bastion",
+    "name": "Last Bastion",
+    "art": "relic-2-00",
+    "major": false,
+    "description": "When hit · below 35% HP · 8s cooldown: 32.5 shield."
+  },
+  {
+    "id": "smoke-vessel",
+    "name": "Smoke Vessel",
+    "art": "relic-3-09",
+    "major": false,
+    "description": "When hit · below 35% HP · 8s cooldown: evasion 2s."
+  },
+  {
+    "id": "resolute-heart",
+    "name": "Resolute Heart",
+    "art": "relic-4-04",
+    "major": false,
+    "description": "When hit: 4 stamina."
+  },
+  {
+    "id": "grudge-flower",
+    "name": "Grudge Flower",
+    "art": "relic-1-06",
+    "major": false,
+    "description": "When hit · at close range: poison 1.5s."
+  },
+  {
+    "id": "frost-buckle",
+    "name": "Frost Buckle",
+    "art": "relic-3-02",
+    "major": false,
+    "description": "When hit: slow 0.75s."
+  },
+  {
+    "id": "scarlet-barrier",
+    "name": "Scarlet Barrier",
+    "art": "relic-3-24",
+    "major": false,
+    "description": "When hit · below 35% HP: -10% incoming damage."
+  },
+  {
+    "id": "linked-bastion",
+    "name": "Linked Bastion",
+    "art": "relic-2-00",
+    "major": false,
+    "description": "When hit · near an ally: -7.5% incoming damage."
+  },
+  {
+    "id": "wanderer-shell",
+    "name": "Wanderer Shell",
+    "art": "relic-2-00",
+    "major": false,
+    "description": "When hit · while isolated: -10% incoming damage."
+  },
+  {
+    "id": "dodge-battery",
+    "name": "Dodge Battery",
+    "art": "relic-4-04",
+    "major": false,
+    "description": "After a dodge: 6 stamina."
+  },
+  {
+    "id": "ghost-lantern",
+    "name": "Ghost Lantern",
+    "art": "relic-2-22",
+    "major": false,
+    "description": "After a dodge: 15 shield."
+  },
+  {
+    "id": "storm-footprint",
+    "name": "Storm Footprint",
+    "art": "relic-4-04",
+    "major": false,
+    "description": "After a dodge: 30% attack splash power."
+  },
+  {
+    "id": "evasive-clock",
+    "name": "Evasive Clock",
+    "art": "relic-4-20",
+    "major": false,
+    "description": "After a dodge: 1 seconds off all cooldowns."
+  },
+  {
+    "id": "bramble-footprint",
+    "name": "Bramble Footprint",
+    "art": "relic-3-02",
+    "major": false,
+    "description": "After a dodge: root 0.28s."
+  },
+  {
+    "id": "running-aegis",
+    "name": "Running Aegis",
+    "art": "relic-2-00",
+    "major": false,
+    "description": "Periodically · while moving · 1s cooldown: 3 shield."
+  },
+  {
+    "id": "stillwater-shell",
+    "name": "Stillwater Shell",
+    "art": "relic-2-00",
+    "major": false,
+    "description": "Periodically · while holding position · 1s cooldown: 4.5 shield."
+  },
+  {
+    "id": "escort-pollen",
+    "name": "Escort Pollen",
+    "art": "relic-1-06",
+    "major": false,
+    "description": "Periodically · near an ally · 1s cooldown: 3.5 healing."
+  },
+  {
+    "id": "lone-comet",
+    "name": "Lone Comet",
+    "art": "relic-3-24",
+    "major": false,
+    "description": "Periodically · while isolated · 1s cooldown: haste 0.6s."
+  },
+  {
+    "id": "anchor-of-life",
+    "name": "Anchor of Life",
+    "art": "relic-2-00",
+    "major": false,
+    "description": "Once at lethal damage: 20 shield, 9% health on revival."
+  },
+  {
+    "id": "echo-script",
+    "name": "Echo Script",
+    "art": "relic-2-16",
+    "major": false,
+    "description": "After cooldown skills: 25% skill echo power."
+  },
+  {
+    "id": "slow-echo",
+    "name": "Slow Echo",
+    "art": "relic-2-16",
+    "major": false,
+    "description": "After cooldown skills: 40% skill echo power."
+  },
+  {
+    "id": "blood-echo",
+    "name": "Blood Echo",
+    "art": "relic-3-06",
+    "major": false,
+    "description": "After cooldown skills: 32.5% skill echo power."
+  },
+  {
+    "id": "casting-aegis",
+    "name": "Casting Aegis",
+    "art": "relic-2-00",
+    "major": false,
+    "description": "After cooldown skills: 17.5 shield."
+  },
+  {
+    "id": "quickglass",
+    "name": "Quickglass",
+    "art": "relic-4-20",
+    "major": false,
+    "description": "Skill channels: -17.5% channel time."
+  },
+  {
+    "id": "tyrant-sigil",
+    "name": "Tyrant Sigil",
+    "art": "relic-3-24",
+    "major": false,
+    "description": "After cooldown skills: 32.5% attack splash power."
+  },
+  {
+    "id": "winter-script",
+    "name": "Winter Script",
+    "art": "relic-3-02",
+    "major": false,
+    "description": "After cooldown skills: slow 1s."
+  },
+  {
+    "id": "purging-voice",
+    "name": "Purging Voice",
+    "art": "relic-4-05",
+    "major": false,
+    "description": "After cooldown skills: cleanse ailments."
+  },
+  {
+    "id": "phase-thread",
+    "name": "Phase Thread",
+    "art": "relic-4-18",
+    "major": false,
+    "description": "After cooldown skills: 7.5 shield, recoil 17.5 ground units."
+  },
+  {
+    "id": "spell-fed-springs",
+    "name": "Spell-fed Springs",
+    "art": "relic-4-04",
+    "major": false,
+    "description": "After cooldown skills: 7.5 stamina."
+  },
+  {
+    "id": "overflow-vessel",
+    "name": "Overflow Vessel",
+    "art": "relic-1-14",
+    "major": false,
+    "description": "When healing: 30% overheal converted to shield."
+  },
+  {
+    "id": "medic-spindle",
+    "name": "Medic Spindle",
+    "art": "relic-4-18",
+    "major": false,
+    "description": "When healing: 0.5 seconds off all cooldowns."
+  },
+  {
+    "id": "blessing-thorns",
+    "name": "Blessing Thorns",
+    "art": "relic-1-14",
+    "major": false,
+    "description": "When healing: A meaningful heal sends a 35% attack thorn pulse into the nearest enemy.."
+  },
+  {
+    "id": "cleansing-nectar",
+    "name": "Cleansing Nectar",
+    "art": "relic-1-06",
+    "major": false,
+    "description": "When healing: cleanse ailments."
+  },
+  {
+    "id": "renewal-banner",
+    "name": "Renewal Banner",
+    "art": "relic-1-14",
+    "major": false,
+    "description": "When healing: haste 1s."
+  },
+  {
+    "id": "trophy-bell",
+    "name": "Trophy Bell",
+    "art": "relic-4-05",
+    "major": false,
+    "description": "After a kill: 2 seconds off all cooldowns."
+  },
+  {
+    "id": "carrion-mantle",
+    "name": "Carrion Mantle",
+    "art": "relic-1-14",
+    "major": false,
+    "description": "After a kill: 7.5% max-health healing."
+  },
+  {
+    "id": "corpse-seed",
+    "name": "Corpse Seed",
+    "art": "relic-1-06",
+    "major": false,
+    "description": "On defeat: 40% attack splash power."
+  },
+  {
+    "id": "funeral-oath",
+    "name": "Funeral Oath",
+    "art": "relic-2-00",
+    "major": false,
+    "description": "On defeat: 25 team shield."
+  },
+  {
+    "id": "victory-fanfare",
+    "name": "Victory Fanfare",
+    "art": "relic-4-05",
+    "major": false,
+    "description": "After a kill: 5 team stamina, team haste 1s."
+  },
+  {
+    "id": "iron-apple",
+    "name": "Iron Apple",
+    "art": "relic-1-07",
+    "major": false,
+    "description": "Always: +7% health."
+  },
+  {
+    "id": "war-bead",
+    "name": "War Bead",
+    "art": "relic-4-22",
+    "major": false,
+    "description": "Always: +6% attack."
+  },
+  {
+    "id": "time-crystal",
+    "name": "Time Crystal",
+    "art": "relic-4-20",
+    "major": false,
+    "description": "Always: -5% cooldown time."
+  },
+  {
+    "id": "swift-sol",
+    "name": "Swift Sol",
+    "art": "relic-3-09",
+    "major": false,
+    "description": "Always: +7% movement."
+  },
+  {
+    "id": "winnow-bell",
+    "name": "Winnow Bell",
+    "art": "relic-4-05",
+    "major": false,
+    "description": "Always: -5% enemy health."
+  },
+  {
+    "id": "deep-breath",
+    "name": "Deep Breath",
+    "art": "relic-1-00",
+    "major": false,
+    "description": "Always: +10% stamina recovery."
+  },
+  {
+    "id": "adamant-pin",
+    "name": "Adamant Pin",
+    "art": "relic-2-00",
+    "major": false,
+    "description": "Always: 10 poise."
+  },
+  {
+    "id": "prism-plate",
+    "name": "Prism Plate",
+    "art": "relic-2-00",
+    "major": false,
+    "description": "Always: 22.5 shield."
+  },
+  {
+    "id": "healer-stone",
+    "name": "Healer Stone",
+    "art": "relic-1-14",
+    "major": false,
+    "description": "Always: +9% healing."
+  },
+  {
+    "id": "keen-shard",
+    "name": "Keen Shard",
+    "art": "relic-3-24",
+    "major": false,
+    "description": "Always: 3.5% critical chance."
+  },
+  {
+    "id": "tactician-eye",
+    "name": "Tactician’s Eye",
+    "art": "relic-2-21",
+    "major": false,
+    "description": "Prioritize nearby interruptible windups and reserve control skills for them."
+  },
+  {
+    "id": "pack-whistle",
+    "name": "Pack Whistle",
+    "art": "relic-4-00",
+    "major": false,
+    "description": "Coordinate on an ally’s engaged target instead of spreading damage."
+  },
+  {
+    "id": "sentinel-map",
+    "name": "Sentinel Map",
+    "art": "relic-4-00",
+    "major": false,
+    "description": "Guard the most endangered backliner and intercept its nearest pursuer."
+  },
+  {
+    "id": "duelist-ribbon",
+    "name": "Duelist’s Ribbon",
+    "art": "relic-4-18",
+    "major": false,
+    "description": "Circle an enemy’s committed attack to reach its exposed flank."
+  },
+  {
+    "id": "longshot-codex",
+    "name": "Longshot Codex",
+    "art": "relic-2-21",
+    "major": false,
+    "description": "Rangers preserve firing distance and retreat toward nearby allies."
+  },
+  {
+    "id": "battle-surgeon",
+    "name": "Battle Surgeon",
+    "art": "relic-4-00",
+    "major": false,
+    "description": "Healers reserve healing for actual missing health and cleanse injured allies first."
+  },
+  {
+    "id": "predator-chart",
+    "name": "Predator Chart",
+    "art": "relic-2-21",
+    "major": false,
+    "description": "Threaten isolated healers and avoid healthy fortified Guardians."
+  },
+  {
+    "id": "patient-hour",
+    "name": "Patient Hour",
+    "art": "relic-4-20",
+    "major": false,
+    "description": "Keep enough stamina for a physical dodge instead of exhausting it on attacks."
+  },
+  {
+    "id": "wardens-command",
+    "name": "Warden’s Command",
+    "art": "relic-2-03",
+    "major": false,
+    "description": "Stay within supporting distance of the weakest ally while approaching threats."
+  },
+  {
+    "id": "hazard-compass",
+    "name": "Hazard Compass",
+    "art": "relic-4-00",
+    "major": false,
+    "description": "React earlier to committed attacks and leave hostile areas before impact."
+  },
+  {
+    "id": "execution-ledger",
+    "name": "Execution Ledger",
+    "art": "relic-4-00",
+    "major": false,
+    "description": "Concentrate offense on an enemy that can be finished instead of chasing shields."
+  },
+  {
+    "id": "mercy-command",
+    "name": "Mercy Command",
+    "art": "relic-2-03",
+    "major": false,
+    "description": "Before a planned capture, reserve heavy finishers against the selected target; ordinary damage can still knock it out."
+  },
+  {
+    "id": "chrono-throne",
+    "name": "Chrono Throne",
+    "art": "relic-4-20",
+    "major": false,
+    "description": "Always: +50% stamina recovery, +60% action speed."
+  },
+  {
+    "id": "phoenix-covenant",
+    "name": "Phoenix Covenant",
+    "art": "relic-2-22",
+    "major": false,
+    "description": "Once at lethal damage: 90 shield, 80% health on revival."
+  },
+  {
+    "id": "cataclysm-heart",
+    "name": "Cataclysm Heart",
+    "art": "relic-3-00",
+    "major": false,
+    "description": "On connected hits · every 3 triggers: 80% attack splash power."
+  },
+  {
+    "id": "endless-banquet",
+    "name": "Endless Banquet",
+    "art": "relic-1-19",
+    "major": false,
+    "description": "After a kill: 4 seconds off all cooldowns, 30 team stamina, 30% max-health healing."
+  },
+  {
+    "id": "sovereigns-seat",
+    "name": "Sovereign’s Seat",
+    "art": "relic-4-07",
+    "major": false,
+    "description": "Permanently sacrifice one active place this expedition to choose any Legendary companion."
+  },
+  {
+    "id": "polite-pebble",
+    "name": "Polite Pebble",
+    "art": "relic-3-10",
+    "major": false,
+    "description": "Always: 2 shield."
+  },
+  {
+    "id": "slightly-warm-sock",
+    "name": "Slightly Warm Sock",
+    "art": "relic-1-18",
+    "major": false,
+    "description": "Always: +1% health."
+  },
+  {
+    "id": "dented-button",
+    "name": "Dented Button",
+    "art": "relic-3-03",
+    "major": false,
+    "description": "Always: 1 poise."
+  },
+  {
+    "id": "emergency-napkin",
+    "name": "Emergency Napkin",
+    "art": "relic-2-09",
+    "major": false,
+    "description": "When hit · 1 uses per fight: 1 shield."
+  },
+  {
+    "id": "patient-moss",
+    "name": "Patient Moss",
+    "art": "relic-1-06",
+    "major": false,
+    "description": "Periodically · while holding position · 12s cooldown: 1 healing."
+  },
+  {
+    "id": "quicksilver-pulse",
+    "name": "Quicksilver Pulse",
+    "art": "relic-2-20",
+    "major": false,
+    "description": "Always: +25% basic attack speed."
+  },
+  {
+    "id": "metronome-soul",
+    "name": "Metronome Soul",
+    "art": "relic-2-20",
+    "major": false,
+    "description": "Always: +15% action speed."
+  },
+  {
+    "id": "slipstream-knot",
+    "name": "Slipstream Knot",
+    "art": "relic-4-18",
+    "major": false,
+    "description": "Always: -25% dodge/dash cooldown time."
+  },
+  {
+    "id": "second-step",
+    "name": "Second Step",
+    "art": "relic-3-09",
+    "major": false,
+    "description": "After a dodge · 4s cooldown: 0.8 seconds off dodge cooldown."
+  },
+  {
+    "id": "lung-of-the-storm",
+    "name": "Lung of the Storm",
+    "art": "relic-1-00",
+    "major": false,
+    "description": "Always: +35% stamina recovery."
+  },
+  {
+    "id": "blood-clock",
+    "name": "Blood Clock",
+    "art": "relic-4-20",
+    "major": false,
+    "description": "On connected hits · against bleeding enemies · 2s cooldown: 0.4 seconds off all cooldowns."
+  },
+  {
+    "id": "ember-vortex",
+    "name": "Ember Vortex",
+    "art": "relic-3-00",
+    "major": false,
+    "description": "On connected hits · against burning enemies · 4s cooldown: 55% attack burn detonation."
+  },
+  {
+    "id": "plague-garden",
+    "name": "Plague Garden",
+    "art": "relic-1-06",
+    "major": false,
+    "description": "On connected hits · every 3 triggers: spread the target’s ailments."
+  },
+  {
+    "id": "winter-gavel",
+    "name": "Winter Gavel",
+    "art": "relic-3-02",
+    "major": false,
+    "description": "On connected hits · against slowed enemies · 5s cooldown: root 0.9s."
+  },
+  {
+    "id": "glass-dancer",
+    "name": "Glass Dancer",
+    "art": "relic-2-00",
+    "major": false,
+    "description": "After a dodge: haste 2.5s, 6% max-health shield."
+  },
+  {
+    "id": "kindling-script",
+    "name": "Kindling Script",
+    "art": "relic-3-00",
+    "major": false,
+    "description": "After cooldown skills: burn 2.5s."
+  },
+  {
+    "id": "reservoir-crown",
+    "name": "Reservoir Crown",
+    "art": "relic-2-03",
+    "major": false,
+    "description": "When healing: 60% overheal converted to shield."
+  },
+  {
+    "id": "mirror-oath",
+    "name": "Mirror Oath",
+    "art": "relic-4-02",
+    "major": false,
+    "description": "When hit · while shielded: 30% damage reflected."
+  },
+  {
+    "id": "hungry-comet",
+    "name": "Hungry Comet",
+    "art": "relic-4-22",
+    "major": false,
+    "description": "After a kill: 1.5 seconds off dodge cooldown, team haste 3s."
+  },
+  {
+    "id": "lantern-of-return",
+    "name": "Lantern of Return",
+    "art": "relic-2-22",
+    "major": false,
+    "description": "After a dodge · 4s cooldown: 40% attack healing to weakest ally."
+  },
+  {
+    "id": "storm-recital",
+    "name": "Storm Recital",
+    "art": "relic-4-05",
+    "major": false,
+    "description": "After cooldown skills · 7s cooldown: 45% skill echo power."
+  },
+  {
+    "id": "serpent-payback",
+    "name": "Serpent Payback",
+    "art": "relic-4-06",
+    "major": false,
+    "description": "When hit · 2s cooldown: poison 3s."
+  },
+  {
+    "id": "redline-talisman",
+    "name": "Redline Talisman",
+    "art": "relic-4-04",
+    "major": false,
+    "description": "On connected hits · below 35 stamina · 2s cooldown: 8 stamina."
+  },
+  {
+    "id": "pilgrims-bell",
+    "name": "Pilgrim’s Bell",
+    "art": "relic-4-05",
+    "major": false,
+    "description": "After a dodge · 6s cooldown: status immunity 1.5s, cleanse ailments."
+  },
+  {
+    "id": "pack-resonance",
+    "name": "Pack Resonance",
+    "art": "relic-3-24",
+    "major": false,
+    "description": "After cooldown skills · 5s cooldown: 10 team stamina."
+  },
+  {
+    "id": "clockwork-orchard",
+    "name": "Clockwork Orchard",
+    "art": "relic-2-20",
+    "major": false,
+    "description": "Every 4 basic hits grow a seed (max 3) and restore 2 stamina. Your next cooldown skill spends the seeds to echo at 20% power each."
+  },
+  {
+    "id": "pilgrims-debt",
+    "name": "Pilgrim’s Debt",
+    "art": "relic-4-14",
+    "major": false,
+    "description": "Cooldown skills cost 2.5% max HP, without killing you. Every 3 casts erupt for 80% attack around you."
+  },
+  {
+    "id": "borrowed-tomorrow",
+    "name": "Borrowed Tomorrow",
+    "art": "relic-2-20",
+    "major": false,
+    "description": "Dodges bank a moment (max 3) and restore 2 stamina. A basic hit spends one moment to advance every skill 0.8s."
+  },
+  {
+    "id": "weather-vane-covenant",
+    "name": "Weather Vane Covenant",
+    "art": "relic-4-23",
+    "major": false,
+    "description": "Cast within 4s of a different allied element casting to arc 25% attack to two enemies and grant the weakest ally 2s ailment immunity. 2s team cooldown. Casting also grants 2 shield."
+  },
+  {
+    "id": "last-lantern",
+    "name": "Last Lantern",
+    "art": "relic-2-22",
+    "major": false,
+    "description": "When only one ally remains, it deals 40% more hit damage and recovers 6 extra stamina each second. No bonus while other allies live."
+  },
+  {
+    "id": "hollow-reed",
+    "name": "Hollow Reed Reliquary",
+    "art": "relic-1-10",
+    "major": false,
+    "description": "25% less healing. Convert 15% overhealing to shields; bank 50% excess healing, capped at 150% attack. Your next basic hit spends the bank in a nearby burst."
+  },
+  {
+    "id": "triune-crucible",
+    "name": "Triune Crucible",
+    "art": "relic-2-24",
+    "major": false,
+    "description": "Hit a target with three of burn, poison, bleed and slow to consume 0.5s of each and burst for 60% attack, advancing skills 0.2s. 4s cooldown."
+  },
+  {
+    "id": "second-dawn-thread",
+    "name": "Second Dawn Thread",
+    "art": "relic-4-18",
+    "major": false,
+    "description": "Heal an ally from below 25% HP across that threshold: it gains 3s ailment immunity and your dodge recovers 1.5s. Once per rescued ally per battle. Healing also grants 2 shield every 4s."
+  },
+  {
+    "id": "bloodglass-crown",
+    "name": "Bloodglass Crown",
+    "art": "relic-3-17",
+    "major": true,
+    "description": "Always: -30% health, +60% attack."
+  },
+  {
+    "id": "ironroot-idol",
+    "name": "Ironroot Idol",
+    "art": "relic-1-20",
+    "major": true,
+    "description": "Always: +70% health, -35% movement."
+  },
+  {
+    "id": "captive-hourglass",
+    "name": "Captive Hourglass",
+    "art": "relic-4-20",
+    "major": true,
+    "description": "Always: -30% attack, -40% cooldown time."
+  },
+  {
+    "id": "giants-fetter",
+    "name": "Giant’s Fetter",
+    "art": "relic-3-22",
+    "major": true,
+    "description": "Always: +55% attack, -40% movement."
+  },
+  {
+    "id": "hollow-sanctuary",
+    "name": "Hollow Sanctuary",
+    "art": "relic-3-14",
+    "major": true,
+    "description": "Always: -40% attack, +70% healing."
+  },
+  {
+    "id": "shattered-citadel",
+    "name": "Shattered Citadel",
+    "art": "relic-2-00",
+    "major": true,
+    "description": "Always: -30% health, 120 shield."
+  },
+  {
+    "id": "fevered-wing",
+    "name": "Fevered Wing",
+    "art": "relic-3-09",
+    "major": true,
+    "description": "Always: -35% health, +60% basic attack speed."
+  },
+  {
+    "id": "restless-moon",
+    "name": "Restless Moon",
+    "art": "relic-1-17",
+    "major": true,
+    "description": "Always: +50% movement, +40% cooldown time, -35% dodge/dash cooldown time."
+  },
+  {
+    "id": "venomous-diadem",
+    "name": "Venomous Diadem",
+    "art": "relic-3-17",
+    "major": true,
+    "description": "On connected hits: poison 4s. Tradeoff: Always: -30% health."
+  },
+  {
+    "id": "ashen-heart",
+    "name": "Ashen Heart",
+    "art": "relic-3-00",
+    "major": true,
+    "description": "On connected hits: burn 4s. Tradeoff: Always: -40% healing."
+  },
+  {
+    "id": "vampires-vow",
+    "name": "Vampire’s Vow",
+    "art": "relic-1-23",
+    "major": true,
+    "description": "On connected hits: 30% damage lifesteal. Tradeoff: Always: -35% health."
+  },
+  {
+    "id": "mirror-of-thorns",
+    "name": "Mirror of Thorns",
+    "art": "relic-4-02",
+    "major": true,
+    "description": "When hit: 35% damage reflected. Tradeoff: Always: +40% cooldown time."
+  },
+  {
+    "id": "burdened-aegis",
+    "name": "Burdened Aegis",
+    "art": "relic-3-22",
+    "major": true,
+    "description": "After cooldown skills · 5s cooldown: 40 team shield. Tradeoff: Always: -40% movement."
+  },
+  {
+    "id": "waning-veil",
+    "name": "Waning Veil",
+    "art": "relic-2-13",
+    "major": true,
+    "description": "After a dodge · 5s cooldown: evasion 3s. Tradeoff: Always: -35% attack."
+  },
+  {
+    "id": "starved-comet",
+    "name": "Starved Comet",
+    "art": "relic-3-05",
+    "major": true,
+    "description": "On connected hits · every 3 triggers: 80% attack chain power. Tradeoff: Always: -40% stamina recovery."
+  },
+  {
+    "id": "worn-heartstone",
+    "name": "Worn Heartstone",
+    "art": "relic-1-07",
+    "major": false,
+    "description": "Always: +2% health."
+  },
+  {
+    "id": "chipped-fang",
+    "name": "Chipped Fang",
+    "art": "animal-04",
+    "major": false,
+    "description": "Always: +2% attack."
+  },
+  {
+    "id": "faded-feather",
+    "name": "Faded Feather",
+    "art": "relic-1-12",
+    "major": false,
+    "description": "Always: +2% movement."
+  },
+  {
+    "id": "cracked-prism",
+    "name": "Cracked Prism",
+    "art": "relic-2-12",
+    "major": false,
+    "description": "Always: 6 shield."
+  },
+  {
+    "id": "tarnished-hourglass",
+    "name": "Tarnished Hourglass",
+    "art": "relic-4-20",
+    "major": false,
+    "description": "Always: -2% cooldown time."
+  },
+  {
+    "id": "scorch-fang",
+    "name": "Berserker Fang",
+    "art": "animal-03",
+    "major": false,
+    "description": "Always: -5% health, +10% attack."
+  },
+  {
+    "id": "ward-stone",
+    "name": "Casting Bastion",
+    "art": "relic-2-00",
+    "major": false,
+    "description": "After cooldown skills: 20 shield."
+  },
+  {
+    "id": "quick-shard",
+    "name": "Clockwork Heart",
+    "art": "relic-2-20",
+    "major": false,
+    "description": "Always: -7.5% cooldown time."
+  },
+  {
+    "id": "moonstone",
+    "name": "Blood Moon",
+    "art": "relic-3-10",
+    "major": false,
+    "description": "On connected hits: 6% damage lifesteal."
+  },
+  {
+    "id": "windglass",
+    "name": "Ghost Step",
+    "art": "relic-3-09",
+    "major": false,
+    "description": "After a dodge: 17.5 shield, 4 stamina."
+  },
+  {
+    "id": "heartseed",
+    "name": "Living Seed",
+    "art": "relic-1-07",
+    "major": false,
+    "description": "Periodically · below 35% HP · 1s cooldown: 6 healing."
+  },
+  {
+    "id": "hunters-eye",
+    "name": "Patient Hunter",
+    "art": "relic-2-21",
+    "major": false,
+    "description": "On connected hits · at long range: +16% damage."
+  },
+  {
+    "id": "ironbark",
+    "name": "Ironroot Shell",
+    "art": "relic-1-20",
+    "major": false,
+    "description": "When hit · while holding position: -11% incoming damage."
+  },
+  {
+    "id": "spore-ring",
+    "name": "Plague Signet",
+    "art": "accessory-19",
+    "major": false,
+    "description": "On connected hits · every 3 triggers: poison 2s."
+  },
+  {
+    "id": "echo-prism",
+    "name": "Echo Heart",
+    "art": "relic-2-16",
+    "major": false,
+    "description": "After cooldown skills: 22.5% skill echo power."
+  },
+  {
+    "id": "phoenix-ash",
+    "name": "Last Ember",
+    "art": "relic-2-22",
+    "major": false,
+    "description": "Once at lethal damage: 15 shield, 7.5% health on revival."
+  },
+  {
+    "id": "wanderers-knot",
+    "name": "Lone Wanderer",
+    "art": "relic-4-18",
+    "major": false,
+    "description": "On connected hits · while isolated: +14% damage."
+  },
+  {
+    "id": "fracture-gem",
+    "name": "Shieldbreaker Tooth",
+    "art": "relic-3-05",
+    "major": false,
+    "description": "On connected hits · against shields: 12 shield damage."
+  },
+  {
+    "id": "fork-gem",
+    "name": "Storm Branch",
+    "art": "relic-4-04",
+    "major": false,
+    "description": "On connected hits · every 4 triggers: 22.5% attack chain power."
+  },
+  {
+    "id": "frost-gem",
+    "name": "Winter Fang",
+    "art": "animal-02",
+    "major": false,
+    "description": "On connected hits · every 3 triggers: slow 1s."
+  },
+  {
+    "id": "venom-gem",
+    "name": "Black Salt",
+    "art": "relic-4-06",
+    "major": false,
+    "description": "On connected hits: wither 1s."
+  },
+  {
+    "id": "cleanse-gem",
+    "name": "Purifying Bell",
+    "art": "relic-4-05",
+    "major": false,
+    "description": "After cooldown skills: cleanse ailments."
+  },
+  {
+    "id": "reservoir-gem",
+    "name": "Overflow Vessel",
+    "art": "relic-1-19",
+    "major": false,
+    "description": "When healing: 20% overheal converted to shield."
+  },
+  {
+    "id": "beacon-gem",
+    "name": "Retreat Lantern",
+    "art": "relic-2-22",
+    "major": false,
+    "description": "After cooldown skills: 10 shield, recoil 15 ground units."
+  },
+  {
+    "id": "hex-gem",
+    "name": "Hex Crown",
+    "art": "relic-3-17",
+    "major": false,
+    "description": "On connected hits · against poisoned enemies: +12.5% damage."
+  },
+  {
+    "id": "execute-gem",
+    "name": "Execution Seal",
+    "art": "relic-3-23",
+    "major": false,
+    "description": "On connected hits · against enemies below 30% HP: +20% damage."
+  },
+  {
+    "id": "trap-gem",
+    "name": "Bramble Heel",
+    "art": "relic-1-18",
+    "major": false,
+    "description": "After a dodge: root 0.25s."
+  },
+  {
+    "id": "siphon-gem",
+    "name": "Mirror Thorn",
+    "art": "relic-4-02",
+    "major": false,
+    "description": "When hit: 6% damage reflected."
+  },
+  {
+    "id": "expose-gem",
+    "name": "Duelist Lens",
+    "art": "relic-2-21",
+    "major": false,
+    "description": "On connected hits: exposure 0.8s."
+  },
+  {
+    "id": "blood-gem",
+    "name": "Bloodglass Clock",
+    "art": "relic-4-20",
+    "major": false,
+    "description": "When hit · every 3 triggers: 0.6 seconds off all cooldowns."
+  },
+  {
+    "id": "relay-gem",
+    "name": "Battle Battery",
+    "art": "relic-4-04",
+    "major": false,
+    "description": "On connected hits · every 3 triggers: 5 stamina."
+  },
+  {
+    "id": "detonate-gem",
+    "name": "Ashen Heart",
+    "art": "relic-3-00",
+    "major": false,
+    "description": "On connected hits · every 4 triggers: 25% attack burn detonation."
+  },
+  {
+    "id": "bodyguard-gem",
+    "name": "Last Bastion",
+    "art": "relic-2-00",
+    "major": false,
+    "description": "When hit · below 35% HP · 8s cooldown: 30 shield."
+  },
+  {
+    "id": "recoil-gem",
+    "name": "Momentum Coil",
+    "art": "relic-3-14",
+    "major": false,
+    "description": "On connected hits · while moving: +12.5% damage."
+  },
+  {
+    "id": "renewal-gem",
+    "name": "Spell-fed Springs",
+    "art": "relic-3-02",
+    "major": false,
+    "description": "After cooldown skills: 6 stamina."
+  }
+]

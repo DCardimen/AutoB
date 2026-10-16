@@ -16,7 +16,7 @@ DEST.mkdir(parents=True, exist_ok=True)
 manifest = {}
 
 
-def extract(source, name, box=None, size=128, trim=True, exclude=None):
+def extract(source, name, box=None, size=256, trim=True, exclude=None):
     im = Image.open(ROOT / source).convert('RGBA')
     box = box or (0, 0, *im.size)
     im = im.crop(box)
@@ -38,7 +38,7 @@ def extract(source, name, box=None, size=128, trim=True, exclude=None):
     manifest[name] = {'source': source, 'crop': list(box), 'size': list(im.size), 'sha256': hashlib.sha256((ROOT / source).read_bytes()).hexdigest()}
 
 
-def grid(source, prefix, columns, rows, names=None, size=128, trim=True, isolate=False):
+def grid(source, prefix, columns, rows, names=None, size=256, trim=True, isolate=False):
     w, h = Image.open(ROOT / source).size
     # Item sheets are not perfectly aligned to equal cells. Find each authored
     # silhouette in the complete sheet before slicing, retaining sword tips
@@ -81,6 +81,7 @@ def grid(source, prefix, columns, rows, names=None, size=128, trim=True, isolate
 # All items from both weapon, both armor and all four relic sheets are retained.
 for source, prefix in [('wep 1.png', 'weapon'), ('wep arm 2.png', 'focus'), ('arm 1.png', 'armor'), ('arm 2.png', 'accessory')]:
     grid(source, prefix, 5, 5, isolate=True)
+grid('fang and animal items.png', 'animal', 5, 5, isolate=True)
 for n in range(1, 5):
     grid(f'rel {n}.png', f'relic-{n}', 5, 5, isolate=True)
 
