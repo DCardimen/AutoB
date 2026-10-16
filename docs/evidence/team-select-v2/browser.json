@@ -1,0 +1,7 @@
+{
+  "checks": [
+    "Source: crisp CSS start button; all three card sizes; selected party survives resize; dialog/canvas identity retained; preference persists across reload; 1440/1280/768/390/320px layouts fit; start opens initial relic selection",
+    "Offline: crisp CSS start button; all three card sizes; selected party survives resize; dialog/canvas identity retained; preference persists across reload; 1440/1280/768/390/320px layouts fit; start opens initial relic selection"
+  ],
+  "errors": []
+}
