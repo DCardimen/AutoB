@@ -1,0 +1,9 @@
+{
+  "checks": [
+    "Actual alpha hit masks cover 2136 family/form/facing top-edge cases; aura ring fixed, rear flair 0 pixels, front flair visible",
+    "Source: no-scroll arena at four sizes, unobstructed controls, compact external capture box, next-level tooltip, faint battle auras, legendary celebration, blended chest, summit foliage, contained reward art, relic flight and map arrival, restored animated grasslands, two-click route lock and gradual zoom",
+    "Offline: no-scroll arena at four sizes, unobstructed controls, compact external capture box, next-level tooltip, faint battle auras, legendary celebration, blended chest, summit foliage, contained reward art, relic flight and map arrival, restored animated grasslands, two-click route lock and gradual zoom",
+    "All seven encounter types require first-click lock and second-click entry, including reduced motion"
+  ],
+  "errors": []
+}

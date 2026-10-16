@@ -6172,5 +6172,47 @@
       128
     ],
     "sha256": "756464e32653fdcc11d1475ce01406003414b8a7a9985839ef2a04d91d49d820"
+  },
+  "aura-flair": {
+    "source": "download (16).png",
+    "crop": [
+      0,
+      0,
+      2172,
+      724
+    ],
+    "size": [
+      2172,
+      724
+    ],
+    "sha256": "64c92c590b5582f670b7d4f67d8d1c319113fb3cc7a4e7a28cd9ffcbb2d0d40b"
+  },
+  "aura-rings": {
+    "source": "download (17).png",
+    "crop": [
+      0,
+      0,
+      2172,
+      724
+    ],
+    "size": [
+      2172,
+      724
+    ],
+    "sha256": "999fd47f432cd996956253414bdfd3fbf582eef4679d0e646d75c57941c10d76"
+  },
+  "stage-grasslands": {
+    "source": "public/ui/world-0.png",
+    "crop": [
+      0,
+      0,
+      941,
+      1672
+    ],
+    "size": [
+      941,
+      1672
+    ],
+    "sha256": "b3773e1c950c6890edf5b53b599db0c7d0052fa31a326a26b26fe7dbc36b5ead"
   }
 }

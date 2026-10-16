@@ -1,5 +1,5 @@
 import {capacity} from './expedition-rules.js';
-import {equipGear,removeGear,equipmentSlots,GEAR_BY_ID,gearCompatibility} from './creature-equipment.js';
+import {equipGear,removeGear,equipmentSlots,GEAR_BY_ID,gearCompatibility,equipmentSlotType} from './creature-equipment.js';
 import {equipRelic,unequipRelic,linkRelic,relicSlots,canSupport,BY_ID} from './game.js';
 import {loadoutFor} from './skills.js';
 export function applyLoadoutDrop(run,payload,target){
@@ -20,7 +20,10 @@ export function applyLoadoutDrop(run,payload,target){
  }
  if(payload.kind==='gear'){
   if(equipmentSlots(c)<=0||!gearCompatibility(c,GEAR_BY_ID[payload.id]).allowed)return false;
-  let slot=target.gearSlot;
+  const type=equipmentSlotType(GEAR_BY_ID[payload.id]);
+  if(c.equipmentVersion>=2&&target.gearType&&target.gearType!==type)return false;
+  let slot=c.equipmentVersion>=2?c.equipment?.findIndex(id=>equipmentSlotType(GEAR_BY_ID[id])===type):target.gearSlot;
+  if(c.equipmentVersion>=2&&Number.isInteger(target.gearSlot)&&c.equipment?.[target.gearSlot]&&equipmentSlotType(GEAR_BY_ID[c.equipment[target.gearSlot]])!==type)return false;
   if(!Number.isInteger(slot)&&(c.equipment||[]).length>=equipmentSlots(c))slot=Math.max(0,c.equipment.findIndex(id=>GEAR_BY_ID[id]?.slot===GEAR_BY_ID[payload.id]?.slot));
   const replace=Number.isInteger(slot)&&slot>=0&&slot<(c.equipment||[]).length;
   if(from===c||c.equipment?.includes(payload.id)||((c.equipment||[]).length>=equipmentSlots(c)&&!replace))return false;

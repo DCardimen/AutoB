@@ -1,0 +1,17 @@
+{
+  "Starfall-Menagerie.html": {
+    "bytes": 103950995,
+    "MiB": 99.135,
+    "sha256": "1d93ddad6bc3077c0b52d346010626a92f750ec16484899e77eeaef4b98bf289"
+  },
+  "Starfall-Training-Glade.html": {
+    "bytes": 16086466,
+    "MiB": 15.341,
+    "sha256": "466fad0496aea7820934d5491fb40b2ccbb23016fd690fb81eb5e229b7da1c75"
+  },
+  "public/prototype-bundle.js": {
+    "bytes": 8464637,
+    "MiB": 8.073,
+    "sha256": "da14a7e00140c686382dca2e883e000501042bf851936f74743b6747aa6c6471"
+  }
+}

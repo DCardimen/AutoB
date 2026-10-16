@@ -1,6 +1,14 @@
 (() => {
   // ambient-art.js
   var AMBIENT_SCENES = {
+    grasslands: {
+      birds: true,
+      moon: [0.86, 0.11, 0.08],
+      sky: 0.24,
+      water: [[[0.365, 0.2], [0.395, 0.2], [0.39, 0.28], [0.36, 0.28]], [[0.4, 0.37], [0.43, 0.37], [0.42, 0.43], [0.4, 0.43]], [[0.85, 0.39], [0.92, 0.39], [0.91, 0.48], [0.84, 0.48]], [[0.13, 0.57], [0.2, 0.57], [0.18, 0.72], [0.13, 0.7]], [[0.65, 0.54], [0.71, 0.54], [0.7, 0.63], [0.64, 0.62]], [[0.46, 0.49], [0.58, 0.49], [0.58, 0.56], [0.45, 0.56]], [[0.69, 0.71], [0.79, 0.73], [0.78, 0.82], [0.69, 0.8]]],
+      mist: [[0.5, 0.33, 0.33, 0.04], [0.33, 0.52, 0.22, 0.055], [0.62, 0.76, 0.34, 0.055]],
+      canopies: [[[0, 0.06], [0.14, 0.05], [0.25, 0.14], [0.2, 0.23], [0.06, 0.21], [0, 0.13]], [[0.02, 0.77], [0.16, 0.73], [0.25, 0.79], [0.2, 0.86], [0.05, 0.87]], [[0.72, 0.6], [0.92, 0.61], [1, 0.69], [0.92, 0.75], [0.73, 0.69]]]
+    },
     rewards: { moon: null, water: [[[0.1, 0.31], [0.15, 0.33], [0.2, 0.64], [0.12, 0.61]], [[0.27, 0.39], [0.3, 0.4], [0.32, 0.62], [0.27, 0.6]], [[0.425, 0.33], [0.45, 0.34], [0.46, 0.48], [0.43, 0.47]], [[0.36, 0.54], [0.5, 0.55], [0.49, 0.77], [0.37, 0.74]], [[0.235, 0.73], [0.26, 0.74], [0.27, 0.95], [0.23, 0.93]], [[0.64, 0.37], [0.67, 0.38], [0.69, 0.55], [0.64, 0.55]]], mist: [[0.25, 0.65, 0.2, 0.06], [0.49, 0.79, 0.23, 0.07], [0.69, 0.46, 0.14, 0.04]], sky: 0.29 },
     grove: { moon: [0.88, 0.09, 0.045], water: [[[0.69, 0.38], [0.71, 0.38], [0.7, 0.52], [0.67, 0.51]]], mist: [[0.55, 0.5, 0.18, 0.035], [0.5, 0.7, 0.25, 0.045]], sky: 0.22 },
     night: { moon: [0.73, 0.095, 0.085], mist: [[0.46, 0.52, 0.31, 0.05], [0.6, 0.73, 0.28, 0.04]], sky: 0.25 },
@@ -43,19 +51,19 @@
       polygon(c2, points);
       c2.clip();
       if (image?.naturalWidth) {
-        c2.globalAlpha = 0.26;
-        c2.drawImage(image, 0, Math.sin(time * 2 + i) * 3e-3, 1, 1);
+        c2.globalAlpha = 0.4;
+        c2.drawImage(image, 0, time * 0.025 % 6e-3 - 3e-3, 1, 1);
         c2.globalAlpha = 1;
       }
       const ys = points.map((p) => p[1]), xs = points.map((p) => p[0]), top = Math.min(...ys), bottom = Math.max(...ys), left = Math.min(...xs), right = Math.max(...xs);
-      for (let n = 0; n < 6; n++) {
-        const y = top + (time * 0.13 + n * 0.17 + i * 0.13) % 1 * (bottom - top), x = left + (n + 0.5) / 6 * (right - left);
-        const streak = c2.createLinearGradient(0, y, 0, y + 0.05);
+      for (let n = 0; n < 10; n++) {
+        const y = top + (time * 0.19 + n * 0.11 + i * 0.13) % 1 * (bottom - top), x = left + (n + 0.5) / 10 * (right - left);
+        const streak = c2.createLinearGradient(0, y, 0, y + 0.035);
         streak.addColorStop(0, "#d4faff00");
-        streak.addColorStop(0.65, "#e2fcff77");
+        streak.addColorStop(0.65, "#e2fcff99");
         streak.addColorStop(1, "#d4faff00");
         c2.fillStyle = streak;
-        c2.fillRect(x, y, 18e-4, 0.05);
+        c2.fillRect(x, y, 18e-4, 0.035);
       }
       c2.restore();
     }
@@ -73,13 +81,13 @@
       }
       c2.restore();
     }
-    for (const [i, [x, y, rx, ry]] of (scene.mist || []).entries()) glow(c2, x + Math.sin(time * 0.055 + i) * 0.012, y + Math.sin(time * 0.08 + i) * 2e-3, rx, ry, theme === "cinder" ? "#b79b9a" : "#b6dce9", 0.08 + 0.025 * Math.sin(time * 0.24 + i));
+    for (const [i, [x, y, rx, ry]] of (scene.mist || []).entries()) glow(c2, x + Math.sin(time * 0.085 + i) * 0.025, y + Math.sin(time * 0.12 + i) * 4e-3, rx, ry, theme === "cinder" ? "#b79b9a" : "#b6dce9", 0.12 + 0.035 * Math.sin(time * 0.24 + i));
     if (scene.moon) {
       const [x, y, r] = scene.moon;
       glow(c2, x + Math.sin(time * 0.04) * 15e-4, y, r * 2.8, r * 3.7, "#a7d9f6", 0.07 + 0.025 * Math.sin(time * 0.45));
     }
     if (scene.sky) {
-      for (let i = 0; i < 2; i++) glow(c2, 0.35 + i * 0.22 + Math.sin(time * 0.035 + i) * 0.015, scene.sky * 0.47 + i * 0.025, 0.18, 0.014, "#bdd4df", 0.045);
+      for (let i = 0; i < 4; i++) glow(c2, (0.1 + i * 0.24 + time * 4e-3) % 1.4 - 0.2, scene.sky * 0.47 + i * 0.023, 0.19, 0.018, "#bdd4df", 0.075);
     }
     if (scene.stars || theme === "night" || theme === "grove") for (let i = 0; i < 16; i++) {
       const x = 0.15 + i * 137 % 701 / 1e3, y = 0.035 + i * 67 % 173 / 1e3, twinkle = Math.pow(Math.max(0, Math.sin(time * (0.35 + i % 3 * 0.1) + i * 1.7)), 6);
@@ -99,6 +107,35 @@
       const f = (time * 0.2 + i * 0.31) % 1;
       glow(c2, x + Math.sin(time + i) * 3e-3, y - f * 0.025, 2e-3, 4e-3, "#ffe09b", (1 - f) * 0.3);
     }
+    const canopies = scene.canopies || (["grove", "night", "rewards", "glade"].includes(theme) ? [[[0, 0.02], [0.14, 0.01], [0.22, 0.11], [0.13, 0.18], [0, 0.13]], [[0.8, 0.02], [1, 0], [1, 0.24], [0.9, 0.18]]] : []);
+    if (image?.naturalWidth) for (const [i, points] of canopies.entries()) {
+      c2.save();
+      polygon(c2, points);
+      c2.clip();
+      const anchor = Math.max(...points.map((p) => p[1])), sway = Math.sin(time * 0.7 + i * 2) * 8e-3;
+      c2.globalAlpha = 0.65;
+      c2.transform(1, 0, sway, 1, -sway * anchor, 0);
+      c2.drawImage(image, 0, 0, 1, 1);
+      c2.restore();
+    }
+    if (scene.birds || ["grove", "night", "rewards", "glade"].includes(theme)) for (let i = 0; i < 3; i++) {
+      const x = (time * 0.012 + i * 0.21) % 1.3 - 0.15, y = 0.11 + i * 0.032 + Math.sin(time * 0.4 + i) * 6e-3, wing = Math.sin(time * 6 + i) * 2e-3;
+      c2.save();
+      c2.strokeStyle = theme === "grasslands" ? "#173b42aa" : "#b3d3db88";
+      c2.lineWidth = 12e-4;
+      c2.lineCap = "round";
+      c2.beginPath();
+      c2.moveTo(x - 5e-3, y + wing);
+      c2.quadraticCurveTo(x - 2e-3, y - 2e-3, x, y);
+      c2.quadraticCurveTo(x + 2e-3, y - 2e-3, x + 5e-3, y + wing);
+      c2.stroke();
+      c2.restore();
+    }
+    if (theme === "cinder") for (let i = 0; i < 12; i++) {
+      const f = (time * 0.05 + i * 0.079) % 1;
+      glow(c2, 0.15 + i * 0.137 % 0.75 + Math.sin(time + i) * 8e-3, 0.6 - f * 0.45, 18e-4, 3e-3, "#ffb96b", (1 - f) * 0.5);
+    }
+    if (theme === "astral") for (let i = 0; i < 3; i++) glow(c2, 0.3 + i * 0.22 + Math.sin(time * 0.14 + i) * 0.035, 0.15 + Math.sin(time * 0.1 + i) * 0.03, 0.1, 0.035, "#b5a0fb", 0.045);
     c2.restore();
   }
 

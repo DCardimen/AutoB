@@ -20,4 +20,31 @@ const rows=[
  ['grove-antler-circlet','Grove Antler Circlet','Jewelry',null,'cast',{healLowest:.3,interval:6},'animal-22'],
  ['sapphire-fang-necklace','Sapphire Fang Necklace','Jewelry',null,'flat',{regenStamina:1.16},'animal-24'],
 ];
-export const AFFINITY_GEAR=rows.map(([id,name,slot,weaponClass,hook,effect,art])=>({id,name,slot,weaponClass,hook,effect,art,color:'#b6d7bd',cost:85,desc:'Specialist equipment. Passives affect the wearer.'}));
+const beastRows=[
+ ['ironhide-harness','Ironhide Harness','Armor','flat',{hp:1.18,armor:10},'animal-10'],
+ ['savage-muzzle','Savage Muzzle','Armor','hurt',{counter:.4,condition:'close',interval:4},'animal-12'],
+ ['moonsteel-barding','Moonsteel Barding','Armor','flat',{hp:1.22,armor:14},'animal-13'],
+ ['stormwing-plates','Stormwing Plates','Armor','hurt',{reflect:.2,condition:'shielded'},'animal-15'],
+ ['tortoise-carapace','Tortoise Carapace','Armor','flat',{armor:25,hp:1.12},'animal-16'],
+ ['grove-hide','Grove Hide','Armor','flat',{hp:1.16,hpRegen:2},'animal-17'],
+ ['winter-pelt','Winter Pelt','Armor','hurt',{slow:2,interval:4},'animal-18'],
+ ['nightwing-mantle','Nightwing Mantle','Accessory','dodge',{evade:2,interval:4},'animal-19'],
+ ['trailblazer-saddle','Trailblazer Saddle','Accessory','flat',{speed:1.18,regenStamina:1.2},'animal-20'],
+ ['ruby-scale-collar','Ruby Scale Collar','Accessory','flat',{speed:1.18,dashCooldown:.85},'animal-21'],
+ ['talon-guards','Talon Guards','Boots','dodge',{stamina:20},'animal-23'],
+];
+const ringRows=[
+ ['ruby-vigor-ring','Ruby Vigor Ring','flat',{hp:1.2},'accessory-11'],
+ ['sapphire-flow-ring','Sapphire Flow Ring','flat',{regenStamina:1.25},'accessory-16'],
+ ['emerald-mending-ring','Emerald Mending Ring','flat',{healing:1.25},'accessory-10'],
+ ['sunstone-fury-ring','Sunstone Fury Ring','flat',{atk:1.18},'accessory-14'],
+ ['moonstone-tempo-ring','Moonstone Tempo Ring','flat',{cd:.85},'accessory-12'],
+ ['amber-ward-ring','Amber Ward Ring','cast',{shield:20,interval:6},'accessory-15'],
+ ['violet-echo-ring','Violet Echo Ring','cast',{refresh:1.2,interval:6},'accessory-13'],
+ ['opal-recovery-ring','Coral Recovery Ring','flat',{hpRegen:3},'accessory-17'],
+];
+export const AFFINITY_GEAR=[
+ ...rows.map(([id,name,slot,weaponClass,hook,effect,art])=>({id,name,slot,weaponClass,hook,effect,art})),
+ ...beastRows.map(([id,name,slot,hook,effect,art])=>({id,name,slot,hook,effect,art,audience:'beast'})),
+ ...ringRows.map(([id,name,hook,effect,art])=>({id,name,slot:'Ring',hook,effect,art})),
+].map(g=>({...g,color:'#b6d7bd',cost:85,desc:'Specialist equipment. Passives affect the wearer.'}));

@@ -1,0 +1,15 @@
+{
+  "checks": [
+    "Source open: captured ally, permanent team recruitment, retained individual/equipment data, saved once across reload",
+    "Source reserve: captured ally, permanent reserve recruitment, retained individual/equipment data, saved once across reload",
+    "Source unlock: captured ally, permanent team recruitment, retained individual/equipment data, saved once across reload",
+    "Source retreat: captured ally, permanent team recruitment, retained individual/equipment data, saved once across reload",
+    "Source old-save: captured ally, permanent reserve recruitment, retained individual/equipment data, saved once across reload",
+    "Offline open: captured ally, permanent team recruitment, retained individual/equipment data, saved once across reload",
+    "Offline reserve: captured ally, permanent reserve recruitment, retained individual/equipment data, saved once across reload",
+    "Offline unlock: captured ally, permanent team recruitment, retained individual/equipment data, saved once across reload",
+    "Offline retreat: captured ally, permanent team recruitment, retained individual/equipment data, saved once across reload",
+    "Offline old-save: captured ally, permanent reserve recruitment, retained individual/equipment data, saved once across reload"
+  ],
+  "errors": []
+}

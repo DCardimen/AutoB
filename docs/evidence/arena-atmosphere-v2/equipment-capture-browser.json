@@ -1,0 +1,11 @@
+{
+  "checks": [
+    "Source team choices keep identical dialog, portraits, background and full opacity",
+    "Offline team choices keep identical dialog, portraits, background and full opacity",
+    "Source 1440px victory: five slots, shade/compatibility, safe replacement, canvas & thumbnail targeting, live/pause odds, capture gear shown/claimed once, card disappears on departure and after reload",
+    "Source 390px retreat: five slots, shade/compatibility, safe replacement, canvas & thumbnail targeting, live/pause odds, capture gear shown/claimed once, card disappears on departure and after reload",
+    "Offline 1440px victory: five slots, shade/compatibility, safe replacement, canvas & thumbnail targeting, live/pause odds, capture gear shown/claimed once, card disappears on departure and after reload",
+    "Offline 390px retreat: five slots, shade/compatibility, safe replacement, canvas & thumbnail targeting, live/pause odds, capture gear shown/claimed once, card disappears on departure and after reload"
+  ],
+  "errors": []
+}

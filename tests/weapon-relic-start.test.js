@@ -2,7 +2,7 @@ import {relicIllustration} from '../relic-illustrations.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {makeRun,creature,SPECIES,RELICS,Battle,stats,rewardBattle} from '../game.js';
-import {CREATURE_GEAR,GEAR_BY_ID,equipGear,enemyEquipment,reconcileEquipment,gearCompatibility,equipmentAffinity,gearWeaponClass} from '../creature-equipment.js';
+import {CREATURE_GEAR,GEAR_BY_ID,equipGear,enemyEquipment,reconcileEquipment,gearCompatibility,equipmentAffinity,gearWeaponClass,equipmentAlignment} from '../creature-equipment.js';
 import {applyLoadoutDrop} from '../loadout-interactions.js';
 import {prepareOpeningRelics,chooseFirstRelic,skipFirstRelic,recordRunReset,recordOpeningBattle,LESSER_RELICS} from '../opening-relics.js';
 import {PACT_RELICS} from '../relic-pacts.js';
@@ -13,7 +13,7 @@ import {RELIC_ART,UI_ART} from '../ui-art.js';
 test('every weapon has an explicit class; all families obey their equipment identity',()=>{
  for(const g of CREATURE_GEAR.filter(g=>g.slot==='Weapon'))assert.ok(gearWeaponClass(g),g.id);
  for(const s of SPECIES)for(let evolution=0;evolution<=2;evolution++){
-  const c={id:s.id,evolution};for(const g of CREATURE_GEAR){const yes=gearCompatibility(c,g).allowed;if(yes&&gearWeaponClass(g))assert.equal(gearWeaponClass(g),equipmentAffinity(c),s.id+': '+g.id);if(equipmentAffinity(c)==='fang'&&yes)assert.ok(['Fang','Jewelry'].includes(g.slot)||gearWeaponClass(g)==='fang');}
+  const c={id:s.id,evolution};for(const g of CREATURE_GEAR){const yes=gearCompatibility(c,g).allowed;if(yes&&gearWeaponClass(g)){if(gearWeaponClass(g)==='spear')assert.equal(equipmentAlignment(c),'Warrior');else assert.equal(gearWeaponClass(g),equipmentAffinity(c),s.id+': '+g.id);}if(equipmentAffinity(c)==='fang'&&yes)assert.ok(g.audience==='beast'||['Fang','Jewelry','Ring'].includes(g.slot)||gearWeaponClass(g)==='fang');}
  }
  for(const [id,affinity]of [['syl','bow'],['rowan','bow'],['morrow','bow'],['grit','sword'],['sable','sword'],['brakk','two-handed'],['emberhound','fang'],['nyra','staff'],['cogwalker','cannon']])assert.equal(equipmentAffinity({id}),affinity);
 });

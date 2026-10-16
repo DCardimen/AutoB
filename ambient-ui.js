@@ -9,11 +9,12 @@ export function decorateAmbientBackgrounds(root=document){
  const definitions=[['.ambient','sky',null,.5,.45],['.header','sky',null,.5,.35],['.rewards-landscape','rewards','rewards-backdrop',.5,1],['.team-select','night',null,.5,1],['.field-world',null,null,.34,.7],['.biome-route',theme,'world-'+planet,.5,.85],['.field-world-preview',null,null,.5,1],['.encounter-art',theme,'world-'+planet,.5,.7],['.collection-banner',theme,'world-'+planet,.3,.5],['.modal:not(.reward-screen):not(.team-select)',theme,'world-'+planet,.35,.18]];
  for(const [selector,kind,key,positionY,opacity]of definitions)for(const host of root.querySelectorAll(selector)){
   if(scenes.has(host))continue;host.querySelector(':scope>.background-motion')?.remove();
-  const route=host.matches('.field-world-preview')?host.style.backgroundImage:host.closest('.reference-map')?.style.getPropertyValue('--route-art')||'',routeWorld=[0,1,2].find(i=>route.includes(UI_ART['world-'+i]));
+  const route=host.matches('.field-world-preview')?host.style.backgroundImage:host.closest('.reference-map')?.style.getPropertyValue('--route-art')||'',routeWorld=[0,1,2].find(i=>route.includes(UI_ART['world-'+i])||i===0&&route.includes(UI_ART['stage-grasslands']));
   const i=host.matches('.field-world')?[...document.querySelectorAll('.field-world')].indexOf(host)%3:routeWorld??planet;
   const canvas=document.createElement('canvas');canvas.className='background-motion';canvas.setAttribute('aria-hidden','true');canvas.style.opacity=opacity;
   if(getComputedStyle(host).position==='static')host.style.position='relative';host.classList.add('ambient-host');host.prepend(canvas);
-  scenes.set(host,{canvas,theme:host.matches('.biome-route,.encounter-art,.field-world-preview')?['grove','cinder','astral'][i]:kind||['grove','cinder','astral'][i],image:source(host.matches('.biome-route,.encounter-art,.field-world,.field-world-preview')?'world-'+i:key),positionY,visible:!observer});observer?.observe(host);
+  const grasslands=i===0&&host.matches('.biome-route,.field-world,.field-world-preview,.encounter-art');
+  scenes.set(host,{canvas,theme:grasslands?'grasslands':host.matches('.biome-route,.encounter-art,.field-world-preview')?['grove','cinder','astral'][i]:kind||['grove','cinder','astral'][i],image:source(grasslands?'stage-grasslands':host.matches('.biome-route,.encounter-art,.field-world,.field-world-preview')?'world-'+i:key),positionY,visible:!observer});observer?.observe(host);
  }
 }
 export function tickAmbientBackgrounds(now,{reducedMotion=false}={}){
