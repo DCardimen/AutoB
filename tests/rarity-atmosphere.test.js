@@ -5,6 +5,11 @@ import {captureCelebrationProfile} from '../capture-celebration.js';
 import {chestFrameBlend} from '../rewards-ui.js';
 import {ELITE_TIER_STRENGTH,eliteTierForSeed,eliteModifier,ELITE_MODIFIERS} from '../elite-modifiers.js';
 import {makeRun,encounter,BY_ID,creature,stats,settleCaptureRecruitment,nextLevelPreview,LEVEL_GROWTH} from '../game.js';
+test('aura size scales uniformly without changing rarity, team identity or the battle fade',()=>{
+ const base=auraProfile('Legendary'),small=auraProfile('Legendary',{size:25}),large=auraProfile('Legendary',{size:200,side:1,battle:true});
+ assert.equal(base.size,1);assert.equal(small.size,.25);assert.equal(large.size,2);
+ assert.equal(small.radius,base.radius);assert.equal(large.tier,base.tier);assert.equal(large.row,1);assert.equal(large.opacity,base.opacity*.2);
+});
 
 test('rarity art increases monotonically, both teams use their authored rows, and battle opacity is exactly 20%',()=>{
  let tier=-1,alpha=-1;

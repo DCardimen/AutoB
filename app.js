@@ -32,6 +32,7 @@ import {RUN_RELIC_BY_ID,EXPEDITION_RELICS,routeModifiers} from './run-relics.js'
 import {DeploymentPhysics} from './deployment-physics.js';
 import {nativeSpawn,nativeBodyHeight} from './native-combat.js';
 import {nativePortrait,getCharacterHeight,drawNativeUnit,nativeUnitHit} from './native-art.js';
+import {auraProfile,paintRarityRing,paintRarityFlair} from './rarity-aura.js';
 import {CREATURE_GEAR,GEAR_BY_ID,equipmentSlots,equipmentDescription,enemyEquipment,gearCompatibility,equipmentAffinity,AFFINITY_LABELS,equipmentAlignment,EQUIPMENT_SLOTS,equipmentSlotViews,equipmentSlotType,gearAudience,reconcileEquipment,armorReduction,claimEvolutionGear,equipGear,removeGear,buyGear} from './creature-equipment.js';
 import {evolutionSkillIds} from './evolution-skills.js';
 import {creatureTypeFactor,creatureWorldScale,MAX_CREATURE_TYPE_FACTOR} from './native-size.js';
@@ -2283,7 +2284,7 @@ function drawTuningPreview(time){const canvas=$('#tuning-preview');if(!canvas||!
  const c=canvas.getContext('2d'),examples=settingsPreview.update(time,profile.tuning);c.imageSmoothingEnabled=false;c.fillStyle='#082330';c.fillRect(0,0,600,210);
  const zoom=Math.min(2.6,144/(192*Math.max(...examples.map(e=>creatureWorldScale(e.spec,e.unit)))));
  for(const [i,e]of examples.entries()){const u=e.unit,x=100+i*200+26*Math.tanh((u.x-e.origin.x)/250),y=146+8*Math.tanh((u.y-e.origin.y)/150),size=3*creatureWorldScale(e.spec,u)*zoom;
-  c.save();c.beginPath();c.rect(i*200,0,200,210);c.clip();c.fillStyle='#35606c';c.fillRect(i*200+12,164,176,1);drawNativeUnit(c,u,e.spec,x,y,time,size);c.restore();
+  c.save();c.beginPath();c.rect(i*200,0,200,210);c.clip();c.fillStyle='#35606c';c.fillRect(i*200+12,164,176,1);const aura=auraProfile(e.spec.rarity,{side:u.side,size:profile.tuning.auraSize}),auraScale=creatureWorldScale(e.spec,u)*zoom;paintRarityRing(c,x,y,aura,auraScale);drawNativeUnit(c,u,e.spec,x,y,time,size);paintRarityFlair(c,x,y,time,aura,auraScale,{reducedMotion:profile.reducedMotion});c.restore();
   const label=document.querySelector(`[data-tuning-example="${i}"]`);label.dataset.previewId=u.id;label.dataset.previewState=e.state;label.querySelector('[data-preview-name]').textContent=creatureName(u);label.querySelector('[data-preview-motion]').textContent=e.state.charAt(0).toUpperCase()+e.state.slice(1);
  }
  canvas.dataset.previewBatch=settingsPreview.batch;

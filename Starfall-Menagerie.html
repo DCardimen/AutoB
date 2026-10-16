@@ -10080,6 +10080,7 @@ body.ui-v3[data-screen="map"] .stage-preview-popover>footer{display:flex;flex-di
     { id: "strideLength", name: "Stride length", min: 50, max: 150, step: 5, group: "Presentation", description: "Shorter or longer steps for every walking creature. Step cadence and planted contacts adapt together; movement speed stays the same." },
     { id: "capeMotion", name: "Cape flow", min: 0, max: 200, step: 5, group: "Presentation", description: "Wind and flutter on the physical cape; its shoulder attachments remain fixed." },
     { id: "damageTextSize", name: "Damage number size", min: 50, max: 200, step: 5, group: "Presentation", description: "Crisp pixel damage, healing, shield and critical-hit numbers." },
+    { id: "auraSize", name: "Aura size", min: 25, max: 200, step: 5, group: "Presentation", description: "Size of rarity rings, orbiting flairs and elite glows for both teams." },
     { id: "effectIntensity", name: "Combat effect intensity", min: 0, max: 200, step: 5, group: "Presentation", description: "Brightness and weight of impacts, magic rings and particles. Telegraphs remain readable." },
     { id: "cameraShake", name: "Camera shake", min: 0, max: 200, step: 5, group: "Presentation", description: "Screen impact from heavy attacks and critical hits. Zero disables it." }
   ];
@@ -21521,9 +21522,9 @@ body.ui-v3[data-screen="map"] .stage-preview-popover>footer{display:flex;flex-di
     }
     return images2.get(key4);
   }
-  function auraProfile(rarity, { side = 0, battle: battle2 = false, elite = false } = {}) {
+  function auraProfile(rarity, { side = 0, battle: battle2 = false, elite = false, size = 100 } = {}) {
     const tier = Math.min(5, (levels[rarity] ?? 0) + (elite ? 1 : 0));
-    return { tier, row: side ? 1 : 0, opacity: (0.5 + tier * 0.065) * (battle2 ? 0.2 : 1), radius: 18 + tier * 1.6, flairSize: 8 + tier * 1.6 };
+    return { tier, row: side ? 1 : 0, opacity: (0.5 + tier * 0.065) * (battle2 ? 0.2 : 1), radius: 18 + tier * 1.6, flairSize: 8 + tier * 1.6, size: Math.max(0.25, Math.min(2, (Number.isFinite(size) ? size : 100) / 100)) };
   }
   function auraOrbit(time, { radius = 24, phase: phase2 = 0, reducedMotion = false } = {}) {
     const angle2 = reducedMotion ? Math.PI / 2 : time * 0.85 + phase2;
@@ -21532,7 +21533,7 @@ body.ui-v3[data-screen="map"] .stage-preview-popover>footer{display:flex;flex-di
   function paintRarityRing(c, x, y, profile2, scale = 1) {
     const image2 = atlas("aura-rings");
     if (!image2?.complete || !image2.naturalWidth) return;
-    scale = Math.max(0.65, scale);
+    scale = Math.max(0.65, scale) * (profile2.size ?? 1);
     const { tier, row, opacity, radius } = profile2, w = (radius * 2 + 12) * scale, h = w * 0.53;
     c.save();
     c.globalAlpha *= opacity;
@@ -21543,7 +21544,7 @@ body.ui-v3[data-screen="map"] .stage-preview-popover>footer{display:flex;flex-di
   function paintRarityFlair(c, x, y, time, profile2, scale = 1, { phase: phase2 = 0, reducedMotion = false } = {}) {
     const image2 = atlas("aura-flair");
     if (!image2?.complete || !image2.naturalWidth) return;
-    scale = Math.max(0.65, scale);
+    scale = Math.max(0.65, scale) * (profile2.size ?? 1);
     const { tier, row, opacity, radius, flairSize } = profile2;
     if (!auraOrbit(time, { radius: radius * scale, phase: phase2, reducedMotion }).visible) return;
     const centers = [161, 489, 829, 1192, 1567, 2030], tops = [133, 105, 65, 20, 15, 0], widths = [78, 92, 100, 110, 124, 136];
@@ -21824,11 +21825,12 @@ body.ui-v3[data-screen="map"] .stage-preview-popover>footer{display:flex;flex-di
         c.restore();
       }
     }
+    const auraSize = (battle2?.tuning || getTuning()).auraSize ?? 100;
     const auraTime = battle2 ? battle2.time : time, auraReduced = battle2?.reducedMotion || document.body.classList.contains("gentle-ui");
     for (const u of units) {
       if (u.captured || u.hp <= 0) continue;
       const p2 = nativeScreen(u.x, u.y), spec = species[u.id];
-      paintRarityRing(c, p2.x, p2.y, auraProfile(spec.rarity, { side: u.side, battle: !!battle2, elite: !!u.elite || !!u.boss }), creatureWorldScale(spec, u));
+      paintRarityRing(c, p2.x, p2.y, auraProfile(spec.rarity, { side: u.side, battle: !!battle2, elite: !!u.elite || !!u.boss, size: auraSize }), creatureWorldScale(spec, u));
     }
     const terrain = battle2?.terrain || foes2[0]?.terrain || [];
     for (const u of [...units, ...terrain.map((t) => ({ ...t, pillar: true }))].sort((a, b) => a.y - b.y)) {
@@ -21856,7 +21858,7 @@ body.ui-v3[data-screen="map"] .stage-preview-popover>footer{display:flex;flex-di
       c.beginPath();
       c.ellipse(p2.x, p2.y, (u.boss ? 68 : 46) * scale, 14 * scale, 0, 0, Math.PI * 2);
       c.fill();
-      if (eliteModifier(u) && u.hp > 0) paintEliteFlame(c, p2, scale, battle2 ? battle2.time : time, u, battle2 ? 0.2 : 1);
+      if (eliteModifier(u) && u.hp > 0) paintEliteFlame(c, p2, scale, battle2 ? battle2.time : time, u, battle2 ? 0.2 : 1, auraSize / 100);
       if (battle2 && u.hp > 0) {
         const radius = u.radius;
         c.strokeStyle = u.side ? "#dc9c8155" : "#c6df9d55";
@@ -21867,7 +21869,7 @@ body.ui-v3[data-screen="map"] .stage-preview-popover>footer{display:flex;flex-di
       }
       const visualTop = drawNativeUnit(c, u, spec, p2.x, p2.y, battle2 ? battle2.time : time, 3 * scale);
       if (u.hp <= 0) continue;
-      paintRarityFlair(c, p2.x, p2.y, auraTime, auraProfile(spec.rarity, { side: u.side, battle: !!battle2, elite: !!u.elite || !!u.boss }), scale, { phase: (u.seat || 0) * 0.55, reducedMotion: auraReduced });
+      paintRarityFlair(c, p2.x, p2.y, auraTime, auraProfile(spec.rarity, { side: u.side, battle: !!battle2, elite: !!u.elite || !!u.boss, size: auraSize }), scale, { phase: (u.seat || 0) * 0.55, reducedMotion: auraReduced });
       const width = u.boss ? 58 : 30, bar = Math.min(visualTop - 9, p2.y - (({ knight: 115, orc: 100, elf: 105, caster: 116, wolf: 77, fox: 112, mech: 90, spider: 83, jelly: 92, serpent: 65, flyer: 112, crab: 80, centipede: 75 }[actorFor(u, spec).id] || 112) + 12) * scale * characterHeight * formProfile(spec, u).height);
       c.fillStyle = "#12251c";
       c.fillRect(p2.x - width / 2 - 1, bar - 1, width + 2, 6);
@@ -22150,12 +22152,15 @@ body.ui-v3[data-screen="map"] .stage-preview-popover>footer{display:flex;flex-di
     c.fillText(f < 0.8 ? "LATTICE LOCK \xB7 " + Math.round(event.chance * 100) + "%" : event.success ? "ALLEGIANCE CHANGED - ROUND ALLY" : "LATTICE BROKEN", 0, -size - 18);
     c.restore();
   }
-  function paintEliteFlame(c, p2, scale, time, u, intensity = 1) {
+  function paintEliteFlame(c, p2, scale, time, u, intensity = 1, size = 1) {
     const rhythm = idleRhythm(u), r = Math.max(12, 34 * scale), height = Math.max(22, 110 * scale);
     c.save();
+    c.translate(p2.x, p2.y);
+    c.scale(size, size);
+    p2 = { x: 0, y: 0 };
     c.globalAlpha = 0.65 * intensity;
     c.shadowColor = "#ff3424";
-    c.shadowBlur = 8 * intensity;
+    c.shadowBlur = 8 * intensity * size;
     for (let i = 0; i < 11; i++) {
       const f = (time * (0.65 + i * 0.025) + rhythm.offset + i / 11) % 1, a = i * Math.PI * 2 / 11, x = p2.x + Math.cos(a) * r, y = p2.y + Math.sin(a) * r * 0.32 - f * height;
       c.fillStyle = i % 3 ? "#fa3823" : "#ffaf52";
@@ -25102,7 +25107,10 @@ body.ui-v3[data-screen="map"] .stage-preview-popover>footer{display:flex;flex-di
       c.clip();
       c.fillStyle = "#35606c";
       c.fillRect(i * 200 + 12, 164, 176, 1);
+      const aura = auraProfile(e.spec.rarity, { side: u.side, size: profile.tuning.auraSize }), auraScale = creatureWorldScale(e.spec, u) * zoom;
+      paintRarityRing(c, x, y, aura, auraScale);
       drawNativeUnit(c, u, e.spec, x, y, time, size);
+      paintRarityFlair(c, x, y, time, aura, auraScale, { reducedMotion: profile.reducedMotion });
       c.restore();
       const label = document.querySelector(`[data-tuning-example="${i}"]`);
       label.dataset.previewId = u.id;
