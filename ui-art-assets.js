@@ -3,6 +3,7 @@ export const UI_ART = Object.fromEntries(Object.entries({
   "aura-flair": "/public/ui/uploaded/aura-flair.png",
   "aura-rings": "/public/ui/uploaded/aura-rings.png",
   "stage-grasslands": "/public/ui/uploaded/stage-grasslands.png",
+  "stage-grasslands-video": "/public/ui/uploaded/stage-grasslands.mp4",
   "weapon-00": "/public/ui/uploaded/weapon-00.png",
   "weapon-01": "/public/ui/uploaded/weapon-01.png",
   "weapon-02": "/public/ui/uploaded/weapon-02.png",
@@ -449,5 +450,5 @@ export const UI_ART = Object.fromEntries(Object.entries({
 function embeddedArtURL(src) {
  if (!src.startsWith("data:")) return src;
  const raw = atob(src.slice(src.indexOf(",")+1));
- return URL.createObjectURL(new Blob([Uint8Array.from(raw, c => c.charCodeAt(0))], {type: "image/png"}));
+ return URL.createObjectURL(new Blob([Uint8Array.from(raw, c => c.charCodeAt(0))], {type: src.slice(5,src.indexOf(';'))}));
 }

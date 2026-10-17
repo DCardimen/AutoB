@@ -10,7 +10,7 @@ function key(node){
  if(node.tagName==='OPTION')return 'option:'+node.value;
  return null;
 }
-const background=node=>node.nodeType===1&&node.matches('canvas.background-motion');
+const background=node=>node.nodeType===1&&node.matches('canvas.background-motion,video.background-motion');
 const compatible=(a,b)=>a.nodeType===b.nodeType&&(a.nodeType!==1||a.tagName===b.tagName)&&key(a)===key(b);
 
 export function patchModalContent(current,incoming){

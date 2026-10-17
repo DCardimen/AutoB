@@ -1,0 +1,41 @@
+{
+  "checks": [
+    "source: decoded changing frames, normal-speed loop, five viewport sizes, mouse/keyboard selection, retained player, gentle pause/resume, visibility-event pause/resume, offscreen pause/resume, cleanup, live combat",
+    "offline: decoded changing frames, normal-speed loop, five viewport sizes, mouse/keyboard selection, retained player, gentle pause/resume, visibility-event pause/resume, offscreen pause/resume, cleanup, live combat, file:// with all network blocked",
+    "reduced: authored fallback and usable stage selection",
+    "failed: authored fallback and usable stage selection",
+    "blocked: authored fallback and usable stage selection",
+    "World 2 retains its own animated painting",
+    "World 3 retains its own animated painting"
+  ],
+  "playback": [
+    {
+      "tag": "source",
+      "duration": 8,
+      "width": 720,
+      "height": 1280,
+      "muted": true,
+      "loop": true,
+      "inline": true,
+      "src": "/public/ui/uploaded/stage-grasslands.mp4",
+      "rate": 1
+    },
+    {
+      "tag": "offline",
+      "duration": 8,
+      "width": 720,
+      "height": 1280,
+      "muted": true,
+      "loop": true,
+      "inline": true,
+      "src": "embedded video/mp4 blob",
+      "rate": 1
+    }
+  ],
+  "errors": [],
+  "decodedTimes": [
+    1.25,
+    4,
+    7.708333
+  ]
+}
