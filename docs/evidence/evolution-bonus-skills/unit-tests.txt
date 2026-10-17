@@ -1,0 +1,194 @@
+TAP version 13
+# Subtest: every evolvable native family receives one separate bonus per stage on both paths
+ok 1 - every evolvable native family receives one separate bonus per stage on both paths
+  ---
+  duration_ms: 18.1138
+  ...
+# Subtest: an accomplishment evolution at level three leaves its earned spell offer untouched
+ok 2 - an accomplishment evolution at level three leaves its earned spell offer untouched
+  ---
+  duration_ms: 0.263
+  ...
+# Subtest: old shared-cap saves recover displaced spells, selected/archived bonuses and missing level offers idempotently
+ok 3 - old shared-cap saves recover displaced spells, selected/archived bonuses and missing level offers idempotently
+  ---
+  duration_ms: 0.3811
+  ...
+# Subtest: regular over-cap or replacement requests remain atomic despite free evolution bonuses
+ok 4 - regular over-cap or replacement requests remain atomic despite free evolution bonuses
+  ---
+  duration_ms: 0.2195
+  ...
+# Subtest: migration keeps an upgraded active spell and refreshes conflicting offers without duplicating its archived base
+ok 5 - migration keeps an upgraded active spell and refreshes conflicting offers without duplicating its archived base
+  ---
+  duration_ms: 0.1708
+  ...
+# Subtest: evolved enemies and captures retain all six real cooldowns and both bonuses
+ok 6 - evolved enemies and captures retain all six real cooldowns and both bonuses
+  ---
+  duration_ms: 95.048
+  ...
+# Subtest: all 89 families have valid lineages, art cells, and an encounter habitat
+ok 2 - all 89 families have valid lineages, art cells, and an encounter habitat
+  ---
+  duration_ms: 0.9607
+  ...
+# Subtest: evolution requires a level, gold, and valid path without spending on failure
+ok 3 - evolution requires a level, gold, and valid path without spending on failure
+  ---
+  duration_ms: 1.2128
+  ...
+# Subtest: opening wild fights use common and uncommon creatures, while sanctuaries offer rarities
+ok 4 - opening wild fights use common and uncommon creatures, while sanctuaries offer rarities
+  ---
+  duration_ms: 4.4211
+  ...
+# Subtest: transformation preserves identity, experience, equipped gems, and skill links
+ok 5 - transformation preserves identity, experience, equipped gems, and skill links
+  ---
+  duration_ms: 2.666
+  ...
+# Subtest: Wild and Warden create different damage, healing, cooldown, and shield outcomes
+ok 6 - Wild and Warden create different damage, healing, cooldown, and shield outcomes
+  ---
+  duration_ms: 4.8888
+  ...
+# Subtest: capture retains an enemy's evolved form; future starters reset progression
+ok 7 - capture retains an enemy's evolved form; future starters reset progression
+  ---
+  duration_ms: 0.6251
+  ...
+# Subtest: animation states are distinct, deterministic, and freeze at a fixed game time
+ok 8 - animation states are distinct, deterministic, and freeze at a fixed game time
+  ---
+  duration_ms: 0.5838
+  ...
+# Subtest: 562 authored abilities plus four quality variants per learnable cooldown, unique autos and legacy loadouts
+ok 3 - 562 authored abilities plus four quality variants per learnable cooldown, unique autos and legacy loadouts
+  ---
+  duration_ms: 4.2752
+  ...
+# Subtest: socket capacity is 1–5 and respects equipment ownership
+ok 4 - socket capacity is 1–5 and respects equipment ownership
+  ---
+  duration_ms: 1.3256
+  ...
+# Subtest: a support changes only the linked skill; invalid links are rejected
+ok 5 - a support changes only the linked skill; invalid links are rejected
+  ---
+  duration_ms: 1.6383
+  ...
+# Subtest: multiple different gems can modify the same skill, with no duplicate supports
+ok 6 - multiple different gems can modify the same skill, with no duplicate supports
+  ---
+  duration_ms: 0.608
+  ...
+# Subtest: Spell Echo schedules and executes a second cast
+ok 7 - Spell Echo schedules and executes a second cast
+  ---
+  duration_ms: 21.9514
+  ...
+# Subtest: Convergence adds an actual target to a signature auto-attack
+ok 8 - Convergence adds an actual target to a signature auto-attack
+  ---
+  duration_ms: 4.7453
+  ...
+# Subtest: Fortification on an auto-attack shields its wearer and no teammate
+ok 9 - Fortification on an auto-attack shields its wearer and no teammate
+  ---
+  duration_ms: 2.8237
+  ...
+# Subtest: every active skill has an executable combat effect
+ok 10 - every active skill has an executable combat effect
+  ---
+  duration_ms: 1352.9809
+  ...
+# Subtest: reachable map paths stay in adjacent lanes and a boss ends the planet
+ok 11 - reachable map paths stay in adjacent lanes and a boss ends the planet
+  ---
+  duration_ms: 1.9983
+  ...
+# Subtest: sanctuaries offer a rare target and a tangible capture bonus
+ok 12 - sanctuaries offer a rare target and a tangible capture bonus
+  ---
+  duration_ms: 1.4583
+  ...
+# Subtest: capture consumes exactly one orb and never proceeds without an orb or bench space
+ok 13 - capture consumes exactly one orb and never proceeds without an orb or bench space
+  ---
+  duration_ms: 0.5032
+  ...
+# Subtest: gold is scarce: purchases cannot overspend or duplicate expedition relics
+ok 14 - gold is scarce: purchases cannot overspend or duplicate expedition relics
+  ---
+  duration_ms: 0.3093
+  ...
+# Subtest: experience carries over through several levels
+ok 15 - experience carries over through several levels
+  ---
+  duration_ms: 0.2176
+  ...
+# Subtest: boss phase two triggers once and accelerates its real cooldowns
+ok 16 - boss phase two triggers once and accelerates its real cooldowns
+  ---
+  duration_ms: 9.7644
+  ...
+# Subtest: representative seeded combat terminates with finite health, skills, healing, and damage
+ok 17 - representative seeded combat terminates with finite health, skills, healing, and damage
+  ---
+  duration_ms: 10422.6979
+  ...
+# Subtest: level-5 awakening unlocks an actual third skill and stronger common stats
+ok 18 - level-5 awakening unlocks an actual third skill and stronger common stats
+  ---
+  duration_ms: 2.0633
+  ...
+# Subtest: every native companion starts with its own cooldown and mechanically distinct family passive
+ok 4 - every native companion starts with its own cooldown and mechanically distinct family passive
+  ---
+  duration_ms: 3.9972
+  ...
+# Subtest: only levels 3,5,7 offer three choices; four regular cooldowns plus basic attack is a hard cap
+ok 5 - only levels 3,5,7 offer three choices; four regular cooldowns plus basic attack is a hard cap
+  ---
+  duration_ms: 2.1156
+  ...
+# Subtest: a new slot is earned at the exact specified level and preview explains its manual choice
+ok 6 - a new slot is earned at the exact specified level and preview explains its manual choice
+  ---
+  duration_ms: 2.4618
+  ...
+# Subtest: evolution grants its own bonus slot and preserves every regular spell and later level choice
+ok 7 - evolution grants its own bonus slot and preserves every regular spell and later level choice
+  ---
+  duration_ms: 1.102
+  ...
+# Subtest: rarity improves quality and family type and role are strongly weighted
+ok 8 - rarity improves quality and family type and role are strongly weighted
+  ---
+  duration_ms: 94.2518
+  ...
+# Subtest: enemy skills are deterministic, respect the same level cap, and never prompt the player
+ok 9 - enemy skills are deterministic, respect the same level cap, and never prompt the player
+  ---
+  duration_ms: 0.7081
+  ...
+# Subtest: legacy migration keeps all evolution bonuses outside the cap and offers the remaining regular slot once
+ok 10 - legacy migration keeps all evolution bonuses outside the cap and offers the remaining regular slot once
+  ---
+  duration_ms: 0.4898
+  ...
+# Subtest: learned skills become real battle cooldowns and captured companions keep their choices
+ok 11 - learned skills become real battle cooldowns and captured companions keep their choices
+  ---
+  duration_ms: 129.2543
+  ...
+1..37
+# tests 37
+# pass 37
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 12931.2177

@@ -22,7 +22,7 @@ import {CORE_SPECIES} from './core-species.js';
 import {evaluateOrders,terrainFor,firstTerrainHit,terrainSteering,confineTerrain,orderGoal,combatApproach,avoidCombatBodies} from './native-tactics.js';
 import {NATIVE_BOUNDS,nativeSpawn,initializeNative,nativeAction,advanceNative,nativeBladePoint,nativeHeavy,nativeMuzzle,nativeBodyHeight} from './native-combat.js';
 import { NATIVE_SPECIES, NATIVE_STARTERS, NATIVE_POOLS, nativeEvolution, nativeSkill, nativePool, lineageLimit, lineageProgress, settleNativeGrowth } from './native-content.js';
-import { SKILLS, loadoutFor,initializeSkills,prepareEnemySkills,queueLevelSkill,queueEvolutionSkill,familyPassiveStats,SKILL_UNLOCK_LEVELS } from "./skills.js";
+import { SKILLS, loadoutFor,initializeSkills,prepareEnemySkills,queueLevelSkill,grantEvolutionSkills,familyPassiveStats,SKILL_UNLOCK_LEVELS } from "./skills.js";
 import { EXPANSION_SPECIES } from "./roster.js";
 import {
   sweepCircle,
@@ -453,7 +453,7 @@ export function evolveCreature(run, index, path) {
   run.gold -= offer.cost;
   c.evolution = offer.stage + 1;
   c.evolutionPath = path;
-  queueEvolutionSkill(c);
+  grantEvolutionSkills(c);
   return { success: true, name: creatureName(c), stage: c.evolution, path };
 }
 export function personalRelic(id) {
@@ -1127,7 +1127,7 @@ export function awardCapture(run, c) {
   if((run.rulesVersion||0)>=15)caught.balanceVersion=run.rulesVersion;
   if(progressive(run)){caught.relics=structuredClone(c.relics||[]);caught.genes=c.genes;caught.nature=c.nature;caught.boundRelics=[...(c.enemyRelics||c.boundRelics||[])];caught.equipment=[...(c.equipment||[])];caught.equipmentVersion=c.equipmentVersion;caught.equipmentQuality=1;caught.equipmentRolls=caught.equipment.map((id,i)=>({...c.equipmentRolls?.[i],id,quality:(c.equipmentRolls?.[i]?.quality??1)*(c.equipmentQuality??1)}));}
   if(c.eliteModifier){caught.eliteModifier=c.eliteModifier;caught.eliteTier=c.eliteTier||4;}
-  if(c.skillsVersion===2)Object.assign(caught,{skillsVersion:2,manualSkills:true,learnedSkills:[...c.learnedSkills||[]],chosenEvolutionSkills:[...c.chosenEvolutionSkills||[]],pendingSkills:[],skillChoicesThrough:c.level,skillSeed:c.skillSeed});
+  if(c.skillsVersion===2)Object.assign(caught,{skillsVersion:2,manualSkills:true,learnedSkills:[...c.learnedSkills||[]],chosenEvolutionSkills:[...c.chosenEvolutionSkills||[]],evolutionSkillsVersion:c.evolutionSkillsVersion,archivedSkills:[...c.archivedSkills||[]],pendingSkills:[],skillChoicesThrough:c.level,skillSeed:c.skillSeed});
   caught.evolution = evolutionStage(c);
   caught.evolutionPath = caught.evolution ? c.evolutionPath : null;
   run.bench.push(caught);
@@ -3594,7 +3594,7 @@ export class Battle {
         level: target.level,
         evolution: target.evolution,
         evolutionPath: target.evolutionPath,
-        skillsVersion:target.skillsVersion,learnedSkills:target.learnedSkills,chosenEvolutionSkills:target.chosenEvolutionSkills,skillSeed:target.skillSeed,
+        skillsVersion:target.skillsVersion,learnedSkills:target.learnedSkills,chosenEvolutionSkills:target.chosenEvolutionSkills,evolutionSkillsVersion:target.evolutionSkillsVersion,archivedSkills:target.archivedSkills,skillSeed:target.skillSeed,
         eliteModifier:target.eliteModifier,eliteTier:target.eliteTier,
         capturePreparation: target.capturePreparation,
         relics:structuredClone(target.relics||[]),genes:target.genes,nature:target.nature,enemyRelics:target.enemyRelics,equipment:[...(target.equipment||[])],equipmentRolls:target.equipmentRolls,equipmentQuality:target.equipmentQuality,equipmentVersion:target.equipmentVersion,
@@ -4195,7 +4195,7 @@ export class Battle {
                 level: target.level,
                 evolution: target.evolution,
                 evolutionPath: target.evolutionPath,
-        skillsVersion:target.skillsVersion,learnedSkills:target.learnedSkills,chosenEvolutionSkills:target.chosenEvolutionSkills,skillSeed:target.skillSeed,
+        skillsVersion:target.skillsVersion,learnedSkills:target.learnedSkills,chosenEvolutionSkills:target.chosenEvolutionSkills,evolutionSkillsVersion:target.evolutionSkillsVersion,archivedSkills:target.archivedSkills,skillSeed:target.skillSeed,
               }
             : null,
         };
