@@ -126,9 +126,9 @@ not ok 25 - a correctly linked counter support can turn the same shield encounte
   failureType: 'testCodeFailure'
   error: |-
     Expected values to be strictly equal:
-    
+
     0 !== 1
-    
+
   code: 'ERR_ASSERTION'
   name: 'AssertionError'
   expected: 1
