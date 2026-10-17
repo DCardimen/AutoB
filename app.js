@@ -564,8 +564,14 @@ function placeCaptureTracker(){
  const tracker=$('#capture-tracker'),viewport=$('.arena-viewport'),controls=$('.arena-control');if(!tracker||!viewport||!controls)return;
  const actions=$('.briefing-actions');if(innerWidth<=900||!actions){if(tracker.parentElement!==controls.parentElement)controls.before(tracker);}else if(tracker.parentElement!==actions)actions.prepend(tracker);
 }
+function placeArenaRoster(){
+ const roster=$('.arena-roster-deck')||$('#live-roster'),frame=$('.arena-frame'),side=$('.side-column');
+ if(!run.native||!roster||!frame||!side)return;
+ const destination=innerWidth>=1101?side:frame;
+ if(roster.parentElement!==destination)destination.append(roster);
+}
 function resizeCanvas() {
-  placeArenaAction();placeCaptureTracker();
+  placeArenaAction();placeCaptureTracker();placeArenaRoster();
   if (!canvas) return;
   const rect = canvas.getBoundingClientRect();
   const dpr = Math.min(devicePixelRatio, 2);

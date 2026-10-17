@@ -460,6 +460,31 @@ body.ui-v3.native-expedition .evolution-skill-bonuses .skill-detail[data-skill-v
 @media(max-width:500px){body.ui-v3.native-expedition .skill-detail[data-skill-visual="2"]{gap:9px;padding:11px}body.ui-v3.native-expedition .skill-detail[data-skill-visual="2"]>.skill-icon,body.ui-v3.native-expedition .skill-detail[data-skill-visual="2"]>.skill-icon img{width:45px;height:45px;min-width:45px}body.ui-v3.native-expedition .skill-detail[data-skill-visual="2"] h3{gap:5px;flex-wrap:wrap}body.ui-v3.native-expedition .skill-choice-card[data-skill-visual="2"]{grid-template-columns:56px minmax(0,1fr)}body.ui-v3.native-expedition .skill-choice-card[data-skill-visual="2"] .skill-choice-art{width:56px;height:56px}}
 /* Postmatch: companions stay beside the rewards, with quiet, usable drop fields. */
 /* Expedition selection keeps the party and confirmation ahead of the catalogue. */
+@media(min-width:1101px){
+ body.ui-v3.native-expedition[data-screen="arena"] #app{width:100%;max-width:none;padding-inline:clamp(14px,1.4vw,36px)}
+ body.ui-v3.native-expedition[data-screen="arena"] .arena-grid,body.ui-v3.native-expedition[data-screen="arena"][data-phase="battle"] .arena-grid,body.ui-v3.native-expedition[data-screen="arena"] .arena-grid:has(.elite-encounter){align-items:stretch;grid-template-columns:minmax(0,1fr) clamp(310px,22vw,390px);gap:12px}
+ body.ui-v3.native-expedition[data-screen="arena"] .side-column{display:flex;flex-direction:column;height:100%;min-height:0;overflow:hidden;gap:10px}
+ body.ui-v3.native-expedition[data-screen="arena"] .side-column>.briefing{flex:1;min-height:0;max-height:none;overflow:auto;padding:14px}
+ body.ui-v3.native-expedition .side-column>.arena-roster-deck,body.ui-v3.native-expedition .side-column>#live-roster{flex:none;max-height:40dvh;overflow:auto;scrollbar-width:thin;scrollbar-color:#729f92 #07242d;border:1px solid #59868c;border-radius:8px;padding:8px;background:#05232b}
+ body.ui-v3.native-expedition .side-column #ally-orders,body.ui-v3.native-expedition .side-column #ally-orders:not(:has(> :nth-child(4))){display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-flow:row;grid-auto-columns:auto;gap:5px}
+ body.ui-v3.native-expedition .side-column .ally-orders>[data-ally-order]{display:flex;flex-direction:column;gap:4px;min-width:0;padding:6px;min-height:70px}
+ body.ui-v3.native-expedition .side-column .prep-roster-portrait{gap:4px;min-width:0;width:100%}
+ body.ui-v3.native-expedition .side-column .prep-roster-portrait img{width:31px;height:31px}
+ body.ui-v3.native-expedition .side-column .prep-roster-portrait strong{font-size:12px}
+ body.ui-v3.native-expedition .side-column .prep-roster-portrait small{font-size:8px}
+ body.ui-v3.native-expedition .side-column .roster-commands{width:100%;margin:0}
+ body.ui-v3.native-expedition .side-column .roster-commands select{width:100%;font-size:9px}
+ body.ui-v3.native-expedition .side-column .prep-roster-vitals{width:100%}
+ body.ui-v3.native-expedition .side-column .prep-roster-vitals>span{font-size:7px}
+ body.ui-v3.native-expedition .side-column .arena-roster-deck h3{font-size:9px;gap:4px;flex-wrap:wrap;margin-bottom:7px}
+ body.ui-v3.native-expedition .side-column .roster-manage{margin-left:auto}
+ body.ui-v3.native-expedition .side-column .roster-manage button{font-size:7px;padding:4px}
+ body.ui-v3.native-expedition .side-column .roster-manage button:first-child{display:none}
+ body.ui-v3.native-expedition .side-column .live-roster.paired-rosters{display:block}
+ body.ui-v3.native-expedition .side-column .live-roster-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px}
+ body.ui-v3.native-expedition .side-column .live-unit-card{min-width:0}
+ body.ui-v3.native-expedition .side-column .live-roster>[data-roster-panel]{margin-bottom:6px}
+}
 body.ui-v3 .header .header-new-expedition{border:1px solid #9cbba077;border-radius:7px;color:#e8d9a1;padding:7px 11px;min-height:34px;white-space:nowrap;font:600 11px var(--sans)}
 body.ui-v3 .header .header-new-expedition:hover{background:#214944;border-color:#d7d995}
 @media(max-width:380px){body.ui-v3 .header{padding-inline:8px}body.ui-v3 .header .header-end{gap:4px}body.ui-v3 .header .header-end .icon-button{width:32px;min-width:32px;height:32px}}
