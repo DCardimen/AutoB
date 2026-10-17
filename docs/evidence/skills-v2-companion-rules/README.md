@@ -34,3 +34,14 @@ Original/current sheets were visually reviewed for Nyra/caster, Syl/elf, Morrow/
 `node scripts/review-skills-v2.mjs` — effect/canvas-state review and actual 1× video decoding. `node scripts/review-gaits-carry.mjs skills-v2` — existing authored-art comparison review. `node tests/legs-v2.browser.mjs` and `node tests/prototype.browser.mjs` — live source/offline creature regression checks.
 
 Both offline HTML builders were run. Training Glade rebuilds byte-identically because its code/assets are unaffected. The main offline game embeds the new icon and canvas code without additional bitmap or network dependencies.
+
+## Full regression result and existing failures
+
+The complete Node suite finished: **460 tests, 458 passed, 2 failed**. [Full output](full-regression.txt). The exhaustive 170,136-frame creature cell test and both character-height boundary checks pass, as do gait, palette and weapon contact checks. The 66 focused feature checks pass separately.
+
+Both failures reproduce identically from an isolated export of the unchanged base commit `8e6063f`:
+
+- `grand-forms`: the arena-size check expects collision radius 3.3 but receives 6.6. [Base reproduction](base-radius-reproduction.txt).
+- `overhaul`: the linked-counter-support scenario expects the unmodified team to lose, but it already wins. [Base reproduction](base-counter-reproduction.txt).
+
+Collision settings, these scenario expectations and their assertions were not changed in this PR. No additional failure was introduced by this update.
