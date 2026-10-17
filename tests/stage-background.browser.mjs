@@ -38,12 +38,12 @@ try{
   const tag=offline?'offline':'source',{page,context,requests}=await fixture({offline});
   await page.waitForFunction(()=>{const v=document.querySelector('.stage-background-video');return v?.readyState>=2&&!v.paused&&v.currentTime>.15;});
   const metadata=await page.locator('.stage-background-video').evaluate(v=>({duration:v.duration,width:v.videoWidth,height:v.videoHeight,muted:v.muted,loop:v.loop,inline:v.playsInline,src:v.currentSrc,rate:v.playbackRate}));
-  assert.equal(metadata.duration,8);assert.equal(metadata.muted,true);assert.equal(metadata.loop,true);assert.equal(metadata.inline,true);assert.equal(metadata.rate,1);
+  assert.equal(metadata.duration,7);assert.equal(metadata.muted,true);assert.equal(metadata.loop,true);assert.equal(metadata.inline,true);assert.equal(metadata.rate,1);
   assert.ok(metadata.width>0&&metadata.height>0);assert.ok(metadata.src.startsWith(offline?'blob:':base));
   const before=await frame(page);await page.waitForTimeout(650);assert.notEqual(await frame(page),before,'actual decoded video frames change');
   if(!offline){
    report.decodedTimes=[];
-   for(const target of [1.2,4,7.7]){
+   for(const target of [1.2,4,6.7]){
     const decoded=await page.locator('.stage-background-video').evaluate((v,target)=>new Promise(resolve=>{
      const capture=(_,meta)=>{if(meta.mediaTime<target){v.requestVideoFrameCallback(capture);return;}const c=document.createElement('canvas');c.width=v.videoWidth;c.height=v.videoHeight;c.getContext('2d').drawImage(v,0,0);resolve({time:meta.mediaTime,png:c.toDataURL().split(',')[1]});};v.requestVideoFrameCallback(capture);
     }),target);
@@ -59,8 +59,8 @@ try{
    await page.evaluate(()=>scrollTo(0,0));await page.waitForTimeout(80);await page.screenshot({path:`${out}/${tag}-${width}.png`,fullPage:true});
   }
   await page.setViewportSize({width:1672,height:941});await page.locator('.biome-route').scrollIntoViewIfNeeded();
-  // Watch the actual eight-second boundary at normal playback speed.
-  await page.locator('.stage-background-video').evaluate(v=>{v.currentTime=7.4;});
+  // Watch the actual continuous seven-second boundary at normal speed.
+  await page.locator('.stage-background-video').evaluate(v=>{v.currentTime=6.4;});
   await page.waitForFunction(()=>{const v=document.querySelector('.stage-background-video');return v.currentTime<1&&!v.paused&&v.readyState>=2;});
   assert.ok(await page.locator('.stage-background-video').evaluate(v=>v.readyState>=2&&!v.error),'loop retains decoded picture');
   await page.screenshot({path:`${out}/${tag}-loop.png`});

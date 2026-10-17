@@ -4,9 +4,9 @@
 .rewards-landscape>.background-motion,.ambient>.background-motion{z-index:0}
 .ui-v3 .ambient-host>canvas.background-motion{position:absolute;inset:0;z-index:-1;width:100%;height:100%;pointer-events:none}
 .ui-v3 .rewards-landscape>canvas.background-motion,.ui-v3 .ambient>canvas.background-motion{z-index:0}
-.ui-v3 .biome-route>.stage-background-video{z-index:-2;object-fit:cover;object-position:center 42%;border-radius:inherit}
+.ui-v3 .biome-route>.stage-background-video,.ui-v3 .biome-route>.stage-background-buffer{z-index:-2;object-fit:cover;object-position:center 42%;border-radius:inherit}
 .biome-route:has(>.stage-background-video):after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(0deg,#06191fc9,transparent 22%,transparent 78%,#05151a80),linear-gradient(90deg,#06243144,#06243126)}
-.stage-background-video[hidden]{display:none}
+.stage-background-video[hidden],.stage-background-buffer[hidden]{display:none}
 .formation-team-stance{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}.formation-team-stance button{padding:9px 13px;border:1px solid #456d75;background:#08212c;color:#b9d9d7;border-radius:5px;cursor:pointer}.formation-team-stance button.active{border-color:#e5ce8a;background:#23443e;color:#ffedb5}
 @media(max-width:620px){body.ui-v3.native-expedition .modal-backdrop:has(.modal[data-kind="companions"]),body.ui-v3.native-expedition .modal-backdrop:has(.modal[data-kind="intel"]),body.ui-v3.native-expedition .modal-backdrop:has(.modal[data-kind="capture-kit"]){overflow-y:auto;overflow-x:hidden}}
 
