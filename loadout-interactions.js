@@ -27,6 +27,7 @@ export function applyLoadoutDrop(run,payload,target){
   order.splice(i,1);order.splice(j,0,payload.id);c.skillOrder=order;return true;
  }
  if(payload.kind==='gear'){
+  if(target.relicSlot!==undefined)return false;
   if(equipmentSlots(c)<=0||!gearCompatibility(c,GEAR_BY_ID[payload.id]).allowed)return false;
   const type=equipmentSlotType(GEAR_BY_ID[payload.id]);
   if(c.equipmentVersion>=2&&target.gearType&&target.gearType!==type)return false;
@@ -43,6 +44,7 @@ export function applyLoadoutDrop(run,payload,target){
   return equipGear(run,Number(target.index),payload.uid);
  }
  if(payload.kind==='gem'){
+  if(target.gearType)return false;
   if(!auraCompatibility(c,payload.id).allowed)return false;
   if(target.relicSlot!==undefined&&target.relicSlot!==(c.relics||[]).length)return false;
   if((run.rulesVersion||0)>=17){if(target.skill||from===c||c.relics?.some(g=>g.id===payload.id)||(c.relics||[]).length>=relicSlots(c))return false;if(from){if(from.relics?.[payload.slot]?.uid!==payload.uid)return false;unequipRelic(run,payload.fromIndex,payload.slot);}return equipRelic(run,Number(target.index),payload.uid);}
