@@ -505,8 +505,10 @@ const elementSkills = {
 export const MAX_COOLDOWN_SKILLS=4;
 export const SKILL_UNLOCK_LEVELS=[3,5,7];
 export const cooldownSkillSlots=c=>Math.min(MAX_COOLDOWN_SKILLS,1+SKILL_UNLOCK_LEVELS.filter(level=>level<=c.level).length);
+function distinctRegularSkills(ids){const known=new Set();return ids.filter(id=>{const s=SKILLS[id],base=s?.baseId||id;if(!s||s.auto||s.evolutionSkill||known.has(base))return false;known.add(base);return true;});}
+export const regularSkillIds=c=>distinctRegularSkills([c.id,...c.learnedSkills||[]]).slice(0,cooldownSkillSlots(c));
 export function loadoutFor(species, level = 1, creature = null) {
-  if(creature?.skillsVersion===2)return {auto:'auto-'+species.id,active:[...new Set([species.id,...creature.learnedSkills||[],...creature.chosenEvolutionSkills||[]])].filter(id=>SKILLS[id]).slice(0,cooldownSkillSlots(creature))};
+  if(creature?.skillsVersion===2)return {auto:'auto-'+species.id,active:[...new Set([...regularSkillIds(creature),...evolutionSkillIds(creature)])].filter(id=>SKILLS[id])};
   const ids = [species.id, species.secondary || elementSkills[species.element]];
   if (["Rare", "Epic", "Legendary"].includes(species.rarity) || level >= 5)
     ids.push(
@@ -528,13 +530,65 @@ const hash=text=>[...String(text)].reduce((n,c)=>(Math.imul(n,31)+c.charCodeAt(0
 function random(seed){let n=seed>>>0;return()=>{n+=0x6d2b79f5;let t=n;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return ((t^(t>>>14))>>>0)/4294967296;};}
 const qualityWeights={Common:[75,20,5,0],Uncommon:[45,40,14,1],Rare:[20,35,40,5],Epic:[0,15,65,20],Legendary:[0,0,35,65]};
 export function skillChoices(c,level=c.level){const species=pixelSpec(c.id),r=random((c.skillSeed??hash(c.uid||c.id))^Math.imul(level,7919)),known=new Set([c.id,...(c.learnedSkills||[]).map(id=>SKILLS[id]?.baseId||id)]),pool=learnable.filter(s=>!known.has(s.baseId)),offers=[];for(let i=0;i<3&&pool.length;i++){const preferred=pool.filter(s=>i===0?s.role===species.role:i===1?s.element===species.element:s.role===species.role&&s.element===species.element),eligible=preferred.length?preferred:pool,weight=s=>(s.role===species.role?6:1)*(s.element===species.element?8:1),sum=eligible.reduce((n,s)=>n+weight(s),0);let roll=r()*sum,index=0;for(;index<eligible.length-1;index++){roll-=weight(eligible[index]);if(roll<0)break;}const base=pool.splice(pool.indexOf(eligible[index]),1)[0],weights=qualityWeights[species.rarity]||qualityWeights.Common;let qroll=r()*100,quality=0;for(;quality<3;quality++){qroll-=weights[quality];if(qroll<0)break;}offers.push(`learn-${base.id}-${quality}`);}return offers;}
-export function initializeSkills(c,{migrate=false,enemy=false}={}){if(c.skillsVersion===2){normalizeSkillSlots(c);return c;}const species=pixelSpec(c.id);if(!species)return c;const old=migrate?loadoutFor(species,c.level,c).active:[],oldEvolution=migrate?evolutionSkillIds(c):[];c.skillsVersion=2;c.manualSkills=!enemy;c.learnedSkills=old.filter(id=>id!==c.id&&!id.startsWith('evolve-'));c.chosenEvolutionSkills=oldEvolution;c.pendingSkills=[];c.skillChoicesThrough=migrate||enemy?c.level:1;const candidates=[species.id,...c.chosenEvolutionSkills,...c.learnedSkills],active=candidates.slice(0,cooldownSkillSlots(c));c.archivedSkills=candidates.slice(cooldownSkillSlots(c));c.learnedSkills=c.learnedSkills.filter(id=>active.includes(id));c.chosenEvolutionSkills=c.chosenEvolutionSkills.filter(id=>active.includes(id));if(!migrate&&!enemy)for(const level of SKILL_UNLOCK_LEVELS.filter(level=>level<=c.level))queueLevelSkill(c,level);return c;}
-export function normalizeSkillSlots(c){if(c.skillsVersion!==2)return;const all=[...new Set([c.id,...c.chosenEvolutionSkills||[],...c.learnedSkills||[]])].filter(id=>SKILLS[id]),active=all.slice(0,cooldownSkillSlots(c));c.archivedSkills=[...new Set([...(c.archivedSkills||[]),...all.slice(cooldownSkillSlots(c))])];c.learnedSkills=(c.learnedSkills||[]).filter(id=>active.includes(id));c.chosenEvolutionSkills=(c.chosenEvolutionSkills||[]).filter(id=>active.includes(id));let space=cooldownSkillSlots(c)-active.length;c.pendingSkills=(c.pendingSkills||[]).filter(o=>o.kind==='evolution'||space-->0);}
-export function queueLevelSkill(c,level=c.level){if(c.skillsVersion!==2||!SKILL_UNLOCK_LEVELS.includes(level)||level<=(c.skillChoicesThrough||1))return false;c.skillChoicesThrough=level;if(loadoutFor(pixelSpec(c.id),c.level,c).active.length+(c.pendingSkills?.length||0)>=cooldownSkillSlots(c))return false;const options=skillChoices(c,level);if(!options.length)return false;c.pendingSkills??=[];c.pendingSkills.push({key:`level:${level}`,kind:'level',level,options});return true;}
-export function queueEvolutionSkill(c){if(c.skillsVersion!==2)return false;const stage=c.evolution,key=`evolution:${stage}`;c.pendingSkills??=[];if(c.pendingSkills.some(o=>o.key===key))return false;const options=['wild','warden'].map(path=>`evolve-${c.id}-${path}-${stage}`).filter(id=>SKILLS[id]);if(options.length!==2)return false;c.pendingSkills.push({key,kind:'evolution',stage,options});return true;}
-export function chooseSkill(c,key,id,replaceId=null){const offer=c.pendingSkills?.find(o=>o.key===key);if(!offer||!offer.options.includes(id)||!SKILLS[id])return false;const active=loadoutFor(pixelSpec(c.id),c.level,c).active;if(active.includes(id))return false;if(active.length>=cooldownSkillSlots(c)){if(offer.kind!=='evolution'||!replaceId||replaceId===c.id||!active.includes(replaceId))return false;c.learnedSkills=(c.learnedSkills||[]).filter(s=>s!==replaceId);c.chosenEvolutionSkills=(c.chosenEvolutionSkills||[]).filter(s=>s!==replaceId);c.archivedSkills??=[];c.archivedSkills.push(replaceId);}else if(replaceId)return false;const list=offer.kind==='evolution'?(c.chosenEvolutionSkills??=[]):(c.learnedSkills??=[]);list.push(id);c.pendingSkills=c.pendingSkills.filter(o=>o!==offer);let remaining=cooldownSkillSlots(c)-loadoutFor(pixelSpec(c.id),c.level,c).active.length;c.pendingSkills=c.pendingSkills.filter(o=>o.kind==='evolution'||remaining-->0);for(const future of c.pendingSkills)if(future.kind==='level')future.options=skillChoices(c,future.level);return true;}
-
-export function prepareEnemySkills(c,seed){if(c.skillsVersion===2){normalizeSkillSlots(c);return c;}if(seed!==undefined)c.skillSeed=seed;initializeSkills(c,{enemy:true});c.chosenEvolutionSkills=c.evolution?Array.from({length:Math.min(2,c.evolution)},(_,i)=>`evolve-${c.id}-${c.evolutionPath||'wild'}-${i+1}`):[];for(const level of SKILL_UNLOCK_LEVELS.filter(level=>level<=c.level)){if(loadoutFor(pixelSpec(c.id),c.level,c).active.length>=cooldownSkillSlots(c))break;const options=skillChoices(c,level);if(options.length)c.learnedSkills.push(options[0]);}c.skillChoicesThrough=c.level;normalizeSkillSlots(c);return c;}
+export function initializeSkills(c,{migrate=false,enemy=false}={}){
+ if(c.skillsVersion===2){normalizeSkillSlots(c);return c;}
+ const species=pixelSpec(c.id);if(!species)return c;
+ const old=migrate?loadoutFor(species,c.level,c).active:[],oldEvolution=migrate?evolutionSkillIds(c):[];
+ c.skillsVersion=2;c.manualSkills=!enemy;c.learnedSkills=old.filter(id=>id!==c.id&&!SKILLS[id]?.evolutionSkill);c.chosenEvolutionSkills=oldEvolution;c.pendingSkills=[];c.skillChoicesThrough=migrate||enemy?c.level:1;
+ normalizeSkillSlots(c);return c;
+}
+export function grantEvolutionSkills(c){
+ if(c.skillsVersion!==2)return false;
+ // Keep previously selected bonuses, including saved choices from the old menu.
+ const previous=c.chosenEvolutionSkills||[],candidates=[...previous,...(c.pendingSkills||[]).filter(o=>o.kind==='evolution').map(o=>o.selected),...c.archivedSkills||[]];
+ const granted=[];
+ for(let stage=1;stage<=Math.min(2,c.evolution||0);stage++){
+  const selected=candidates.find(id=>SKILLS[id]?.evolutionSkill&&SKILLS[id].species===c.id&&SKILLS[id].stage===stage);
+  const id=selected||`evolve-${c.id}-${c.evolutionPath||'wild'}-${stage}`;if(SKILLS[id])granted.push(id);
+ }
+ c.chosenEvolutionSkills=granted;c.pendingSkills=(c.pendingSkills||[]).filter(o=>o.kind!=='evolution');
+ return previous.join()!==granted.join();
+}
+export function normalizeSkillSlots(c){
+ if(c.skillsVersion!==2)return;
+ const migrating=c.evolutionSkillsVersion!==1;
+ grantEvolutionSkills(c);
+ // Recover spells displaced by the former shared cap once, without reviving
+ // intentionally archived choices on every subsequent save/load.
+ const all=distinctRegularSkills([c.id,...c.learnedSkills||[],...(migrating?c.archivedSkills||[]:[])]),active=all.slice(0,cooldownSkillSlots(c));
+ c.learnedSkills=active.filter(id=>id!==c.id);
+ c.archivedSkills=[...new Set([...c.archivedSkills||[],...all.slice(cooldownSkillSlots(c))])].filter(id=>!active.includes(id)&&!c.chosenEvolutionSkills.includes(id));
+ c.evolutionSkillsVersion=1;
+ const available=cooldownSkillSlots(c)-active.length;let space=available;const pendingLevels=new Set();
+ c.pendingSkills=(c.pendingSkills||[]).filter(o=>o.kind==='level'&&SKILL_UNLOCK_LEVELS.includes(o.level)&&o.level<=c.level&&!pendingLevels.has(o.level)&&space-->0&&pendingLevels.add(o.level));
+ if(migrating){
+  const unlocked=SKILL_UNLOCK_LEVELS.filter(level=>level<=c.level);
+  if(c.manualSkills===false){
+   c.pendingSkills=[];
+   for(const level of unlocked){if(regularSkillIds(c).length>=cooldownSkillSlots(c))break;const options=skillChoices(c,level);if(options.length)c.learnedSkills.push(options[0]);}
+  }else for(const level of unlocked.slice(c.learnedSkills.length)){
+   if(c.pendingSkills.length>=available)break;
+   if(!pendingLevels.has(level)){const options=skillChoices(c,level);if(options.length)c.pendingSkills.push({key:`level:${level}`,kind:'level',level,options});}
+  }
+  c.pendingSkills.sort((a,b)=>a.level-b.level);c.skillChoicesThrough=Math.max(c.skillChoicesThrough||1,...unlocked);
+  const known=new Set(active.map(id=>SKILLS[id].baseId||id));
+  for(const offer of c.pendingSkills)if(offer.options.some(id=>known.has(SKILLS[id]?.baseId||id)))offer.options=skillChoices(c,offer.level);
+ }
+}
+export function queueLevelSkill(c,level=c.level){
+ if(c.skillsVersion!==2||!SKILL_UNLOCK_LEVELS.includes(level)||level<=(c.skillChoicesThrough||1))return false;
+ c.skillChoicesThrough=level;
+ if(regularSkillIds(c).length+(c.pendingSkills||[]).filter(o=>o.kind==='level').length>=cooldownSkillSlots(c))return false;
+ const options=skillChoices(c,level);if(!options.length)return false;c.pendingSkills??=[];c.pendingSkills.push({key:`level:${level}`,kind:'level',level,options});return true;
+}
+export function chooseSkill(c,key,id,replaceId=null){
+ const offer=c.pendingSkills?.find(o=>o.key===key),active=regularSkillIds(c);
+ if(!offer||offer.kind!=='level'||!offer.options.includes(id)||!SKILLS[id]||SKILLS[id].evolutionSkill||replaceId||active.some(s=>(SKILLS[s].baseId||s)===(SKILLS[id].baseId||id))||active.length>=cooldownSkillSlots(c))return false;
+ (c.learnedSkills??=[]).push(id);c.pendingSkills=c.pendingSkills.filter(o=>o!==offer);
+ let remaining=cooldownSkillSlots(c)-regularSkillIds(c).length;c.pendingSkills=c.pendingSkills.filter(o=>o.kind==='level'&&remaining-->0);
+ for(const future of c.pendingSkills)future.options=skillChoices(c,future.level);return true;
+}
+export function prepareEnemySkills(c,seed){if(c.skillsVersion===2){normalizeSkillSlots(c);return c;}if(seed!==undefined)c.skillSeed=seed;initializeSkills(c,{enemy:true});return c;}
 
 // Family-specific two-stat talents supplement the original behavioral passive.
 // The ordinal within each role makes every released family combination distinct.
