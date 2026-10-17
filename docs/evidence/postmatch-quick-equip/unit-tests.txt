@@ -1,0 +1,254 @@
+TAP version 13
+# Subtest: 30 unique role auras; exact rarity slots, no evolution extras, four exponential power tiers
+ok 1 - 30 unique role auras; exact rarity slots, no evolution extras, four exponential power tiers
+  ---
+  duration_ms: 0.9075
+  ...
+# Subtest: Valor Stone obeys range, role and current tier in real effects
+ok 2 - Valor Stone obeys range, role and current tier in real effects
+  ---
+  duration_ms: 2.147
+  ...
+# Subtest: Ironwall Stone obeys range, role and current tier in real effects
+ok 3 - Ironwall Stone obeys range, role and current tier in real effects
+  ---
+  duration_ms: 1.4141
+  ...
+# Subtest: Tailwind Stone obeys range, role and current tier in real effects
+ok 4 - Tailwind Stone obeys range, role and current tier in real effects
+  ---
+  duration_ms: 1.4618
+  ...
+# Subtest: Quickening Stone obeys range, role and current tier in real effects
+ok 5 - Quickening Stone obeys range, role and current tier in real effects
+  ---
+  duration_ms: 1.4167
+  ...
+# Subtest: Clarity Stone obeys range, role and current tier in real effects
+ok 6 - Clarity Stone obeys range, role and current tier in real effects
+  ---
+  duration_ms: 1.6227
+  ...
+# Subtest: Wellspring Stone obeys range, role and current tier in real effects
+ok 7 - Wellspring Stone obeys range, role and current tier in real effects
+  ---
+  duration_ms: 2.0975
+  ...
+# Subtest: Renewal Stone obeys range, role and current tier in real effects
+ok 8 - Renewal Stone obeys range, role and current tier in real effects
+  ---
+  duration_ms: 1.3008
+  ...
+# Subtest: Lifelight Stone obeys range, role and current tier in real effects
+ok 9 - Lifelight Stone obeys range, role and current tier in real effects
+  ---
+  duration_ms: 1.4149
+  ...
+# Subtest: Endurance Stone obeys range, role and current tier in real effects
+ok 10 - Endurance Stone obeys range, role and current tier in real effects
+  ---
+  duration_ms: 1.4545
+  ...
+# Subtest: Precision Stone obeys range, role and current tier in real effects
+ok 11 - Precision Stone obeys range, role and current tier in real effects
+  ---
+  duration_ms: 2.0764
+  ...
+# Subtest: Veil Stone obeys range, role and current tier in real effects
+ok 12 - Veil Stone obeys range, role and current tier in real effects
+  ---
+  duration_ms: 1.5668
+  ...
+# Subtest: Far Sight Stone obeys range, role and current tier in real effects
+ok 13 - Far Sight Stone obeys range, role and current tier in real effects
+  ---
+  duration_ms: 2.0138
+  ...
+# Subtest: Resolve Stone obeys range, role and current tier in real effects
+ok 14 - Resolve Stone obeys range, role and current tier in real effects
+  ---
+  duration_ms: 2.1101
+  ...
+# Subtest: Celerity Stone obeys range, role and current tier in real effects
+ok 15 - Celerity Stone obeys range, role and current tier in real effects
+  ---
+  duration_ms: 1.3721
+  ...
+# Subtest: Shelter Stone obeys range, role and current tier in real effects
+ok 16 - Shelter Stone obeys range, role and current tier in real effects
+  ---
+  duration_ms: 1.2446
+  ...
+# Subtest: Frailty Stone obeys range, role and current tier in real effects
+ok 17 - Frailty Stone obeys range, role and current tier in real effects
+  ---
+  duration_ms: 1.2292
+  ...
+# Subtest: Corrosion Stone obeys range, role and current tier in real effects
+ok 18 - Corrosion Stone obeys range, role and current tier in real effects
+  ---
+  duration_ms: 1.3447
+  ...
+# Subtest: Quicksand Stone obeys range, role and current tier in real effects
+ok 19 - Quicksand Stone obeys range, role and current tier in real effects
+  ---
+  duration_ms: 1.4245
+  ...
+# Subtest: Lethargy Stone obeys range, role and current tier in real effects
+ok 20 - Lethargy Stone obeys range, role and current tier in real effects
+  ---
+  duration_ms: 1.5777
+  ...
+# Subtest: Clockwork Relay Stone obeys range, role and current tier in real effects
+ok 21 - Clockwork Relay Stone obeys range, role and current tier in real effects
+  ---
+  duration_ms: 0.5382
+  ...
+# Subtest: Drought Stone obeys range, role and current tier in real effects
+ok 22 - Drought Stone obeys range, role and current tier in real effects
+  ---
+  duration_ms: 1.1793
+  ...
+# Subtest: Blight Stone obeys range, role and current tier in real effects
+ok 23 - Blight Stone obeys range, role and current tier in real effects
+  ---
+  duration_ms: 1.2328
+  ...
+# Subtest: Exhaustion Stone obeys range, role and current tier in real effects
+ok 24 - Exhaustion Stone obeys range, role and current tier in real effects
+  ---
+  duration_ms: 1.3431
+  ...
+# Subtest: Battle Battery Stone obeys range, role and current tier in real effects
+ok 25 - Battle Battery Stone obeys range, role and current tier in real effects
+  ---
+  duration_ms: 0.3959
+  ...
+# Subtest: Revelation Stone obeys range, role and current tier in real effects
+ok 26 - Revelation Stone obeys range, role and current tier in real effects
+  ---
+  duration_ms: 1.9921
+  ...
+# Subtest: Heart Pulse Stone obeys range, role and current tier in real effects
+ok 27 - Heart Pulse Stone obeys range, role and current tier in real effects
+  ---
+  duration_ms: 0.4693
+  ...
+# Subtest: Bulwark Pulse Stone obeys range, role and current tier in real effects
+ok 28 - Bulwark Pulse Stone obeys range, role and current tier in real effects
+  ---
+  duration_ms: 0.373
+  ...
+# Subtest: Tempo Lantern Stone obeys range, role and current tier in real effects
+ok 29 - Tempo Lantern Stone obeys range, role and current tier in real effects
+  ---
+  duration_ms: 0.2668
+  ...
+# Subtest: Vulnerability Stone obeys range, role and current tier in real effects
+ok 30 - Vulnerability Stone obeys range, role and current tier in real effects
+  ---
+  duration_ms: 2.0254
+  ...
+# Subtest: Purity Bell Stone obeys range, role and current tier in real effects
+ok 31 - Purity Bell Stone obeys range, role and current tier in real effects
+  ---
+  duration_ms: 0.305
+  ...
+# Subtest: duplicate aura uses strongest tier and leaves precisely when target exits or allegiance changes
+ok 32 - duplicate aura uses strongest tier and leaves precisely when target exits or allegiance changes
+  ---
+  duration_ms: 0.2386
+  ...
+# Subtest: cross-role and common equip rejected atomically; tier survives transfers and migration
+ok 33 - cross-role and common equip rejected atomically; tier survives transfers and migration
+  ---
+  duration_ms: 2.3132
+  ...
+# Subtest: carrier rates, early caps, enemy-derived tiers, boss three, and exact tier loot claims
+ok 34 - carrier rates, early caps, enemy-derived tiers, boss three, and exact tier loot claims
+  ---
+  duration_ms: 465.8324
+  ...
+# Subtest: common mobs can drop unequippable loot; opening elites avoid rarity spikes; shops use regular prices
+ok 35 - common mobs can drop unequippable loot; opening elites avoid rarity spikes; shops use regular prices
+  ---
+  duration_ms: 44.529
+  ...
+# Subtest: battle applies area factors to actual healing, damage, and cooldown progression
+ok 36 - battle applies area factors to actual healing, damage, and cooldown progression
+  ---
+  duration_ms: 5.2712
+  ...
+# Subtest: five categories replace atomically, retain rolls, and double modern equipment effects
+ok 2 - five categories replace atomically, retain rolls, and double modern equipment effects
+  ---
+  duration_ms: 2.6876
+  ...
+# Subtest: migration preserves duplicate and incompatible items once with rolled data
+ok 3 - migration preserves duplicate and incompatible items once with rolled data
+  ---
+  duration_ms: 0.2827
+  ...
+# Subtest: enemies carry one item, elites/bosses two distinct usable categories in every family
+ok 4 - enemies carry one item, elites/bosses two distinct usable categories in every family
+  ---
+  duration_ms: 34.1373
+  ...
+# Subtest: capture gear is postgame loot once, including retreat; reload cannot duplicate grants
+ok 5 - capture gear is postgame loot once, including retreat; reload cannot duplicate grants
+  ---
+  duration_ms: 2.3202
+  ...
+# Subtest: tracker reports exact current engine odds, threshold progress, and terminal outcomes by UID
+ok 6 - tracker reports exact current engine odds, threshold progress, and terminal outcomes by UID
+  ---
+  duration_ms: 2.4287
+  ...
+# Subtest: all enemy damage including crits and status is crimson; friendly damage is gold and smaller
+ok 7 - all enemy damage including crits and status is crimson; friendly damage is gold and smaller
+  ---
+  duration_ms: 0.3476
+  ...
+# Subtest: quick equip claims only that drop; collect/reload/transfer never duplicate it
+ok 3 - quick equip claims only that drop; collect/reload/transfer never duplicate it
+  ---
+  duration_ms: 2.9486
+  ...
+# Subtest: invalid reward drops are atomic and do not claim; stronger and weaker rolls compare actual stats
+ok 4 - invalid reward drops are atomic and do not claim; stronger and weaker rolls compare actual stats
+  ---
+  duration_ms: 0.9243
+  ...
+# Subtest: full aura field accepts stronger same-aura tier; wrong role/common are unavailable without a grant
+ok 5 - full aura field accepts stronger same-aura tier; wrong role/common are unavailable without a grant
+  ---
+  duration_ms: 0.8948
+  ...
+# Subtest: EXP plan fills every level before resetting and ends at the exact real reward
+ok 4 - EXP plan fills every level before resetting and ends at the exact real reward
+  ---
+  duration_ms: 1.4376
+  ...
+# Subtest: earned EXP never goes backward while the local bar crosses multiple levels
+ok 5 - earned EXP never goes backward while the local bar crosses multiple levels
+  ---
+  duration_ms: 0.49
+  ...
+# Subtest: zero EXP and exact-boundary gains settle without fabricating experience or a partial level
+ok 6 - zero EXP and exact-boundary gains settle without fabricating experience or a partial level
+  ---
+  duration_ms: 0.1534
+  ...
+# Subtest: the before snapshot remains visible beside the real final state and replay is cosmetic
+ok 7 - the before snapshot remains visible beside the real final state and replay is cosmetic
+  ---
+  duration_ms: 0.3113
+  ...
+1..49
+# tests 49
+# pass 49
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1263.4004

@@ -47,6 +47,7 @@ jobs:
       - run: node tests/legs-v2.browser.mjs
       - run: node tests/skills-v2.browser.mjs
       - run: node tests/stage-loop-seam.browser.mjs
+      - run: node tests/reward-loadout.browser.mjs
       - run: node scripts/review-skills-v2.mjs
       - run: node scripts/review-legs-v2.mjs final
       - run: node scripts/review-legs-v3.mjs final

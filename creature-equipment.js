@@ -48,15 +48,15 @@ export function enemyEquipment(c,seed,progress=0,chaos=0){
 export function claimEvolutionGear(run,index,id){const c=run.team[index];if(!c||!GEAR_BY_ID[id]||(c.gearClaimed||0)>=((c.balanceVersion||0)>=15?(c.evolution||0):equipmentSlots(c)))return false;c.gearClaimed=(c.gearClaimed||0)+1;run.gearInventory??=[];run.gearInventory.push({uid:`${c.uid}:gear:${c.gearClaimed}`,id});return true;}
 export function equipGear(run,index,uid){
  const c=run.team[index],i=run.gearInventory?.findIndex(g=>g.uid===uid),item=run.gearInventory?.[i],g=GEAR_BY_ID[item?.id];
- if(!c||i===undefined||i<0||!gearCompatibility(c,g).allowed||c.equipment?.includes(item.id))return false;
+ if(!c||i===undefined||i<0||!gearCompatibility(c,g).allowed||(c.equipmentVersion<2&&c.equipment?.includes(item.id)))return false;
  c.equipment??=[];c.equipmentRolls??=c.equipment.map(()=>null);
  const slot=c.equipmentVersion>=2?c.equipment.findIndex(id=>equipmentSlotType(GEAR_BY_ID[id])===equipmentSlotType(g)):-1;
  if(slot<0&&c.equipment.length>=equipmentSlots(c))return false;
  run.gearInventory.splice(i,1);
- if(slot>=0){const old={...c.equipmentRolls[slot],id:c.equipment[slot],uid:`${c.uid}:swap:${run.gearSerial=(run.gearSerial||0)+1}`};run.gearInventory.push(old);c.equipment[slot]=item.id;c.equipmentRolls[slot]={...item};}
+ if(slot>=0){const old={...c.equipmentRolls[slot],id:c.equipment[slot],uid:c.equipmentRolls[slot]?.uid||`${c.uid}:swap:${run.gearSerial=(run.gearSerial||0)+1}`};run.gearInventory.push(old);c.equipment[slot]=item.id;c.equipmentRolls[slot]={...item};}
  else{c.equipment.push(item.id);c.equipmentRolls.push({...item});}return true;
 }
-export function removeGear(run,index,slot){const c=run.team[index],id=c?.equipment?.[slot];if(!id)return false;const roll=c.equipmentRolls?.[slot]||{};c.equipment.splice(slot,1);c.equipmentRolls?.splice(slot,1);run.gearInventory??=[];run.gearInventory.push({...roll,uid:`${c.uid}:unsocket:${slot}:${run.gearSerial=(run.gearSerial||0)+1}`,id});return true;}
+export function removeGear(run,index,slot){const c=run.team[index],id=c?.equipment?.[slot];if(!id)return false;const roll=c.equipmentRolls?.[slot]||{};c.equipment.splice(slot,1);c.equipmentRolls?.splice(slot,1);run.gearInventory??=[];run.gearInventory.push({...roll,uid:roll.uid||`${c.uid}:unsocket:${slot}:${run.gearSerial=(run.gearSerial||0)+1}`,id});return true;}
 export function buyGear(run,id,seed=0,price=GEAR_BY_ID[id]?.cost){const g=GEAR_BY_ID[id];if(!g||!Number.isFinite(price)||price<0||run.gold<price)return false;run.gold-=price;run.gearInventory??=[];run.gearInventory.push({uid:`gear:${seed}:${run.gearSerial=(run.gearSerial||0)+1}`,id});return true;}
 
 // Preserve rolled quality/provenance while migrating to one item per category.
