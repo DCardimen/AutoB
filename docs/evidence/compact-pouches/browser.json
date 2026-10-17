@@ -1,0 +1,102 @@
+[
+  {
+    "offline": false,
+    "width": 1440,
+    "motion": [
+      {
+        "kind": "gear",
+        "a": "164.29782819823797px",
+        "b": "90.25383403576708px"
+      },
+      {
+        "kind": "gem",
+        "a": "87.26006818991138px",
+        "b": "14.228237480095189px"
+      }
+    ],
+    "compactAuraRow": true,
+    "independentPouches": true,
+    "interruptedDrags": 8,
+    "pausedSettlementCleanup": true,
+    "qualityAndTierPreserved": true,
+    "keyboardReducedMotion": true,
+    "combatClean": true,
+    "errors": [],
+    "failed": []
+  },
+  {
+    "offline": false,
+    "width": 390,
+    "motion": [
+      {
+        "kind": "gear",
+        "a": "178.78648131840583px",
+        "b": "105.56852769676004px"
+      },
+      {
+        "kind": "gem",
+        "a": "92.46497380725809px",
+        "b": "18.779263699745478px"
+      }
+    ],
+    "compactAuraRow": true,
+    "independentPouches": true,
+    "interruptedDrags": 8,
+    "pausedSettlementCleanup": true,
+    "qualityAndTierPreserved": true,
+    "keyboardReducedMotion": true,
+    "combatClean": true,
+    "errors": [],
+    "failed": []
+  },
+  {
+    "offline": true,
+    "width": 1440,
+    "motion": [
+      {
+        "kind": "gear",
+        "a": "171.63982027543202px",
+        "b": "98.40800916642755px"
+      },
+      {
+        "kind": "gem",
+        "a": "79.39165603419366px",
+        "b": "11.580253002307373px"
+      }
+    ],
+    "compactAuraRow": true,
+    "independentPouches": true,
+    "interruptedDrags": 8,
+    "pausedSettlementCleanup": true,
+    "qualityAndTierPreserved": true,
+    "keyboardReducedMotion": true,
+    "combatClean": true,
+    "errors": [],
+    "failed": []
+  },
+  {
+    "offline": true,
+    "width": 390,
+    "motion": [
+      {
+        "kind": "gear",
+        "a": "178.83409418258015px",
+        "b": "108.70104627017827px"
+      },
+      {
+        "kind": "gem",
+        "a": "92.44110624281763px",
+        "b": "13.98885565898258px"
+      }
+    ],
+    "compactAuraRow": true,
+    "independentPouches": true,
+    "interruptedDrags": 8,
+    "pausedSettlementCleanup": true,
+    "qualityAndTierPreserved": true,
+    "keyboardReducedMotion": true,
+    "combatClean": true,
+    "errors": [],
+    "failed": []
+  }
+]

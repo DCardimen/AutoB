@@ -5,6 +5,7 @@ import {makeRun,creature,generateRoute} from '../game.js';
 const base=process.env.BASE_URL||'http://127.0.0.1:3022',out='playtest-artifacts/sprite-drag';fs.mkdirSync(out,{recursive:true});
 const browser=await chromium.launch({headless:true,executablePath:'C:/Program Files/Google/Chrome/Application/chrome.exe'}),report={checks:[],errors:[]};
 async function drag(page,source,target,inspect){
+ const pouch=source.locator("xpath=ancestor::*[@data-pack-kind]");if(await pouch.count()&&await pouch.getAttribute("data-pouch-opened")==="false"){await pouch.hover();await page.waitForTimeout(1700);}
  await source.scrollIntoViewIfNeeded();const s=await source.boundingBox();await page.mouse.move(s.x+s.width/2,s.y+s.height/2);await page.mouse.down();await page.mouse.move(s.x+s.width/2+12,s.y+s.height/2-8,{steps:3});
  await page.locator('.loadout-sprite-ghost').waitFor();assert.equal(await page.locator('.loadout-sprite-ghost img,.loadout-sprite-ghost canvas').count(),1,'drag only the sprite');
  if(inspect)await inspect();await target.scrollIntoViewIfNeeded();const t=await target.boundingBox();await page.mouse.move(t.x+t.width/2,t.y+t.height/2,{steps:8});await page.mouse.up();
@@ -17,6 +18,7 @@ try{
   if(offline)await page.route('**/*',r=>r.request().isNavigationRequest()?r.continue():r.abort());await page.goto(base+(offline?'/Starfall-Menagerie.html':''));await page.locator('.arena-dock').waitFor();
   await page.waitForTimeout(700);if(!offline)await page.screenshot({path:out+'/arena-framing.png'});
   await page.locator('.arena-dock [data-action="companions"]').click();
+  await page.locator(".equipment-pouch").hover();await page.waitForTimeout(1700);
   const cancelledBefore=await page.evaluate(()=>JSON.stringify(starfall.state.run)),cancelSource=page.locator('[data-gear-equip="ring"]');await cancelSource.scrollIntoViewIfNeeded();const cb=await cancelSource.boundingBox();await page.mouse.move(cb.x+cb.width/2,cb.y+cb.height/2);await page.mouse.down();await page.mouse.move(cb.x+cb.width/2+12,cb.y+cb.height/2,{steps:3});await page.locator('.loadout-sprite-ghost').waitFor();await page.keyboard.press('Escape');await page.waitForTimeout(550);await page.mouse.up();assert.equal(await page.evaluate(()=>JSON.stringify(starfall.state.run)),cancelledBefore);assert.equal(await page.locator('.loadout-sprite-ghost').count(),0);assert.ok(await page.locator('.modal').isVisible());
   await drag(page,page.locator('[data-gear-equip="ring"]'),page.locator('.companion-equipment .equipment-slot[data-gear-type="Ring"]'),async()=>{
    assert.ok(await page.locator('.companion-equipment [data-gear-type="Ring"]').evaluate(el=>el.classList.contains('loadout-compatible')));

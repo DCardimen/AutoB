@@ -18,7 +18,7 @@ export function applyLoadoutDrop(run,payload,target){
   if(old.placement)run.team[i].placement={...old.placement};else delete run.team[i].placement;delete old.placement;return true;
  }
  const c=run.team[Number(target.index)],from=run.team[payload.fromIndex];
- if(target.pack){if(payload.kind==='gear'&&from)return removeGear(run,payload.fromIndex,payload.slot);if(payload.kind==='gem'&&from)return unequipRelic(run,payload.fromIndex,payload.slot);return false;}
+ if(target.pack){if(target.packKind&&target.packKind!==payload.kind)return false;if(payload.kind==='gear'&&from)return removeGear(run,payload.fromIndex,payload.slot);if(payload.kind==='gem'&&from)return unequipRelic(run,payload.fromIndex,payload.slot);return false;}
  if(!c)return false;
  if(payload.kind==='skill'){
   if(from!==c||!target.skill)return false;const skills=loadoutFor(BY_ID[c.id],c.level,c).active;
