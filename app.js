@@ -124,7 +124,7 @@ import { Soundscape } from "./sound.js";
 const soundscape = new Soundscape();
 const deployment=new DeploymentPhysics();let defeatFilm=null,victoryFilm=null;
 const PERSONAL_RELICS=AURA_STONES,PERSONAL_BY_ID=WEARER_BY_ID;
-let loadoutDrag=null,touchLoadout=null,touchDragUntil=0,cancelledSpritePointer=null;
+let loadoutDrag=null,touchLoadout=null,touchDragUntil=0,cancelledSpritePointer=null,loadoutPreviewSource=null;
 const $ = (s) => document.querySelector(s);
 const STORE = "starfall-menagerie-v1";
 const ICONS = {
@@ -601,6 +601,7 @@ function bindDrag() {
 }
 let modalFocusSerial=0;
 function modal(html, kind = "generic", closable = true) {
+  if(loadoutPreviewSource)clearLoadoutTargets();
   if(kind!==modalKind)cancelSpriteDrag({immediate:true});
   const focused=document.activeElement,focusSerial=++modalFocusSerial;
   const previousKind=modalKind,previousScroll=$(".modal")?.scrollTop||0,backdropScroll=$(".modal-backdrop")?.scrollTop||0,pageScroll={top:scrollY,left:scrollX};
@@ -2077,7 +2078,7 @@ function stonePouchHTML(c=run.team[selectedCreature],index=selectedCreature){
  return inventoryPouchHTML({kind:'gem',title:'Aura Stone pouch',icon:'<span class="pouch-emblem stone-pouch-emblem" aria-hidden="true">◇</span>',items,index,locked:phase==='battle',empty:'Drop equipped stones here to store them.'});
 }
 function inventoryDockHTML(c=run.team[selectedCreature],index=selectedCreature){return equipmentPouchHTML(c,index)+stonePouchHTML(c,index);}
-function pouchCompanionsHTML(){return `<nav class="pouch-companions" aria-label="Choose companion for equipment">${run.team.map((c,i)=>`<button data-pouch-companion="${i}" aria-pressed="${i===selectedCreature}" title="${creatureName(c)} · ${BY_ID[c.id].role}">${image(c)}<span>${creatureName(c)}</span></button>`).join('')}</nav>`;}
+function pouchCompanionsHTML(){return `<nav class="pouch-companions" aria-label="Choose companion for equipment">${run.team.map((c,i)=>`<button data-pouch-companion="${i}" data-loadout-drop="${i}" aria-pressed="${i===selectedCreature}" title="${creatureName(c)} · ${BY_ID[c.id].role}">${image(c)}<span>${creatureName(c)}</span></button>`).join('')}</nav>`;}
 function refreshLoadoutMenu(index,kind=modalKind){if(kind==='companions')openCompanions();else if(kind==='pack')openPack();else openCreature(index);}
 document.addEventListener('pointerover',showPouchItem);
 document.addEventListener('focusin',showPouchItem);
@@ -2442,14 +2443,25 @@ document.addEventListener('pointerdown',e=>{const el=e.target.closest('.ailment-
 document.addEventListener('keydown',e=>{if(!e.target.matches('[data-detail-tab]')||!['ArrowLeft','ArrowRight'].includes(e.key))return;e.preventDefault();const tabs=[...document.querySelectorAll('[data-detail-tab]')],i=tabs.indexOf(e.target),next=tabs[(i+(e.key==='ArrowRight'?1:-1)+tabs.length)%tabs.length];detailTab=next.dataset.detailTab;prepareDetailTabs();next.focus();});
 
 const loadoutTargets='[data-seat-drop],[data-skill-drop],[data-loadout-drop],[data-pack-drop],[data-gear-slot]';
-function clearLoadoutTargets(){document.body.classList.remove('carrying-sprite');document.querySelectorAll('.dragging,.loadout-target,.loadout-compatible,.loadout-incompatible').forEach(el=>el.classList.remove('dragging','loadout-target','loadout-compatible','loadout-incompatible'));}
-function highlightLoadoutTargets(payload,source){
- document.body.classList.add('carrying-sprite');
+function clearLoadoutTargets(){loadoutPreviewSource=null;document.body.classList.remove('carrying-sprite','previewing-loadout');document.querySelectorAll('.dragging,.loadout-target,.loadout-compatible,.loadout-incompatible').forEach(el=>el.classList.remove('dragging','loadout-target','loadout-compatible','loadout-incompatible'));}
+function highlightLoadoutTargets(payload,source,{preview=false}={}){
+ clearLoadoutTargets();document.body.classList.add(preview?'previewing-loadout':'carrying-sprite');
  for(const el of document.querySelectorAll(loadoutTargets)){
   if(el===source||source.contains(el))continue;
   const valid=canLoadoutDrop(run,payload,dropTarget(el));el.classList.add(valid?'loadout-compatible':'loadout-incompatible');
  }
 }
+function previewLoadoutItem(target){
+ if(phase==='battle'||touchLoadout?.moved||loadoutDrag)return;
+ const source=target?.closest?.('[data-drag-payload]');
+ if(!source||source.disabled||!['gear','gem'].includes(JSON.parse(source.dataset.dragPayload).kind)){if(loadoutPreviewSource)clearLoadoutTargets();return;}
+ if(source===loadoutPreviewSource)return;
+ highlightLoadoutTargets(JSON.parse(source.dataset.dragPayload),source,{preview:true});loadoutPreviewSource=source;
+}
+document.addEventListener('pointerover',e=>{if(e.pointerType!=='touch')previewLoadoutItem(e.target);});
+document.addEventListener('pointerout',e=>{if(loadoutPreviewSource&&!loadoutPreviewSource.contains(e.relatedTarget))previewLoadoutItem(e.relatedTarget);});
+document.addEventListener('focusin',e=>previewLoadoutItem(e.target));
+document.addEventListener('focusout',e=>{if(loadoutPreviewSource&&!loadoutPreviewSource.contains(e.relatedTarget))previewLoadoutItem(e.relatedTarget);});
 function hoverLoadoutTarget(el,valid){document.querySelectorAll('.loadout-target').forEach(n=>n.classList.remove('loadout-target'));if(valid){el?.closest(loadoutTargets)?.classList.add('loadout-target');const pouch=el?.closest('.inventory-pouch');if(pouch)openInventoryPouch(pouch);}}
 function landedTarget(payload,target,ghost){
  const candidates=[...document.querySelectorAll(loadoutTargets)].filter(el=>{const t=dropTarget(el);return t&&(target.pack?t.pack:target.seat!==undefined?t.seat===target.seat:t.index===target.index);}).filter(el=>el.getClientRects().length);

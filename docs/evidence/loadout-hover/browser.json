@@ -1,0 +1,50 @@
+[
+  {
+    "offline": false,
+    "width": 1440,
+    "hoverMatchesDrag": true,
+    "weaponAffinity": true,
+    "stoneRoleAndFullSlots": true,
+    "companionStrip": true,
+    "noMutationOrGhost": true,
+    "keyboardFocus": true,
+    "cleanup": true,
+    "errors": []
+  },
+  {
+    "offline": false,
+    "width": 390,
+    "hoverMatchesDrag": true,
+    "weaponAffinity": true,
+    "stoneRoleAndFullSlots": true,
+    "companionStrip": true,
+    "noMutationOrGhost": true,
+    "keyboardFocus": true,
+    "cleanup": true,
+    "errors": []
+  },
+  {
+    "offline": true,
+    "width": 1440,
+    "hoverMatchesDrag": true,
+    "weaponAffinity": true,
+    "stoneRoleAndFullSlots": true,
+    "companionStrip": true,
+    "noMutationOrGhost": true,
+    "keyboardFocus": true,
+    "cleanup": true,
+    "errors": []
+  },
+  {
+    "offline": true,
+    "width": 390,
+    "hoverMatchesDrag": true,
+    "weaponAffinity": true,
+    "stoneRoleAndFullSlots": true,
+    "companionStrip": true,
+    "noMutationOrGhost": true,
+    "keyboardFocus": true,
+    "cleanup": true,
+    "errors": []
+  }
+]

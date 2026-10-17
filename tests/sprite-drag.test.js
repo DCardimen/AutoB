@@ -11,8 +11,17 @@ test('slot highlights use real equipment rules and never change live ownership',
  assert.equal(canLoadoutDrop(run,fang,{index:2,gearType:'Weapon',gearSlot:-1}),true);
  assert.equal(canLoadoutDrop(run,fang,{index:2,gearType:'Ring',gearSlot:-1}),false);
  assert.equal(canLoadoutDrop(run,{kind:'gear',uid:'ring',id:'ruby-vigor-ring'},{index:0,gearType:'Ring',gearSlot:-1}),true);
+ assert.equal(canLoadoutDrop(run,{kind:'gear',uid:'ring',id:'ruby-vigor-ring'},{index:0,relicSlot:0}),false);
  assert.equal(JSON.stringify(run),before);
  assert.equal(canLoadoutDrop(run,fang,null),false);
+});
+
+test('Aura Stones never highlight equipment sockets as attachment slots',()=>{
+ const run=makeRun(8,['aurel','brakk']);run.team=[{...creature('eira'),balanceVersion:17,equipmentVersion:2,relics:[]}];run.inventory=[{uid:'stone',id:'aura-wellspring',tier:2}];
+ const payload={kind:'gem',uid:'stone',id:'aura-wellspring'},before=JSON.stringify(run);
+ assert.equal(canLoadoutDrop(run,payload,{index:0,gearType:'Ring',gearSlot:-1}),false);
+ assert.equal(canLoadoutDrop(run,payload,{index:0,relicSlot:0}),true);
+ assert.equal(JSON.stringify(run),before);
 });
 
 test('companion drops move the individual and its items, keeping team seats distinct',()=>{
