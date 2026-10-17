@@ -458,3 +458,71 @@ body.ui-v3.native-expedition .evolution-skill-bonuses .skill-detail[data-skill-v
 .armor-stat.armor-vulnerable>span{color:#f0b295}
 @media(max-width:700px){body.ui-v3.native-expedition .skill-choice-card[data-skill-visual="2"]{grid-template-columns:64px minmax(0,1fr);column-gap:12px}body.ui-v3.native-expedition .skill-choice-card[data-skill-visual="2"] .skill-choice-art{width:64px;height:64px;margin:0}}
 @media(max-width:500px){body.ui-v3.native-expedition .skill-detail[data-skill-visual="2"]{gap:9px;padding:11px}body.ui-v3.native-expedition .skill-detail[data-skill-visual="2"]>.skill-icon,body.ui-v3.native-expedition .skill-detail[data-skill-visual="2"]>.skill-icon img{width:45px;height:45px;min-width:45px}body.ui-v3.native-expedition .skill-detail[data-skill-visual="2"] h3{gap:5px;flex-wrap:wrap}body.ui-v3.native-expedition .skill-choice-card[data-skill-visual="2"]{grid-template-columns:56px minmax(0,1fr)}body.ui-v3.native-expedition .skill-choice-card[data-skill-visual="2"] .skill-choice-art{width:56px;height:56px}}
+/* Postmatch: companions stay beside the rewards, with quiet, usable drop fields. */
+body.ui-v3.native-expedition .rewards-layout.reward-quick-equip{display:grid;grid-template-columns:minmax(310px,.85fr) minmax(0,1.4fr);grid-template-rows:auto auto;gap:22px;padding:30px 3vw 0}
+body.ui-v3.native-expedition .reward-quick-equip .rewards-stage{display:flex;grid-column:2;grid-row:1;min-height:0}
+body.ui-v3.native-expedition .reward-quick-equip .rewards-expedition{display:block;grid-column:1;grid-row:1;align-self:start;margin-top:0;padding:10px;border:1px solid #68918b66;border-radius:14px;background:linear-gradient(145deg,#12343be8,#041d29ed);box-shadow:0 10px 40px #00141a66}
+body.ui-v3.native-expedition .reward-quick-equip .rewards-expedition>header{display:flex;padding:4px 4px 12px;align-items:center;gap:8px;justify-content:space-between;border-bottom:1px solid #709f9255}
+body.ui-v3.native-expedition .reward-quick-equip .rewards-expedition>header h3{font-size:25px;margin:0}
+body.ui-v3.native-expedition .reward-quick-equip .rewards-expedition>header button{font-size:10px}
+body.ui-v3.native-expedition .reward-quick-equip .experience-story{display:block;padding:0;border:0;background:none}
+body.ui-v3.native-expedition .reward-quick-equip .growth-heading{margin:12px 3px 8px}
+body.ui-v3.native-expedition .reward-quick-equip .growth-heading p{display:none}
+body.ui-v3.native-expedition .reward-quick-equip .growth-row{display:grid;grid-template-columns:42px minmax(0,1fr);gap:6px 10px;padding:10px;margin:8px 0;min-height:0;text-align:left;transition:border-color .15s,background .15s}
+body.ui-v3.native-expedition .reward-quick-equip .growth-portrait{width:42px;grid-row:1}
+body.ui-v3.native-expedition .reward-quick-equip .growth-portrait>img{width:40px;height:43px!important}
+body.ui-v3.native-expedition .reward-quick-equip .growth-portrait>span{font-size:8px;padding:2px 4px}
+body.ui-v3.native-expedition .reward-quick-equip .growth-info{width:auto;min-width:0}
+body.ui-v3.native-expedition .reward-quick-equip .growth-info>strong{font-size:17px;gap:5px}
+body.ui-v3.native-expedition .reward-quick-equip .xp-before-after{gap:5px;margin:5px 0}
+body.ui-v3.native-expedition .reward-quick-equip .xp-before-after small{font-size:6px!important}
+body.ui-v3.native-expedition .reward-quick-equip .xp-before-after b{font-size:9px}
+body.ui-v3.native-expedition .reward-quick-equip .xp-before-after em{font-size:8px}
+body.ui-v3.native-expedition .reward-quick-equip .growth-track{height:6px;margin:5px 0}
+body.ui-v3.native-expedition .reward-quick-equip .xp-readouts small{font-size:8px!important}
+body.ui-v3.native-expedition .reward-quick-equip .quick-attachments{grid-column:1/-1;display:flex;align-items:start;gap:8px;min-width:0;padding-top:4px;border-top:1px solid #69988f33}
+body.ui-v3.native-expedition .reward-quick-equip .quick-equipment{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));flex:5;gap:3px;padding:0;border:0;background:none}
+body.ui-v3.native-expedition .reward-quick-equip .quick-auras{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));flex:2;gap:3px;min-width:0}
+body.ui-v3.native-expedition .reward-quick-equip .quick-equipment>button,body.ui-v3.native-expedition .reward-quick-equip .quick-auras>button{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-width:0;min-height:43px;padding:4px 2px;border-radius:5px;border:1px solid #80b4b344;background:#061f2ab3}
+body.ui-v3.native-expedition .reward-quick-equip .slot-label{font:600 5px var(--sans);letter-spacing:.2px;line-height:1.2;color:#94b5ad}
+body.ui-v3.native-expedition .reward-quick-equip .quick-attachments button>small,body.ui-v3.native-expedition .reward-quick-equip .visible-gear-effect{display:none}
+body.ui-v3.native-expedition .reward-quick-equip .quick-attachments button>img,body.ui-v3.native-expedition .reward-quick-equip .quick-attachments .gear-symbol,body.ui-v3.native-expedition .reward-quick-equip .quick-attachments .stone-symbol{width:23px;height:23px;object-fit:contain}
+body.ui-v3.native-expedition .reward-quick-equip .quick-attachments button>b{font-size:18px;color:#87a98f}
+body.ui-v3.native-expedition .reward-quick-equip .reward-companion-grade{grid-column:1/-1;font:600 9px/1.4 var(--sans);display:none;min-height:0}
+body.ui-v3.native-expedition .reward-quick-equip .rewards-expedition .experience-story .growth-row{display:grid;grid-template-columns:42px minmax(0,1fr);gap:6px 10px;min-height:0;margin:8px 0;padding:10px;text-align:left}
+body.ui-v3.native-expedition .reward-quick-equip .rewards-expedition .experience-story .growth-info{grid-column:2;grid-row:1;width:auto;min-width:0}
+body.ui-v3.native-expedition .reward-quick-equip .rewards-expedition .experience-story .growth-portrait{grid-column:1;grid-row:1}
+body.ui-v3.native-expedition .reward-quick-equip .rewards-expedition .experience-story .quick-attachments{grid-column:1/-1}
+body.ui-v3.native-expedition .reward-quick-equip [data-reward-grade] .reward-companion-grade{display:block}
+.grade-upgrade,[data-reward-grade="upgrade"] .reward-companion-grade{color:#b8ee9c}
+.grade-maybe,[data-reward-grade="maybe"] .reward-companion-grade{color:#f0ba6a}
+.grade-blocked,.grade-worse,[data-reward-grade="blocked"] .reward-companion-grade,[data-reward-grade="worse"] .reward-companion-grade{color:#ed9a8e}
+body.ui-v3.native-expedition .reward-quick-equip [data-reward-grade="upgrade"]{border-color:#b0df83}
+body.ui-v3.native-expedition .reward-quick-equip [data-reward-grade="maybe"]{border-color:#d99f56}
+body.ui-v3.native-expedition .reward-quick-equip .reward-equip-hint{font:10px/1.6 var(--sans);color:#b0c9bb;text-align:center;margin:0 0 8px}
+.reward-equip-hint>span{display:inline-block;margin-inline:5px;font-weight:700}
+body.ui-v3.native-expedition .reward-quick-equip .reward-showcase{min-height:385px;height:auto;flex:1}
+body.ui-v3.native-expedition .reward-quick-equip .loot-v2 .loot-drop{min-width:0;min-height:220px;max-width:210px;padding-bottom:10px}
+body.ui-v3.native-expedition .reward-quick-equip .loot-v2 .loot-drops{gap:8px;align-items:stretch}
+body.ui-v3.native-expedition .reward-quick-equip .loot-v2 .reward-quick{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;border:1px solid currentColor;border-radius:6px;background:#001b25b3;margin-top:8px;padding:5px;cursor:pointer;font:700 10px var(--sans);text-align:left}
+body.ui-v3.native-expedition .reward-quick-equip .reward-quick>b{font:700 25px var(--sans);color:inherit}
+.reward-quick small{display:block;font-size:8px;font-weight:400;margin-top:2px;color:#c7d7c7}
+body.ui-v3.native-expedition .reward-quick-equip .reward-quick:disabled{opacity:.7;cursor:default}
+body.ui-v3.native-expedition .reward-quick-equip .loot-drop[data-loot-claimed="true"]{opacity:.85}
+body.ui-v3.native-expedition .reward-quick-equip .rewards-footer{grid-column:1/-1;grid-row:2;margin:0 -3vw;padding:12px 3vw}
+@media(max-width:900px){
+ body.ui-v3.native-expedition .rewards-layout.reward-quick-equip{display:flex;padding:24px 3vw 0;gap:12px}
+ body.ui-v3.native-expedition .reward-quick-equip .rewards-stage{display:contents}
+ body.ui-v3.native-expedition .reward-quick-equip .result-hero{order:0;min-height:0;margin-bottom:8px}
+ body.ui-v3.native-expedition .reward-quick-equip .rewards-expedition{order:1}
+ body.ui-v3.native-expedition .reward-quick-equip .reward-showcase{order:2;min-height:360px;height:auto}
+ body.ui-v3.native-expedition .reward-quick-equip .reward-upgrades{order:3}
+ body.ui-v3.native-expedition .reward-quick-equip .rewards-footer{order:4}
+ body.ui-v3.native-expedition .reward-quick-equip .rewards-numbers{display:none}
+ body.ui-v3.native-expedition .reward-quick-equip .rewards-expedition>header h3{font-size:22px}
+ body.ui-v3.native-expedition .reward-quick-equip .capture-outcome{padding:8px;font-size:9px;margin-bottom:0}
+ body.ui-v3.native-expedition .reward-quick-equip .rewards-expedition .capture-outcome{display:flex;align-items:center;gap:10px;padding:10px}
+ body.ui-v3.native-expedition .reward-quick-equip .rewards-expedition .capture-outcome.neutral>img{position:static;transform:none;flex:none;width:25px;height:25px}
+ body.ui-v3.native-expedition .reward-quick-equip .capture-outcome p{font-size:9px;margin:3px 0}
+ body.ui-v3.native-expedition .reward-quick-equip .loot-v2 .loot-drop{max-width:none}
+}

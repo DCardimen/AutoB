@@ -35,10 +35,10 @@ export function applyLoadoutDrop(run,payload,target){
   if(c.equipmentVersion>=2&&Number.isInteger(target.gearSlot)&&c.equipment?.[target.gearSlot]&&equipmentSlotType(GEAR_BY_ID[c.equipment[target.gearSlot]])!==type)return false;
   if(!Number.isInteger(slot)&&(c.equipment||[]).length>=equipmentSlots(c))slot=Math.max(0,c.equipment.findIndex(id=>GEAR_BY_ID[id]?.slot===GEAR_BY_ID[payload.id]?.slot));
   const replace=Number.isInteger(slot)&&slot>=0&&slot<(c.equipment||[]).length;
-  if(from===c||c.equipment?.includes(payload.id)||((c.equipment||[]).length>=equipmentSlots(c)&&!replace))return false;
+  if(from===c||(c.equipmentVersion<2&&c.equipment?.includes(payload.id))||((c.equipment||[]).length>=equipmentSlots(c)&&!replace))return false;
   if(!from&&!run.gearInventory?.some(g=>g.uid===payload.uid&&g.id===payload.id))return false;
   if(from&&from.equipment?.[payload.slot]!==payload.id)return false;
-  if(replace&&from){const displaced=c.equipment[slot];if(from.equipment.includes(displaced)||!gearCompatibility(from,GEAR_BY_ID[displaced]).allowed)return false;c.equipmentRolls??=c.equipment.map(()=>null);from.equipmentRolls??=from.equipment.map(()=>null);[c.equipmentRolls[slot],from.equipmentRolls[payload.slot]]=[from.equipmentRolls[payload.slot],c.equipmentRolls[slot]];c.equipment[slot]=payload.id;from.equipment[payload.slot]=displaced;return true;}
+  if(replace&&from){const displaced=c.equipment[slot];if(from.equipment.some((id,i)=>i!==payload.slot&&id===displaced)||!gearCompatibility(from,GEAR_BY_ID[displaced]).allowed)return false;c.equipmentRolls??=c.equipment.map(()=>null);from.equipmentRolls??=from.equipment.map(()=>null);[c.equipmentRolls[slot],from.equipmentRolls[payload.slot]]=[from.equipmentRolls[payload.slot],c.equipmentRolls[slot]];c.equipment[slot]=payload.id;from.equipment[payload.slot]=displaced;return true;}
   if(replace)removeGear(run,Number(target.index),slot);
   if(from){if(from.equipment?.[payload.slot]!==payload.id)return false;removeGear(run,payload.fromIndex,payload.slot);return equipGear(run,Number(target.index),run.gearInventory.at(-1).uid);}
   return equipGear(run,Number(target.index),payload.uid);
@@ -46,8 +46,25 @@ export function applyLoadoutDrop(run,payload,target){
  if(payload.kind==='gem'){
   if(target.gearType)return false;
   if(!auraCompatibility(c,payload.id).allowed)return false;
+  if((run.rulesVersion||0)>=17){
+   if(target.skill||from===c)return false;
+   const stones=c.relics||[],duplicate=stones.findIndex(g=>g.id===payload.id),slot=target.relicSlot??(duplicate>=0?duplicate:stones.length);
+   if(!Number.isInteger(slot)||slot<0||slot>stones.length||slot>=relicSlots(c)||stones.some((g,i)=>i!==slot&&g.id===payload.id))return false;
+   const item=from?.relics?.[payload.slot]||run.inventory?.find(g=>g.uid===payload.uid&&g.id===payload.id);
+   if(!item||item.uid!==payload.uid||item.id!==payload.id)return false;
+   const displaced=stones[slot];
+   if(from&&displaced){
+    if(!auraCompatibility(from,displaced).allowed||from.relics.some((g,i)=>i!==payload.slot&&g.id===displaced.id))return false;
+    c.relics[slot]=item;from.relics[payload.slot]=displaced;return true;
+   }
+   if(from)unequipRelic(run,payload.fromIndex,payload.slot);
+   if(displaced)unequipRelic(run,Number(target.index),slot);
+   if(!equipRelic(run,Number(target.index),payload.uid))return false;
+   // Keep the selected field stable when replacing an occupied aura slot.
+   if(displaced)c.relics.splice(slot,0,c.relics.pop());
+   return true;
+  }
   if(target.relicSlot!==undefined&&target.relicSlot!==(c.relics||[]).length)return false;
-  if((run.rulesVersion||0)>=17){if(target.skill||from===c||c.relics?.some(g=>g.id===payload.id)||(c.relics||[]).length>=relicSlots(c))return false;if(from){if(from.relics?.[payload.slot]?.uid!==payload.uid)return false;unequipRelic(run,payload.fromIndex,payload.slot);}return equipRelic(run,Number(target.index),payload.uid);}
   const loadout=loadoutFor(BY_ID[c.id],c.level,c),skills=[loadout.auto,...loadout.active];
   if(target.skill&&(!skills.includes(target.skill)||!canSupport(payload.id,target.skill)))return false;
   if(from===c)return target.skill?linkRelic(run,Number(target.index),payload.slot,target.skill):false;
