@@ -1,0 +1,255 @@
+{
+  "schema": 1,
+  "revision": "f202255a3ddb455a5fb5be6a275caa29306fcf35",
+  "inputs": {
+    "companion-anatomy.js": "c4dcfdb70d2da573523afd899c6101e5ba716e0122d3d49317bd4523d3c3f570",
+    "authored-parts.js": "f054c8c27bacd5b9ff2279194d9d37f1169429e094268341012dba8d436056f7",
+    "authored-arm-skin.js": "221473b42067f13484aa8eb8fa91aa9ec5de8d4eb200d4dc06a4f4339d72b8f9",
+    "authored-sprite-renderer.js": "9cec3356e0dea3bea1224ae04bf04088d6fc03dd482914015cf13c8e54c12368",
+    "creature-leg-volume.js": "9ae4a459140389a062f6caeff606024c728d65b05c261469758edf63d9340e19",
+    "creature-attacks.js": "7b6bf250d8155d8bc2787eb5cf9e9b9a611ec88c280f1ddf653e80ae38b71a45",
+    "native-combat.js": "14429b67e3041626126bc4a421f9f2dfc8ae9e23e047f4b3e9a4161a1293ca99",
+    "native-forms.js": "146d90d0ffc5862dd99d76c590f5628330ac6a006ed3f6db6b68d5307ab18e8b",
+    "prototype-rig.js": "46c4066f3c6f1a84fdc647e5695dd758833f44587da1e01aee83dcfa6e826303",
+    "prototype-pixel-art.js": "e7390381299ee0ef1c4249362ab70f66c3131c3e9f103303d7efe747f52cc2a2",
+    "authored-body-data.js": "56edb58b077f166dbbdf28d4f254e3f8a5fc49ac5c6a5af5ff2ad9c72c9f783a",
+    "authored-body-stage1-data.js": "4a7720a8e4aca01cf29da90dd14ef11933b92b63891708ef181f00d230405824",
+    "authored-body-stage2-data.js": "7eb7714b992132e6ee1a836923d1ebab25bec628b6ec8acc5853bdb7e81b3ca6",
+    "authored-family-data.js": "1dcde00f7109ce07b5c5b7088a8e11a90de2b8c04f362bd2c45da3cd591e64fc",
+    "authored-family-stage1-data.js": "01e93e0b7d6d8cd4d3145ad618ed20924a6e18cc110d37c2f98238bbbd0205b3",
+    "authored-family-stage2-data.js": "2f5b8b6364f9d02a2a720343bfe7c00767fd8d852b05f5f8ca52efe465449445",
+    "authored-legacy-data.js": "6b917edf37e12e2270b92859a0ab15778f19d763205badaa49b4a8d5ffe19776",
+    "authored-legacy-stage1-data.js": "efa0aadc679825b807d79e8af39ab1bfd3d64d2c622e561e81c92201b37d76ee",
+    "authored-legacy-stage2-data.js": "0a1f07d2b1cce55c4ddb0dc0e70abf2570eb52c07e6447398113fca0defcb569",
+    "authored-sprite-data.js": "2a1b79e2bbd6bb9a9fc532eadf148fefb82452f483d85cb7d390592ae6806490",
+    "authored-sprite-stage1-data.js": "4c2b497a6bd613265f17c667f094bde3bb586a04e765ae1080922c96c8e1b5a7",
+    "authored-sprite-stage2-data.js": "5d8fab2d6b2a5cbe052848f8a7c8cf0d68e4399595d54c90c35d15c23f3c82bd"
+  },
+  "coverage": {
+    "families": 41,
+    "forms": 3,
+    "directions": 8
+  },
+  "checks": [
+    {
+      "name": "parts",
+      "command": [
+        "node",
+        "scripts/build-companion-parts.mjs",
+        "--out=C:\\Users\\David Cardimen\\Downloads\\AutoB-uploaded-art-pass\\playtest-artifacts\\animation-pipeline\\parts"
+      ],
+      "files": {
+        "scripts/build-companion-parts.mjs": "c82555745e97cb3889f7f8a66de105b84bdfc4a3d67d5174c506d9cdc4c6bafb"
+      },
+      "exitCode": 0,
+      "seconds": 5.309,
+      "log": "playtest-artifacts\\animation-pipeline\\parts.log"
+    },
+    {
+      "name": "parts-repeat",
+      "command": [
+        "node",
+        "scripts/build-companion-parts.mjs",
+        "--out=C:\\Users\\David Cardimen\\Downloads\\AutoB-uploaded-art-pass\\playtest-artifacts\\animation-pipeline\\parts-repeat"
+      ],
+      "files": {
+        "scripts/build-companion-parts.mjs": "c82555745e97cb3889f7f8a66de105b84bdfc4a3d67d5174c506d9cdc4c6bafb"
+      },
+      "exitCode": 0,
+      "seconds": 5.599,
+      "log": "playtest-artifacts\\animation-pipeline\\parts-repeat.log"
+    },
+    {
+      "name": "anatomy-tests",
+      "command": [
+        "node",
+        "--test",
+        "tests/companion-parts.test.js",
+        "tests/brakk-arms.test.js",
+        "tests/gaits-carry.test.js",
+        "tests/legs-v3.test.js",
+        "tests/legs-v2.test.js",
+        "tests/creature-anatomy.test.js",
+        "tests/melee-weapon-art.test.js",
+        "tests/swing-body.test.js",
+        "tests/prototype-rig.test.js",
+        "tests/sprite-art-v2.test.js",
+        "tests/combat-spacing.test.js"
+      ],
+      "files": {
+        "tests/companion-parts.test.js": "1afa8acd6d31fd8ab6b43ae3d39a20a585b43f1eafed4c1b28baad55fb7d38f6",
+        "tests/brakk-arms.test.js": "b9660bd89221fbee32e1551d8608c7e0b86c21d65b7649fb03e55bd9cf15a7ee",
+        "tests/gaits-carry.test.js": "1cc8d1a70d265d458f591c1a79ea8a862df0a8f6d38a89229250840d26f668cb",
+        "tests/legs-v3.test.js": "ecc4744e0fc47c63c6c34dc14dc0008bb53879b338f97f35628b0489a0b565fc",
+        "tests/legs-v2.test.js": "52cb36c3a6d7c78da5c4ab1c4befb28061a782b862b810e7fafdbc395592466d",
+        "tests/creature-anatomy.test.js": "eae4ba61cf44bd39af4e57cdd9a03ec5ea5eef04338813d1feffeebbbec23128",
+        "tests/melee-weapon-art.test.js": "892799814378cfb84d2400daf39a6948366caef528026a9e27b89b231357dbcf",
+        "tests/swing-body.test.js": "2460b92963fe5399c929b4db0922f15ed43cf1cfb68a38e7464f8bc8308b7fc9",
+        "tests/prototype-rig.test.js": "ed86b6d7914dd59e17e9d01ba271119af92ff575ab8acba29a440590c43f64c3",
+        "tests/sprite-art-v2.test.js": "6e5761986ce6b83a4c9ee893d24d030d8b181e7dea4e36f77694a215161110a0",
+        "tests/combat-spacing.test.js": "7a53f3d8887501c7ad565b28d00b30e7c025ec16adc3815698a2a9c672e83721"
+      },
+      "exitCode": 0,
+      "seconds": 456.82,
+      "log": "playtest-artifacts\\animation-pipeline\\anatomy-tests.log"
+    },
+    {
+      "name": "cell-tests",
+      "command": [
+        "node",
+        "--test",
+        "--test-name-pattern=every pixel family|raised weapons|grand evolution|cloth anchors|weapon contacts",
+        "tests/grand-forms.test.js"
+      ],
+      "files": {
+        "tests/grand-forms.test.js": "c1b6d8a983323d286f5e85b85552a8869387eeb2ed5045b92f07ab0873640d78"
+      },
+      "exitCode": 0,
+      "seconds": 1156.354,
+      "log": "playtest-artifacts\\animation-pipeline\\cell-tests.log"
+    },
+    {
+      "name": "standalone",
+      "command": [
+        "node",
+        "scripts/build-standalone.mjs"
+      ],
+      "files": {
+        "scripts/build-standalone.mjs": "edc7e3eedca336fe33eb233c5c96f1560acdadfc884e49c17960c4cb59a015c3"
+      },
+      "exitCode": 0,
+      "seconds": 7.128,
+      "log": "playtest-artifacts\\animation-pipeline\\standalone.log"
+    },
+    {
+      "name": "prototype",
+      "command": [
+        "node",
+        "scripts/build-prototype.mjs"
+      ],
+      "files": {
+        "scripts/build-prototype.mjs": "5c22b9a8d0800cb728095a846da5416d87d15f67c991c0b687adfa9d7c8b65cd"
+      },
+      "exitCode": 0,
+      "seconds": 0.424,
+      "log": "playtest-artifacts\\animation-pipeline\\prototype.log"
+    },
+    {
+      "name": "source-offline-combat",
+      "command": [
+        "node",
+        "tests/companion-animation.browser.mjs"
+      ],
+      "files": {
+        "tests/companion-animation.browser.mjs": "10956e6646e5351cf81d69abc58dd84e6467f65d4350fce9ef92d969741af2ff"
+      },
+      "exitCode": 0,
+      "seconds": 58.924,
+      "log": "playtest-artifacts\\animation-pipeline\\source-offline-combat.log"
+    },
+    {
+      "name": "live-legs",
+      "command": [
+        "node",
+        "tests/legs-v2.browser.mjs"
+      ],
+      "files": {
+        "tests/legs-v2.browser.mjs": "139d29483cf230e4c06611760ea6fd7a57ac3f68bbb61f8e0761c1be9aec76b4"
+      },
+      "exitCode": 0,
+      "seconds": 19.333,
+      "log": "playtest-artifacts\\animation-pipeline\\live-legs.log"
+    },
+    {
+      "name": "live-prototype",
+      "command": [
+        "node",
+        "tests/prototype.browser.mjs"
+      ],
+      "files": {
+        "tests/prototype.browser.mjs": "cce44f51c44a73a49f42ba5789264ad220604439a64e9dabf6aeaade3d0f7b3a"
+      },
+      "exitCode": 0,
+      "seconds": 129.667,
+      "log": "playtest-artifacts\\animation-pipeline\\live-prototype.log"
+    },
+    {
+      "name": "source-sheets",
+      "command": [
+        "node",
+        "scripts/review-gaits-carry.mjs",
+        "final"
+      ],
+      "files": {
+        "scripts/review-gaits-carry.mjs": "73833224617e4fb7f4fd284d0ebbaac28dec2e27fa6b62acba8e3a9af95e79ed"
+      },
+      "exitCode": 0,
+      "seconds": 35.221,
+      "log": "playtest-artifacts\\animation-pipeline\\source-sheets.log"
+    },
+    {
+      "name": "natural-sheets",
+      "command": [
+        "node",
+        "scripts/review-legs-v3.mjs",
+        "final"
+      ],
+      "files": {
+        "scripts/review-legs-v3.mjs": "70aec5578469639e93652e7a4e4ac090c5f10a6ef0332c61724dd2ea641a520a"
+      },
+      "exitCode": 0,
+      "seconds": 30.642,
+      "log": "playtest-artifacts\\animation-pipeline\\natural-sheets.log"
+    },
+    {
+      "name": "body-sheets",
+      "command": [
+        "node",
+        "scripts/review-swing-body.mjs",
+        "final"
+      ],
+      "files": {
+        "scripts/review-swing-body.mjs": "08c4412ff141cd30e713069c7ebccf6d8139fb93ae2c323458cf0f59854ee42b"
+      },
+      "exitCode": 0,
+      "seconds": 2.969,
+      "log": "playtest-artifacts\\animation-pipeline\\body-sheets.log"
+    },
+    {
+      "name": "motion-video",
+      "command": [
+        "node",
+        "scripts/review-companion-animation.mjs",
+        "--out=C:\\Users\\David Cardimen\\Downloads\\AutoB-uploaded-art-pass\\playtest-artifacts\\animation-pipeline\\video",
+        "--reuse"
+      ],
+      "files": {
+        "scripts/review-companion-animation.mjs": "7b41221ba7af59a4fd131c19b2824ca5319fb9b59b58abf607d74830078ae997"
+      },
+      "exitCode": 0,
+      "seconds": 0.146,
+      "log": "playtest-artifacts\\animation-pipeline\\motion-video.log"
+    },
+    {
+      "name": "decoded-video",
+      "command": [
+        "node",
+        "scripts/verify-animation-video.mjs",
+        "--out=C:\\Users\\David Cardimen\\Downloads\\AutoB-uploaded-art-pass\\playtest-artifacts\\animation-pipeline\\video"
+      ],
+      "files": {
+        "scripts/verify-animation-video.mjs": "344d0bb3f3660483900c56586da173026c4bef9f3c4375bd47c653e79d4fecd0"
+      },
+      "exitCode": 0,
+      "seconds": 89.719,
+      "log": "playtest-artifacts\\animation-pipeline\\decoded-video.log"
+    }
+  ],
+  "status": "passed",
+  "partsManifest": "39ee4e143a38190b0f0e3c7c56f6bd7e2cf8ecee15cfdcce3d797bf11600e787",
+  "reproducible": true,
+  "outputs": {
+    "Starfall-Menagerie.html": "4e48b0bc08329e7efc2fb2c917471f5547883ded5b644317e8fd1cfa59e1f40d",
+    "Starfall-Training-Glade.html": "dda5548a4cc4461fe3e84d1ed89914b00b38dfc5f61c034cbe641ecb0b0597ed"
+  }
+}

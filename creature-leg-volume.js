@@ -1,5 +1,6 @@
 import {projectRig} from './prototype-rig.js';
 import {legAnatomy,sampleLegMaterial} from './leg-anatomy.js';
+import {NATURAL_ANATOMY} from './companion-anatomy.js';
 const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
 const ease=n=>{n=clamp(n,0,1);return n*n*(3-2*n);};
 export const QUADRUPEDS=new Set(['wolf','feralfox','cat','lion','bear','rhino','stag','rabbit','rodent','turtle']);
@@ -13,7 +14,7 @@ export function creatureLegArt(asset,rig,colors=asset.colors){
  asset.creatureSkins??=new Map();if(asset.creatureSkins.has(design))return asset.creatureSkins.get(design);
  const bottom=Math.max(...asset.pixels.map(p=>p.y)),top=Math.min(...asset.pixels.map(p=>p.y));
  const robe=['caster','frostelf','elf','fox','skeleton'].includes(design);
- const height=Math.min((bottom-top)*.36,legAnatomy(design).height||(robe?5:9)),rootY=bottom-height;
+ const height=Math.min((bottom-top)*.36,NATURAL_ANATOMY[design]?.legHeights?.[rig.artStage||0]||legAnatomy(design).height||(robe?5:9)),rootY=bottom-height;
  const occupied=new Set(asset.pixels.map(p=>p.y*64+p.x));
  // Separate the visible terminal branches below the belly. Evaluate several
  // depths: a single scan line misses far feet that end above the near soles.
@@ -55,7 +56,7 @@ export function creatureLegArt(asset,rig,colors=asset.colors){
 export function skinCreatureLegs(rig,rest,angle,art,bodyDelta){
  const project=q=>{const p=projectRig(q,angle);return {x:p.x/3,y:p.y/3};};
  const bind=rest.legs.map(l=>project(l.end)),xs=bind.map(p=>p.x),left=Math.min(...xs),right=Math.max(...xs);
- const first=art.limbs[0].x,last=art.limbs.at(-1).x,available=new Set(bind.map((_,i)=>i));
+ const first=art.limbs[0].x,last=art.limbs.at(-1).x,available=new Set(bind.map((_,i)=>i).filter(i=>NATURAL_ANATOMY[rig.design]?.plan!=='biped'||i>=bind.length-2));
  const moving=['walk','run','sprint','turn','stop','dash','dodge'].includes(rig.state),fallen=Boolean(rig.ragdoll);
  const quad=QUADRUPEDS.has(rig.design||rig.id),group=index=>index===0||index===3?0:1;let firstGroup;
  const limbs=art.limbs.map((source,ordinal)=>{

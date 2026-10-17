@@ -5,11 +5,11 @@ import {projectRig,characterRig} from './prototype-rig.js';
 import {drawNativeFace,FACE_VIEWS} from './prototype-faces.js';
 import {paintAuthoredTorso,paintFairyWings,paintFairyBody} from './authored-pixel-art.js';
 import {paintAtlasCharacter} from './authored-sprite-renderer.js';
-import {paintAuthoredArms} from './authored-arm-skin.js';
+import {paintAuthoredArms,paintAuthoredGrips} from './authored-arm-skin.js';
 import {paintLegVolumes} from './leg-volume.js';
 import {paintCreatureAttack} from './creature-attacks.js';
 export const CELL=64,PIVOT={x:32,y:44},PIXEL_WORLD=3;
-export const SPRITE_ART_REVISION=13;
+export const SPRITE_ART_REVISION=14;
 const OUT='#192328';
 export const PIXEL_PALETTES={
  crab:{skin:['#496b63','#7daca0','#c6d9be'],cloth:['#385c69','#5b95aa','#a9d1db'],metal:['#324d52','#668d8c','#b0c8bd','#e5e0b9'],hair:['#364c58','#638e99','#abd5ce']},
@@ -42,7 +42,7 @@ export function paintCharacterPixels(id,rig,angle){
  let b=new PixelBrush();const p=rig.palette||PIXEL_PALETTES[id],dir=((Math.round(angle/(Math.PI/4))%8)+8)%8,front=dir===2,back=!FACE_VIEWS[dir].eyes.length,side=FACE_VIEWS[dir].sign,at=q=>spritePoint(q,angle);
  rig.dir=dir;rig.back=back;const body=at(rig.body),pelvis=at(rig.pelvis),head=at(rig.head),moving=['walk','run','sprint','turn','stop'].includes(rig.state),dead=rig.death>0;
  if(paintAtlasCharacter(b,id,rig,at)){
-  const art=b;const farArt=new PixelBrush();paintGrandPixels(farArt,rig,at,p,'far');
+  const art=b;const farArt=new PixelBrush();farArt.clipped=art.clipped;farArt.data.clipSamples=art.data.clipSamples.slice();paintGrandPixels(farArt,rig,at,p,'far');
   paintLegVolumes(farArt,rig);
   paintCreatureAttack(farArt,rig,'far');
   const far=q=>q&&at(q).depth<body.depth;
@@ -66,12 +66,14 @@ export function paintCharacterPixels(id,rig,angle){
   const gear=(brush,near)=>drawGearPart(brush,id,rig,angle,{...p,...rig.artGearPalette},rig.artProject,(x,y,rx,ry,color)=>{brush.oval(x,y,rx+1,ry+1,OUT);brush.oval(x,y,rx,ry,color);},art.data.contactGear&&Boolean(rig.weapon)&&far(rig.weapon.grip)!==near,art.data.contactGear&&Boolean(rig.shield)&&far(rig.shield.grip)!==near);
   arms(farArt,false);
   gear(farArt,false);
+  paintAuthoredGrips(farArt,rig,false);
   for(let i=0;i<art.data.length;i+=4)if(art.data[i+3])farArt.data.set(art.data.subarray(i,i+4),i);b=farArt;
   paintGrandPixels(b,rig,at,p,'body');paintGrandPixels(b,rig,at,p,'head');
   if(rig.artLegLayered)paintLegVolumes(b,rig,'near');
   paintCreatureAttack(b,rig);
   arms(b,true);
   gear(b,true);
+  paintAuthoredGrips(b,rig,true);
   b.data.clipped=b.clipped;b.data.artIdentity=art.data.artIdentity;b.data.artStage=art.data.artStage;b.data.artFit=art.data.artFit;b.data.expression=art.data.expression;return b.data;
  }
  const bind=rig.ragdoll?characterRig(id,'idle',0):null;let headRoll=0;if(bind){const h=at(bind.head),c=at(bind.body),rest=Math.atan2(h.x-c.x,-(h.y-c.y)),current=Math.atan2(head.x-body.x,-(head.y-body.y));headRoll=Math.round(Math.atan2(Math.sin(current-rest),Math.cos(current-rest))/(Math.PI/12))*(Math.PI/12);}

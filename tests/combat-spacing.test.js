@@ -63,7 +63,7 @@ test('every melee companion and form reaches actual authored contact from all ei
   const angle=dir*Math.PI/4;t.x=t.px=500;t.y=t.py=430;u.x=u.px=500-Math.cos(angle)*50;u.y=u.py=430-Math.sin(angle)*50;u.facing=angle;t.speed=0;t.attackTimer=999;
   for(let i=0;i<480;i++)b.step(1/60);cases++;if(!b.metrics.bladeContacts)failures.push(`${spec.id}/${evolution}/${dir}`);
  }
- assert.equal(cases,1128);assert.deepEqual(failures,[],'body footprints must leave every authored attack physically reachable');
+ assert.equal(cases,1128);assert.deepEqual(failures,[],'body footprints must leave every authored attack physically reachable: '+JSON.stringify(failures));
 });
 
 test('offensive abilities wait for actual range while shields and healing keep their support rules',()=>{

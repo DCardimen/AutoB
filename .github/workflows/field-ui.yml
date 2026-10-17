@@ -24,6 +24,8 @@ jobs:
       - run: npm run build:standalone
       - run: npm run build:prototype
       - run: npx playwright install --with-deps chromium
+      - run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      - run: npm run animation:parts
       - name: Start the game
         run: |
           npm start > /tmp/field-server.log 2>&1 &
@@ -45,6 +47,7 @@ jobs:
       - run: node tests/weapon-relic-start.browser.mjs
       - run: node tests/settings-movement.browser.mjs
       - run: node tests/legs-v2.browser.mjs
+      - run: node tests/companion-animation.browser.mjs
       - run: node tests/skills-v2.browser.mjs
       - run: node tests/stage-loop-seam.browser.mjs
       - run: node tests/reward-loadout.browser.mjs
@@ -54,6 +57,8 @@ jobs:
       - run: node scripts/review-legs-v2.mjs final
       - run: node scripts/review-legs-v3.mjs final
       - run: node scripts/review-gaits-carry.mjs final
+      - run: npm run animation:review
+      - run: npm run animation:verify-video
       - run: node scripts/review-creature-anatomy.mjs
       - run: node scripts/review-melee-weapons.mjs
       - run: node scripts/review-natural-carry.mjs
@@ -74,6 +79,10 @@ jobs:
           path: |
             Starfall-Menagerie.html
             Starfall-Training-Glade.html
+            COMPANION-ANIMATION-PIPELINE.md
+            playtest-artifacts/companion-parts/
+            playtest-artifacts/companion-animation/
+            playtest-artifacts/companion-animation-live/
             playtest-artifacts/journey-*.png
             playtest-artifacts/journey-browser.json
             playtest-artifacts/uploaded-*.png

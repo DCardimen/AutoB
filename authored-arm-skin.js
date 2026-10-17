@@ -52,6 +52,7 @@ export function paintAuthoredArms(brush,rig,near,at){
    const source=sub(z,a),length=Math.hypot(source.x,source.y)||1,axis=unit(source),target=unit(sub(pz,pa)),offset=sub(p,a),along=dot(offset,axis),t=Math.max(0,Math.min(1,along/length)),across=offset.x*-axis.y+offset.y*axis.x,tail=along-t*length,point=mix(pa,pz,t);
    const q={x:point.x+(target.x*tail-target.y*across)*thickness,y:point.y+(target.y*tail+target.x*across)*thickness};
    mapped.set(key(p.x,p.y),{...p,q,color:colors[p.index]});brush.dot(q.x,q.y,colors[p.index]);
+   if(Math.hypot(p.x-profile.end.x,p.y-profile.end.y)<=1.65){rig.artGripPixels??=new Map();if(!rig.artGripPixels.has(arm.side))rig.artGripPixels.set(arm.side,[]);rig.artGripPixels.get(arm.side).push({x:q.x,y:q.y,color:colors[p.index],near:isNear});}
   }
   for(const p of mapped.values())for(const [dx,dy]of [[1,0],[0,1],[1,1],[-1,1]]){
    const other=mapped.get(key(p.x+dx,p.y+dy));if(other)brush.line(p.q,other.q,p.color);
@@ -67,3 +68,6 @@ export function paintAuthoredArms(brush,rig,near,at){
   }
  }
 }
+// The original fingers cover the handle at the grip, so a broad guard or
+// hammer shaft cannot erase the painted fist after the arm has been drawn.
+export function paintAuthoredGrips(brush,rig,near){for(const pixels of rig.artGripPixels?.values()||[])for(const pixel of pixels)if(pixel.near===near)brush.dot(pixel.x,pixel.y,pixel.color);}
