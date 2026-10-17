@@ -1,0 +1,364 @@
+TAP version 13
+# Subtest: base Brakk removes the old sleeves/hands from the body and paints one authored pair
+ok 1 - base Brakk removes the old sleeves/hands from the body and paints one authored pair
+  ---
+  duration_ms: 161.2968
+  ...
+# Subtest: base Brakk arms stay connected and unclipped through every facing and combat motion
+ok 2 - base Brakk arms stay connected and unclipped through every facing and combat motion
+  ---
+  duration_ms: 5175.4089
+  ...
+# Subtest: Brakk waves with his free hand while his hatchet remains on its original hand
+ok 3 - Brakk waves with his free hand while his hatchet remains on its original hand
+  ---
+  duration_ms: 356.5553
+  ...
+# Subtest: native bodies occupy their visible ground footprint and retain weight across size controls
+ok 2 - native bodies occupy their visible ground footprint and retain weight across size controls
+  ---
+  duration_ms: 6.1617
+  ...
+# Subtest: a crowded mixed-mass pile separates in two dimensions without pushing through arena walls
+ok 3 - a crowded mixed-mass pile separates in two dimensions without pushing through arena walls
+  ---
+  duration_ms: 0.9867
+  ...
+# Subtest: fast opposing dashes cannot tunnel through each other between fixed steps
+ok 4 - fast opposing dashes cannot tunnel through each other between fixed steps
+  ---
+  duration_ms: 0.1341
+  ...
+# Subtest: allies reserve different reachable approach positions around a shared opponent
+ok 5 - allies reserve different reachable approach positions around a shared opponent
+  ---
+  duration_ms: 1.4538
+  ...
+# Subtest: melee approaches, commits, contacts and recovers while both bodies stay apart
+ok 6 - melee approaches, commits, contacts and recovers while both bodies stay apart
+  ---
+  duration_ms: 96.2155
+  ...
+# Subtest: six versus six retain solid footprints through pursuit, crowding and knockback
+ok 7 - six versus six retain solid footprints through pursuit, crowding and knockback
+  ---
+  duration_ms: 948.2408
+  ...
+# Subtest: a distant committed swing cannot deal identity-based damage
+ok 8 - a distant committed swing cannot deal identity-based damage
+  ---
+  duration_ms: 4.2019
+  ...
+# Subtest: heavy bodies recoil less than light bodies from the same connected impact
+ok 9 - heavy bodies recoil less than light bodies from the same connected impact
+  ---
+  duration_ms: 0.5724
+  ...
+# Subtest: every melee companion and form reaches actual authored contact from all eight approach directions
+ok 10 - every melee companion and form reaches actual authored contact from all eight approach directions
+  ---
+  duration_ms: 31775.2305
+  ...
+# Subtest: offensive abilities wait for actual range while shields and healing keep their support rules
+ok 11 - offensive abilities wait for actual range while shields and healing keep their support rules
+  ---
+  duration_ms: 0.9048
+  ...
+# Subtest: every authored family has its own reviewed body plan; every weapon-bearing form has indexed arms and a complete torso
+ok 3 - every authored family has its own reviewed body plan; every weapon-bearing form has indexed arms and a complete torso
+  ---
+  duration_ms: 351.7299
+  ...
+# Subtest: bite effects project onto the actual painted mouth for every biting form, facing and character height
+ok 4 - bite effects project onto the actual painted mouth for every biting form, facing and character height
+  ---
+  duration_ms: 7747.4607
+  ...
+# Subtest: painted grip pixels remain visible after weapons and shields in every weapon family, form and facing
+ok 5 - painted grip pixels remain visible after weapons and shields in every weapon family, form and facing
+  ---
+  duration_ms: 11173.4982
+  ...
+# Subtest: dragon face belongs to its head, never to a wing; evolved foxes register their longer legs
+ok 6 - dragon face belongs to its head, never to a wing; evolved foxes register their longer legs
+  ---
+  duration_ms: 0.5471
+  ...
+# Subtest: painted shoulders, elbows and hands remain connected through locomotion, swings, casts and falls in all weapon forms
+ok 7 - painted shoulders, elbows and hands remain connected through locomotion, swings, casts and falls in all weapon forms
+  ---
+  duration_ms: 37232.4128
+  ...
+# Subtest: phoenix cleanup retains painted flame tips beside removed ground material
+ok 8 - phoenix cleanup retains painted flame tips beside removed ground material
+  ---
+  duration_ms: 14.842
+  ...
+# Subtest: wing, fin and face edges keep their original painted connections through complete motion cycles
+ok 9 - wing, fin and face edges keep their original painted connections through complete motion cycles
+  ---
+  duration_ms: 27088.7337
+  ...
+# Subtest: multi-legged families skin their visible authored limbs without moving anatomical joints
+ok 4 - multi-legged families skin their visible authored limbs without moving anatomical joints
+  ---
+  duration_ms: 1659.3606
+  ...
+# Subtest: all natural attack categories are distinct and attack poses remain inside the sprite in every facing
+ok 5 - all natural attack categories are distinct and attack poses remain inside the sprite in every facing
+  ---
+  duration_ms: 25075.2811
+  ...
+# Subtest: canine jaws open before impact, snap at contact, close on recovery and stay hidden on rear views
+ok 6 - canine jaws open before impact, snap at contact, close on recovery and stay hidden on rear views
+  ---
+  duration_ms: 61.3135
+  ...
+# Subtest: mantises have four walking legs and two separate scythes with a wide crossing slash
+ok 7 - mantises have four walking legs and two separate scythes with a wide crossing slash
+  ---
+  duration_ms: 0.7842
+  ...
+# Subtest: crabs pinch, cats rake, horned creatures ram, and segmented predators use mandibles
+ok 8 - crabs pinch, cats rake, horned creatures ram, and segmented predators use mandibles
+  ---
+  duration_ms: 1.3107
+  ...
+# Subtest: natural attacks use their animated tips for physical hits and never apply duplicate contact damage
+ok 9 - natural attacks use their animated tips for physical hits and never apply duplicate contact damage
+  ---
+  duration_ms: 22.0025
+  ...
+# Subtest: original soles, limb textures and socket pixels are retained instead of cut away
+ok 10 - original soles, limb textures and socket pixels are retained instead of cut away
+  ---
+  duration_ms: 560.4139
+  ...
+# Subtest: registered legs stay inside the cell during movement, dodges and falls
+ok 11 - registered legs stay inside the cell during movement, dodges and falls
+  ---
+  duration_ms: 2144.3423
+  ...
+# Subtest: every four-leg physics proxy has an explicit source-anatomy classification
+ok 5 - every four-leg physics proxy has an explicit source-anatomy classification
+  ---
+  duration_ms: 22.5576
+  ...
+# Subtest: all quadruped anatomies alternate visible footfall groups through walk, run and sprint in every form and facing
+ok 6 - all quadruped anatomies alternate visible footfall groups through walk, run and sprint in every form and facing
+  ---
+  duration_ms: 19498.2208
+  ...
+# Subtest: humanoid weapon identity and authored carry hand remain fixed throughout walking cycles
+ok 7 - humanoid weapon identity and authored carry hand remain fixed throughout walking cycles
+  ---
+  duration_ms: 18262.9628
+  ...
+# Subtest: production humanoids retain painted boots and clothing with no replacement leg mesh showing through
+ok 8 - production humanoids retain painted boots and clothing with no replacement leg mesh showing through
+  ---
+  duration_ms: 5030.965
+  ...
+# Subtest: every anatomy retains reachable, fixed-length legs at both stride extremes throughout three gait cycles
+ok 6 - every anatomy retains reachable, fixed-length legs at both stride extremes throughout three gait cycles
+  ---
+  duration_ms: 741.6138
+  ...
+# Subtest: heavy animals retain authored limb widths and textured materials in each facing and evolution
+ok 7 - heavy animals retain authored limb widths and textured materials in each facing and evolution
+  ---
+  duration_ms: 1624.2594
+  ...
+# Subtest: material selection rejects neighboring crystals and outline pixels without recoloring white fur
+ok 8 - material selection rejects neighboring crystals and outline pixels without recoloring white fur
+  ---
+  duration_ms: 0.4256
+  ...
+# Subtest: all 89 collection families retain unclipped legs through movement, dodging and falls in eight views and three forms
+ok 9 - all 89 collection families retain unclipped legs through movement, dodging and falls in eight views and three forms
+  ---
+  duration_ms: 72899.292
+  ...
+# Subtest: stride length migrates, clamps, resets and changes steps without changing combat travel or stats
+ok 10 - stride length migrates, clamps, resets and changes steps without changing combat travel or stats
+  ---
+  duration_ms: 7.6386
+  ...
+# Subtest: 13,056 rendered idle and gait poses introduce no detached lower-limb clusters
+ok 7 - 13,056 rendered idle and gait poses introduce no detached lower-limb clusters
+  ---
+  duration_ms: 90585.249
+  ...
+# Subtest: natural bodies and legs use exactly the same authored palette through every form and facing
+ok 8 - natural bodies and legs use exactly the same authored palette through every form and facing
+  ---
+  duration_ms: 8033.8012
+  ...
+# Subtest: idle retains the authored stance and motion cannot exceed the source limb proportions
+ok 9 - idle retains the authored stance and motion cannot exceed the source limb proportions
+  ---
+  duration_ms: 4660.1164
+  ...
+# Subtest: every evolved crab crown has a tapered top and clear cell margins
+ok 10 - every evolved crab crown has a tapered top and clear cell margins
+  ---
+  duration_ms: 443.8782
+  ...
+# Subtest: stride tuning remains visible in the authored limbs, including short many-legged anatomies
+ok 11 - stride tuning remains visible in the authored limbs, including short many-legged anatomies
+  ---
+  duration_ms: 816.0384
+  ...
+# Subtest: apex stag hooves end in separate warm toes instead of a moving blue ground platform
+ok 12 - apex stag hooves end in separate warm toes instead of a moving blue ground platform
+  ---
+  duration_ms: 60.9642
+  ...
+# Subtest: resting melee weapons hang down from their hands instead of crossing the chest
+ok 8 - resting melee weapons hang down from their hands instead of crossing the chest
+  ---
+  duration_ms: 4943.4066
+  ...
+# Subtest: Brakk rests both hands below his shoulders on opposite sides of his torso
+ok 9 - Brakk rests both hands below his shoulders on opposite sides of his torso
+  ---
+  duration_ms: 184.9987
+  ...
+# Subtest: melee silhouettes retain the complete weapon and limbs during swings, dodges, hits and falls
+ok 10 - melee silhouettes retain the complete weapon and limbs during swings, dodges, hits and falls
+  ---
+  duration_ms: 33910.4246
+  ...
+# Subtest: active melee contacts keep their physical direction and the weapon remains in its wielding hand
+ok 11 - active melee contacts keep their physical direction and the weapon remains in its wielding hand
+  ---
+  duration_ms: 12692.1124
+  ...
+# Subtest: sideways dodges lead with the correct foot and tilt toward their actual escape direction
+ok 9 - sideways dodges lead with the correct foot and tilt toward their actual escape direction
+  ---
+  duration_ms: 3.3869
+  ...
+# Subtest: humanoid strides grow with pace while staying compact relative to short legs
+ok 10 - humanoid strides grow with pace while staying compact relative to short legs
+  ---
+  duration_ms: 0.1182
+  ...
+# Subtest: hips and head stay continuous when the last supporting foot leaves the ground
+ok 11 - hips and head stay continuous when the last supporting foot leaves the ground
+  ---
+  duration_ms: 3.3389
+  ...
+# Subtest: movement-to-attack transitions begin at the carried pose and settle before active contact
+ok 12 - movement-to-attack transitions begin at the carried pose and settle before active contact
+  ---
+  duration_ms: 1.5223
+  ...
+# Subtest: dash and dodge poses enter and exit at the idle stance without crouch or hand pops
+ok 13 - dash and dodge poses enter and exit at the idle stance without crouch or hand pops
+  ---
+  duration_ms: 2.009
+  ...
+# Subtest: anatomical legs keep their lengths and planted ankle height through full walk/run/sprint cycles
+ok 14 - anatomical legs keep their lengths and planted ankle height through full walk/run/sprint cycles
+  ---
+  duration_ms: 141.1967
+  ...
+# Subtest: supporting feet remain fixed in world space while creatures move and turn
+ok 15 - supporting feet remain fixed in world space while creatures move and turn
+  ---
+  duration_ms: 322.0168
+  ...
+# Subtest: local foot contacts reproduce fixed world anchors after a body turn
+ok 16 - local foot contacts reproduce fixed world anchors after a body turn
+  ---
+  duration_ms: 0.4294
+  ...
+# Subtest: both axe hands follow one rigid handle and the contact/recovery pose is continuous
+ok 17 - both axe hands follow one rigid handle and the contact/recovery pose is continuous
+  ---
+  duration_ms: 8.8611
+  ...
+# Subtest: walking and running blend continuously and clear the ground during swing
+ok 18 - walking and running blend continuously and clear the ground during swing
+  ---
+  duration_ms: 0.2647
+  ...
+# Subtest: the archer draws the animated bowstring with the same hand that holds it
+ok 19 - the archer draws the animated bowstring with the same hand that holds it
+  ---
+  duration_ms: 2.3255
+  ...
+# Subtest: a target inside the aim cone is missed when the actual blade path cannot reach it
+ok 20 - a target inside the aim cone is missed when the actual blade path cannot reach it
+  ---
+  duration_ms: 8.9731
+  ...
+# Subtest: connected swings pause their weapon briefly without inflicting duplicate damage
+ok 21 - connected swings pause their weapon briefly without inflicting duplicate damage
+  ---
+  duration_ms: 4.4799
+  ...
+# Subtest: creatures align toward a target before attacking rather than snapping through 180 degrees
+ok 22 - creatures align toward a target before attacking rather than snapping through 180 degrees
+  ---
+  duration_ms: 3.9758
+  ...
+# Subtest: live walking, running and sprinting keep every limb reachable while turning and accelerating
+ok 23 - live walking, running and sprinting keep every limb reachable while turning and accelerating
+  ---
+  duration_ms: 1306.6008
+  ...
+# Subtest: carried weapons retain their grip through walk/run/sprint, including both axe hands
+ok 24 - carried weapons retain their grip through walk/run/sprint, including both axe hands
+  ---
+  duration_ms: 41.7514
+  ...
+# Subtest: walking rolls heel to toe; sprint adds lift, forward lean and an alternating wolf trot
+ok 25 - walking rolls heel to toe; sprint adds lift, forward lean and an alternating wolf trot
+  ---
+  duration_ms: 4.4411
+  ...
+# Subtest: short many-legged steps preserve sole height and bone length through wide turn anchors
+ok 26 - short many-legged steps preserve sole height and bone length through wide turn anchors
+  ---
+  duration_ms: 2.7939
+  ...
+# Subtest: expressive eye clusters are present in front/profile faces and absent from rear faces
+ok 10 - expressive eye clusters are present in front/profile faces and absent from rear faces
+  ---
+  duration_ms: 3.985
+  ...
+# Subtest: tiny idle phase changes leave the authored pixel clusters stable
+ok 11 - tiny idle phase changes leave the authored pixel clusters stable
+  ---
+  duration_ms: 892.6608
+  ...
+# Subtest: the neck and clothed torso stay connected to the head across living animation frames
+ok 12 - the neck and clothed torso stay connected to the head across living animation frames
+  ---
+  duration_ms: 6627.9923
+  ...
+# Subtest: uncovered body pixels remain opaque without arms or weapons through a complete swing
+ok 11 - uncovered body pixels remain opaque without arms or weapons through a complete swing
+  ---
+  duration_ms: 18854.4843
+  ...
+# Subtest: Brakk reveals leather clothing under his raised arms instead of duplicate green hand pixels
+ok 12 - Brakk reveals leather clothing under his raised arms instead of duplicate green hand pixels
+  ---
+  duration_ms: 7.4515
+  ...
+# Subtest: the completed body keeps its palette when equipment changes
+ok 13 - the completed body keeps its palette when equipment changes
+  ---
+  duration_ms: 305.1404
+  ...
+1..71
+# tests 71
+# pass 71
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 456764.7904

@@ -15,14 +15,14 @@ import {characterRig} from './prototype-rig.js';
 import {ragdollRig} from './prototype-dynamics.js';
 import {renderCharacterFrame} from './prototype-renderer.js';
 import {PIXEL_PALETTES,PIVOT,CELL} from './prototype-pixel-art.js';
-import {nativeSpawn,nativeBodyHeight} from './native-combat.js';
+import {nativeSpawn,nativeBodyHeight,setNativeContactHeight} from './native-combat.js';
 import {nativeRigFor} from './grand-designs.js';
 import {creatureWorldScale} from './native-size.js';
 import {paintCombatTexts} from './combat-text.js';
 import {terrainFor} from './native-tactics.js';
 import {getTuning} from './tuning.js';
 let characterHeight=1;
-export function setCharacterHeight(value){characterHeight=Math.max(.85,Math.min(1.1,Number(value)||1));}
+export function setCharacterHeight(value){characterHeight=Math.max(.85,Math.min(1.1,Number(value)||1));setNativeContactHeight(characterHeight);}
 export function getCharacterHeight(){return characterHeight;}
 export function nativePreviewFrame(c,state='idle',phase=.25,dir=1){const key=['preview',c.id,c.evolution,c.evolutionPath,state,phase,dir,characterHeight,getTuning().strideLength].join(':');if(!frames.has(key)){const spec=byId[c.id];frames.set(key,renderCharacterFrame(nativeRigFor(spec,c),nativePoseRig(spec,c,state,phase,characterHeight),dir*Math.PI/4));if(frames.size>256)frames.delete(frames.keys().next().value);}return frames.get(key);}
 export const nativeScreen=(x,y)=>({x,y:y*.58+75});
