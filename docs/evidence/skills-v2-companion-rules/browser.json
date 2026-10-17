@@ -1,0 +1,75 @@
+[
+  {
+    "allSkillsDecoded": 1030
+  },
+  {
+    "offline": false,
+    "width": 1440,
+    "regularSlots": 4,
+    "bonusSlots": 2,
+    "allKindsCasted": 24,
+    "negativeArmorDamage": 150,
+    "reducedMotion": true,
+    "errors": []
+  },
+  {
+    "offline": false,
+    "width": 390,
+    "regularSlots": 4,
+    "bonusSlots": 2,
+    "allKindsCasted": 24,
+    "negativeArmorDamage": 150,
+    "reducedMotion": true,
+    "errors": []
+  },
+  {
+    "offline": true,
+    "width": 1440,
+    "regularSlots": 4,
+    "bonusSlots": 2,
+    "allKindsCasted": 24,
+    "negativeArmorDamage": 150,
+    "reducedMotion": true,
+    "errors": []
+  },
+  {
+    "offline": true,
+    "width": 390,
+    "regularSlots": 4,
+    "bonusSlots": 2,
+    "allKindsCasted": 24,
+    "negativeArmorDamage": 150,
+    "reducedMotion": true,
+    "errors": []
+  },
+  {
+    "offline": false,
+    "shopPurchase": true,
+    "reload": true,
+    "deploy": true,
+    "equipmentCategories": 5,
+    "auraSlots": 4,
+    "errors": []
+  },
+  {
+    "offline": true,
+    "shopPurchase": true,
+    "reload": true,
+    "deploy": true,
+    "equipmentCategories": 5,
+    "auraSlots": 4,
+    "errors": []
+  },
+  {
+    "offline": false,
+    "skillChoiceCards": 3,
+    "qualityArtDecoded": true,
+    "learn": true
+  },
+  {
+    "offline": true,
+    "skillChoiceCards": 3,
+    "qualityArtDecoded": true,
+    "learn": true
+  }
+]

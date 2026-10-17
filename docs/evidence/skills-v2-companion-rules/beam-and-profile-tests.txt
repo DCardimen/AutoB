@@ -1,0 +1,59 @@
+TAP version 13
+# Subtest: both shop recruitment paths give every Legendary the five modern categories immediately
+ok 1 - both shop recruitment paths give every Legendary the five modern categories immediately
+  ---
+  duration_ms: 5.8619
+  ...
+# Subtest: modern companion initialization repairs old shop recruits once and preserves ownership and rolls
+ok 2 - modern companion initialization repairs old shop recruits once and preserves ownership and rolls
+  ---
+  duration_ms: 0.6956
+  ...
+# Subtest: negative armor has smooth bounded amplification; positive Guardian protection stays unchanged
+ok 3 - negative armor has smooth bounded amplification; positive Guardian protection stays unchanged
+  ---
+  duration_ms: 0.1881
+  ...
+# Subtest: Corrosion can cross zero and restores armor exactly when the aura leaves
+ok 4 - Corrosion can cross zero and restores armor exactly when the aura leaves
+  ---
+  duration_ms: 0.9852
+  ...
+# Subtest: negative armor increases connected damage without recording negative mitigation or changing status damage
+ok 5 - negative armor increases connected damage without recording negative mitigation or changing status damage
+  ---
+  duration_ms: 5.6995
+  ...
+# Subtest: capture warning includes negative armor amplification and temporary armor buffs
+ok 6 - capture warning includes negative armor amplification and temporary armor buffs
+  ---
+  duration_ms: 0.1662
+  ...
+# Subtest: skill beams retain the directional authored muzzle in every family, facing and evolution form
+ok 7 - skill beams retain the directional authored muzzle in every family, facing and evolution form
+  ---
+  duration_ms: 4707.5194
+  ...
+# Subtest: every released skill has finite, deterministic v2 art and a matching combat palette
+ok 2 - every released skill has finite, deterministic v2 art and a matching combat palette
+  ---
+  duration_ms: 34.2376
+  ...
+# Subtest: emblems describe the action and authored weapon instead of the missing type field
+ok 3 - emblems describe the action and authored weapon instead of the missing type field
+  ---
+  duration_ms: 0.9333
+  ...
+# Subtest: learned qualities retain spell identity and evolution bonuses have their own path/stage crest
+ok 4 - learned qualities retain spell identity and evolution bonuses have their own path/stage crest
+  ---
+  duration_ms: 0.3922
+  ...
+1..10
+# tests 10
+# pass 10
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 5082.0674

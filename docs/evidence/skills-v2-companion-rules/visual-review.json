@@ -1,0 +1,28 @@
+{
+  "effectSamples": 24,
+  "paintersPreserveEventsAndCanvasState": true,
+  "decode": [
+    {
+      "mode": "source",
+      "rate": 1,
+      "width": 1440,
+      "height": 1000,
+      "decodedTimes": [
+        5.92,
+        8.68,
+        9.88
+      ]
+    },
+    {
+      "mode": "offline",
+      "rate": 1,
+      "width": 1440,
+      "height": 1000,
+      "decodedTimes": [
+        9.6,
+        12.4,
+        13.6
+      ]
+    }
+  ]
+}
