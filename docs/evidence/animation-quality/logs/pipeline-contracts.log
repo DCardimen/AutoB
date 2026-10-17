@@ -1,0 +1,39 @@
+TAP version 13
+# Subtest: movie acceptance rejects omitted facings, missing idle/turn/stop, clipped poses and inconsistent timing
+ok 1 - movie acceptance rejects omitted facings, missing idle/turn/stop, clipped poses and inconsistent timing
+  ---
+  duration_ms: 4.4127
+  ...
+# Subtest: movie cache requires matching bytes, source inputs, complete coverage and a review player
+ok 2 - movie cache requires matching bytes, source inputs, complete coverage and a review player
+  ---
+  duration_ms: 13.6383
+  ...
+# Subtest: PNG validation checks actual decoded pixels and rejects corruption or truncation
+ok 3 - PNG validation checks actual decoded pixels and rejects corruption or truncation
+  ---
+  duration_ms: 1.4321
+  ...
+# Subtest: animation output lock rejects a live owner and recovers an abandoned process
+ok 4 - animation output lock rejects a live owner and recovers an abandoned process
+  ---
+  duration_ms: 5.0312
+  ...
+# Subtest: a failed encoder preserves the last movie and releases its output lock
+ok 5 - a failed encoder preserves the last movie and releases its output lock
+  ---
+  duration_ms: 166.2885
+  ...
+# Subtest: an independent stage reports its own result without claiming complete pipeline approval
+ok 6 - an independent stage reports its own result without claiming complete pipeline approval
+  ---
+  duration_ms: 1388.6982
+  ...
+1..6
+# tests 6
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1641.0839

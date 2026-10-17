@@ -50,7 +50,7 @@ try{
   for(const type of ['ember','grove','tide','storm','void']){
    await page.locator('#starter-type-filter').selectOption(type);await page.clock.runFor(150);
    assert.ok(await page.locator('.starter-choice').evaluateAll((els,type)=>els.length>0&&els.every(el=>el.dataset.element===type),type));
-   backgrounds.add(await page.locator('.starter-portrait').first().evaluate(el=>getComputedStyle(el,'::before').backgroundImage));
+   backgrounds.add(await page.locator('.starter-card .starter-portrait').first().evaluate(el=>getComputedStyle(el,'::before').backgroundImage));
    if(!offline){const card=page.locator('.starter-choice').first();await card.scrollIntoViewIfNeeded();await page.clock.runFor(200);await page.screenshot({path:`playtest-artifacts/team-select-type-${type}.png`,clip:await card.boundingBox()});}
   }
   assert.equal(backgrounds.size,5,'every elemental type uses different supplied scenery');
@@ -96,6 +96,7 @@ try{
   const inherited=await page.evaluate(()=>starfall.state.run.team.find(c=>c.id==='brakk'));
   assert.equal(inherited.eliteModifier,'bloodtempo-lowest-level');assert.equal(inherited.eliteOriginUid,'test-elite');assert.equal(inherited.level,1);assert.equal(inherited.genes.speed,1.2);
   assert.equal(await page.evaluate(()=>starfall.state.run.chaos),4);
+  if(await page.locator('[data-action="skip-opening-relic"]').count())await page.locator('[data-action="skip-opening-relic"]').click();
   await page.locator('[data-action="battle"]').click();await page.clock.runFor(2200);
   assert.equal(await page.evaluate(()=>starfall.state.phase),'battle');
   assert.ok(await page.evaluate(()=>starfall.state.battle.units.some(c=>c.id==='brakk'&&c.side===0)));

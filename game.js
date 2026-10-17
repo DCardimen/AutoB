@@ -20,7 +20,7 @@ import {equipmentEffects,armorReduction,enemyEquipment,CREATURE_GEAR} from './cr
 import {queueCombatText,advanceCombatTexts} from './combat-text.js';
 import {CORE_SPECIES} from './core-species.js';
 import {evaluateOrders,terrainFor,firstTerrainHit,terrainSteering,confineTerrain,orderGoal,combatApproach,avoidCombatBodies} from './native-tactics.js';
-import {NATIVE_BOUNDS,nativeSpawn,initializeNative,nativeAction,advanceNative,nativeBladePoint,nativeHeavy,nativeMuzzle,nativeBodyHeight} from './native-combat.js';
+import {NATIVE_BOUNDS,nativeSpawn,initializeNative,nativeAction,advanceNative,nativeBladePoint,nativeStrikeOrigin,nativeHeavy,nativeMuzzle,nativeBodyHeight} from './native-combat.js';
 import { NATIVE_SPECIES, NATIVE_STARTERS, NATIVE_POOLS, nativeEvolution, nativeSkill, nativePool, lineageLimit, lineageProgress, settleNativeGrowth } from './native-content.js';
 import { SKILLS, loadoutFor,initializeSkills,prepareEnemySkills,queueLevelSkill,grantEvolutionSkills,familyPassiveStats,SKILL_UNLOCK_LEVELS } from "./skills.js";
 import { EXPANSION_SPECIES } from "./roster.js";
@@ -2702,7 +2702,7 @@ export class Battle {
     const color =
       SKILLS[strike.skillId].color || ELEMENTS[BY_ID[u.id].element].color;
     const naturalEffect=strike.nativeMelee&&u.nativeAttackEffect;
-    const naturalTip=naturalEffect?nativeBladePoint(u,strike,1):strike.beam&&this.native?nativeMuzzle(u,{x:u.x+strike.dx*strike.reach,y:u.y+strike.dy*strike.reach}):null;
+    const naturalTip=naturalEffect?nativeStrikeOrigin(u,strike,1):strike.beam&&this.native?nativeMuzzle(u,{x:u.x+strike.dx*strike.reach,y:u.y+strike.dy*strike.reach}):null;
     this.fx(strike.beam ? "beam" : naturalEffect||"slash", naturalTip?.x??u.x, strike.beam&&this.native?naturalTip.y+14:naturalTip?.y??u.y-12, color, {
       skillId:strike.skillId,sourceId:u.id,sourceUid:u.uid,targetZ:this.native?nativeBodyHeight(strike.target||u):45,
       originZ:naturalTip?.z,

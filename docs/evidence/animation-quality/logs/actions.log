@@ -1,0 +1,94 @@
+TAP version 13
+# Subtest: native bodies occupy their visible ground footprint and retain weight across size controls
+ok 1 - native bodies occupy their visible ground footprint and retain weight across size controls
+  ---
+  duration_ms: 5.8164
+  ...
+# Subtest: a crowded mixed-mass pile separates in two dimensions without pushing through arena walls
+ok 2 - a crowded mixed-mass pile separates in two dimensions without pushing through arena walls
+  ---
+  duration_ms: 0.9269
+  ...
+# Subtest: fast opposing dashes cannot tunnel through each other between fixed steps
+ok 3 - fast opposing dashes cannot tunnel through each other between fixed steps
+  ---
+  duration_ms: 0.1291
+  ...
+# Subtest: allies reserve different reachable approach positions around a shared opponent
+ok 4 - allies reserve different reachable approach positions around a shared opponent
+  ---
+  duration_ms: 1.2954
+  ...
+# Subtest: melee approaches, commits, contacts and recovers while both bodies stay apart
+ok 5 - melee approaches, commits, contacts and recovers while both bodies stay apart
+  ---
+  duration_ms: 89.6542
+  ...
+# Subtest: six versus six retain solid footprints through pursuit, crowding and knockback
+ok 6 - six versus six retain solid footprints through pursuit, crowding and knockback
+  ---
+  duration_ms: 954.6394
+  ...
+# Subtest: a distant committed swing cannot deal identity-based damage
+ok 7 - a distant committed swing cannot deal identity-based damage
+  ---
+  duration_ms: 4.6343
+  ...
+# Subtest: heavy bodies recoil less than light bodies from the same connected impact
+ok 8 - heavy bodies recoil less than light bodies from the same connected impact
+  ---
+  duration_ms: 0.564
+  ...
+# Subtest: every melee companion and form reaches actual authored contact from all eight approach directions
+ok 9 - every melee companion and form reaches actual authored contact from all eight approach directions
+  ---
+  duration_ms: 32154.8608
+  ...
+# Subtest: offensive abilities wait for actual range while shields and healing keep their support rules
+ok 10 - offensive abilities wait for actual range while shields and healing keep their support rules
+  ---
+  duration_ms: 0.95
+  ...
+# Subtest: resting melee weapons hang down from their hands instead of crossing the chest
+ok 2 - resting melee weapons hang down from their hands instead of crossing the chest
+  ---
+  duration_ms: 5228.9181
+  ...
+# Subtest: Brakk rests both hands below his shoulders on opposite sides of his torso
+ok 3 - Brakk rests both hands below his shoulders on opposite sides of his torso
+  ---
+  duration_ms: 197.8458
+  ...
+# Subtest: melee silhouettes retain the complete weapon and limbs during swings, dodges, hits and falls
+ok 4 - melee silhouettes retain the complete weapon and limbs during swings, dodges, hits and falls
+  ---
+  duration_ms: 36936.794
+  ...
+# Subtest: active melee contacts keep their physical direction and the weapon remains in its wielding hand
+ok 5 - active melee contacts keep their physical direction and the weapon remains in its wielding hand
+  ---
+  duration_ms: 14473.9365
+  ...
+# Subtest: uncovered body pixels remain opaque without arms or weapons through a complete swing
+ok 3 - uncovered body pixels remain opaque without arms or weapons through a complete swing
+  ---
+  duration_ms: 19921.2637
+  ...
+# Subtest: Brakk reveals leather clothing under his raised arms instead of duplicate green hand pixels
+ok 4 - Brakk reveals leather clothing under his raised arms instead of duplicate green hand pixels
+  ---
+  duration_ms: 7.2001
+  ...
+# Subtest: the completed body keeps its palette when equipment changes
+ok 5 - the completed body keeps its palette when equipment changes
+  ---
+  duration_ms: 351.2984
+  ...
+1..17
+# tests 17
+# pass 17
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 110953.0399

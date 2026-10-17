@@ -8,6 +8,33 @@ concurrency:
   group: field-ui-${{ github.ref }}
   cancel-in-progress: true
 jobs:
+  animation-quality:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      - name: Verify all seven animation stages independently of the general suite
+        run: npm run animation:pipeline
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: companion-animation-quality
+          path: |
+            playtest-artifacts/animation-pipeline/
+            playtest-artifacts/*quality*.png
+            playtest-artifacts/*quality*.json
+            playtest-artifacts/companion-animation-live/
+            COMPANION-ANIMATION-PIPELINE.md
+            Starfall-Menagerie.html
+            Starfall-Training-Glade.html
   field-ui:
     if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
@@ -24,6 +51,8 @@ jobs:
       - run: npm run build:standalone
       - run: npm run build:prototype
       - run: npx playwright install --with-deps chromium
+      - run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      - run: npm run animation:parts
       - name: Start the game
         run: |
           npm start > /tmp/field-server.log 2>&1 &
@@ -45,12 +74,18 @@ jobs:
       - run: node tests/weapon-relic-start.browser.mjs
       - run: node tests/settings-movement.browser.mjs
       - run: node tests/legs-v2.browser.mjs
+      - run: node tests/companion-animation.browser.mjs
       - run: node tests/skills-v2.browser.mjs
       - run: node tests/stage-loop-seam.browser.mjs
+      - run: node tests/reward-loadout.browser.mjs
+      - run: node tests/expedition-confirm.browser.mjs
+      - run: node tests/fluid-arena.browser.mjs
       - run: node scripts/review-skills-v2.mjs
       - run: node scripts/review-legs-v2.mjs final
       - run: node scripts/review-legs-v3.mjs final
       - run: node scripts/review-gaits-carry.mjs final
+      - run: npm run animation:review
+      - run: npm run animation:verify-video
       - run: node scripts/review-creature-anatomy.mjs
       - run: node scripts/review-melee-weapons.mjs
       - run: node scripts/review-natural-carry.mjs
@@ -71,6 +106,10 @@ jobs:
           path: |
             Starfall-Menagerie.html
             Starfall-Training-Glade.html
+            COMPANION-ANIMATION-PIPELINE.md
+            playtest-artifacts/companion-parts/
+            playtest-artifacts/companion-animation/
+            playtest-artifacts/companion-animation-live/
             playtest-artifacts/journey-*.png
             playtest-artifacts/journey-browser.json
             playtest-artifacts/uploaded-*.png

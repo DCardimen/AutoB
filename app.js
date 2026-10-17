@@ -25,12 +25,13 @@ import {BIOMES,planetOrb,biomeScenery,worldJourneyHTML} from './planet-ui.js';
 import {equipmentDropChance} from './equipment-loot.js';
 import {TUNING_OPTIONS,DEFAULT_TUNING,normalizeTuning,setTuning} from './tuning.js';
 import {battleSummaryHTML} from './battle-summary.js';
-import {applyLoadoutDrop,canLoadoutDrop} from './loadout-interactions.js';
+import {applyLoadoutDrop,canLoadoutDrop as canRegularLoadoutDrop} from './loadout-interactions.js';
+import {rewardDropPayload,rewardRecommendation,bestRewardRecommendation,rewardGrade,canRewardLoadoutDrop,applyRewardLoadoutDrop} from './reward-loadout.js';
 import {dragSprite,moveDragSprite,settleDragSprite,clearDragSprites} from './loadout-drag-ui.js';
 import {inventoryPouchHTML,prepareInventoryPouches,openInventoryPouch,resetInventoryPouches} from './inventory-pouches.js';
 import {activeAilments,STATUS_AILMENTS,annotateAilments} from './status-ailments.js';
 import {combatEffectDescription,itemStrength} from './item-effects.js';
-import {chooseLegendaryPact,assignEnemyRelics,recruitPrice,refundCapture,progressive,capacity,CAPTURERS,buyCapturer,consumeCapturer,addCapturer,routeVisible,claimLoot,makeLoot,attachCaptureLoot,lootName,buyPermit,permitCost,buyRecruit} from './expedition-rules.js';
+import {chooseLegendaryPact,assignEnemyRelics,recruitPrice,refundCapture,progressive,capacity,CAPTURERS,buyCapturer,consumeCapturer,addCapturer,routeVisible,claimLoot,lootDropClaimed,makeLoot,attachCaptureLoot,lootName,buyPermit,permitCost,buyRecruit} from './expedition-rules.js';
 import {RUN_RELIC_BY_ID,EXPEDITION_RELICS,routeModifiers} from './run-relics.js';
 import {DeploymentPhysics} from './deployment-physics.js';
 import {nativeSpawn,nativeBodyHeight} from './native-combat.js';
@@ -126,6 +127,7 @@ const deployment=new DeploymentPhysics();let defeatFilm=null,victoryFilm=null;
 const PERSONAL_RELICS=AURA_STONES,PERSONAL_BY_ID=WEARER_BY_ID;
 let loadoutDrag=null,touchLoadout=null,touchDragUntil=0,cancelledSpritePointer=null,loadoutPreviewSource=null;
 const $ = (s) => document.querySelector(s);
+const slotEmblems={Weapon:'⚔',Armor:'◈',Ring:'◉',Boots:'⇟',Accessory:'✦'};
 const STORE = "starfall-menagerie-v1";
 const ICONS = {
   battle: "⚔",
@@ -562,8 +564,14 @@ function placeCaptureTracker(){
  const tracker=$('#capture-tracker'),viewport=$('.arena-viewport'),controls=$('.arena-control');if(!tracker||!viewport||!controls)return;
  const actions=$('.briefing-actions');if(innerWidth<=900||!actions){if(tracker.parentElement!==controls.parentElement)controls.before(tracker);}else if(tracker.parentElement!==actions)actions.prepend(tracker);
 }
+function placeArenaRoster(){
+ const roster=$('.arena-roster-deck')||$('#live-roster'),frame=$('.arena-frame'),side=$('.side-column');
+ if(!run.native||!roster||!frame||!side)return;
+ const destination=innerWidth>=1101?side:frame;
+ if(roster.parentElement!==destination)destination.append(roster);
+}
 function resizeCanvas() {
-  placeArenaAction();placeCaptureTracker();
+  placeArenaAction();placeCaptureTracker();placeArenaRoster();
   if (!canvas) return;
   const rect = canvas.getBoundingClientRect();
   const dpr = Math.min(devicePixelRatio, 2);
@@ -616,6 +624,10 @@ function modal(html, kind = "generic", closable = true) {
   const nextDialog=next.content.querySelector('.modal'),nextBackdrop=next.content.querySelector('.modal-backdrop');
   nextDialog.dataset.kind=kind;nextBackdrop.dataset.kind=kind;nextDialog.classList.toggle('reward-screen',kind==='reward');
   decorateFieldUI(next.content);decorateUploadedArt(next.content);decorateAilments(next.content);
+  if(kind==='starters'){
+  const party=nextDialog.querySelector('.team-party'),layout=nextDialog.querySelector('.team-select-layout');
+  if(party&&layout){layout.before(party);party.setAttribute('aria-label','Review and confirm your new expedition');const confirm=party.querySelector('[data-action="confirm-run"]');confirm?.insertAdjacentHTML('beforebegin',`<p class="expedition-confirm-note"><b>${selectedDifficulty==='chaos'?'Chaos '+selectedChaos:selectedDifficulty==='veteran'?'Veteran':'Standard'} expedition</b><span>${saved?.run?'Confirm to replace the current expedition.':'Confirm your party to begin.'}</span></p>`);}
+  }
   const current=$('.modal-backdrop'),updating=previousKind===kind&&!!current;
   if(updating)patchModalContent(current,nextBackdrop);else $('#modal-root').replaceChildren(next.content);
   decorateAmbientBackgrounds($('#modal-root'));prepareLoadoutDragging();prepareInventoryPouches($('#modal-root'),{reducedMotion:profile.reducedMotion});prepareDetailTabs();
@@ -945,7 +957,8 @@ function openRewards(){
  const revealKey=`${run.seed}:${run.battleSerial}:${node.seed}`,reveal=rewardShownKey!==revealKey;rewardShownKey=revealKey;
  const relicOffer=options.some(u=>/^(relic:|boon:)/.test(u.id));
   const upgrades=`<div class="upgrade-grid">${options.map(u=>`<button class="upgrade-card ${upgradeChosen===u.id?'selected':''} ${u.majorPact?'major-pact':''}" data-upgrade="${u.id}" aria-pressed="${upgradeChosen===u.id}" ${upgradeChosen?'disabled':''}>${artImage(u.id==='gear'?gearArt(reward.equipmentReward):u.id==='orbs'?'capture-scout-idle':u.id==='gold'?'treasure-01':u.id.startsWith('relic:')||u.id.startsWith('boon:')?relicArt(u.id.split(':')[1]):'rich-03','upgrade-symbol')}<span><strong>${upgradeChosen===u.id?'\u2713 ':''}${u.name}</strong>${u.majorPact?'<small class="pact-label">GREAT POWER \u00b7 GREAT PRICE</small>':''}<p>${u.desc}</p></span></button>`).join('')}</div>${relicOffer?`<button class="button secondary skip-relic" data-upgrade="skip-relic" ${upgradeChosen?'disabled':''}>${upgradeChosen==='skipped'?'Relic skipped':'Skip relic \u2192'}</button><small class="relic-choice-note">Relics are optional. Keep your current build if you prefer.</small>`:''}`;
- const growth=growthHTML(lastReport||{growth:reward.growth},{image:c=>image(c),name:creatureName})||`<div class="rewards-team">${run.team.map(c=>`<div>${image(c)}<span><strong>${creatureName(c)}</strong><small>Lv. ${c.level} \u00b7 ${c.xp} / ${xpNeeded(c.level)} EXP</small></span></div>`).join('')}</div>`;
+ const growthRows=run.team.map(c=>(lastReport?.growth||reward.growth||[]).find(g=>g.uid===c.uid)||{...c,before:{level:c.level,xp:c.xp,needed:xpNeeded(c.level)},after:{level:c.level,xp:c.xp,needed:xpNeeded(c.level)},amount:0,levels:0});
+ const growth=growthHTML({growth:growthRows},{image:c=>image(c),name:creatureName,rowAttributes:g=>`data-loadout-drop="${run.team.findIndex(c=>c.uid===g.uid)}" data-reward-companion="${g.uid}"`,attachments:g=>`<span class="reward-companion-grade" aria-live="polite"></span>${quickEquipmentHTML(run.team.find(c=>c.uid===g.uid),run.team.findIndex(c=>c.uid===g.uid))}`});
  const next=button(won?'Continue the journey \u2192':run.integrity<=0?'End expedition \u2192':node.type==='boss'?'Challenge the guardian again \u2192':'Choose the next path \u2192','continue','',won&&!upgradeChosen||reward.loot&&!reward.loot.claimed);
  modal(rewardsShell({won,reveal,gold:reward.gold,xp:reward.xp,time:reward.time,claimed:!!reward.loot?.claimed,loot:lootHTML(),upgrades,growth,capture:captureOutcomeHTML()||`<div class="capture-outcome neutral">${artImage('icon-capture')}<div><strong>No capture planned</strong><p>Select a wild target before your next battle.</p></div></div>`,casualty:casualtyHTML(reward.casualty),report:lastReport,continueButton:next,collectionButton:reward.loot?button(reward.loot.claimed?'Spoils collected':artImage('rich-11')+'Collect all spoils','claim-loot','',reward.loot.claimed):'',slots:reward.slotsAdded?`<p class="result-levels">NEW TEAM PLACE \u00b7 ${capacity(run)} available. Deploy a companion from Reserves.</p>`:''}),'reward');
  animateRewardReveal(document.querySelector('.rewards-layout'),{gold:reward.gold,reducedMotion:profile.reducedMotion});
@@ -1354,9 +1367,10 @@ function openStarters(reset = true) {
     <details class="team-field-notes"><summary>Before you set off <span>Points · captures · Chaos</span></summary><div><h3>A small party. A bigger future.</h3><p>Choose 1–${slots} companions within ${budget} starter points. Common / Uncommon / Rare / Epic / Legendary cost 1 / 2 / 3 / 4 / 6 points. Repeat captures grow bonds: +2% starter health per bond. Bond 5 reduces cost by 1 point, or 2 for a Legendary.</p><h3>Bring an elite home.</h3><p>In an elite encounter, one opponent carries a mutation. Preselect that individual and a capturer before combat; lower health improves your odds. Capture it before it falls. A successful capture saves its bonus, nature and genes for future runs. Choose that individual beside its companion card; it starts at level 1 with fresh equipment.</p><h3>Why brave the Chaos?</h3><p>Win any expedition to unlock Chaos. Its 20 tiers stack their rules: tier 4 includes rules 1–4. Clear your highest unlocked tier to open the next. Your permanent budget is 3 + your highest cleared tier; clearing Chaos 3 also unlocks a third starting place. Each expedition victory grants 3 starlight for Legendary adoption.</p><h3>Find your elemental rhythm.</h3><p>Two companions of the same category activate its first bonus; four activate its second. Card bonuses and the party preview update as you choose. You can recruit more companions during the expedition.</p></div></details>
     <p class="team-permanent-note">${profile.chaosCleared||0} Chaos tiers cleared · ${budget} permanent points<br>${slots===3?'Third starting place unlocked.':'Clear Chaos 3 to open your third starting place.'}</p></div></aside>
     <section class="team-companions team-art-panel" data-card-size="${['compact','comfortable','large'].includes(profile.starterCardSize)?profile.starterCardSize:'compact'}"><div class="team-section-heading"><h3>❧ YOUR COMPANIONS</h3><span>Choose up to ${slots} companions.</span></div>${starterToolsHTML(starterChoices.length)}<div class="companion-scroll" tabindex="0" aria-label="Available companions"><div class="starter-grid">${starterChoices.map(id=>starterCardHTML(id,counts)).join('')||'<div class="starter-no-results"><strong>No companions match these filters.</strong><p>Try another cost or elemental type.</p><button class="button secondary small" data-action="starter-reset-filters">Clear filters</button></div>'}</div></div><div class="team-synergy-preview" aria-live="polite"><b>TEAM SYNERGIES</b>${Object.entries(counts).map(([id,n])=>`<span style="--element:${ELEMENTS[id].color}">${ELEMENTS[id].icon} ${ELEMENTS[id].name} ${n} / ${n>=2?4:2} · ${n>=2?'ACTIVE':`${2-n} more to activate`}</span>`).join('')||'<span>Choose companions to discover a combination.</span>'}</div></section></div>
-    <footer class="team-party team-art-panel"><div class="team-party-roster"><h3>YOUR PARTY (${slots} SLOTS)</h3><div>${Array.from({length:slots},(_,i)=>{const id=starterSelection[i];return id?`<button class="party-companion" data-party-remove="${id}" aria-label="Remove ${BY_ID[id].name} from party">${starterPortraitHTML(id)}<span><strong>${BY_ID[id].name}</strong><small style="color:${ELEMENTS[BY_ID[id].element].color}">${ELEMENTS[BY_ID[id].element].icon} ${ELEMENTS[BY_ID[id].element].name} · ${BY_ID[id].role}</small>${starterEliteSelection[id]?'<small class="party-elite">✦ Elite bonus equipped</small>':''}</span><b>${starterCost(id)} PT</b></button>`:'<div class="party-companion open-slot"><b>＋</b><span>Open slot<small>Choose a companion</small></span></div>';}).join('')}</div></div><div class="starter-budget" aria-live="polite"><span><strong>${starterSelection.length} / ${slots}</strong> companions</span><span><strong>${cost} / ${budget}</strong> starter points<i class="starter-point-dots" aria-hidden="true">${Array.from({length:budget},(_,i)=>`<i class="${i<cost?'spent':''}"></i>`).join('')}</i></span></div>${button('Begin expedition <span>→</span>', 'confirm-run','team-begin',!starterSelection.length||starterSelection.length>slots||cost>budget)}</footer><p class="team-replace-note">${saved?.run?'Beginning replaces your current expedition. Your permanent menagerie remains.':'Your discoveries stay with you, wherever this journey leads.'}</p><div class="team-foliage" aria-hidden="true"></div>`,
+    <footer class="team-party team-art-panel"><div class="team-party-roster"><h3>YOUR PARTY (${slots} SLOTS)</h3><div>${Array.from({length:slots},(_,i)=>{const id=starterSelection[i];return id?`<button class="party-companion" data-party-remove="${id}" aria-label="Remove ${BY_ID[id].name} from party">${starterPortraitHTML(id)}<span><strong>${BY_ID[id].name}</strong><small style="color:${ELEMENTS[BY_ID[id].element].color}">${ELEMENTS[BY_ID[id].element].icon} ${ELEMENTS[BY_ID[id].element].name} · ${BY_ID[id].role}</small>${starterEliteSelection[id]?'<small class="party-elite">✦ Elite bonus equipped</small>':''}</span><b>${starterCost(id)} PT</b></button>`:'<div class="party-companion open-slot"><b>＋</b><span>Open slot<small>Choose a companion</small></span></div>';}).join('')}</div></div><div class="starter-budget" aria-live="polite"><span><strong>${starterSelection.length} / ${slots}</strong> companions</span><span><strong>${cost} / ${budget}</strong> starter points<i class="starter-point-dots" aria-hidden="true">${Array.from({length:budget},(_,i)=>`<i class="${i<cost?'spent':''}"></i>`).join('')}</i></span></div>${button('Confirm expedition <span>→</span>', 'confirm-run','team-begin',!starterSelection.length||starterSelection.length>slots||cost>budget)}</footer><p class="team-replace-note">${saved?.run?'Beginning replaces your current expedition. Your permanent menagerie remains.':'Your discoveries stay with you, wherever this journey leads.'}</p><div class="team-foliage" aria-hidden="true"></div>`,
     "starters",
   );
+
 }
 function selectStarter(id) {
   if (starterSelection.includes(id))
@@ -1427,6 +1441,11 @@ document.addEventListener("click", async (e) => {
   if(el?.dataset.action==='clear-capture'){if(phase==='prep'&&!run.captureReservation){run.captureOrder=null;save();refreshCapturePlanUI();}return;}
   if(el?.dataset.action==='begin-encounter'){startBattle();return;}
   if(el?.dataset.action==='show-spoils'){openRewards();return;}
+  if(el?.dataset.rewardQuick!==undefined&&phase==='reward'){
+   const drop=reward.loot?.drops.find(d=>d.id===el.dataset.rewardQuick),rec=bestRewardRecommendation(run,reward.loot,drop);
+   if(['upgrade','maybe'].includes(rec.grade))finishLoadoutDrop(rewardDropPayload(run,drop),rec.target);
+   return;
+  }
   if(el?.dataset.action==='help'){openHelp();return;}
   if(el?.dataset.action==='inspect-selected'){openCreature(selectedCreature);return;}
   if(el?.dataset.action==='companions'){openCompanions();return;}
@@ -2079,7 +2098,7 @@ function stonePouchHTML(c=run.team[selectedCreature],index=selectedCreature){
 }
 function inventoryDockHTML(c=run.team[selectedCreature],index=selectedCreature){return equipmentPouchHTML(c,index)+stonePouchHTML(c,index);}
 function pouchCompanionsHTML(){return `<nav class="pouch-companions" aria-label="Choose companion for equipment">${run.team.map((c,i)=>`<button data-pouch-companion="${i}" data-loadout-drop="${i}" aria-pressed="${i===selectedCreature}" title="${creatureName(c)} · ${BY_ID[c.id].role}">${image(c)}<span>${creatureName(c)}</span></button>`).join('')}</nav>`;}
-function refreshLoadoutMenu(index,kind=modalKind){if(kind==='companions')openCompanions();else if(kind==='pack')openPack();else openCreature(index);}
+function refreshLoadoutMenu(index,kind=modalKind){if(kind==='reward')openRewards();else if(kind==='companions')openCompanions();else if(kind==='pack')openPack();else openCreature(index);}
 document.addEventListener('pointerover',showPouchItem);
 document.addEventListener('focusin',showPouchItem);
 function showPouchItem(e){
@@ -2277,7 +2296,6 @@ function openEquipTarget(uid) {
   );
 }
 
-const slotEmblems={Weapon:'⚔',Armor:'◈',Ring:'◉',Boots:'⇟',Accessory:'✦'};
 function equipmentHTML(u,index,includePack=true){
  const slots=equipmentSlots(u),editable=index!==null&&phase!=='battle',equipped=u.equipment||[],pending=Math.max(0,(u.evolution||0)-(u.gearClaimed||0));
  const offers=CREATURE_GEAR.filter(g=>gearCompatibility(u,g).allowed).filter((g,i,a)=>a.findIndex(v=>equipmentSlotType(v)===equipmentSlotType(g))===i).slice(0,3);
@@ -2314,7 +2332,7 @@ function lootVisual(d){const color=d.kind==='stone'?AURA_BY_ID[d.stone]?.color:d
 function lootIcon(d){return artImage(lootArt(d));}
 function lootHTML(){
  const cache=reward?.loot;if(!cache)return '';
- return `<section class="loot-cache loot-v2 ${cache.claimed?'collected':''}" aria-label="Victory spoils"><div class="loot-drops">${(cache.claimed?[]:cache.drops).map((d,i)=>{const {color,tier}=lootVisual(d);return rewardDropHTML(d,i,{name:lootName(d),color,tier,claimed:cache.claimed,description:lootDescription(d)});}).join('')}</div><div class="loot-collection"><span role="status">${cache.claimed?'\u2713 Safely in your pack.':cache.drops.length+' drops ready to claim'}</span></div></section>`;
+ return `<section class="loot-cache loot-v2 ${cache.claimed?'collected':''}" aria-label="Victory spoils"><p class="reward-equip-hint">Drag equipment or stones onto a companion or a slot. <span class="grade-upgrade">↑ Upgrade</span> <span class="grade-maybe">? Consider</span> <span class="grade-worse">× Weaker / unavailable</span></p><div class="loot-drops">${cache.drops.map((d,i)=>{const {color,tier}=lootVisual(d),recommendation=bestRewardRecommendation(run,cache,d),payload=rewardDropPayload(run,d),wearer=payload?.fromIndex!==undefined?run.team[payload.fromIndex]:null;return rewardDropHTML(d,i,{name:lootName(d),color,tier,claimed:lootDropClaimed(run,cache,d.id),description:lootDescription(d),equipped:wearer&&creatureName(wearer),recommendation:payload?{...recommendation,...rewardGrade[recommendation.grade],companion:recommendation.index!==undefined?creatureName(run.team[recommendation.index]):''}:null});}).join('')}</div><div class="loot-collection"><span role="status">${cache.claimed?'\u2713 All spoils collected.':cache.drops.filter(d=>!lootDropClaimed(run,cache,d.id)).length+' drops ready to claim'}</span></div></section>`;
 }
 function lootDescription(d){return d.kind==='stone'?auraStone({id:d.stone,tier:d.tier})?.desc:d.kind==='gear'?equipmentDescription(GEAR_BY_ID[d.gear],{balanceVersion:17,equipmentVersion:2,equipment:[d.gear],equipmentRolls:[d]}):d.kind==='relic'?relicDescription(RUN_RELIC_BY_ID[d.relic]):d.kind==='capturer'?`${CAPTURERS[d.tier].mult}\u00d7 Scout odds \u00b7 one attempt`:'Spend at an outpost to shape your next build.';}
 
@@ -2407,7 +2425,8 @@ function updateLiveStatus(){
  updateCaptureFeedback();updateRetryControls();
 }
 function prepareLoadoutDragging(){
- const make=(el,payload)=>{if(!el||phase==='battle')return;el.draggable=true;el.dataset.dragPayload=JSON.stringify(payload);el.classList.add('loadout-draggable');};
+ const make=(el,payload)=>{if(!el||!payload||phase==='battle')return;el.draggable=true;el.dataset.dragPayload=JSON.stringify(payload);el.classList.add('loadout-draggable');};
+ document.querySelectorAll('[data-reward-loot]').forEach(el=>make(el,rewardDropPayload(run,reward?.loot?.drops.find(d=>d.id===el.dataset.rewardLoot))));
  document.querySelectorAll('[data-creature],[data-party-select]').forEach(el=>{const c=run.team[Number(el.dataset.creature??el.dataset.partySelect)];if(c)make(el,{kind:'companion',uid:c.uid});});
  document.querySelectorAll('[data-gear-equip]').forEach(el=>{const g=run.gearInventory.find(g=>g.uid===el.dataset.gearEquip);if(g)make(el,{kind:'gear',uid:g.uid,id:g.id});});
  document.querySelectorAll('[data-gear-remove]').forEach(el=>{const i=Number(el.dataset.index),slot=Number(el.dataset.gearRemove),id=run.team[i]?.equipment?.[slot];if(id)make(el,{kind:'gear',id,fromIndex:i,slot});});
@@ -2419,7 +2438,8 @@ function prepareLoadoutDragging(){
 }
 function dropTarget(el){const marker=el?.closest('[data-seat-drop],[data-skill-drop],[data-loadout-drop],[data-pack-drop]');if(!marker)return null;if(marker.dataset.seatDrop!==undefined)return {seat:Number(marker.dataset.seatDrop)};if(marker.dataset.packDrop!==undefined)return {pack:true,...(marker.dataset.packKind?{packKind:marker.dataset.packKind}:{})};if(marker.dataset.skillDrop)return {index:Number(marker.dataset.index),skill:marker.dataset.skillDrop};const gear=el.closest('[data-gear-slot]');return marker.dataset.loadoutDrop!=='null'?{index:Number(marker.dataset.loadoutDrop),...(gear?{gearSlot:Number(gear.dataset.gearSlot),gearType:gear.dataset.gearType,equipmentArea:gear.closest('.equipment-panel')?'panel':'quick'}:{}),...(el.closest('[data-relic-slot]')?{relicSlot:Number(el.closest('[data-relic-slot]').dataset.relicSlot),stoneArea:el.closest('[data-quick-aura]')?'quick':'panel'}:{})}:null;}
 
-function finishLoadoutDrop(payload,target){if(!target||phase==='battle')return false;if(!applyLoadoutDrop(run,payload,target)){toast('That loadout cannot accept this item or skill. Check space and compatibility.');return false;}save();render();if(modalKind==='creature'||modalKind==='detail')openCreature(selectedCreature);else if(modalKind==='pack')openPack();else if(modalKind==='companions')openCompanions();const refreshed=$('.modal');if(refreshed)refreshed.classList.add('loadout-updated');if(payload.kind==='gem'&&!target.pack)setTimeout(()=>animateAuraEquip(Number(target.index),payload.id),profile.reducedMotion?80:460);toast(payload.kind==='skill'?'Cooldown priority changed. The first ready skill is considered first.':'Loadout updated.');return true;}
+function canLoadoutDrop(run,payload,target){return payload?.rewardDropId?canRewardLoadoutDrop(run,reward?.loot,payload,target):canRegularLoadoutDrop(run,payload,target);}
+function finishLoadoutDrop(payload,target){if(!target||phase==='battle')return false;if(!(payload.rewardDropId?applyRewardLoadoutDrop(run,reward?.loot,payload,target):applyLoadoutDrop(run,payload,target))){toast('That loadout cannot accept this item or skill. Check space and compatibility.');return false;}save();render();if(modalKind==='creature'||modalKind==='detail')openCreature(selectedCreature);else if(modalKind==='pack')openPack();else if(modalKind==='companions')openCompanions();else if(modalKind==='reward')openRewards();const refreshed=$('.modal');if(refreshed)refreshed.classList.add('loadout-updated');if(payload.kind==='gem'&&!target.pack)setTimeout(()=>animateAuraEquip(Number(target.index),payload.id),profile.reducedMotion?80:460);toast(payload.kind==='skill'?'Cooldown priority changed. The first ready skill is considered first.':'Loadout updated.');return true;}
 // Native drag events are a fallback; pointer dragging gives mouse, pen and
 // touch the same exact sprite, legal targets and drop animation.
 document.addEventListener('dragstart',e=>{
@@ -2443,9 +2463,10 @@ document.addEventListener('pointerdown',e=>{const el=e.target.closest('.ailment-
 document.addEventListener('keydown',e=>{if(!e.target.matches('[data-detail-tab]')||!['ArrowLeft','ArrowRight'].includes(e.key))return;e.preventDefault();const tabs=[...document.querySelectorAll('[data-detail-tab]')],i=tabs.indexOf(e.target),next=tabs[(i+(e.key==='ArrowRight'?1:-1)+tabs.length)%tabs.length];detailTab=next.dataset.detailTab;prepareDetailTabs();next.focus();});
 
 const loadoutTargets='[data-seat-drop],[data-skill-drop],[data-loadout-drop],[data-pack-drop],[data-gear-slot]';
-function clearLoadoutTargets(){loadoutPreviewSource=null;document.body.classList.remove('carrying-sprite','previewing-loadout');document.querySelectorAll('.dragging,.loadout-target,.loadout-compatible,.loadout-incompatible').forEach(el=>el.classList.remove('dragging','loadout-target','loadout-compatible','loadout-incompatible'));}
+function clearLoadoutTargets(){document.querySelectorAll('[data-reward-companion]').forEach(el=>{delete el.dataset.rewardGrade;const grade=el.querySelector('.reward-companion-grade');if(grade)grade.textContent='';});loadoutPreviewSource=null;document.body.classList.remove('carrying-sprite','previewing-loadout');document.querySelectorAll('.dragging,.loadout-target,.loadout-compatible,.loadout-incompatible').forEach(el=>el.classList.remove('dragging','loadout-target','loadout-compatible','loadout-incompatible'));}
 function highlightLoadoutTargets(payload,source,{preview=false}={}){
  clearLoadoutTargets();document.body.classList.add(preview?'previewing-loadout':'carrying-sprite');
+ if(payload.rewardDropId){const drop=reward?.loot?.drops.find(d=>d.id===payload.rewardDropId);for(const row of document.querySelectorAll('[data-reward-companion]')){const rec=rewardRecommendation(run,reward.loot,drop,{index:Number(row.dataset.loadoutDrop)});row.dataset.rewardGrade=rec.grade;const badge=row.querySelector('.reward-companion-grade');badge.textContent=rewardGrade[rec.grade].symbol+' '+rec.reason;badge.title=rec.reason;}}
  for(const el of document.querySelectorAll(loadoutTargets)){
   if(el===source||source.contains(el))continue;
   const valid=canLoadoutDrop(run,payload,dropTarget(el));el.classList.add(valid?'loadout-compatible':'loadout-incompatible');
