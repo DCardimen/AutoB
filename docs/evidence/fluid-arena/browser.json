@@ -1,0 +1,302 @@
+[
+  {
+    "offline": false,
+    "width": 2560,
+    "height": 1440,
+    "app": {
+      "x": 0,
+      "y": 64,
+      "w": 2560,
+      "h": 1376,
+      "bottom": 1440
+    },
+    "arena": {
+      "x": 46.828125,
+      "y": 195,
+      "w": 2064.34375,
+      "h": 1155,
+      "bottom": 1350
+    },
+    "dock": {
+      "x": 42.828125,
+      "y": 1354,
+      "w": 2072.34375,
+      "h": 71,
+      "bottom": 1425
+    },
+    "rosterInSidebar": true,
+    "scroll": 2560,
+    "liveCombat": true,
+    "errors": []
+  },
+  {
+    "offline": false,
+    "width": 1900,
+    "height": 935,
+    "app": {
+      "x": 0,
+      "y": 64,
+      "w": 1900,
+      "h": 871,
+      "bottom": 935
+    },
+    "arena": {
+      "x": 37.59375,
+      "y": 195,
+      "w": 1422.8125,
+      "h": 650,
+      "bottom": 845
+    },
+    "dock": {
+      "x": 33.59375,
+      "y": 849,
+      "w": 1430.8125,
+      "h": 71,
+      "bottom": 920
+    },
+    "rosterInSidebar": true,
+    "scroll": 1900,
+    "liveCombat": true,
+    "errors": []
+  },
+  {
+    "offline": false,
+    "width": 1366,
+    "height": 768,
+    "app": {
+      "x": 0,
+      "y": 64,
+      "w": 1366,
+      "h": 704,
+      "bottom": 768
+    },
+    "arena": {
+      "x": 30.109375,
+      "y": 195,
+      "w": 983.78125,
+      "h": 479,
+      "bottom": 674
+    },
+    "dock": {
+      "x": 26.109375,
+      "y": 678,
+      "w": 991.78125,
+      "h": 75,
+      "bottom": 753
+    },
+    "rosterInSidebar": true,
+    "scroll": 1366,
+    "liveCombat": true,
+    "errors": []
+  },
+  {
+    "offline": false,
+    "width": 1024,
+    "height": 768,
+    "app": {
+      "x": 0,
+      "y": 64,
+      "w": 1024,
+      "h": 704,
+      "bottom": 768
+    },
+    "arena": {
+      "x": 35,
+      "y": 195,
+      "w": 640,
+      "h": 337,
+      "bottom": 532
+    },
+    "dock": {
+      "x": 31,
+      "y": 682,
+      "w": 648,
+      "h": 71,
+      "bottom": 753
+    },
+    "rosterInSidebar": false,
+    "scroll": 1024,
+    "liveCombat": true,
+    "errors": []
+  },
+  {
+    "offline": false,
+    "width": 390,
+    "height": 844,
+    "app": {
+      "x": 0,
+      "y": 56,
+      "w": 390,
+      "h": 718,
+      "bottom": 774
+    },
+    "arena": {
+      "x": 15,
+      "y": 192,
+      "w": 360,
+      "h": 390,
+      "bottom": 582
+    },
+    "dock": {
+      "x": 11,
+      "y": 666,
+      "w": 368,
+      "h": 99,
+      "bottom": 765
+    },
+    "rosterInSidebar": false,
+    "scroll": 390,
+    "liveCombat": true,
+    "errors": []
+  },
+  {
+    "offline": true,
+    "width": 2560,
+    "height": 1440,
+    "app": {
+      "x": 0,
+      "y": 64,
+      "w": 2560,
+      "h": 1376,
+      "bottom": 1440
+    },
+    "arena": {
+      "x": 46.828125,
+      "y": 195,
+      "w": 2064.34375,
+      "h": 1155,
+      "bottom": 1350
+    },
+    "dock": {
+      "x": 42.828125,
+      "y": 1354,
+      "w": 2072.34375,
+      "h": 71,
+      "bottom": 1425
+    },
+    "rosterInSidebar": true,
+    "scroll": 2560,
+    "liveCombat": true,
+    "errors": []
+  },
+  {
+    "offline": true,
+    "width": 1900,
+    "height": 935,
+    "app": {
+      "x": 0,
+      "y": 64,
+      "w": 1900,
+      "h": 871,
+      "bottom": 935
+    },
+    "arena": {
+      "x": 37.59375,
+      "y": 195,
+      "w": 1422.8125,
+      "h": 650,
+      "bottom": 845
+    },
+    "dock": {
+      "x": 33.59375,
+      "y": 849,
+      "w": 1430.8125,
+      "h": 71,
+      "bottom": 920
+    },
+    "rosterInSidebar": true,
+    "scroll": 1900,
+    "liveCombat": true,
+    "errors": []
+  },
+  {
+    "offline": true,
+    "width": 1366,
+    "height": 768,
+    "app": {
+      "x": 0,
+      "y": 64,
+      "w": 1366,
+      "h": 704,
+      "bottom": 768
+    },
+    "arena": {
+      "x": 30.109375,
+      "y": 195,
+      "w": 983.78125,
+      "h": 479,
+      "bottom": 674
+    },
+    "dock": {
+      "x": 26.109375,
+      "y": 678,
+      "w": 991.78125,
+      "h": 75,
+      "bottom": 753
+    },
+    "rosterInSidebar": true,
+    "scroll": 1366,
+    "liveCombat": true,
+    "errors": []
+  },
+  {
+    "offline": true,
+    "width": 1024,
+    "height": 768,
+    "app": {
+      "x": 0,
+      "y": 64,
+      "w": 1024,
+      "h": 704,
+      "bottom": 768
+    },
+    "arena": {
+      "x": 35,
+      "y": 195,
+      "w": 640,
+      "h": 337,
+      "bottom": 532
+    },
+    "dock": {
+      "x": 31,
+      "y": 682,
+      "w": 648,
+      "h": 71,
+      "bottom": 753
+    },
+    "rosterInSidebar": false,
+    "scroll": 1024,
+    "liveCombat": true,
+    "errors": []
+  },
+  {
+    "offline": true,
+    "width": 390,
+    "height": 844,
+    "app": {
+      "x": 0,
+      "y": 56,
+      "w": 390,
+      "h": 718,
+      "bottom": 774
+    },
+    "arena": {
+      "x": 15,
+      "y": 192,
+      "w": 360,
+      "h": 390,
+      "bottom": 582
+    },
+    "dock": {
+      "x": 11,
+      "y": 666,
+      "w": 368,
+      "h": 99,
+      "bottom": 765
+    },
+    "rosterInSidebar": false,
+    "scroll": 390,
+    "liveCombat": true,
+    "errors": []
+  }
+]
