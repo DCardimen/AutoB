@@ -5,12 +5,13 @@ import {CREATURE_GEAR, GEAR_BY_ID} from './creature-equipment.js';
 import {RELICS} from './game.js';
 import {WEARER_RELICS} from './wearer-relics.js';
 import {SKILLS} from './skills.js';
+import {skillIconData,skillVisual} from './skill-visuals.js';
 
 export {UI_ART};
 const ART_VARIABLES={frame:'arena-frame',panel:'leaf-panel',gold:'gold-action',collect:'collect-button','collect-hover':'collect-hover',card:'reward-card','card-hover':'reward-card-hover','card-grove':'reward-card-grove',slot:'gear-slot',empty:'empty-slot',tab:'tab','tab-active':'tab-selected',result:'result-panel',rewards:'rewards-backdrop',leaves:'reward-leaves',failure:'capture-failed',success:'capture-success',companion:'companion-card',hp:'bar-health','enemy-hp':'bar-enemy',stamina:'bar-stamina',poise:'bar-poise'};
 let installedArtVariables=false;
 export function artImage(key, cls='', alt='') {
- const src=UI_ART[key];
+ const src=UI_ART[key]||(key?.startsWith('data:image/svg+xml')?key:null);
  return src ? `<img class="uploaded-art ${cls}" src="${src}" alt="${alt}" draggable="false" decoding="async">` : '';
 }
 
@@ -44,19 +45,15 @@ export const gearArt=id=>GEAR_ART[id]||'weapon-00';
 export const relicArt=id=>RELIC_ART[id]||'relic-1-00';
 export const lootArt=d=>d.kind==='gear'?gearArt(d.gear):d.kind==='capturer'?`capture-${d.tier}-idle`:d.kind==='stone'?relicArt(d.stone):d.kind==='relic'?relicArt(d.relic):'treasure-01';
 export function skillArt(skill) {
- if(skill?.auto)return 'skill-00';
- const type=skill?.type||'',id=skill?.id||'';
- if(/heal|mend|bloom|restore/.test(type+' '+id))return 'icon-healing';
- if(/shield|guard|barrier/.test(type+' '+id))return 'skill-01';
- if(/dash|charge|step/.test(type+' '+id))return 'skill-03';
- if(/storm|spark|volt|chain/.test(id))return 'skill-06';
- if(/moon|night|void|curse/.test(id))return 'skill-07';
- if(/wave|frost|tide|water/.test(id))return 'skill-02';
- return 'skill-11';
+ return skillIconData(skill);
 }
 
 export function decorateUploadedArt(root=document) {
  if(!root)return;
+ for(const el of root.querySelectorAll('[data-skill-drop],[data-learn-skill],[data-unit-skill],[data-hud-skill]')){
+  const id=el.dataset.skillDrop||el.dataset.learnSkill||el.dataset.hudSkill||el.dataset.unitSkill.split(':')[1],visual=skillVisual(SKILLS[id]);
+  el.dataset.skillVisual='2';el.dataset.spellElement=visual.element;el.dataset.spellShape=visual.shape;el.style.setProperty('--spell-color',visual.color);el.style.setProperty('--spell-light',visual.light);
+ }
  // Large data URLs exceed browser CSS custom-property limits. The offline
  // registry already provides compact blob URLs; share them with the CSS skin.
  if(!installedArtVariables){for(const [name,key]of Object.entries(ART_VARIABLES))document.documentElement.style.setProperty('--upload-'+name,`url("${UI_ART[key]}")`);installedArtVariables=true;}

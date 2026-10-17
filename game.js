@@ -2001,6 +2001,7 @@ export class Battle {
     if (show && real >= 2) {
       if(this.native)queueCombatText(this,target,real,"heal");else this.effect(target.x, target.y - 44, `+${Math.round(real)}`, "#bada9b");
       this.fx("heal", target.x, target.y, "#badf92", {
+        skillId,sourceId:source?.id,sourceUid:source?.uid,victimUid:target.uid,
         r: 36,
         ttl: 0.7,
         max: 0.7,
@@ -2121,7 +2122,7 @@ export class Battle {
     }
     let prevented=0;
     if(kind!=="cost"){const before=amount;amount*=relicReduction(this,target,source);prevented+=Math.max(0,before-amount);}
-    if((this.run.rulesVersion||0)>=15&&!['status','cost','reflection'].includes(kind)){const reduction=armorReduction((target.armor||0)+(target.armorBuffTime>0?target.armorBuff||0:0),target.role);const armor=amount*reduction;amount*=1-reduction;prevented+=armor;this.metrics.armorPrevented=(this.metrics.armorPrevented||0)+armor;}
+    if((this.run.rulesVersion||0)>=15&&!['status','cost','reflection'].includes(kind)){const reduction=armorReduction((target.armor||0)+(target.armorBuffTime>0?target.armorBuff||0:0),target.role),armor=Math.max(0,amount*reduction),amplified=Math.max(0,-amount*reduction);amount*=1-reduction;prevented+=armor;this.metrics.armorPrevented=(this.metrics.armorPrevented||0)+armor;this.metrics.armorAmplified=(this.metrics.armorAmplified||0)+amplified;}
     const blocked = Math.min(
       target.shield,
       amount * (1 - Math.min(0.95, pierce)),
@@ -2300,7 +2301,7 @@ export class Battle {
       crit ? "#fff0b3" : target.side === 0 ? "#eeb6a7" : "#f3e5c7",
     );
     this.burst(target.x, target.y - 10, color, crit ? 11 : 4, crit ? 110 : 60);
-    this.fx("impact", target.x, target.y - 8, color, { r: crit ? 35 : 23, victimUid:target.uid, angle:Math.atan2(target.y-source.y,target.x-source.x), groundRadius:target.radius, heavy:!def.auto, blocked:dealt<=0, ttl:crit?.32:.26, max:crit?.32:.26 });
+    this.fx("impact", target.x, target.y - 8, color, { skillId,sourceId:source.id,sourceUid:source.uid,r: crit ? 35 : 23, victimUid:target.uid, angle:Math.atan2(target.y-source.y,target.x-source.x), groundRadius:target.radius, heavy:!def.auto, blocked:dealt<=0, ttl:crit?.32:.26, max:crit?.32:.26 });
     if(dealt>0&&this.run.rulesVersion>=17&&this.visuals&&!this.reducedMotion)this.hitPause=Math.max(this.hitPause||0,crit?.055:.025);
     if (crit || !def.auto) this.shake = Math.min(4, this.shake + 1.1);
     this.audioEvents.push({
@@ -2701,11 +2702,12 @@ export class Battle {
     const color =
       SKILLS[strike.skillId].color || ELEMENTS[BY_ID[u.id].element].color;
     const naturalEffect=strike.nativeMelee&&u.nativeAttackEffect;
-    const naturalTip=naturalEffect?nativeBladePoint(u,strike,1):null;
-    this.fx(strike.beam ? "beam" : naturalEffect||"slash", naturalTip?.x??u.x, naturalTip?.y??u.y-12, color, {
+    const naturalTip=naturalEffect?nativeBladePoint(u,strike,1):strike.beam&&this.native?nativeMuzzle(u,{x:u.x+strike.dx*strike.reach,y:u.y+strike.dy*strike.reach}):null;
+    this.fx(strike.beam ? "beam" : naturalEffect||"slash", naturalTip?.x??u.x, strike.beam&&this.native?naturalTip.y+14:naturalTip?.y??u.y-12, color, {
+      skillId:strike.skillId,sourceId:u.id,sourceUid:u.uid,targetZ:this.native?nativeBodyHeight(strike.target||u):45,
       originZ:naturalTip?.z,
       tx: u.x + strike.dx * strike.reach,
-      ty: u.y + strike.dy * strike.reach - 12,
+      ty: u.y + strike.dy * strike.reach - (strike.beam&&this.native?0:12),
       angle: Math.atan2(strike.dy, strike.dx),
       face: u.face,
       r: strike.beam ? 30 : strike.reach,
@@ -2988,6 +2990,7 @@ export class Battle {
       color: def.color || ELEMENTS[BY_ID[u.id].element].color,
     });
     this.fx("telegraph", t.x, t.y, def.color || "#b5b1df", {
+      skillId:id,sourceId:u.id,sourceUid:u.uid,
       r: radius * m.area,
       ttl: delay,
       max: delay,
@@ -3020,6 +3023,7 @@ export class Battle {
     const friends = this.living(u.side),
       enemies = this.living(1 - u.side),
       color = def.color || ELEMENTS[BY_ID[u.id].element].color;
+    const spellFX=(type,x,y,color,extra={})=>this.fx(type,x,y,color,{...extra,skillId:id,sourceId:u.id,sourceUid:u.uid});
     u.attackAnim = auto ? 0.32 : 0.2;
     if (!auto) {
       u.actionLock = Math.max(u.actionLock, 0.22);
@@ -3028,7 +3032,7 @@ export class Battle {
       this.metrics.skills++;u.nativeResolvedSkills++;u.lastRelicCast=this.time;if(!echo)relicEvent(this,u,"cast",{target:t,skillId:id});
       this.say(`${creatureName(u)} uses ${def.name}${echo ? " · Echo" : ""}.`);
       this.effect(u.x, u.y - 67, def.name, color);
-      this.fx("cast", u.x, u.y, color, { r: 45, ttl: 0.65, max: 0.65 });
+      spellFX("cast", u.x, u.y, color, { r: 45, ttl: 0.65, max: 0.65 });
     }
     const power = (def.power || 1) * u.atk;
     const weakest = friends
@@ -3113,7 +3117,7 @@ export class Battle {
         if (def.cleanse) {
           this.cleanse(f);
         }
-        this.fx("beam", u.x, u.y - 10, color, {
+        spellFX("beam", u.x, u.y - 10, color, {
           tx: f.x,
           ty: f.y - 10,
           width: 5,
@@ -3132,7 +3136,7 @@ export class Battle {
           );
         if (def.haste) f.haste = def.haste;
       });
-      this.fx("ring", u.x, u.y, color, { r: 220 * m.area, ttl: 0.8, max: 0.8 });
+      spellFX("ring", u.x, u.y, color, { r: 220 * m.area, ttl: 0.8, max: 0.8 });
     } else if (def.kind === "shield") {
       friends
         .filter((f) => def.all || distance(f, u) < def.radius * m.area)
@@ -3141,7 +3145,7 @@ export class Battle {
             f.maxHp * 0.7,
             f.shield + def.shield * shieldScale,
           );
-          this.fx("shield", f.x, f.y, color, { r: 38, ttl: 0.9, max: 0.9 });
+          spellFX("shield", f.x, f.y, color, { victimUid:f.uid,r: 38, ttl: 0.9, max: 0.9 });
         });
       if (def.taunt) u.taunt = def.taunt;
       if (def.slow)
@@ -3190,7 +3194,7 @@ export class Battle {
     } else if (["blast", "volley", "breath"].includes(def.kind)) {
       this.zone(u, t, id, def.power, def.radius, def.delay || 0.7, scale);
       if (def.kind === "breath")
-        this.fx("breath", u.x, u.y - 14, color, {
+        spellFX("breath", u.x, u.y - 14, color, {
           tx: t.x,
           ty: t.y,
           r: def.radius,
@@ -3227,7 +3231,7 @@ export class Battle {
         .slice(0, def.targets + m.targets);
       let from = u;
       targets.forEach((e) => {
-        this.fx("lightning", from.x, from.y - 12, color, {
+        spellFX("lightning", from.x, from.y - 12, color, {
           tx: e.x,
           ty: e.y - 12,
           ttl: 0.35,
@@ -3256,7 +3260,7 @@ export class Battle {
       u.haste = def.haste;
       u.evade = def.evade || 0;
       if (def.attackBoost) u.rage = def.haste;
-      this.fx("ring", u.x, u.y, color, {
+      spellFX("ring", u.x, u.y, color, {
         r: 60 * m.area,
         ttl: 0.65,
         max: 0.65,
@@ -3266,7 +3270,7 @@ export class Battle {
         .sort((a, b) => distance(a, u) - distance(b, u))
         .slice(0, def.targets + m.targets)
         .forEach((e) => {
-          this.fx("beam", e.x, e.y - 10, color, {
+          spellFX("beam", e.x, e.y - 10, color, {
             tx: u.x,
             ty: u.y - 10,
             width: 5,
@@ -3285,7 +3289,7 @@ export class Battle {
       enemies
         .filter((e) => distance(e, u) < def.radius * m.area)
         .forEach((e) => this.hit(e, power, u, id, scale));
-      this.fx("ring", u.x, u.y, color, {
+      spellFX("ring", u.x, u.y, color, {
         r: def.radius * m.area,
         ttl: 0.75,
         max: 0.75,
@@ -3298,7 +3302,7 @@ export class Battle {
       enemies
         .filter((e) => distance(e, u) < def.radius * m.area)
         .forEach((e) => this.hit(e, power, u, id, scale));
-      this.fx("ring", u.x, u.y, color, { r: 260 * m.area, ttl: 1, max: 1 });
+      spellFX("ring", u.x, u.y, color, { r: 260 * m.area, ttl: 1, max: 1 });
     } else if (["gravity", "wave"].includes(def.kind)) {
       friends
         .filter((f) => def.kind === "gravity" || distance(f, u) < def.radius)
@@ -3319,7 +3323,7 @@ export class Battle {
           }
           this.hit(e, power, u, id, scale);
         });
-      this.fx("ring", u.x, u.y, color, {
+      spellFX("ring", u.x, u.y, color, {
         r: def.radius * m.area,
         ttl: 0.8,
         max: 0.8,
@@ -4170,7 +4174,7 @@ export class Battle {
           ),
         );
         if (h.root) targets.forEach((e) => (e.root = Math.max(e.root, h.root)));
-        this.fx("nova", h.x, h.y, h.color, { r: h.r, ttl: 0.65, max: 0.65 });
+        this.fx("nova", h.x, h.y, h.color, { skillId:h.skillId,sourceId:h.source.id,sourceUid:h.source.uid,r: h.r, ttl: 0.65, max: 0.65 });
         this.burst(h.x, h.y, h.color, 18, 130);
         this.shake = Math.min(5, this.shake + 2);
         if (!targets.length) this.metrics.dodges++;

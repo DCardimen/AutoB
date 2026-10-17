@@ -1,0 +1,339 @@
+TAP version 13
+# Subtest: 30 unique role auras; exact rarity slots, no evolution extras, four exponential power tiers
+ok 1 - 30 unique role auras; exact rarity slots, no evolution extras, four exponential power tiers
+  ---
+  duration_ms: 0.9552
+  ...
+# Subtest: Valor Stone obeys range, role and current tier in real effects
+ok 2 - Valor Stone obeys range, role and current tier in real effects
+  ---
+  duration_ms: 1.9881
+  ...
+# Subtest: Ironwall Stone obeys range, role and current tier in real effects
+ok 3 - Ironwall Stone obeys range, role and current tier in real effects
+  ---
+  duration_ms: 1.3327
+  ...
+# Subtest: Tailwind Stone obeys range, role and current tier in real effects
+ok 4 - Tailwind Stone obeys range, role and current tier in real effects
+  ---
+  duration_ms: 1.5275
+  ...
+# Subtest: Quickening Stone obeys range, role and current tier in real effects
+ok 5 - Quickening Stone obeys range, role and current tier in real effects
+  ---
+  duration_ms: 1.5104
+  ...
+# Subtest: Clarity Stone obeys range, role and current tier in real effects
+ok 6 - Clarity Stone obeys range, role and current tier in real effects
+  ---
+  duration_ms: 1.5005
+  ...
+# Subtest: Wellspring Stone obeys range, role and current tier in real effects
+ok 7 - Wellspring Stone obeys range, role and current tier in real effects
+  ---
+  duration_ms: 1.9579
+  ...
+# Subtest: Renewal Stone obeys range, role and current tier in real effects
+ok 8 - Renewal Stone obeys range, role and current tier in real effects
+  ---
+  duration_ms: 1.2809
+  ...
+# Subtest: Lifelight Stone obeys range, role and current tier in real effects
+ok 9 - Lifelight Stone obeys range, role and current tier in real effects
+  ---
+  duration_ms: 1.9555
+  ...
+# Subtest: Endurance Stone obeys range, role and current tier in real effects
+ok 10 - Endurance Stone obeys range, role and current tier in real effects
+  ---
+  duration_ms: 1.4189
+  ...
+# Subtest: Precision Stone obeys range, role and current tier in real effects
+ok 11 - Precision Stone obeys range, role and current tier in real effects
+  ---
+  duration_ms: 1.3999
+  ...
+# Subtest: Veil Stone obeys range, role and current tier in real effects
+ok 12 - Veil Stone obeys range, role and current tier in real effects
+  ---
+  duration_ms: 1.4568
+  ...
+# Subtest: Far Sight Stone obeys range, role and current tier in real effects
+ok 13 - Far Sight Stone obeys range, role and current tier in real effects
+  ---
+  duration_ms: 2.8012
+  ...
+# Subtest: Resolve Stone obeys range, role and current tier in real effects
+ok 14 - Resolve Stone obeys range, role and current tier in real effects
+  ---
+  duration_ms: 1.5237
+  ...
+# Subtest: Celerity Stone obeys range, role and current tier in real effects
+ok 15 - Celerity Stone obeys range, role and current tier in real effects
+  ---
+  duration_ms: 1.3081
+  ...
+# Subtest: Shelter Stone obeys range, role and current tier in real effects
+ok 16 - Shelter Stone obeys range, role and current tier in real effects
+  ---
+  duration_ms: 1.2334
+  ...
+# Subtest: Frailty Stone obeys range, role and current tier in real effects
+ok 17 - Frailty Stone obeys range, role and current tier in real effects
+  ---
+  duration_ms: 1.3307
+  ...
+# Subtest: Corrosion Stone obeys range, role and current tier in real effects
+ok 18 - Corrosion Stone obeys range, role and current tier in real effects
+  ---
+  duration_ms: 1.6905
+  ...
+# Subtest: Quicksand Stone obeys range, role and current tier in real effects
+ok 19 - Quicksand Stone obeys range, role and current tier in real effects
+  ---
+  duration_ms: 1.2426
+  ...
+# Subtest: Lethargy Stone obeys range, role and current tier in real effects
+ok 20 - Lethargy Stone obeys range, role and current tier in real effects
+  ---
+  duration_ms: 1.6379
+  ...
+# Subtest: Clockwork Relay Stone obeys range, role and current tier in real effects
+ok 21 - Clockwork Relay Stone obeys range, role and current tier in real effects
+  ---
+  duration_ms: 0.5448
+  ...
+# Subtest: Drought Stone obeys range, role and current tier in real effects
+ok 22 - Drought Stone obeys range, role and current tier in real effects
+  ---
+  duration_ms: 1.1742
+  ...
+# Subtest: Blight Stone obeys range, role and current tier in real effects
+ok 23 - Blight Stone obeys range, role and current tier in real effects
+  ---
+  duration_ms: 1.4964
+  ...
+# Subtest: Exhaustion Stone obeys range, role and current tier in real effects
+ok 24 - Exhaustion Stone obeys range, role and current tier in real effects
+  ---
+  duration_ms: 1.27
+  ...
+# Subtest: Battle Battery Stone obeys range, role and current tier in real effects
+ok 25 - Battle Battery Stone obeys range, role and current tier in real effects
+  ---
+  duration_ms: 0.4623
+  ...
+# Subtest: Revelation Stone obeys range, role and current tier in real effects
+ok 26 - Revelation Stone obeys range, role and current tier in real effects
+  ---
+  duration_ms: 1.1075
+  ...
+# Subtest: Heart Pulse Stone obeys range, role and current tier in real effects
+ok 27 - Heart Pulse Stone obeys range, role and current tier in real effects
+  ---
+  duration_ms: 0.3358
+  ...
+# Subtest: Bulwark Pulse Stone obeys range, role and current tier in real effects
+ok 28 - Bulwark Pulse Stone obeys range, role and current tier in real effects
+  ---
+  duration_ms: 0.3614
+  ...
+# Subtest: Tempo Lantern Stone obeys range, role and current tier in real effects
+ok 29 - Tempo Lantern Stone obeys range, role and current tier in real effects
+  ---
+  duration_ms: 0.2432
+  ...
+# Subtest: Vulnerability Stone obeys range, role and current tier in real effects
+ok 30 - Vulnerability Stone obeys range, role and current tier in real effects
+  ---
+  duration_ms: 1.1965
+  ...
+# Subtest: Purity Bell Stone obeys range, role and current tier in real effects
+ok 31 - Purity Bell Stone obeys range, role and current tier in real effects
+  ---
+  duration_ms: 1.335
+  ...
+# Subtest: duplicate aura uses strongest tier and leaves precisely when target exits or allegiance changes
+ok 32 - duplicate aura uses strongest tier and leaves precisely when target exits or allegiance changes
+  ---
+  duration_ms: 0.6473
+  ...
+# Subtest: cross-role and common equip rejected atomically; tier survives transfers and migration
+ok 33 - cross-role and common equip rejected atomically; tier survives transfers and migration
+  ---
+  duration_ms: 1.84
+  ...
+# Subtest: carrier rates, early caps, enemy-derived tiers, boss three, and exact tier loot claims
+ok 34 - carrier rates, early caps, enemy-derived tiers, boss three, and exact tier loot claims
+  ---
+  duration_ms: 436.2411
+  ...
+# Subtest: common mobs can drop unequippable loot; opening elites avoid rarity spikes; shops use regular prices
+ok 35 - common mobs can drop unequippable loot; opening elites avoid rarity spikes; shops use regular prices
+  ---
+  duration_ms: 46.5862
+  ...
+# Subtest: battle applies area factors to actual healing, damage, and cooldown progression
+ok 36 - battle applies area factors to actual healing, damage, and cooldown progression
+  ---
+  duration_ms: 6.1008
+  ...
+# Subtest: both shop recruitment paths give every Legendary the five modern categories immediately
+ok 2 - both shop recruitment paths give every Legendary the five modern categories immediately
+  ---
+  duration_ms: 6.3782
+  ...
+# Subtest: modern companion initialization repairs old shop recruits once and preserves ownership and rolls
+ok 3 - modern companion initialization repairs old shop recruits once and preserves ownership and rolls
+  ---
+  duration_ms: 0.4301
+  ...
+# Subtest: negative armor has smooth bounded amplification; positive Guardian protection stays unchanged
+ok 4 - negative armor has smooth bounded amplification; positive Guardian protection stays unchanged
+  ---
+  duration_ms: 0.1313
+  ...
+# Subtest: Corrosion can cross zero and restores armor exactly when the aura leaves
+ok 5 - Corrosion can cross zero and restores armor exactly when the aura leaves
+  ---
+  duration_ms: 1.0054
+  ...
+# Subtest: negative armor increases connected damage without recording negative mitigation or changing status damage
+ok 6 - negative armor increases connected damage without recording negative mitigation or changing status damage
+  ---
+  duration_ms: 5.6709
+  ...
+# Subtest: capture warning includes negative armor amplification and temporary armor buffs
+ok 7 - capture warning includes negative armor amplification and temporary armor buffs
+  ---
+  duration_ms: 0.1685
+  ...
+# Subtest: skill beams retain the directional authored muzzle in every family, facing and evolution form
+ok 8 - skill beams retain the directional authored muzzle in every family, facing and evolution form
+  ---
+  duration_ms: 3796.1604
+  ...
+# Subtest: five categories replace atomically, retain rolls, and double modern equipment effects
+ok 3 - five categories replace atomically, retain rolls, and double modern equipment effects
+  ---
+  duration_ms: 2.6925
+  ...
+# Subtest: migration preserves duplicate and incompatible items once with rolled data
+ok 4 - migration preserves duplicate and incompatible items once with rolled data
+  ---
+  duration_ms: 0.2815
+  ...
+# Subtest: enemies carry one item, elites/bosses two distinct usable categories in every family
+ok 5 - enemies carry one item, elites/bosses two distinct usable categories in every family
+  ---
+  duration_ms: 34.3595
+  ...
+# Subtest: capture gear is postgame loot once, including retreat; reload cannot duplicate grants
+ok 6 - capture gear is postgame loot once, including retreat; reload cannot duplicate grants
+  ---
+  duration_ms: 1.6221
+  ...
+# Subtest: tracker reports exact current engine odds, threshold progress, and terminal outcomes by UID
+ok 7 - tracker reports exact current engine odds, threshold progress, and terminal outcomes by UID
+  ---
+  duration_ms: 2.4855
+  ...
+# Subtest: all enemy damage including crits and status is crimson; friendly damage is gold and smaller
+ok 8 - all enemy damage including crits and status is crimson; friendly damage is gold and smaller
+  ---
+  duration_ms: 0.3495
+  ...
+# Subtest: every evolvable native family receives one separate bonus per stage on both paths
+ok 4 - every evolvable native family receives one separate bonus per stage on both paths
+  ---
+  duration_ms: 14.0824
+  ...
+# Subtest: an accomplishment evolution at level three leaves its earned spell offer untouched
+ok 5 - an accomplishment evolution at level three leaves its earned spell offer untouched
+  ---
+  duration_ms: 0.2369
+  ...
+# Subtest: old shared-cap saves recover displaced spells, selected/archived bonuses and missing level offers idempotently
+ok 6 - old shared-cap saves recover displaced spells, selected/archived bonuses and missing level offers idempotently
+  ---
+  duration_ms: 0.3543
+  ...
+# Subtest: regular over-cap or replacement requests remain atomic despite free evolution bonuses
+ok 7 - regular over-cap or replacement requests remain atomic despite free evolution bonuses
+  ---
+  duration_ms: 0.211
+  ...
+# Subtest: migration keeps an upgraded active spell and refreshes conflicting offers without duplicating its archived base
+ok 8 - migration keeps an upgraded active spell and refreshes conflicting offers without duplicating its archived base
+  ---
+  duration_ms: 0.1583
+  ...
+# Subtest: evolved enemies and captures retain all six real cooldowns and both bonuses
+ok 9 - evolved enemies and captures retain all six real cooldowns and both bonuses
+  ---
+  duration_ms: 75.2656
+  ...
+# Subtest: every native companion starts with its own cooldown and mechanically distinct family passive
+ok 5 - every native companion starts with its own cooldown and mechanically distinct family passive
+  ---
+  duration_ms: 4.4028
+  ...
+# Subtest: only levels 3,5,7 offer three choices; four regular cooldowns plus basic attack is a hard cap
+ok 6 - only levels 3,5,7 offer three choices; four regular cooldowns plus basic attack is a hard cap
+  ---
+  duration_ms: 2.7951
+  ...
+# Subtest: a new slot is earned at the exact specified level and preview explains its manual choice
+ok 7 - a new slot is earned at the exact specified level and preview explains its manual choice
+  ---
+  duration_ms: 2.9293
+  ...
+# Subtest: evolution grants its own bonus slot and preserves every regular spell and later level choice
+ok 8 - evolution grants its own bonus slot and preserves every regular spell and later level choice
+  ---
+  duration_ms: 1.0386
+  ...
+# Subtest: rarity improves quality and family type and role are strongly weighted
+ok 9 - rarity improves quality and family type and role are strongly weighted
+  ---
+  duration_ms: 86.6366
+  ...
+# Subtest: enemy skills are deterministic, respect the same level cap, and never prompt the player
+ok 10 - enemy skills are deterministic, respect the same level cap, and never prompt the player
+  ---
+  duration_ms: 0.7519
+  ...
+# Subtest: legacy migration keeps all evolution bonuses outside the cap and offers the remaining regular slot once
+ok 11 - legacy migration keeps all evolution bonuses outside the cap and offers the remaining regular slot once
+  ---
+  duration_ms: 0.4624
+  ...
+# Subtest: learned skills become real battle cooldowns and captured companions keep their choices
+ok 12 - learned skills become real battle cooldowns and captured companions keep their choices
+  ---
+  duration_ms: 120.9866
+  ...
+# Subtest: every released skill has finite, deterministic v2 art and a matching combat palette
+ok 6 - every released skill has finite, deterministic v2 art and a matching combat palette
+  ---
+  duration_ms: 30.2486
+  ...
+# Subtest: emblems describe the action and authored weapon instead of the missing type field
+ok 7 - emblems describe the action and authored weapon instead of the missing type field
+  ---
+  duration_ms: 0.8107
+  ...
+# Subtest: learned qualities retain spell identity and evolution bonuses have their own path/stage crest
+ok 8 - learned qualities retain spell identity and evolution bonuses have their own path/stage crest
+  ---
+  duration_ms: 0.3058
+  ...
+1..66
+# tests 66
+# pass 66
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 5601.508

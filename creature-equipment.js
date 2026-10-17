@@ -28,7 +28,12 @@ export function gearQuality(c,id){return Math.max(.25,Math.min(1.3,c.equipmentRo
 export function equipmentEffects(c){const out={attack:1,health:1,cooldown:1,speed:1,healing:1,poise:0,shield:0,armor:0,regenStamina:1,attackSpeed:1,actionSpeed:1,dashCooldown:1,atkFlat:0,hpFlat:0,speedFlat:0,actionSpeedFlat:0,hpRegen:0};for(const id of c.equipment||[]){const strength=equipmentStrength(c)*gearQuality(c,id),g=GEAR_BY_ID[id];if(!g)continue;for(const key of ['attack','health','cooldown','speed','healing'])out[key]*=1+((g[key]||1)-1)*strength;out.poise+=(g.poise||0)*strength;out.shield+=(g.shield||0)*strength;out.armor+=(g.armor||0)*strength;if(g.hook==='flat'){const e=scaledEffect(g.effect,strength);out.attack*=e.atk||1;out.health*=e.hp||1;out.cooldown*=e.cd||1;out.speed*=e.speed||1;out.healing*=e.healing||1;out.armor+=e.armor||0;out.regenStamina*=e.regenStamina||1;out.attackSpeed*=e.attackSpeed||1;out.actionSpeed*=e.actionSpeed||1;out.dashCooldown*=e.dashCooldown||1;for(const key of ['atkFlat','hpFlat','speedFlat','actionSpeedFlat','hpRegen'])out[key]+=e[key]||0;}}return out;}
 export function equipmentTraits(c){return (c.equipment||[]).map(id=>GEAR_BY_ID[id]).filter(g=>g?.hook&&g.hook!=='flat').map(g=>({...g,id:'gear:'+g.id,wearerOnly:true,effect:scaledEffect(g.effect,equipmentStrength(c)*gearQuality(c,g.id))}));}
 export function equipmentDescription(g,c={balanceVersion:17,equipmentVersion:2}){if(g.hook)return combatEffectDescription({...g,effect:scaledEffect(g.effect,equipmentStrength(c)*gearQuality(c,g.id))},{balanceVersion:12}).replace(/all allies|nearby allies|the weakest ally|lowest-health ally|all friendly creatures/gi,'the wearer').replace(/team armor/g,'wearer armor').replace(/team shield/g,'wearer shield').replace(/team stamina/g,'wearer stamina').replace(/team haste/g,'wearer haste').replace(/cleanse the team/g,'cleanse the wearer').replace(/weakest ally/g,'wearer')+(g.armor?` Base armor: ${+(g.armor*equipmentStrength(c)*gearQuality(c,g.id)).toFixed(1)}.`:'');const e=equipmentEffects({...c,equipment:[g.id],equipmentRolls:[c.equipmentRolls?.[(c.equipment||[]).indexOf(g.id)]||null]});return Object.entries({attack:e.attack,health:e.health,cooldown:e.cooldown,speed:e.speed,healing:e.healing}).filter(([,v])=>v!==1).map(([key,v])=>`${v>1?'+':''}${+((v-1)*100).toFixed(1)}% ${key}`).concat(e.poise?`${e.poise} poise`:[],e.shield?`${e.shield} opening shield`:[]).join(' · ');}
-export function armorReduction(armor,role='Striker'){const effective=Math.max(0,Number(armor)||0)*(role==='Guardian'?1.4:1);return effective/(100+effective);}
+export function armorReduction(armor,role='Striker'){
+ const parsed=Number(armor),value=Number.isFinite(parsed)?parsed:0,effective=value>0&&role==='Guardian'?value*1.4:value;
+ // Signed diminishing returns: negative armor increases damage smoothly,
+ // without a singularity at -100 or recording negative mitigation.
+ return effective/(100+Math.abs(effective));
+}
 export function enemyEquipment(c,seed,progress=0,chaos=0){
  c.balanceVersion=Math.max(17,c.balanceVersion||0);c.equipmentVersion=2;c.equipmentQuality=Math.min(1.25,.38+progress*.045+chaos*.018+(c.elite?.12:0)+(c.boss?.18:0));
  const compatible=CREATURE_GEAR.filter(g=>gearCompatibility(c,g).allowed),limit=c.elite||c.boss?2:1;
@@ -56,9 +61,11 @@ export function buyGear(run,id,seed=0,price=GEAR_BY_ID[id]?.cost){const g=GEAR_B
 
 // Preserve rolled quality/provenance while migrating to one item per category.
 export function reconcileEquipment(run){
- let moved=0;run.gearInventory??=[];
- for(const c of [...run.team,...run.bench||[]]){
-  c.equipmentVersion=2;const occupied=new Set();
+ return [...run.team,...run.bench||[]].reduce((moved,c)=>moved+reconcileCompanionEquipment(run,c),0);
+}
+export function reconcileCompanionEquipment(run,c){
+ let moved=0;run.gearInventory??=[];c.equipment??=[];c.equipmentRolls??=c.equipment.map(()=>null);
+ c.equipmentVersion=2;const occupied=new Set();
   for(let slot=0;slot<(c.equipment?.length||0);slot++){
    const id=c.equipment[slot],g=GEAR_BY_ID[id],type=equipmentSlotType(g);
    if(g&&gearCompatibility(c,g).allowed&&!occupied.has(type)){occupied.add(type);continue;}
@@ -66,5 +73,5 @@ export function reconcileEquipment(run){
    run.gearInventory.push({...roll,id,uid:`${c.uid}:slots:${run.gearSerial=(run.gearSerial||0)+1}`});
    c.equipment.splice(slot,1);c.equipmentRolls?.splice(slot,1);slot--;moved++;
   }
- }return moved;
+ return moved;
 }

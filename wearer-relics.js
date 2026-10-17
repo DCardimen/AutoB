@@ -1,4 +1,5 @@
 import {initializeSkills} from './skills.js';
+import {reconcileCompanionEquipment} from './creature-equipment.js';
 import {AURA_BY_ID} from './aura-stones.js';
 import {scaledEffect,itemStrength} from './item-effects.js';
 // Personal relics attach to a creature, never to an individual skill. Stable
@@ -40,4 +41,4 @@ export const WEARER_RELICS=rows.map(([id,name,hook,effect,desc],i)=>({id,name,ho
 export const WEARER_BY_ID={...Object.fromEntries(WEARER_RELICS.map(r=>[r.id,r])),...AURA_BY_ID};
 export function wearerTraits(c){if((c.balanceVersion||0)<17)return [];return (c.relics||[]).map(g=>WEARER_BY_ID[g.id]).filter(r=>r&&!r.aura&&r.hook!=='flat').map(r=>({...r,id:'personal:'+r.id,effect:scaledEffect(r.effect,itemStrength(c))}));}
 export function wearerStats(c){const out={atk:1,hp:1,cd:1,speed:1,healing:1};if((c.balanceVersion||0)<17)return out;for(const item of c.relics||[]){const r=WEARER_BY_ID[item.id];if(r?.hook==='flat'&&!r.aura){const e=scaledEffect(r.effect,itemStrength(c));for(const key of Object.keys(out))out[key]*=e[key]||1;}}return out;}
-export function initializeCompanion(run,c){if(!c)return c;if(run.skillRulesVersion===2)initializeSkills(c);c.balanceVersion=Math.max(c.balanceVersion||0,run.rulesVersion||17);c.equipment??=[];c.equipmentRolls??=c.equipment.map(()=>null);c.relics??=[];if(c.balanceVersion>=17)c.relics.forEach(r=>delete r.link);return c;}
+export function initializeCompanion(run,c){if(!c)return c;if(run.skillRulesVersion===2)initializeSkills(c);c.balanceVersion=Math.max(c.balanceVersion||0,run.rulesVersion||17);c.equipment??=[];c.equipmentRolls??=c.equipment.map(()=>null);c.relics??=[];if(c.balanceVersion>=17){reconcileCompanionEquipment(run,c);c.relics.forEach(r=>delete r.link);}return c;}
