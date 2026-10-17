@@ -13,7 +13,7 @@ import {AUTHORED_LEGACY_STAGE2} from './authored-legacy-stage2-data.js';
 import {meleeWeaponBounds} from './melee-weapon-art.js';
 import {authoredArmArt} from './authored-arm-skin.js';
 import {authoredParts,connectAuthoredArm} from './authored-parts.js';
-import {NATURAL_ANATOMY,naturalHeadWeight} from './companion-anatomy.js';
+import {NATURAL_ANATOMY,naturalHeadWeight,naturalHeadDelta,companionFallAngle} from './companion-anatomy.js';
 import {portraitExpressionAt,portraitExpressionLayer,portraitSourceOffset} from './portrait-expressions.js';
 import {characterRig,projectRig} from './prototype-rig.js';
 import {buildLegVolumes} from './leg-volume.js';
@@ -82,7 +82,6 @@ const eyeColor=(id,[r,g,b])=>id==='elf'?g>r*1.2&&g>b*1.1:id==='caster'?b>g*1.5&&
 function restFor(id){if(!rests.has(id))rests.set(id,characterRig(id,'idle',.25));return rests.get(id);}
 function difference(a,b){return {x:a.x-b.x,y:a.y-b.y};}
 const mix=(a,b,t)=>({x:a.x+(b.x-a.x)*t,y:a.y+(b.y-a.y)*t});
-function rotation(a,b,c,d){return Math.atan2(a.x-b.x,-(a.y-b.y))-Math.atan2(c.x-d.x,-(c.y-d.y));}
 function handLandmarks(asset,identity,stage){
  if(asset.hands)return asset.hands;
  const hands={},expectedY=stage?(['orc','minotaur','troll','knight','goblin','dwarf','rogue'].includes(identity)?38:31):34;
@@ -216,7 +215,7 @@ export function paintAtlasCharacter(b,id,rig,at){
  const humanoid=rig.arms.length>0||identity==='fairy'||identity==='harpy'||identity==='skeleton'||identity==='rogue'||identity==='frostelf',parts=rig.arms.length?authoredParts(asset,identity,artStage,rig.dir):null,scale=rig.artScale||{width:1,height:1},headCut=parts?.registration.neck??(identity==='orc'?27:29),headCenter={x:32,y:headCut-9},bodyCenter={x:32,y:33};
  const sourceHands=parts?.hands||(rig.arms.length?handLandmarks(asset,identity,artStage):{}),artColors=authoredMaterialColors(identity,asset.colors,rig);
  rig.artArmPalette=materialRamp(identity,asset.colors,artColors);
- const headRoll=rig.ragdoll?rotation(poseHead,poseBody,head0,body0):clamp((rig.lean||0)*Math.cos(angle)+(rig.sideLean||0)*Math.sin(angle),-.25,.25),cos=Math.cos(headRoll),sin=Math.sin(headRoll);
+ const headRoll=rig.ragdoll?0:clamp((rig.lean||0)*Math.cos(angle)+(rig.sideLean||0)*Math.sin(angle),-.08,.08),cos=Math.cos(headRoll),sin=Math.sin(headRoll);
  const footDeltas=rig.legs.map((l,i)=>{const original=rest.legs[i]||rest.legs[0],end0=base(original.end);return {delta:difference(at(l.end),end0),knee:difference(at(l.joint),base(original.joint)),root:difference(at(l.root),base(original.root)),pitch:l.foot?.pitch||0,anchor:{x:32+(end0.x-32)*(humanoid?2.4:1.45),y:45+(end0.y-43)*.6}};});
  // Source-foot ownership is constant for a bind pose. Cache it once instead
  // of doing a nearest-leg search three times for every painted pixel/frame.
@@ -228,26 +227,34 @@ export function paintAtlasCharacter(b,id,rig,at){
  const solidLegs=Boolean(rig.debugLegVolumes)&&!naturalLegs&&humanoid&&rig.legs.length===2&&['knight','orc','elf','caster','fox'].includes(id),authoredLegs=rig.legs.length>0&&!solidLegs;
  if(QUADRUPEDS.has(rig.design||id)&&['walk','run','sprint','turn','stop'].includes(rig.state)){const oldY=dc.y;dc.y=clamp(dc.y,-.7,.7);dh.y=dc.y+clamp(dh.y-oldY,-1,1);dc.x=clamp(dc.x,-1.2,1.2);}
  const legArt=authoredLegs?creatureLegArt(asset,rig,artColors):solidLegs?legProfiles(asset,footIndices,footDeltas,identity,artStage):null;
- const legSkin=authoredLegs?skinCreatureLegs(rig,rest,angle,legArt,humanoid?dp:dc):null;
+ const trunkTop=headCut+3,trunkLength=Math.max(4,(legArt?.rootY??40)-trunkTop),trunkLimit=(v,extent)=>extent*Math.tanh(v/extent),paintedPelvis={x:dc.x+trunkLimit(dp.x-dc.x,trunkLength*.35*scale.width),y:dc.y+trunkLimit(dp.y-dc.y,trunkLength*.35*scale.height)};
+ const legSkin=authoredLegs?skinCreatureLegs(rig,rest,angle,legArt,humanoid&&!NATURAL_ANATOMY[identity]?paintedPelvis:dc):null;
  const legMesh=solidLegs?buildLegVolumes(rig,legArt.profiles,rest,angle,scale,artColors):null;
  const mouthSource=rig.creatureAttack&&creatureMouthSource(rig);
  const armDeltas=rig.arms.map((a,i)=>{const orig=rest.arms[i]||rest.arms[0],end0=base(orig.end);return {side:a.side,delta:difference(at(a.end),end0),end:at(a.end),anchor:{x:32+(end0.x-32)*1.7,y:32+(end0.y-30)*.5}};});
  const sourceGear=GEAR[identity]?.[rig.dir],grip=rig.weapon&&at(rig.weapon.grip),tip=rig.weapon&&at(rig.weapon.tip),sourceLen=sourceGear&&Math.hypot(sourceGear[2]-sourceGear[0],sourceGear[3]-sourceGear[1]),weaponLen=grip&&Math.hypot(tip.x-grip.x,tip.y-grip.y),weaponAngle=grip?Math.atan2(tip.y-grip.y,tip.x-grip.x):0,sourceAngle=sourceGear?Math.atan2(sourceGear[3]-sourceGear[1],sourceGear[2]-sourceGear[0]):0;
  const action=['attack','slash','charge','cast'].includes(rig.state),align=1;
+ const paintedHead=naturalHeadDelta(identity,dc,dh,scale,action);
+ const fallAngle=rig.ragdoll?companionFallAngle(identity,rig.dir,rig.death):0,fallCos=Math.cos(fallAngle),fallSin=Math.sin(fallAngle),fallOrigin={x:32+(bodyCenter.x-32)*scale.width+dc.x,y:44+(bodyCenter.y-45)*scale.height+dc.y};
+ const rotateFall=(p,inverse=false)=>{const dx=p.x-fallOrigin.x,dy=p.y-fallOrigin.y,s=inverse?-fallSin:fallSin;return {x:fallOrigin.x+dx*fallCos-dy*s,y:fallOrigin.y+dx*s+dy*fallCos};};
  const cape=rig.capeMesh,capeBind=rig.artCapeBind,capeOffsets=cape&&capeBind?cape.map((col,i)=>col.map((p,j)=>difference(at(p),at(capeBind[i][j])))):null;
  const expression=rig.portraitMenu?'open':rig.state==='death'?'dead':['hit','stagger','knockdown'].includes(rig.state)?'hurt':rig.state==='idle'&&rig.phase>=.9375?'blink':'open';
  const portraitMenu=rig.portraitMenu&&artStage===0&&rig.dir===2?portraitExpressionAt(identity,rig.portraitMenu.progress):null;
  const eyePixels=rig.dir<5?(asset.eyePixels??=asset.pixels.filter(p=>p.y>=14&&p.y<21&&p.x>=17&&p.x<47&&eyeColor(identity,p.rgb))):[];
- function warped(x,y,gearPixel=false,armPixel=false,clothPixel=false,hairPixel=false){
+ // A fall rotates the connected painted body. Neck travel alone cannot
+ // express a collapse without folding a short source neck inside out.
+ function warped(x,y,gearPixel=false,armPixel=false,clothPixel=false,hairPixel=false){const p=deformed(x,y,gearPixel,armPixel,clothPixel,hairPixel);return fallAngle?rotateFall(p):p;}
+ function deformed(x,y,gearPixel=false,armPixel=false,clothPixel=false,hairPixel=false){
   if(gearPixel&&sourceGear&&grip&&gearDistance(x,y,sourceGear)<(identity==='orc'?4:identity==='caster'?2.8:2.4)&&Math.abs(x-32)>6){
    const dx=x-sourceGear[0],dy=y-sourceGear[1],theta=(weaponAngle-sourceAngle)*align,cos=Math.cos(theta),sin=Math.sin(theta),ratio=1+(clamp(weaponLen/sourceLen,.1,3)-1)*align;
    const arm=armDeltas.find(a=>a.side===(rig.weapon.hand==='left'?-1:1)),drift=arm?.delta||dc,g={x:sourceGear[0]+drift.x,y:sourceGear[1]+drift.y},target=mix(g,grip,align);
    return {x:target.x+(dx*cos-dy*sin)*ratio,y:target.y+(dx*sin+dy*cos)*ratio};
   }
   let delta=dc;
-  if(humanoid){
+  if(humanoid&&!NATURAL_ANATOMY[identity]){
    const headWeight=ease((headCut+3-y)/5);
-   delta=y<37?mix(dc,dh,headWeight):dp;
+   const trunk=mix(dc,paintedPelvis,ease((y-trunkTop)/trunkLength));
+   delta=mix(trunk,paintedHead,headWeight);
    if(!legSkin&&!solidLegs&&footDeltas.length&&y>=37){
     const foot=footAt(x,y);
     // A fixed thigh/shin seam, rather than independently shearing every pixel.
@@ -260,7 +267,7 @@ export function paintAtlasCharacter(b,id,rig,at){
    if(headWeight&&headRoll){const dx=x-headCenter.x,dy=y-headCenter.y;delta={x:delta.x+(dx*cos-dy*sin-dx)*headWeight,y:delta.y+(dx*sin+dy*cos-dy)*headWeight};}
   }else{
    const anatomy=NATURAL_ANATOMY[identity],headWeight=anatomy?.lockedHead||anatomy?.lockedTravelHead&&!action?0:naturalHeadWeight(identity,artStage,rig.dir,x,y);
-   delta=mix(dc,dh,headWeight);
+   delta=mix(dc,paintedHead,headWeight);
    if(mouthSource?.visible&&action&&rig.creatureAttack.jaw>0){
     const dx=Math.abs(x-mouthSource.x),dy=y-mouthSource.y,r=mouthSource.jawRadius;
     // Move the painted lower jaw, with a soft hinge at its cheek. No new
@@ -268,21 +275,18 @@ export function paintAtlasCharacter(b,id,rig,at){
     const jawWeight=clamp(1-dx/(r+1),0,1)*clamp(dy+1,0,1)*clamp((r+2-dy)/2,0,1);
     delta={x:delta.x,y:delta.y+Math.min(1.5,rig.creatureAttack.jaw*.25)*jawWeight};
    }
-   if(!naturalLegs&&footDeltas.length&&y>33){const foot=footAt(x,y),leg=y<39?mix(foot.root,foot.knee,ease((y-33)/6)):mix(foot.knee,foot.delta,ease((y-39)/6));delta=mix(delta,leg,ease((y-31)/10));}
-   if(['jelly','squid','mushroom'].includes(identity)){const squash=rig.squash||1,pulse=Math.sin(rig.phase*Math.PI),action=['dodge','dash','stop'].includes(rig.state)?1+.18*pulse:1,t=ease((y-27)/17),spread=1+(artStage===2?.4:artStage===1?.25:0)*t,ripple=artStage?Math.sin(rig.phase*Math.PI*2+(x-32)*.2)*t:0,offset=portraitMenu?portraitSourceOffset(identity,x,y,portraitMenu):{x:0,y:0};return {x:32+(x-32)*scale.width*squash*action*spread+delta.x+ripple+offset.x*scale.width,y:44+(y-45)*scale.height/(squash*action)+delta.y+offset.y*scale.height};}
+   if(!legSkin&&!naturalLegs&&footDeltas.length&&y>33){const foot=footAt(x,y),leg=y<39?mix(foot.root,foot.knee,ease((y-33)/6)):mix(foot.knee,foot.delta,ease((y-39)/6));delta=mix(delta,leg,ease((y-31)/10));}
+   if(['jelly','squid','mushroom'].includes(identity)){const squash=bodyPlan==='rooted'?1:rig.squash||1,pulse=Math.sin(rig.phase*Math.PI),action=['dodge','dash','stop'].includes(rig.state)?1+.18*pulse:1,t=ease((y-27)/17),fan=identity==='jelly'?1+(artStage===2?.4:artStage===1?.25:0)*t:1,ripple=artStage?Math.sin(rig.phase*Math.PI*2+(x-32)*.2)*t:0,offset=portraitMenu?portraitSourceOffset(identity,x,y,portraitMenu):{x:0,y:0};return {x:32+(x-32)*scale.width*squash*action*fan+delta.x+ripple+offset.x*scale.width,y:44+(y-45)*scale.height/(squash*action)+delta.y+offset.y*scale.height};}
   }
-  // Maturation changes head-to-body proportions and develops shoulders/legs.
-  // Feet retain the same ground pivot; this is skinning, not a physics retarget.
-  if(!naturalLegs&&artStage&&['mech','serpent','crab','spider','beetle'].includes(identity)){
-   const upper=1-ease((y-27)/10),lower=1-upper,amount=identity==='crab'?(artStage===2?.55:.45):identity==='serpent'?(artStage===2?.55:.4):artStage===2?.32:.22;
-   const weight=['crab','spider','serpent'].includes(identity)?lower:upper;
-   delta={x:delta.x+(x-32)*amount*weight,y:delta.y};
-  }
-  if(!naturalLegs&&artStage&&identity==='lion')delta={x:delta.x+(x-32)*(artStage===2?.3:.2)*(1-ease((y-25)/10)),y:delta.y};
+  // Evolution already selects a separately painted form. Preserve its
+  // proportions instead of applying the old juvenile-to-adult widening too.
+  if(identity==='serpent'&&artStage)delta={x:delta.x+(x-32)*(artStage===2?.3:.2)*ease((y-27)/10),y:delta.y};
+  if(identity==='crab'&&artStage)delta={x:delta.x+(x-32)*(artStage===2?.55:.45)*ease((y-27)/10),y:delta.y};
+  if(identity==='bear'&&artStage)delta={x:delta.x+(x-32)*(artStage===2?.48:.35)*ease((y-16)/17),y:delta.y};
   // Fold/flap only the outer wing region; roots remain attached to the torso.
-  if(['fairy','moth','bat','harpy','drake','phoenix','owl','fish','mantis'].includes(identity)&&(!naturalLegs||y<legArt.rootY-2)&&Math.abs(x-32)>9&&y>17){const weight=ease((Math.abs(x-32)-9)/15)*(1-naturalHeadWeight(identity,artStage,rig.dir,x,y)),flap=Math.sin(rig.phase*Math.PI*2);delta={x:delta.x+Math.sign(x-32)*weight*(flap*2+(artStage===2?3:artStage?2:0)),y:delta.y+weight*flap*2};}
+  if(['fairy','moth','bat','harpy','drake','phoenix','owl','fish','mantis'].includes(identity)&&(!legSkin||y<legArt.rootY-2)&&Math.abs(x-32)>9&&y>17){const weight=ease((Math.abs(x-32)-9)/15)*ease((y-17)/4)*(legSkin?ease((legArt.rootY-2-y)/4):1)*(1-naturalHeadWeight(identity,artStage,rig.dir,x,y)),flap=Math.sin(rig.phase*Math.PI*2);delta={x:delta.x+Math.sign(x-32)*weight*(flap*2+(artStage===2?3:artStage?2:0))*scale.width,y:delta.y+weight*flap*2*scale.height};}
   if(identity==='fox'&&y>32&&Math.abs(x-32)>12){const weight=ease((Math.abs(x-32)-12)/12);delta={x:delta.x,y:delta.y+Math.sin(rig.phase*Math.PI*2)*weight*2};}
-  if(['feralfox','cat','rodent','rabbit'].includes(identity)&&y>26&&Math.abs(x-32)>14){const weight=ease((Math.abs(x-32)-14)/10)*(1-naturalHeadWeight(identity,artStage,rig.dir,x,y));delta={x:delta.x,y:delta.y+Math.sin(rig.phase*Math.PI*2)*weight*2};}
+  if(['feralfox','cat','rodent','rabbit'].includes(identity)&&y>26&&Math.abs(x-32)>14){const weight=ease((Math.abs(x-32)-14)/10)*ease((y-26)/4)*(1-naturalHeadWeight(identity,artStage,rig.dir,x,y));delta={x:delta.x,y:delta.y+Math.sin(rig.phase*Math.PI*2)*weight*2};}
   if(identity==='clam')delta={x:delta.x,y:delta.y-(rig.creatureAttack?.active?(rig.creatureAttack.jaw||0)*ease((34-y)/7):Math.sin(rig.phase*Math.PI*2)*ease((35-y)/18)*1.5)};
   if(hairPixel&&y>headCut+4&&Math.abs(x-32)>8){const lag=ease((y-19)/20),moving=['walk','run','sprint','turn','stop','dodge','dash'].includes(rig.state),drive=moving?(rig.state==='sprint'?1.3:1):.55,wave=Math.sin(rig.phase*Math.PI*2-lag*2.1+(x<32?-.25:.25));delta={x:delta.x+wave*lag*drive*1.1-(rig.lean||0)*lag*4,y:delta.y+Math.cos(rig.phase*Math.PI*2-lag*2.1)*lag*drive*.35};}
   const ownedCape=parts?.capeMask.has(Math.round(y)*64+Math.round(x)),capeWeight=ownedCape?ease((y-parts.registration.neck-2)/Math.max(4,parts.registration.pelvis-parts.registration.neck)):0;
@@ -290,11 +294,7 @@ export function paintAtlasCharacter(b,id,rig,at){
   if(cape&&capeBind&&ownedCape){
    const u=clamp((x-18)/28,0,1)*(cape.length-1),v=clamp((y-26)/19,0,1)*(cape[0].length-1),i=Math.floor(u),j=Math.floor(v),ii=Math.min(i+1,cape.length-1),jj=Math.min(j+1,cape[0].length-1),lag=mix(mix(capeOffsets[i][j],capeOffsets[ii][j],u-i),mix(capeOffsets[i][jj],capeOffsets[ii][jj],u-i),v-j);delta={x:delta.x+clamp(lag.x-dc.x,-3,3)*capeWeight,y:delta.y+clamp(lag.y-dc.y,-3,3)*capeWeight};
   }
-  if(legSkin&&y>=legArt.rootY)delta=legSkin.offset(x,y);
-  // Preserve the species' established mature pincer/carapace proportions,
-  // now deforming the complete painted limbs and sockets as one connected skin.
-  if(naturalLegs&&identity==='crab'&&artStage)delta={x:delta.x+(x-32)*(artStage===2?.55:.45)*ease((y-27)/10),y:delta.y};
-  if(naturalLegs&&identity==='bear'&&artStage)delta={x:delta.x+(x-32)*(artStage===2?.48:.35)*ease((y-16)/17),y:delta.y};
+  if(legSkin&&y>=legArt.rootY){const leg=legSkin.offset(x,y);delta=humanoid&&!NATURAL_ANATOMY[identity]?leg:{x:delta.x+leg.x-dc.x,y:delta.y+leg.y-dc.y};}
   if(portraitMenu&&identity!=='owl'){
    const offset=portraitSourceOffset(identity,x,y,portraitMenu);delta={x:delta.x+offset.x*scale.width,y:delta.y+offset.y*scale.height};
   }
@@ -362,8 +362,9 @@ export function paintAtlasCharacter(b,id,rig,at){
   const l=Math.max(0,Math.floor(32+(minX-32+ox)*fit)-1),r=Math.min(63,Math.ceil(32+(maxX-32+ox)*fit)+1),t=Math.max(0,Math.floor(44+(minY-44+oy)*fit)-1),z=Math.min(63,Math.ceil(44+(maxY-44+oy)*fit)+1);
   for(let y=t;y<=z;y++)for(let x=l;x<=r;x++){
    const tx=32+(x-32)/fit-ox,ty=44+(y-44)/fit-oy;
-   let sx=32+(tx-32)/scale.width,sy=45+(ty-44)/scale.height;
-   for(let i=0;i<4;i++){const q=warped(sx,sy);sx+=(tx-q.x)/scale.width;sy+=(ty-q.y)/scale.height;}
+   const target=fallAngle?rotateFall({x:tx,y:ty},true):{x:tx,y:ty};
+   let sx=32+(target.x-32)/scale.width,sy=45+(target.y-44)/scale.height;
+   for(let i=0;i<4;i++){const q=deformed(sx,sy);sx+=(target.x-q.x)/scale.width;sy+=(target.y-q.y)/scale.height;}
    const xx=Math.round(sx),yy=Math.round(sy);if(xx<0||xx>63)continue;
    const source=mapped.get(yy*64+xx);if(source)b.dot(x,y,source.shade);
   }
@@ -387,7 +388,7 @@ export function paintAtlasCharacter(b,id,rig,at){
  rig.artLegRegistration=authoredLegs?{cutY:anchor(warped(32,legArt.rootY)).y,soleY:anchor(warped(32,legArt.bottom)).y}:null;
  rig.artNaturalPalette=authoredLegs?legArt.materialIndices.map(i=>artColors[i]):legArt?.material||rig.palette?.skin;
  rig.artCreatureFit=fit;
- rig.artSourceTransform={scale,fit,ox,oy};
+ rig.artSourceTransform={scale,fit,ox,oy,fallAngle};
  rig.artCreatureProject=q=>anchor({x:32+(at(q).x-poseBody.x)*1.5+dc.x,y:34+(at(q).y-poseBody.y)*1.1+dc.y});
  rig.artCreatureMouth=mouthSource&&anchor(warped(mouthSource.x,mouthSource.y));
  rig.artMouthRegistration=mouthSource;

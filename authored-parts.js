@@ -7,7 +7,10 @@ function segment(p,a,z){const dx=z.x-a.x,dy=z.y-a.y,t=clamp(((p.x-a.x)*dx+(p.y-a
 function armMaterial(identity,p){
  const [r,g,b]=p.rgb,range=Math.max(r,g,b)-Math.min(r,g,b);
  if(identity==='knight')return !(r>g*1.65&&g<b*2);
- if(['orc','goblin','minotaur'].includes(identity))return !(r>g*1.5&&r>b*1.4);
+ if(['orc','goblin'].includes(identity))return !(r>g*1.5&&r>b*1.4);
+ // Minotaur fur is warm brown, not a red cloak. Its gold/ochre midtones
+ // have distinct green over blue; retain those painted upper-arm pixels.
+ if(identity==='minotaur')return !(r>g*1.5&&g<b*1.25);
  if(['elf','fox'].includes(identity))return !(r>g*1.25&&g>b*1.4&&p.y<32);
  if(['caster','frostelf'].includes(identity))return !(range<60&&Math.min(r,g,b)>110);
  if(identity==='skeleton')return !(b>r*1.05&&b>g*1.1);

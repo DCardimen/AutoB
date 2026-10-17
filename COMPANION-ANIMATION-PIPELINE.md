@@ -12,6 +12,8 @@ The source art defines anatomy. A physics proxy supplies motion and combat inten
 
 The seven implemented steps and reproducible commands are recorded below. Generated evidence records the source revision, anatomy registration, forms, directions, motion settings, check results and unresolved limitations. Re-running the pipeline must recreate the same parts from the same source and registration rather than infer new anatomy from an animated pose.
 
+The [separate quality review](docs/ANIMATION-PIPELINE-QUALITY-REVIEW.md) records the findings for each stage and links its visual evidence.
+
 ## Implementation
 
 | Step | Production implementation | Verification |
@@ -36,7 +38,17 @@ Install the repository dependencies and Playwright Chromium. Put FFmpeg on `PATH
 npm run animation:pipeline
 ```
 
-The command exports the parts twice and compares their manifests, runs anatomy/contact/cell checks, rebuilds both offline files, starts a local server when needed, verifies source and dependency-free offline combat, generates comparison sheets and an all-family movie, and decodes that movie at normal speed into native and 3× evidence. A failed check stops the pipeline and records the failure. `BASE_URL` selects an existing game server. `--out=...` changes the evidence directory.
+The command records a separate result for each of the seven stages. It exports the parts twice, compares their manifests, decodes all 984 PNG strips, checks exact layer reassembly and original palette colors, runs anatomy/contact/cell checks, rebuilds both offline files, verifies source and dependency-free offline combat, and produces comparison sheets plus a normal-speed movie. The decoder samples all 72 state/facing segments at native and 3× size, including idle, turns, stops and rear views. A failed check stops the pipeline and records the failure. `BASE_URL` selects an existing game server; the pipeline rejects a server whose anatomy source differs from this checkout. `--out=...` changes the evidence directory.
+
+Run any stage separately while tuning its implementation:
+
+```sh
+npm run animation:pipeline -- --stage=1
+# 1 inventory; 2 part exports; 3 sockets; 4 locomotion;
+# 5 secondary motion; 6 actions; 7 delivered game and visual evidence.
+```
+
+An independent run writes `stage-N.json` and leaves other stages marked `not-run`. Only a complete successful run sets `completePipeline: true` in `pipeline.json`. Neither result automatically assigns an artistic quality score. The review must still judge shape, connection, pacing, readability and consistency separately for every stage.
 
 ```sh
 # Export parts without changing source artwork or rebuilding the game.
@@ -50,6 +62,10 @@ npm run animation:review
 npm run animation:verify-video
 ```
 
-The pipeline reruns every automated check. The movie cache is accepted only when every runtime input hash and the encoded video's hash match, and the review contains no clipped poses. Pass `--force` to `animation:review` to encode again. No generated parts are embedded a second time in the game: production skins the same indexed artwork, keeping the main offline build below 100 MiB.
+The pipeline reruns every automated check and verifies that its runtime, tool and test inputs stayed unchanged during the run. The movie cache requires matching source/encoder-helper hashes, matching movie bytes, complete contiguous coverage and an existing review player. Concurrent writers cannot share the same output directory. A failed encoder releases its lock and preserves the previous movie. Pass `--force` to `animation:review` to encode again. The independent animation CI job uploads evidence even on failure, so an unrelated general-suite failure cannot prevent animation checks from running. No generated parts are embedded a second time in the game: production skins the same indexed artwork, keeping the main offline build below 100 MiB.
+
+The part manifest records actual decoded-size coverage and an explicit reason for each empty directional layer. Twelve weapon-bearing families have independent indexed arms; natural appendages remain in their authored body or locomotor skin when the body plan has no independent hand rig. Empty strips are an explained anatomy choice, not evidence of an articulated arm. Repaired crystal crowns can use virtual source rows above the imported cell; the complete restored crown must fit inside the exported and rendered cell.
+
+Head motion is bounded by the painted neck blend, with wing motion expressed in the form's own source-pixel scale. Humanoids also use restrained head tilt and a continuous chest-to-pelvis blend. Leg skinning blends between neighboring source feet and limits relative compression by socket-to-sole length, preventing skin reversal during a fall; idle feet keep zero displacement. Every body uses a continuous fall arc for its body plan, rotating the connected skin together. Inverse raster sampling removes that rotation before sampling the source, preserving solid torso texture. Separate regressions check positive local head/collar area across all 29 natural and 12 articulated families, three evolution inputs, eight facings and nine states. Evolution uses its separately authored silhouette. Registered exceptions preserve the evolved jelly tentacle fan, serpent coil flare, crab pincers and bear shoulders; duplicate widening of other already evolved shells and carapaces is removed. Rooted mushroom caps retain their shape instead of inheriting jelly squash.
 
 Open `playtest-artifacts/animation-pipeline/video/review.html` after a full run. The upper player shows every family/form at native 64px; the selector shows the same decoded frames at 3×. Check an entire cycle, including rear views and action recovery. `pipeline.json` records automated results; visual approval still requires looking at the movie and sheets. New creatures need reviewed registrations rather than a guessed proxy body plan.

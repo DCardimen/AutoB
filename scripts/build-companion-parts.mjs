@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import {createHash} from 'node:crypto';
-import {deflateSync} from 'node:zlib';
+import {png} from './animation-artifacts.mjs';
 import {authoredIdentities,authoredSourceFrame} from '../authored-sprite-renderer.js';
 import {authoredParts} from '../authored-parts.js';
 import {NATURAL_ANATOMY,naturalHeadWeight} from '../companion-anatomy.js';
@@ -11,9 +11,6 @@ import {creatureLegArt} from '../creature-leg-volume.js';
 
 const out=path.resolve(process.argv.find(arg=>arg.startsWith('--out='))?.slice(6)||'playtest-artifacts/companion-parts');fs.mkdirSync(out,{recursive:true});
 const hash=value=>createHash('sha256').update(value).digest('hex');
-const crcTable=Array.from({length:256},(_,n)=>{for(let i=0;i<8;i++)n=n&1?0xedb88320^(n>>>1):n>>>1;return n>>>0;});
-function chunk(type,data){const name=Buffer.from(type),length=Buffer.alloc(4),sum=Buffer.alloc(4);length.writeUInt32BE(data.length);let crc=0xffffffff;for(const n of Buffer.concat([name,data]))crc=crcTable[(crc^n)&255]^(crc>>>8);sum.writeUInt32BE((crc^0xffffffff)>>>0);return Buffer.concat([length,name,data,sum]);}
-function png(width,height,rgba){const header=Buffer.alloc(13);header.writeUInt32BE(width);header.writeUInt32BE(height,4);header[8]=8;header[9]=6;const raw=Buffer.alloc(height*(width*4+1));for(let y=0;y<height;y++)Buffer.from(rgba.buffer,rgba.byteOffset+y*width*4,width*4).copy(raw,y*(width*4+1)+1);return Buffer.concat([Buffer.from([137,80,78,71,13,10,26,10]),chunk('IHDR',header),chunk('IDAT',deflateSync(raw,{level:9})),chunk('IEND',Buffer.alloc(0))]);}
 const families=[];
 for(const identity of authoredIdentities)for(const stage of [0,1,2]){
  const spec=PIXEL_SPECIES.find(s=>(s.nativeDesign===(identity==='fairy'?'faerie':identity)||s.nativeRig===identity)&&!s.pixelConverted)||PIXEL_SPECIES.find(s=>s.nativeDesign===(identity==='fairy'?'faerie':identity));
@@ -31,10 +28,12 @@ for(const identity of authoredIdentities)for(const stage of [0,1,2]){
    put(cape?'cape':head?'head':p.y>=legTop?'legs':'torso',p);put('assembled',p);
   }
   if(parts)for(const [side,arm]of parts.arms.profiles)for(const p of arm.pixels){put(side<0?'left-arm':'right-arm',p);put('assembled',p);}
-  frames.push({dir,sourceHash:hash(JSON.stringify(asset.pixels.map(p=>[p.x,p.y,p.index]))),paletteHash:hash(asset.colors.join(',')),registration:parts?.registration||NATURAL_ANATOMY[identity],resolvedHands:parts?.hands,exportTransform:{fit,ox,oy},partCounts:parts?{head:parts.head.length,torso:parts.torso.length,leftArm:parts.arms.profiles.get(-1)?.pixels.length||0,rightArm:parts.arms.profiles.get(1)?.pixels.length||0,repairs:parts.repairs.length}:null,legs:legArt?.limbs});
+  const partCounts=Object.fromEntries(Object.entries(layers).map(([name,rgba])=>{let count=0;for(let y=0;y<64;y++)for(let x=dir*64;x<(dir+1)*64;x++)if(rgba[(y*512+x)*4+3])count++;return [name,count];}));
+  const absenceReasons=Object.fromEntries(Object.entries(partCounts).filter(([,count])=>!count).map(([name])=>[name,name.includes('arm')?'No independent hand rig; painted appendages remain in the body/locomotor skin.':name==='cape'?'No separate painted cape in this facing.':name==='legs'?'This body plan has no separately painted walking feet in this facing.':'Source region is occluded in this facing.']));
+  frames.push({dir,sourceHash:hash(JSON.stringify(asset.pixels.map(p=>[p.x,p.y,p.index]))),paletteHash:hash(asset.colors.join(',')),registration:parts?.registration||NATURAL_ANATOMY[identity],resolvedHands:parts?.hands,exportTransform:{fit,ox,oy},partCounts,absenceReasons,repairs:parts?.repairs.length||0,legs:legArt?.limbs});
  }
  const files={};for(const [name,rgba]of Object.entries(layers)){const file=`${identity}-form-${stage}-${name}.png`,data=png(512,64,rgba);fs.writeFileSync(path.join(out,file),data);files[name]={file,sha256:hash(data)};}
  families.push({identity,stage,files,frames});
 }
-const manifest={schema:1,directions:['E','SE','S','SW','W','NW','N','NE'],cell:64,families:authoredIdentities.length,forms:3,sourceFrames:families.length*8,entries:families};fs.writeFileSync(path.join(out,'manifest.json'),JSON.stringify(manifest,null,2)+'\n');
+const manifest={schema:2,directions:['E','SE','S','SW','W','NW','N','NE'],cell:64,families:authoredIdentities.length,forms:3,sourceFrames:families.length*8,entries:families};fs.writeFileSync(path.join(out,'manifest.json'),JSON.stringify(manifest,null,2)+'\n');
 console.log(`Generated ${families.length} form sets, ${manifest.sourceFrames} directional frames and ${families.length*8} independent part strips in ${out}`);

@@ -102,6 +102,26 @@ export function naturalHeadWeight(identity,stage,dir,x,y){
  const horizontal=clamp((radius+3-Math.abs(x-centerX))/3,0,1),vertical=clamp((neck+3-y)/4,0,1);
  return horizontal*vertical;
 }
+// The source neck blends over 3 horizontal / 4 vertical pixels. Driving it
+// with the full proxy-rig excursion folds that skin inside out. Bound the
+// relative travel smoothly, in source-pixel units, while the body carries
+// the action's larger lunge. The rigid head interior retains its shape.
+export function naturalHeadDelta(identity,body,head,scale={width:1,height:1},action=false){
+ const anatomy=NATURAL_ANATOMY[identity];
+ if(anatomy?.lockedHead||anatomy?.lockedTravelHead&&!action)return {...body};
+ const travel=1;
+ const limit=(value,extent)=>extent*Math.tanh(value/extent);
+ return {x:body.x+limit(head.x-body.x,travel*scale.width),y:body.y+limit(head.y-body.y,travel*scale.height)};
+}
+// A proxy neck can spin around its body as ragdoll particles settle. Use a
+// coherent directional fall arc for the complete source skin instead. Shells
+// settle, quadrupeds roll modestly, and upright/flying bodies tip onto a side.
+export function companionFallAngle(identity,dir,progress){
+ const plan=NATURAL_ANATOMY[identity]?.plan;
+ const turns={quadruped:.18,crustacean:.12,insect:.12,arachnid:.12,segmented:.12,walker:.12,rooted:.08,shell:.08,floating:.2,tentacled:.2,serpentine:.38};
+ const t=clamp(progress||0,0,1),arc=(turns[plan]??.42)*Math.PI,towards=Math.sign(-Math.cos(dir*Math.PI/4)-.27*Math.sin(dir*Math.PI/4));
+ return towards*arc*t*t*(3-2*t);
+}
 function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
 
 // Source mouth landmarks, measured independently in every painted form.

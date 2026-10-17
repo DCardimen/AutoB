@@ -1,0 +1,187 @@
+{
+  "videoHash": "628d4bdbfac97dc30e098f4f2cd17ff2920368b178733d9e01c4f978b222b9b2",
+  "fps": 12,
+  "status": "passed",
+  "cycles": [
+    {
+      "identity": "feralfox",
+      "state": "walk",
+      "dir": 1,
+      "frames": 16,
+      "startFrame": 158,
+      "file": "feralfox-walk-1.png",
+      "sha256": "92788943e72503045aba5253951a75e8d07029ec64f4cb809fdd1d55ea4486ad"
+    },
+    {
+      "identity": "feralfox",
+      "state": "walk",
+      "dir": 6,
+      "frames": 16,
+      "startFrame": 828,
+      "file": "feralfox-walk-6.png",
+      "sha256": "e10341cfc986e322dec67b7b928f82048aa8ff02f3965b06d4883bf7e1b68b35"
+    },
+    {
+      "identity": "drake",
+      "state": "walk",
+      "dir": 1,
+      "frames": 16,
+      "startFrame": 158,
+      "file": "drake-walk-1.png",
+      "sha256": "042fced05476987e43e95405cd5053c3d6b648e8986886544f932aff97db6dd3"
+    },
+    {
+      "identity": "drake",
+      "state": "walk",
+      "dir": 6,
+      "frames": 16,
+      "startFrame": 828,
+      "file": "drake-walk-6.png",
+      "sha256": "3dfc84e934a41a81ac7bcbe2babe0f01c410c49ac24e91fc8b80e0f9ef9d3ad8"
+    },
+    {
+      "identity": "troll",
+      "state": "attack",
+      "dir": 1,
+      "frames": 16,
+      "startFrame": 220,
+      "file": "troll-attack-1.png",
+      "sha256": "63cb033265d1e1379193092e7edf242d11f4a70c7f98059ecf519b92be95b282"
+    },
+    {
+      "identity": "troll",
+      "state": "attack",
+      "dir": 6,
+      "frames": 16,
+      "startFrame": 890,
+      "file": "troll-attack-6.png",
+      "sha256": "b1087dd014fb3235cc2c8de95ba086f26f141cda57d7821c5792466ab699f5ec"
+    },
+    {
+      "identity": "dwarf",
+      "state": "attack",
+      "dir": 1,
+      "frames": 16,
+      "startFrame": 220,
+      "file": "dwarf-attack-1.png",
+      "sha256": "d1c7be380e5889a4b8da41d652aa0e7bf064d469ef4a256edbf89fec1c363718"
+    },
+    {
+      "identity": "dwarf",
+      "state": "attack",
+      "dir": 6,
+      "frames": 16,
+      "startFrame": 890,
+      "file": "dwarf-attack-6.png",
+      "sha256": "d358f02690c2a0265078ddb9fe877093b1d01067cbf9eb08ed0899abfdbf4398"
+    },
+    {
+      "identity": "minotaur",
+      "state": "attack",
+      "dir": 1,
+      "frames": 16,
+      "startFrame": 220,
+      "file": "minotaur-attack-1.png",
+      "sha256": "c565c40632dbc35ccefac011a6db9094a1cd8e642eac0db03bf655f5231488ff"
+    },
+    {
+      "identity": "minotaur",
+      "state": "attack",
+      "dir": 6,
+      "frames": 16,
+      "startFrame": 890,
+      "file": "minotaur-attack-6.png",
+      "sha256": "e2fa5182dbc9a8ca5718d85816b38725423442ec8613531fa36a838a03b08b70"
+    },
+    {
+      "identity": "minotaur",
+      "state": "death",
+      "dir": 1,
+      "frames": 16,
+      "startFrame": 252,
+      "file": "minotaur-death-1.png",
+      "sha256": "95075b8710e2f0e5a043573d1a8479e77c9833a88496bc2b3a60d83eef4b8021"
+    },
+    {
+      "identity": "minotaur",
+      "state": "death",
+      "dir": 6,
+      "frames": 16,
+      "startFrame": 922,
+      "file": "minotaur-death-6.png",
+      "sha256": "0cc1df81d6c6eab9b669c9527f3a20309af169994f657fc525a4983a7ef3284f"
+    },
+    {
+      "identity": "fairy",
+      "state": "death",
+      "dir": 1,
+      "frames": 16,
+      "startFrame": 252,
+      "file": "fairy-death-1.png",
+      "sha256": "34ec16c5074a140df88422362238562347b0823ff32039a9fa35efb985d8d3f1"
+    },
+    {
+      "identity": "fairy",
+      "state": "death",
+      "dir": 6,
+      "frames": 16,
+      "startFrame": 922,
+      "file": "fairy-death-6.png",
+      "sha256": "dbf03544d1d346c09bba086bba8368ab56005a29b5746317c8f47630db73ca65"
+    },
+    {
+      "identity": "serpent",
+      "state": "death",
+      "dir": 1,
+      "frames": 16,
+      "startFrame": 252,
+      "file": "serpent-death-1.png",
+      "sha256": "39dabde2ca6b4beb0e190c22f39e4839738bb1f073302ff572aabf6ceb29f377"
+    },
+    {
+      "identity": "serpent",
+      "state": "death",
+      "dir": 6,
+      "frames": 16,
+      "startFrame": 922,
+      "file": "serpent-death-6.png",
+      "sha256": "30c8f88fba416f6553656970b9d6cd625570e45674e9ef5e8e0812bb82b4e05e"
+    },
+    {
+      "identity": "mushroom",
+      "state": "idle",
+      "dir": 1,
+      "frames": 24,
+      "startFrame": 134,
+      "file": "mushroom-idle-1.png",
+      "sha256": "eb38b1547ee33968db4c243a3d617e5cb119653201b195184d184b693661ad02"
+    },
+    {
+      "identity": "mushroom",
+      "state": "idle",
+      "dir": 6,
+      "frames": 24,
+      "startFrame": 804,
+      "file": "mushroom-idle-6.png",
+      "sha256": "e7f9533a849d55202d38a77e680ac1fee4bba766e339b70f2c0a34acb278e975"
+    },
+    {
+      "identity": "knight",
+      "state": "cast",
+      "dir": 1,
+      "frames": 16,
+      "startFrame": 236,
+      "file": "knight-cast-1.png",
+      "sha256": "fd1a7f107dfcbd8579ed4195a87868a0ffd799c8bacad39b1271abf7cf56d39d"
+    },
+    {
+      "identity": "knight",
+      "state": "cast",
+      "dir": 6,
+      "frames": 16,
+      "startFrame": 906,
+      "file": "knight-cast-6.png",
+      "sha256": "1a3cec1f5106df5b0297393e4e0ad6e7968d69b6c1b5e0daabfd232f1f8d9720"
+    }
+  ]
+}

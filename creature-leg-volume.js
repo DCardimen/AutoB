@@ -74,16 +74,24 @@ export function skinCreatureLegs(rig,rest,angle,art,bodyDelta){
   const strideScale=Math.sqrt(clamp((rig.strideLength??100)/100,.5,1.5)),reach=art.height*(art.arthropod?.2:.28)*strideScale,lift=art.height*(art.arthropod?.17:.22);
   const dx=moving||fallen||rig.creatureAttack?.active?clamp((end.x-origin.x)*.65,-reach,reach):0;
   const dy=moving||fallen||rig.creatureAttack?.active?clamp((end.y-origin.y)*.65,-lift,lift):0;
-  return {...source,index,delta:{x:dx,y:dy},planted:rig.legs[index].foot?.planted!==false};
+  // Preserve the painted length through falls as well as travel. A proxy
+  // foot can pass above its source hip; feeding that absolute position into
+  // the skin reverses the calf. Carry the foot with its body, then bound the
+  // relative compression by the actual socket-to-sole distance.
+  const length=Math.max(2,source.sole-art.rootY),scale=rig.artScale||{width:1,height:1};
+  const bounded=(value,extent)=>extent*Math.tanh(value/extent);
+  const delta=moving||fallen||rig.creatureAttack?.active?{x:bodyDelta.x+bounded(dx-bodyDelta.x,length*.35*scale.width),y:bodyDelta.y+bounded(dy-bodyDelta.y,length*.35*scale.height)}:{x:0,y:0};
+  return {...source,index,delta,planted:rig.legs[index].foot?.planted!==false};
  });
  const offset=(x,y)=>{
   if(y<=art.rootY)return bodyDelta;
   // Continuous blend through the entire socket, knee and foot. Adjacent
   // pixels share the same field; there is no hard cut or floating calf.
-  let nearest=limbs[0],distance=Infinity;
-  for(const l of limbs){const d=Math.abs(x-l.x);if(d<distance){distance=d;nearest=l;}}
-  const t=ease((y-art.rootY)/Math.max(2,nearest.sole-art.rootY));
-  return {x:bodyDelta.x*(1-t)+nearest.delta.x*t,y:bodyDelta.y*(1-t)+nearest.delta.y*t};
+  const rightIndex=limbs.findIndex(l=>l.x>=x),right=limbs[rightIndex<0?limbs.length-1:rightIndex],left=limbs[Math.max(0,rightIndex<0?limbs.length-1:rightIndex-1)];
+  const between=ease((x-left.x)/Math.max(1,right.x-left.x));
+  const sample=limb=>{const t=ease((y-art.rootY)/Math.max(2,limb.sole-art.rootY));return {x:bodyDelta.x+(limb.delta.x-bodyDelta.x)*t,y:bodyDelta.y+(limb.delta.y-bodyDelta.y)*t};};
+  const a=sample(left),b=sample(right);
+  return {x:a.x+(b.x-a.x)*between,y:a.y+(b.y-a.y)*between};
  };
  return {limbs,offset,mode:'authored',sourcePixels:art.sourcePixels,rootY:art.rootY,bottom:art.bottom};
 }

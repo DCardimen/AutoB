@@ -2848,6 +2848,19 @@
     const horizontal = clamp2((radius + 3 - Math.abs(x - centerX)) / 3, 0, 1), vertical = clamp2((neck + 3 - y) / 4, 0, 1);
     return horizontal * vertical;
   }
+  function naturalHeadDelta(identity, body, head, scale = { width: 1, height: 1 }, action = false) {
+    const anatomy = NATURAL_ANATOMY[identity];
+    if (anatomy?.lockedHead || anatomy?.lockedTravelHead && !action) return { ...body };
+    const travel = 1;
+    const limit = (value, extent) => extent * Math.tanh(value / extent);
+    return { x: body.x + limit(head.x - body.x, travel * scale.width), y: body.y + limit(head.y - body.y, travel * scale.height) };
+  }
+  function companionFallAngle(identity, dir, progress) {
+    const plan = NATURAL_ANATOMY[identity]?.plan;
+    const turns = { quadruped: 0.18, crustacean: 0.12, insect: 0.12, arachnid: 0.12, segmented: 0.12, walker: 0.12, rooted: 0.08, shell: 0.08, floating: 0.2, tentacled: 0.2, serpentine: 0.38 };
+    const t = clamp2(progress || 0, 0, 1), arc = (turns[plan] ?? 0.42) * Math.PI, towards = Math.sign(-Math.cos(dir * Math.PI / 4) - 0.27 * Math.sin(dir * Math.PI / 4));
+    return towards * arc * t * t * (3 - 2 * t);
+  }
   function clamp2(v, a, b) {
     return Math.max(a, Math.min(b, v));
   }
@@ -2889,7 +2902,8 @@
   function armMaterial(identity, p) {
     const [r, g, b] = p.rgb, range = Math.max(r, g, b) - Math.min(r, g, b);
     if (identity === "knight") return !(r > g * 1.65 && g < b * 2);
-    if (["orc", "goblin", "minotaur"].includes(identity)) return !(r > g * 1.5 && r > b * 1.4);
+    if (["orc", "goblin"].includes(identity)) return !(r > g * 1.5 && r > b * 1.4);
+    if (identity === "minotaur") return !(r > g * 1.5 && g < b * 1.25);
     if (["elf", "fox"].includes(identity)) return !(r > g * 1.25 && g > b * 1.4 && p.y < 32);
     if (["caster", "frostelf"].includes(identity)) return !(range < 60 && Math.min(r, g, b) > 110);
     if (identity === "skeleton") return !(b > r * 1.05 && b > g * 1.1);
@@ -3310,20 +3324,21 @@
       const strideScale = Math.sqrt(clamp6((rig.strideLength ?? 100) / 100, 0.5, 1.5)), reach = art.height * (art.arthropod ? 0.2 : 0.28) * strideScale, lift = art.height * (art.arthropod ? 0.17 : 0.22);
       const dx = moving || fallen || rig.creatureAttack?.active ? clamp6((end.x - origin.x) * 0.65, -reach, reach) : 0;
       const dy = moving || fallen || rig.creatureAttack?.active ? clamp6((end.y - origin.y) * 0.65, -lift, lift) : 0;
-      return { ...source, index, delta: { x: dx, y: dy }, planted: rig.legs[index].foot?.planted !== false };
+      const length2 = Math.max(2, source.sole - art.rootY), scale = rig.artScale || { width: 1, height: 1 };
+      const bounded = (value, extent) => extent * Math.tanh(value / extent);
+      const delta = moving || fallen || rig.creatureAttack?.active ? { x: bodyDelta.x + bounded(dx - bodyDelta.x, length2 * 0.35 * scale.width), y: bodyDelta.y + bounded(dy - bodyDelta.y, length2 * 0.35 * scale.height) } : { x: 0, y: 0 };
+      return { ...source, index, delta, planted: rig.legs[index].foot?.planted !== false };
     });
     const offset = (x, y) => {
       if (y <= art.rootY) return bodyDelta;
-      let nearest = limbs[0], distance3 = Infinity;
-      for (const l of limbs) {
-        const d = Math.abs(x - l.x);
-        if (d < distance3) {
-          distance3 = d;
-          nearest = l;
-        }
-      }
-      const t = ease2((y - art.rootY) / Math.max(2, nearest.sole - art.rootY));
-      return { x: bodyDelta.x * (1 - t) + nearest.delta.x * t, y: bodyDelta.y * (1 - t) + nearest.delta.y * t };
+      const rightIndex = limbs.findIndex((l) => l.x >= x), right2 = limbs[rightIndex < 0 ? limbs.length - 1 : rightIndex], left2 = limbs[Math.max(0, rightIndex < 0 ? limbs.length - 1 : rightIndex - 1)];
+      const between = ease2((x - left2.x) / Math.max(1, right2.x - left2.x));
+      const sample = (limb) => {
+        const t = ease2((y - art.rootY) / Math.max(2, limb.sole - art.rootY));
+        return { x: bodyDelta.x + (limb.delta.x - bodyDelta.x) * t, y: bodyDelta.y + (limb.delta.y - bodyDelta.y) * t };
+      };
+      const a = sample(left2), b = sample(right2);
+      return { x: a.x + (b.x - a.x) * between, y: a.y + (b.y - a.y) * between };
     };
     return { limbs, offset, mode: "authored", sourcePixels: art.sourcePixels, rootY: art.rootY, bottom: art.bottom };
   }
@@ -3522,9 +3537,6 @@
     return { x: a.x - b.x, y: a.y - b.y };
   }
   var mix5 = (a, b, t) => ({ x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t });
-  function rotation(a, b, c2, d) {
-    return Math.atan2(a.x - b.x, -(a.y - b.y)) - Math.atan2(c2.x - d.x, -(c2.y - d.y));
-  }
   function handLandmarks(asset, identity, stage) {
     if (asset.hands) return asset.hands;
     const hands = {}, expectedY = stage ? ["orc", "minotaur", "troll", "knight", "goblin", "dwarf", "rogue"].includes(identity) ? 38 : 31 : 34;
@@ -3741,7 +3753,7 @@
     const humanoid = rig.arms.length > 0 || identity === "fairy" || identity === "harpy" || identity === "skeleton" || identity === "rogue" || identity === "frostelf", parts = rig.arms.length ? authoredParts(asset, identity, artStage, rig.dir) : null, scale = rig.artScale || { width: 1, height: 1 }, headCut = parts?.registration.neck ?? (identity === "orc" ? 27 : 29), headCenter = { x: 32, y: headCut - 9 }, bodyCenter = { x: 32, y: 33 };
     const sourceHands = parts?.hands || (rig.arms.length ? handLandmarks(asset, identity, artStage) : {}), artColors = authoredMaterialColors(identity, asset.colors, rig);
     rig.artArmPalette = materialRamp(identity, asset.colors, artColors);
-    const headRoll = rig.ragdoll ? rotation(poseHead, poseBody, head0, body0) : clamp7((rig.lean || 0) * Math.cos(angle) + (rig.sideLean || 0) * Math.sin(angle), -0.25, 0.25), cos = Math.cos(headRoll), sin = Math.sin(headRoll);
+    const headRoll = rig.ragdoll ? 0 : clamp7((rig.lean || 0) * Math.cos(angle) + (rig.sideLean || 0) * Math.sin(angle), -0.08, 0.08), cos = Math.cos(headRoll), sin = Math.sin(headRoll);
     const footDeltas = rig.legs.map((l, i) => {
       const original = rest.legs[i] || rest.legs[0], end0 = base(original.end);
       return { delta: difference(at(l.end), end0), knee: difference(at(l.joint), base(original.joint)), root: difference(at(l.root), base(original.root)), pitch: l.foot?.pitch || 0, anchor: { x: 32 + (end0.x - 32) * (humanoid ? 2.4 : 1.45), y: 45 + (end0.y - 43) * 0.6 } };
@@ -3774,7 +3786,8 @@
       dc.x = clamp7(dc.x, -1.2, 1.2);
     }
     const legArt = authoredLegs ? creatureLegArt(asset, rig, artColors) : solidLegs ? legProfiles(asset, footIndices, footDeltas, identity, artStage) : null;
-    const legSkin = authoredLegs ? skinCreatureLegs(rig, rest, angle, legArt, humanoid ? dp : dc) : null;
+    const trunkTop = headCut + 3, trunkLength = Math.max(4, (legArt?.rootY ?? 40) - trunkTop), trunkLimit = (v, extent) => extent * Math.tanh(v / extent), paintedPelvis = { x: dc.x + trunkLimit(dp.x - dc.x, trunkLength * 0.35 * scale.width), y: dc.y + trunkLimit(dp.y - dc.y, trunkLength * 0.35 * scale.height) };
+    const legSkin = authoredLegs ? skinCreatureLegs(rig, rest, angle, legArt, humanoid && !NATURAL_ANATOMY[identity] ? paintedPelvis : dc) : null;
     const legMesh = solidLegs ? buildLegVolumes(rig, legArt.profiles, rest, angle, scale, artColors) : null;
     const mouthSource = rig.creatureAttack && creatureMouthSource(rig);
     const armDeltas = rig.arms.map((a, i) => {
@@ -3783,20 +3796,31 @@
     });
     const sourceGear = GEAR[identity]?.[rig.dir], grip = rig.weapon && at(rig.weapon.grip), tip = rig.weapon && at(rig.weapon.tip), sourceLen = sourceGear && Math.hypot(sourceGear[2] - sourceGear[0], sourceGear[3] - sourceGear[1]), weaponLen = grip && Math.hypot(tip.x - grip.x, tip.y - grip.y), weaponAngle = grip ? Math.atan2(tip.y - grip.y, tip.x - grip.x) : 0, sourceAngle = sourceGear ? Math.atan2(sourceGear[3] - sourceGear[1], sourceGear[2] - sourceGear[0]) : 0;
     const action = ["attack", "slash", "charge", "cast"].includes(rig.state), align = 1;
+    const paintedHead = naturalHeadDelta(identity, dc, dh, scale, action);
+    const fallAngle = rig.ragdoll ? companionFallAngle(identity, rig.dir, rig.death) : 0, fallCos = Math.cos(fallAngle), fallSin = Math.sin(fallAngle), fallOrigin = { x: 32 + (bodyCenter.x - 32) * scale.width + dc.x, y: 44 + (bodyCenter.y - 45) * scale.height + dc.y };
+    const rotateFall = (p, inverse = false) => {
+      const dx = p.x - fallOrigin.x, dy = p.y - fallOrigin.y, s = inverse ? -fallSin : fallSin;
+      return { x: fallOrigin.x + dx * fallCos - dy * s, y: fallOrigin.y + dx * s + dy * fallCos };
+    };
     const cape = rig.capeMesh, capeBind = rig.artCapeBind, capeOffsets = cape && capeBind ? cape.map((col, i) => col.map((p, j) => difference(at(p), at(capeBind[i][j])))) : null;
     const expression = rig.portraitMenu ? "open" : rig.state === "death" ? "dead" : ["hit", "stagger", "knockdown"].includes(rig.state) ? "hurt" : rig.state === "idle" && rig.phase >= 0.9375 ? "blink" : "open";
     const portraitMenu = rig.portraitMenu && artStage === 0 && rig.dir === 2 ? portraitExpressionAt(identity, rig.portraitMenu.progress) : null;
     const eyePixels = rig.dir < 5 ? asset.eyePixels ?? (asset.eyePixels = asset.pixels.filter((p) => p.y >= 14 && p.y < 21 && p.x >= 17 && p.x < 47 && eyeColor(identity, p.rgb))) : [];
     function warped(x, y, gearPixel = false, armPixel = false, clothPixel = false, hairPixel = false) {
+      const p = deformed(x, y, gearPixel, armPixel, clothPixel, hairPixel);
+      return fallAngle ? rotateFall(p) : p;
+    }
+    function deformed(x, y, gearPixel = false, armPixel = false, clothPixel = false, hairPixel = false) {
       if (gearPixel && sourceGear && grip && gearDistance(x, y, sourceGear) < (identity === "orc" ? 4 : identity === "caster" ? 2.8 : 2.4) && Math.abs(x - 32) > 6) {
         const dx = x - sourceGear[0], dy = y - sourceGear[1], theta = (weaponAngle - sourceAngle) * align, cos2 = Math.cos(theta), sin2 = Math.sin(theta), ratio = 1 + (clamp7(weaponLen / sourceLen, 0.1, 3) - 1) * align;
         const arm = armDeltas.find((a) => a.side === (rig.weapon.hand === "left" ? -1 : 1)), drift = arm?.delta || dc, g = { x: sourceGear[0] + drift.x, y: sourceGear[1] + drift.y }, target = mix5(g, grip, align);
         return { x: target.x + (dx * cos2 - dy * sin2) * ratio, y: target.y + (dx * sin2 + dy * cos2) * ratio };
       }
       let delta = dc;
-      if (humanoid) {
+      if (humanoid && !NATURAL_ANATOMY[identity]) {
         const headWeight = ease3((headCut + 3 - y) / 5);
-        delta = y < 37 ? mix5(dc, dh, headWeight) : dp;
+        const trunk = mix5(dc, paintedPelvis, ease3((y - trunkTop) / trunkLength));
+        delta = mix5(trunk, paintedHead, headWeight);
         if (!legSkin && !solidLegs && footDeltas.length && y >= 37) {
           const foot = footAt(x, y);
           const a = { x: foot.anchor.x, y: y < 41 ? 35 : 40 }, z = { x: foot.anchor.x, y: y < 41 ? 40 : 45 }, da = y < 41 ? foot.root : foot.knee, dz = y < 41 ? foot.knee : foot.delta;
@@ -3810,37 +3834,34 @@
         }
       } else {
         const anatomy = NATURAL_ANATOMY[identity], headWeight = anatomy?.lockedHead || anatomy?.lockedTravelHead && !action ? 0 : naturalHeadWeight(identity, artStage, rig.dir, x, y);
-        delta = mix5(dc, dh, headWeight);
+        delta = mix5(dc, paintedHead, headWeight);
         if (mouthSource?.visible && action && rig.creatureAttack.jaw > 0) {
           const dx = Math.abs(x - mouthSource.x), dy = y - mouthSource.y, r = mouthSource.jawRadius;
           const jawWeight = clamp7(1 - dx / (r + 1), 0, 1) * clamp7(dy + 1, 0, 1) * clamp7((r + 2 - dy) / 2, 0, 1);
           delta = { x: delta.x, y: delta.y + Math.min(1.5, rig.creatureAttack.jaw * 0.25) * jawWeight };
         }
-        if (!naturalLegs && footDeltas.length && y > 33) {
+        if (!legSkin && !naturalLegs && footDeltas.length && y > 33) {
           const foot = footAt(x, y), leg = y < 39 ? mix5(foot.root, foot.knee, ease3((y - 33) / 6)) : mix5(foot.knee, foot.delta, ease3((y - 39) / 6));
           delta = mix5(delta, leg, ease3((y - 31) / 10));
         }
         if (["jelly", "squid", "mushroom"].includes(identity)) {
-          const squash = rig.squash || 1, pulse = Math.sin(rig.phase * Math.PI), action2 = ["dodge", "dash", "stop"].includes(rig.state) ? 1 + 0.18 * pulse : 1, t = ease3((y - 27) / 17), spread = 1 + (artStage === 2 ? 0.4 : artStage === 1 ? 0.25 : 0) * t, ripple = artStage ? Math.sin(rig.phase * Math.PI * 2 + (x - 32) * 0.2) * t : 0, offset = portraitMenu ? portraitSourceOffset(identity, x, y, portraitMenu) : { x: 0, y: 0 };
-          return { x: 32 + (x - 32) * scale.width * squash * action2 * spread + delta.x + ripple + offset.x * scale.width, y: 44 + (y - 45) * scale.height / (squash * action2) + delta.y + offset.y * scale.height };
+          const squash = bodyPlan === "rooted" ? 1 : rig.squash || 1, pulse = Math.sin(rig.phase * Math.PI), action2 = ["dodge", "dash", "stop"].includes(rig.state) ? 1 + 0.18 * pulse : 1, t = ease3((y - 27) / 17), fan = identity === "jelly" ? 1 + (artStage === 2 ? 0.4 : artStage === 1 ? 0.25 : 0) * t : 1, ripple = artStage ? Math.sin(rig.phase * Math.PI * 2 + (x - 32) * 0.2) * t : 0, offset = portraitMenu ? portraitSourceOffset(identity, x, y, portraitMenu) : { x: 0, y: 0 };
+          return { x: 32 + (x - 32) * scale.width * squash * action2 * fan + delta.x + ripple + offset.x * scale.width, y: 44 + (y - 45) * scale.height / (squash * action2) + delta.y + offset.y * scale.height };
         }
       }
-      if (!naturalLegs && artStage && ["mech", "serpent", "crab", "spider", "beetle"].includes(identity)) {
-        const upper = 1 - ease3((y - 27) / 10), lower = 1 - upper, amount = identity === "crab" ? artStage === 2 ? 0.55 : 0.45 : identity === "serpent" ? artStage === 2 ? 0.55 : 0.4 : artStage === 2 ? 0.32 : 0.22;
-        const weight = ["crab", "spider", "serpent"].includes(identity) ? lower : upper;
-        delta = { x: delta.x + (x - 32) * amount * weight, y: delta.y };
-      }
-      if (!naturalLegs && artStage && identity === "lion") delta = { x: delta.x + (x - 32) * (artStage === 2 ? 0.3 : 0.2) * (1 - ease3((y - 25) / 10)), y: delta.y };
-      if (["fairy", "moth", "bat", "harpy", "drake", "phoenix", "owl", "fish", "mantis"].includes(identity) && (!naturalLegs || y < legArt.rootY - 2) && Math.abs(x - 32) > 9 && y > 17) {
-        const weight = ease3((Math.abs(x - 32) - 9) / 15) * (1 - naturalHeadWeight(identity, artStage, rig.dir, x, y)), flap = Math.sin(rig.phase * Math.PI * 2);
-        delta = { x: delta.x + Math.sign(x - 32) * weight * (flap * 2 + (artStage === 2 ? 3 : artStage ? 2 : 0)), y: delta.y + weight * flap * 2 };
+      if (identity === "serpent" && artStage) delta = { x: delta.x + (x - 32) * (artStage === 2 ? 0.3 : 0.2) * ease3((y - 27) / 10), y: delta.y };
+      if (identity === "crab" && artStage) delta = { x: delta.x + (x - 32) * (artStage === 2 ? 0.55 : 0.45) * ease3((y - 27) / 10), y: delta.y };
+      if (identity === "bear" && artStage) delta = { x: delta.x + (x - 32) * (artStage === 2 ? 0.48 : 0.35) * ease3((y - 16) / 17), y: delta.y };
+      if (["fairy", "moth", "bat", "harpy", "drake", "phoenix", "owl", "fish", "mantis"].includes(identity) && (!legSkin || y < legArt.rootY - 2) && Math.abs(x - 32) > 9 && y > 17) {
+        const weight = ease3((Math.abs(x - 32) - 9) / 15) * ease3((y - 17) / 4) * (legSkin ? ease3((legArt.rootY - 2 - y) / 4) : 1) * (1 - naturalHeadWeight(identity, artStage, rig.dir, x, y)), flap = Math.sin(rig.phase * Math.PI * 2);
+        delta = { x: delta.x + Math.sign(x - 32) * weight * (flap * 2 + (artStage === 2 ? 3 : artStage ? 2 : 0)) * scale.width, y: delta.y + weight * flap * 2 * scale.height };
       }
       if (identity === "fox" && y > 32 && Math.abs(x - 32) > 12) {
         const weight = ease3((Math.abs(x - 32) - 12) / 12);
         delta = { x: delta.x, y: delta.y + Math.sin(rig.phase * Math.PI * 2) * weight * 2 };
       }
       if (["feralfox", "cat", "rodent", "rabbit"].includes(identity) && y > 26 && Math.abs(x - 32) > 14) {
-        const weight = ease3((Math.abs(x - 32) - 14) / 10) * (1 - naturalHeadWeight(identity, artStage, rig.dir, x, y));
+        const weight = ease3((Math.abs(x - 32) - 14) / 10) * ease3((y - 26) / 4) * (1 - naturalHeadWeight(identity, artStage, rig.dir, x, y));
         delta = { x: delta.x, y: delta.y + Math.sin(rig.phase * Math.PI * 2) * weight * 2 };
       }
       if (identity === "clam") delta = { x: delta.x, y: delta.y - (rig.creatureAttack?.active ? (rig.creatureAttack.jaw || 0) * ease3((34 - y) / 7) : Math.sin(rig.phase * Math.PI * 2) * ease3((35 - y) / 18) * 1.5) };
@@ -3857,9 +3878,10 @@
         const u = clamp7((x - 18) / 28, 0, 1) * (cape.length - 1), v = clamp7((y - 26) / 19, 0, 1) * (cape[0].length - 1), i = Math.floor(u), j = Math.floor(v), ii = Math.min(i + 1, cape.length - 1), jj = Math.min(j + 1, cape[0].length - 1), lag = mix5(mix5(capeOffsets[i][j], capeOffsets[ii][j], u - i), mix5(capeOffsets[i][jj], capeOffsets[ii][jj], u - i), v - j);
         delta = { x: delta.x + clamp7(lag.x - dc.x, -3, 3) * capeWeight, y: delta.y + clamp7(lag.y - dc.y, -3, 3) * capeWeight };
       }
-      if (legSkin && y >= legArt.rootY) delta = legSkin.offset(x, y);
-      if (naturalLegs && identity === "crab" && artStage) delta = { x: delta.x + (x - 32) * (artStage === 2 ? 0.55 : 0.45) * ease3((y - 27) / 10), y: delta.y };
-      if (naturalLegs && identity === "bear" && artStage) delta = { x: delta.x + (x - 32) * (artStage === 2 ? 0.48 : 0.35) * ease3((y - 16) / 17), y: delta.y };
+      if (legSkin && y >= legArt.rootY) {
+        const leg = legSkin.offset(x, y);
+        delta = humanoid && !NATURAL_ANATOMY[identity] ? leg : { x: delta.x + leg.x - dc.x, y: delta.y + leg.y - dc.y };
+      }
       if (portraitMenu && identity !== "owl") {
         const offset = portraitSourceOffset(identity, x, y, portraitMenu);
         delta = { x: delta.x + offset.x * scale.width, y: delta.y + offset.y * scale.height };
@@ -3924,11 +3946,12 @@
       const l = Math.max(0, Math.floor(32 + (minX - 32 + ox) * fit) - 1), r = Math.min(63, Math.ceil(32 + (maxX - 32 + ox) * fit) + 1), t = Math.max(0, Math.floor(44 + (minY - 44 + oy) * fit) - 1), z = Math.min(63, Math.ceil(44 + (maxY - 44 + oy) * fit) + 1);
       for (let y = t; y <= z; y++) for (let x = l; x <= r; x++) {
         const tx = 32 + (x - 32) / fit - ox, ty = 44 + (y - 44) / fit - oy;
-        let sx = 32 + (tx - 32) / scale.width, sy = 45 + (ty - 44) / scale.height;
+        const target = fallAngle ? rotateFall({ x: tx, y: ty }, true) : { x: tx, y: ty };
+        let sx = 32 + (target.x - 32) / scale.width, sy = 45 + (target.y - 44) / scale.height;
         for (let i = 0; i < 4; i++) {
-          const q = warped(sx, sy);
-          sx += (tx - q.x) / scale.width;
-          sy += (ty - q.y) / scale.height;
+          const q = deformed(sx, sy);
+          sx += (target.x - q.x) / scale.width;
+          sy += (target.y - q.y) / scale.height;
         }
         const xx = Math.round(sx), yy = Math.round(sy);
         if (xx < 0 || xx > 63) continue;
@@ -3991,7 +4014,7 @@
     rig.artLegRegistration = authoredLegs ? { cutY: anchor(warped(32, legArt.rootY)).y, soleY: anchor(warped(32, legArt.bottom)).y } : null;
     rig.artNaturalPalette = authoredLegs ? legArt.materialIndices.map((i) => artColors[i]) : legArt?.material || rig.palette?.skin;
     rig.artCreatureFit = fit;
-    rig.artSourceTransform = { scale, fit, ox, oy };
+    rig.artSourceTransform = { scale, fit, ox, oy, fallAngle };
     rig.artCreatureProject = (q) => anchor({ x: 32 + (at(q).x - poseBody.x) * 1.5 + dc.x, y: 34 + (at(q).y - poseBody.y) * 1.1 + dc.y });
     rig.artCreatureMouth = mouthSource && anchor(warped(mouthSource.x, mouthSource.y));
     rig.artMouthRegistration = mouthSource;
