@@ -1,0 +1,113 @@
+/* Keep worn slots in the center and both inventory pouches within reach. */
+body.ui-v3.native-expedition .modal[data-kind="companions"]{width:min(1480px,calc(100vw - 28px));padding:20px;max-height:calc(100dvh - 28px)}
+body.ui-v3.native-expedition .companions-layout{grid-template-columns:minmax(0,1.35fr) minmax(0,1fr) minmax(250px,.85fr);gap:12px;align-items:start}
+body.ui-v3.native-expedition .companions-layout>.inventory-sidebar{display:flex;grid-column:auto;flex-direction:column;gap:10px;position:sticky;top:0;max-height:calc(100dvh - 145px);overflow-y:auto;padding:2px;scrollbar-width:thin}
+.inventory-sidebar{display:flex;flex-direction:column;gap:10px;min-width:0}
+.pouch-companions{display:none;gap:6px;overflow-x:auto;padding:5px 0;scrollbar-width:thin}
+.pouch-companions button{flex:0 0 auto;display:flex;align-items:center;gap:5px;min-height:42px;padding:4px 8px;background:#0d2932;color:#c5daca;border:1px solid #4a7776;border-radius:8px;font:10px var(--sans);cursor:pointer}
+.pouch-companions button[aria-pressed="true"]{border-color:#e3c986;background:#29413c;color:#fff0be}
+.pouch-companions img{width:30px;height:30px;object-fit:contain;image-rendering:pixelated}
+.modal[data-kind="pack"] .pouch-companions{display:flex;margin-bottom:14px}
+.pack-pouches{max-width:570px;margin:auto;display:grid;gap:14px}
+.detail-equipment-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(240px,.8fr);gap:14px;align-items:start}
+
+/* Loose items overlap slightly inside a stitched, open fabric bag. */
+.inventory-pouch{min-width:0;border:1px solid #89926d;border-radius:12px;background:linear-gradient(145deg,#203b3c,#09252e);overflow:hidden}
+.inventory-pouch>header{display:flex;gap:7px;align-items:center;padding:9px 10px 6px;border-bottom:1px solid #bec89926}
+.inventory-pouch>header>div{min-width:0;flex:1}
+body.ui-v3.native-expedition .inventory-pouch h3{font:18px/1.1 var(--serif);letter-spacing:0;color:#f3e2b6;margin:0 0 4px}
+.inventory-pouch>header small{font:9px/1.3 var(--sans);color:#acc8bc}
+.pouch-emblem{width:34px;height:34px;object-fit:contain;flex:none}
+.stone-pouch-emblem{display:grid;place-items:center;font:34px var(--serif);color:#c6a7ed}
+.pouch-count{flex:none;min-width:25px;text-align:center;padding:4px;border:1px solid #b7bf8066;border-radius:6px;color:#f1dda6;font:11px var(--sans)}
+.pouch-pile{display:grid;grid-template-columns:repeat(auto-fill,minmax(42px,1fr));grid-auto-rows:44px;justify-items:center;align-items:center;gap:0;padding:17px 13px 20px;margin:7px;min-height:135px;max-height:200px;overflow-y:auto;overflow-x:hidden;scrollbar-width:thin;border:1px dashed #c3b47c88;border-top:5px solid #6a7250;border-radius:20px 20px 34px 34px;background:radial-gradient(ellipse at top,#3d4530,#142b29 76%),repeating-linear-gradient(30deg,#fff1 0 1px,transparent 1px 4px);box-shadow:inset 0 4px 12px #001017a0;isolation:isolate;align-content:start}
+.stone-pouch{border-color:#7e89a7;background:linear-gradient(145deg,#26384b,#112738)}
+.stone-pouch .pouch-pile{grid-template-columns:repeat(auto-fill,minmax(36px,1fr));grid-auto-rows:36px;min-height:80px;max-height:120px;border-color:#9f9ac088;border-top-color:#616485;border-radius:15px 15px 27px 27px;background:radial-gradient(ellipse at top,#394056,#172838 76%);padding:13px 12px 16px}
+.stone-pouch h3{color:#e0d2ef!important}
+.pouch-contents{position:relative;isolation:isolate}
+.pouch-bag-art{position:absolute;z-index:5;pointer-events:none;left:50%;top:50%;transform:translate(-50%,-50%);width:min(82%,190px);height:96%;object-fit:contain;filter:drop-shadow(0 5px 6px #0009);transition:opacity .25s,transform .35s}
+.stone-pouch .pouch-bag-art{width:min(65%,120px)}
+.pouch-open-control{position:absolute;z-index:6;inset:0;width:100%;border:0;background:none;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;padding:0 8px 10px;color:#f4dfaa;font:10px var(--sans);cursor:pointer}
+.pouch-open-control>span:first-child{padding:4px 7px;background:#102731e8;border:1px solid #aa9c6f66;border-radius:5px}
+.inventory-pouch[data-pouch-opened="false"] .pouch-pile{opacity:0;pointer-events:none}
+.inventory-pouch[data-pouch-opened="true"] .pouch-open-control{opacity:0;pointer-events:none}
+.inventory-pouch[data-pouch-opened="true"] .pouch-bag-art{z-index:0;opacity:.16;transform:translate(-50%,-50%) scale(1.12)}
+.inventory-pouch.pouch-opening .pouch-bag-art{opacity:.7;z-index:5}
+.pouch-pile{position:relative;transition:opacity .18s}
+body.ui-v3.native-expedition .pouch-pile>.pouch-item{position:relative;z-index:var(--pile-layer);display:grid;place-items:center;width:52px;height:52px;min-width:0;min-height:0;padding:3px;border:1px solid color-mix(in srgb,var(--item-color) 55%,#364c42);border-radius:13px;background:radial-gradient(circle,#2b4546e8,#09222bd9);box-shadow:0 3px 5px #001018a0;transform:translate(calc(var(--pile-x) + var(--scatter-x,0px)),calc(var(--pile-y) + var(--scatter-y,0px))) rotate(calc(var(--pile-angle) + var(--scatter-spin,0deg)));cursor:grab;overflow:visible;transition:box-shadow .12s,border-color .12s}
+body.ui-v3.native-expedition .stone-pouch .pouch-item{width:44px;height:44px;border-radius:12px;background:radial-gradient(circle,#344456ed,#132437ed);padding:3px}
+.pouch-item>.item-art{width:44px;height:44px;object-fit:contain;margin:0;max-width:none}
+.pouch-item>.authored-aura-art{width:36px;height:36px;margin:0}
+.pouch-item .authored-aura-art img{width:100%;height:100%}
+.pouch-pile>.pouch-item.pouch-incompatible{opacity:.43;filter:saturate(.5)}
+body.ui-v3.native-expedition .pouch-pile>.pouch-item:hover,body.ui-v3.native-expedition .pouch-pile>.pouch-item:focus-visible{z-index:20;outline:2px solid #f0dda3;outline-offset:1px;box-shadow:0 0 12px #f0cf7970;opacity:1}
+.pouch-pile>.pouch-item:disabled{cursor:default}
+@media(prefers-reduced-motion:reduce){.pouch-pile,.pouch-bag-art{transition:none}}
+.gentle-ui .pouch-pile,.gentle-ui .pouch-bag-art{transition:none}
+.pouch-empty{grid-column:1/-1;align-self:center;text-align:center;font:11px/1.5 var(--sans);color:#a9bbb0;margin:18px 5px;pointer-events:none}
+.pouch-inspector{padding:4px 10px 9px;height:76px}
+.pouch-inspector>strong{display:block;font:12px/1.2 var(--serif);color:#ecdfbe;margin-bottom:3px}
+.pouch-inspector>small{display:block;font:10px/1.4 var(--sans);color:#b7cdbf;max-height:42px;overflow-y:auto;scrollbar-width:thin}
+.stone-pouch .pouch-inspector{height:76px}
+.party-notes{border:1px solid #467979;border-radius:8px;overflow:hidden;background:#0d2a32}
+.party-notes>summary{cursor:pointer;padding:10px;font:11px var(--sans);color:#c3d6c5}
+.party-notes>summary span{float:right;color:#e9cf8f}
+body.ui-v3.native-expedition .party-notes .synergy-panel{padding:8px;border:0}
+body.ui-v3.native-expedition .party-notes .party-relics{padding:8px;border:0}
+body.ui-v3.native-expedition .party-notes .party-relics h3{font-size:16px;margin-bottom:6px}
+body.ui-v3.native-expedition .party-notes .party-relics>div button{width:38px;height:38px}
+body.ui-v3.native-expedition .party-notes .party-relics>div img{width:30px;height:30px}
+.companion-tools{display:grid;grid-template-columns:1.2fr 1fr;gap:6px;position:sticky;bottom:0;padding:4px 0;background:#09232f}
+.companion-tools>.button{padding:9px 6px;font-size:10px;min-width:0;min-height:40px}
+
+/* Small sockets replace the tall Aura Stone cards. Effects remain in titles. */
+body.ui-v3.native-expedition .character-attachments{padding:10px}
+body.ui-v3.native-expedition .character-attachments>.equipment-panel{padding:0}
+body.ui-v3.native-expedition .character-attachments>.personal-loadout{padding:10px 0 0;margin-top:10px}
+body.ui-v3.native-expedition .personal-loadout.compact-auras .section-heading{margin-bottom:5px}
+body.ui-v3.native-expedition .personal-loadout.compact-auras .aura-bearer{display:block;font:10px/1.4 var(--sans);margin:3px 0 8px}
+body.ui-v3.native-expedition .personal-loadout.compact-auras .relic-slots{grid-template-columns:repeat(var(--aura-slots),minmax(0,1fr));gap:5px;margin:0}
+body.ui-v3.native-expedition .personal-loadout.compact-auras .aura-slot{position:relative;display:flex;align-items:center;justify-content:center;gap:3px;padding:7px 3px;min-height:78px;max-height:90px;border:1px solid var(--relic);border-radius:8px;background:#1b303a;text-align:center;overflow:hidden}
+body.ui-v3.native-expedition .personal-loadout.compact-auras .aura-slot .aura-stone-art{width:32px;height:34px;flex:none;margin:0}
+body.ui-v3.native-expedition .personal-loadout.compact-auras .aura-slot .aura-stone-art i{display:none}
+body.ui-v3.native-expedition .personal-loadout.compact-auras .aura-slot strong{display:block;font:11px/1.1 var(--serif);max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+body.ui-v3.native-expedition .personal-loadout.compact-auras .aura-slot small{font:8px/1.2 var(--sans);color:#adbec9}
+body.ui-v3.native-expedition .personal-loadout.compact-auras .aura-slot>.aura-remove{position:absolute;top:1px;right:1px;width:22px;height:22px;min-width:0;padding:0;border:0;background:#142733;color:#dfd4e9;font:18px var(--sans);border-radius:5px}
+.empty-aura-symbol{color:#baa5d3;font-size:26px;line-height:30px}
+body.ui-v3.native-expedition .personal-loadout.compact-auras .aura-no-slots{font:10px/1.5 var(--sans);margin:5px}
+body.ui-v3.native-expedition .quick-auras button{min-height:44px;padding:3px;gap:1px}
+body.ui-v3.native-expedition .quick-auras .aura-stone-art{width:24px;height:24px}
+body.ui-v3.native-expedition .quick-auras small{display:none}
+body.ui-v3.native-expedition .quick-auras b{font-size:18px;line-height:22px}
+body.ui-v3.native-expedition .character-attachments .equipment-panel>p{font:9px/1.4 var(--sans);margin:6px 0 10px}
+body.ui-v3.native-expedition .character-attachments .equipment-slot{padding:8px;min-height:92px;gap:4px 7px}
+body.ui-v3.native-expedition .character-attachments .equipment-slot>.slot-label{font-size:8px;margin-bottom:1px}
+body.ui-v3.native-expedition .character-attachments .equipment-slot>strong{font-size:12px}
+body.ui-v3.native-expedition .character-attachments .equipment-slot>small{font-size:9px;line-height:1.35;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+body.ui-v3.native-expedition .character-attachments .equipment-slot:last-child{grid-column:1/-1;min-height:76px}
+body.ui-v3.native-expedition .companion-equipment>header>img{width:44px;height:44px}
+body.ui-v3.native-expedition .companion-equipment>header h3{font-size:23px}
+body.ui-v3.native-expedition .companion-equipment>header button{font-size:10px;padding:8px}
+
+@media(max-width:1050px){
+ body.ui-v3.native-expedition .companions-layout{grid-template-columns:minmax(0,1fr) minmax(240px,1fr)}
+ body.ui-v3.native-expedition .companions-layout>.companion-equipment{grid-column:1;grid-row:1}
+ body.ui-v3.native-expedition .companions-layout>.inventory-sidebar{grid-column:2;grid-row:1}
+ body.ui-v3.native-expedition .companions-layout>.party-overview{grid-column:1/-1;grid-row:2}
+ .modal[data-kind="companions"] .pouch-companions{display:flex;margin-bottom:8px}
+}
+@media(max-width:700px){
+ body.ui-v3.native-expedition .modal-backdrop[data-kind="companions"]{padding:0;overflow:hidden;align-items:start}
+ body.ui-v3.native-expedition .modal[data-kind="companions"]{width:100%;height:100dvh;max-height:100dvh;min-height:0;padding:12px 8px;border-width:8px;overflow-y:auto}
+ body.ui-v3.native-expedition .companions-layout{grid-template-columns:minmax(0,1fr)}
+ body.ui-v3.native-expedition .companions-layout>.companion-equipment{grid-column:1;grid-row:1}
+ body.ui-v3.native-expedition .companions-layout>.inventory-sidebar{grid-column:1;grid-row:2;position:static;max-height:none;overflow:visible}
+ body.ui-v3.native-expedition .companions-layout>.party-overview{grid-column:1;grid-row:3}
+ .modal[data-kind="companions"] .pouch-companions{position:sticky;top:-12px;background:#08242ef5;z-index:25;margin-top:-4px}
+ .detail-equipment-layout{grid-template-columns:minmax(0,1fr)}
+ body.ui-v3.native-expedition .character-attachments .equipment-slot{min-height:72px}
+ body.ui-v3.native-expedition .character-attachments .equipment-slot:last-child{min-height:72px}
+ body.ui-v3.native-expedition .companion-equipment{padding:10px}
+ .pouch-pile{max-height:180px}
+ .stone-pouch .pouch-pile{max-height:105px}
+}

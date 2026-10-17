@@ -26,7 +26,8 @@ import {equipmentDropChance} from './equipment-loot.js';
 import {TUNING_OPTIONS,DEFAULT_TUNING,normalizeTuning,setTuning} from './tuning.js';
 import {battleSummaryHTML} from './battle-summary.js';
 import {applyLoadoutDrop,canLoadoutDrop} from './loadout-interactions.js';
-import {dragSprite,moveDragSprite,settleDragSprite} from './loadout-drag-ui.js';
+import {dragSprite,moveDragSprite,settleDragSprite,clearDragSprites} from './loadout-drag-ui.js';
+import {inventoryPouchHTML,prepareInventoryPouches,openInventoryPouch,resetInventoryPouches} from './inventory-pouches.js';
 import {activeAilments,STATUS_AILMENTS,annotateAilments} from './status-ailments.js';
 import {combatEffectDescription,itemStrength} from './item-effects.js';
 import {chooseLegendaryPact,assignEnemyRelics,recruitPrice,refundCapture,progressive,capacity,CAPTURERS,buyCapturer,consumeCapturer,addCapturer,routeVisible,claimLoot,makeLoot,attachCaptureLoot,lootName,buyPermit,permitCost,buyRecruit} from './expedition-rules.js';
@@ -123,6 +124,7 @@ import { Soundscape } from "./sound.js";
 const soundscape = new Soundscape();
 const deployment=new DeploymentPhysics();let defeatFilm=null,victoryFilm=null;
 const PERSONAL_RELICS=AURA_STONES,PERSONAL_BY_ID=WEARER_BY_ID;
+let loadoutDrag=null,touchLoadout=null,touchDragUntil=0,cancelledSpritePointer=null;
 const $ = (s) => document.querySelector(s);
 const STORE = "starfall-menagerie-v1";
 const ICONS = {
@@ -352,6 +354,7 @@ function activeSynergies() {
 }
 var liveRosterSide=0,liveSelectedUid=null;
 function render() {
+  if(phase==='battle')cancelSpriteDrag({immediate:true});
   const pageScroll={left:scrollX,top:scrollY};
   updateHeader();refreshRelicPreviews();installRelicPreviews();
   document.body.dataset.planet = Math.min(run.planet,2);
@@ -598,6 +601,7 @@ function bindDrag() {
 }
 let modalFocusSerial=0;
 function modal(html, kind = "generic", closable = true) {
+  if(kind!==modalKind)cancelSpriteDrag({immediate:true});
   const focused=document.activeElement,focusSerial=++modalFocusSerial;
   const previousKind=modalKind,previousScroll=$(".modal")?.scrollTop||0,backdropScroll=$(".modal-backdrop")?.scrollTop||0,pageScroll={top:scrollY,left:scrollX};
   const starterScroll=kind==='starters'&&previousKind===kind?['.companion-scroll','.challenge-scroll','.chaos-rules ol'].map(selector=>[selector,$(selector)?.scrollTop||0]):[];
@@ -613,7 +617,7 @@ function modal(html, kind = "generic", closable = true) {
   decorateFieldUI(next.content);decorateUploadedArt(next.content);decorateAilments(next.content);
   const current=$('.modal-backdrop'),updating=previousKind===kind&&!!current;
   if(updating)patchModalContent(current,nextBackdrop);else $('#modal-root').replaceChildren(next.content);
-  decorateAmbientBackgrounds($('#modal-root'));prepareLoadoutDragging();prepareDetailTabs();
+  decorateAmbientBackgrounds($('#modal-root'));prepareLoadoutDragging();prepareInventoryPouches($('#modal-root'),{reducedMotion:profile.reducedMotion});prepareDetailTabs();
   const preserved=updating&&focused?.isConnected&&!focused.disabled;
   const first=preserved?focused:(focusSelector&&$(focusSelector))||$('#modal-root button:not(:disabled)');
   if(previousKind===kind){$('.modal').scrollTop=previousScroll;$('.modal-backdrop').scrollTop=backdropScroll;}
@@ -625,7 +629,9 @@ function modal(html, kind = "generic", closable = true) {
 function closeModal() {
   modalFocusSerial++;
   if(modalKind==='opening-relic'&&run.openingRelic?.decision===null||modalKind==='skill-choice'&&pendingSkillCompanion())return;
-  if(modalKind==='settings'&&settingsPrevious){const previous=settingsPrevious;settingsPrevious=null;paused=previous.paused;modalKind=previous.kind;$('#modal-root').innerHTML=previous.html;if($('.modal'))$('.modal').scrollTop=previous.scroll;if($('.modal-backdrop'))$('.modal-backdrop').scrollTop=previous.backdropScroll;prepareLoadoutDragging();prepareDetailTabs();return;}
+  cancelSpriteDrag({immediate:true});
+  if(modalKind==='settings'&&settingsPrevious){const previous=settingsPrevious;settingsPrevious=null;paused=previous.paused;modalKind=previous.kind;$('#modal-root').innerHTML=previous.html;if($('.modal'))$('.modal').scrollTop=previous.scroll;if($('.modal-backdrop'))$('.modal-backdrop').scrollTop=previous.backdropScroll;prepareLoadoutDragging();prepareInventoryPouches($('#modal-root'),{reducedMotion:profile.reducedMotion});prepareDetailTabs();return;}
+  resetInventoryPouches();
   practice=null;
   modalKind = null;
   $("#modal-root").innerHTML = "";
@@ -736,7 +742,7 @@ function openDetail(u, index = null, codex = false) {
     ),
     locked = codex && !profile.owned.includes(u.id);
   modal(
-    `<div class="detail-top">${image(u)}<div><span class="section-kicker" style="color:${RARITY[s.rarity].color}">${s.rarity.toUpperCase()} CREATURE</span><h2>${creatureName(u)}</h2><p style="margin:0">${s.role} · ${e.name} · Level ${u.level}</p><div class="tags">${tag(`${ROLES[s.role]} ${s.role}`)}${tag(`${e.icon} ${e.name}`)}</div></div></div>${detailTabsHTML(index)}<div class="detail-pane" data-detail-pane="overview"><div class="stat-grid">${levelStatHTML(u,'hp','HEALTH',index)}${levelStatHTML(u,'atk','ATTACK',index)}${levelStatHTML(u,'attackSpeed','BASIC ATTACK SPEED',index)}${levelStatHTML(u,'actionSpeed','ACTION SPEED',index)}${levelStatHTML(u,'hpRegen','HP REGEN',index)}${levelStatHTML(u,'staminaRecharge','STAMINA RECHARGE',index)}${levelStatHTML(u,'dodge','DODGE CHANCE',index)}${levelStatHTML(u,'dashCooldown','DODGE / DASH',index)}${levelStatHTML(u,'speed','MOVEMENT',index)}${levelStatHTML(u,'cd','SKILL COOLDOWN',index)}</div>${armorHTML(st,s)}${eliteBadgeHTML(u)}${ailmentMenuHTML(u)}${individualHTML(u)}${enemyCuriosHTML(u)}<div class="trait-panel"><strong>${traitFor(u).name}</strong><p>${traitFor(u).desc}</p></div>${familyInfo(u)}${evolutionHTML(u, index)}</div><div class="detail-pane" data-detail-pane="equipment"><div class="character-attachments">${equipmentHTML(u,index)}${loadoutHTML(u, index)}</div></div><div class="detail-pane" data-detail-pane="skills">${skillsHTML(u, index)}<p>Drag cooldown skills into a different order to change which ready skill the AI considers first.</p></div><div class="detail-pane" data-detail-pane="ai">${index !== null ? policyHTML(u, index) + survivalHTML(u, index) : ""}${index !== null ? `<div class="focus-control"><span class="section-kicker">TRAINING FOCUS · CHOOSE BEFORE BATTLE</span><div class="segmented">${["balanced", "aggressive", "defensive", "swift"].map((f) => `<button data-focus="${f}" data-index="${index}" class="${u.focus === f ? "active" : ""}" ${phase === "battle" ? "disabled" : ""}>${f.charAt(0).toUpperCase() + f.slice(1)}</button>`).join("")}</div><p style="font-size:10px;margin:9px 0 0">${{ balanced: "Natural strengths. No stat tradeoffs.", aggressive: "+15% attack · −8% health.", defensive: "+15% health · −8% attack.", swift: "15% faster skills · −6% attack." }[u.focus || "balanced"]}</p></div><div class="thin-rule"></div><span class="section-kicker">SWAP WITH A COMPANION ON YOUR BENCH</span><div class="bench-list">${run.bench.length ? run.bench.map((b, j) => `<button class="bench-button" data-swap="${j}" data-index="${index}" ${phase === "battle" ? "disabled" : ""}>${image(b)}${creatureName(b)}<br><span class="muted">Lv. ${b.level}</span></button>`).join("") : '<div class="empty-bench">Capture a creature or recruit one at an outpost to fill your bench.</div>'}</div><p class="starter-note">${u.level >= 5 && !evolutionStage(u) && lineageLimit(u)>0 ? "EVOLUTION AVAILABLE · INSPECT YOUR EVOLUTION PATH ABOVE · " : ""}${u.level >= 5 ? "AWAKENED · THIRD SKILL UNLOCKED · " : ""}${u.bond ? `BOND ${u.bond} · +${u.bond * 2}% BASE HEALTH · ` : ""}${u.xp} / ${xpNeeded(u.level)} EXP toward the next level · ${u.training || 0} training upgrades</p>` : locked ? '<p class="disabled-note">Find this creature in the wild and capture it to unlock it as a future starter.</p>' : `<p style="font-size:11px">${e.description}. Rare companions have stronger base stats and specialized skills.</p>`}</div>${button("Back to expedition", "close", "secondary")}`,
+    `<div class="detail-top">${image(u)}<div><span class="section-kicker" style="color:${RARITY[s.rarity].color}">${s.rarity.toUpperCase()} CREATURE</span><h2>${creatureName(u)}</h2><p style="margin:0">${s.role} · ${e.name} · Level ${u.level}</p><div class="tags">${tag(`${ROLES[s.role]} ${s.role}`)}${tag(`${e.icon} ${e.name}`)}</div></div></div>${detailTabsHTML(index)}<div class="detail-pane" data-detail-pane="overview"><div class="stat-grid">${levelStatHTML(u,'hp','HEALTH',index)}${levelStatHTML(u,'atk','ATTACK',index)}${levelStatHTML(u,'attackSpeed','BASIC ATTACK SPEED',index)}${levelStatHTML(u,'actionSpeed','ACTION SPEED',index)}${levelStatHTML(u,'hpRegen','HP REGEN',index)}${levelStatHTML(u,'staminaRecharge','STAMINA RECHARGE',index)}${levelStatHTML(u,'dodge','DODGE CHANCE',index)}${levelStatHTML(u,'dashCooldown','DODGE / DASH',index)}${levelStatHTML(u,'speed','MOVEMENT',index)}${levelStatHTML(u,'cd','SKILL COOLDOWN',index)}</div>${armorHTML(st,s)}${eliteBadgeHTML(u)}${ailmentMenuHTML(u)}${individualHTML(u)}${enemyCuriosHTML(u)}<div class="trait-panel"><strong>${traitFor(u).name}</strong><p>${traitFor(u).desc}</p></div>${familyInfo(u)}${evolutionHTML(u, index)}</div><div class="detail-pane" data-detail-pane="equipment"><div class="detail-equipment-layout"><div class="character-attachments">${equipmentHTML(u,index,false)}${loadoutHTML(u,index,false)}</div>${index!==null?`<aside class="inventory-sidebar">${inventoryDockHTML(u,index)}</aside>`:''}</div></div><div class="detail-pane" data-detail-pane="skills">${skillsHTML(u, index)}<p>Drag cooldown skills into a different order to change which ready skill the AI considers first.</p></div><div class="detail-pane" data-detail-pane="ai">${index !== null ? policyHTML(u, index) + survivalHTML(u, index) : ""}${index !== null ? `<div class="focus-control"><span class="section-kicker">TRAINING FOCUS · CHOOSE BEFORE BATTLE</span><div class="segmented">${["balanced", "aggressive", "defensive", "swift"].map((f) => `<button data-focus="${f}" data-index="${index}" class="${u.focus === f ? "active" : ""}" ${phase === "battle" ? "disabled" : ""}>${f.charAt(0).toUpperCase() + f.slice(1)}</button>`).join("")}</div><p style="font-size:10px;margin:9px 0 0">${{ balanced: "Natural strengths. No stat tradeoffs.", aggressive: "+15% attack · −8% health.", defensive: "+15% health · −8% attack.", swift: "15% faster skills · −6% attack." }[u.focus || "balanced"]}</p></div><div class="thin-rule"></div><span class="section-kicker">SWAP WITH A COMPANION ON YOUR BENCH</span><div class="bench-list">${run.bench.length ? run.bench.map((b, j) => `<button class="bench-button" data-swap="${j}" data-index="${index}" ${phase === "battle" ? "disabled" : ""}>${image(b)}${creatureName(b)}<br><span class="muted">Lv. ${b.level}</span></button>`).join("") : '<div class="empty-bench">Capture a creature or recruit one at an outpost to fill your bench.</div>'}</div><p class="starter-note">${u.level >= 5 && !evolutionStage(u) && lineageLimit(u)>0 ? "EVOLUTION AVAILABLE · INSPECT YOUR EVOLUTION PATH ABOVE · " : ""}${u.level >= 5 ? "AWAKENED · THIRD SKILL UNLOCKED · " : ""}${u.bond ? `BOND ${u.bond} · +${u.bond * 2}% BASE HEALTH · ` : ""}${u.xp} / ${xpNeeded(u.level)} EXP toward the next level · ${u.training || 0} training upgrades</p>` : locked ? '<p class="disabled-note">Find this creature in the wild and capture it to unlock it as a future starter.</p>' : `<p style="font-size:11px">${e.description}. Rare companions have stronger base stats and specialized skills.</p>`}</div>${button("Back to expedition", "close", "secondary")}`,
     "creature",
   );
 }
@@ -1425,6 +1431,7 @@ document.addEventListener("click", async (e) => {
   if(el?.dataset.action==='help'){openHelp();return;}
   if(el?.dataset.action==='inspect-selected'){openCreature(selectedCreature);return;}
   if(el?.dataset.action==='companions'){openCompanions();return;}
+  if(el?.dataset.pouchCompanion!==undefined){selectedCreature=Number(el.dataset.pouchCompanion);modalKind==='pack'?openPack():openCompanions();return;}
   if(el?.dataset.partySelect!==undefined){selectedCreature=Number(el.dataset.partySelect);openCompanions();return;}
   if(el?.dataset.action==='capture-kit'){openCaptureKit();return;}
   if(el?.dataset.action==='intel'){openIntel();return;}
@@ -1532,7 +1539,7 @@ document.addEventListener("click", async (e) => {
     if(phase==="battle")return;const index=Number(el.dataset.index);
     const ok=el.dataset.gearClaim?claimEvolutionGear(run,index,el.dataset.gearClaim):el.dataset.gearEquip?equipGear(run,index,el.dataset.gearEquip):removeGear(run,index,Number(el.dataset.gearRemove));
     if(!ok&&el.dataset.gearEquip)toast(gearCompatibility(run.team[index],GEAR_BY_ID[run.gearInventory.find(g=>g.uid===el.dataset.gearEquip)?.id]).reason);
-    if(ok){const party=modalKind==='companions';save();render();party?openCompanions():openCreature(index);sound("buy");}return;
+    if(ok){const kind=modalKind;save();render();refreshLoadoutMenu(index,kind);sound("buy");}return;
   }
   if (el.dataset.evolve) {
     transformCreature(Number(el.dataset.index), el.dataset.evolve);
@@ -1584,9 +1591,8 @@ document.addEventListener("click", async (e) => {
     if (phase === "battle") return;
     const i = Number(el.dataset.index);
     if (equipRelic(run, i, el.dataset.equip)) {
-      save();
-      render();
-      detailTab="equipment";openCreature(i);animateAuraEquip(i,run.team[i].relics.at(-1).id);
+      const kind=modalKind;save();render();
+      detailTab="equipment";refreshLoadoutMenu(i,kind);animateAuraEquip(i,run.team[i].relics.at(-1).id);
       toast("Aura Stone equipped. Nearby targets now benefit from its aura.");
     }
     return;
@@ -1595,9 +1601,7 @@ document.addEventListener("click", async (e) => {
     if (phase === "battle") return;
     const i = Number(el.dataset.index);
     if (unequipRelic(run, i, Number(el.dataset.unequip))) {
-      save();
-      render();
-      openCreature(i);
+      const kind=modalKind;save();render();refreshLoadoutMenu(i,kind);
     }
     return;
   }
@@ -1609,9 +1613,8 @@ document.addEventListener("click", async (e) => {
     if (phase === "battle") return;
     const i = Number(el.dataset.packTarget);
     if (equipRelic(run, i, el.dataset.item)) {
-      save();
-      render();
-      detailTab="equipment";openCreature(i);animateAuraEquip(i,run.team[i].relics.at(-1).id);
+      const kind=modalKind;save();render();
+      detailTab="equipment";refreshLoadoutMenu(i,kind);animateAuraEquip(i,run.team[i].relics.at(-1).id);
       toast("Aura Stone equipped on this companion.");
     }
     return;
@@ -2052,10 +2055,39 @@ function animateAuraEquip(index,id){
  pulse.addEventListener('animationend',()=>pulse.remove(),{once:true});setTimeout(()=>pulse.remove(),1200);
 }
 function stoneSymbol(stone){return `<span class="aura-stone-art authored-aura-art" style="--stone-color:${stone.color}">${artImage(relicArt(stone.id),'stone-illustration')}<i>${auraTierLabel(stone)}</i></span>`;}
-function loadoutHTML(u,index){
- const items=u.relics||[],slots=relicSlots(u);
- return `<section class="personal-loadout" data-loadout-drop="${index}"><div class="section-heading"><h3>AURA STONES</h3><span>${items.length} / ${slots} SLOTS</span></div><div class="aura-bearer" data-aura-bearer="${index}">${image(u)}<p><strong>${BY_ID[u.id].rarity} \u00b7 ${slots} aura slot${slots===1?'':'s'}</strong><br>Nearby allies or enemies are affected while the wearer lives. Common 0 \u00b7 Uncommon 1 \u00b7 Rare 2 \u00b7 Epic 3 \u00b7 Legendary 4. Slots do not increase on evolution.</p></div><div class="relic-slots">${Array.from({length:slots},(_,slot)=>{const g=items[slot],r=g&&auraStone(g);return `<div data-loadout-drop="${index}" data-relic-slot="${slot}" class="relic-slot aura-slot ${r?'equipped':''}" style="--relic:${r?.color||'#728666'}">${r?stoneSymbol(r):'<span>\u25c7</span>'}<strong>${r?.name||'Empty Aura slot'}</strong><small>${r?r.desc:'Drop an Aura Stone here'}</small>${r&&index!==null?`<button data-unequip="${slot}" data-index="${index}" ${phase==='battle'?'disabled':''}>Return to stone pack</button>`:''}</div>`;}).join('')||'<p>Common companions cannot wear Aura Stones. They still receive allied aura benefits.</p>'}</div>${index!==null?`<div class="personal-inventory" data-pack-drop="true">${run.inventory.map(g=>{const r=auraStone(g);if(!r)return '';const fit=auraCompatibility(u,r),usable=fit.allowed;return `<button class="aura-inventory ${usable?'stone-usable':'stone-incompatible'}" aria-disabled="${!usable}" data-equip="${g.uid}" data-index="${index}" ${phase==='battle'||items.length>=slots||items.some(x=>x.id===g.id)?'disabled':''}>${stoneSymbol(r)}<span class="aura-target">${auraTierLabel(g)} \u00b7 ${r.role} \u00b7 ${r.target==='allies'?'ALLY AURA':'ENEMY AURA'}</span><strong>${r.name}</strong><small>${r.desc}</small><b>${usable?r.role+' compatible \u00b7 '+r.radius+' radius':fit.reason}</b></button>`;}).join('')||'<p>Enemy carriers: 20% normal, 60% elite. Common creatures have no sockets. Bosses carry three. Higher-rarity enemies and higher-tier elites drop stronger stones.</p>'}</div>`:''}</section>`;
+function loadoutHTML(u,index,includePack=true){
+ const items=u.relics||[],slots=relicSlots(u),role=BY_ID[u.id].role;
+ return `<section class="personal-loadout compact-auras" data-loadout-drop="${index}"><div class="section-heading"><h3>AURA STONES</h3><span>${items.length} / ${slots} SLOTS</span></div><p class="aura-bearer">${role} stones · Nearby targets benefit while the wearer lives.</p><div class="relic-slots" style="--aura-slots:${Math.max(1,slots)}">${Array.from({length:slots},(_,slot)=>{
+  const g=items[slot],r=g&&auraStone(g),tip=r?`${r.name} · ${auraTierLabel(g)} · ${r.desc}`:`Empty Aura slot · Drop a ${role} stone here`;
+  return `<div data-loadout-drop="${index}" data-relic-slot="${slot}" class="relic-slot aura-slot ${r?'equipped':''}" style="--relic:${r?.color||'#728666'}" tabindex="0" title="${tip.replaceAll('"','&quot;')}" aria-label="${tip.replaceAll('"','&quot;')}">${r?stoneSymbol(r):'<span class="empty-aura-symbol">◇</span>'}<strong>${r?r.name.replace(' Stone',''):'Empty slot'}</strong><small>${r?auraTierLabel(g):'Drop stone'}</small>${r&&index!==null?`<button class="aura-remove" data-unequip="${slot}" data-index="${index}" aria-label="Return ${r.name} to stone pouch" title="Return to stone pouch" ${phase==='battle'?'disabled':''}>×</button>`:''}</div>`;
+ }).join('')||'<p class="aura-no-slots">No Aura slots at Common rarity. Allied auras still apply.</p>'}</div>${includePack&&index!==null?stonePouchHTML(u,index):''}</section>`;
 }
+function equipmentPouchHTML(c=run.team[selectedCreature],index=selectedCreature){
+ const items=(run.gearInventory||[]).flatMap(item=>{
+  const g=GEAR_BY_ID[item.id];if(!g)return [];
+  const fit=gearCompatibility(c,g),worn=c?.equipment?.includes(g.id),sample={balanceVersion:17,equipmentVersion:2,equipment:[g.id],equipmentRolls:[item]};
+  return [{uid:item.uid,name:g.name,art:gearSymbol(g),color:g.color,usable:!!c&&fit.allowed&&!worn,meta:`${equipmentSlotType(g)} · ${item.rarity||'Standard'} · ${Math.round((item.quality||1)*100)}% quality${item.fromCapture?' · From capture':''}`,description:equipmentDescription(g,sample),reason:worn?'Already equipped':fit.allowed?'Fits '+creatureName(c):fit.reason}];
+ });
+ return inventoryPouchHTML({kind:'gear',title:'Equipment knapsack',icon:artImage('pack-08','pouch-emblem'),items,index,locked:phase==='battle',empty:'Drop worn equipment here to pack it away.'});
+}
+function stonePouchHTML(c=run.team[selectedCreature],index=selectedCreature){
+ const items=run.inventory.flatMap(g=>{
+  const r=auraStone(g);if(!r)return [];
+  const fit=c?auraCompatibility(c,r):{allowed:false,reason:'Select a companion'},full=c&&(c.relics||[]).length>=relicSlots(c),worn=c?.relics?.some(s=>s.id===r.id);
+  return [{uid:g.uid,name:r.name,art:stoneSymbol(r),color:r.color,usable:fit.allowed&&!full&&!worn,meta:`${auraTierLabel(g)} · ${r.role} · ${r.target==='allies'?'Allied aura':'Enemy aura'}`,description:r.desc,reason:!fit.allowed?fit.reason:worn?'Already equipped':full?'No open Aura slot':'Fits '+creatureName(c)}];
+ });
+ return inventoryPouchHTML({kind:'gem',title:'Aura Stone pouch',icon:'<span class="pouch-emblem stone-pouch-emblem" aria-hidden="true">◇</span>',items,index,locked:phase==='battle',empty:'Drop equipped stones here to store them.'});
+}
+function inventoryDockHTML(c=run.team[selectedCreature],index=selectedCreature){return equipmentPouchHTML(c,index)+stonePouchHTML(c,index);}
+function pouchCompanionsHTML(){return `<nav class="pouch-companions" aria-label="Choose companion for equipment">${run.team.map((c,i)=>`<button data-pouch-companion="${i}" aria-pressed="${i===selectedCreature}" title="${creatureName(c)} · ${BY_ID[c.id].role}">${image(c)}<span>${creatureName(c)}</span></button>`).join('')}</nav>`;}
+function refreshLoadoutMenu(index,kind=modalKind){if(kind==='companions')openCompanions();else if(kind==='pack')openPack();else openCreature(index);}
+document.addEventListener('pointerover',showPouchItem);
+document.addEventListener('focusin',showPouchItem);
+function showPouchItem(e){
+ const item=e.target.closest?.('[data-pouch-item]'),info=item?.closest('.inventory-pouch')?.querySelector('.pouch-inspector');if(!info||touchLoadout?.moved)return;
+ info.querySelector('strong').textContent=item.dataset.pouchName;info.querySelector('small').textContent=item.dataset.pouchDetail;
+}
+
 function policyHTML(u, index) {
   const policy = POLICIES[u.policy || "adaptive"] || POLICIES.adaptive;
   return nativeOrdersHTML(u,index)+`<label class="policy-control"><span class="section-kicker">CREATURE AI POLICY</span><select data-policy="${index}" ${phase === "battle" ? "disabled" : ""}>${Object.entries(
@@ -2245,20 +2277,9 @@ function skillsHTML(u, index) {
     .join("")}</div>`;
 }
 
-function openPack() {
-  modal(
-    `<span class="section-kicker">AURA STONES · EXPEDITION INVENTORY</span><h2>A little something special.</h2><p>Drag a stone onto a companion of the matching role with an open aura slot. Common 0 \u00b7 Uncommon 1 \u00b7 Rare 2 \u00b7 Epic 3 \u00b7 Legendary 4. Evolution does not add slots. Each tier increases aura strength by 20%.</p><div class="personal-inventory">${
-      run.inventory.length
-        ? run.inventory
-            .map((item) => {
-              const r = auraStone(item)||PERSONAL_BY_ID[item.id];
-              return `<button class="inventory-item" data-pack-relic="${item.uid}" ${phase === "battle" ? "disabled" : ""}>${stoneSymbol(r)}<div><small class="aura-target">${auraTierLabel(r)} \u00b7 ${r.role} \u00b7 ${r.target==='allies'?'ALLY AURA':'ENEMY AURA'}</small><strong>${r.name}</strong><small>${relicDescription(r)}</small></div><b>→</b></button>`;
-            })
-            .join("")
-        : "<p>Your pack is empty. Buy Aura Stones at an outpost or defeat an enemy carrying one.</p>"
-    }</div><div class="modal-actions">${button("Back to expedition", "close", "secondary")}</div>`,
-    "pack",
-  );
+function openPack(){
+ selectedCreature=Math.max(0,Math.min(selectedCreature,run.team.length-1));
+ modal(`<span class="section-kicker">EXPEDITION INVENTORY</span><h2>Your knapsack & stone pouch.</h2>${pouchCompanionsHTML()}<div class="pack-pouches">${inventoryDockHTML()}</div><div class="modal-actions">${button('Done →','close')}</div>`,'pack');
 }
 function openEquipTarget(uid) {
   const item = run.inventory.find((i) => i.uid === uid);
@@ -2352,7 +2373,7 @@ function drawTuningPreview(time){const canvas=$('#tuning-preview');if(!canvas||!
 }
 function quickEquipmentHTML(c,index){return `<div class="quick-attachments"><div class="quick-equipment" aria-label="${creatureName(c)} equipment" data-loadout-drop="${index}">${equipmentSlotViews(c).map(({type,slot,gear:g,roll})=>g?`<button class="slot-${type.toLowerCase()}" data-gear-remove="${slot}" data-index="${index}" data-loadout-drop="${index}" data-gear-slot="${slot}" data-gear-type="${type}" style="--gear-color:${g.color||'#b9cf9d'}" ${phase==='battle'?'disabled':''} title="${type}: ${roll?.rarity||'Standard'} ${g.name} · ${Math.round((roll?.quality||1)*100)}% quality: ${equipmentDescription(g,c)}. Click to return to pack." aria-label="${creatureName(c)}: ${type}, ${g.name}"><span class="slot-label">${type}</span>${gearSymbol(g)}<small>${g.name}</small><span class="visible-gear-effect">${equipmentDescription(g,c)}</span></button>`:`<button class="slot-${type.toLowerCase()} empty-equipment" data-action="inspect-quick-gear" data-index="${index}" data-loadout-drop="${index}" data-gear-slot="-1" data-gear-type="${type}" title="Drop ${type.toLowerCase()} here or inspect equipment"><span class="slot-label">${type}</span><b>${slotEmblems[type]||'+'}</b><small>Empty</small></button>`).join('')}</div>${quickAuraHTML(c,index)}</div>`;}
 function quickAuraHTML(c,index){const slots=relicSlots(c);if(!slots)return '';return `<div class="quick-auras" aria-label="${creatureName(c)} Aura Stones">${Array.from({length:slots},(_,slot)=>{const item=c.relics?.[slot],s=item&&auraStone(item);return `<button class="quick-aura ${s?'equipped':''}" data-loadout-drop="${index}" data-relic-slot="${slot}" data-quick-aura="${index}" data-index="${index}" ${s?`data-equipped-stone="${slot}"`:''} title="${s?s.desc:'Empty '+BY_ID[c.id].role+' Aura Stone slot'}"><span class="slot-label">AURA ${slot+1}</span>${s?stoneSymbol(s):'<b>\u25c7</b>'}<small>${s?auraTierLabel(s):'Empty'}</small></button>`;}).join('')}</div>`;}
-function equipmentTrayHTML(){return `<section class="equipment-tray" data-pack-drop="true"><div class="section-heading"><h3>${artImage('pack-00','inventory-pack')} YOUR EQUIPMENT PACK <span data-equipment-total>${run.gearInventory?.length||0}</span></h3><small>${phase==='battle'?'Equipment locks during combat.':'Select a companion to see what fits. Shaded items cannot be equipped by them.'}</small></div><div class="pack-recipients" aria-label="Equipment recipients">${run.team.map((c,i)=>`<button data-loadout-drop="${i}" data-switch-creature="${i}" ${phase==='battle'?'disabled':''} title="Drop equipment on ${creatureName(c)}">${image(c)}<span>${creatureName(c)}<small>${equipmentAlignment(c)} · ${c.equipment?.length||0}/${equipmentSlots(c)} equipped</small></span></button>`).join('')}</div>${equipmentItemsHTML(run.team[selectedCreature],selectedCreature)}</section>`;}
+function equipmentTrayHTML(){return equipmentPouchHTML();}
 
 function retryCaptureUI(uid){const result=battle.retryCapture(uid,run.selectedCapturer||'scout');if(result.ok){settleTacticalCapture();updateRetryControls();}else toast(result.reason);}
 function retryControlsHTML(){return `<div id="capture-retry-controls" class="capture-retry-controls"><div><strong>CAPTURE TOOLS <span id="capture-attempt-count">${battle?.captureAttempts||0} / 3 attempts</span></strong><small id="capture-retry-note">The first throw is automatic. After a failure, click a weakened opponent to retry.</small></div><label class="auto-capture-toggle"><input type="checkbox" data-auto-capture ${run.autoCaptureRetry?'checked':''}> Auto retry · 3s</label><div class="capture-quick">${Object.entries(CAPTURERS).map(([id,t])=>`<button data-capture-method="${id}" class="${id===(run.selectedCapturer||run.captureOrder.tool)?'selected':''}" title="${t.name} · ${t.mult}× baseline chance">${t.icon}<small data-capturer-stock="${id}">${t.name.split(' ')[0]} · ${run.captureTools?.[id]||0}</small></button>`).join('')}</div></div>`;}
@@ -2410,10 +2431,9 @@ function prepareLoadoutDragging(){
  document.querySelectorAll('[data-skill-drop]').forEach(el=>{const i=Number(el.dataset.index),id=el.dataset.skillDrop;if(run.team[i]&&!SKILLS[id]?.auto)make(el,{kind:'skill',id,fromIndex:i});});
  document.querySelectorAll('.personal-inventory').forEach(el=>el.dataset.packDrop='true');
 }
-function dropTarget(el){const marker=el?.closest('[data-seat-drop],[data-skill-drop],[data-loadout-drop],[data-pack-drop]');if(!marker)return null;if(marker.dataset.seatDrop!==undefined)return {seat:Number(marker.dataset.seatDrop)};if(marker.dataset.packDrop!==undefined)return {pack:true};if(marker.dataset.skillDrop)return {index:Number(marker.dataset.index),skill:marker.dataset.skillDrop};const gear=el.closest('[data-gear-slot]');return marker.dataset.loadoutDrop!=='null'?{index:Number(marker.dataset.loadoutDrop),...(gear?{gearSlot:Number(gear.dataset.gearSlot),gearType:gear.dataset.gearType,equipmentArea:gear.closest('.equipment-panel')?'panel':'quick'}:{}),...(el.closest('[data-relic-slot]')?{relicSlot:Number(el.closest('[data-relic-slot]').dataset.relicSlot),stoneArea:el.closest('[data-quick-aura]')?'quick':'panel'}:{})}:null;}
+function dropTarget(el){const marker=el?.closest('[data-seat-drop],[data-skill-drop],[data-loadout-drop],[data-pack-drop]');if(!marker)return null;if(marker.dataset.seatDrop!==undefined)return {seat:Number(marker.dataset.seatDrop)};if(marker.dataset.packDrop!==undefined)return {pack:true,...(marker.dataset.packKind?{packKind:marker.dataset.packKind}:{})};if(marker.dataset.skillDrop)return {index:Number(marker.dataset.index),skill:marker.dataset.skillDrop};const gear=el.closest('[data-gear-slot]');return marker.dataset.loadoutDrop!=='null'?{index:Number(marker.dataset.loadoutDrop),...(gear?{gearSlot:Number(gear.dataset.gearSlot),gearType:gear.dataset.gearType,equipmentArea:gear.closest('.equipment-panel')?'panel':'quick'}:{}),...(el.closest('[data-relic-slot]')?{relicSlot:Number(el.closest('[data-relic-slot]').dataset.relicSlot),stoneArea:el.closest('[data-quick-aura]')?'quick':'panel'}:{})}:null;}
 
 function finishLoadoutDrop(payload,target){if(!target||phase==='battle')return false;if(!applyLoadoutDrop(run,payload,target)){toast('That loadout cannot accept this item or skill. Check space and compatibility.');return false;}save();render();if(modalKind==='creature'||modalKind==='detail')openCreature(selectedCreature);else if(modalKind==='pack')openPack();else if(modalKind==='companions')openCompanions();const refreshed=$('.modal');if(refreshed)refreshed.classList.add('loadout-updated');if(payload.kind==='gem'&&!target.pack)setTimeout(()=>animateAuraEquip(Number(target.index),payload.id),profile.reducedMotion?80:460);toast(payload.kind==='skill'?'Cooldown priority changed. The first ready skill is considered first.':'Loadout updated.');return true;}
-let loadoutDrag=null;
 // Native drag events are a fallback; pointer dragging gives mouse, pen and
 // touch the same exact sprite, legal targets and drop animation.
 document.addEventListener('dragstart',e=>{
@@ -2436,7 +2456,6 @@ document.addEventListener('pointerdown',e=>{const el=e.target.closest('.ailment-
 
 document.addEventListener('keydown',e=>{if(!e.target.matches('[data-detail-tab]')||!['ArrowLeft','ArrowRight'].includes(e.key))return;e.preventDefault();const tabs=[...document.querySelectorAll('[data-detail-tab]')],i=tabs.indexOf(e.target),next=tabs[(i+(e.key==='ArrowRight'?1:-1)+tabs.length)%tabs.length];detailTab=next.dataset.detailTab;prepareDetailTabs();next.focus();});
 
-let touchLoadout=null,touchDragUntil=0,cancelledSpritePointer=null;
 const loadoutTargets='[data-seat-drop],[data-skill-drop],[data-loadout-drop],[data-pack-drop],[data-gear-slot]';
 function clearLoadoutTargets(){document.body.classList.remove('carrying-sprite');document.querySelectorAll('.dragging,.loadout-target,.loadout-compatible,.loadout-incompatible').forEach(el=>el.classList.remove('dragging','loadout-target','loadout-compatible','loadout-incompatible'));}
 function highlightLoadoutTargets(payload,source){
@@ -2446,7 +2465,7 @@ function highlightLoadoutTargets(payload,source){
   const valid=canLoadoutDrop(run,payload,dropTarget(el));el.classList.add(valid?'loadout-compatible':'loadout-incompatible');
  }
 }
-function hoverLoadoutTarget(el,valid){document.querySelectorAll('.loadout-target').forEach(n=>n.classList.remove('loadout-target'));if(valid)el?.closest(loadoutTargets)?.classList.add('loadout-target');}
+function hoverLoadoutTarget(el,valid){document.querySelectorAll('.loadout-target').forEach(n=>n.classList.remove('loadout-target'));if(valid){el?.closest(loadoutTargets)?.classList.add('loadout-target');const pouch=el?.closest('.inventory-pouch');if(pouch)openInventoryPouch(pouch);}}
 function landedTarget(payload,target,ghost){
  const candidates=[...document.querySelectorAll(loadoutTargets)].filter(el=>{const t=dropTarget(el);return t&&(target.pack?t.pack:target.seat!==undefined?t.seat===target.seat:t.index===target.index);}).filter(el=>el.getClientRects().length);
  if(target.pack){const uid=payload.kind==='gear'?run.gearInventory.filter(g=>g.id===payload.id).at(-1)?.uid:payload.uid;const selector=payload.kind==='gear'?'[data-gear-equip]':'[data-equip],[data-pack-relic]';const item=[...document.querySelectorAll(selector)].find(el=>(el.dataset.gearEquip||el.dataset.equip||el.dataset.packRelic)===uid&&el.getClientRects().length);if(item)return item;}
@@ -2455,37 +2474,59 @@ function landedTarget(payload,target,ghost){
  return candidates.find(el=>el.dataset.creature!==undefined||el.dataset.partySelect!==undefined||el.dataset.seatDrop!==undefined||el.dataset.skillDrop===target.skill)||candidates[0];
 }
 function completeSpriteDrop(payload,target,ghost,source){
- const valid=phase!=='battle'&&canLoadoutDrop(run,payload,target);clearLoadoutTargets();
- if(valid&&finishLoadoutDrop(payload,target))settleDragSprite(ghost,landedTarget(payload,target,ghost),{reducedMotion:profile.reducedMotion});
- else settleDragSprite(ghost,source,{reducedMotion:profile.reducedMotion,cancelled:true});
+ try{
+  const valid=phase!=='battle'&&canLoadoutDrop(run,payload,target);clearLoadoutTargets();
+  if(valid&&finishLoadoutDrop(payload,target))settleDragSprite(ghost,landedTarget(payload,target,ghost),{reducedMotion:profile.reducedMotion});
+  else settleDragSprite(ghost,source,{reducedMotion:profile.reducedMotion,cancelled:true});
+ }catch(error){clearDragSprites();throw error;}
+ finally{clearLoadoutTargets();}
 }
+function dragTargetAllowed(el){return !!el?.closest(loadoutTargets)?.classList.contains('loadout-compatible');}
 function scrollSpriteDrag(){
  const d=touchLoadout;if(!d?.moved)return;
- const dialog=d.el.closest('.modal'),scroll=dialog?.scrollHeight>dialog?.clientHeight?dialog:d.el.closest('.modal-backdrop');
- if(scroll){const r=scroll.getBoundingClientRect(),edge=36,up=Math.max(0,r.top+edge-d.clientY),down=Math.max(0,d.clientY-(r.bottom-edge));scroll.scrollTop+=Math.max(-12,Math.min(12,(down-up)*.35));}
- const hit=document.elementFromPoint(d.clientX,d.clientY);hoverLoadoutTarget(hit,canLoadoutDrop(run,d.payload,dropTarget(hit)));d.scrollFrame=requestAnimationFrame(scrollSpriteDrag);
+ if(!d.el.isConnected||!d.ghost?.isConnected){cancelSpriteDrag({immediate:true});return;}
+ const pile=d.el.closest('[data-pouch-pile]'),pr=pile?.getBoundingClientRect(),inside=pr&&d.clientX>=pr.left&&d.clientX<=pr.right&&d.clientY>=pr.top&&d.clientY<=pr.bottom;
+ const dialog=d.el.closest('.modal'),scroll=inside&&pile.scrollHeight>pile.clientHeight?pile:dialog?.scrollHeight>dialog?.clientHeight?dialog:d.el.closest('.modal-backdrop');
+ if(scroll){const r=scroll.getBoundingClientRect(),edge=32,up=Math.max(0,r.top+edge-d.clientY),down=Math.max(0,d.clientY-(r.bottom-edge));scroll.scrollTop+=Math.max(-12,Math.min(12,(down-up)*.35));}
+ const hit=document.elementFromPoint(d.clientX,d.clientY);hoverLoadoutTarget(hit,dragTargetAllowed(hit));d.scrollFrame=requestAnimationFrame(scrollSpriteDrag);
 }
-function cancelSpriteDrag(){const d=touchLoadout;touchLoadout=null;if(d?.scrollFrame)cancelAnimationFrame(d.scrollFrame);if(d?.moved){cancelledSpritePointer=d.id;touchDragUntil=performance.now()+400;settleDragSprite(d.ghost,d.el,{reducedMotion:profile.reducedMotion,cancelled:true});}clearLoadoutTargets();}
+function cancelSpriteDrag({immediate=false}={}){
+ const d=touchLoadout;touchLoadout=null;loadoutDrag=null;
+ if(d?.scrollFrame)cancelAnimationFrame(d.scrollFrame);
+ if(d?.el.hasPointerCapture(d.id))d.el.releasePointerCapture(d.id);
+ if(d?.moved){cancelledSpritePointer=d.id;touchDragUntil=performance.now()+400;if(!immediate)settleDragSprite(d.ghost,d.el,{reducedMotion:profile.reducedMotion,cancelled:true});}
+ if(immediate)clearDragSprites();clearLoadoutTargets();
+}
 document.addEventListener('pointerdown',e=>{
+ if(e.isPrimary===false)return;
+ if(touchLoadout)cancelSpriteDrag({immediate:true});
+ clearDragSprites();touchDragUntil=0;cancelledSpritePointer=null;
  const el=e.target.closest('[data-drag-payload]');if(!el||phase==='battle'||el.disabled||e.button!==0)return;
- cancelledSpritePointer=null;touchLoadout={el,payload:JSON.parse(el.dataset.dragPayload),x:e.clientX,y:e.clientY,id:e.pointerId,moved:false};
+ touchLoadout={el,payload:JSON.parse(el.dataset.dragPayload),x:e.clientX,y:e.clientY,clientX:e.clientX,clientY:e.clientY,id:e.pointerId,moved:false};
 });
 document.addEventListener('pointermove',e=>{
- const d=touchLoadout;if(!d||e.pointerId!==d.id)return;d.clientX=e.clientX;d.clientY=e.clientY;
- if(!d.moved&&Math.hypot(e.clientX-d.x,e.clientY-d.y)>6){d.moved=true;d.el.setPointerCapture(e.pointerId);d.ghost=dragSprite(d.el,d.payload.kind==='gem'?artImage(relicArt(d.payload.id)):'');d.el.classList.add('dragging');highlightLoadoutTargets(d.payload,d.el);d.scrollFrame=requestAnimationFrame(scrollSpriteDrag);}
- if(d.moved){e.preventDefault();moveDragSprite(d.ghost,e.clientX,e.clientY);const hit=document.elementFromPoint(e.clientX,e.clientY);hoverLoadoutTarget(hit,canLoadoutDrop(run,d.payload,dropTarget(hit)));}
+ const d=touchLoadout;if(!d||e.pointerId!==d.id)return;
+ if(!d.el.isConnected||e.pointerType==='mouse'&&e.buttons===0){cancelSpriteDrag({immediate:true});return;}
+ d.clientX=e.clientX;d.clientY=e.clientY;
+ if(!d.moved&&Math.hypot(e.clientX-d.x,e.clientY-d.y)>6){
+  try{d.el.setPointerCapture(e.pointerId);}catch{cancelSpriteDrag({immediate:true});return;}
+  d.moved=true;d.ghost=dragSprite(d.el,d.payload.kind==='gem'?artImage(relicArt(d.payload.id)):'');d.el.classList.add('dragging');highlightLoadoutTargets(d.payload,d.el);d.scrollFrame=requestAnimationFrame(scrollSpriteDrag);
+ }
+ if(d.moved){e.preventDefault();moveDragSprite(d.ghost,e.clientX,e.clientY);const hit=document.elementFromPoint(e.clientX,e.clientY);hoverLoadoutTarget(hit,dragTargetAllowed(hit));}
 },{passive:false});
 document.addEventListener('pointerup',e=>{
- if(cancelledSpritePointer===e.pointerId){cancelledSpritePointer=null;touchDragUntil=performance.now()+500;return;}
+ if(cancelledSpritePointer===e.pointerId){cancelledSpritePointer=null;touchDragUntil=performance.now()+400;return;}
  const d=touchLoadout;if(!d||d.id!==e.pointerId)return;touchLoadout=null;if(d.scrollFrame)cancelAnimationFrame(d.scrollFrame);
  if(d.el.hasPointerCapture(e.pointerId))d.el.releasePointerCapture(e.pointerId);
  if(!d.moved)return;touchDragUntil=performance.now()+400;
- completeSpriteDrop(d.payload,dropTarget(document.elementFromPoint(e.clientX,e.clientY)),d.ghost,d.el);touchDragUntil=performance.now()+500;
+ completeSpriteDrop(d.payload,dropTarget(document.elementFromPoint(e.clientX,e.clientY)),d.ghost,d.el);
 });
-document.addEventListener('pointercancel',cancelSpriteDrag);
-window.addEventListener('blur',cancelSpriteDrag);
+document.addEventListener('pointercancel',e=>{if(touchLoadout?.id===e.pointerId)cancelSpriteDrag({immediate:true});});
+document.addEventListener('lostpointercapture',e=>{if(touchLoadout?.id===e.pointerId)cancelSpriteDrag({immediate:true});});
+window.addEventListener('blur',()=>cancelSpriteDrag({immediate:true}));
+document.addEventListener('visibilitychange',()=>{if(document.hidden)cancelSpriteDrag({immediate:true});});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&touchLoadout?.moved){e.preventDefault();e.stopImmediatePropagation();cancelSpriteDrag();}},true);
-document.addEventListener('click',e=>{if(performance.now()<touchDragUntil){e.preventDefault();e.stopImmediatePropagation();}},true);
+document.addEventListener('click',e=>{if(e.detail!==0&&performance.now()<touchDragUntil){e.preventDefault();e.stopImmediatePropagation();}},true);
 
 function roleBadge(s){return `<span class="role-badge role-${s.role.toLowerCase()}" title="${s.role}: ${{Guardian:'Armored frontline and interception',Striker:'Close combat pressure',Ranger:'Ranged damage and kiting',Support:'Healing and control'}[s.role]}">${ROLES[s.role]} ${s.role}${s.rarity==='Legendary'?' · ✦ Legendary':''}</span>`;}
 function reserveTrayHTML(){return `<section class="reserve-tray"><div class="section-heading"><h3>RESERVE ROSTER <span>${run.bench.length} / 12</span></h3><small>Drag onto a team member to swap · their equipment stays with them${run.bench.length>12?' · Extra captured companions are kept safely.':''}</small></div><div class="reserve-tray-list">${run.bench.map((c,j)=>`<button class="reserve-card ${BY_ID[c.id].rarity==='Legendary'?'legendary-creature':''}" ${run.team.length<capacity(run)?`data-deploy-reserve="${j}"`:`data-swap="${j}"`} data-index="${selectedCreature}" data-drag-payload='${JSON.stringify({kind:'reserve',uid:c.uid})}' draggable="${phase!=='battle'}" ${phase==='battle'?'disabled':''}>${image(c)}<span><strong>${creatureName(c)}</strong>${roleBadge(BY_ID[c.id])}<small>Lv. ${c.level} · ${c.equipment?.length||0}/${equipmentSlots(c)} gear slots</small></span></button>`).join('')||'<p>Capture or recruit a companion to build your reserves.</p>'}</div></section>`;}
@@ -2618,7 +2659,7 @@ function captureSummaryHTML(){
 function openCompanions(){
  selectedCreature=Math.max(0,Math.min(selectedCreature,run.team.length-1));
  const selected=run.team[selectedCreature];
- modal(`<header class="tool-heading"><h2>Your expedition <small>${run.team.length} / ${capacity(run)}</small></h2><p>Inspect skills & equipment · Deploy on the tactical grid.</p>${button('Roster & forms','roster','secondary small')}</header><div class="companions-layout"><section class="party-overview"><div class="team-grid">${Array.from({length:capacity(run)},(_,seat)=>teamSeatHTML(seat).replace('data-creature=','data-party-select=')).join('')}</div><section class="reserve-panel">${reserveTrayHTML()}${button('Manage reserves','reserves','secondary',phase==='battle')}</section></section><section class="companion-equipment"><header>${selected?image(selected):''}<div><h3>${selected?creatureName(selected):'An open place'}</h3><p>${selected?BY_ID[selected.id].role+' · Lv. '+selected.level:'Capture or recruit a companion.'}</p></div>${selected?`<button class="button secondary small" data-action="inspect-selected">Inspect skills →</button>`:''}</header>${selected?'<div class="character-attachments">'+equipmentHTML(selected,selectedCreature,false)+loadoutHTML(selected,selectedCreature)+'</div>':''}${equipmentTrayHTML()}</section><aside>${synergyHTML()}<section class="party-relics"><h3>Expedition relics · ${run.relics.length}</h3><div>${run.relics.map(id=>`<button data-relic="${id}" title="${RELICS.find(r=>r.id===id)?.name||id}">${artImage(relicArt(id))}</button>`).join('')||'<p>No expedition relics yet.</p>'}</div>${button('Stone pack · '+run.inventory.length,'pack','secondary')}</section>${button('Deployment & AI','formation','secondary')}${button('Done →','close')}</aside></div>`,'companions');
+ modal(`<header class="tool-heading"><h2>Your expedition <small>${run.team.length} / ${capacity(run)}</small></h2><p>Choose a companion · Equip from the pouches.</p>${button('Roster & forms','roster','secondary small')}</header>${pouchCompanionsHTML()}<div class="companions-layout"><section class="party-overview"><div class="team-grid">${Array.from({length:capacity(run)},(_,seat)=>teamSeatHTML(seat).replace('data-creature=','data-party-select=')).join('')}</div><section class="reserve-panel">${reserveTrayHTML()}${button('Manage reserves','reserves','secondary',phase==='battle')}</section></section><section class="companion-equipment"><header data-aura-bearer="${selectedCreature}">${selected?image(selected):''}<div><h3>${selected?creatureName(selected):'An open place'}</h3><p>${selected?BY_ID[selected.id].role+' · Lv. '+selected.level:'Capture or recruit a companion.'}</p></div>${selected?`<button class="button secondary small" data-action="inspect-selected">Inspect skills →</button>`:''}</header>${selected?'<div class="character-attachments">'+equipmentHTML(selected,selectedCreature,false)+loadoutHTML(selected,selectedCreature,false)+'</div>':''}</section><aside class="inventory-sidebar">${inventoryDockHTML()}<details class="party-notes"><summary>Team synergies & relics <span>${run.relics.length}</span></summary>${synergyHTML()}<section class="party-relics"><h3>Expedition relics · ${run.relics.length}</h3><div>${run.relics.map(id=>`<button data-relic="${id}" title="${RELICS.find(r=>r.id===id)?.name||id}">${artImage(relicArt(id))}</button>`).join('')||'<p>No expedition relics yet.</p>'}</div></section></details><div class="companion-tools">${button('Deployment & AI','formation','secondary')}${button('Done →','close')}</div></aside></div>`,'companions');
 }
 function openCaptureKit(){
  const targets=(foes||[]).filter(c=>!c.boss),plan=run.captureOrder;

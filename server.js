@@ -16,6 +16,8 @@ const types = {
   ".woff2": "font/woff2",
 };
 const entryFiles = new Set([
+  "/inventory-pouches.js",
+  "/inventory-pouches.css",
   "/xp-celebration.js",
   "/aura-stones.js",
   "/loadout-drag-ui.js",
