@@ -22,7 +22,7 @@ import {CORE_SPECIES} from './core-species.js';
 import {evaluateOrders,terrainFor,firstTerrainHit,terrainSteering,confineTerrain,orderGoal,combatApproach,avoidCombatBodies} from './native-tactics.js';
 import {NATIVE_BOUNDS,nativeSpawn,initializeNative,nativeAction,advanceNative,nativeBladePoint,nativeHeavy,nativeMuzzle,nativeBodyHeight} from './native-combat.js';
 import { NATIVE_SPECIES, NATIVE_STARTERS, NATIVE_POOLS, nativeEvolution, nativeSkill, nativePool, lineageLimit, lineageProgress, settleNativeGrowth } from './native-content.js';
-import { SKILLS, loadoutFor } from "./skills.js";
+import { SKILLS, loadoutFor,initializeSkills,prepareEnemySkills,queueLevelSkill,queueEvolutionSkill,familyPassiveStats,SKILL_UNLOCK_LEVELS } from "./skills.js";
 import { EXPANSION_SPECIES } from "./roster.js";
 import {
   sweepCircle,
@@ -453,6 +453,7 @@ export function evolveCreature(run, index, path) {
   run.gold -= offer.cost;
   c.evolution = offer.stage + 1;
   c.evolutionPath = path;
+  queueEvolutionSkill(c);
   return { success: true, name: creatureName(c), stage: c.evolution, path };
 }
 export function personalRelic(id) {
@@ -689,6 +690,7 @@ export function gainXP(c, amount) {
   while (c.xp >= xpNeeded(c.level)) {
     c.xp -= xpNeeded(c.level);
     c.level++;
+    queueLevelSkill(c,c.level);
     levels++;
   }
   return levels;
@@ -770,7 +772,7 @@ export function stats(c, team, relics = []) {
     atk *= 0.94;
   }
   const personal = personalEffects(c);
-  const gear=equipmentEffects(c),curios=relicStatFactors([...relics,...(c.boundRelics||[])],strength),genes=c.genes||{};
+  const passive=familyPassiveStats(c),gear=equipmentEffects(c),curios=relicStatFactors([...relics,...(c.boundRelics||[])],strength),genes=c.genes||{};
   hp *= (genes.hp||1)*curios.hp;atk *= (genes.atk||1)*curios.atk;cd *= (genes.cd||1)*curios.cd;speed *= (genes.speed||1)*curios.speed;
   hp *= personal.health * gear.health;
   atk *= personal.attack * gear.attack;
@@ -778,7 +780,7 @@ export function stats(c, team, relics = []) {
   speed *= personal.speed * gear.speed * (nativeEvolution(c).speed || 1);
   dodge += personal.dodge;
   return applyEliteStats({
-    armor:c.balanceVersion>=15?({Guardian:34,Striker:12,Ranger:7,Support:9}[s.role]||10)+Math.max(0,c.level-1)*1.5*(levelGrowthRate(c)/.105)+gear.armor+personal.armor*100:0,
+    armor:c.balanceVersion>=15?({Guardian:34,Striker:12,Ranger:7,Support:9}[s.role]||10)+Math.max(0,c.level-1)*1.5*(levelGrowthRate(c)/.105)+gear.armor+personal.armor*100+(passive.armor||0):0,
     hp: Math.round(hp+gear.hpFlat),
     atk: Math.round(atk+gear.atkFlat),
     cd: cd * linkedSupport(c, c.id).cooldown,
@@ -786,18 +788,18 @@ export function stats(c, team, relics = []) {
     speed:(speed+gear.speedFlat)*(1+minor.speed*secondaryLevels),
     hpRegen:gear.hpRegen+minor.hpRegen*secondaryLevels,
     dodge:dodge+Math.min(.06,minor.dodge*secondaryLevels),
-    range: s.range + (nativeEvolution(c).range || 0),
-    attackSpeed:curios.attackSpeed*gear.attackSpeed*(1+minor.attackSpeed*secondaryLevels)/((s.role==='Guardian'?1.55:1.3)*linkedSupport(c,loadoutFor(s,c.level,c).auto).attackSpeed),
+    range: s.range + (nativeEvolution(c).range || 0)+(passive.range||0),
+    attackSpeed:(passive.attackSpeed||1)*curios.attackSpeed*gear.attackSpeed*(1+minor.attackSpeed*secondaryLevels)/((s.role==='Guardian'?1.55:1.3)*linkedSupport(c,loadoutFor(s,c.level,c).auto).attackSpeed),
     actionSpeed:(curios.actionSpeed*gear.actionSpeed+gear.actionSpeedFlat)*(1+minor.actionSpeed*secondaryLevels),
-    staminaRecharge:((c.balanceVersion||0)>=17?({Striker:26,Ranger:22,Support:20,Guardian:15}[s.role]||20):20)*curios.regenStamina*gear.regenStamina*(1+minor.staminaRecharge*secondaryLevels),
-    dashCooldown:curios.dashCooldown*gear.dashCooldown/(1+minor.dashCooldown*secondaryLevels),
+    staminaRecharge:((c.balanceVersion||0)>=17?({Striker:26,Ranger:22,Support:20,Guardian:15}[s.role]||20):20)*(passive.staminaRecharge||1)*curios.regenStamina*gear.regenStamina*(1+minor.staminaRecharge*secondaryLevels),
+    dashCooldown:(passive.dashCooldown||1)*curios.dashCooldown*gear.dashCooldown/(1+minor.dashCooldown*secondaryLevels),
     dodgeStyle:(c.balanceVersion||0)>=17?dodgeStyle(s):'roll',
     personal,
   },c);
 }
 export function nextLevelPreview(c,team=[c],relics=[]){
  const next={...c,level:c.level+1},nextTeam=team.map(u=>u===c||c.uid&&u.uid===c.uid?next:u),s=BY_ID[c.id],before=loadoutFor(s,c.level,c),after=loadoutFor(s,next.level,next);
- return {level:next.level,rarity:s.rarity,growthRate:levelGrowthRate(c),current:stats(c,team,relics),next:stats(next,nextTeam,relics),newSkills:after.active.filter(id=>!before.active.includes(id))};
+ return {skillChoice:c.skillsVersion===2&&SKILL_UNLOCK_LEVELS.includes(next.level),level:next.level,rarity:s.rarity,growthRate:levelGrowthRate(c),current:stats(c,team,relics),next:stats(next,nextTeam,relics),newSkills:after.active.filter(id=>!before.active.includes(id))};
 }
 export function makeRun(seed = Date.now(), ids = STARTERS, options = {}) {
   const random = rng(seed),
@@ -813,6 +815,7 @@ export function makeRun(seed = Date.now(), ids = STARTERS, options = {}) {
   const result = {
     seed,
     rulesVersion,
+    skillRulesVersion:options.manualSkills?2:1,
     teamCapacity:rulesVersion>=12?Math.max(teamSize,starterSlots(options)):teamSize,
     chaosCleared:Math.max(0,Math.min(20,options.chaosCleared||0)),
     captureTools:rulesVersion>=12?{scout:5,runic:0,astral:0,mythic:0}:undefined,
@@ -850,6 +853,7 @@ export function makeRun(seed = Date.now(), ids = STARTERS, options = {}) {
     shop: null,
     complete: false,
   };
+  if(options.manualSkills)team.forEach((c,i)=>{c.skillSeed=seed+i*971;initializeSkills(c);});
   // Seeded independently: the opening relic never changes the route RNG stream.
   // The browser commits two saved offers after team selection; no automatic grant.
   const chaos = chaosLevel(result);
@@ -1071,6 +1075,7 @@ export function encounter(run, type = "battle", seed = 1) {
   }
   if(type==="elite")assignEliteModifier(foes,seed,BY_ID);
   if((run.rulesVersion||0)>=17)foes.forEach((c,i)=>assignEnemyStones(c,seed+i*919,run.planet*8+run.depth));
+  if(run.skillRulesVersion===2)foes.forEach((c,i)=>prepareEnemySkills(c,seed+i*1217));
   return foes;
 }
 export function captureChance(run, c) {
@@ -1122,6 +1127,7 @@ export function awardCapture(run, c) {
   if((run.rulesVersion||0)>=15)caught.balanceVersion=run.rulesVersion;
   if(progressive(run)){caught.relics=structuredClone(c.relics||[]);caught.genes=c.genes;caught.nature=c.nature;caught.boundRelics=[...(c.enemyRelics||c.boundRelics||[])];caught.equipment=[...(c.equipment||[])];caught.equipmentVersion=c.equipmentVersion;caught.equipmentQuality=1;caught.equipmentRolls=caught.equipment.map((id,i)=>({...c.equipmentRolls?.[i],id,quality:(c.equipmentRolls?.[i]?.quality??1)*(c.equipmentQuality??1)}));}
   if(c.eliteModifier){caught.eliteModifier=c.eliteModifier;caught.eliteTier=c.eliteTier||4;}
+  if(c.skillsVersion===2)Object.assign(caught,{skillsVersion:2,manualSkills:true,learnedSkills:[...c.learnedSkills||[]],chosenEvolutionSkills:[...c.chosenEvolutionSkills||[]],pendingSkills:[],skillChoicesThrough:c.level,skillSeed:c.skillSeed});
   caught.evolution = evolutionStage(c);
   caught.evolutionPath = caught.evolution ? c.evolutionPath : null;
   run.bench.push(caught);
@@ -1260,7 +1266,8 @@ export function trainSurvival(run, index) {
   c.survivalTraining = level + 1;
   return true;
 }
-export function deployReserve(run, benchIndex, targetIndex = run.team.length) {
+export function deployReserve(run, benchIndex, targetIndex = run.team.length, targetSeat = null) {
+  if(targetSeat!==null&&(!Number.isInteger(targetSeat)||targetSeat<0||targetSeat>=capacity(run)||run.team.some(c=>c.seat===targetSeat)))return false;
   if (
     !Number.isInteger(benchIndex) ||
     !run.bench[benchIndex] ||
@@ -1293,8 +1300,8 @@ export function deployReserve(run, benchIndex, targetIndex = run.team.length) {
           break;
         }
   }
-  reserve.seat=previous?.seat??[...Array(capacity(run)).keys()].find(s=>!run.team.some(c=>c.seat===s));
-  reserve.deployment = deployment;
+  reserve.seat=targetSeat??previous?.seat??[...Array(capacity(run)).keys()].find(s=>!run.team.some(c=>c.seat===s));
+  delete reserve.placement;reserve.deployment = deployment;
   if(previous?.deploymentPosition)reserve.deploymentPosition={...previous.deploymentPosition};else delete reserve.deploymentPosition;
   run.team[targetIndex] = reserve;
   return true;
@@ -1799,7 +1806,7 @@ export class Battle {
     run.team.forEach((c, i) => add(c, 0, i, run.team));
     foes.forEach((c, i) => add(c, 1, i, foes));
     for (const [index,u] of this.units.entries()) {
-      compileRelics(this,u);u.maxPoise+=u.curioStats.poise;u.shield+=u.curioStats.shield;
+      compileRelics(this,u);u.maxPoise+=u.curioStats.poise+(familyPassiveStats(u).poise||0);u.shield+=u.curioStats.shield;
       u.tuning=this.tuning;
       if(this.native){const position=nativeSpawn(BY_ID[u.id],u,u.side,u.side?index-run.team.length:index);u.x=u.px=position.x;u.y=u.py=position.y;u.nativeHome={...position};initializeNative(u,BY_ID[u.id],this.tuning);}else if(BY_ID[u.id].nativeRig)initializeNative(u,BY_ID[u.id],this.tuning);
       if (
@@ -1928,7 +1935,7 @@ export class Battle {
   heal(target, amount, source, skillId = null, show = true, scale = 1) {
     if (!target || target.hp <= 0) return;
     const mod = skillId ? linkedSupport(source, skillId) : { healing: 1 };
-    amount *= mod.healing * scale * (nativeEvolution(source).healing||1) * equipmentEffects(source).healing*wearerStats(source).healing*(source.curioStats?.healing||1)*(source.auraHealingPower||1)*(target.auraHealingReceived||1);
+    amount *= mod.healing * scale * (nativeEvolution(source).healing||1) * equipmentEffects(source).healing*wearerStats(source).healing*(source.curioStats?.healing||1)*(familyPassiveStats(source).healing||1)*(source.auraHealingPower||1)*(target.auraHealingReceived||1);
     if (source.side === 0 && this.run.relics.includes("seed")) amount *= 1+.35*itemStrength(source);
     const syn = source.side === 0 ? this.teamSyn : this.foeSyn;
     if (syn.grove >= 4) amount *= 1.3;
@@ -2250,7 +2257,7 @@ export class Battle {
     )
       amount *= 1.2;
     amount*=relicDamageFactor(this,source,target,def);
-    const crit = this.random() < Math.max(0,0.045 + m.crit+(source.curioStats?.crit||0)+(source.auraCrit||0));
+    const crit = this.random() < Math.max(0,0.045 + m.crit+(source.curioStats?.crit||0)+(source.auraCrit||0)+(familyPassiveStats(source).crit||0));
     if (crit) {
       amount *= 1.65;
       this.metrics.crits++;
@@ -3587,6 +3594,7 @@ export class Battle {
         level: target.level,
         evolution: target.evolution,
         evolutionPath: target.evolutionPath,
+        skillsVersion:target.skillsVersion,learnedSkills:target.learnedSkills,chosenEvolutionSkills:target.chosenEvolutionSkills,skillSeed:target.skillSeed,
         eliteModifier:target.eliteModifier,eliteTier:target.eliteTier,
         capturePreparation: target.capturePreparation,
         relics:structuredClone(target.relics||[]),genes:target.genes,nature:target.nature,enemyRelics:target.enemyRelics,equipment:[...(target.equipment||[])],equipmentRolls:target.equipmentRolls,equipmentQuality:target.equipmentQuality,equipmentVersion:target.equipmentVersion,
@@ -4187,6 +4195,7 @@ export class Battle {
                 level: target.level,
                 evolution: target.evolution,
                 evolutionPath: target.evolutionPath,
+        skillsVersion:target.skillsVersion,learnedSkills:target.learnedSkills,chosenEvolutionSkills:target.chosenEvolutionSkills,skillSeed:target.skillSeed,
               }
             : null,
         };

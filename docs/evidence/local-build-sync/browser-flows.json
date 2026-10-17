@@ -1,0 +1,248 @@
+{
+    "equipmentLanding":  {
+                             "value":  [
+                                           {
+                                               "offline":  false,
+                                               "width":  1440,
+                                               "dx":  0,
+                                               "dy":  0,
+                                               "sizeError":  0,
+                                               "left":  13,
+                                               "slotWidth":  179.71875,
+                                               "landedX":  739.640625
+                                           },
+                                           {
+                                               "offline":  false,
+                                               "width":  390,
+                                               "dx":  0,
+                                               "dy":  0,
+                                               "sizeError":  0,
+                                               "left":  13,
+                                               "slotWidth":  298,
+                                               "landedX":  80
+                                           },
+                                           {
+                                               "offline":  true,
+                                               "width":  1440,
+                                               "dx":  0,
+                                               "dy":  0,
+                                               "sizeError":  0,
+                                               "left":  13,
+                                               "slotWidth":  179.71875,
+                                               "landedX":  739.640625
+                                           },
+                                           {
+                                               "offline":  true,
+                                               "width":  390,
+                                               "dx":  0,
+                                               "dy":  0,
+                                               "sizeError":  0,
+                                               "left":  13,
+                                               "slotWidth":  298,
+                                               "landedX":  80
+                                           }
+                                       ],
+                             "Count":  4
+                         },
+    "auraStoneArt":  {
+                         "value":  [
+                                       {
+                                           "offline":  false,
+                                           "width":  1440,
+                                           "authoredArt":  true,
+                                           "sharedAttachmentArea":  true,
+                                           "quickStoneTransfer":  true,
+                                           "tierPreserved":  true
+                                       },
+                                       {
+                                           "offline":  false,
+                                           "width":  390,
+                                           "authoredArt":  true,
+                                           "sharedAttachmentArea":  true,
+                                           "quickStoneTransfer":  true,
+                                           "tierPreserved":  true
+                                       },
+                                       {
+                                           "offline":  true,
+                                           "width":  1440,
+                                           "authoredArt":  true,
+                                           "sharedAttachmentArea":  true,
+                                           "quickStoneTransfer":  true,
+                                           "tierPreserved":  true
+                                       },
+                                       {
+                                           "offline":  true,
+                                           "width":  390,
+                                           "authoredArt":  true,
+                                           "sharedAttachmentArea":  true,
+                                           "quickStoneTransfer":  true,
+                                           "tierPreserved":  true
+                                       }
+                                   ],
+                         "Count":  4
+                     },
+    "emptyRoster":  {
+                        "value":  [
+                                      {
+                                          "offline":  false,
+                                          "width":  1440,
+                                          "arenaVacancies":  true,
+                                          "clickedExactSeat":  true,
+                                          "draggedExactSeat":  true,
+                                          "reserveStatePreserved":  true,
+                                          "persistence":  true
+                                      },
+                                      {
+                                          "offline":  false,
+                                          "width":  390,
+                                          "arenaVacancies":  true,
+                                          "clickedExactSeat":  true,
+                                          "draggedExactSeat":  true,
+                                          "reserveStatePreserved":  true,
+                                          "persistence":  true
+                                      },
+                                      {
+                                          "offline":  true,
+                                          "width":  1440,
+                                          "arenaVacancies":  true,
+                                          "clickedExactSeat":  true,
+                                          "draggedExactSeat":  true,
+                                          "reserveStatePreserved":  true,
+                                          "persistence":  true
+                                      },
+                                      {
+                                          "offline":  true,
+                                          "width":  390,
+                                          "arenaVacancies":  true,
+                                          "clickedExactSeat":  true,
+                                          "draggedExactSeat":  true,
+                                          "reserveStatePreserved":  true,
+                                          "persistence":  true
+                                      }
+                                  ],
+                        "Count":  4
+                    },
+    "manualSkills":  {
+                         "value":  [
+                                       {
+                                           "offline":  false,
+                                           "width":  1440,
+                                           "threeSavedChoices":  true,
+                                           "earnedAt357":  true,
+                                           "fourCooldownCap":  true,
+                                           "twoEvolutionChoices":  true,
+                                           "explicitReplacement":  true,
+                                           "persistence":  true,
+                                           "liveCombat":  true
+                                       },
+                                       {
+                                           "offline":  false,
+                                           "width":  390,
+                                           "threeSavedChoices":  true,
+                                           "earnedAt357":  true,
+                                           "fourCooldownCap":  true,
+                                           "twoEvolutionChoices":  true,
+                                           "explicitReplacement":  true,
+                                           "persistence":  true,
+                                           "liveCombat":  true
+                                       },
+                                       {
+                                           "offline":  true,
+                                           "width":  1440,
+                                           "threeSavedChoices":  true,
+                                           "earnedAt357":  true,
+                                           "fourCooldownCap":  true,
+                                           "twoEvolutionChoices":  true,
+                                           "explicitReplacement":  true,
+                                           "persistence":  true,
+                                           "liveCombat":  true
+                                       },
+                                       {
+                                           "offline":  true,
+                                           "width":  390,
+                                           "threeSavedChoices":  true,
+                                           "earnedAt357":  true,
+                                           "fourCooldownCap":  true,
+                                           "twoEvolutionChoices":  true,
+                                           "explicitReplacement":  true,
+                                           "persistence":  true,
+                                           "liveCombat":  true
+                                       }
+                                   ],
+                         "Count":  4
+                     },
+    "experienceCelebration":  {
+                                  "value":  [
+                                                {
+                                                    "offline":  false,
+                                                    "width":  1440,
+                                                    "startsAtPriorEXP":  true,
+                                                    "threeRealLevelCrossings":  true,
+                                                    "exactFinalEXP":  true,
+                                                    "beforeAfterVisible":  true,
+                                                    "cosmeticReplay":  true,
+                                                    "reducedMotion":  true,
+                                                    "reopenDoesNotReplay":  true
+                                                },
+                                                {
+                                                    "offline":  false,
+                                                    "width":  390,
+                                                    "startsAtPriorEXP":  true,
+                                                    "threeRealLevelCrossings":  true,
+                                                    "exactFinalEXP":  true,
+                                                    "beforeAfterVisible":  true,
+                                                    "cosmeticReplay":  true,
+                                                    "reducedMotion":  true,
+                                                    "reopenDoesNotReplay":  true
+                                                },
+                                                {
+                                                    "offline":  true,
+                                                    "width":  1440,
+                                                    "startsAtPriorEXP":  true,
+                                                    "threeRealLevelCrossings":  true,
+                                                    "exactFinalEXP":  true,
+                                                    "beforeAfterVisible":  true,
+                                                    "cosmeticReplay":  true,
+                                                    "reducedMotion":  true,
+                                                    "reopenDoesNotReplay":  true
+                                                },
+                                                {
+                                                    "offline":  true,
+                                                    "width":  390,
+                                                    "startsAtPriorEXP":  true,
+                                                    "threeRealLevelCrossings":  true,
+                                                    "exactFinalEXP":  true,
+                                                    "beforeAfterVisible":  true,
+                                                    "cosmeticReplay":  true,
+                                                    "reducedMotion":  true,
+                                                    "reopenDoesNotReplay":  true
+                                                }
+                                            ],
+                                  "Count":  4
+                              },
+    "combatRewardSkillJourney":  {
+                                     "value":  [
+                                                   {
+                                                       "offline":  false,
+                                                       "realCombatVictory":  true,
+                                                       "levelThreeEXP":  true,
+                                                       "upgradeDuringEXP":  true,
+                                                       "rewardsBeforeSkillChoice":  true,
+                                                       "threeChoices":  true,
+                                                       "selectedSkillSaved":  true,
+                                                       "noDuplicateEXP":  true
+                                                   },
+                                                   {
+                                                       "offline":  true,
+                                                       "realCombatVictory":  true,
+                                                       "levelThreeEXP":  true,
+                                                       "upgradeDuringEXP":  true,
+                                                       "rewardsBeforeSkillChoice":  true,
+                                                       "threeChoices":  true,
+                                                       "selectedSkillSaved":  true,
+                                                       "noDuplicateEXP":  true
+                                                   }
+                                               ],
+                                     "Count":  2
+                                 }
+}

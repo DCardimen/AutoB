@@ -1,0 +1,35 @@
+import {chromium} from 'playwright';
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import {makeRun,creature,generateRoute,gainXP,xpNeeded} from '../game.js';
+const browser=await chromium.launch({headless:true,executablePath:'C:/Program Files/Google/Chrome/Application/chrome.exe'}),results=[];
+try {for(const offline of [false,true]) {
+ const context=await browser.newContext({viewport:{width:1440,height:1000}}),page=await context.newPage(),errors=[];
+ page.on('pageerror',e=>errors.push(e.message));
+ const run=makeRun(83,['aurel','brakk'],{manualSkills:true});run.route=generateRoute(run);run.openingRelic=true;
+ gainXP(run.team[0],xpNeeded(1));run.team[0].xp=xpNeeded(2)-1;
+ const foe=creature('brakk');foe.genes={hp:.02};
+ await page.addInitScript(saved=>{localStorage.setItem('starfall-menagerie-v1',JSON.stringify(saved));sessionStorage.setItem('fang-feather-intro','seen');},{version:7,run,node:run.route[0][0],foes:[foe],phase:'prep',profile:{owned:['aurel','brakk'],tutorial:true}});
+ if(offline)await page.route('**/*',r=>r.request().isNavigationRequest()?r.continue():r.abort());
+ await page.goto((process.env.BASE_URL||'http://127.0.0.1:3000')+(offline?'/Starfall-Menagerie.html':''));
+ await page.locator('[data-action="battle"]').click();
+ await page.locator('.growth-row').first().waitFor({timeout:90000});
+ assert.equal(await page.evaluate(()=>starfall.state.phase),'reward');
+ assert.equal(await page.locator('[data-learn-skill]').count(),0);
+ await page.waitForFunction(()=>document.querySelector('.growth-row')?.dataset.xpPhase==='fill');
+ await page.locator('[data-upgrade]').first().click();
+ await page.waitForFunction(()=>[...document.querySelectorAll('.growth-row')].every(r=>r.dataset.xpPhase==='done'));
+ const final=await page.evaluate(()=>starfall.state.run.team.map(c=>({uid:c.uid,level:c.level,xp:c.xp})));
+ assert.equal(final[0].level,3);
+ await page.locator('[data-action="claim-loot"]').click();
+ await page.locator('[data-action="continue"]:not([disabled])').waitFor();
+ await page.locator('[data-action="continue"]').click();
+ await page.locator('[data-learn-skill]').first().waitFor();
+ assert.equal(await page.locator('[data-learn-skill]').count(),3);
+ await page.locator('[data-learn-skill]').first().click();
+ assert.equal(await page.evaluate(()=>starfall.state.run.team[0].learnedSkills.length),1);
+ assert.deepEqual(await page.evaluate(()=>starfall.state.run.team.map(c=>({uid:c.uid,level:c.level,xp:c.xp}))),final);
+ const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('starfall-menagerie-v1')).run.team[0]);
+ assert.equal(saved.learnedSkills.length,1);assert.equal(saved.xp,final[0].xp);assert.deepEqual(errors,[]);
+ results.push({offline,realCombatVictory:true,levelThreeEXP:true,upgradeDuringEXP:true,rewardsBeforeSkillChoice:true,threeChoices:true,selectedSkillSaved:true,noDuplicateEXP:true});await context.close();
+}} finally {await browser.close();fs.writeFileSync('docs/evidence/xp-celebration/journey.json',JSON.stringify(results,null,2));console.log(JSON.stringify(results));}

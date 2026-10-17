@@ -1,7 +1,7 @@
 import {auraCompatibility} from './aura-stones.js';
 import {capacity} from './expedition-rules.js';
 import {equipGear,removeGear,equipmentSlots,GEAR_BY_ID,gearCompatibility,equipmentSlotType} from './creature-equipment.js';
-import {equipRelic,unequipRelic,linkRelic,relicSlots,canSupport,BY_ID} from './game.js';
+import {deployReserve,equipRelic,unequipRelic,linkRelic,relicSlots,canSupport,BY_ID} from './game.js';
 import {loadoutFor} from './skills.js';
 export function applyLoadoutDrop(run,payload,target){
  if(!target)return false;
@@ -13,7 +13,7 @@ export function applyLoadoutDrop(run,payload,target){
  }
  if(payload.kind==='reserve'){
   if(target.pack)return false;const j=run.bench.findIndex(c=>c.uid===payload.uid),i=Number(target.index);if(j<0)return false;
-  if(target.seat!==undefined){const seat=Number(target.seat);if(!Number.isInteger(seat)||seat<0||seat>=capacity(run)||run.team.some(c=>c.seat===seat)||run.team.length>=capacity(run))return false;const c=run.bench.splice(j,1)[0];c.seat=seat;delete c.placement;run.team.push(c);return true;}
+  if(target.seat!==undefined){const seat=Number(target.seat);if(!Number.isInteger(seat)||seat<0||seat>=capacity(run)||run.team.some(c=>c.seat===seat)||run.team.length>=capacity(run))return false;return deployReserve(run,j,run.team.length,seat);}
   if(!run.team[i])return false;const old=run.team[i],seat=old.seat;[run.team[i],run.bench[j]]=[run.bench[j],old];run.team[i].seat=seat;
   if(old.placement)run.team[i].placement={...old.placement};else delete run.team[i].placement;delete old.placement;return true;
  }

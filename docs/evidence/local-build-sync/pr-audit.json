@@ -1,0 +1,50 @@
+[
+  {
+    "number": 43,
+    "title": "Align equipment previews and sprite drops to the left-hand slot artwork",
+    "merged": true,
+    "base": "feat/positioning-aura-stones",
+    "head": "fix/equipment-preview-landing",
+    "head_sha": "b913f9253c8147a12f81845615501f00da2ea413"
+  },
+  {
+    "number": 44,
+    "title": "Use uploaded stone art and group Aura Stones with companion equipment",
+    "merged": true,
+    "base": "fix/equipment-preview-landing",
+    "head": "feat/aura-stone-art-equip-area",
+    "head_sha": "f509f07c0f06466d31eea2579349019536bee1bf"
+  },
+  {
+    "number": 45,
+    "title": "Restore vacant roster seats and refill them with reserves",
+    "merged": true,
+    "base": "feat/aura-stone-art-equip-area",
+    "head": "fix/restore-empty-roster-seats",
+    "head_sha": "2fbed981f7791e4da6046a852e6a623baac3e686"
+  },
+  {
+    "number": 46,
+    "title": "Add manual skill choices at levels 3, 5 and 7 with four cooldown slots",
+    "merged": true,
+    "base": "fix/restore-empty-roster-seats",
+    "head": "feat/manual-companion-skills-v2",
+    "head_sha": "9763a8e560ab72ec2d1a0f615cf4554d9936dc7b"
+  },
+  {
+    "number": 47,
+    "title": "Make post-match EXP fill through every level with satisfying rewards",
+    "merged": true,
+    "base": "feat/manual-companion-skills-v2",
+    "head": "feat/postmatch-exp-celebration",
+    "head_sha": "6f75f2a1ed9d16c77ea48c3719180c9111f5d3c2"
+  },
+  {
+    "number": 49,
+    "title": "Add verified MP4 background to stage selection",
+    "merged": false,
+    "base": "codex/starfall-menagerie",
+    "head": "feat/stage-select-video-background",
+    "head_sha": "940e730a812f3fa76fede94a9d571142ef1e8917"
+  }
+]

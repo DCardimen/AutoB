@@ -1,3 +1,4 @@
+import {familyPassive} from './skills.js';
 import {routeModifiers} from './run-relics.js';
 import { NATIVE_SPECIES, NATIVE_EVOLUTIONS } from './native-content.js';
 // Shared design data. Rules, scouting, tooltips, and reports use the same definitions.
@@ -160,7 +161,7 @@ Object.assign(CREATURE_TRAITS, {
 });
 Object.assign(CREATURE_TRAITS,Object.fromEntries(NATIVE_SPECIES.map(s=>[s.id,s.trait])));
 export function traitFor(c) {
-  return TRAITS[CREATURE_TRAITS[c.id] || "battery"];
+  const base=TRAITS[CREATURE_TRAITS[c.id] || "battery"];if(c.skillsVersion!==2)return base;const talent=familyPassive(c);return {name:talent.name+" \u00b7 "+base.name,desc:base.desc+" "+talent.desc};
 }
 export function evolutionMechanic(c, role, path = c.evolutionPath) {
   const family = NATIVE_EVOLUTIONS[c.id]?.[path];
