@@ -585,3 +585,36 @@ body.ui-v3.native-expedition .reward-quick-equip .rewards-footer{grid-column:1/-
  body.ui-v3.native-expedition .reward-quick-equip .capture-outcome p{font-size:9px;margin:3px 0}
  body.ui-v3.native-expedition .reward-quick-equip .loot-v2 .loot-drop{max-width:none}
 }
+/* Pass 1: the encounter briefing gives way to live combat information. */
+@media(min-width:1101px){
+ body.ui-v3.native-expedition[data-phase="battle"] .side-column>.briefing{display:none}
+ body.ui-v3.native-expedition[data-phase="battle"] .side-column>#live-roster{max-height:none;flex:1;padding:12px}
+ body.ui-v3.native-expedition[data-phase="battle"] .side-column .live-roster [data-roster-panel="1"]{display:block;margin-top:18px;padding-top:15px;border-top:1px solid #729b8b55}
+ body.ui-v3.native-expedition[data-phase="battle"] .side-column [data-roster-panel="1"] [data-roster-side="0"],body.ui-v3.native-expedition[data-phase="battle"] .side-column [data-roster-panel="0"] [data-roster-side="1"]{display:none}
+ body.ui-v3.native-expedition[data-phase="battle"] .side-column [data-roster-panel="1"] [data-roster-side="1"]{display:block;color:#e8b7a0}
+ body.ui-v3.native-expedition[data-phase="battle"] .side-column .live-unit-card{max-height:none;padding:10px}
+ body.ui-v3.native-expedition[data-phase="battle"] .side-column .live-unit-portrait{min-height:48px}
+ body.ui-v3.native-expedition[data-phase="battle"] .side-column .live-unit-portrait img{width:44px;height:44px}
+ body.ui-v3.native-expedition[data-phase="battle"] .side-column .live-unit-condition{font-size:10px;line-height:1.4;min-height:30px}
+ body.ui-v3.native-expedition[data-phase="battle"] .side-column .live-focus-button{min-height:36px;width:100%;margin-top:8px}
+}
+body.ui-v3.native-expedition[data-phase="battle"] .arena-field-tools{display:none}
+@media(max-width:900px){
+ body.ui-v3.native-expedition[data-screen="arena"] .run-bar{display:none}
+ body.ui-v3.native-expedition[data-screen="arena"] .page-heading{display:flex;position:relative;inset:auto;height:44px;min-height:44px;flex:none;padding:0;margin:0 0 4px}
+ body.ui-v3.native-expedition[data-screen="arena"] .resources{position:static;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;width:100%}
+ body.ui-v3.native-expedition[data-screen="arena"] .resources>div{min-height:40px;box-sizing:border-box;padding:4px 7px}
+ body.ui-v3.native-expedition[data-screen="arena"] .resources strong{font-size:16px}
+ body.ui-v3.native-expedition[data-screen="arena"] .header .header-end{gap:3px}
+ body.ui-v3.native-expedition[data-screen="arena"] .header .icon-button{width:44px;min-width:44px;height:44px}
+ body.ui-v3.native-expedition[data-screen="arena"] .header .header-new-expedition{min-height:44px}
+ body.ui-v3.native-expedition[data-screen="arena"] .arena-control .speed-switch button{min-width:38px;max-width:none;min-height:44px}
+ body.ui-v3.native-expedition[data-screen="arena"] .arena-control .pause-btn{min-width:44px;min-height:44px}
+ body.ui-v3.native-expedition[data-screen="arena"] .arena-control .arena-dock button{min-height:44px;font-size:9px}
+ body.ui-v3.native-expedition[data-screen="arena"] .live-unit-portrait{min-height:44px}
+ body.ui-v3.native-expedition[data-screen="arena"] .live-roster .live-unit-card{max-height:84px}
+ body.ui-v3.native-expedition[data-screen="arena"] .arena-label{max-width:calc(100% - 75px)}
+ body.ui-v3.native-expedition[data-screen="arena"] .arena-label strong{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block}
+ body.ui-v3.native-expedition[data-screen="arena"] .arena-label small{font-size:7px}
+}
+@media(max-width:370px){body.ui-v3.native-expedition[data-screen="arena"] .brand .brand-name{display:none}}

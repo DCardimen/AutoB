@@ -1,5 +1,5 @@
 import {sweepCircle} from './arena.js';
-export const ORDERS={advance:{name:'Advance',desc:'Close to attack range; ranged units kite nearby threats.'},hold:{name:'Hold',desc:'Defend within 105 ground units of the deployment cell.'},flank:{name:'Flank',desc:'Approach an occupied frontline from the side.'},escort:{name:'Escort',desc:'Screen the weakest ally and threaten attackers approaching them.'}};
+export const ORDERS={advance:{name:'Advance',desc:'Close to attack range; ranged units hold clear firing positions.'},hold:{name:'Hold',desc:'Defend within 105 ground units of the deployment cell.'},flank:{name:'Flank',desc:'Approach an occupied frontline from the side.'},escort:{name:'Escort',desc:'Screen the weakest ally and threaten attackers approaching them.'}};
 export const CONDITIONS={none:'No condition',selfHurt:'Self below 35% HP',allyHurt:'An ally below 35% HP',channel:'Enemy winding up an interruptible attack',shield:'Enemy has a shield',wounded:'Enemy below 30% HP'};
 export const RESPONSES={retreat:'Retreat',protect:'Protect weakest ally',interrupt:'Pressure the channel',breaker:'Break shields',execute:'Finish wounded enemies'};
 export const OPENING_BOONS=['thorn-crown','glass-cannon','storm-relay'];
@@ -44,9 +44,11 @@ export function combatApproach(u,target,units,bounds){
  const alive=units.filter(a=>a.hp>0&&!a.captured&&a!==u&&a!==target),distance=Math.hypot(u.x-target.x,u.y-target.y),ranged=u.range>100;
  const gap=u.radius+target.radius+.8,reach=ranged?u.range*.78:Math.max(gap,u.range*.88);
  const current=Math.atan2(u.y-target.y,u.x-target.x),previous=u.engagement;
- // A fighter already in a clear attack position plants its feet through cooldown/recovery.
+ // Plant through cooldown/recovery when there is a clear attack position.
+ // Automatic backpedalling used to turn a lone ranged opponent into a long
+ // chase. Explicit retreat orders and the Longshot Codex still enable kiting.
  const crowded=alive.some(a=>Math.hypot(a.x-u.x,a.y-u.y)<u.radius+a.radius+1);
- if(!crowded&&distance>=gap-.2&&distance<=reach+.3&&(!ranged||distance>=u.range*.55)){
+ if(!crowded&&distance>=gap-.2&&distance<=reach+.3){
   u.engagement={targetUid:target.uid,angle:current,x:u.x,y:u.y};return {x:u.x,y:u.y,intent:ranged?'Holding firing range':'Holding striking range'};
  }
  let best=null;

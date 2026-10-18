@@ -1,0 +1,59 @@
+{
+  "timestep": 0.04,
+  "speed": 1,
+  "visuals": false,
+  "median": 18.479999999999784,
+  "results": [
+    {
+      "seed": 337,
+      "seconds": 31.39999999999951,
+      "winner": 0,
+      "foes": [
+        "sparkhare",
+        "brom"
+      ],
+      "contacts": 45
+    },
+    {
+      "seed": 62,
+      "seconds": 12.679999999999906,
+      "winner": 0,
+      "foes": [
+        "ashpup",
+        "nix"
+      ],
+      "contacts": 11
+    },
+    {
+      "seed": 19,
+      "seconds": 18.479999999999784,
+      "winner": 0,
+      "foes": [
+        "rowan",
+        "pipthorn"
+      ],
+      "contacts": 10
+    },
+    {
+      "seed": 81,
+      "seconds": 31.35999999999951,
+      "winner": 0,
+      "foes": [
+        "wickmoth",
+        "luma"
+      ],
+      "contacts": 12
+    },
+    {
+      "seed": 122,
+      "seconds": 12.199999999999916,
+      "winner": 0,
+      "foes": [
+        "aurel",
+        "sparkhare"
+      ],
+      "contacts": 14
+    }
+  ],
+  "limitation": "Five deterministic opening encounters, not a full balance audit. Visual hit pauses add a small amount of wall time."
+}

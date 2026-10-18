@@ -1,0 +1,204 @@
+﻿TAP version 13
+# Subtest: native runs keep six unique starters and 29 complete native family loadouts
+ok 1 - native runs keep six unique starters and 29 complete native family loadouts
+  ---
+  duration_ms: 1.5518
+  ...
+# Subtest: native encounters and shops recruit native families, while legacy runs retain their original pools
+ok 2 - native encounters and shops recruit native families, while legacy runs retain their original pools
+  ---
+  duration_ms: 5.7603
+  ...
+# Subtest: native blade contact preserves gem damage and actual committed misses
+ok 3 - native blade contact preserves gem damage and actual committed misses
+  ---
+  duration_ms: 115.2623
+  ...
+# Subtest: native charged strikes withstand impact while taking damage, including lethal hits
+ok 4 - native charged strikes withstand impact while taking damage, including lethal hits
+  ---
+  duration_ms: 1.8182
+  ...
+# Subtest: native projectiles start at held weapons and ragdolls keep settling after a win
+ok 5 - native projectiles start at held weapons and ragdolls keep settling after a win
+  ---
+  duration_ms: 11.9655
+  ...
+# Subtest: family evolution makes distinct tactical changes without dropping gems or identity
+ok 6 - family evolution makes distinct tactical changes without dropping gems or identity
+  ---
+  duration_ms: 1.5043
+  ...
+# Subtest: native battles remain finite and use the expanded courtyard bounds
+ok 7 - native battles remain finite and use the expanded courtyard bounds
+  ---
+  duration_ms: 73885.717
+  ...
+# Subtest: released batch includes separate serpentine and flying bodies, weaker recruits and habitat conditions
+ok 2 - released batch includes separate serpentine and flying bodies, weaker recruits and habitat conditions
+  ---
+  duration_ms: 4.6976
+  ...
+# Subtest: families have one, two or three total forms; final-form families never spend gold on evolution
+ok 3 - families have one, two or three total forms; final-form families never spend gold on evolution
+  ---
+  duration_ms: 0.5585
+  ...
+# Subtest: a combat accomplishment unlocks an early transformation while retaining identity and support links
+ok 4 - a combat accomplishment unlocks an early transformation while retaining identity and support links
+  ---
+  duration_ms: 0.2591
+  ...
+# Subtest: actual combat settlement awards native growth once and practice cannot mutate the parent run
+ok 5 - actual combat settlement awards native growth once and practice cannot mutate the parent run
+  ---
+  duration_ms: 774.1837
+  ...
+# Subtest: an evolved signature changes the real skill and its connected combat effect
+ok 6 - an evolved signature changes the real skill and its connected combat effect
+  ---
+  duration_ms: 1.581
+  ...
+# Subtest: a genuine retry after a defeat earns fresh accomplishments while repeated settlement does not
+ok 7 - a genuine retry after a defeat earns fresh accomplishments while repeated settlement does not
+  ---
+  duration_ms: 323.6668
+  ...
+# Subtest: every Chaos clear grants one permanent point, without duplicate rewards
+ok 8 - every Chaos clear grants one permanent point, without duplicate rewards
+  ---
+  duration_ms: 0.303
+  ...
+# Subtest: new family art stays recognizable across forms and every required pose fits its 64-pixel cell
+ok 9 - new family art stays recognizable across forms and every required pose fits its 64-pixel cell
+  ---
+  duration_ms: 60166.1875
+  ...
+# Subtest: all exported poses have exact 64px cells, binary alpha and no clipped drawing
+ok 3 - all exported poses have exact 64px cells, binary alpha and no clipped drawing
+  ---
+  duration_ms: 86211.9955
+  ...
+# Subtest: every creature has eight identifiable facings and distinct run, turn, stop and dodge poses
+ok 4 - every creature has eight identifiable facings and distinct run, turn, stop and dodge poses
+  ---
+  duration_ms: 1490.6234
+  ...
+# Subtest: the hound keeps four legs, the walker six, the spider eight and jelly none
+ok 5 - the hound keeps four legs, the walker six, the spider eight and jelly none
+  ---
+  duration_ms: 10.2012
+  ...
+# Subtest: ragdolls react to impulse and retain finite constrained joints above their floor radii
+ok 6 - ragdolls react to impulse and retain finite constrained joints above their floor radii
+  ---
+  duration_ms: 172.0556
+  ...
+# Subtest: a heavy impact causes knockdown and a get-up phase without granting immunity
+ok 7 - a heavy impact causes knockdown and a get-up phase without granting immunity
+  ---
+  duration_ms: 21.5234
+  ...
+# Subtest: cape springs retain motion through braking and settle rather than snapping
+ok 8 - cape springs retain motion through braking and settle rather than snapping
+  ---
+  duration_ms: 0.6056
+  ...
+# Subtest: sideways dodges lead with the correct foot and tilt toward their actual escape direction
+ok 4 - sideways dodges lead with the correct foot and tilt toward their actual escape direction
+  ---
+  duration_ms: 3.3911
+  ...
+# Subtest: humanoid strides grow with pace while staying compact relative to short legs
+ok 5 - humanoid strides grow with pace while staying compact relative to short legs
+  ---
+  duration_ms: 0.1094
+  ...
+# Subtest: hips and head stay continuous when the last supporting foot leaves the ground
+ok 6 - hips and head stay continuous when the last supporting foot leaves the ground
+  ---
+  duration_ms: 3.2902
+  ...
+# Subtest: movement-to-attack transitions begin at the carried pose and settle before active contact
+ok 7 - movement-to-attack transitions begin at the carried pose and settle before active contact
+  ---
+  duration_ms: 1.705
+  ...
+# Subtest: dash and dodge poses enter and exit at the idle stance without crouch or hand pops
+ok 8 - dash and dodge poses enter and exit at the idle stance without crouch or hand pops
+  ---
+  duration_ms: 1.9347
+  ...
+# Subtest: anatomical legs keep their lengths and planted ankle height through full walk/run/sprint cycles
+ok 9 - anatomical legs keep their lengths and planted ankle height through full walk/run/sprint cycles
+  ---
+  duration_ms: 132.14
+  ...
+# Subtest: supporting feet remain fixed in world space while creatures move and turn
+ok 10 - supporting feet remain fixed in world space while creatures move and turn
+  ---
+  duration_ms: 314.904
+  ...
+# Subtest: local foot contacts reproduce fixed world anchors after a body turn
+ok 11 - local foot contacts reproduce fixed world anchors after a body turn
+  ---
+  duration_ms: 0.394
+  ...
+# Subtest: both axe hands follow one rigid handle and the contact/recovery pose is continuous
+ok 12 - both axe hands follow one rigid handle and the contact/recovery pose is continuous
+  ---
+  duration_ms: 7.5433
+  ...
+# Subtest: walking and running blend continuously and clear the ground during swing
+ok 13 - walking and running blend continuously and clear the ground during swing
+  ---
+  duration_ms: 0.1778
+  ...
+# Subtest: the archer draws the animated bowstring with the same hand that holds it
+ok 14 - the archer draws the animated bowstring with the same hand that holds it
+  ---
+  duration_ms: 2.2827
+  ...
+# Subtest: a target inside the aim cone is missed when the actual blade path cannot reach it
+ok 15 - a target inside the aim cone is missed when the actual blade path cannot reach it
+  ---
+  duration_ms: 8.9313
+  ...
+# Subtest: connected swings pause their weapon briefly without inflicting duplicate damage
+ok 16 - connected swings pause their weapon briefly without inflicting duplicate damage
+  ---
+  duration_ms: 4.6534
+  ...
+# Subtest: creatures align toward a target before attacking rather than snapping through 180 degrees
+ok 17 - creatures align toward a target before attacking rather than snapping through 180 degrees
+  ---
+  duration_ms: 3.9765
+  ...
+# Subtest: live walking, running and sprinting keep every limb reachable while turning and accelerating
+ok 18 - live walking, running and sprinting keep every limb reachable while turning and accelerating
+  ---
+  duration_ms: 1234.4098
+  ...
+# Subtest: carried weapons retain their grip through walk/run/sprint, including both axe hands
+ok 19 - carried weapons retain their grip through walk/run/sprint, including both axe hands
+  ---
+  duration_ms: 37.0944
+  ...
+# Subtest: walking rolls heel to toe; sprint adds lift, forward lean and an alternating wolf trot
+ok 20 - walking rolls heel to toe; sprint adds lift, forward lean and an alternating wolf trot
+  ---
+  duration_ms: 4.0712
+  ...
+# Subtest: short many-legged steps preserve sole height and bone length through wide turn anchors
+ok 21 - short many-legged steps preserve sole height and bone length through wide turn anchors
+  ---
+  duration_ms: 1.0675
+  ...
+1..39
+# tests 39
+# pass 39
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 225603.3185

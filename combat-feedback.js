@@ -39,7 +39,7 @@ export function paintActionFeedback(c,battle,height=1){
     }
   }
   const focus=battle.living(1).find(u=>u.uid===battle.focusUid&&battle.time<battle.focusUntil);
-  if(focus){const p=screen(focus.x,focus.y);c.globalAlpha=.9;c.strokeStyle='#ffdb87';c.lineWidth=2;const r=25+(battle.reducedMotion?0:Math.sin(battle.time*5)*3);c.beginPath();c.ellipse(p.x,p.y,r,r*.58,0,0,Math.PI*2);c.stroke();c.fillStyle='#ffe4a4';c.font='bold 11px sans-serif';c.textAlign='center';c.fillText('FOCUS '+Math.ceil(battle.focusUntil-battle.time)+'s',p.x,p.y-nativeBodyHeight(focus)*height-25);}
+  if(focus){const p=screen(focus.x,focus.y);c.globalAlpha=.9;c.strokeStyle='#ffdb87';c.lineWidth=2;const r=25+(battle.reducedMotion?0:Math.sin(battle.time*5)*3);c.beginPath();c.ellipse(p.x,p.y,r,r*.58,0,0,Math.PI*2);c.stroke();}
   c.restore();
 }
 

@@ -1,6 +1,6 @@
 import {getTuning} from './tuning.js';
-// Previous arena default was .5; the new default is 30% of that size.
-export const BASE_CREATURE_SCALE=.15;
+// Bodies, grips, mouths and collision volumes share this readable world scale.
+export const BASE_CREATURE_SCALE=.4;
 export const MIN_CREATURE_TYPE_FACTOR=.7;
 export const MAX_CREATURE_TYPE_FACTOR=1.5;
 const sizes={aurel:1,brakk:1.3,syl:1,nyra:1,emberhound:1,rowan:.95,cogwalker:2.5,runespider:1.2,moonjelly:2,brom:.9,grit:.7,morrow:1,grum:2,tarka:1.7,nix:.9,zephyr:1.15,luma:.7,vesper:1.1,sable:1,eira:1.05,solara:2};

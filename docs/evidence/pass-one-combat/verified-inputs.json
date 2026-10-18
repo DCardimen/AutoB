@@ -1,0 +1,83 @@
+{
+  "base": "b8e63a62c9b9124905b7055119fc4b23351e39e0",
+  "branch": "feat/pass-one-readable-combat",
+  "recordedAt": "2026-10-18T02:41:45.188Z",
+  "source": {
+    "app.js": {
+      "bytes": 254932,
+      "sha256": "a0f76249f96e5e8940da785b7acaca81831ad32cfbf8de67e084142230ce33ec"
+    },
+    "arena-camera.js": {
+      "bytes": 2921,
+      "sha256": "681bf91826ac505bd0659cfd7391a2fa70d0cd2bb1ae0de13914abd72705c020"
+    },
+    "combat-feedback.js": {
+      "bytes": 3901,
+      "sha256": "7e09e3782ce3ac05ca3a686ada80eb25cfbdc8a95c4c2e75fbf7a9f8cfbd9233"
+    },
+    "combat-text.js": {
+      "bytes": 5404,
+      "sha256": "d45b8034612aa9445050bfae0c70726e4d4e978c8259d3c60a28917e8f53bb9c"
+    },
+    "game.js": {
+      "bytes": 166053,
+      "sha256": "7fab758d619fd3473ed4f07ff21390fb1de4dafd7b2c406556477d6a0902560a"
+    },
+    "journey-polish.css": {
+      "bytes": 106087,
+      "sha256": "6a3dd12a625984d7f01d0e40c6336d8952ed5e0e7d71a09b846211b5f7feae63"
+    },
+    "native-art.js": {
+      "bytes": 20752,
+      "sha256": "25cd8151b6b41a81062d4a4f6d3282eaba166c971e4e51bfcfd987e1858de3d9"
+    },
+    "native-combat.js": {
+      "bytes": 12246,
+      "sha256": "46de85f85de8896e50b8f9e4ab18174dd26c1e3fee2760bb49620f3f7389b89a"
+    },
+    "native-size.js": {
+      "bytes": 1180,
+      "sha256": "ca3817015957da5514ed035e3084a69a598950967abe4afbda4df28151914a27"
+    },
+    "native-tactics.js": {
+      "bytes": 6980,
+      "sha256": "750931799108117dba36d174776aaae30f81b473cad5acf2fe2e79c5cb56ea71"
+    },
+    "sound.js": {
+      "bytes": 5618,
+      "sha256": "375e11b6ba699b1d8265c4f94909fa58c4dee3475fcd15530f4f075bbe7d0a3f"
+    }
+  },
+  "builds": {
+    "Starfall-Menagerie.html": {
+      "bytes": 103959001,
+      "sha256": "58e5f817643470f6cae628cb3c721343523befc3bd2c587f761f60b4d478ddb0"
+    },
+    "Starfall-Training-Glade.html": {
+      "bytes": 16117411,
+      "sha256": "a20adce73febf1b5860f2c12cde4837369b9aa8752bd1a92ad7a1809f01f6501"
+    }
+  },
+  "videos": {
+    "source-1900": {
+      "bytes": 2094090,
+      "sha256": "e67cd558a1f175a58cd8490b262222cfdc6a220cc1a63783c87f75b0d72d8675",
+      "fullFfmpegDecode": "passed"
+    },
+    "source-390": {
+      "bytes": 1595335,
+      "sha256": "76fdca6a9fe7ab3ffa3c5e1ca34faa1e08a8743a2dbdd32a63a3b0e655c98415",
+      "fullFfmpegDecode": "passed"
+    },
+    "offline-1900": {
+      "bytes": 2600284,
+      "sha256": "c2b3b6f49836450c1b6c355a4110ba09984e3e160eca535f9373457bd431f337",
+      "fullFfmpegDecode": "passed"
+    },
+    "offline-390": {
+      "bytes": 1903494,
+      "sha256": "61e527beee53f19c259c33db1134c2fa8c8b01347ff6d16f612cf46812afcaff",
+      "fullFfmpegDecode": "passed"
+    }
+  }
+}
