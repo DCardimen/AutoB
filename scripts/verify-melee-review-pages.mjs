@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {chromium} from 'playwright';
 
 const root=process.env.REVIEW_URL||'http://127.0.0.1:3050';
-const out='public/melee-arm-review',expected=JSON.parse(fs.readFileSync(out+'/checks/individual-combat.json','utf8'));
+const out=process.argv.find(a=>a.startsWith('--review='))?.slice(9)||'public/melee-arm-review',expected=JSON.parse(fs.readFileSync(out+'/checks/individual-combat.json','utf8'));
 const browser=await chromium.launch({headless:true,executablePath:process.env.CHROMIUM_PATH||(process.platform==='win32'?'C:/Program Files/Google/Chrome/Application/chrome.exe':undefined)});
 const errors=[],mediaRangeCancellations=[],links=new Set(),pages=[],movies=[],families=[];
 try{

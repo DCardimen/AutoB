@@ -1,4 +1,4 @@
-import {armRegistration,capePixel} from './companion-anatomy.js';
+import {armRegistration,capePixel,authoredClothing,completeClothing} from './companion-anatomy.js';
 const key=(x,y)=>y*64+x;
 const mix=(a,b,t)=>({x:a.x+(b.x-a.x)*t,y:a.y+(b.y-a.y)*t});
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
@@ -67,6 +67,7 @@ function torsoEnvelope(pixels,identity,registration,profiles){
 export function authoredParts(asset,identity,stage,dir){
  if(asset.parts)return asset.parts;
  const registration=armRegistration(identity,stage,dir);if(!registration)return null;
+ const clothing=authoredClothing(asset,identity,stage,dir,registration);
  const grid=new Map(asset.pixels.map(p=>[key(p.x,p.y),p])),hands={},profiles=new Map(),mask=new Set();
  for(const side of [-1,1]){
   if(occludedMeleeArm(identity,dir,side)){
@@ -83,6 +84,7 @@ export function authoredParts(asset,identity,stage,dir){
   hands[side]={...sample};
   const root=registration.roots[side],end={x:sample.x,y:sample.y},joint=mix(root,end,.5);
   const candidates=asset.pixels.filter(p=>{
+   if(clothing.mask.has(key(p.x,p.y)))return false;
    if(p.y<root.y-1||p.y>end.y+registration.lower)return false;
    if(Math.hypot(p.x-end.x,p.y-end.y)<=registration.lower)return true;
    if(MELEE_ARM_FAMILIES.has(identity)&&meleeOverlay(identity,p))return false;
@@ -96,7 +98,7 @@ export function authoredParts(asset,identity,stage,dir){
   const selected=new Map(candidates.filter(p=>!mask.has(key(p.x,p.y))).map(p=>[key(p.x,p.y),p]));
   for(const p of candidates)for(const [dx,dy]of [[-1,0],[1,0],[0,-1],[0,1]]){
    const q=grid.get(key(p.x+dx,p.y+dy));if(!q||mask.has(key(q.x,q.y))||q.y<root.y-1||q.y>end.y+registration.lower||side*(q.x-32)<registration.torso*.25)continue;
-   if(MELEE_ARM_FAMILIES.has(identity)&&meleeOverlay(identity,q))continue;
+   if(clothing.mask.has(key(q.x,q.y))||MELEE_ARM_FAMILIES.has(identity)&&meleeOverlay(identity,q))continue;
    const region=segment(q,root,end),radius=registration.upper+(registration.lower-registration.upper)*region.t;
    if(region.distance<=radius+.8&&Math.max(...q.rgb)<100)selected.set(key(q.x,q.y),q);
   }
@@ -127,7 +129,7 @@ export function authoredParts(asset,identity,stage,dir){
    for(const p of asset.pixels){
     if(mask.has(key(p.x,p.y))||p.y<root.y-2||p.y>Math.min(registration.pelvis-1,end.y+Math.ceil(registration.lower)+1)||side*(p.x-32)<registration.torso*.25)continue;
     if(p.y>end.y&&Math.abs(p.x-32)<=registration.torso)continue; // inner thigh/hip, below the fist
-    if(meleeOverlay(identity,p))continue;
+    if(clothing.mask.has(key(p.x,p.y))||meleeOverlay(identity,p))continue;
     const row=rows.get(p.y),outside=!row||p.x<row.left||p.x>row.right,hand=Math.hypot(p.x-end.x,p.y-end.y)<=registration.lower+1.5;
     if(!hand&&!outside)continue;
     profile.pixels.push(p);profile.grid.set(key(p.x,p.y),p);mask.add(key(p.x,p.y));
@@ -163,8 +165,9 @@ export function authoredParts(asset,identity,stage,dir){
   if(sample)underbody.push({...sample,x,y,bodyUnderlay:true});
  }
  const body=[...retained,...repairs],head=body.filter(p=>p.y<=registration.neck),torso=body.filter(p=>p.y>registration.neck&&p.y<=registration.pelvis),legs=body.filter(p=>p.y>registration.pelvis);
- const cape=body.filter(p=>capePixel(identity,p,registration)),capeMask=new Set(cape.map(p=>key(p.x,p.y)));
- return asset.parts={registration,hands,arms:{profiles,mask},body,head,torso,legs,cape,capeMask,repairs,bodyRows,underbody};
+ const garment=completeClothing(clothing,mask);
+ const cape=body.filter(p=>clothing.mask.has(key(p.x,p.y))||capePixel(identity,p,registration)),capeMask=new Set([...cape,...garment.repairs].map(p=>key(p.x,p.y)));
+ return asset.parts={registration,hands,arms:{profiles,mask},body,head,torso,legs,cape,capeMask,clothing:garment,repairs,bodyRows,underbody};
 }
 
 export function connectAuthoredArm(profile,root,goal,preferredJoint,scale){

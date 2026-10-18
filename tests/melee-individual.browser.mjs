@@ -9,7 +9,7 @@ import {MELEE_ARM_FAMILIES} from '../authored-parts.js';
 import {makeRun,creature,generateRoute} from '../game.js';
 import {fingerprint,runtimeFiles,hashFile} from '../scripts/animation-contract.mjs';
 
-const out='public/melee-arm-review/combat',base=process.env.BASE_URL||'http://127.0.0.1:3047',only=process.argv.find(a=>a.startsWith('--only='))?.slice(7);
+const out=(process.argv.find(a=>a.startsWith('--out='))?.slice(6)||'public/melee-arm-review')+'/combat',base=process.env.BASE_URL||'http://127.0.0.1:3047',only=process.argv.find(a=>a.startsWith('--only='))?.slice(7);
 const specs=PIXEL_SPECIES.filter(s=>MELEE_ARM_FAMILIES.has(s.nativeDesign)&&(!only||only.split(',').includes(s.id)));
 const files=[...runtimeFiles(),'Starfall-Menagerie.html','Starfall-Training-Glade.html','public/prototype-bundle.js'],inputs=fingerprint(files);
 const ffmpeg=process.env.FFMPEG_PATH||path.resolve('playtest-artifacts/tools/imageio_ffmpeg/binaries/ffmpeg-win-x86_64-v7.1.exe');

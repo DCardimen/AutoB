@@ -1,0 +1,206 @@
+{
+  "checks": [
+    "Opening scene shows eight views side by side; all nine characters have eight distinct sprites at one fixed pose phase, with native 64×64 cells; clicking a view opens its close inspection",
+    "Randomized teams have six creatures each; cards match the lineup, and pause/frame stepping preserve simulation control",
+    "Selecting a character and clicking ground produces actual movement in the physical scene",
+    "All nine locomotion profiles travel around the circuits and turn through all eight facings; speed changes work",
+    "Walk/run/sprint pace controls, selected sprint toggle, Shift hold/release, acceleration, stride blending and stamina recovery work",
+    "Eight directional views and seventeen animation states are inspectable, including a close view and death",
+    "Restart changes the actual team composition; charged-strike control survives impact while taking damage, with visible anticipation levels",
+    "Rendered sparring resolves with physical hits, projectile travel, rolls and deaths; optional audio toggles",
+    "390px mobile layout has no horizontal overflow and retains scene and character controls",
+    "Standalone HTML runs combat and pose inspection with zero external requests"
+  ],
+  "errors": [],
+  "screenshots": [
+    "directions-knight.png",
+    "directions-orc.png",
+    "directions-elf.png",
+    "directions-caster.png",
+    "directions-wolf.png",
+    "directions-fox.png",
+    "directions-mech.png",
+    "directions-spider.png",
+    "directions-jelly.png",
+    "prototype-movement.png",
+    "prototype-sprint.png",
+    "prototype-study.png",
+    "prototype-battle.png",
+    "prototype-mobile.png",
+    "directions-mobile.png"
+  ],
+  "pixelPresentation": {
+    "mismatchedBlocks": 0,
+    "nativeArena": [
+      334,
+      218
+    ],
+    "nativeCell": 64,
+    "style": "native 64x64 pixel chibi"
+  },
+  "characterDirectionFrames": {
+    "knight": 8,
+    "orc": 8,
+    "elf": 8,
+    "caster": 8,
+    "wolf": 8,
+    "fox": 8,
+    "mech": 8,
+    "spider": 8,
+    "jelly": 8
+  },
+  "jointCoverage": {
+    "checks": 13296,
+    "gaps": []
+  },
+  "battleRosters": [
+    [
+      "wolf",
+      "elf",
+      "spider",
+      "jelly",
+      "orc",
+      "mech"
+    ],
+    [
+      "orc",
+      "fox",
+      "caster",
+      "elf",
+      "jelly",
+      "wolf"
+    ]
+  ],
+  "movementDirectionFrames": {
+    "knight": 8,
+    "orc": 8,
+    "elf": 8,
+    "caster": 8,
+    "wolf": 8,
+    "fox": 8,
+    "mech": 8,
+    "spider": 8,
+    "jelly": 8
+  },
+  "rigVersion": 7,
+  "sprint": [
+    {
+      "id": "knight",
+      "active": true,
+      "blend": 0.012243919970661663,
+      "stamina": 59.99999999999904
+    },
+    {
+      "id": "orc",
+      "active": true,
+      "blend": 0.000016824361519855407,
+      "stamina": 59.99999999999904
+    },
+    {
+      "id": "elf",
+      "active": true,
+      "blend": 0.13350653496723608,
+      "stamina": 59.99999999999904
+    },
+    {
+      "id": "caster",
+      "active": true,
+      "blend": 0.861789231392788,
+      "stamina": 59.99999999999904
+    },
+    {
+      "id": "wolf",
+      "active": true,
+      "blend": 0.013430796263974426,
+      "stamina": 59.99999999999904
+    },
+    {
+      "id": "fox",
+      "active": true,
+      "blend": 0.11413044342762386,
+      "stamina": 59.99999999999904
+    },
+    {
+      "id": "mech",
+      "active": true,
+      "blend": 0.0003264550097892008,
+      "stamina": 59.99999999999904
+    },
+    {
+      "id": "spider",
+      "active": true,
+      "blend": 0.27080433923105995,
+      "stamina": 59.99999999999904
+    },
+    {
+      "id": "jelly",
+      "active": true,
+      "blend": 0.6911839803561467,
+      "stamina": 59.99999999999904
+    }
+  ],
+  "directionFrames": 8,
+  "stateFrames": 16,
+  "chargeProtection": {
+    "sameAction": true,
+    "hpLost": 45,
+    "stagger": 0,
+    "knockdown": 0,
+    "impulse": 0,
+    "state": "charge"
+  },
+  "battle": {
+    "time": 57.49999999999738,
+    "metrics": {
+      "hits": 82,
+      "misses": 61,
+      "rolls": 59,
+      "avoided": 43,
+      "interrupts": 1,
+      "projectiles": 82,
+      "contacts": 3991,
+      "knockouts": 8,
+      "charged": 19,
+      "armorResists": 15
+    },
+    "cache": {
+      "frames": 192,
+      "maxFrames": 192,
+      "sourceReady": true,
+      "frameSize": 64,
+      "rasterScale": 1,
+      "rigVersion": 7,
+      "directionalArt": {
+        "columns": 8,
+        "characters": 9,
+        "nativeCell": [
+          64,
+          64
+        ]
+      },
+      "renderer": {
+        "type": "Canvas2D",
+        "artStyle": "native 64x64 pixel chibi",
+        "nativeArena": [
+          334,
+          218
+        ],
+        "nativePortrait": [
+          64,
+          64
+        ],
+        "nearestNeighbor": true,
+        "antialias": false,
+        "facings": 8,
+        "arenaPasses": 1,
+        "drawCalls": 12
+      }
+    }
+  },
+  "offlineExternalRequests": 0,
+  "showcase": {
+    "heroes": 5,
+    "directions": 4,
+    "examples": 12
+  }
+}

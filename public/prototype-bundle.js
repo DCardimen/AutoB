@@ -2979,6 +2979,58 @@
     const [r, g, b] = p.rgb;
     return ["knight", "goblin"].includes(identity) ? r > g * 1.25 && r > b * 1.1 : ["caster", "skeleton"].includes(identity) ? b > g * 1.12 && b > r * 0.9 : ["elf", "fox"].includes(identity) ? g > r * 1.05 && g > b : ["rogue", "frostelf"].includes(identity) ? b > r * 1.08 : false;
   }
+  var MATERIALS = {
+    dwarf: [[37, 43, 46], [11, 28, 41], [20, 21, 27, 42, 44]],
+    minotaur: [[19, 20, 26, 27, 40], [16, 25, 29, 30, 31, 33, 39, 48], [29, 30, 31, 36, 43]],
+    knight: [
+      [11, 12, 13, 14, 23, 25, 26, 31, 32, 37, 40, 44, 47],
+      [1, 8, 9, 10, 12, 13, 15, 18, 22, 23, 25, 27, 31, 34, 35, 38, 42, 43, 44, 45, 46, 47],
+      [1, 8, 10, 13, 14, 16, 18, 23, 24, 27, 34, 36, 38, 43, 45, 46]
+    ],
+    orc: [[], [16, 23, 27, 31], [13, 21, 27, 31, 41]],
+    goblin: [
+      [1, 2, 3, 4, 7, 15, 16, 20, 21, 25, 29, 30, 33, 34, 39, 40, 41, 43],
+      [6, 8, 9, 10, 13, 17, 19, 20, 22, 24, 25, 29, 31, 32, 33, 36, 42, 43, 47],
+      [1, 2, 5, 6, 7, 8, 9, 12, 15, 16, 17, 19, 20, 21, 22, 23, 24, 26, 30, 33, 34, 37, 38, 41, 43]
+    ],
+    rogue: [
+      [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 16, 17, 18, 22, 26, 32, 36, 37],
+      [1, 2, 3, 4, 5, 6, 11, 12, 15, 18, 19, 20, 21, 22, 23, 26, 31, 36, 37, 41, 42, 43],
+      [1, 2, 3, 4, 5, 6, 7, 10, 13, 14, 15, 17, 19, 20, 21, 23, 24, 25, 28, 29, 31, 32, 33, 35, 37, 39, 40, 42, 46]
+    ]
+  };
+  var clothingKey = (x, y) => y * 64 + x;
+  function authoredClothing(asset, identity, stage, dir, registration) {
+    if (asset.clothing) return asset.clothing;
+    const materials = new Set(MATERIALS[identity]?.[stage] || []);
+    const visibleHands = Object.entries(registration.hands).filter(([side]) => !(identity === "rogue" && (dir === 6 || dir === 5 && Number(side) === 1 || dir === 7 && Number(side) === -1))).map(([, p]) => p);
+    const pixels = asset.pixels.filter((p) => p.y >= registration.neck - 2 && materials.has(p.index) && (identity !== "orc" || p.y >= registration.pelvis - 4) && (identity !== "minotaur" || Math.abs(p.x - 32) <= registration.torso * 0.8) && !visibleHands.some((h) => Math.hypot(p.x - h.x, p.y - h.y) <= 1.5));
+    return asset.clothing = { pixels, mask: new Set(pixels.map((p) => clothingKey(p.x, p.y))), materials, backdrop: ["knight", "goblin", "rogue"].includes(identity) };
+  }
+  function completeClothing(clothing, armMask) {
+    const points = clothing.pixels.slice().sort((a, b) => a.x - b.x || a.y - b.y), hull = [];
+    if (!clothing.backdrop || points.length < 3) return { ...clothing, repairs: [] };
+    const cross2 = (a, b, c2) => (b.x - a.x) * (c2.y - a.y) - (b.y - a.y) * (c2.x - a.x);
+    for (const p of points) {
+      while (hull.length > 1 && cross2(hull.at(-2), hull.at(-1), p) <= 0) hull.pop();
+      hull.push(p);
+    }
+    const lower = hull.length;
+    for (let i = points.length - 2; i >= 0; i--) {
+      const p = points[i];
+      while (hull.length > lower && cross2(hull.at(-2), hull.at(-1), p) <= 0) hull.pop();
+      hull.push(p);
+    }
+    hull.pop();
+    const repairs = [];
+    for (const k of armMask) {
+      const x = k % 64, y = Math.floor(k / 64);
+      if (!hull.every((a, i) => cross2(a, hull[(i + 1) % hull.length], { x, y }) >= 0)) continue;
+      const sample = points.reduce((a, b) => Math.abs(b.y - y) * 4 + Math.abs(b.x - x) < Math.abs(a.y - y) * 4 + Math.abs(a.x - x) ? b : a);
+      repairs.push({ ...sample, x, y, clothingUnderlay: true });
+    }
+    return { ...clothing, repairs };
+  }
 
   // authored-parts.js
   var key2 = (x, y) => y * 64 + x;
@@ -3056,6 +3108,7 @@
     if (asset.parts) return asset.parts;
     const registration = armRegistration(identity, stage, dir);
     if (!registration) return null;
+    const clothing = authoredClothing(asset, identity, stage, dir, registration);
     const grid = new Map(asset.pixels.map((p) => [key2(p.x, p.y), p])), hands = {}, profiles2 = /* @__PURE__ */ new Map(), mask = /* @__PURE__ */ new Set();
     for (const side of [-1, 1]) {
       if (occludedMeleeArm(identity, dir, side)) {
@@ -3071,6 +3124,7 @@
       hands[side] = { ...sample };
       const root = registration.roots[side], end = { x: sample.x, y: sample.y }, joint = mix3(root, end, 0.5);
       const candidates = asset.pixels.filter((p) => {
+        if (clothing.mask.has(key2(p.x, p.y))) return false;
         if (p.y < root.y - 1 || p.y > end.y + registration.lower) return false;
         if (Math.hypot(p.x - end.x, p.y - end.y) <= registration.lower) return true;
         if (MELEE_ARM_FAMILIES.has(identity) && meleeOverlay(identity, p)) return false;
@@ -3083,7 +3137,7 @@
       for (const p of candidates) for (const [dx, dy] of [[-1, 0], [1, 0], [0, -1], [0, 1]]) {
         const q = grid.get(key2(p.x + dx, p.y + dy));
         if (!q || mask.has(key2(q.x, q.y)) || q.y < root.y - 1 || q.y > end.y + registration.lower || side * (q.x - 32) < registration.torso * 0.25) continue;
-        if (MELEE_ARM_FAMILIES.has(identity) && meleeOverlay(identity, q)) continue;
+        if (clothing.mask.has(key2(q.x, q.y)) || MELEE_ARM_FAMILIES.has(identity) && meleeOverlay(identity, q)) continue;
         const region = segment(q, root, end), radius = registration.upper + (registration.lower - registration.upper) * region.t;
         if (region.distance <= radius + 0.8 && Math.max(...q.rgb) < 100) selected2.set(key2(q.x, q.y), q);
       }
@@ -3107,7 +3161,7 @@
         for (const p of asset.pixels) {
           if (mask.has(key2(p.x, p.y)) || p.y < root.y - 2 || p.y > Math.min(registration.pelvis - 1, end.y + Math.ceil(registration.lower) + 1) || side * (p.x - 32) < registration.torso * 0.25) continue;
           if (p.y > end.y && Math.abs(p.x - 32) <= registration.torso) continue;
-          if (meleeOverlay(identity, p)) continue;
+          if (clothing.mask.has(key2(p.x, p.y)) || meleeOverlay(identity, p)) continue;
           const row = rows.get(p.y), outside = !row || p.x < row.left || p.x > row.right, hand = Math.hypot(p.x - end.x, p.y - end.y) <= registration.lower + 1.5;
           if (!hand && !outside) continue;
           profile.pixels.push(p);
@@ -3144,8 +3198,9 @@
       if (sample) underbody.push({ ...sample, x, y, bodyUnderlay: true });
     }
     const body = [...retained, ...repairs], head = body.filter((p) => p.y <= registration.neck), torso = body.filter((p) => p.y > registration.neck && p.y <= registration.pelvis), legs = body.filter((p) => p.y > registration.pelvis);
-    const cape = body.filter((p) => capePixel(identity, p, registration)), capeMask = new Set(cape.map((p) => key2(p.x, p.y)));
-    return asset.parts = { registration, hands, arms: { profiles: profiles2, mask }, body, head, torso, legs, cape, capeMask, repairs, bodyRows, underbody };
+    const garment = completeClothing(clothing, mask);
+    const cape = body.filter((p) => clothing.mask.has(key2(p.x, p.y)) || capePixel(identity, p, registration)), capeMask = new Set([...cape, ...garment.repairs].map((p) => key2(p.x, p.y)));
+    return asset.parts = { registration, hands, arms: { profiles: profiles2, mask }, body, head, torso, legs, cape, capeMask, clothing: garment, repairs, bodyRows, underbody };
   }
   function connectAuthoredArm(profile, root, goal, preferredJoint, scale) {
     const upper = Math.hypot(profile.joint.x - profile.root.x, profile.joint.y - profile.root.y) * scale, lower = Math.hypot(profile.end.x - profile.joint.x, profile.end.y - profile.joint.y) * scale;
@@ -4126,7 +4181,7 @@
         const u = clamp7((x - 18) / 28, 0, 1) * (cape.length - 1), v = clamp7((y - 26) / 19, 0, 1) * (cape[0].length - 1), i = Math.floor(u), j = Math.floor(v), ii = Math.min(i + 1, cape.length - 1), jj = Math.min(j + 1, cape[0].length - 1), lag = mix5(mix5(capeOffsets[i][j], capeOffsets[ii][j], u - i), mix5(capeOffsets[i][jj], capeOffsets[ii][jj], u - i), v - j);
         delta = { x: delta.x + clamp7(lag.x - dc.x, -3, 3) * capeWeight, y: delta.y + clamp7(lag.y - dc.y, -3, 3) * capeWeight };
       }
-      if (legSkin && y >= legArt.rootY) {
+      if (legSkin && y >= legArt.rootY && !ownedCape) {
         const leg = legSkin.offset(x, y);
         delta = humanoid && !NATURAL_ANATOMY[identity] ? leg : { x: delta.x + leg.x - dc.x, y: delta.y + leg.y - dc.y };
       }
@@ -4137,7 +4192,7 @@
       return { x: 32 + (x - 32) * scale.width + delta.x, y: 44 + (y - 45) * scale.height + delta.y };
     }
     const armArt = parts?.arms || (identity === "orc" && artStage === 0 ? authoredArmArt(asset, sourceHands) : null);
-    const bodyLayer = completeBodyLayer(asset, identity, artStage, sourceGear, armArt?.mask), baseLayer = solidLegs ? [...bodyLayer.filter((p) => p.bodyUnderlay || !legArt.mask.has(p.y * 64 + p.x)), ...legArt.repairs] : bodyLayer;
+    const bodyLayer = completeBodyLayer(asset, identity, artStage, sourceGear, armArt?.mask), clothedLayer = [...parts?.clothing.repairs || [], ...bodyLayer], baseLayer = solidLegs ? [...clothedLayer.filter((p) => p.bodyUnderlay || !legArt.mask.has(p.y * 64 + p.x)), ...legArt.repairs] : clothedLayer;
     const layer = rig.portraitMenu && artStage === 0 && rig.dir === 2 ? portraitExpressionLayer(baseLayer, asset, identity, rig.portraitMenu.progress) : baseLayer;
     const pixels = naturalLegs ? layer.map((p) => ({ ...warped(p.x, p.y), color: artColors[p.index], spanX: 1, spanY: 1 })) : layer.flatMap((p) => {
       const rgb = p.rgb, lum = (rgb[0] + rgb[1] + rgb[2]) / 3, range = Math.max(...rgb) - Math.min(...rgb), metal = range < 45 && lum > 55, wood = rgb[0] > rgb[1] * 1.18 && rgb[1] > rgb[2] * 1.15, gem = rgb[2] > rgb[0] * 1.25 && rgb[1] > rgb[0] * 1.2;

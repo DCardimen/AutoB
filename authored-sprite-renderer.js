@@ -301,7 +301,7 @@ export function paintAtlasCharacter(b,id,rig,at,cellPass=0){
   if(cape&&capeBind&&ownedCape){
    const u=clamp((x-18)/28,0,1)*(cape.length-1),v=clamp((y-26)/19,0,1)*(cape[0].length-1),i=Math.floor(u),j=Math.floor(v),ii=Math.min(i+1,cape.length-1),jj=Math.min(j+1,cape[0].length-1),lag=mix(mix(capeOffsets[i][j],capeOffsets[ii][j],u-i),mix(capeOffsets[i][jj],capeOffsets[ii][jj],u-i),v-j);delta={x:delta.x+clamp(lag.x-dc.x,-3,3)*capeWeight,y:delta.y+clamp(lag.y-dc.y,-3,3)*capeWeight};
   }
-  if(legSkin&&y>=legArt.rootY){const leg=legSkin.offset(x,y);delta=humanoid&&!NATURAL_ANATOMY[identity]?leg:{x:delta.x+leg.x-dc.x,y:delta.y+leg.y-dc.y};}
+  if(legSkin&&y>=legArt.rootY&&!ownedCape){const leg=legSkin.offset(x,y);delta=humanoid&&!NATURAL_ANATOMY[identity]?leg:{x:delta.x+leg.x-dc.x,y:delta.y+leg.y-dc.y};}
   if(portraitMenu&&identity!=='owl'){
    const offset=portraitSourceOffset(identity,x,y,portraitMenu);delta={x:delta.x+offset.x*scale.width,y:delta.y+offset.y*scale.height};
   }
@@ -310,7 +310,7 @@ export function paintAtlasCharacter(b,id,rig,at,cellPass=0){
  // A complete costume sits behind the articulated arms and held equipment.
  // Its repaired pixels use palette indices, so collection recolors stay exact.
  const armArt=parts?.arms||(identity==='orc'&&artStage===0?authoredArmArt(asset,sourceHands):null);
- const bodyLayer=completeBodyLayer(asset,identity,artStage,sourceGear,armArt?.mask),baseLayer=solidLegs?[...bodyLayer.filter(p=>p.bodyUnderlay||!legArt.mask.has(p.y*64+p.x)),...legArt.repairs]:bodyLayer;
+ const bodyLayer=completeBodyLayer(asset,identity,artStage,sourceGear,armArt?.mask),clothedLayer=[...(parts?.clothing.repairs||[]),...bodyLayer],baseLayer=solidLegs?[...clothedLayer.filter(p=>p.bodyUnderlay||!legArt.mask.has(p.y*64+p.x)),...legArt.repairs]:clothedLayer;
  const layer=rig.portraitMenu&&artStage===0&&rig.dir===2?portraitExpressionLayer(baseLayer,asset,identity,rig.portraitMenu.progress):baseLayer;
  const pixels=naturalLegs?layer.map(p=>({...warped(p.x,p.y),color:artColors[p.index],spanX:1,spanY:1})):layer.flatMap(p=>{
   const rgb=p.rgb,lum=(rgb[0]+rgb[1]+rgb[2])/3,range=Math.max(...rgb)-Math.min(...rgb),metal=range<45&&lum>55,wood=rgb[0]>rgb[1]*1.18&&rgb[1]>rgb[2]*1.15,gem=rgb[2]>rgb[0]*1.25&&rgb[1]>rgb[0]*1.2;

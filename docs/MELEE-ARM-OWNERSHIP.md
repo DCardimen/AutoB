@@ -1,5 +1,7 @@
 # Melee arm ownership and complete bodies
 
+Archived PR66 review: this pass missed cape highlights and folds being removed with the arms. It is superseded by [complete melee clothing](MELEE-CLOTHING.md), including the user's marked knight example and new garment-only regression checks.
+
 This review supersedes the PR65 torso-fill review. That repair followed the outside of the resting arm, leaving an arm-shaped body bulge under the animated arm. Some source cuffs and hand outlines also remained stationary. A filled silhouette alone did not establish correct anatomy.
 
 The current pass covers Aurel, Brakk, Brom, Grum, Grit, Tarka, Sable, Mossguard, Glacier, Abyssal, Gravitan and Cloverimp: seven source families, all three authored forms and eight facings. Actual combat also covers every available evolution and path: 52 variants in 104 separate source/offline fights.

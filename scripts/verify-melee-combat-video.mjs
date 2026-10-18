@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import assert from 'node:assert/strict';
 import {chromium} from 'playwright';
 import {fingerprint,runtimeFiles,hashFile} from './animation-contract.mjs';
-const root='public/melee-arm-review',folder=root+'/combat',out='playtest-artifacts/melee-arms/decoded-individual';fs.mkdirSync(out,{recursive:true});
+const root=process.argv.find(a=>a.startsWith('--review='))?.slice(9)||'public/melee-arm-review',folder=root+'/combat',out=process.argv.find(a=>a.startsWith('--out='))?.slice(6)||'playtest-artifacts/melee-arms/decoded-individual';fs.mkdirSync(out,{recursive:true});
 const inputs=fingerprint([...runtimeFiles(),'Starfall-Menagerie.html','Starfall-Training-Glade.html','public/prototype-bundle.js']);
 const reports=fs.readdirSync(folder).filter(n=>/^report(?:-.*)?\.json$/.test(n)).map(n=>JSON.parse(fs.readFileSync(folder+'/'+n))).filter(r=>r.cases.every(c=>c.captureVersion===2)&&JSON.stringify(r.inputs)===JSON.stringify(inputs));
 const records=(reports.find(r=>r.cases.length===104)?[reports.find(r=>r.cases.length===104)]:reports).flatMap(r=>r.cases);
