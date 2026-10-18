@@ -4,7 +4,7 @@ import {characterRig,weaponTipAt,plantFeet,locomotionStride} from './prototype-r
 import {stepCape,createRagdoll,stepRagdoll} from './prototype-dynamics.js';
 import {NATIVE_BOSS_RIGS,nativeEvolution,pixelSpec} from './native-content.js';
 import {nativeRigFor,capeSpecification} from './grand-designs.js';
-import {creatureWorldScale,nativeEntityBounds} from './native-size.js';
+import {creatureWorldScale,nativeEntityBounds,BASE_CREATURE_SCALE} from './native-size.js';
 import {stepPhysicalCape} from './native-cloth.js';
 import {equipmentEffects} from './creature-equipment.js';
 import {spriteSample} from './prototype-sprites.js';
@@ -45,7 +45,7 @@ export function initializeNative(u,spec,tuning){
  u.nativeAttackEffect=CREATURE_ATTACK_EFFECTS[spec.nativeDesign||spec.nativeRig];
  u.nativeScale=creatureWorldScale(spec,u,tuning);// Compact shells/pincers have shorter authored contact paths than tall bodies.
  const footprint={crab:32,clam:25,beetle:35}[spec.nativeDesign||spec.nativeRig]||44;
- u.radius=Math.max(u.radius,footprint)*u.nativeScale;u.range=spec.range>100?u.range:u.range*u.nativeScale;u.mass*=Math.max(.65,u.nativeScale/.15);u.entityBounds=nativeEntityBounds(spec,u,NATIVE_BOUNDS,tuning);u.y=Math.max(u.y,u.entityBounds.top+u.radius);u.py=u.y;
+ u.radius=Math.max(u.radius,footprint)*u.nativeScale;u.range=spec.range>100?u.range:u.range*u.nativeScale;u.mass*=Math.max(.65,u.nativeScale/BASE_CREATURE_SCALE);u.entityBounds=nativeEntityBounds(spec,u,NATIVE_BOUNDS,tuning);u.y=Math.max(u.y,u.entityBounds.top+u.radius);u.py=u.y;
  u.nativeActor=makePrototypeUnit(id,u.side,0,u.x,u.y);u.nativeActor.uid=u.uid;u.nativeActor.family=spec;u.nativeActor.creature=u;u.nativeActor.rigScale=u.nativeScale;u.nativeActor.stride=formProfile(spec,u).stride||u.nativeActor.stride;u.nativeActor.strideLength=tuning?.strideLength??100;
  u.facing=u.side?Math.PI:0;u.meleeCount=0;u.nativeActor.facing=u.facing;u.nativeActor.moveFacing=u.facing;
  const gear=equipmentEffects(u);u.maxPoise+=(nativeEvolution(u).poise||0)+gear.poise;u.shield+=gear.shield;

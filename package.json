@@ -8,6 +8,7 @@
     "animation:review": "node scripts/review-companion-animation.mjs",
     "animation:verify-video": "node scripts/verify-animation-video.mjs",
     "animation:pipeline": "node scripts/animation-pipeline.mjs",
+    "review:combat": "npm run build:standalone && node --test tests/readable-combat.test.js && node scripts/check-combat-pacing.mjs && node tests/readable-combat.browser.mjs",
     "dev": "node server.js",
     "start": "node server.js",
     "test": "node --test tests/*.test.js",

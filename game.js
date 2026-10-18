@@ -17,7 +17,7 @@ import {tacticalTarget,tacticalMove} from './ai-relics.js';
 import {spendCapturers,refundCapture,progressive,capacity,rollIndividual,unlockSlots,routeGraph,graphCanVisit,assignEnemyRelics,CAPTURERS,consumeCapturer,addCapturer,newCasualty,recruitOffer} from './expedition-rules.js';
 import {EXPEDITION_RELICS,routeModifiers,relicStatFactors,compileRelics,relicDamageFactor,relicReduction,relicEvent,relicFatal,relicTick} from './run-relics.js';
 import {equipmentEffects,armorReduction,enemyEquipment,CREATURE_GEAR} from './creature-equipment.js';
-import {queueCombatText,advanceCombatTexts} from './combat-text.js';
+import {queueCombatText,queueCombatCue,advanceCombatTexts} from './combat-text.js';
 import {CORE_SPECIES} from './core-species.js';
 import {evaluateOrders,terrainFor,firstTerrainHit,terrainSteering,confineTerrain,orderGoal,combatApproach,avoidCombatBodies} from './native-tactics.js';
 import {NATIVE_BOUNDS,nativeSpawn,initializeNative,nativeAction,advanceNative,nativeBladePoint,nativeStrikeOrigin,nativeHeavy,nativeMuzzle,nativeBodyHeight} from './native-combat.js';
@@ -1915,7 +1915,7 @@ export class Battle {
     const enemy=this.living(1).find(u=>u.uid===uid);if(!enemy||this.done)return false;
     this.focusUid=uid;this.focusUntil=this.time+8;
     this.living(0).forEach(u=>u.targetTimer=0);
-    this.effect(enemy.x,enemy.y-55,'FOCUS · 8s','#f4cf7e');return true;
+    if(!this.native)this.effect(enemy.x,enemy.y-55,'FOCUS · 8s','#f4cf7e');return true;
   }
   get enrage(){return enrageAt((this.run.rulesVersion||0)>=15?this.time:0);}
   setTuning(values){
@@ -2282,7 +2282,8 @@ export class Battle {
       kind, true, crit,
     );
     if(proc)relicEvent(this,source,"hit",{target,dealt,def,skillId,kind,critical:crit});
-    target.flash = 0.12;
+    target.flash = dealt>0?0.1:0;
+    if(this.native&&dealt<=0)queueCombatCue(this,target,"block");
     target.hitAnim = 0.22;
     if (kind === "physical" || kind === "projectile") {
       this.metrics.physicalHits++;
@@ -2302,10 +2303,10 @@ export class Battle {
     );
     this.burst(target.x, target.y - 10, color, crit ? 11 : 4, crit ? 110 : 60);
     this.fx("impact", target.x, target.y - 8, color, { skillId,sourceId:source.id,sourceUid:source.uid,r: crit ? 35 : 23, victimUid:target.uid, angle:Math.atan2(target.y-source.y,target.x-source.x), groundRadius:target.radius, heavy:!def.auto, blocked:dealt<=0, ttl:crit?.32:.26, max:crit?.32:.26 });
-    if(dealt>0&&this.run.rulesVersion>=17&&this.visuals&&!this.reducedMotion)this.hitPause=Math.max(this.hitPause||0,crit?.055:.025);
-    if (crit || !def.auto) this.shake = Math.min(4, this.shake + 1.1);
+    if(dealt>0&&this.run.rulesVersion>=17&&this.visuals&&!this.reducedMotion)this.hitPause=Math.max(this.hitPause||0,crit?.045:!def.auto?.03:0);
+    if (dealt>0&&(crit || !def.auto)) this.shake = Math.min(4, this.shake + 1.1);
     this.audioEvents.push({
-      type: crit ? "crit" : def.auto ? "hit" : "skill",
+      type: dealt<=0 ? "block" : crit ? "crit" : def.auto ? "hit" : "skill",
       element: BY_ID[source.id].element,
       time: this.time,
     });
@@ -2693,7 +2694,7 @@ export class Battle {
     if (!unit || unit.hp <= 0 || unit.lastEvadeKey === key) return;
     unit.lastEvadeKey = key;
     this.metrics.dodges++;
-    this.effect(unit.x, unit.y - 43, "EVADED", "#b5dadd");
+    if(this.native)queueCombatCue(this,unit,"dodge");else this.effect(unit.x, unit.y - 43, "EVADED", "#b5dadd");
     this.dodgeProc(unit, source);
   }
   resolveStrike(strike) {
@@ -2716,7 +2717,7 @@ export class Battle {
       max: 0.22,
     });
     if(strike.nativeMelee){
-      if(!strike.hitUids.length){this.metrics.whiffs++;this.effect(u.x+strike.dx*strike.reach,u.y+strike.dy*strike.reach,'MISS','#b9b1a0');if(strike.target?.rollCount>strike.targetRoll)this.registerEvade(strike.target,u,strike.key);}
+      if(!strike.hitUids.length){this.metrics.whiffs++;queueCombatCue(this,u,'miss');if(strike.target?.rollCount>strike.targetRoll)this.registerEvade(strike.target,u,strike.key);}
       u.actionId=null;return;
     }
     const targets = this.living(1 - u.side)
@@ -2785,7 +2786,7 @@ export class Battle {
       target.actionId = null;
       target.actionLock = target.stagger;
       this.metrics.staggers++;
-      this.effect(target.x, target.y - 55, "STAGGER", "#ffd99c");
+      if(this.native)queueCombatCue(this,target,"stagger");else this.effect(target.x, target.y - 55, "STAGGER", "#ffd99c");
       this.say(
         `${creatureName(target)} loses its footing. The windup is interrupted.`,
       );

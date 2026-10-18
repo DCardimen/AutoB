@@ -15,13 +15,13 @@ function battleFixture(id='aurel',form=0){const r=makeRun(62,[id],{native:true})
 function mask(p){const points=[];for(let y=0;y<64;y++)for(let x=0;x<64;x++)if(p[(y*64+x)*4+3])points.push([x,y]);const minX=Math.min(...points.map(p=>p[0])),minY=Math.min(...points.map(p=>p[1])),w=Math.max(...points.map(p=>p[0]))-minX+1,h=Math.max(...points.map(p=>p[1]))-minY+1;const out=new Set();for(const [x,y]of points)out.add(Math.floor((x-minX)*32/w)+':'+Math.floor((y-minY)*32/h));return out;}
 function silhouetteChange(a,b){const A=mask(a),B=mask(b);return 1-[...A].filter(p=>B.has(p)).length/new Set([...A,...B]).size;}
 
-test('arena default is 30% of the prior size; all families and evolutions stay within 70–150% of the new default',()=>{
+test('arena uses a readable physical size; all families and evolutions stay within 70–150% of the new default',()=>{
  const near=(a,b)=>assert.ok(Math.abs(a-b)<1e-10,`${a} ≈ ${b}`);
- near(BASE_CREATURE_SCALE,.5*.3);assert.equal(MIN_CREATURE_TYPE_FACTOR,.7);assert.equal(MAX_CREATURE_TYPE_FACTOR,1.5);assert.equal(PIXEL_SPECIES.length,89);assert.equal(NATIVE_SPECIES.length,29);
- near(creatureWorldScale(pixelSpec('aurel')),.15);near(creatureWorldScale(pixelSpec('luma')),.105);near(creatureWorldScale(pixelSpec('ironscolopendra')),.225);
+ near(BASE_CREATURE_SCALE,.4);assert.equal(MIN_CREATURE_TYPE_FACTOR,.7);assert.equal(MAX_CREATURE_TYPE_FACTOR,1.5);assert.equal(PIXEL_SPECIES.length,89);assert.equal(NATIVE_SPECIES.length,29);
+ near(creatureWorldScale(pixelSpec('aurel')),.4);near(creatureWorldScale(pixelSpec('luma')),.28);near(creatureWorldScale(pixelSpec('ironscolopendra')),.6);
  assert.equal(creatureTypeFactor(pixelSpec('aurel')),1);assert.equal(creatureTypeFactor(pixelSpec('brakk')),1.3);
  for(const s of PIXEL_SPECIES){assert.ok(nativeRigFor(s));for(const evo of [0,1,2]){const factor=creatureTypeFactor(s,{evolution:evo});assert.ok(factor>=MIN_CREATURE_TYPE_FACTOR&&factor<=MAX_CREATURE_TYPE_FACTOR);}}
- const {b}=battleFixture();near(b.units[0].nativeActor.rigScale,.15);near(b.units[0].radius,3.3);near(b.units[0].range,8.4);
+ const {b}=battleFixture();near(b.units[0].nativeActor.rigScale,.4);near(b.units[0].radius,44*.4);near(b.units[0].range,56*.4);
 });
 test('an evolution unlocks an executable skill, a separate gear slot and a support socket without destroying links',()=>{
  const {r}=battleFixture();r.team[0].evolution=0;r.gold=300;const gem=personalRelic('quick-shard');r.inventory=[gem];assert.ok(equipRelic(r,0,gem.uid));assert.ok(linkRelic(r,0,0,'auto-aurel'));

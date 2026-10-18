@@ -2,7 +2,7 @@ import {chromium} from 'playwright';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {makeRun,generateRoute,encounter} from '../game.js';
-const out='docs/evidence/fluid-arena';fs.mkdirSync(out,{recursive:true});const report=[];
+const out=process.env.FLUID_ARENA_OUT||'playtest-artifacts/fluid-arena';fs.mkdirSync(out,{recursive:true});const report=[];
 const browser=await chromium.launch({headless:true,executablePath:process.env.CHROMIUM_PATH||(process.platform==='win32'?'C:/Program Files/Google/Chrome/Application/chrome.exe':undefined)});
 try{for(const offline of [false,true])for(const [width,height]of [[2560,1440],[1900,935],[1366,768],[1024,768],[390,844]]){
  const context=await browser.newContext({viewport:{width,height}}),page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));

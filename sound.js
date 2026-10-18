@@ -113,6 +113,9 @@ export class Soundscape {
       this.action("capture");
       return;
     }
+    if(event.type==='block'){
+      this.tone(760,.06,'triangle',.07,0,.65);this.hiss(2400,.045,.045);return;
+    }
     const heavy = event.type === "crit" || event.type === "skill",
       volume = heavy ? 0.24 : 0.12,
       element = event.element;

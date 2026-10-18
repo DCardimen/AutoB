@@ -24,11 +24,11 @@ async function ensureServer(){
  for(let attempt=0;attempt<50;attempt++){if(failure)throw failure;if(await available())return;await new Promise(resolve=>setTimeout(resolve,200));}
  throw Error('Local game server did not start; see server.log');
 }
-async function run(name,args){
+async function run(name,args,env={}){
  const logfile=path.join(out,name+'.log'),entry={stage:currentStage,name,command:['node',...args],status:'running',log:path.relative(root,logfile)};
  report.checks.push(entry);save();console.log('Stage '+currentStage+': '+name);const fd=fs.openSync(logfile,'w'),start=Date.now();
  try{
-  const child=spawn(process.execPath,args,{cwd:root,env:process.env,windowsHide:true,stdio:['ignore',fd,fd]});
+  const child=spawn(process.execPath,args,{cwd:root,env:{...process.env,...env},windowsHide:true,stdio:['ignore',fd,fd]});
   entry.exitCode=await new Promise((resolve,reject)=>{child.once('error',reject);child.once('close',resolve);});
   if(entry.exitCode!==0)throw Error(name+' failed; see '+logfile);entry.status='passed';
  }catch(error){entry.status='failed';entry.error=error.message;throw error;}finally{fs.closeSync(fd);entry.seconds=(Date.now()-start)/1000;save();}
@@ -53,6 +53,9 @@ const checks={
   await run('standalone',['scripts/build-standalone.mjs']);await run('prototype',['scripts/build-prototype.mjs']);
   for(const file of ['Starfall-Menagerie.html','Starfall-Training-Glade.html'])assert.ok(fs.statSync(file).size<100*1024*1024,file+' fits repository size limit');
   await ensureServer();
+  await run('readability-contracts',['--test','tests/readable-combat.test.js']);
+  await run('opening-pacing',['scripts/check-combat-pacing.mjs','--out='+path.join(out,'opening-pacing.json')]);
+  await run('default-combat-readability',['tests/readable-combat.browser.mjs'],{PASS_ONE_OUT:path.join(out,'default-combat')});
   await run('source-offline-combat',['tests/companion-animation.browser.mjs']);
   await run('live-legs',['tests/legs-v2.browser.mjs']);await run('live-prototype',['tests/prototype.browser.mjs']);
   await run('source-sheets',['scripts/review-gaits-carry.mjs','quality']);await run('natural-sheets',['scripts/review-legs-v3.mjs','quality']);await run('body-sheets',['scripts/review-swing-body.mjs','quality']);
