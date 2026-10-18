@@ -1,5 +1,7 @@
 # Authored arm animation overhaul
 
+The follow-up [torso fill correction](TORSO-FILL.md) fixes the exposed shoulder cutouts missed by this pass. Its before/after evidence and body-only opacity tests are the current acceptance evidence for body completeness.
+
 Moving sleeves, forearms and hands now use one continuous indexed skin. The complete cuff and its outline leave the body together; the torso retains its own underpainting. Weapon rendering no longer draws a second set of generic fists over those original hand pixels.
 
 `companion-arm-bindings.js` registers wrists and shoulder heights separately for every form and facing. Several previous landmarks were on boots, cape hems or fox tails. The shoulder pivot now sits on the body side of the painted cuff seam. The elbow retains its authored bend branch instead of snapping when a projected joint crosses the torso.

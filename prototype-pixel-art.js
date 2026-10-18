@@ -9,7 +9,7 @@ import {paintAuthoredArms,paintAuthoredGrips} from './authored-arm-skin.js';
 import {paintLegVolumes} from './leg-volume.js';
 import {paintCreatureAttack} from './creature-attacks.js';
 export const CELL=64,PIVOT={x:32,y:44},PIXEL_WORLD=3;
-export const SPRITE_ART_REVISION=16;
+export const SPRITE_ART_REVISION=17;
 const OUT='#192328';
 export const PIXEL_PALETTES={
  crab:{skin:['#496b63','#7daca0','#c6d9be'],cloth:['#385c69','#5b95aa','#a9d1db'],metal:['#324d52','#668d8c','#b0c8bd','#e5e0b9'],hair:['#364c58','#638e99','#abd5ce']},

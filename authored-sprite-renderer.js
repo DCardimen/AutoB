@@ -352,6 +352,20 @@ export function paintAtlasCharacter(b,id,rig,at){
  // every destination sample. Forward splats and seam-colored cylinders lost
  // both width and texture, and left disconnected pixels at bent joints.
  if(authoredLegs){
+  const trunk=new Map((parts?.underbody||[]).map(p=>{const q=warped(p.x,p.y);return [p.y*64+p.x,{...p,q:{x:32+(q.x-32+ox)*fit,y:44+(q.y-44+oy)*fit},shade:artColors[p.index]}];}));
+  // Draw the independent body first. Moving hair, capes and arms can cover
+  // it, but cannot remove the shirt/armor beneath their original positions.
+  for(const p of trunk.values()){
+   b.dot(p.q.x,p.q.y,p.shade);
+   const samples=[[p.x,p.y],[p.x+1,p.y],[p.x+1,p.y+1],[p.x,p.y+1]].map(([x,y])=>trunk.get(y*64+x));if(samples.some(p=>!p))continue;
+   const vertices=samples.map(p=>p.q),ys=vertices.map(p=>p.y);
+   for(let y=Math.ceil(Math.min(...ys));y<=Math.floor(Math.max(...ys));y++){
+    const intersections=[];
+    for(let i=0;i<4;i++){const a=vertices[i],z=vertices[(i+1)%4];if(y<Math.min(a.y,z.y)||y>Math.max(a.y,z.y))continue;if(a.y===z.y)intersections.push(a.x,z.x);else intersections.push(a.x+(z.x-a.x)*(y-a.y)/(z.y-a.y));}
+    if(intersections.length)for(let x=Math.ceil(Math.min(...intersections));x<=Math.floor(Math.max(...intersections));x++)b.dot(x,y,p.shade);
+   }
+   const mid=warped(p.x+.5,p.y+.5);b.dot(32+(mid.x-32+ox)*fit,44+(mid.y-44+oy)*fit,p.shade);
+  }
   // Rasterize the source adjacency edges first. Thin diagonal hooves can
   // otherwise vanish under nearest-neighbor sampling at a fractional scale.
   // These edges connect only pixels adjacent in the original artwork and use
@@ -378,7 +392,7 @@ export function paintAtlasCharacter(b,id,rig,at){
   // branch. Keep only samples connected to the forward-mapped source graph;
   // every actual authored pixel (including separate ornaments) is a seed.
   const reached=new Uint8Array(4096),queue=new Uint16Array(4096);let count=0;
-  for(const p of mapped.values()){const x=Math.round(p.q.x),y=Math.round(p.q.y),k=y*64+x;if(x>=0&&x<64&&y>=0&&y<64&&!reached[k]){reached[k]=1;queue[count++]=k;}}
+  for(const p of [...mapped.values(),...trunk.values()]){const x=Math.round(p.q.x),y=Math.round(p.q.y),k=y*64+x;if(x>=0&&x<64&&y>=0&&y<64&&!reached[k]){reached[k]=1;queue[count++]=k;}}
   for(let i=0;i<count;i++){const k=queue[i],x=k%64,y=Math.floor(k/64);for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){const xx=x+dx,yy=y+dy,n=yy*64+xx;if(xx<0||xx>63||yy<0||yy>63||reached[n]||!b.data[n*4+3])continue;reached[n]=1;queue[count++]=n;}}
   for(let i=0;i<4096;i++)if(b.data[i*4+3]&&!reached[i])b.data.fill(0,i*4,i*4+4);
  }

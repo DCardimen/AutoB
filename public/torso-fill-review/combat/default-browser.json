@@ -1,0 +1,698 @@
+[
+  {
+    "label": "source-1900",
+    "median": 86.57999192309504,
+    "phase": "battle",
+    "time": 7.520000000000006,
+    "defaults": {
+      "spriteSize": 100,
+      "smallSize": 100,
+      "largeSize": 100,
+      "movementSpeed": 100,
+      "acceleration": 100,
+      "braking": 100,
+      "turnSpeed": 100,
+      "steeringAgility": 100,
+      "cornerSlowdown": 100,
+      "runStartDistance": 100,
+      "sprintStartDistance": 100,
+      "gaitBlendSpeed": 100,
+      "knockback": 100,
+      "gaitPace": 100,
+      "strideLength": 100,
+      "capeMotion": 100,
+      "damageTextSize": 100,
+      "auraSize": 100,
+      "effectIntensity": 100,
+      "cameraShake": 100
+    },
+    "camera": {
+      "scale": 1.8499998274165605,
+      "x": 142.77603342152858,
+      "y": 118.44135248455713,
+      "width": 758.277097765443,
+      "height": 340.54057230900713,
+      "viewportWidth": 1402.8125,
+      "viewportHeight": 630,
+      "updatedAt": 9.450899999999999
+    },
+    "arena": {
+      "x": 47.59375,
+      "y": 205,
+      "width": 1402.8125,
+      "height": 630,
+      "top": 205,
+      "right": 1450.40625,
+      "bottom": 835,
+      "left": 47.59375
+    },
+    "heights": [
+      67.9319936627361,
+      126.98398815387272,
+      75.47999295859567,
+      97.67999088759441
+    ],
+    "focus": [
+      {
+        "uid": "sparkhare-mvdnlg4mab0x-3",
+        "x": 866.3051836871466,
+        "y": 574.4574532697802
+      },
+      {
+        "uid": "brom-mvdnlg4mab0x-4",
+        "x": 830.7751399859576,
+        "y": 449.7938946229988
+      }
+    ],
+    "overflow": 0,
+    "dockBottom": 920,
+    "targets": [
+      {
+        "label": "II",
+        "height": 50,
+        "width": 50
+      },
+      {
+        "label": "1×",
+        "height": 36,
+        "width": 44
+      },
+      {
+        "label": "2×",
+        "height": 36,
+        "width": 44
+      },
+      {
+        "label": "3×",
+        "height": 36,
+        "width": 44
+      },
+      {
+        "label": "Arena",
+        "height": 48,
+        "width": 181.921875
+      },
+      {
+        "label": "Deployment & AI",
+        "height": 48,
+        "width": 181.921875
+      },
+      {
+        "label": "Companions",
+        "height": 48,
+        "width": 181.921875
+      },
+      {
+        "label": "Capture5",
+        "height": 48,
+        "width": 181.921875
+      },
+      {
+        "label": "Intel & log",
+        "height": 48,
+        "width": 181.921875
+      }
+    ],
+    "errors": []
+  },
+  {
+    "label": "source-390",
+    "median": 54.30662526075734,
+    "phase": "battle",
+    "time": 7.640000000000006,
+    "defaults": {
+      "spriteSize": 100,
+      "smallSize": 100,
+      "largeSize": 100,
+      "movementSpeed": 100,
+      "acceleration": 100,
+      "braking": 100,
+      "turnSpeed": 100,
+      "steeringAgility": 100,
+      "cornerSlowdown": 100,
+      "runStartDistance": 100,
+      "sprintStartDistance": 100,
+      "gaitBlendSpeed": 100,
+      "knockback": 100,
+      "gaitPace": 100,
+      "strideLength": 100,
+      "capeMotion": 100,
+      "damageTextSize": 100,
+      "auraSize": 100,
+      "effectIntensity": 100,
+      "cameraShake": 100
+    },
+    "camera": {
+      "scale": 1.160397975657208,
+      "x": 377.41557776507284,
+      "y": 147.4356743288363,
+      "width": 298.1735639482118,
+      "height": 296.45001733579437,
+      "viewportWidth": 346,
+      "viewportHeight": 344,
+      "updatedAt": 8.796100000000001
+    },
+    "arena": {
+      "x": 22,
+      "y": 176,
+      "width": 346,
+      "height": 344,
+      "top": 176,
+      "right": 368,
+      "bottom": 520,
+      "left": 22
+    },
+    "heights": [
+      40.103354038713114,
+      85.0803795751865,
+      47.344237406814095,
+      61.2690131147006
+    ],
+    "focus": [
+      {
+        "uid": "sparkhare-mvdnlg4mab0x-7",
+        "x": 269.4808601529455,
+        "y": 375.10062324115626
+      },
+      {
+        "uid": "brom-mvdnlg4mab0x-8",
+        "x": 240.98870432411456,
+        "y": 295.8319445968859
+      }
+    ],
+    "overflow": 0,
+    "dockBottom": 765,
+    "targets": [
+      {
+        "label": "II",
+        "height": 50,
+        "width": 50
+      },
+      {
+        "label": "1×",
+        "height": 44,
+        "width": 38
+      },
+      {
+        "label": "2×",
+        "height": 44,
+        "width": 38
+      },
+      {
+        "label": "3×",
+        "height": 44,
+        "width": 38
+      },
+      {
+        "label": "Arena",
+        "height": 44,
+        "width": 68
+      },
+      {
+        "label": "Deployment & AI",
+        "height": 44,
+        "width": 68
+      },
+      {
+        "label": "Companions",
+        "height": 44,
+        "width": 68
+      },
+      {
+        "label": "Capture5",
+        "height": 44,
+        "width": 68
+      },
+      {
+        "label": "Intel & log",
+        "height": 44,
+        "width": 68
+      }
+    ],
+    "errors": []
+  },
+  {
+    "label": "source-2560",
+    "median": 95.48430888806186,
+    "phase": "battle",
+    "time": 7.560000000000006,
+    "defaults": {
+      "spriteSize": 100,
+      "smallSize": 100,
+      "largeSize": 100,
+      "movementSpeed": 100,
+      "acceleration": 100,
+      "braking": 100,
+      "turnSpeed": 100,
+      "steeringAgility": 100,
+      "cornerSlowdown": 100,
+      "runStartDistance": 100,
+      "sprintStartDistance": 100,
+      "gaitBlendSpeed": 100,
+      "knockback": 100,
+      "gaitPace": 100,
+      "strideLength": 100,
+      "capeMotion": 100,
+      "damageTextSize": 100,
+      "auraSize": 100,
+      "effectIntensity": 100,
+      "cameraShake": 100
+    },
+    "camera": {
+      "scale": 2.040263010428672,
+      "x": 21.862209872743186,
+      "y": 139.9023446797154,
+      "width": 1002.0001046681087,
+      "height": 308.78371895181937,
+      "viewportWidth": 2044.34375,
+      "viewportHeight": 630,
+      "updatedAt": 8.8075
+    },
+    "arena": {
+      "x": 56.828125,
+      "y": 205,
+      "width": 2044.34375,
+      "height": 630,
+      "top": 205,
+      "right": 2101.171875,
+      "bottom": 835,
+      "left": 56.828125
+    },
+    "heights": [
+      74.91845774294083,
+      140.04365303582406,
+      83.24273082548983,
+      107.7258869506339
+    ],
+    "focus": [
+      {
+        "uid": "sparkhare-mvdnlg4mab0x-11",
+        "x": 1211.2339313948653,
+        "y": 569.9791598219929
+      },
+      {
+        "uid": "brom-mvdnlg4mab0x-12",
+        "x": 1167.2517858304386,
+        "y": 431.18364765732593
+      }
+    ],
+    "overflow": 0,
+    "dockBottom": 920,
+    "targets": [
+      {
+        "label": "II",
+        "height": 50,
+        "width": 50
+      },
+      {
+        "label": "1×",
+        "height": 36,
+        "width": 44
+      },
+      {
+        "label": "2×",
+        "height": 36,
+        "width": 44
+      },
+      {
+        "label": "3×",
+        "height": 36,
+        "width": 44
+      },
+      {
+        "label": "Arena",
+        "height": 48,
+        "width": 310.21875
+      },
+      {
+        "label": "Deployment & AI",
+        "height": 48,
+        "width": 310.234375
+      },
+      {
+        "label": "Companions",
+        "height": 48,
+        "width": 310.21875
+      },
+      {
+        "label": "Capture5",
+        "height": 48,
+        "width": 310.234375
+      },
+      {
+        "label": "Intel & log",
+        "height": 48,
+        "width": 310.21875
+      }
+    ],
+    "errors": []
+  },
+  {
+    "label": "offline-1900",
+    "median": 86.57999087690828,
+    "phase": "battle",
+    "time": 7.560000000000006,
+    "defaults": {
+      "spriteSize": 100,
+      "smallSize": 100,
+      "largeSize": 100,
+      "movementSpeed": 100,
+      "acceleration": 100,
+      "braking": 100,
+      "turnSpeed": 100,
+      "steeringAgility": 100,
+      "cornerSlowdown": 100,
+      "runStartDistance": 100,
+      "sprintStartDistance": 100,
+      "gaitBlendSpeed": 100,
+      "knockback": 100,
+      "gaitPace": 100,
+      "strideLength": 100,
+      "capeMotion": 100,
+      "damageTextSize": 100,
+      "auraSize": 100,
+      "effectIntensity": 100,
+      "cameraShake": 100
+    },
+    "camera": {
+      "scale": 1.8499998050621427,
+      "x": 143.70299399854215,
+      "y": 118.79259967642942,
+      "width": 758.2771069280619,
+      "height": 340.5405764239191,
+      "viewportWidth": 1402.8125,
+      "viewportHeight": 630,
+      "updatedAt": 14.036700000000002
+    },
+    "arena": {
+      "x": 47.59375,
+      "y": 205,
+      "width": 1402.8125,
+      "height": 630,
+      "top": 205,
+      "right": 1450.40625,
+      "bottom": 835,
+      "left": 47.59375
+    },
+    "heights": [
+      67.93199284188188,
+      126.98398661946547,
+      75.47999204653543,
+      97.67998970728114
+    ],
+    "focus": [
+      {
+        "uid": "sparkhare-mvdnlg4mab0x-15",
+        "x": 868.940877018257,
+        "y": 574.9963246229051
+      },
+      {
+        "uid": "brom-mvdnlg4mab0x-16",
+        "x": 829.0602536356332,
+        "y": 449.14408442854665
+      }
+    ],
+    "overflow": 0,
+    "dockBottom": 920,
+    "targets": [
+      {
+        "label": "II",
+        "height": 50,
+        "width": 50
+      },
+      {
+        "label": "1×",
+        "height": 36,
+        "width": 44
+      },
+      {
+        "label": "2×",
+        "height": 36,
+        "width": 44
+      },
+      {
+        "label": "3×",
+        "height": 36,
+        "width": 44
+      },
+      {
+        "label": "Arena",
+        "height": 48,
+        "width": 181.921875
+      },
+      {
+        "label": "Deployment & AI",
+        "height": 48,
+        "width": 181.921875
+      },
+      {
+        "label": "Companions",
+        "height": 48,
+        "width": 181.921875
+      },
+      {
+        "label": "Capture5",
+        "height": 48,
+        "width": 181.921875
+      },
+      {
+        "label": "Intel & log",
+        "height": 48,
+        "width": 181.921875
+      }
+    ],
+    "errors": []
+  },
+  {
+    "label": "offline-390",
+    "median": 54.13616784142669,
+    "phase": "battle",
+    "time": 7.560000000000006,
+    "defaults": {
+      "spriteSize": 100,
+      "smallSize": 100,
+      "largeSize": 100,
+      "movementSpeed": 100,
+      "acceleration": 100,
+      "braking": 100,
+      "turnSpeed": 100,
+      "steeringAgility": 100,
+      "cornerSlowdown": 100,
+      "runStartDistance": 100,
+      "sprintStartDistance": 100,
+      "gaitBlendSpeed": 100,
+      "knockback": 100,
+      "gaitPace": 100,
+      "strideLength": 100,
+      "capeMotion": 100,
+      "damageTextSize": 100,
+      "auraSize": 100,
+      "effectIntensity": 100,
+      "cameraShake": 100
+    },
+    "camera": {
+      "scale": 1.1567557231074077,
+      "x": 375.0923701281136,
+      "y": 147.41184892130798,
+      "width": 299.11241681219934,
+      "height": 297.3834433046144,
+      "viewportWidth": 346,
+      "viewportHeight": 344,
+      "updatedAt": 13.9862
+    },
+    "arena": {
+      "x": 22,
+      "y": 176,
+      "width": 346,
+      "height": 344,
+      "top": 176,
+      "right": 368,
+      "bottom": 520,
+      "left": 22
+    },
+    "heights": [
+      42.47607015250401,
+      79.39971283409247,
+      47.195633502782236,
+      61.076702180071145
+    ],
+    "focus": [
+      {
+        "uid": "sparkhare-mvdnlg4mab0x-19",
+        "x": 267.90555000384177,
+        "y": 374.24339052868174
+      },
+      {
+        "uid": "brom-mvdnlg4mab0x-20",
+        "x": 242.96925584169634,
+        "y": 295.5513286633984
+      }
+    ],
+    "overflow": 0,
+    "dockBottom": 765,
+    "targets": [
+      {
+        "label": "II",
+        "height": 50,
+        "width": 50
+      },
+      {
+        "label": "1×",
+        "height": 44,
+        "width": 38
+      },
+      {
+        "label": "2×",
+        "height": 44,
+        "width": 38
+      },
+      {
+        "label": "3×",
+        "height": 44,
+        "width": 38
+      },
+      {
+        "label": "Arena",
+        "height": 44,
+        "width": 68
+      },
+      {
+        "label": "Deployment & AI",
+        "height": 44,
+        "width": 68
+      },
+      {
+        "label": "Companions",
+        "height": 44,
+        "width": 68
+      },
+      {
+        "label": "Capture5",
+        "height": 44,
+        "width": 68
+      },
+      {
+        "label": "Intel & log",
+        "height": 44,
+        "width": 68
+      }
+    ],
+    "errors": []
+  },
+  {
+    "label": "offline-2560",
+    "median": 95.48430740525001,
+    "phase": "battle",
+    "time": 7.560000000000006,
+    "defaults": {
+      "spriteSize": 100,
+      "smallSize": 100,
+      "largeSize": 100,
+      "movementSpeed": 100,
+      "acceleration": 100,
+      "braking": 100,
+      "turnSpeed": 100,
+      "steeringAgility": 100,
+      "cornerSlowdown": 100,
+      "runStartDistance": 100,
+      "sprintStartDistance": 100,
+      "gaitBlendSpeed": 100,
+      "knockback": 100,
+      "gaitPace": 100,
+      "strideLength": 100,
+      "capeMotion": 100,
+      "damageTextSize": 100,
+      "auraSize": 100,
+      "effectIntensity": 100,
+      "cameraShake": 100
+    },
+    "camera": {
+      "scale": 2.040262978744658,
+      "x": 21.677265630059253,
+      "y": 139.92760161111136,
+      "width": 1002.0001202285466,
+      "height": 308.7837237470383,
+      "viewportWidth": 2044.34375,
+      "viewportHeight": 630,
+      "updatedAt": 14.0485
+    },
+    "arena": {
+      "x": 56.828125,
+      "y": 205,
+      "width": 2044.34375,
+      "height": 630,
+      "top": 205,
+      "right": 2101.171875,
+      "bottom": 835,
+      "left": 56.828125
+    },
+    "heights": [
+      74.91845657950384,
+      140.0436508610333,
+      83.24272953278205,
+      107.72588527771796
+    ],
+    "focus": [
+      {
+        "uid": "sparkhare-mvdnlg4mab0x-23",
+        "x": 1211.6112483591419,
+        "y": 569.92762337201
+      },
+      {
+        "uid": "brom-mvdnlg4mab0x-24",
+        "x": 1167.6291034777305,
+        "y": 431.13211336275094
+      }
+    ],
+    "overflow": 0,
+    "dockBottom": 920,
+    "targets": [
+      {
+        "label": "II",
+        "height": 50,
+        "width": 50
+      },
+      {
+        "label": "1×",
+        "height": 36,
+        "width": 44
+      },
+      {
+        "label": "2×",
+        "height": 36,
+        "width": 44
+      },
+      {
+        "label": "3×",
+        "height": 36,
+        "width": 44
+      },
+      {
+        "label": "Arena",
+        "height": 48,
+        "width": 310.21875
+      },
+      {
+        "label": "Deployment & AI",
+        "height": 48,
+        "width": 310.234375
+      },
+      {
+        "label": "Companions",
+        "height": 48,
+        "width": 310.21875
+      },
+      {
+        "label": "Capture5",
+        "height": 48,
+        "width": 310.234375
+      },
+      {
+        "label": "Intel & log",
+        "height": 48,
+        "width": 310.21875
+      }
+    ],
+    "errors": []
+  }
+]

@@ -1,0 +1,2502 @@
+[
+  {
+    "offline": false,
+    "evolution": 0,
+    "evolutionPath": "wild",
+    "species": [
+      "mossguard",
+      "glacier",
+      "abyssal",
+      "cloverimp",
+      "gravitan",
+      "aurel",
+      "brakk",
+      "syl",
+      "nyra",
+      "rowan",
+      "brom",
+      "grit"
+    ],
+    "units": [
+      {
+        "id": "mossguard",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "glacier",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "abyssal",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "cloverimp",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "gravitan",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "aurel",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "brakk",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "syl",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "nyra",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "rowan",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "brom",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "grit",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      }
+    ],
+    "time": 6.360000000000005,
+    "phase": "battle",
+    "errors": [],
+    "requests": []
+  },
+  {
+    "offline": false,
+    "evolution": 0,
+    "evolutionPath": "wild",
+    "species": [
+      "morrow",
+      "grum",
+      "tarka",
+      "sable",
+      "eira"
+    ],
+    "units": [
+      {
+        "id": "morrow",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "grum",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "tarka",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "sable",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "eira",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "cinderfox",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "mossguard",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "brookfin",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "voltwing",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "pyrehorn",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "bloomkin",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      }
+    ],
+    "time": 6.280000000000005,
+    "phase": "battle",
+    "errors": [],
+    "requests": []
+  },
+  {
+    "offline": false,
+    "evolution": 1,
+    "evolutionPath": "wild",
+    "species": [
+      "mossguard",
+      "glacier",
+      "abyssal",
+      "cloverimp",
+      "gravitan",
+      "aurel",
+      "brakk",
+      "syl",
+      "nyra",
+      "rowan",
+      "brom",
+      "grit"
+    ],
+    "units": [
+      {
+        "id": "mossguard",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "glacier",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "abyssal",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "cloverimp",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "gravitan",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "aurel",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "brakk",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "syl",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "nyra",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "rowan",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "brom",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "grit",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      }
+    ],
+    "time": 5.800000000000004,
+    "phase": "battle",
+    "errors": [],
+    "requests": []
+  },
+  {
+    "offline": false,
+    "evolution": 1,
+    "evolutionPath": "wild",
+    "species": [
+      "morrow",
+      "grum",
+      "tarka",
+      "sable",
+      "eira"
+    ],
+    "units": [
+      {
+        "id": "morrow",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "grum",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "tarka",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "sable",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "eira",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "cinderfox",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "mossguard",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "brookfin",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "voltwing",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "pyrehorn",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "bloomkin",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      }
+    ],
+    "time": 6.1200000000000045,
+    "phase": "battle",
+    "errors": [],
+    "requests": []
+  },
+  {
+    "offline": false,
+    "evolution": 1,
+    "evolutionPath": "warden",
+    "species": [
+      "mossguard",
+      "glacier",
+      "abyssal",
+      "cloverimp",
+      "gravitan",
+      "aurel",
+      "brakk",
+      "syl",
+      "nyra",
+      "rowan",
+      "brom",
+      "grit"
+    ],
+    "units": [
+      {
+        "id": "mossguard",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "glacier",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "abyssal",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "cloverimp",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "gravitan",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "aurel",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "brakk",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "syl",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "nyra",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "rowan",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "brom",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "grit",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      }
+    ],
+    "time": 6.360000000000005,
+    "phase": "battle",
+    "errors": [],
+    "requests": []
+  },
+  {
+    "offline": false,
+    "evolution": 1,
+    "evolutionPath": "warden",
+    "species": [
+      "morrow",
+      "grum",
+      "tarka",
+      "sable",
+      "eira"
+    ],
+    "units": [
+      {
+        "id": "morrow",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "grum",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "tarka",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "sable",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "eira",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "cinderfox",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "mossguard",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "brookfin",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "voltwing",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "pyrehorn",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "bloomkin",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      }
+    ],
+    "time": 6.360000000000005,
+    "phase": "battle",
+    "errors": [],
+    "requests": []
+  },
+  {
+    "offline": false,
+    "evolution": 2,
+    "evolutionPath": "wild",
+    "species": [
+      "mossguard",
+      "glacier",
+      "abyssal",
+      "cloverimp",
+      "gravitan",
+      "aurel",
+      "brakk",
+      "syl",
+      "nyra",
+      "rowan",
+      "brom",
+      "grit"
+    ],
+    "units": [
+      {
+        "id": "mossguard",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "glacier",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "abyssal",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "cloverimp",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "gravitan",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "aurel",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "brakk",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "syl",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "nyra",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "rowan",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "brom",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "grit",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      }
+    ],
+    "time": 6.000000000000004,
+    "phase": "battle",
+    "errors": [],
+    "requests": []
+  },
+  {
+    "offline": false,
+    "evolution": 2,
+    "evolutionPath": "wild",
+    "species": [
+      "morrow",
+      "grum",
+      "tarka",
+      "sable",
+      "eira"
+    ],
+    "units": [
+      {
+        "id": "morrow",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "grum",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "tarka",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "sable",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "eira",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "cinderfox",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "mossguard",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "brookfin",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "voltwing",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "pyrehorn",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "bloomkin",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      }
+    ],
+    "time": 6.1200000000000045,
+    "phase": "battle",
+    "errors": [],
+    "requests": []
+  },
+  {
+    "offline": false,
+    "evolution": 2,
+    "evolutionPath": "warden",
+    "species": [
+      "mossguard",
+      "glacier",
+      "abyssal",
+      "cloverimp",
+      "gravitan",
+      "aurel",
+      "brakk",
+      "syl",
+      "nyra",
+      "rowan",
+      "brom",
+      "grit"
+    ],
+    "units": [
+      {
+        "id": "mossguard",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "glacier",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "abyssal",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "cloverimp",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "gravitan",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "aurel",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "brakk",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "syl",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "nyra",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "rowan",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "brom",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "grit",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      }
+    ],
+    "time": 6.360000000000005,
+    "phase": "battle",
+    "errors": [],
+    "requests": []
+  },
+  {
+    "offline": false,
+    "evolution": 2,
+    "evolutionPath": "warden",
+    "species": [
+      "morrow",
+      "grum",
+      "tarka",
+      "sable",
+      "eira"
+    ],
+    "units": [
+      {
+        "id": "morrow",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "grum",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "tarka",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "sable",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "eira",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "cinderfox",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "mossguard",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "brookfin",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "voltwing",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "pyrehorn",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "bloomkin",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      }
+    ],
+    "time": 6.320000000000005,
+    "phase": "battle",
+    "errors": [],
+    "requests": []
+  },
+  {
+    "offline": true,
+    "evolution": 0,
+    "evolutionPath": "wild",
+    "species": [
+      "mossguard",
+      "glacier",
+      "abyssal",
+      "cloverimp",
+      "gravitan",
+      "aurel",
+      "brakk",
+      "syl",
+      "nyra",
+      "rowan",
+      "brom",
+      "grit"
+    ],
+    "units": [
+      {
+        "id": "mossguard",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "glacier",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "abyssal",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "cloverimp",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "gravitan",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "aurel",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "brakk",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "syl",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "nyra",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "rowan",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "brom",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "grit",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      }
+    ],
+    "time": 6.360000000000005,
+    "phase": "battle",
+    "errors": [],
+    "requests": []
+  },
+  {
+    "offline": true,
+    "evolution": 0,
+    "evolutionPath": "wild",
+    "species": [
+      "morrow",
+      "grum",
+      "tarka",
+      "sable",
+      "eira"
+    ],
+    "units": [
+      {
+        "id": "morrow",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "grum",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "tarka",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "sable",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "eira",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "cinderfox",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "mossguard",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "brookfin",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "voltwing",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "pyrehorn",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "bloomkin",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      }
+    ],
+    "time": 6.280000000000005,
+    "phase": "battle",
+    "errors": [],
+    "requests": []
+  },
+  {
+    "offline": true,
+    "evolution": 1,
+    "evolutionPath": "wild",
+    "species": [
+      "mossguard",
+      "glacier",
+      "abyssal",
+      "cloverimp",
+      "gravitan",
+      "aurel",
+      "brakk",
+      "syl",
+      "nyra",
+      "rowan",
+      "brom",
+      "grit"
+    ],
+    "units": [
+      {
+        "id": "mossguard",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "glacier",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "abyssal",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "cloverimp",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "gravitan",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "aurel",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "brakk",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "syl",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "nyra",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "rowan",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "brom",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "grit",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      }
+    ],
+    "time": 5.800000000000004,
+    "phase": "battle",
+    "errors": [],
+    "requests": []
+  },
+  {
+    "offline": true,
+    "evolution": 1,
+    "evolutionPath": "wild",
+    "species": [
+      "morrow",
+      "grum",
+      "tarka",
+      "sable",
+      "eira"
+    ],
+    "units": [
+      {
+        "id": "morrow",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "grum",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "tarka",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "sable",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "eira",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "cinderfox",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "mossguard",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "brookfin",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "voltwing",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "pyrehorn",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "bloomkin",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      }
+    ],
+    "time": 6.160000000000005,
+    "phase": "battle",
+    "errors": [],
+    "requests": []
+  },
+  {
+    "offline": true,
+    "evolution": 1,
+    "evolutionPath": "warden",
+    "species": [
+      "mossguard",
+      "glacier",
+      "abyssal",
+      "cloverimp",
+      "gravitan",
+      "aurel",
+      "brakk",
+      "syl",
+      "nyra",
+      "rowan",
+      "brom",
+      "grit"
+    ],
+    "units": [
+      {
+        "id": "mossguard",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "glacier",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "abyssal",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "cloverimp",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "gravitan",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "aurel",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "brakk",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "syl",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "nyra",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "rowan",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "brom",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "grit",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      }
+    ],
+    "time": 6.360000000000005,
+    "phase": "battle",
+    "errors": [],
+    "requests": []
+  },
+  {
+    "offline": true,
+    "evolution": 1,
+    "evolutionPath": "warden",
+    "species": [
+      "morrow",
+      "grum",
+      "tarka",
+      "sable",
+      "eira"
+    ],
+    "units": [
+      {
+        "id": "morrow",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "grum",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "tarka",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "sable",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "eira",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "cinderfox",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "mossguard",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "brookfin",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "voltwing",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "pyrehorn",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "bloomkin",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      }
+    ],
+    "time": 6.360000000000005,
+    "phase": "battle",
+    "errors": [],
+    "requests": []
+  },
+  {
+    "offline": true,
+    "evolution": 2,
+    "evolutionPath": "wild",
+    "species": [
+      "mossguard",
+      "glacier",
+      "abyssal",
+      "cloverimp",
+      "gravitan",
+      "aurel",
+      "brakk",
+      "syl",
+      "nyra",
+      "rowan",
+      "brom",
+      "grit"
+    ],
+    "units": [
+      {
+        "id": "mossguard",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "glacier",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "abyssal",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "cloverimp",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "gravitan",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "aurel",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "brakk",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "syl",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "nyra",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "rowan",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "brom",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "grit",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      }
+    ],
+    "time": 6.000000000000004,
+    "phase": "battle",
+    "errors": [],
+    "requests": []
+  },
+  {
+    "offline": true,
+    "evolution": 2,
+    "evolutionPath": "wild",
+    "species": [
+      "morrow",
+      "grum",
+      "tarka",
+      "sable",
+      "eira"
+    ],
+    "units": [
+      {
+        "id": "morrow",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "grum",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "tarka",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "sable",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "eira",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "cinderfox",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "mossguard",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "brookfin",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "voltwing",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "pyrehorn",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "bloomkin",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      }
+    ],
+    "time": 6.1200000000000045,
+    "phase": "battle",
+    "errors": [],
+    "requests": []
+  },
+  {
+    "offline": true,
+    "evolution": 2,
+    "evolutionPath": "warden",
+    "species": [
+      "mossguard",
+      "glacier",
+      "abyssal",
+      "cloverimp",
+      "gravitan",
+      "aurel",
+      "brakk",
+      "syl",
+      "nyra",
+      "rowan",
+      "brom",
+      "grit"
+    ],
+    "units": [
+      {
+        "id": "mossguard",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "glacier",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "abyssal",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "cloverimp",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "gravitan",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "aurel",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "brakk",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "syl",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "nyra",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "rowan",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "brom",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "grit",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      }
+    ],
+    "time": 6.360000000000005,
+    "phase": "battle",
+    "errors": [],
+    "requests": []
+  },
+  {
+    "offline": true,
+    "evolution": 2,
+    "evolutionPath": "warden",
+    "species": [
+      "morrow",
+      "grum",
+      "tarka",
+      "sable",
+      "eira"
+    ],
+    "units": [
+      {
+        "id": "morrow",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "grum",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "tarka",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "sable",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "eira",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "cinderfox",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "mossguard",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "brookfin",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "voltwing",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "pyrehorn",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      },
+      {
+        "id": "bloomkin",
+        "states": [
+          "idle",
+          "windup",
+          "recovery"
+        ],
+        "finite": true
+      }
+    ],
+    "time": 6.320000000000005,
+    "phase": "battle",
+    "errors": [],
+    "requests": []
+  }
+]

@@ -5,11 +5,12 @@ import {PIXEL_SPECIES} from '../native-content.js';
 import {ARM_ANATOMY} from '../companion-anatomy.js';
 import {makeRun,creature,generateRoute} from '../game.js';
 import {runtimeFiles,fingerprint} from '../scripts/animation-contract.mjs';
-const out='playtest-artifacts/arm-roster-live',base=process.env.BASE_URL||'http://127.0.0.1:3000';fs.mkdirSync(out,{recursive:true});
+const out=process.argv.find(a=>a.startsWith('--out='))?.slice(6)||'playtest-artifacts/arm-roster-live',base=process.env.BASE_URL||'http://127.0.0.1:3000';fs.mkdirSync(out,{recursive:true});
 const inputFiles=[...runtimeFiles(),'Starfall-Menagerie.html','Starfall-Training-Glade.html','public/prototype-bundle.js'],inputs=fingerprint(inputFiles);
 const chunks=items=>Array.from({length:Math.ceil(items.length/12)},(_,i)=>items.slice(i*12,i*12+12));
 const armed=PIXEL_SPECIES.filter(s=>ARM_ANATOMY[s.nativeDesign||s.nativeRig]);
-const fixtures=[...chunks(PIXEL_SPECIES).map(specs=>({specs,evolution:0,evolutionPath:'wild'})),...[1,2].flatMap(evolution=>['wild','warden'].flatMap(evolutionPath=>chunks(armed).map(specs=>({specs,evolution,evolutionPath}))))];
+const selected=process.argv.includes('--arms-only')?armed:PIXEL_SPECIES;
+const fixtures=[...chunks(selected).map(specs=>({specs,evolution:0,evolutionPath:'wild'})),...[1,2].flatMap(evolution=>['wild','warden'].flatMap(evolutionPath=>chunks(armed).map(specs=>({specs,evolution,evolutionPath}))))];
 const browser=await chromium.launch({headless:true,executablePath:process.env.CHROMIUM_PATH||(process.platform==='win32'?'C:/Program Files/Google/Chrome/Application/chrome.exe':undefined)}),report=[];
 try{for(const offline of [false,true])for(const [fixtureIndex,fixture]of fixtures.entries()){
  const {evolution,evolutionPath}=fixture,context=await browser.newContext({viewport:{width:1440,height:1000}}),page=await context.newPage(),errors=[],requests=[],url=base+(offline?'/Starfall-Menagerie.html':'/index.html');
@@ -30,6 +31,6 @@ try{for(const offline of [false,true])for(const [fixtureIndex,fixture]of fixture
  report.push({offline,evolution,evolutionPath,species:fixture.specs.map(s=>s.id),...result,errors,requests});await context.close();
  console.log(`${offline?'Offline':'Source'} ${fixtureIndex+1}/${fixtures.length}: ${fixture.specs.map(s=>s.id).join(', ')} / form ${evolution} ${evolutionPath}`);
 }}finally{await browser.close();fs.writeFileSync(out+'/report.json',JSON.stringify(report,null,2)+'\n');}
-for(const offline of [false,true])assert.deepEqual([...new Set(report.filter(r=>r.offline===offline).flatMap(r=>r.species))].sort(),PIXEL_SPECIES.map(s=>s.id).sort());
+for(const offline of [false,true])assert.deepEqual([...new Set(report.filter(r=>r.offline===offline).flatMap(r=>r.species))].sort(),selected.map(s=>s.id).sort());
 assert.equal(report.length,fixtures.length*2);
 assert.deepEqual(fingerprint(inputFiles),inputs,'source and offline outputs must remain unchanged during roster verification');fs.writeFileSync(out+'/inputs.json',JSON.stringify(inputs,null,2)+'\n');
