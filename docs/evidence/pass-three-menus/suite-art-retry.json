@@ -1,0 +1,41 @@
+{
+  "workers": 2,
+  "timeoutMs": 300000,
+  "seconds": 407.69,
+  "passed": 3,
+  "failed": 1,
+  "results": [
+    {
+      "file": "tests/companion-deformation.test.js",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "seconds": 238.66,
+      "log": "playtest-artifacts/unit-suite/companion-deformation.test.js.txt"
+    },
+    {
+      "file": "tests/companion-parts.test.js",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "seconds": 107.64,
+      "log": "playtest-artifacts/unit-suite/companion-parts.test.js.txt"
+    },
+    {
+      "file": "tests/grand-forms.test.js",
+      "code": null,
+      "signal": "SIGTERM",
+      "timedOut": true,
+      "seconds": 300.03,
+      "log": "playtest-artifacts/unit-suite/grand-forms.test.js.txt"
+    },
+    {
+      "file": "tests/legs-v3.test.js",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "seconds": 152.17,
+      "log": "playtest-artifacts/unit-suite/legs-v3.test.js.txt"
+    }
+  ]
+}

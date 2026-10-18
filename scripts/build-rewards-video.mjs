@@ -1,0 +1,10 @@
+import fs from 'node:fs';
+import {execFileSync} from 'node:child_process';
+import crypto from 'node:crypto';
+const source='enchanted_valley_post_match_loop_1080p.mp4',destination='public/ui/uploaded/rewards-valley.mp4';
+const args=['-hide_banner','-loglevel','error','-i',source,'-an','-c:v','libx264','-preset','slow','-crf','24','-maxrate','2000k','-bufsize','4000k','-pix_fmt','yuv420p','-movflags','+faststart','-threads','2','-y',destination];
+execFileSync(process.env.FFMPEG_PATH||'ffmpeg',args,{stdio:'inherit',windowsHide:true});
+if(fs.statSync(destination).size>2000000)throw new Error('Rewards video exceeds its 2 MB delivery budget');
+const hash=file=>crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex');
+fs.writeFileSync('public/ui/uploaded/rewards-valley.json',JSON.stringify({source,sourceSHA256:hash(source),destination,deliverySHA256:hash(destination),bytes:fs.statSync(destination).size,encoding:{width:1920,height:1080,fps:24,audio:false,crf:24,maxrate:'2000k',buffer:'4000k'},ffmpegArguments:args},null,2));
+console.log('Built rewards valley: '+fs.statSync(destination).size+' bytes; original upload preserved.');

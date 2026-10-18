@@ -1,0 +1,42 @@
+{
+  "source": "enchanted_valley_post_match_loop_1080p.mp4",
+  "sourceSHA256": "a04cab9fe7f35572d3d0a22af80fb3b347467a96ba465aea168d68373820ecdb",
+  "destination": "public/ui/uploaded/rewards-valley.mp4",
+  "deliverySHA256": "6c30ecbb31c899c67b8482dc5916f67d4e00f4051e109fa458bf8f2d7dd1a6aa",
+  "bytes": 1823947,
+  "encoding": {
+    "width": 1920,
+    "height": 1080,
+    "fps": 24,
+    "audio": false,
+    "crf": 24,
+    "maxrate": "2000k",
+    "buffer": "4000k"
+  },
+  "ffmpegArguments": [
+    "-hide_banner",
+    "-loglevel",
+    "error",
+    "-i",
+    "enchanted_valley_post_match_loop_1080p.mp4",
+    "-an",
+    "-c:v",
+    "libx264",
+    "-preset",
+    "slow",
+    "-crf",
+    "24",
+    "-maxrate",
+    "2000k",
+    "-bufsize",
+    "4000k",
+    "-pix_fmt",
+    "yuv420p",
+    "-movflags",
+    "+faststart",
+    "-threads",
+    "2",
+    "-y",
+    "public/ui/uploaded/rewards-valley.mp4"
+  ]
+}

@@ -8,6 +8,36 @@ concurrency:
   group: field-ui-${{ github.ref }}
   cancel-in-progress: true
 jobs:
+  menu-quality:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run build:prototype
+      - name: Start game for menu and media checks
+        run: |
+          npm start > /tmp/menu-server.log 2>&1 &
+          for attempt in {1..30}; do
+            if curl --fail --silent http://127.0.0.1:3000 > /dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/menu-server.log
+          exit 1
+      - run: npm run test:menus
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: menu-and-rewards-quality
+          path: |
+            playtest-artifacts/pass-three/
+            playtest-artifacts/postmatch-quick-equip/
   animation-quality:
     if: github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
@@ -115,6 +145,8 @@ jobs:
             playtest-artifacts/companion-animation-live/
             playtest-artifacts/journey-*.png
             playtest-artifacts/journey-browser.json
+            playtest-artifacts/pass-three/
+            playtest-artifacts/unit-suite/
             playtest-artifacts/pass-two/
             playtest-artifacts/postmatch-quick-equip/
             playtest-artifacts/uploaded-*.png

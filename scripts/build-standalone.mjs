@@ -8,6 +8,9 @@ const mime={'.png':'image/png','.webp':'image/webp','.svg':'image/svg+xml','.wof
 const asset=file=>'data:'+mime[path.extname(file)]+';base64,'+fs.readFileSync(path.join(root,file)).toString('base64');
 const atlasNames=['prototype-glade-pixel'];
 const assets=Object.fromEntries(atlasNames.map(name=>[name+'.png',asset('public/'+name+'.png')]));
+// The intro and 56px header share one authored logo. Embedding its full PNG in
+// each HTML src duplicated almost 3 MiB and made every offline download larger.
+assets['brand-logo.png']=asset('public/ui/fang-and-feather-logo.png');
 // Uploaded skin variables are installed from UI_ART's shared blob URLs.
 // Do not duplicate large PNG data URLs inside CSS custom properties.
 // Other CSS artwork also shares one embedded copy, including the arena icon
@@ -25,10 +28,12 @@ const bundle=await build({entryPoints:[path.join(root,'app.js')],bundle:true,wri
 });}}]});
 const cssSetup='const embeddedCSSAssets='+JSON.stringify(cssAssets)+';\n'+
  'for(const [name,src] of Object.entries(embeddedCSSAssets)){const raw=atob(src.slice(src.indexOf(",")+1));const url=URL.createObjectURL(new Blob([Uint8Array.from(raw,c=>c.charCodeAt(0))],{type:src.slice(5,src.indexOf(";"))}));document.documentElement.style.setProperty("--offline-"+name,\'url("\'+url+\'")\');}\n';
-const js='const embeddedAssets='+JSON.stringify(assets)+';\n'+cssSetup+bundle.outputFiles[0].text;
+const logoSetup='for(const img of document.querySelectorAll("[data-offline-logo]"))img.src=embeddedAssets["brand-logo.png"];\n';
+const js='const embeddedAssets='+JSON.stringify(assets)+';\n'+logoSetup+cssSetup+bundle.outputFiles[0].text;
 new vm.Script(js);if(/<\/script/i.test(js))throw new Error('Unsafe script embedding');
-const html=fs.readFileSync(path.join(root,'index.html'),'utf8').replace('<link rel="stylesheet" href="styles.css" />',()=>'<style>'+css+'</style>').replace(/\s*<link rel="stylesheet" href="(?:field-ui|uploaded-ui|journey-polish|inventory-pouches)\.css" \/>/g,'').replace('<script type="module" src="app.js"></script>',()=>'<script>'+js+'</script>').replace('href="prototype.html"','href="Starfall-Training-Glade.html"').replaceAll('/public/ui/fang-and-feather-logo.png',asset('public/ui/fang-and-feather-logo.png'));
+const html=fs.readFileSync(path.join(root,'index.html'),'utf8').replace('<link rel="stylesheet" href="styles.css" />',()=>'<style>'+css+'</style>').replace(/\s*<link rel="stylesheet" href="(?:field-ui|uploaded-ui|journey-polish|inventory-pouches)\.css" \/>/g,'').replace('<script type="module" src="app.js"></script>',()=>'<script>'+js+'</script>').replace('href="prototype.html"','href="Starfall-Training-Glade.html"').replaceAll('src="/public/ui/fang-and-feather-logo.png"','data-offline-logo').replaceAll('href="/public/ui/uploaded/brand-crest.png"','href="data:," data-offline-favicon');
 const embedded=html.slice(html.indexOf('<script>const embeddedAssets=')+8,html.lastIndexOf('</script>'));
 if(embedded!==js)throw new Error('Standalone script changed during HTML embedding');new vm.Script(embedded);
+if(Buffer.byteLength(html)>99*1024*1024)throw new Error('Offline game exceeds the 99 MiB delivery budget');
 fs.writeFileSync(path.join(root,'Starfall-Menagerie.html'),html);
 console.log('Built Fang & Feather standalone: '+(Buffer.byteLength(html)/1024/1024).toFixed(1)+' MiB, embedded artwork and fonts.');

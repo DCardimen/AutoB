@@ -406,6 +406,7 @@ export const UI_ART = Object.fromEntries(Object.entries({
   "world-1": "/public/ui/uploaded/world-1.png",
   "world-2": "/public/ui/uploaded/world-2.png",
   "rewards-backdrop": "/public/ui/uploaded/rewards-backdrop.png",
+  "rewards-valley-video": "/public/ui/uploaded/rewards-valley.mp4",
   "brand-crest": "/public/ui/uploaded/brand-crest.png",
   "bar-track": "/public/ui/uploaded/bar-track.png",
   "bar-health": "/public/ui/uploaded/bar-health.png",

@@ -1,0 +1,142 @@
+[
+  {
+    "label": "source-1440",
+    "seams": [
+      {
+        "diff": 0.1907638888888889,
+        "recentPeak": 1.3561805555555555,
+        "nativeStep": 0,
+        "opacity": 1,
+        "elapsed": 6023.499999856949,
+        "time": 0.661248,
+        "ready": 4
+      },
+      {
+        "diff": 0.1907638888888889,
+        "recentPeak": 1.2971296296296295,
+        "nativeStep": 0,
+        "opacity": 1,
+        "elapsed": 11655.399999856949,
+        "time": 0.662724,
+        "ready": 4
+      }
+    ],
+    "maxFrameDelta": 1.759212962962963,
+    "duration": 6.5,
+    "width": 1920,
+    "height": 1080,
+    "muted": true,
+    "rate": 1,
+    "reducedMotion": true,
+    "retainedOnPatch": true,
+    "posterFallback": true,
+    "decoderCleanup": true,
+    "errors": [],
+    "requests": []
+  },
+  {
+    "label": "source-390",
+    "seams": [
+      {
+        "diff": 0.8241435185185185,
+        "recentPeak": 1.3563657407407408,
+        "nativeStep": 0.3668287037037037,
+        "opacity": 1,
+        "elapsed": 6134.899999856949,
+        "time": 0.658927,
+        "ready": 4
+      },
+      {
+        "diff": 0.3668287037037037,
+        "recentPeak": 1.314675925925926,
+        "nativeStep": 0.38828703703703704,
+        "opacity": 1,
+        "elapsed": 11808.399999856949,
+        "time": 0.69908,
+        "ready": 4
+      }
+    ],
+    "maxFrameDelta": 1.3563657407407408,
+    "duration": 6.5,
+    "width": 1920,
+    "height": 1080,
+    "muted": true,
+    "rate": 1,
+    "reducedMotion": true,
+    "retainedOnPatch": true,
+    "posterFallback": true,
+    "decoderCleanup": true,
+    "errors": [],
+    "requests": []
+  },
+  {
+    "label": "offline-1440",
+    "seams": [
+      {
+        "diff": 0.8233564814814814,
+        "recentPeak": 1.2718055555555556,
+        "nativeStep": 0.3668287037037037,
+        "opacity": 1,
+        "elapsed": 6124.9,
+        "time": 0.661103,
+        "ready": 4
+      },
+      {
+        "diff": 0.1907638888888889,
+        "recentPeak": 1.400787037037037,
+        "nativeStep": 0,
+        "opacity": 1,
+        "elapsed": 11791.4,
+        "time": 0.659005,
+        "ready": 4
+      }
+    ],
+    "maxFrameDelta": 1.400787037037037,
+    "duration": 6.5,
+    "width": 1920,
+    "height": 1080,
+    "muted": true,
+    "rate": 1,
+    "reducedMotion": true,
+    "retainedOnPatch": true,
+    "posterFallback": true,
+    "decoderCleanup": true,
+    "errors": [],
+    "requests": []
+  },
+  {
+    "label": "offline-390",
+    "seams": [
+      {
+        "diff": 0.38828703703703704,
+        "recentPeak": 1.3262962962962963,
+        "nativeStep": 0.38828703703703704,
+        "opacity": 1,
+        "elapsed": 6225.200000095367,
+        "time": 0.714176,
+        "ready": 4
+      },
+      {
+        "diff": 0.3668287037037037,
+        "recentPeak": 1.314675925925926,
+        "nativeStep": 0.6075694444444445,
+        "opacity": 1,
+        "elapsed": 11801.500000095368,
+        "time": 0.696811,
+        "ready": 4
+      }
+    ],
+    "maxFrameDelta": 1.3262962962962963,
+    "duration": 6.5,
+    "width": 1920,
+    "height": 1080,
+    "muted": true,
+    "rate": 1,
+    "reducedMotion": true,
+    "retainedOnPatch": true,
+    "posterFallback": true,
+    "decoderCleanup": true,
+    "errors": [],
+    "requests": []
+  }
+]
