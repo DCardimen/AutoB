@@ -2702,41 +2702,109 @@
       const profile = art.profiles.get(rig.artArmScreens[arm.side]);
       if (!profile) continue;
       const root = rig.artArmRoots[arm.side], joint = rig.artProject(arm.joint), end = rig.artProject(arm.end);
-      const upperNear = (at(arm.root).depth + at(arm.joint).depth) / 2 >= at(rig.body).depth, lowerNear = at(arm.end).depth >= at(rig.body).depth;
-      const segments = [[profile.root, profile.joint, root, joint, upperNear], [profile.joint, profile.end, joint, end, lowerNear]], thickness = fit * scale.width;
-      const sourceAxis = unit2(sub(profile.end, profile.root));
-      const partFor = (p) => dot2(sub(p, profile.joint), sourceAxis) < 0 ? 0 : 1;
+      const axis = unit2(sub(profile.end, profile.root)), length2 = Math.hypot(profile.end.x - profile.root.x, profile.end.y - profile.root.y) || 1, hinge = dot2(sub(profile.joint, profile.root), axis), thickness = fit * scale.width;
+      const upper = unit2(sub(joint, root)), lower = unit2(sub(end, joint)), upperAngle = Math.atan2(upper.y, upper.x), bend = Math.atan2(upper.x * lower.y - upper.y * lower.x, dot2(upper, lower)), blend = Math.min(1.5, length2 * 0.2);
+      const depths = [at(arm.root).depth, at(arm.joint).depth, at(arm.end).depth], bodyDepth = at(rig.body).depth;
+      const warp = (x, y) => {
+        const offset = { x: x - profile.root.x, y: y - profile.root.y }, along = dot2(offset, axis), across = offset.x * -axis.y + offset.y * axis.x;
+        const first = along <= hinge, a = first ? root : joint, z = first ? joint : end, t = first ? along / (hinge || 1) : (along - hinge) / (length2 - hinge || 1), center = mix2(a, z, t);
+        const w = Math.max(0, Math.min(1, (along - hinge + blend) / (blend * 2))), theta = upperAngle + bend * w * w * (3 - 2 * w);
+        return { x: center.x - Math.sin(theta) * across * thickness, y: center.y + Math.cos(theta) * across * thickness };
+      };
       const mapped = /* @__PURE__ */ new Map();
       for (const p of profile.pixels) {
-        const part = partFor(p), [a, z, pa, pz, isNear] = segments[part];
-        if (isNear !== near) continue;
-        const source = sub(z, a), length2 = Math.hypot(source.x, source.y) || 1, axis = unit2(source), target = unit2(sub(pz, pa)), offset = sub(p, a), along = dot2(offset, axis), t = Math.max(0, Math.min(1, along / length2)), across = offset.x * -axis.y + offset.y * axis.x, tail = along - t * length2, point3 = mix2(pa, pz, t);
-        const q = { x: point3.x + (target.x * tail - target.y * across) * thickness, y: point3.y + (target.y * tail + target.x * across) * thickness };
-        mapped.set(key(p.x, p.y), { ...p, q, color: colors2[p.index] });
-        brush.dot(q.x, q.y, colors2[p.index]);
+        const along = dot2(sub(p, profile.root), axis), t = Math.max(0, Math.min(1, along / length2)), depth = t < 0.5 ? depths[0] + (depths[1] - depths[0]) * t * 2 : depths[1] + (depths[2] - depths[1]) * (t - 0.5) * 2;
+        mapped.set(key(p.x, p.y), { ...p, q: warp(p.x, p.y), near: depth >= bodyDepth, color: colors2[p.index] });
+      }
+      rig.artArmPixels ?? (rig.artArmPixels = /* @__PURE__ */ new Map());
+      if (!rig.artArmPixels.has(arm.side)) rig.artArmPixels.set(arm.side, mapped);
+      for (const p of mapped.values()) {
+        if (p.near !== near) continue;
+        const corners = [[-0.5, -0.5], [0.5, -0.5], [0.5, 0.5], [-0.5, 0.5]].map(([dx, dy]) => warp(p.x + dx, p.y + dy));
+        brush.poly(corners, p.color);
+        brush.dot(p.q.x, p.q.y, p.color);
+        for (const [dx, dy] of [[1, 0], [0, 1], [1, 1], [-1, 1]]) {
+          const other = mapped.get(key(p.x + dx, p.y + dy));
+          if (!other) continue;
+          if (dx && dy && (mapped.has(key(p.x + dx, p.y)) || mapped.has(key(p.x, p.y + dy)))) continue;
+          if (Math.max(Math.abs(Math.round(other.q.x) - Math.round(p.q.x)), Math.abs(Math.round(other.q.y) - Math.round(p.q.y))) > 1) brush.line(p.q, other.q, p.color);
+        }
         if (Math.hypot(p.x - profile.end.x, p.y - profile.end.y) <= 1.65) {
           rig.artGripPixels ?? (rig.artGripPixels = /* @__PURE__ */ new Map());
           if (!rig.artGripPixels.has(arm.side)) rig.artGripPixels.set(arm.side, []);
-          rig.artGripPixels.get(arm.side).push({ x: q.x, y: q.y, color: colors2[p.index], near: isNear });
+          rig.artGripPixels.get(arm.side).push({ x: p.q.x, y: p.q.y, color: p.color, near: p.near });
         }
-      }
-      for (const p of mapped.values()) for (const [dx, dy] of [[1, 0], [0, 1], [1, 1], [-1, 1]]) {
-        const other = mapped.get(key(p.x + dx, p.y + dy));
-        if (other) brush.line(p.q, other.q, p.color);
-      }
-      if (!mapped.size) continue;
-      const points = [...mapped.values()].map((p) => p.q), left = Math.floor(Math.min(...points.map((p) => p.x))), right = Math.ceil(Math.max(...points.map((p) => p.x))), top = Math.floor(Math.min(...points.map((p) => p.y))), bottom = Math.ceil(Math.max(...points.map((p) => p.y)));
-      for (let y = top; y <= bottom; y++) for (let x = left; x <= right; x++) for (let part = 0; part < 2; part++) {
-        const [a, z, pa, pz, isNear] = segments[part];
-        if (isNear !== near) continue;
-        const target = sub(pz, pa), length2 = Math.hypot(target.x, target.y) || 1, axis = unit2(target), offset = { x: x - pa.x, y: y - pa.y }, along = dot2(offset, axis), t = Math.max(0, Math.min(1, along / length2)), across = (offset.x * -axis.y + offset.y * axis.x) / thickness, tail = (along - t * length2) / thickness, sourceAxis2 = unit2(sub(z, a)), base = mix2(a, z, t), sx = Math.round(base.x + sourceAxis2.x * tail - sourceAxis2.y * across), sy = Math.round(base.y + sourceAxis2.y * tail + sourceAxis2.x * across), pixel = profile.grid.get(key(sx, sy));
-        if (pixel && partFor(pixel) === part) brush.dot(x, y, colors2[pixel.index]);
       }
     }
   }
   function paintAuthoredGrips(brush, rig, near) {
     for (const pixels of rig.artGripPixels?.values() || []) for (const pixel of pixels) if (pixel.near === near) brush.dot(pixel.x, pixel.y, pixel.color);
   }
+
+  // companion-arm-bindings.js
+  var ARM_SHOULDER_Y = { knight: [30, 23, 23], orc: [29, 24, 24], dwarf: [23, 23, 23], troll: [29, 24, 24], elf: [29, 23, 23], caster: [29, 23, 23], fox: [28, 23, 23], goblin: [28, 24, 23], minotaur: [28, 23, 22], skeleton: [23, 21, 21], rogue: [27, 23, 22], frostelf: [27, 23, 23] };
+  var ARM_WRISTS = {
+    knight: [
+      [[25, 36, 42, 35], [24, 36, 42, 35], [22, 36, 42, 36], [22, 34, 39, 36], [21, 34, 36, 36], [24, 36, 42, 34], [23, 36, 42, 36], [23, 34, 41, 36]],
+      [[27, 30, 44, 30], [24, 31, 44, 31], [20, 32, 45, 32], [20, 30, 42, 32], [19, 30, 36, 32], [22, 31, 44, 30], [20, 32, 45, 32], [21, 30, 43, 31]],
+      [[27, 30, 46, 30], [24, 31, 46, 31], [21, 31, 46, 31], [20, 30, 43, 31], [18, 30, 37, 30], [23, 31, 45, 30], [21, 30, 46, 30], [21, 30, 45, 31]]
+    ],
+    orc: [
+      [[23, 35, 43, 34], [23, 35, 43, 34], [21, 35, 43, 35], [21, 34, 41, 35], [20, 34, 37, 35], [22, 35, 42, 34], [21, 35, 43, 35], [22, 34, 42, 35]],
+      [[23, 32, 47, 30], [21, 32, 48, 31], [17, 32, 49, 32], [18, 30, 45, 32], [18, 30, 33, 32], [20, 32, 45, 30], [18, 32, 48, 32], [20, 30, 46, 32]],
+      [[23, 34, 48, 32], [21, 33, 48, 33], [17, 33, 49, 33], [18, 31, 45, 33], [18, 31, 33, 34], [20, 33, 46, 31], [18, 33, 48, 33], [20, 31, 46, 33]]
+    ],
+    dwarf: [
+      [[27, 29, 40, 27], [25, 29, 41, 27], [22, 28, 43, 28], [23, 26, 41, 29], [24, 26, 37, 29], [24, 29, 42, 27], [22, 28, 43, 28], [23, 26, 40, 29]],
+      [[25, 30, 41, 26], [22, 31, 43, 28], [17, 30, 48, 30], [19, 27, 46, 30], [21, 26, 36, 30], [22, 31, 43, 27], [18, 30, 48, 30], [20, 27, 45, 31]],
+      [[28, 29, 42, 27], [26, 29, 44, 28], [20, 30, 47, 30], [21, 28, 43, 30], [23, 27, 35, 30], [24, 30, 43, 27], [21, 30, 45, 30], [21, 27, 41, 30]]
+    ],
+    troll: [
+      [[23, 34, 43, 33], [22, 34, 44, 33], [20, 34, 44, 34], [20, 33, 42, 34], [22, 33, 40, 34], [23, 34, 43, 33], [21, 34, 44, 34], [21, 33, 40, 34]],
+      [[23, 32, 47, 30], [21, 32, 48, 31], [15, 32, 49, 32], [17, 29, 43, 32], [19, 29, 36, 32], [21, 32, 45, 29], [17, 32, 47, 32], [19, 29, 43, 32]],
+      [[23, 32, 47, 30], [21, 32, 48, 31], [15, 32, 49, 32], [17, 29, 43, 32], [19, 29, 36, 32], [21, 32, 45, 29], [17, 32, 47, 32], [19, 29, 43, 32]]
+    ],
+    elf: [
+      [[27, 34, 42, 33], [26, 34, 43, 33], [23, 34, 43, 34], [21, 32, 38, 34], [21, 32, 35, 34], [23, 32, 41, 30], [22, 32, 42, 30], [23, 30, 41, 32]],
+      [[29, 29, 45, 27], [27, 29, 46, 28], [25, 29, 42, 29], [21, 27, 38, 29], [17, 27, 31, 29], [17, 27, 28, 32], [20, 27, 44, 27], [25, 32, 49, 27]],
+      [[27, 30, 46, 28], [26, 30, 47, 29], [22, 30, 43, 30], [20, 28, 37, 30], [17, 28, 29, 31], [17, 27, 28, 30], [20, 29, 44, 29], [25, 30, 48, 28]]
+    ],
+    caster: [
+      [[28, 34, 43, 33], [27, 34, 44, 33], [23, 34, 43, 34], [21, 33, 37, 34], [18, 33, 32, 34], [17, 33, 42, 34], [20, 34, 44, 34], [23, 34, 48, 34]],
+      [[27, 28, 45, 27], [25, 29, 46, 27], [22, 29, 43, 29], [19, 27, 37, 29], [16, 27, 30, 29], [16, 27, 43, 30], [20, 29, 44, 29], [24, 29, 49, 27]],
+      [[28, 28, 47, 27], [27, 29, 48, 28], [23, 29, 43, 29], [20, 27, 37, 29], [16, 27, 29, 29], [17, 27, 42, 31], [20, 29, 44, 29], [25, 31, 49, 27]]
+    ],
+    fox: [
+      [[28, 33, 44, 32], [27, 33, 44, 32], [22, 33, 43, 33], [21, 32, 37, 33], [20, 32, 35, 33], [22, 32, 40, 29], [22, 32, 43, 29], [24, 29, 43, 32]],
+      [[28, 29, 47, 27], [26, 29, 48, 27], [23, 29, 45, 29], [19, 27, 38, 29], [16, 27, 29, 30], [17, 27, 43, 25], [20, 27, 45, 27], [24, 25, 49, 27]],
+      [[28, 28, 46, 27], [27, 28, 47, 27], [24, 29, 44, 29], [20, 27, 38, 29], [17, 27, 30, 29], [17, 25, 43, 25], [20, 27, 45, 27], [24, 25, 49, 27]]
+    ],
+    goblin: [
+      [[25, 33, 42, 32], [24, 33, 43, 32], [22, 33, 43, 33], [22, 32, 40, 33], [21, 32, 37, 33], [24, 33, 42, 32], [22, 33, 43, 33], [22, 32, 42, 33]],
+      [[26, 30, 46, 30], [23, 31, 48, 30], [20, 31, 46, 31], [17, 29, 44, 31], [15, 28, 30, 30], [15, 29, 42, 30], [17, 30, 48, 30], [22, 30, 49, 29]],
+      [[25, 28, 47, 27], [23, 28, 48, 27], [20, 29, 46, 29], [17, 27, 44, 29], [15, 26, 30, 27], [15, 27, 43, 29], [17, 28, 48, 28], [22, 29, 49, 27]]
+    ],
+    minotaur: [
+      [[25, 34, 42, 33], [23, 34, 43, 33], [21, 34, 44, 34], [21, 33, 41, 34], [23, 33, 39, 34], [24, 34, 43, 33], [21, 34, 44, 34], [21, 33, 40, 34]],
+      [[23, 31, 47, 29], [21, 31, 48, 30], [17, 31, 49, 31], [18, 28, 45, 31], [19, 28, 41, 29], [21, 28, 45, 28], [17, 29, 47, 29], [18, 28, 43, 28]],
+      [[23, 30, 47, 29], [21, 31, 48, 30], [17, 30, 49, 30], [18, 28, 45, 31], [19, 28, 41, 29], [21, 28, 45, 28], [17, 29, 47, 29], [18, 28, 43, 28]]
+    ],
+    skeleton: [
+      [[28, 28, 43, 29], [26, 28, 44, 30], [23, 30, 43, 30], [20, 29, 37, 28], [17, 28, 35, 28], [18, 28, 43, 29], [19, 28, 44, 28], [23, 29, 48, 28]],
+      [[29, 25, 47, 26], [27, 25, 48, 27], [24, 26, 44, 26], [19, 25, 39, 26], [15, 25, 32, 25], [15, 25, 43, 27], [17, 25, 47, 25], [23, 27, 49, 25]],
+      [[29, 26, 44, 26], [27, 26, 45, 27], [24, 27, 43, 27], [19, 26, 38, 27], [15, 26, 31, 26], [15, 26, 44, 27], [17, 26, 47, 26], [23, 27, 49, 26]]
+    ],
+    rogue: [
+      [[27, 32, 43, 31], [26, 32, 44, 31], [23, 32, 43, 32], [21, 31, 38, 32], [19, 31, 35, 32], [20, 31, 41, 30], [22, 30, 43, 30], [24, 30, 44, 31]],
+      [[28, 27, 47, 28], [26, 28, 48, 28], [24, 28, 44, 28], [19, 27, 38, 28], [16, 27, 31, 28], [16, 26, 43, 28], [18, 27, 46, 27], [24, 28, 49, 26]],
+      [[28, 26, 46, 27], [26, 27, 47, 27], [23, 27, 44, 27], [19, 26, 38, 27], [16, 26, 31, 27], [16, 25, 43, 27], [18, 26, 46, 26], [24, 27, 46, 27]]
+    ],
+    frostelf: [
+      [[28, 32, 46, 30], [27, 32, 46, 30], [23, 32, 43, 32], [20, 30, 37, 32], [17, 30, 32, 32], [17, 30, 43, 30], [20, 31, 44, 31], [24, 31, 49, 30]],
+      [[28, 28, 46, 25], [27, 28, 47, 25], [23, 28, 43, 28], [19, 25, 36, 28], [16, 25, 30, 28], [16, 25, 43, 29], [20, 28, 44, 28], [24, 29, 49, 25]],
+      [[29, 28, 48, 27], [28, 28, 49, 27], [24, 29, 44, 29], [20, 27, 38, 29], [16, 27, 30, 29], [17, 26, 43, 30], [20, 28, 44, 28], [25, 30, 49, 26]]
+    ]
+  };
 
   // companion-anatomy.js
   var form = (neck, pelvis, torso, upper, lower, hands) => ({ neck, pelvis, torso, upper, lower, hands });
@@ -2805,9 +2873,9 @@
   function armRegistration(identity, stage, dir) {
     const profile = ARM_ANATOMY[identity]?.[stage];
     if (!profile) return null;
-    const h = profile.hands[dir], hands = { [-1]: { x: h[0], y: h[1] }, [1]: { x: h[2], y: h[3] } };
+    const h = ARM_WRISTS[identity][stage][dir], hands = { [-1]: { x: h[0], y: h[1] }, [1]: { x: h[2], y: h[3] } };
     const roots = {};
-    for (const side of [-1, 1]) roots[side] = { x: 32 + side * Math.min(profile.torso, (Math.abs(hands[side].x - 32) + profile.torso) * 0.5), y: profile.neck + 2 };
+    for (const side of [-1, 1]) roots[side] = { x: identity === "skeleton" ? 32 + side * profile.torso : hands[side].x + (32 - hands[side].x) * 0.25, y: Math.min(hands[side].y - 2, ARM_SHOULDER_Y[identity][stage]) };
     return { ...profile, hands, roots };
   }
   var NATURAL_ANATOMY = {
@@ -2904,7 +2972,8 @@
     if (identity === "knight") return !(r > g * 1.65 && g < b * 2);
     if (["orc", "goblin"].includes(identity)) return !(r > g * 1.5 && r > b * 1.4);
     if (identity === "minotaur") return !(r > g * 1.5 && g < b * 1.25);
-    if (["elf", "fox"].includes(identity)) return !(r > g * 1.25 && g > b * 1.4 && p.y < 32);
+    if (identity === "elf") return !(r > g * 1.25 && g > b * 1.4 && r > 135);
+    if (identity === "fox") return !(r > g * 1.55 && g > b * 1.5 && r > 140);
     if (["caster", "frostelf"].includes(identity)) return !(range < 60 && Math.min(r, g, b) > 110);
     if (identity === "skeleton") return !(b > r * 1.05 && b > g * 1.1);
     return true;
@@ -2920,24 +2989,32 @@
       if (!sample) continue;
       hands[side] = { ...sample };
       const root = registration.roots[side], end = { x: sample.x, y: sample.y }, joint = mix3(root, end, 0.5);
-      const pixels = asset.pixels.filter((p) => {
-        if (p.y < registration.neck + 1 || side * (p.x - 32) < registration.torso * 0.53) return false;
-        if (Math.hypot(p.x - end.x, p.y - end.y) <= registration.lower * 0.8) return true;
+      const candidates = asset.pixels.filter((p) => {
+        if (p.y < root.y - 1 || p.y > end.y + registration.lower) return false;
+        if (Math.hypot(p.x - end.x, p.y - end.y) <= registration.lower) return true;
+        if (side * (p.x - 32) < registration.torso * 0.25) return false;
         if (!armMaterial(identity, p)) return false;
         const region = segment(p, root, end), radius = registration.upper + (registration.lower - registration.upper) * region.t;
-        return region.distance <= radius;
+        return region.distance <= radius + 0.6;
       });
-      const profile = { side, root, joint, end, pixels, grid: new Map(pixels.map((p) => [key2(p.x, p.y), p])) };
+      const selected2 = new Map(candidates.map((p) => [key2(p.x, p.y), p]));
+      for (const p of candidates) for (const [dx, dy] of [[-1, 0], [1, 0], [0, -1], [0, 1]]) {
+        const q = grid.get(key2(p.x + dx, p.y + dy));
+        if (!q || q.y < root.y - 1 || q.y > end.y + registration.lower || side * (q.x - 32) < registration.torso * 0.25) continue;
+        const region = segment(q, root, end), radius = registration.upper + (registration.lower - registration.upper) * region.t;
+        if (region.distance <= radius + 0.8 && Math.max(...q.rgb) < 100) selected2.set(key2(q.x, q.y), q);
+      }
+      const pixels = [...selected2.values()];
+      const contacts = pixels.filter((p) => p.y <= root.y + 1 && [[-1, 0], [1, 0], [0, -1], [0, 1]].some(([dx, dy]) => {
+        const q = grid.get(key2(p.x + dx, p.y + dy));
+        return q && !selected2.has(key2(q.x, q.y)) && Math.abs(q.x - 32) <= Math.abs(p.x - 32);
+      }));
+      contacts.sort((a, b) => Math.abs(a.x - 32) - Math.abs(b.x - 32) || Math.abs(a.y - root.y) - Math.abs(b.y - root.y));
+      const cuff = contacts[0] || pixels.reduce((a, b) => Math.hypot(a.x - root.x, a.y - root.y) < Math.hypot(b.x - root.x, b.y - root.y) ? a : b);
+      const inside = [[-side, 0], [0, -1], [0, 1]].map(([dx, dy]) => grid.get(key2(cuff.x + dx, cuff.y + dy))).find((p) => p && !selected2.has(key2(p.x, p.y)) && Math.abs(p.x - 32) <= Math.abs(cuff.x - 32)), attached = { x: inside?.x ?? cuff.x, y: inside?.y ?? cuff.y };
+      const profile = { side, root: attached, joint: mix3(attached, end, 0.5), end, pixels, grid: new Map(pixels.map((p) => [key2(p.x, p.y), p])) };
       profiles2.set(side, profile);
       for (const p of pixels) mask.add(key2(p.x, p.y));
-    }
-    if (identity === "orc" && stage === 0 && dir === 4) {
-      const far = authoredArmArt(asset, hands).profiles.get(1);
-      if (far) {
-        profiles2.set(1, far);
-        mask.clear();
-        for (const arm of profiles2.values()) for (const p of arm.pixels) mask.add(key2(p.x, p.y));
-      }
     }
     const retained = asset.pixels.filter((p) => !mask.has(key2(p.x, p.y))), bodyGrid = new Map(retained.map((p) => [key2(p.x, p.y), p])), repairs = [];
     for (let y = registration.neck + 1; y <= registration.pelvis; y++) {
@@ -2959,10 +3036,60 @@
   }
   function connectAuthoredArm(profile, root, goal, preferredJoint, scale) {
     const upper = Math.hypot(profile.joint.x - profile.root.x, profile.joint.y - profile.root.y) * scale, lower = Math.hypot(profile.end.x - profile.joint.x, profile.end.y - profile.joint.y) * scale;
-    const dx = goal.x - root.x, dy = goal.y - root.y, distance3 = Math.hypot(dx, dy) || 1e-3, d = Math.min(distance3, (upper + lower) * 0.999), axis = { x: dx / distance3, y: dy / distance3 }, end = { x: root.x + axis.x * d, y: root.y + axis.y * d };
+    const dx = goal.x - root.x, dy = goal.y - root.y, distance3 = Math.hypot(dx, dy) || 1e-3, d = Math.min(distance3, upper + lower), axis = { x: dx / distance3, y: dy / distance3 }, end = { x: root.x + axis.x * d, y: root.y + axis.y * d };
     const along = (upper * upper - lower * lower + d * d) / (2 * d), height = Math.sqrt(Math.max(0, upper * upper - along * along)), base = { x: root.x + axis.x * along, y: root.y + axis.y * along };
-    const side = (preferredJoint.x - base.x) * -axis.y + (preferredJoint.y - base.y) * axis.x >= 0 ? 1 : -1, joint = { x: base.x - axis.y * height * side, y: base.y + axis.x * height * side };
+    const side = -profile.side, joint = { x: base.x - axis.y * height * side, y: base.y + axis.x * height * side };
     return { root, joint, end };
+  }
+  function constrainHeldGrip(goal, constraints, bounds) {
+    const candidates = [{ ...goal }], valid = (p) => constraints.every((c2) => Math.hypot(p.x - c2.center.x, p.y - c2.center.y) <= c2.radius + 1e-9) && (!bounds || p.x >= bounds.minX - 1e-9 && p.x <= bounds.maxX + 1e-9 && p.y >= bounds.minY - 1e-9 && p.y <= bounds.maxY + 1e-9);
+    for (const c2 of constraints) {
+      const dx = goal.x - c2.center.x, dy = goal.y - c2.center.y, d = Math.hypot(dx, dy) || 1;
+      candidates.push({ x: c2.center.x + dx / d * c2.radius, y: c2.center.y + dy / d * c2.radius });
+    }
+    for (let i = 0; i < constraints.length; i++) for (let j = i + 1; j < constraints.length; j++) {
+      const a = constraints[i], b = constraints[j], dx = b.center.x - a.center.x, dy = b.center.y - a.center.y, d = Math.hypot(dx, dy);
+      if (!d || d > a.radius + b.radius || d < Math.abs(a.radius - b.radius)) continue;
+      const along = (a.radius * a.radius - b.radius * b.radius + d * d) / (2 * d), height = Math.sqrt(Math.max(0, a.radius * a.radius - along * along)), x = a.center.x + dx / d * along, y = a.center.y + dy / d * along;
+      for (const sign of [-1, 1]) candidates.push({ x: x - dy / d * height * sign, y: y + dx / d * height * sign });
+    }
+    if (bounds) {
+      candidates.push({ x: clamp3(goal.x, bounds.minX, bounds.maxX), y: clamp3(goal.y, bounds.minY, bounds.maxY) });
+      for (const x of [bounds.minX, bounds.maxX]) for (const y of [bounds.minY, bounds.maxY]) candidates.push({ x, y });
+      for (const c2 of constraints) {
+        for (const x of [bounds.minX, bounds.maxX]) {
+          const h = c2.radius * c2.radius - (x - c2.center.x) ** 2;
+          if (h >= 0) for (const sign of [-1, 1]) candidates.push({ x, y: c2.center.y + sign * Math.sqrt(h) });
+        }
+        for (const y of [bounds.minY, bounds.maxY]) {
+          const h = c2.radius * c2.radius - (y - c2.center.y) ** 2;
+          if (h >= 0) for (const sign of [-1, 1]) candidates.push({ x: c2.center.x + sign * Math.sqrt(h), y });
+        }
+      }
+    }
+    const feasible = candidates.filter(valid).sort((a, b) => Math.hypot(a.x - goal.x, a.y - goal.y) - Math.hypot(b.x - goal.x, b.y - goal.y));
+    if (feasible.length) return feasible[0];
+    const result = { ...goal };
+    for (let i = 0; i < 80; i++) {
+      let error = 0;
+      for (const { center, radius } of constraints) {
+        const dx = result.x - center.x, dy = result.y - center.y, distance3 = Math.hypot(dx, dy);
+        if (distance3 > radius) {
+          const amount = distance3 - radius;
+          result.x -= dx / distance3 * amount;
+          result.y -= dy / distance3 * amount;
+          error = Math.max(error, amount);
+        }
+      }
+      if (bounds) {
+        const x = clamp3(result.x, bounds.minX, bounds.maxX), y = clamp3(result.y, bounds.minY, bounds.maxY);
+        error = Math.max(error, Math.abs(x - result.x), Math.abs(y - result.y));
+        result.x = x;
+        result.y = y;
+      }
+      if (error < 1e-9) break;
+    }
+    return result;
   }
 
   // portrait-expressions.js
@@ -3326,7 +3453,8 @@
       const dy = moving || fallen || rig.creatureAttack?.active ? clamp6((end.y - origin.y) * 0.65, -lift, lift) : 0;
       const length2 = Math.max(2, source.sole - art.rootY), scale = rig.artScale || { width: 1, height: 1 };
       const bounded = (value, extent) => extent * Math.tanh(value / extent);
-      const delta = moving || fallen || rig.creatureAttack?.active ? { x: bodyDelta.x + bounded(dx - bodyDelta.x, length2 * 0.35 * scale.width), y: bodyDelta.y + bounded(dy - bodyDelta.y, length2 * 0.35 * scale.height) } : { x: 0, y: 0 };
+      const displaced = moving || fallen || rig.creatureAttack?.active || ["hit", "stagger"].includes(rig.state);
+      const delta = displaced ? { x: bodyDelta.x + bounded(dx - bodyDelta.x, length2 * 0.35 * scale.width), y: bodyDelta.y + bounded(dy - bodyDelta.y, length2 * 0.35 * scale.height) } : { x: 0, y: 0 };
       return { ...source, index, delta, planted: rig.legs[index].foot?.planted !== false };
     });
     const offset = (x, y) => {
@@ -3832,6 +3960,8 @@
           const dx = x - headCenter.x, dy = y - headCenter.y;
           delta = { x: delta.x + (dx * cos - dy * sin - dx) * headWeight, y: delta.y + (dx * sin + dy * cos - dy) * headWeight };
         }
+        const shoulder = ease3((y - headCut + 2) / 3), waist = 1 - ease3((y - headCut - 2) / Math.max(4, (parts?.registration.pelvis ?? 40) - headCut - 2));
+        delta = { x: delta.x + (x - 32) * scale.width * (Math.cos(rig.torsoYaw || 0) - 1) * shoulder * waist, y: delta.y };
       } else {
         const anatomy = NATURAL_ANATOMY[identity], headWeight = anatomy?.lockedHead || anatomy?.lockedTravelHead && !action ? 0 : naturalHeadWeight(identity, artStage, rig.dir, x, y);
         delta = mix5(dc, paintedHead, headWeight);
@@ -4140,9 +4270,34 @@
         elbow.y += dy * 0.5;
       }
     }
-    if (main && (id === "orc" || rig.bowString?.draw > 0.05)) for (const arm of rig.arms.filter((a) => a !== main)) {
-      const held = heldPoint(arm.end), relaxed = rig.artLimbPoints.get(arm.end);
-      rig.artLimbPoints.set(arm.end, { ...held, ...mix5(held, relaxed, carryWeight) });
+    const support = main && (id === "orc" || rig.bowString?.draw > 0.05) ? rig.arms.find((a) => a !== main) : null;
+    if (parts && main) {
+      const radius = (arm) => {
+        const p = armArt.profiles.get(rig.artArmScreens[arm.side]);
+        return Math.hypot(p.end.x - p.root.x, p.end.y - p.root.y) * fit * (scale.width + scale.height) / 2;
+      };
+      const constraints = [{ center: rig.artArmRoots[main.side], radius: radius(main) }];
+      const relaxed = support && rig.artLimbPoints.get(support.end), held = support && heldPoint(support.end), weight = 1 - carryWeight;
+      if (support && weight > 1e-6) {
+        const root = rig.artArmRoots[support.side], offset = difference(held, paintedGrip);
+        constraints.push({ center: { x: (root.x - relaxed.x * carryWeight) / weight - offset.x, y: (root.y - relaxed.y * carryWeight) / weight - offset.y }, radius: radius(support) / weight });
+      }
+      const bounds = melee && meleeWeaponBounds(rig, paintedGrip, heldPoint(rig.weapon.tip)), cell = bounds && { minX: 1 + paintedGrip.x - bounds.minX, maxX: 62 + paintedGrip.x - bounds.maxX, minY: 1 + paintedGrip.y - bounds.minY, maxY: 62 + paintedGrip.y - bounds.maxY };
+      const fitted = constrainHeldGrip(paintedGrip, constraints, cell);
+      Object.assign(paintedGrip, fitted);
+      rig.artGripConstraints = { constraints, cell };
+      if (support) {
+        const held2 = heldPoint(support.end);
+        Object.assign(relaxed, mix5(held2, relaxed, carryWeight));
+      }
+      for (const arm of rig.arms) {
+        const profile = armArt.profiles.get(rig.artArmScreens[arm.side]), root = rig.artArmRoots[arm.side], end = rig.artLimbPoints.get(arm.end), joint = rig.artLimbPoints.get(arm.joint), pose2 = connectAuthoredArm(profile, root, end, joint, fit * (scale.width + scale.height) / 2);
+        Object.assign(joint, pose2.joint);
+        if (arm !== main && arm !== support) Object.assign(end, pose2.end);
+      }
+    } else if (support) {
+      const held = heldPoint(support.end), relaxed = rig.artLimbPoints.get(support.end);
+      Object.assign(relaxed, mix5(held, relaxed, carryWeight));
     }
     rig.artProject = (q) => rig.artLimbPoints.has(q) ? rig.artLimbPoints.get(q) : heldPoint(q);
     rig.artShieldProject = (q) => {
@@ -4152,6 +4307,7 @@
     rig.artGearPalette = asset.metal && !rig.equipment?.includes("sunsteel-edge") ? { ...rig.palette, metal: asset.metal } : rig.palette;
     rig.artArmSkin = armArt ? { art: armArt, colors: artColors, fit, scale, bodyPixels: bodyLayer } : null;
     rig.artGripPixels = /* @__PURE__ */ new Map();
+    rig.artArmPixels = /* @__PURE__ */ new Map();
     rig.artSourceProject = (x, y) => anchor(warped(x, y));
     rig.artSourcePixels = new Map(layer.map((p, i) => [p.y * 64 + p.x, anchor(pixels[i])]));
     rig.artParts = parts;
@@ -4861,7 +5017,7 @@
   function drawGearPart(b, id, rig, angle, p, at, outlinedOval, weapon, shield) {
     if (weapon && rig.weapon) {
       const g = at(rig.weapon.grip), tip = at(rig.weapon.tip);
-      if (["elf", "fox"].includes(id)) {
+      if (rig.weapon.kind === "bow") {
         const bowPoint = (length2, bend) => rig.ragdoll ? { ...rig.weapon.grip, x: rig.weapon.grip.x + length2, y: rig.weapon.grip.y + bend } : { ...rig.weapon.grip, x: rig.weapon.grip.x + bend, z: rig.weapon.grip.z + length2 };
         const top = at(bowPoint(24, -6)), bottom = at(bowPoint(-24, -6)), upper = at(bowPoint(12, 1)), lower = at(bowPoint(-12, 1));
         for (const [a, z] of [[top, upper], [upper, g], [g, lower], [lower, bottom]]) {
@@ -4878,7 +5034,7 @@
           b.line(at(pull.end), bottom, p.metal[3]);
         } else b.line(top, bottom, p.metal[3]);
         if (rig.bowString?.draw > 0.4) b.line(at(pull.end), { x: g.x + Math.cos(angle) * 7, y: g.y + Math.sin(angle) * 4 }, p.metal[2]);
-      } else if (id === "caster") {
+      } else if (rig.weapon.kind === "staff") {
         b.line(g, tip, OUT, 1.2);
         b.line(g, tip, rig.gear === "orb" ? "#587346" : "#795338", 0.65);
         b.line({ x: g.x - 0.4, y: g.y - 0.4 }, { x: tip.x - 0.4, y: tip.y - 0.4 }, "#be9b61");
@@ -4898,7 +5054,7 @@
       } else {
         paintMeleeWeapon(b, rig, p, g, tip, OUT);
       }
-      for (const hand of rig.arms.filter((a) => a.side === (rig.weapon.hand === "left" ? -1 : 1) || id === "orc")) {
+      if (!rig.artArmSkin) for (const hand of rig.arms.filter((a) => a.side === (rig.weapon.hand === "left" ? -1 : 1) || id === "orc")) {
         const h = at(hand.end);
         outlinedOval(h.x, h.y, 1.2, 1.2, rig.artHandColors?.[hand.side] || (id === "knight" ? p.metal[1] : p.skin[1]));
         b.dot(h.x - 1, h.y - 1, rig.artHandColors?.[hand.side] || (id === "knight" ? p.metal[3] : p.skin[2]));

@@ -1,0 +1,2341 @@
+{
+  "schema": 2,
+  "status": "passed",
+  "videoHash": "96ab6a4991d639c1efd3880723b70a4f56a847394b6aa6bfa279ccad47420e1f",
+  "manifestHash": "d6132a1039ae96ddbd99a15d5784a8240f364f322b204fd60e9137d3ed41272a",
+  "playbackRate": 1,
+  "dimensions": [
+    960,
+    1000
+  ],
+  "duration": 164,
+  "enlargedFamilies": [
+    "feralfox",
+    "drake",
+    "troll",
+    "dwarf",
+    "knight",
+    "orc",
+    "elf",
+    "caster",
+    "fox",
+    "goblin",
+    "fairy",
+    "wolf",
+    "mech",
+    "spider",
+    "jelly",
+    "serpent",
+    "harpy",
+    "moth",
+    "crab",
+    "centipede",
+    "minotaur",
+    "skeleton",
+    "lion",
+    "bear",
+    "stag",
+    "beetle",
+    "bat",
+    "phoenix",
+    "rogue",
+    "frostelf",
+    "cat",
+    "rabbit",
+    "rodent",
+    "rhino",
+    "turtle",
+    "owl",
+    "fish",
+    "mushroom",
+    "mantis",
+    "clam",
+    "squid"
+  ],
+  "coverage": {
+    "states": [
+      "idle",
+      "walk",
+      "run",
+      "sprint",
+      "turn",
+      "stop",
+      "attack",
+      "slash",
+      "charge",
+      "cast",
+      "dash",
+      "dodge",
+      "hit",
+      "stagger",
+      "knockdown",
+      "getup",
+      "death"
+    ],
+    "directions": 8,
+    "segments": 136
+  },
+  "captures": [
+    {
+      "file": "decoded-0-idle.png",
+      "time": 0.916667,
+      "state": "idle",
+      "dir": 0,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "knight",
+        "orc",
+        "elf",
+        "caster"
+      ],
+      "sha256": "dd57f866de96da22db36835576cb914f9c0b8e08b99f444190c4db3d1136986b"
+    },
+    {
+      "file": "decoded-0-walk.png",
+      "time": 2.666667,
+      "state": "walk",
+      "dir": 0,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "fox",
+        "goblin",
+        "fairy",
+        "wolf"
+      ],
+      "sha256": "1355355f2361920621a863032bd9383ac0ef1b66ce9c30d09f30c4e71f462a68"
+    },
+    {
+      "file": "decoded-0-run.png",
+      "time": 3.833333,
+      "state": "run",
+      "dir": 0,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "mech",
+        "spider",
+        "jelly",
+        "serpent"
+      ],
+      "sha256": "3d20f18dfac66a18d7b4844e326e80ce7b0171321a1d488aa93ced4c34ce42bf"
+    },
+    {
+      "file": "decoded-0-sprint.png",
+      "time": 4.75,
+      "state": "sprint",
+      "dir": 0,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "harpy",
+        "moth",
+        "crab",
+        "centipede"
+      ],
+      "sha256": "e21b994fc205c25bf48d4a30cd91cf17487d8e51de7efd5d1b895f8ab5f5b032"
+    },
+    {
+      "file": "decoded-0-turn.png",
+      "time": 5.666667,
+      "state": "turn",
+      "dir": 0,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "minotaur",
+        "skeleton",
+        "lion"
+      ],
+      "sha256": "84de4ca29f4db7d2e3ad82b04c21fd6b65071a88c112698caa0a8e196a4a4cfb"
+    },
+    {
+      "file": "decoded-0-stop.png",
+      "time": 6.666667,
+      "state": "stop",
+      "dir": 0,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "bear",
+        "stag",
+        "beetle"
+      ],
+      "sha256": "91e65448313ec778db332e40c14362fb73031e88c42f53858c934c2ca3255d2f"
+    },
+    {
+      "file": "decoded-0-attack.png",
+      "time": 7.833333,
+      "state": "attack",
+      "dir": 0,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "bat",
+        "phoenix",
+        "rogue",
+        "frostelf"
+      ],
+      "sha256": "655f29d76d9c6e7f8e182bf4f3fcf3a5bb11529792f4dddd3edd695e061f2cdb"
+    },
+    {
+      "file": "decoded-0-slash.png",
+      "time": 9.166667,
+      "state": "slash",
+      "dir": 0,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "cat",
+        "rabbit"
+      ],
+      "sha256": "bcfc496ece1dea8dc26ca5aaadd7daf2e33196351a374320aff258e977502d38"
+    },
+    {
+      "file": "decoded-0-charge.png",
+      "time": 10.5,
+      "state": "charge",
+      "dir": 0,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "rodent",
+        "rhino",
+        "turtle",
+        "owl"
+      ],
+      "sha256": "2363f2a80996c2cd1d4f5fc2d847eada195d0733850ec353a42c485ae7d071c0"
+    },
+    {
+      "file": "decoded-0-cast.png",
+      "time": 11.833333,
+      "state": "cast",
+      "dir": 0,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "fish",
+        "mushroom",
+        "mantis",
+        "clam"
+      ],
+      "sha256": "1cce0e20d0733542c9276b7549675044288a4c234ca32da15da9771b4d22e7db"
+    },
+    {
+      "file": "decoded-0-dash.png",
+      "time": 13,
+      "state": "dash",
+      "dir": 0,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "squid",
+        "knight",
+        "orc",
+        "elf"
+      ],
+      "sha256": "2d05c96bb6ef1266c3bd108f33a09068ddafca9cbdf243ee37b1e9d840082279"
+    },
+    {
+      "file": "decoded-0-dodge.png",
+      "time": 14,
+      "state": "dodge",
+      "dir": 0,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "caster",
+        "fox",
+        "goblin",
+        "fairy"
+      ],
+      "sha256": "246df8b8b5b5f7572181ea60740c6f4522227f7733a1a8343551b3c29e3c4d81"
+    },
+    {
+      "file": "decoded-0-hit.png",
+      "time": 15,
+      "state": "hit",
+      "dir": 0,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "wolf",
+        "mech",
+        "spider",
+        "jelly"
+      ],
+      "sha256": "f8263644fdcdddf49eaaa0b0e41716ea482c409168878f131e95f739b417b293"
+    },
+    {
+      "file": "decoded-0-stagger.png",
+      "time": 16,
+      "state": "stagger",
+      "dir": 0,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "serpent",
+        "harpy",
+        "moth",
+        "crab"
+      ],
+      "sha256": "87b08e4a62ef6dbc7b3069f221ed8835ef90638580e803d99a31bbb2316f7dac"
+    },
+    {
+      "file": "decoded-0-knockdown.png",
+      "time": 17.166667,
+      "state": "knockdown",
+      "dir": 0,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "centipede",
+        "minotaur",
+        "skeleton"
+      ],
+      "sha256": "74ea316cd47abf92cc567706ee421c46b9b4068d0924cb235fc16d20a9d1ce97"
+    },
+    {
+      "file": "decoded-0-getup.png",
+      "time": 18.5,
+      "state": "getup",
+      "dir": 0,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "lion",
+        "bear",
+        "stag"
+      ],
+      "sha256": "03e7f8667faa017b2f68ccbee81d79d7b0d6b859a0bab1774ad10b9f6dcea705"
+    },
+    {
+      "file": "decoded-0-death.png",
+      "time": 19.833333,
+      "state": "death",
+      "dir": 0,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "beetle",
+        "bat",
+        "phoenix",
+        "rogue"
+      ],
+      "sha256": "326661c5accf8aad4ca5e544da13ff89e31b2fab95e60c46c93cab589680c4a1"
+    },
+    {
+      "file": "decoded-1-idle.png",
+      "time": 21.416667,
+      "state": "idle",
+      "dir": 1,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "frostelf",
+        "cat"
+      ],
+      "sha256": "6fc01ff4c49b6b743fb0c7453d90101f2a1097a012d10b6201b641fc5b92b1a6"
+    },
+    {
+      "file": "decoded-1-walk.png",
+      "time": 23.166667,
+      "state": "walk",
+      "dir": 1,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "rabbit",
+        "rodent",
+        "rhino",
+        "turtle"
+      ],
+      "sha256": "b404b18857610adf22cfb7d3d4e65b5b1eb5e69ec66ff043846b66fe4e59df43"
+    },
+    {
+      "file": "decoded-1-run.png",
+      "time": 24.333333,
+      "state": "run",
+      "dir": 1,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "owl",
+        "fish",
+        "mushroom",
+        "mantis"
+      ],
+      "sha256": "45c8cb1e15fcacb77c798d3c1e9a53006e81a99b1dcbc6549870544068ac9804"
+    },
+    {
+      "file": "decoded-1-sprint.png",
+      "time": 25.25,
+      "state": "sprint",
+      "dir": 1,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "clam",
+        "squid",
+        "knight",
+        "orc"
+      ],
+      "sha256": "64568a929efa98dc35388551e7af12c917e0e5e1c9e7ea614c85dc2346c0ac88"
+    },
+    {
+      "file": "decoded-1-turn.png",
+      "time": 26.166667,
+      "state": "turn",
+      "dir": 1,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "elf",
+        "caster",
+        "fox",
+        "goblin"
+      ],
+      "sha256": "bd61086dc8d55fa2b3f28535132377a3b87ef4eb4154df6ba03c9434552f2802"
+    },
+    {
+      "file": "decoded-1-stop.png",
+      "time": 27.166667,
+      "state": "stop",
+      "dir": 1,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "fairy",
+        "wolf",
+        "mech",
+        "spider"
+      ],
+      "sha256": "bfded13572d243ffd41086b4e5812c5a01dc7c13a2eb91cbecb9930ea099945c"
+    },
+    {
+      "file": "decoded-1-attack.png",
+      "time": 28.333333,
+      "state": "attack",
+      "dir": 1,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "jelly",
+        "serpent",
+        "harpy",
+        "moth"
+      ],
+      "sha256": "45853e8e16e0c75d15e3a14ff40617979e5f57ad83ec6917df04b101d56bace4"
+    },
+    {
+      "file": "decoded-1-slash.png",
+      "time": 29.666667,
+      "state": "slash",
+      "dir": 1,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "crab",
+        "centipede",
+        "minotaur"
+      ],
+      "sha256": "6ca16a3e544f57f37eb60cd01038f3a92cdcb4cece8bd6af14785f243133cf7a"
+    },
+    {
+      "file": "decoded-1-charge.png",
+      "time": 31,
+      "state": "charge",
+      "dir": 1,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "skeleton",
+        "lion",
+        "bear",
+        "stag"
+      ],
+      "sha256": "5d0c5bd43422919f170d3f7c6fff2bfb5735a404038f164543c903a3dff2065e"
+    },
+    {
+      "file": "decoded-1-cast.png",
+      "time": 32.333333,
+      "state": "cast",
+      "dir": 1,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "beetle",
+        "bat",
+        "phoenix"
+      ],
+      "sha256": "c4423ce3d07bc868cbc2956a06b8599dd09d802f6b0471a5ba6c57678369f20a"
+    },
+    {
+      "file": "decoded-1-dash.png",
+      "time": 33.5,
+      "state": "dash",
+      "dir": 1,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "rogue",
+        "frostelf"
+      ],
+      "sha256": "6fe8280d6d77b43adab07a605e879a445eb45725405131fa4ba5db8d1860e776"
+    },
+    {
+      "file": "decoded-1-dodge.png",
+      "time": 34.5,
+      "state": "dodge",
+      "dir": 1,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "cat",
+        "rabbit",
+        "rodent",
+        "rhino"
+      ],
+      "sha256": "5abbb2b9091d07c05c84ca2cb26ad86a826bf64c69b164c4ec0bc56dd750e095"
+    },
+    {
+      "file": "decoded-1-hit.png",
+      "time": 35.5,
+      "state": "hit",
+      "dir": 1,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "turtle",
+        "owl",
+        "fish",
+        "mushroom"
+      ],
+      "sha256": "d016b5af2a0a9bbcd89a93215869f3118c116760d831814366e38ae8b2d5d32a"
+    },
+    {
+      "file": "decoded-1-stagger.png",
+      "time": 36.5,
+      "state": "stagger",
+      "dir": 1,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "mantis",
+        "clam",
+        "squid",
+        "knight"
+      ],
+      "sha256": "4d9b1be1cc23608a253ba487097f6c19dc8740bdfef7f4bf8e98a0391a59d596"
+    },
+    {
+      "file": "decoded-1-knockdown.png",
+      "time": 37.666667,
+      "state": "knockdown",
+      "dir": 1,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "orc",
+        "elf",
+        "caster",
+        "fox"
+      ],
+      "sha256": "5ff8bb2192e25a412700c631988fe086428ac68ef59ea133afe4a1bc86e67ede"
+    },
+    {
+      "file": "decoded-1-getup.png",
+      "time": 39,
+      "state": "getup",
+      "dir": 1,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "goblin",
+        "fairy",
+        "wolf",
+        "mech"
+      ],
+      "sha256": "393f7208c15c634b9aa1a56cc627e9180c6ff24a259c1a64c5224152c202e18b"
+    },
+    {
+      "file": "decoded-1-death.png",
+      "time": 40.333333,
+      "state": "death",
+      "dir": 1,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "spider",
+        "jelly",
+        "serpent",
+        "harpy"
+      ],
+      "sha256": "b5bf202aa5c4b1b8f00ff5c1be9505071d5c52500a9a5ac014361a8829ee6db0"
+    },
+    {
+      "file": "decoded-2-idle.png",
+      "time": 41.916667,
+      "state": "idle",
+      "dir": 2,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "moth",
+        "crab",
+        "centipede"
+      ],
+      "sha256": "b3beba0a65101b14044cb9cbe994c8169aa122798cfca1170240fe19f448bfc0"
+    },
+    {
+      "file": "decoded-2-walk.png",
+      "time": 43.666667,
+      "state": "walk",
+      "dir": 2,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "minotaur",
+        "skeleton",
+        "lion",
+        "bear"
+      ],
+      "sha256": "77016e4df0c38d508d26e2ddcf94ec9f8ea86fb243cfa766b726f48b8f7732a3"
+    },
+    {
+      "file": "decoded-2-run.png",
+      "time": 44.833333,
+      "state": "run",
+      "dir": 2,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "stag",
+        "beetle",
+        "bat"
+      ],
+      "sha256": "632767564a0fab1e9285c3ace0fd4b8a6c1add813b632fe9ef1b01f8f6b312c1"
+    },
+    {
+      "file": "decoded-2-sprint.png",
+      "time": 45.75,
+      "state": "sprint",
+      "dir": 2,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "phoenix",
+        "rogue",
+        "frostelf"
+      ],
+      "sha256": "9b67a5fe7b027024ccf395388fca2591bbc007e5bd62eb4997d91096288e7df8"
+    },
+    {
+      "file": "decoded-2-turn.png",
+      "time": 46.666667,
+      "state": "turn",
+      "dir": 2,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "cat",
+        "rabbit",
+        "rodent"
+      ],
+      "sha256": "29650353ba19601f06e93b8740cf1635f204cadda6a0c0eb1f137b5a7919065c"
+    },
+    {
+      "file": "decoded-2-stop.png",
+      "time": 47.666667,
+      "state": "stop",
+      "dir": 2,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "rhino",
+        "turtle",
+        "owl",
+        "fish"
+      ],
+      "sha256": "0f7e0001a7210d72d331cef3da4cfadb39ad4b55d2b1571dffd3717039a7e0ca"
+    },
+    {
+      "file": "decoded-2-attack.png",
+      "time": 48.833333,
+      "state": "attack",
+      "dir": 2,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "mushroom",
+        "mantis",
+        "clam",
+        "squid"
+      ],
+      "sha256": "e995acf4c305f014fc1978423757ed86c3b5a9a1dfe047babea1c5fa64c19ad9"
+    },
+    {
+      "file": "decoded-2-slash.png",
+      "time": 50.166667,
+      "state": "slash",
+      "dir": 2,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "knight",
+        "orc",
+        "elf",
+        "caster"
+      ],
+      "sha256": "ae093c1b79ea23f7af54c468fab3045bb9713d5c063bebf55dd42146db57d3a1"
+    },
+    {
+      "file": "decoded-2-charge.png",
+      "time": 51.5,
+      "state": "charge",
+      "dir": 2,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "fox",
+        "goblin",
+        "fairy",
+        "wolf"
+      ],
+      "sha256": "d106434602b75c2c2c4e0397fdd197227c119a238201ef7fc955f64058ec1b37"
+    },
+    {
+      "file": "decoded-2-cast.png",
+      "time": 52.833333,
+      "state": "cast",
+      "dir": 2,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "mech",
+        "spider",
+        "jelly",
+        "serpent"
+      ],
+      "sha256": "59b0e54839f1ff465ff43d919169b74cb3f909c08af99a8690130e98009ff851"
+    },
+    {
+      "file": "decoded-2-dash.png",
+      "time": 54,
+      "state": "dash",
+      "dir": 2,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "harpy",
+        "moth",
+        "crab",
+        "centipede"
+      ],
+      "sha256": "442b72e0d724aa11cc088f22978c2205d66567a913f50cef913d92cf307017a2"
+    },
+    {
+      "file": "decoded-2-dodge.png",
+      "time": 55,
+      "state": "dodge",
+      "dir": 2,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "minotaur",
+        "skeleton",
+        "lion"
+      ],
+      "sha256": "772207066f22ff4798cef6bc8ccfe2261861bee4e32a4d20d362bff6be492c44"
+    },
+    {
+      "file": "decoded-2-hit.png",
+      "time": 56,
+      "state": "hit",
+      "dir": 2,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "bear",
+        "stag",
+        "beetle"
+      ],
+      "sha256": "c65ad57813cebe8d2be7ddaf2071b66bdec415813675ec574a0af2c3c9860cca"
+    },
+    {
+      "file": "decoded-2-stagger.png",
+      "time": 57,
+      "state": "stagger",
+      "dir": 2,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "bat",
+        "phoenix",
+        "rogue",
+        "frostelf"
+      ],
+      "sha256": "c1699042f0f2564d348a648381a34df1d497f60bccc4489d2034dfbdb467f67e"
+    },
+    {
+      "file": "decoded-2-knockdown.png",
+      "time": 58.166667,
+      "state": "knockdown",
+      "dir": 2,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "cat",
+        "rabbit"
+      ],
+      "sha256": "3026025c7b7a2783cc1e30dc1c1c32b0c012d77cd08b65b827b683972b9a081d"
+    },
+    {
+      "file": "decoded-2-getup.png",
+      "time": 59.5,
+      "state": "getup",
+      "dir": 2,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "rodent",
+        "rhino",
+        "turtle",
+        "owl"
+      ],
+      "sha256": "a28730d8c11dc7034972aa8348609266f8fa417ade92d06a32eb4d50b454cb07"
+    },
+    {
+      "file": "decoded-2-death.png",
+      "time": 60.833333,
+      "state": "death",
+      "dir": 2,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "fish",
+        "mushroom",
+        "mantis",
+        "clam"
+      ],
+      "sha256": "fb685d3de8a15d75e4b76e1cb2ade2967dde09529b7a105913c86c33517e5bc6"
+    },
+    {
+      "file": "decoded-3-idle.png",
+      "time": 62.416667,
+      "state": "idle",
+      "dir": 3,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "squid",
+        "knight",
+        "orc",
+        "elf"
+      ],
+      "sha256": "264779616cca23f33d92e42589994333054543d01936ad8bbf0d5bac4bfbf39e"
+    },
+    {
+      "file": "decoded-3-walk.png",
+      "time": 64.166667,
+      "state": "walk",
+      "dir": 3,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "caster",
+        "fox",
+        "goblin",
+        "fairy"
+      ],
+      "sha256": "98a03e7faecaa1e59a086b0f7a73722111c2e9513afed12043ad97fcfbdb49bb"
+    },
+    {
+      "file": "decoded-3-run.png",
+      "time": 65.333333,
+      "state": "run",
+      "dir": 3,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "wolf",
+        "mech",
+        "spider",
+        "jelly"
+      ],
+      "sha256": "9498090c878568bc5bd1a0ba880061ab3c7d7a30ab91435491ff6675232dfc25"
+    },
+    {
+      "file": "decoded-3-sprint.png",
+      "time": 66.25,
+      "state": "sprint",
+      "dir": 3,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "serpent",
+        "harpy",
+        "moth",
+        "crab"
+      ],
+      "sha256": "401e240049b160aa8241441a251a5d6c3f747d1fa3272e5d2ceda5dd06a8f632"
+    },
+    {
+      "file": "decoded-3-turn.png",
+      "time": 67.166667,
+      "state": "turn",
+      "dir": 3,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "centipede",
+        "minotaur",
+        "skeleton"
+      ],
+      "sha256": "dc37dff1215cd8f6c705c0d381aacf8e7e334cb6d4844900695cf9a2c1573f41"
+    },
+    {
+      "file": "decoded-3-stop.png",
+      "time": 68.166667,
+      "state": "stop",
+      "dir": 3,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "lion",
+        "bear",
+        "stag"
+      ],
+      "sha256": "66ed58e0f114f36fb0bec4ef1888d9a3100b6f5a7b2f39330c87645174f6fb43"
+    },
+    {
+      "file": "decoded-3-attack.png",
+      "time": 69.333333,
+      "state": "attack",
+      "dir": 3,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "beetle",
+        "bat",
+        "phoenix",
+        "rogue"
+      ],
+      "sha256": "5ce9edfbb0f4e46953d45390ee7d31c9b491a34713b85c4217ac8c60dfc89037"
+    },
+    {
+      "file": "decoded-3-slash.png",
+      "time": 70.666667,
+      "state": "slash",
+      "dir": 3,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "frostelf",
+        "cat"
+      ],
+      "sha256": "1ca8c4f39e873e5d6cfce4aedc6ca7ff03bfd786c12a747c24dc06fef9157a9a"
+    },
+    {
+      "file": "decoded-3-charge.png",
+      "time": 72,
+      "state": "charge",
+      "dir": 3,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "rabbit",
+        "rodent",
+        "rhino",
+        "turtle"
+      ],
+      "sha256": "b49001ef7b6cf698f0abd6aaa08bbe62a280f9ae1358443660c860c3dc99739f"
+    },
+    {
+      "file": "decoded-3-cast.png",
+      "time": 73.333333,
+      "state": "cast",
+      "dir": 3,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "owl",
+        "fish",
+        "mushroom",
+        "mantis"
+      ],
+      "sha256": "27639509207f2ccbe3e2b3a0235d08e31fd371596da86244473f84f32bb4b7fe"
+    },
+    {
+      "file": "decoded-3-dash.png",
+      "time": 74.5,
+      "state": "dash",
+      "dir": 3,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "clam",
+        "squid",
+        "knight",
+        "orc"
+      ],
+      "sha256": "5c5b852a315906959ea1a243878f5c723fc875356c0314878564d45d457b1aca"
+    },
+    {
+      "file": "decoded-3-dodge.png",
+      "time": 75.5,
+      "state": "dodge",
+      "dir": 3,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "elf",
+        "caster",
+        "fox",
+        "goblin"
+      ],
+      "sha256": "b0465490a193a7643e07f2e00409d612f2bcf5bfa2e791a87d6678a757b6ba5f"
+    },
+    {
+      "file": "decoded-3-hit.png",
+      "time": 76.5,
+      "state": "hit",
+      "dir": 3,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "fairy",
+        "wolf",
+        "mech",
+        "spider"
+      ],
+      "sha256": "4161f53f2a9e049d36a762683b1c0d6c520f473ae2d229bbce5d1f6a1554c61e"
+    },
+    {
+      "file": "decoded-3-stagger.png",
+      "time": 77.5,
+      "state": "stagger",
+      "dir": 3,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "jelly",
+        "serpent",
+        "harpy",
+        "moth"
+      ],
+      "sha256": "573c8df51ed88fa132a9bfd7aed48ccecfdab4e0573ad37f180bc862f8c60d97"
+    },
+    {
+      "file": "decoded-3-knockdown.png",
+      "time": 78.666667,
+      "state": "knockdown",
+      "dir": 3,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "crab",
+        "centipede",
+        "minotaur"
+      ],
+      "sha256": "51f91ba3a0fa328561054190a86c70484324c49f7075bc269cbcd9c4a9fe2f66"
+    },
+    {
+      "file": "decoded-3-getup.png",
+      "time": 80,
+      "state": "getup",
+      "dir": 3,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "skeleton",
+        "lion",
+        "bear",
+        "stag"
+      ],
+      "sha256": "78cd55bfc8ffb31b2ca69c1adcb993f551138c76a7d362f3cf767a5eab2bdab9"
+    },
+    {
+      "file": "decoded-3-death.png",
+      "time": 81.333333,
+      "state": "death",
+      "dir": 3,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "beetle",
+        "bat",
+        "phoenix"
+      ],
+      "sha256": "b0ee32eaa8c46a64634f577132b493c5450b48a1aa5bc34532f397229047525e"
+    },
+    {
+      "file": "decoded-4-idle.png",
+      "time": 82.916667,
+      "state": "idle",
+      "dir": 4,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "rogue",
+        "frostelf"
+      ],
+      "sha256": "4de2b7776cb51da93a051f83032d933cfb36d99fb1339cbf2cfc3e0b578d82b2"
+    },
+    {
+      "file": "decoded-4-walk.png",
+      "time": 84.666667,
+      "state": "walk",
+      "dir": 4,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "cat",
+        "rabbit",
+        "rodent",
+        "rhino"
+      ],
+      "sha256": "13a13bd4b82ee10b2f1959e77e7455db55c3a94d5e0850f5415e5c59d74d2d9e"
+    },
+    {
+      "file": "decoded-4-run.png",
+      "time": 85.833333,
+      "state": "run",
+      "dir": 4,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "turtle",
+        "owl",
+        "fish",
+        "mushroom"
+      ],
+      "sha256": "699aeed7c5c317aad5e0136c633d0e34b8a2347422172365da8a02bc7b567883"
+    },
+    {
+      "file": "decoded-4-sprint.png",
+      "time": 86.75,
+      "state": "sprint",
+      "dir": 4,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "mantis",
+        "clam",
+        "squid",
+        "knight"
+      ],
+      "sha256": "730f8022854eafaa0641d34a0d64caa1431cd13b12a7e5ed86b40f3f164f694e"
+    },
+    {
+      "file": "decoded-4-turn.png",
+      "time": 87.666667,
+      "state": "turn",
+      "dir": 4,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "orc",
+        "elf",
+        "caster",
+        "fox"
+      ],
+      "sha256": "cfa342fbd4429f78d7c33db90da1a165ce591652ac4b7ee30e1abc218a3d09e5"
+    },
+    {
+      "file": "decoded-4-stop.png",
+      "time": 88.666667,
+      "state": "stop",
+      "dir": 4,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "goblin",
+        "fairy",
+        "wolf",
+        "mech"
+      ],
+      "sha256": "8808bf1fb6effbaa69e21ff0265a07f04f28f0105f3af5a39ca8b691f0881e58"
+    },
+    {
+      "file": "decoded-4-attack.png",
+      "time": 89.833333,
+      "state": "attack",
+      "dir": 4,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "spider",
+        "jelly",
+        "serpent",
+        "harpy"
+      ],
+      "sha256": "312f12d7e06908a88fc869cbe7fca13ea9e0345ef220f83abc587ea2ff2c4ae7"
+    },
+    {
+      "file": "decoded-4-slash.png",
+      "time": 91.166667,
+      "state": "slash",
+      "dir": 4,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "moth",
+        "crab",
+        "centipede"
+      ],
+      "sha256": "7acb94c39bc36a2525d48eeab7586483a3cf8ea0817c63ab4503c8c41c7e73d5"
+    },
+    {
+      "file": "decoded-4-charge.png",
+      "time": 92.5,
+      "state": "charge",
+      "dir": 4,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "minotaur",
+        "skeleton",
+        "lion",
+        "bear"
+      ],
+      "sha256": "10b711a925d1258ce681a5a0241804af4e0256e6fef6f70ac91b0384e8d23152"
+    },
+    {
+      "file": "decoded-4-cast.png",
+      "time": 93.833333,
+      "state": "cast",
+      "dir": 4,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "stag",
+        "beetle",
+        "bat"
+      ],
+      "sha256": "7f1ba03aa62db741acf96260e6b9eb75b44b1b7a6670d0f399ad96566b2c0230"
+    },
+    {
+      "file": "decoded-4-dash.png",
+      "time": 95,
+      "state": "dash",
+      "dir": 4,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "phoenix",
+        "rogue",
+        "frostelf"
+      ],
+      "sha256": "5528b5711f94ab48c9e139dc4d5eed03c1ce8c8855fae39ad8fabe3731c9306e"
+    },
+    {
+      "file": "decoded-4-dodge.png",
+      "time": 96,
+      "state": "dodge",
+      "dir": 4,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "cat",
+        "rabbit",
+        "rodent"
+      ],
+      "sha256": "e8f5674d1b20836e7b1796b9fd2af26aa7700d0bda1ffa47bb79a58dd6e0dbda"
+    },
+    {
+      "file": "decoded-4-hit.png",
+      "time": 97,
+      "state": "hit",
+      "dir": 4,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "rhino",
+        "turtle",
+        "owl",
+        "fish"
+      ],
+      "sha256": "52519f6cff154fe7e403e30b7d612badf86e18838abbd5ea12a20bcce741d467"
+    },
+    {
+      "file": "decoded-4-stagger.png",
+      "time": 98,
+      "state": "stagger",
+      "dir": 4,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "mushroom",
+        "mantis",
+        "clam",
+        "squid"
+      ],
+      "sha256": "29edfc1022c58f19e03d38150ab120d955246e0dca38bc52b9d03398dc6ce736"
+    },
+    {
+      "file": "decoded-4-knockdown.png",
+      "time": 99.166667,
+      "state": "knockdown",
+      "dir": 4,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "knight",
+        "orc",
+        "elf",
+        "caster"
+      ],
+      "sha256": "a2ef1a11fce5fcc6baa7421c8bfe8bf0c3c41932331316bdc66745a7a1214dcf"
+    },
+    {
+      "file": "decoded-4-getup.png",
+      "time": 100.5,
+      "state": "getup",
+      "dir": 4,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "fox",
+        "goblin",
+        "fairy",
+        "wolf"
+      ],
+      "sha256": "96f5ab72311443b54aab0fb7b305222f3de253ad9ce4ef3994b8859c9ad6badc"
+    },
+    {
+      "file": "decoded-4-death.png",
+      "time": 101.833333,
+      "state": "death",
+      "dir": 4,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "mech",
+        "spider",
+        "jelly",
+        "serpent"
+      ],
+      "sha256": "de414c9c18e26b4b93a096b926a63786d2e62f4cd990e3054b64b84f82c32507"
+    },
+    {
+      "file": "decoded-5-idle.png",
+      "time": 103.416667,
+      "state": "idle",
+      "dir": 5,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "harpy",
+        "moth",
+        "crab",
+        "centipede"
+      ],
+      "sha256": "6a3d58648c7b5cdc349b49a075c1d93e721c6900f4da6e2d1fb22ecc2e6463fd"
+    },
+    {
+      "file": "decoded-5-walk.png",
+      "time": 105.166667,
+      "state": "walk",
+      "dir": 5,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "minotaur",
+        "skeleton",
+        "lion"
+      ],
+      "sha256": "68555090ca33090748d9e27e823abe3a1db90e69d9a6ba97e0e559bfc04305dd"
+    },
+    {
+      "file": "decoded-5-run.png",
+      "time": 106.333333,
+      "state": "run",
+      "dir": 5,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "bear",
+        "stag",
+        "beetle"
+      ],
+      "sha256": "cb124ffda4f72f86f1703ed4ec37751a8f674531e6c9111120694f4e4e638949"
+    },
+    {
+      "file": "decoded-5-sprint.png",
+      "time": 107.25,
+      "state": "sprint",
+      "dir": 5,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "bat",
+        "phoenix",
+        "rogue",
+        "frostelf"
+      ],
+      "sha256": "a7707d4440722aa606915509a93546e25b407d01f1d79a734c3a25e32a117693"
+    },
+    {
+      "file": "decoded-5-turn.png",
+      "time": 108.166667,
+      "state": "turn",
+      "dir": 5,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "cat",
+        "rabbit"
+      ],
+      "sha256": "69f5aa04372d23838c921227960b405a980a4f105706fbeaa1db729c7d64fef5"
+    },
+    {
+      "file": "decoded-5-stop.png",
+      "time": 109.166667,
+      "state": "stop",
+      "dir": 5,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "rodent",
+        "rhino",
+        "turtle",
+        "owl"
+      ],
+      "sha256": "84e327518e01cb338f7f620fe266388bd75cecf8511f4e49dd3aaad636c0d198"
+    },
+    {
+      "file": "decoded-5-attack.png",
+      "time": 110.333333,
+      "state": "attack",
+      "dir": 5,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "fish",
+        "mushroom",
+        "mantis",
+        "clam"
+      ],
+      "sha256": "a88ef7f22ce79d98dab025a0337808f22ae0a01e013a06a6bb46df93f6e60b21"
+    },
+    {
+      "file": "decoded-5-slash.png",
+      "time": 111.666667,
+      "state": "slash",
+      "dir": 5,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "squid",
+        "knight",
+        "orc",
+        "elf"
+      ],
+      "sha256": "733f35de5b26744b14e0333a35ac14e2f442cf045f8c922222a030b9c77daffd"
+    },
+    {
+      "file": "decoded-5-charge.png",
+      "time": 113,
+      "state": "charge",
+      "dir": 5,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "caster",
+        "fox",
+        "goblin",
+        "fairy"
+      ],
+      "sha256": "5e0f915f71f9a621caf0c28cbe7b7e2b31ec7bab6e037b7772d680e232036b14"
+    },
+    {
+      "file": "decoded-5-cast.png",
+      "time": 114.333333,
+      "state": "cast",
+      "dir": 5,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "wolf",
+        "mech",
+        "spider",
+        "jelly"
+      ],
+      "sha256": "0217bacbf7039d05206ea0c626d3580ff98108865950e2d2df267ba3e3fe7257"
+    },
+    {
+      "file": "decoded-5-dash.png",
+      "time": 115.5,
+      "state": "dash",
+      "dir": 5,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "serpent",
+        "harpy",
+        "moth",
+        "crab"
+      ],
+      "sha256": "2cf992d9a12e9ea6ee63a9eed5023f6e6b858aaad83b307498ff6c5a76dfd555"
+    },
+    {
+      "file": "decoded-5-dodge.png",
+      "time": 116.5,
+      "state": "dodge",
+      "dir": 5,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "centipede",
+        "minotaur",
+        "skeleton"
+      ],
+      "sha256": "c8f4b0009bfa8e9774fd9163000656ff59ac76179b4bb6dc0fc31ae800a34773"
+    },
+    {
+      "file": "decoded-5-hit.png",
+      "time": 117.5,
+      "state": "hit",
+      "dir": 5,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "lion",
+        "bear",
+        "stag"
+      ],
+      "sha256": "3ab93fe4ab273c73b63d8a4c28058d6e592d63e8e1ab6057f2089a3b4cd716a2"
+    },
+    {
+      "file": "decoded-5-stagger.png",
+      "time": 118.5,
+      "state": "stagger",
+      "dir": 5,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "beetle",
+        "bat",
+        "phoenix",
+        "rogue"
+      ],
+      "sha256": "eeda676a552dd5ead6943ae38fb40726cc2154ef531e9fa41e8144e3d74ad017"
+    },
+    {
+      "file": "decoded-5-knockdown.png",
+      "time": 119.666667,
+      "state": "knockdown",
+      "dir": 5,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "frostelf",
+        "cat"
+      ],
+      "sha256": "8f4a60a2f987ab1015ba0261260fc82b21d2186cf02b3767ba20852c2a2d48b7"
+    },
+    {
+      "file": "decoded-5-getup.png",
+      "time": 121,
+      "state": "getup",
+      "dir": 5,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "rabbit",
+        "rodent",
+        "rhino",
+        "turtle"
+      ],
+      "sha256": "46895c14c76ab2dd0cf3088568e67559678616536a256e8d074b271f4ace8e4a"
+    },
+    {
+      "file": "decoded-5-death.png",
+      "time": 122.333333,
+      "state": "death",
+      "dir": 5,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "owl",
+        "fish",
+        "mushroom",
+        "mantis"
+      ],
+      "sha256": "99b7151a939af188574128dae28e5eab68e479b5143316d73a38f296cb21d3a6"
+    },
+    {
+      "file": "decoded-6-idle.png",
+      "time": 123.916667,
+      "state": "idle",
+      "dir": 6,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "clam",
+        "squid",
+        "knight",
+        "orc"
+      ],
+      "sha256": "a70952f7c8c6d88ba7b0fb874ffc815d232277ca8d6b1493606ce9ff6aa472be"
+    },
+    {
+      "file": "decoded-6-walk.png",
+      "time": 125.666667,
+      "state": "walk",
+      "dir": 6,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "elf",
+        "caster",
+        "fox",
+        "goblin"
+      ],
+      "sha256": "85ac929463dfa29a7ff595839d7683f2e84cb6acea4690f7bbc54689e05c96b3"
+    },
+    {
+      "file": "decoded-6-run.png",
+      "time": 126.833333,
+      "state": "run",
+      "dir": 6,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "fairy",
+        "wolf",
+        "mech",
+        "spider"
+      ],
+      "sha256": "2db6e9bda40b55f665a35050391017c170d33c3047f9a78e3a1b11fe07cf98f2"
+    },
+    {
+      "file": "decoded-6-sprint.png",
+      "time": 127.75,
+      "state": "sprint",
+      "dir": 6,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "jelly",
+        "serpent",
+        "harpy",
+        "moth"
+      ],
+      "sha256": "697446032bf2dd0a058f417924cffbe9dc1098d4e146931c66a6b1d3dae2c745"
+    },
+    {
+      "file": "decoded-6-turn.png",
+      "time": 128.666667,
+      "state": "turn",
+      "dir": 6,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "crab",
+        "centipede",
+        "minotaur"
+      ],
+      "sha256": "1ca8068d00c00ddbdccceaa230d002aa1fd3a7320319ad07be70fde994045f5a"
+    },
+    {
+      "file": "decoded-6-stop.png",
+      "time": 129.666667,
+      "state": "stop",
+      "dir": 6,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "skeleton",
+        "lion",
+        "bear",
+        "stag"
+      ],
+      "sha256": "145fee967cb749f64a3f9ca30ff3b87f9dc2448ac50910c0152c81cd20ab9c11"
+    },
+    {
+      "file": "decoded-6-attack.png",
+      "time": 130.833333,
+      "state": "attack",
+      "dir": 6,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "beetle",
+        "bat",
+        "phoenix"
+      ],
+      "sha256": "1041042de677ea3160cc6ddd9236351c8d99832aab3ac8ae2566f4085d51bce8"
+    },
+    {
+      "file": "decoded-6-slash.png",
+      "time": 132.166667,
+      "state": "slash",
+      "dir": 6,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "rogue",
+        "frostelf"
+      ],
+      "sha256": "488182c44b8fb0fd2b38c0fad5e9c8b5f67115287f14f662e27130b596be9ef0"
+    },
+    {
+      "file": "decoded-6-charge.png",
+      "time": 133.5,
+      "state": "charge",
+      "dir": 6,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "cat",
+        "rabbit",
+        "rodent",
+        "rhino"
+      ],
+      "sha256": "4c17c92c0b9a1799facce3a2a35c5cad9e5ad31097e285290cc401803e470d8b"
+    },
+    {
+      "file": "decoded-6-cast.png",
+      "time": 134.833333,
+      "state": "cast",
+      "dir": 6,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "turtle",
+        "owl",
+        "fish",
+        "mushroom"
+      ],
+      "sha256": "e30b9442a55df9f116751db0aeb216b70db818be2cfddd57a3c9c027c8a716da"
+    },
+    {
+      "file": "decoded-6-dash.png",
+      "time": 136,
+      "state": "dash",
+      "dir": 6,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "mantis",
+        "clam",
+        "squid",
+        "knight"
+      ],
+      "sha256": "90d284807a8ba3f4eea880b3118d484ef5da8338fb4694604084f8d94c3c3854"
+    },
+    {
+      "file": "decoded-6-dodge.png",
+      "time": 137,
+      "state": "dodge",
+      "dir": 6,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "orc",
+        "elf",
+        "caster",
+        "fox"
+      ],
+      "sha256": "83fa643aae6d812f7f70e48d67af58e770defac70692e980cc8ad4e73c4ac134"
+    },
+    {
+      "file": "decoded-6-hit.png",
+      "time": 138,
+      "state": "hit",
+      "dir": 6,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "goblin",
+        "fairy",
+        "wolf",
+        "mech"
+      ],
+      "sha256": "7a5541a549d437eac8643afeeb16ac1860227be0615316f3e870f6a63929e347"
+    },
+    {
+      "file": "decoded-6-stagger.png",
+      "time": 139,
+      "state": "stagger",
+      "dir": 6,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "spider",
+        "jelly",
+        "serpent",
+        "harpy"
+      ],
+      "sha256": "3d8775fe2463b566b1f20039a9c63c0260dba9a9ce20011b28d40d1910c8088f"
+    },
+    {
+      "file": "decoded-6-knockdown.png",
+      "time": 140.166667,
+      "state": "knockdown",
+      "dir": 6,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "moth",
+        "crab",
+        "centipede"
+      ],
+      "sha256": "4c1712178de7db317ddc0ab4974d7731c35c1379dd74cb5641eaaaf15720d118"
+    },
+    {
+      "file": "decoded-6-getup.png",
+      "time": 141.5,
+      "state": "getup",
+      "dir": 6,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "minotaur",
+        "skeleton",
+        "lion",
+        "bear"
+      ],
+      "sha256": "491f46f59c7e5a5297695b5cef2db26033f2b65046ad9982fe8e97463bd3b7d9"
+    },
+    {
+      "file": "decoded-6-death.png",
+      "time": 142.833333,
+      "state": "death",
+      "dir": 6,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "stag",
+        "beetle",
+        "bat"
+      ],
+      "sha256": "48bcfcc3288c329f37647265208957830917b131e38af9c32a639b3fdb81673f"
+    },
+    {
+      "file": "decoded-7-idle.png",
+      "time": 144.416667,
+      "state": "idle",
+      "dir": 7,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "phoenix",
+        "rogue",
+        "frostelf"
+      ],
+      "sha256": "b40a62f4f10af3ea3e982e476a629eab0742d2a03a84c35fa04f84b493435dfe"
+    },
+    {
+      "file": "decoded-7-walk.png",
+      "time": 146.166667,
+      "state": "walk",
+      "dir": 7,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "cat",
+        "rabbit",
+        "rodent"
+      ],
+      "sha256": "37dea6379732a9fd1784674c9d6a1cbd85f6c060f9bfc62b23a2c96532e7ab15"
+    },
+    {
+      "file": "decoded-7-run.png",
+      "time": 147.333333,
+      "state": "run",
+      "dir": 7,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "rhino",
+        "turtle",
+        "owl",
+        "fish"
+      ],
+      "sha256": "b2ae7bd1d7237069a7ca7edc51a30fa176f06d76353e57dfd56b3e316fa1263d"
+    },
+    {
+      "file": "decoded-7-sprint.png",
+      "time": 148.25,
+      "state": "sprint",
+      "dir": 7,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "mushroom",
+        "mantis",
+        "clam",
+        "squid"
+      ],
+      "sha256": "bab843414db4ffc7b8b0a19823ea61228b5531a46c01e89cbf220bc78d21bfa7"
+    },
+    {
+      "file": "decoded-7-turn.png",
+      "time": 149.166667,
+      "state": "turn",
+      "dir": 7,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "knight",
+        "orc",
+        "elf",
+        "caster"
+      ],
+      "sha256": "c492fed3125c068f0729e79f0eb1e49a2375cd1bbfb24e4e394d979387305493"
+    },
+    {
+      "file": "decoded-7-stop.png",
+      "time": 150.166667,
+      "state": "stop",
+      "dir": 7,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "fox",
+        "goblin",
+        "fairy",
+        "wolf"
+      ],
+      "sha256": "b2117853fb5a79e10c6e8acdb2ef217aacde6db42b25de1cd2a4b49a30bd99b6"
+    },
+    {
+      "file": "decoded-7-attack.png",
+      "time": 151.333333,
+      "state": "attack",
+      "dir": 7,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "mech",
+        "spider",
+        "jelly",
+        "serpent"
+      ],
+      "sha256": "3ea67dc646f8c0802bfb86fad16163e303f924695fbbba40fb3734d57abbe48d"
+    },
+    {
+      "file": "decoded-7-slash.png",
+      "time": 152.666667,
+      "state": "slash",
+      "dir": 7,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "harpy",
+        "moth",
+        "crab",
+        "centipede"
+      ],
+      "sha256": "71c0cbd766304f88658aa65228712a6f77faeb89e1b68238ac3749449e3f77a9"
+    },
+    {
+      "file": "decoded-7-charge.png",
+      "time": 154,
+      "state": "charge",
+      "dir": 7,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "minotaur",
+        "skeleton",
+        "lion"
+      ],
+      "sha256": "df39e93374b12a25fc6a7bf416f1bb61af9e66d65e8f202e6305ee9093ae4762"
+    },
+    {
+      "file": "decoded-7-cast.png",
+      "time": 155.333333,
+      "state": "cast",
+      "dir": 7,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "bear",
+        "stag",
+        "beetle"
+      ],
+      "sha256": "9389295112e2de1f5e7fb434fd823aafdbb27827b8a94c866ff23c3f23985b42"
+    },
+    {
+      "file": "decoded-7-dash.png",
+      "time": 156.5,
+      "state": "dash",
+      "dir": 7,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "bat",
+        "phoenix",
+        "rogue",
+        "frostelf"
+      ],
+      "sha256": "a3f956a5fc32df1a0bc8f9e025802d055ec958b85e4c32182c30ab2603bcb6aa"
+    },
+    {
+      "file": "decoded-7-dodge.png",
+      "time": 157.5,
+      "state": "dodge",
+      "dir": 7,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "cat",
+        "rabbit"
+      ],
+      "sha256": "0b0df1a1a9a7e4f55575ec1c05edee3d1914ae266a409154a8cc2678ebc43631"
+    },
+    {
+      "file": "decoded-7-hit.png",
+      "time": 158.5,
+      "state": "hit",
+      "dir": 7,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "rodent",
+        "rhino",
+        "turtle",
+        "owl"
+      ],
+      "sha256": "7eeb19619d4b98be6ac0dfc6b76ef896e4ed8ab79712ee2e79357c01747282e8"
+    },
+    {
+      "file": "decoded-7-stagger.png",
+      "time": 159.5,
+      "state": "stagger",
+      "dir": 7,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "fish",
+        "mushroom",
+        "mantis",
+        "clam"
+      ],
+      "sha256": "2ed6a7ecc3daaa020b97586b226a4b37c99565cb8be885edc27b1e28710decc6"
+    },
+    {
+      "file": "decoded-7-knockdown.png",
+      "time": 160.666667,
+      "state": "knockdown",
+      "dir": 7,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "squid",
+        "knight",
+        "orc",
+        "elf"
+      ],
+      "sha256": "fd4f8eac5784a20e7c8c4933979f23e055429f5a9d060eace41ff4d64e15711e"
+    },
+    {
+      "file": "decoded-7-getup.png",
+      "time": 162,
+      "state": "getup",
+      "dir": 7,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "caster",
+        "fox",
+        "goblin",
+        "fairy"
+      ],
+      "sha256": "98d91c9bfe24ae4b8fa0e83db3fe7ffee617f6deab95743445d0bf8c58d2c147"
+    },
+    {
+      "file": "decoded-7-death.png",
+      "time": 163.333333,
+      "state": "death",
+      "dir": 7,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "wolf",
+        "mech",
+        "spider",
+        "jelly"
+      ],
+      "sha256": "e6230f11ba86f84ea8f1495a41daa81667f37ed850fdf4993b177fb08cb738e1"
+    }
+  ],
+  "errors": []
+}

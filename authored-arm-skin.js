@@ -42,29 +42,34 @@ export function paintAuthoredArms(brush,rig,near,at){
  for(const arm of rig.arms){
   const profile=art.profiles.get(rig.artArmScreens[arm.side]);if(!profile)continue;
   const root=rig.artArmRoots[arm.side],joint=rig.artProject(arm.joint),end=rig.artProject(arm.end);
-  const upperNear=(at(arm.root).depth+at(arm.joint).depth)/2>=at(rig.body).depth,lowerNear=at(arm.end).depth>=at(rig.body).depth;
-  const segments=[[profile.root,profile.joint,root,joint,upperNear],[profile.joint,profile.end,joint,end,lowerNear]],thickness=fit*scale.width;
-  const sourceAxis=unit(sub(profile.end,profile.root));
-  const partFor=p=>dot(sub(p,profile.joint),sourceAxis)<0?0:1;
+  const axis=unit(sub(profile.end,profile.root)),length=Math.hypot(profile.end.x-profile.root.x,profile.end.y-profile.root.y)||1,hinge=dot(sub(profile.joint,profile.root),axis),thickness=fit*scale.width;
+  const upper=unit(sub(joint,root)),lower=unit(sub(end,joint)),upperAngle=Math.atan2(upper.y,upper.x),bend=Math.atan2(upper.x*lower.y-upper.y*lower.x,dot(upper,lower)),blend=Math.min(1.5,length*.2);
+  const depths=[at(arm.root).depth,at(arm.joint).depth,at(arm.end).depth],bodyDepth=at(rig.body).depth;
+  const warp=(x,y)=>{
+   const offset={x:x-profile.root.x,y:y-profile.root.y},along=dot(offset,axis),across=offset.x*-axis.y+offset.y*axis.x;
+   const first=along<=hinge,a=first?root:joint,z=first?joint:end,t=first?along/(hinge||1):(along-hinge)/(length-hinge||1),center=mix(a,z,t);
+   const w=Math.max(0,Math.min(1,(along-hinge+blend)/(blend*2))),theta=upperAngle+bend*w*w*(3-2*w);
+   return {x:center.x-Math.sin(theta)*across*thickness,y:center.y+Math.cos(theta)*across*thickness};
+  };
   const mapped=new Map();
   for(const p of profile.pixels){
-   const part=partFor(p),[a,z,pa,pz,isNear]=segments[part];if(isNear!==near)continue;
-   const source=sub(z,a),length=Math.hypot(source.x,source.y)||1,axis=unit(source),target=unit(sub(pz,pa)),offset=sub(p,a),along=dot(offset,axis),t=Math.max(0,Math.min(1,along/length)),across=offset.x*-axis.y+offset.y*axis.x,tail=along-t*length,point=mix(pa,pz,t);
-   const q={x:point.x+(target.x*tail-target.y*across)*thickness,y:point.y+(target.y*tail+target.x*across)*thickness};
-   mapped.set(key(p.x,p.y),{...p,q,color:colors[p.index]});brush.dot(q.x,q.y,colors[p.index]);
-   if(Math.hypot(p.x-profile.end.x,p.y-profile.end.y)<=1.65){rig.artGripPixels??=new Map();if(!rig.artGripPixels.has(arm.side))rig.artGripPixels.set(arm.side,[]);rig.artGripPixels.get(arm.side).push({x:q.x,y:q.y,color:colors[p.index],near:isNear});}
+   const along=dot(sub(p,profile.root),axis),t=Math.max(0,Math.min(1,along/length)),depth=t<.5?depths[0]+(depths[1]-depths[0])*t*2:depths[1]+(depths[2]-depths[1])*(t-.5)*2;
+   mapped.set(key(p.x,p.y),{...p,q:warp(p.x,p.y),near:depth>=bodyDepth,color:colors[p.index]});
   }
-  for(const p of mapped.values())for(const [dx,dy]of [[1,0],[0,1],[1,1],[-1,1]]){
-   const other=mapped.get(key(p.x+dx,p.y+dy));if(other)brush.line(p.q,other.q,p.color);
-  }
-  // Inverse samples restore the cuff's texture after source adjacency bridges
-  // keep the elbow and shoulder connected through a bend.
-  if(!mapped.size)continue;
-  const points=[...mapped.values()].map(p=>p.q),left=Math.floor(Math.min(...points.map(p=>p.x))),right=Math.ceil(Math.max(...points.map(p=>p.x))),top=Math.floor(Math.min(...points.map(p=>p.y))),bottom=Math.ceil(Math.max(...points.map(p=>p.y)));
-  for(let y=top;y<=bottom;y++)for(let x=left;x<=right;x++)for(let part=0;part<2;part++){
-   const [a,z,pa,pz,isNear]=segments[part];if(isNear!==near)continue;
-   const target=sub(pz,pa),length=Math.hypot(target.x,target.y)||1,axis=unit(target),offset={x:x-pa.x,y:y-pa.y},along=dot(offset,axis),t=Math.max(0,Math.min(1,along/length)),across=(offset.x*-axis.y+offset.y*axis.x)/thickness,tail=(along-t*length)/thickness,sourceAxis=unit(sub(z,a)),base=mix(a,z,t),sx=Math.round(base.x+sourceAxis.x*tail-sourceAxis.y*across),sy=Math.round(base.y+sourceAxis.y*tail+sourceAxis.x*across),pixel=profile.grid.get(key(sx,sy));
-   if(pixel&&partFor(pixel)===part)brush.dot(x,y,colors[pixel.index]);
+  rig.artArmPixels??=new Map();if(!rig.artArmPixels.has(arm.side))rig.artArmPixels.set(arm.side,mapped);
+  for(const p of mapped.values()){
+   if(p.near!==near)continue;
+   // Adjacent source pixels share exactly the same warped cell corners.
+   // The old independent rigid halves left holes or loose source strips at
+   // the elbow. This continuous indexed mesh retains the painted width.
+   const corners=[[-.5,-.5],[.5,-.5],[.5,.5],[-.5,.5]].map(([dx,dy])=>warp(p.x+dx,p.y+dy));
+   brush.poly(corners,p.color);brush.dot(p.q.x,p.q.y,p.color);
+   for(const [dx,dy]of [[1,0],[0,1],[1,1],[-1,1]]){
+    const other=mapped.get(key(p.x+dx,p.y+dy));if(!other)continue;
+    if(dx&&dy&&(mapped.has(key(p.x+dx,p.y))||mapped.has(key(p.x,p.y+dy))))continue;
+    if(Math.max(Math.abs(Math.round(other.q.x)-Math.round(p.q.x)),Math.abs(Math.round(other.q.y)-Math.round(p.q.y)))>1)brush.line(p.q,other.q,p.color);
+   }
+   if(Math.hypot(p.x-profile.end.x,p.y-profile.end.y)<=1.65){rig.artGripPixels??=new Map();if(!rig.artGripPixels.has(arm.side))rig.artGripPixels.set(arm.side,[]);rig.artGripPixels.get(arm.side).push({x:p.q.x,y:p.q.y,color:p.color,near:p.near});}
   }
  }
 }

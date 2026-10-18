@@ -1,3 +1,4 @@
+import {ARM_WRISTS,ARM_SHOULDER_Y} from './companion-arm-bindings.js';
 // Registration is in the original 64px directional cells (E, SE, S, SW, W,
 // NW, N, NE). Each form owns its hands and body proportions. These values
 // never depend on an animated shoulder, gait phase, or palette recoloring.
@@ -54,10 +55,10 @@ export const ARM_ANATOMY={
 };
 export function armRegistration(identity,stage,dir){
  const profile=ARM_ANATOMY[identity]?.[stage];if(!profile)return null;
- const h=profile.hands[dir],hands={[-1]:{x:h[0],y:h[1]},[1]:{x:h[2],y:h[3]}};
+ const h=ARM_WRISTS[identity][stage][dir],hands={[-1]:{x:h[0],y:h[1]},[1]:{x:h[2],y:h[3]}};
  // Root positions follow the registered shoulder line and trunk width for
  // this form. Fore/aft hand heights retain the source's directional depth.
- const roots={};for(const side of [-1,1])roots[side]={x:32+side*Math.min(profile.torso,(Math.abs(hands[side].x-32)+profile.torso)*.5),y:profile.neck+2};
+ const roots={};for(const side of [-1,1])roots[side]={x:identity==='skeleton'?32+side*profile.torso:hands[side].x+(32-hands[side].x)*.25,y:Math.min(hands[side].y-2,ARM_SHOULDER_Y[identity][stage])};
  return {...profile,hands,roots};
 }
 

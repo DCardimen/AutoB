@@ -12,7 +12,7 @@ import {AUTHORED_LEGACY_STAGE1} from './authored-legacy-stage1-data.js';
 import {AUTHORED_LEGACY_STAGE2} from './authored-legacy-stage2-data.js';
 import {meleeWeaponBounds} from './melee-weapon-art.js';
 import {authoredArmArt} from './authored-arm-skin.js';
-import {authoredParts,connectAuthoredArm} from './authored-parts.js';
+import {authoredParts,connectAuthoredArm,constrainHeldGrip} from './authored-parts.js';
 import {NATURAL_ANATOMY,naturalHeadWeight,naturalHeadDelta,companionFallAngle} from './companion-anatomy.js';
 import {portraitExpressionAt,portraitExpressionLayer,portraitSourceOffset} from './portrait-expressions.js';
 import {characterRig,projectRig} from './prototype-rig.js';
@@ -265,6 +265,12 @@ export function paintAtlasCharacter(b,id,rig,at){
     if(['caster','frostelf'].includes(identity)&&Math.abs(x-32)<5&&y<44)delta=dc;
    }
    if(headWeight&&headRoll){const dx=x-headCenter.x,dy=y-headCenter.y;delta={x:delta.x+(dx*cos-dy*sin-dx)*headWeight,y:delta.y+(dx*sin+dy*cos-dy)*headWeight};}
+   // The physical shoulders turn during a cross-body swing. Foreshorten
+   // the connected painted chest with that same yaw, tapering into the
+   // neck and waist. Leaving a front-facing torso rigid made the two-hand
+   // reach circles disjoint during the middle of a side-swing recovery.
+   const shoulder=ease((y-headCut+2)/3),waist=1-ease((y-headCut-2)/Math.max(4,(parts?.registration.pelvis??40)-headCut-2));
+   delta={x:delta.x+(x-32)*scale.width*(Math.cos(rig.torsoYaw||0)-1)*shoulder*waist,y:delta.y};
   }else{
    const anatomy=NATURAL_ANATOMY[identity],headWeight=anatomy?.lockedHead||anatomy?.lockedTravelHead&&!action?0:naturalHeadWeight(identity,artStage,rig.dir,x,y);
    delta=mix(dc,paintedHead,headWeight);
@@ -476,13 +482,31 @@ export function paintAtlasCharacter(b,id,rig,at){
   const dx=bounds.minX<1?1-bounds.minX:bounds.maxX>62?62-bounds.maxX:0,dy=bounds.minY<1?1-bounds.minY:bounds.maxY>62?62-bounds.maxY:0;
   if(dx||dy){paintedGrip.x+=dx;paintedGrip.y+=dy;const elbow=rig.artLimbPoints.get(main.joint);elbow.x+=dx*.5;elbow.y+=dy*.5;}
  }
- // A two-handed handle and drawn bowstring share the held object's transform.
- if(main&&(id==='orc'||rig.bowString?.draw>.05))for(const arm of rig.arms.filter(a=>a!==main)){const held=heldPoint(arm.end),relaxed=rig.artLimbPoints.get(arm.end);rig.artLimbPoints.set(arm.end,{...held,...mix(held,relaxed,carryWeight)});}
+ // Solve the held object and BOTH wrists before solving the elbows. Moving
+ // a support wrist after IK stretched the source forearm into a loose strip.
+ const support=main&&(id==='orc'||rig.bowString?.draw>.05)?rig.arms.find(a=>a!==main):null;
+ if(parts&&main){
+  const radius=arm=>{const p=armArt.profiles.get(rig.artArmScreens[arm.side]);return Math.hypot(p.end.x-p.root.x,p.end.y-p.root.y)*fit*(scale.width+scale.height)/2;};
+  const constraints=[{center:rig.artArmRoots[main.side],radius:radius(main)}];
+  const relaxed=support&&rig.artLimbPoints.get(support.end),held=support&&heldPoint(support.end),weight=1-carryWeight;
+  if(support&&weight>1e-6){const root=rig.artArmRoots[support.side],offset=difference(held,paintedGrip);constraints.push({center:{x:(root.x-relaxed.x*carryWeight)/weight-offset.x,y:(root.y-relaxed.y*carryWeight)/weight-offset.y},radius:radius(support)/weight});}
+  const bounds=melee&&meleeWeaponBounds(rig,paintedGrip,heldPoint(rig.weapon.tip)),cell=bounds&&{minX:1+paintedGrip.x-bounds.minX,maxX:62+paintedGrip.x-bounds.maxX,minY:1+paintedGrip.y-bounds.minY,maxY:62+paintedGrip.y-bounds.maxY};
+  const fitted=constrainHeldGrip(paintedGrip,constraints,cell);Object.assign(paintedGrip,fitted);
+  rig.artGripConstraints={constraints,cell};
+  if(support){const held=heldPoint(support.end);Object.assign(relaxed,mix(held,relaxed,carryWeight));}
+  for(const arm of rig.arms){
+   const profile=armArt.profiles.get(rig.artArmScreens[arm.side]),root=rig.artArmRoots[arm.side],end=rig.artLimbPoints.get(arm.end),joint=rig.artLimbPoints.get(arm.joint),pose=connectAuthoredArm(profile,root,end,joint,fit*(scale.width+scale.height)/2);
+   // Keep the held object's exact contact. An infeasible pair is observable
+   // by the arm-length regression, never hidden by replacing just one wrist.
+   Object.assign(joint,pose.joint);
+   if(arm!==main&&arm!==support)Object.assign(end,pose.end);
+  }
+ }else if(support){const held=heldPoint(support.end),relaxed=rig.artLimbPoints.get(support.end);Object.assign(relaxed,mix(held,relaxed,carryWeight));}
  rig.artProject=q=>rig.artLimbPoints.has(q)?rig.artLimbPoints.get(q):heldPoint(q);
  rig.artShieldProject=q=>{const arm=rig.arms.find(a=>a.side===-1),h=arm&&rig.artLimbPoints.get(arm.end),g=rig.shield&&at(rig.shield.grip),v=at(q);return h&&g?{...v,x:h.x+(v.x-g.x)*fit,y:h.y+(v.y-g.y)*fit}:v;};
  rig.artGearPalette=asset.metal&&!rig.equipment?.includes('sunsteel-edge')?{...rig.palette,metal:asset.metal}:rig.palette;
  rig.artArmSkin=armArt?{art:armArt,colors:artColors,fit,scale,bodyPixels:bodyLayer}:null;
- rig.artGripPixels=new Map();
+ rig.artGripPixels=new Map();rig.artArmPixels=new Map();
  rig.artSourceProject=(x,y)=>anchor(warped(x,y));
  rig.artSourcePixels=new Map(layer.map((p,i)=>[p.y*64+p.x,anchor(pixels[i])]));
  rig.artParts=parts;

@@ -1,0 +1,35 @@
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+import {chromium} from 'playwright';
+import {PIXEL_SPECIES} from '../native-content.js';
+import {ARM_ANATOMY} from '../companion-anatomy.js';
+import {makeRun,creature,generateRoute} from '../game.js';
+import {runtimeFiles,fingerprint} from '../scripts/animation-contract.mjs';
+const out='playtest-artifacts/arm-roster-live',base=process.env.BASE_URL||'http://127.0.0.1:3000';fs.mkdirSync(out,{recursive:true});
+const inputFiles=[...runtimeFiles(),'Starfall-Menagerie.html','Starfall-Training-Glade.html','public/prototype-bundle.js'],inputs=fingerprint(inputFiles);
+const chunks=items=>Array.from({length:Math.ceil(items.length/12)},(_,i)=>items.slice(i*12,i*12+12));
+const armed=PIXEL_SPECIES.filter(s=>ARM_ANATOMY[s.nativeDesign||s.nativeRig]);
+const fixtures=[...chunks(PIXEL_SPECIES).map(specs=>({specs,evolution:0,evolutionPath:'wild'})),...[1,2].flatMap(evolution=>['wild','warden'].flatMap(evolutionPath=>chunks(armed).map(specs=>({specs,evolution,evolutionPath}))))];
+const browser=await chromium.launch({headless:true,executablePath:process.env.CHROMIUM_PATH||(process.platform==='win32'?'C:/Program Files/Google/Chrome/Application/chrome.exe':undefined)}),report=[];
+try{for(const offline of [false,true])for(const [fixtureIndex,fixture]of fixtures.entries()){
+ const {evolution,evolutionPath}=fixture,context=await browser.newContext({viewport:{width:1440,height:1000}}),page=await context.newPage(),errors=[],requests=[],url=base+(offline?'/Starfall-Menagerie.html':'/index.html');
+ page.on('pageerror',e=>errors.push(e.message));
+ if(offline)await page.route('**/*',r=>r.request().isNavigationRequest()&&r.request().url()===url?r.continue():(requests.push(r.request().url()),r.abort()));
+ const companion=(spec,i,side)=>({...creature(spec.id),evolution,evolutionPath,equipment:[],deploymentPosition:{x:side?530+(i>=3?35:0):430-(i>=3?35:0),y:320+i%3*95}});
+ const run=makeRun(491,['aurel']);run.team=fixture.specs.slice(0,6).map((s,i)=>companion(s,i,0));run.teamCapacity=6;run.route=generateRoute(run);
+ const foes=(fixture.specs.slice(6).length?fixture.specs.slice(6):PIXEL_SPECIES.slice(0,6)).map((s,i)=>companion(s,i,1));
+ await page.addInitScript(saved=>{localStorage.setItem('starfall-menagerie-v1',JSON.stringify(saved));sessionStorage.setItem('fang-feather-intro','seen');},{version:7,run,node:run.route[0][0],foes,phase:'prep',profile:{owned:run.team.map(c=>c.id),tutorial:true}});
+ await page.clock.install();await page.clock.pauseAt(await page.evaluate(()=>Date.now()+1000));await page.goto(url);await page.waitForFunction(()=>window.starfall);await page.locator('[data-action="battle"]').click();
+ await page.evaluate(()=>{window.armReview={};for(const u of starfall.state.battle.units){u.hp=u.maxHp=100000;armReview[u.uid]={id:u.id,states:[],finite:true};}setInterval(()=>{for(const u of starfall.state.battle.units){const a=u.nativeActor,r=armReview[u.uid],state=a?.action?(a.action.released?'recovery':'windup'):u.moving?'travel':'idle';if(!r.states.includes(state))r.states.push(state);r.finite&&=[u.x,u.y,a?.gait].every(Number.isFinite);}},50);});
+ const before=await page.locator('#battle-canvas').evaluate(c=>c.toDataURL());await page.clock.runFor(6500);
+ const result=await page.evaluate(()=>({units:Object.values(armReview),time:starfall.state.battle.time,phase:starfall.state.phase}));
+ assert.ok(fixture.specs.every(s=>result.units.some(u=>u.id===s.id)),'every requested roster entry actually spawned in the delivered battle');
+ assert.equal(result.phase,'battle');assert.ok(result.time>5);assert.ok(result.units.every(u=>u.finite&&u.states.length));assert.notEqual(await page.locator('#battle-canvas').evaluate(c=>c.toDataURL()),before);
+ assert.ok(result.units.some(u=>u.states.includes('windup')||u.states.includes('recovery')),'real attack animations occur');assert.deepEqual(errors,[]);assert.deepEqual(requests,[]);
+ if(fixtureIndex<2||evolution===2)await page.screenshot({path:`${out}/${offline?'offline':'source'}-${fixtureIndex}.png`});
+ report.push({offline,evolution,evolutionPath,species:fixture.specs.map(s=>s.id),...result,errors,requests});await context.close();
+ console.log(`${offline?'Offline':'Source'} ${fixtureIndex+1}/${fixtures.length}: ${fixture.specs.map(s=>s.id).join(', ')} / form ${evolution} ${evolutionPath}`);
+}}finally{await browser.close();fs.writeFileSync(out+'/report.json',JSON.stringify(report,null,2)+'\n');}
+for(const offline of [false,true])assert.deepEqual([...new Set(report.filter(r=>r.offline===offline).flatMap(r=>r.species))].sort(),PIXEL_SPECIES.map(s=>s.id).sort());
+assert.equal(report.length,fixtures.length*2);
+assert.deepEqual(fingerprint(inputFiles),inputs,'source and offline outputs must remain unchanged during roster verification');fs.writeFileSync(out+'/inputs.json',JSON.stringify(inputs,null,2)+'\n');

@@ -5,7 +5,7 @@ import {createHash} from 'node:crypto';
 export const hashFile=file=>createHash('sha256').update(fs.readFileSync(file)).digest('hex');
 export const runtimeFiles=()=>fs.readdirSync('.').filter(file=>file.endsWith('.js')&&file!=='expedition.js').sort();
 export const fingerprint=files=>Object.fromEntries(files.map(file=>[file,hashFile(file)]));
-export const states=['idle','walk','run','sprint','turn','stop','attack','cast','death'];
+export const states=['idle','walk','run','sprint','turn','stop','attack','slash','charge','cast','dash','dodge','hit','stagger','knockdown','getup','death'];
 export const stages=[
  {id:1,name:'Anatomy inventory'},
  {id:2,name:'Part separation'},

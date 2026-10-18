@@ -1,5 +1,4 @@
 import {armRegistration,capePixel} from './companion-anatomy.js';
-import {authoredArmArt} from './authored-arm-skin.js';
 const key=(x,y)=>y*64+x;
 const mix=(a,b,t)=>({x:a.x+(b.x-a.x)*t,y:a.y+(b.y-a.y)*t});
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
@@ -11,7 +10,8 @@ function armMaterial(identity,p){
  // Minotaur fur is warm brown, not a red cloak. Its gold/ochre midtones
  // have distinct green over blue; retain those painted upper-arm pixels.
  if(identity==='minotaur')return !(r>g*1.5&&g<b*1.25);
- if(['elf','fox'].includes(identity))return !(r>g*1.25&&g>b*1.4&&p.y<32);
+ if(identity==='elf')return !(r>g*1.25&&g>b*1.4&&r>135);
+ if(identity==='fox')return !(r>g*1.55&&g>b*1.5&&r>140);
  if(['caster','frostelf'].includes(identity))return !(range<60&&Math.min(r,g,b)>110);
  if(identity==='skeleton')return !(b>r*1.05&&b>g*1.1);
  return true;
@@ -27,22 +27,37 @@ export function authoredParts(asset,identity,stage,dir){
   const sample=near[0];if(!sample)continue;
   hands[side]={...sample};
   const root=registration.roots[side],end={x:sample.x,y:sample.y},joint=mix(root,end,.5);
-  const pixels=asset.pixels.filter(p=>{
-   if(p.y<registration.neck+1||side*(p.x-32)<registration.torso*.53)return false;
-   if(Math.hypot(p.x-end.x,p.y-end.y)<=registration.lower*.8)return true;
+  const candidates=asset.pixels.filter(p=>{
+   if(p.y<root.y-1||p.y>end.y+registration.lower)return false;
+   if(Math.hypot(p.x-end.x,p.y-end.y)<=registration.lower)return true;
+   if(side*(p.x-32)<registration.torso*.25)return false;
    if(!armMaterial(identity,p))return false;
    const region=segment(p,root,end),radius=registration.upper+(registration.lower-registration.upper)*region.t;
-   return region.distance<=radius;
+   return region.distance<=radius+.6;
   });
-  const profile={side,root,joint,end,pixels,grid:new Map(pixels.map(p=>[key(p.x,p.y),p]))};
+  // Ownership includes the source outline and enclosed cuff shading. Color
+  // tests alone left dark sleeve fragments in the torso, visible on a swing.
+  const selected=new Map(candidates.map(p=>[key(p.x,p.y),p]));
+  for(const p of candidates)for(const [dx,dy]of [[-1,0],[1,0],[0,-1],[0,1]]){
+   const q=grid.get(key(p.x+dx,p.y+dy));if(!q||q.y<root.y-1||q.y>end.y+registration.lower||side*(q.x-32)<registration.torso*.25)continue;
+   const region=segment(q,root,end),radius=registration.upper+(registration.lower-registration.upper)*region.t;
+   if(region.distance<=radius+.8&&Math.max(...q.rgb)<100)selected.set(key(q.x,q.y),q);
+  }
+  const pixels=[...selected.values()];
+  // The socket itself must be painted and touch the retained torso. The
+  // nominal source shoulder can lie in transparent space in profile views.
+  const contacts=pixels.filter(p=>p.y<=root.y+1&&[[-1,0],[1,0],[0,-1],[0,1]].some(([dx,dy])=>{const q=grid.get(key(p.x+dx,p.y+dy));return q&&!selected.has(key(q.x,q.y))&&Math.abs(q.x-32)<=Math.abs(p.x-32);}));
+  // The articulation is the INNER cuff edge, where it joins the trunk,
+  // rather than the outer silhouette beside the hand. An outer-edge pivot
+  // incorrectly shortens a foreshortened arm and makes two-hand IK infeasible.
+  contacts.sort((a,b)=>Math.abs(a.x-32)-Math.abs(b.x-32)||Math.abs(a.y-root.y)-Math.abs(b.y-root.y));
+  const cuff=contacts[0]||pixels.reduce((a,b)=>Math.hypot(a.x-root.x,a.y-root.y)<Math.hypot(b.x-root.x,b.y-root.y)?a:b);
+  // Pivot one source sample inside the jacket, on the BODY side of that
+  // seam. The visible cuff is the surface of the shoulder, not its joint.
+  // This retains the foreshortened upper arm under its original occluder.
+  const inside=[[-side,0],[0,-1],[0,1]].map(([dx,dy])=>grid.get(key(cuff.x+dx,cuff.y+dy))).find(p=>p&&!selected.has(key(p.x,p.y))&&Math.abs(p.x-32)<=Math.abs(cuff.x-32)),attached={x:inside?.x??cuff.x,y:inside?.y??cuff.y};
+  const profile={side,root:attached,joint:mix(attached,end,.5),end,pixels,grid:new Map(pixels.map(p=>[key(p.x,p.y),p]))};
   profiles.set(side,profile);for(const p of pixels)mask.add(key(p.x,p.y));
- }
- // The juvenile orc's west-facing far sleeve is only one source column.
- // Keep its reviewed connected ownership; a shoulder capsule would also
- // select the jacket that occludes this arm.
- if(identity==='orc'&&stage===0&&dir===4){
-  const far=authoredArmArt(asset,hands).profiles.get(1);
-  if(far){profiles.set(1,far);mask.clear();for(const arm of profiles.values())for(const p of arm.pixels)mask.add(key(p.x,p.y));}
  }
  const retained=asset.pixels.filter(p=>!mask.has(key(p.x,p.y))),bodyGrid=new Map(retained.map(p=>[key(p.x,p.y),p])),repairs=[];
  // A complete tapered trunk exists independently of the arms. Extend the
@@ -65,8 +80,41 @@ export function authoredParts(asset,identity,stage,dir){
 
 export function connectAuthoredArm(profile,root,goal,preferredJoint,scale){
  const upper=Math.hypot(profile.joint.x-profile.root.x,profile.joint.y-profile.root.y)*scale,lower=Math.hypot(profile.end.x-profile.joint.x,profile.end.y-profile.joint.y)*scale;
- const dx=goal.x-root.x,dy=goal.y-root.y,distance=Math.hypot(dx,dy)||.001,d=Math.min(distance,(upper+lower)*.999),axis={x:dx/distance,y:dy/distance},end={x:root.x+axis.x*d,y:root.y+axis.y*d};
+ const dx=goal.x-root.x,dy=goal.y-root.y,distance=Math.hypot(dx,dy)||.001,d=Math.min(distance,upper+lower),axis={x:dx/distance,y:dy/distance},end={x:root.x+axis.x*d,y:root.y+axis.y*d};
  const along=(upper*upper-lower*lower+d*d)/(2*d),height=Math.sqrt(Math.max(0,upper*upper-along*along)),base={x:root.x+axis.x*along,y:root.y+axis.y*along};
- const side=(preferredJoint.x-base.x)*-axis.y+(preferredJoint.y-base.y)*axis.x>=0?1:-1,joint={x:base.x-axis.y*height*side,y:base.y+axis.x*height*side};
+ // Keep the elbow on its authored bend branch. Selecting a branch from a
+ // crossing animated elbow snapped the whole sleeve to the other side.
+ const side=-profile.side,joint={x:base.x-axis.y*height*side,y:base.y+axis.x*height*side};
  return {root,joint,end};
+}
+
+export function constrainHeldGrip(goal,constraints,bounds){
+ // The nearest feasible point lies on one boundary, or at an intersection
+ // of two boundaries. Solve those explicitly: alternating projections can
+ // leave an arm stretched at nearly tangent reach circles even after many
+ // iterations, which becomes visible as an elbow pop in the next frame.
+ const candidates=[{...goal}],valid=p=>constraints.every(c=>Math.hypot(p.x-c.center.x,p.y-c.center.y)<=c.radius+1e-9)&&(!bounds||p.x>=bounds.minX-1e-9&&p.x<=bounds.maxX+1e-9&&p.y>=bounds.minY-1e-9&&p.y<=bounds.maxY+1e-9);
+ for(const c of constraints){const dx=goal.x-c.center.x,dy=goal.y-c.center.y,d=Math.hypot(dx,dy)||1;candidates.push({x:c.center.x+dx/d*c.radius,y:c.center.y+dy/d*c.radius});}
+ for(let i=0;i<constraints.length;i++)for(let j=i+1;j<constraints.length;j++){
+  const a=constraints[i],b=constraints[j],dx=b.center.x-a.center.x,dy=b.center.y-a.center.y,d=Math.hypot(dx,dy);if(!d||d>a.radius+b.radius||d<Math.abs(a.radius-b.radius))continue;
+  const along=(a.radius*a.radius-b.radius*b.radius+d*d)/(2*d),height=Math.sqrt(Math.max(0,a.radius*a.radius-along*along)),x=a.center.x+dx/d*along,y=a.center.y+dy/d*along;
+  for(const sign of [-1,1])candidates.push({x:x-dy/d*height*sign,y:y+dx/d*height*sign});
+ }
+ if(bounds){
+  candidates.push({x:clamp(goal.x,bounds.minX,bounds.maxX),y:clamp(goal.y,bounds.minY,bounds.maxY)});
+  for(const x of [bounds.minX,bounds.maxX])for(const y of [bounds.minY,bounds.maxY])candidates.push({x,y});
+  for(const c of constraints){
+   for(const x of [bounds.minX,bounds.maxX]){const h=c.radius*c.radius-(x-c.center.x)**2;if(h>=0)for(const sign of [-1,1])candidates.push({x,y:c.center.y+sign*Math.sqrt(h)});}
+   for(const y of [bounds.minY,bounds.maxY]){const h=c.radius*c.radius-(y-c.center.y)**2;if(h>=0)for(const sign of [-1,1])candidates.push({x:c.center.x+sign*Math.sqrt(h),y});}
+  }
+ }
+ const feasible=candidates.filter(valid).sort((a,b)=>Math.hypot(a.x-goal.x,a.y-goal.y)-Math.hypot(b.x-goal.x,b.y-goal.y));if(feasible.length)return feasible[0];
+ const result={...goal};
+ for(let i=0;i<80;i++){
+  let error=0;
+  for(const {center,radius}of constraints){const dx=result.x-center.x,dy=result.y-center.y,distance=Math.hypot(dx,dy);if(distance>radius){const amount=distance-radius;result.x-=dx/distance*amount;result.y-=dy/distance*amount;error=Math.max(error,amount);}}
+  if(bounds){const x=clamp(result.x,bounds.minX,bounds.maxX),y=clamp(result.y,bounds.minY,bounds.maxY);error=Math.max(error,Math.abs(x-result.x),Math.abs(y-result.y));result.x=x;result.y=y;}
+  if(error<1e-9)break;
+ }
+ return result;
 }

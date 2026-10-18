@@ -1,0 +1,10 @@
+{"naturalFamilies":29,"poses":35496,"quads":26205840,"minArea":0.0649875694638062}
+✔ painted natural heads and necks retain positive area through every facing, form and motion state (78560.2088ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 78768.1403

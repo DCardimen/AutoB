@@ -15,11 +15,13 @@ test('base Brakk removes the old sleeves/hands from the body and paints one auth
   assert.ok(skin,'authored arm skin is active');assert.ok(skin.art.mask.size>=10,'actual source cuff/hand pixels are extracted');
   assert.equal(skin.bodyPixels.filter(p=>!p.bodyUnderlay&&skin.art.mask.has(p.y*64+p.x)).length,0,'no old arm is left in the costume layer');
   for(const profile of skin.art.profiles.values()){
+   assert.ok(profile.pixels.length>=8,'source arm width and cuff texture are retained');
    if(dir===4&&profile.side===1){
-    // The original west-facing far hand is a six-pixel, one-column sliver.
-    // Preserve that occlusion instead of manufacturing a broad second arm.
-    assert.equal(profile.pixels.length,6);assert.equal(new Set(profile.pixels.map(p=>p.x)).size,1);
-   }else assert.ok(profile.pixels.length>=8,'source arm width and cuff texture are retained');
+    // In the original west cell the complete NEAR glove is at x35-39.
+    // The old x40 landmark selected only its outside outline column.
+    assert.ok(profile.grid.has(35*64+37),'the actual green glove moves');
+    assert.ok(new Set(profile.pixels.map(p=>p.x)).size>=4,'the complete source glove retains its width');
+   }
   }
   assert.equal(pixels.clipped,0);
  }
