@@ -2,6 +2,14 @@ import {armRegistration,capePixel} from './companion-anatomy.js';
 const key=(x,y)=>y*64+x;
 const mix=(a,b,t)=>({x:a.x+(b.x-a.x)*t,y:a.y+(b.y-a.y)*t});
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+export const MELEE_ARM_FAMILIES=new Set(['knight','orc','dwarf','troll','goblin','minotaur','rogue']);
+function meleeOverlay(identity,p){
+ const [r,g,b]=p.rgb;
+ // A cape crosses the shoulder as well as the lower jacket. The generic
+ // cape classifier's neck/width gates are unsuitable for arm extraction.
+ return ['knight','goblin','orc'].includes(identity)?r>g*1.8&&g<b*1.5:identity==='rogue'?b>r*1.08:false;
+}
+export function occludedMeleeArm(identity,dir,side){return identity==='rogue'&&(dir===6||dir===5&&side===1||dir===7&&side===-1);}
 function segment(p,a,z){const dx=z.x-a.x,dy=z.y-a.y,t=clamp(((p.x-a.x)*dx+(p.y-a.y)*dy)/(dx*dx+dy*dy||1),0,1),q=mix(a,z,t);return {distance:Math.hypot(p.x-q.x,p.y-q.y),t};}
 function armMaterial(identity,p){
  const [r,g,b]=p.rgb,range=Math.max(r,g,b)-Math.min(r,g,b);
@@ -23,6 +31,16 @@ function torsoOccluder(identity,p,registration){
 }
 function torsoEnvelope(pixels,identity,registration,profiles){
  const arms=[...profiles.values()],top=Math.min(...arms.map(a=>a.root.y))-2;
+ if(MELEE_ARM_FAMILIES.has(identity)){
+  // The chest ends at the jacket side, not at the resting fist. In
+  // particular, the source outline around a hand is not a body landmark.
+  const rows=new Map(),shoulder=Math.min(...Object.values(registration.roots).map(p=>p.y))+2;
+  for(let y=top;y<=registration.pelvis;y++){
+   const taper=clamp((y-shoulder)/(registration.pelvis-shoulder||1),0,1),radius=registration.torso*(1-.22*taper);
+   rows.set(y,{left:Math.ceil(32-radius),right:Math.floor(32+radius)});
+  }
+  return rows;
+ }
  // Follow the actual painted side outline around the removed sleeve. A
  // generic chest radius still leaves a hollow strip inside that outline.
  const radius=Math.max(registration.torso+registration.upper*2,...arms.flatMap(a=>a.pixels.map(p=>Math.abs(p.x-32)+2)));
@@ -51,6 +69,15 @@ export function authoredParts(asset,identity,stage,dir){
  const registration=armRegistration(identity,stage,dir);if(!registration)return null;
  const grid=new Map(asset.pixels.map(p=>[key(p.x,p.y),p])),hands={},profiles=new Map(),mask=new Set();
  for(const side of [-1,1]){
+  if(occludedMeleeArm(identity,dir,side)){
+   // The rear cloak contains no painted hand. Preserve that entire cloak,
+   // and use the same form's authored front arm beneath it. Translate its
+   // indexed skin to the fixed concealed socket; depth decides when a hand
+   // emerges. Cutting a blue "arm" out of the cape erased costume artwork.
+   const sourceDir=2,source=authoredParts(asset.sourceFrame(sourceDir),identity,stage,sourceDir).arms.profiles.get(side),end=registration.hands[side],dx=end.x-source.end.x,dy=end.y-source.end.y;
+   const translate=p=>({...p,x:p.x+dx,y:p.y+dy}),pixels=source.pixels.map(translate),profile={...source,root:translate(source.root),joint:translate(source.joint),end:{...end},pixels,grid:new Map(pixels.map(p=>[key(p.x,p.y),p])),occluded:true,sourceDir};
+   profiles.set(side,profile);hands[side]={...profile.grid.get(key(end.x,end.y))};continue;
+  }
   const socket=registration.hands[side],near=asset.pixels.filter(p=>Math.hypot(p.x-socket.x,p.y-socket.y)<=3).sort((a,b)=>Math.hypot(a.x-socket.x,a.y-socket.y)-Math.hypot(b.x-socket.x,b.y-socket.y));
   const sample=near[0];if(!sample)continue;
   hands[side]={...sample};
@@ -58,16 +85,18 @@ export function authoredParts(asset,identity,stage,dir){
   const candidates=asset.pixels.filter(p=>{
    if(p.y<root.y-1||p.y>end.y+registration.lower)return false;
    if(Math.hypot(p.x-end.x,p.y-end.y)<=registration.lower)return true;
-   if(side*(p.x-32)<registration.torso*.25)return false;
+   if(MELEE_ARM_FAMILIES.has(identity)&&meleeOverlay(identity,p))return false;
+   if(!(MELEE_ARM_FAMILIES.has(identity)&&side*(end.x-32)<registration.torso*.25)&&side*(p.x-32)<registration.torso*.25)return false;
    if(!armMaterial(identity,p))return false;
    const region=segment(p,root,end),radius=registration.upper+(registration.lower-registration.upper)*region.t;
    return region.distance<=radius+.6;
   });
   // Ownership includes the source outline and enclosed cuff shading. Color
   // tests alone left dark sleeve fragments in the torso, visible on a swing.
-  const selected=new Map(candidates.map(p=>[key(p.x,p.y),p]));
+  const selected=new Map(candidates.filter(p=>!mask.has(key(p.x,p.y))).map(p=>[key(p.x,p.y),p]));
   for(const p of candidates)for(const [dx,dy]of [[-1,0],[1,0],[0,-1],[0,1]]){
-   const q=grid.get(key(p.x+dx,p.y+dy));if(!q||q.y<root.y-1||q.y>end.y+registration.lower||side*(q.x-32)<registration.torso*.25)continue;
+   const q=grid.get(key(p.x+dx,p.y+dy));if(!q||mask.has(key(q.x,q.y))||q.y<root.y-1||q.y>end.y+registration.lower||side*(q.x-32)<registration.torso*.25)continue;
+   if(MELEE_ARM_FAMILIES.has(identity)&&meleeOverlay(identity,q))continue;
    const region=segment(q,root,end),radius=registration.upper+(registration.lower-registration.upper)*region.t;
    if(region.distance<=radius+.8&&Math.max(...q.rgb)<100)selected.set(key(q.x,q.y),q);
   }
@@ -86,6 +115,24 @@ export function authoredParts(asset,identity,stage,dir){
   const inside=[[-side,0],[0,-1],[0,1]].map(([dx,dy])=>grid.get(key(cuff.x+dx,cuff.y+dy))).find(p=>p&&!selected.has(key(p.x,p.y))&&Math.abs(p.x-32)<=Math.abs(cuff.x-32)),attached={x:inside?.x??cuff.x,y:inside?.y??cuff.y};
   const profile={side,root:attached,joint:mix(attached,end,.5),end,pixels,grid:new Map(pixels.map(p=>[key(p.x,p.y),p]))};
   profiles.set(side,profile);for(const p of pixels)mask.add(key(p.x,p.y));
+ }
+ if(MELEE_ARM_FAMILIES.has(identity)){
+  // Complete the painted sleeve/hand INCLUDING its outside outline. Keep
+  // the established inner shoulder pivot; outline ownership must not
+  // change the physical reach or choose a different wielding hand.
+  const rows=torsoEnvelope(asset.pixels,identity,registration,profiles);
+  for(const profile of profiles.values()){
+   if(profile.occluded)continue;
+   const {side,end}=profile,root=registration.roots[side];
+   for(const p of asset.pixels){
+    if(mask.has(key(p.x,p.y))||p.y<root.y-2||p.y>Math.min(registration.pelvis-1,end.y+Math.ceil(registration.lower)+1)||side*(p.x-32)<registration.torso*.25)continue;
+    if(p.y>end.y&&Math.abs(p.x-32)<=registration.torso)continue; // inner thigh/hip, below the fist
+    if(meleeOverlay(identity,p))continue;
+    const row=rows.get(p.y),outside=!row||p.x<row.left||p.x>row.right,hand=Math.hypot(p.x-end.x,p.y-end.y)<=registration.lower+1.5;
+    if(!hand&&!outside)continue;
+    profile.pixels.push(p);profile.grid.set(key(p.x,p.y),p);mask.add(key(p.x,p.y));
+   }
+  }
  }
  const retained=asset.pixels.filter(p=>!mask.has(key(p.x,p.y))),bodyGrid=new Map(retained.map(p=>[key(p.x,p.y),p])),repairs=[];
  const bodyRows=torsoEnvelope(retained,identity,registration,profiles);

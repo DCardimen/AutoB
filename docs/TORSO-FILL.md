@@ -1,5 +1,7 @@
 # Body beneath moving arms
 
+Archived PR65 review. Its outer sleeve contour caused a stationary arm shape beneath the moving arm. See [Melee arm ownership](MELEE-ARM-OWNERSHIP.md) and the [current individual combat review](../public/melee-arm-review/index.html) for the correction and current evidence.
+
 The previous arm pass left a narrow strip of repaired torso. Removing a sleeve exposed the larger unpainted cutout beside that strip. Its tests checked the repairs that existed, so they did not catch the missing area.
 
 The body now has an independent indexed underpainting across its full shoulder-to-waist contour, derived from the source shoulder caps, jacket sides and waist. The adjacent torso texture continues into each arm opening. Hair and cape overlays have body material underneath too. The body moves with the trunk, independently of the arms.

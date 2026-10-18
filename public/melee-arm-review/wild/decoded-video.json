@@ -1,0 +1,1932 @@
+{
+  "schema": 2,
+  "status": "passed",
+  "videoHash": "1a0700d503d76fb79819b121562bdfe1032844d2a3ff703eeb0df691c4df7949",
+  "manifestHash": "cd87a03d5fa53a2c51f869153f61af6bd07999021c58cac9587233ab845f186c",
+  "playbackRate": 1,
+  "dimensions": [
+    960,
+    208
+  ],
+  "duration": 164,
+  "enlargedFamilies": [
+    "troll",
+    "dwarf",
+    "knight",
+    "orc",
+    "goblin",
+    "minotaur",
+    "rogue"
+  ],
+  "coverage": {
+    "states": [
+      "idle",
+      "walk",
+      "run",
+      "sprint",
+      "turn",
+      "stop",
+      "attack",
+      "slash",
+      "charge",
+      "cast",
+      "dash",
+      "dodge",
+      "hit",
+      "stagger",
+      "knockdown",
+      "getup",
+      "death"
+    ],
+    "directions": 8,
+    "segments": 136
+  },
+  "captures": [
+    {
+      "file": "decoded-0-idle.png",
+      "time": 0.916667,
+      "state": "idle",
+      "dir": 0,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "knight",
+        "orc",
+        "goblin"
+      ],
+      "sha256": "c4c263ccc69a43b96915a41a2add9ff8f563cc57b51249cf7b271bfeddcb3f0c"
+    },
+    {
+      "file": "decoded-0-walk.png",
+      "time": 2.666667,
+      "state": "walk",
+      "dir": 0,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "minotaur",
+        "rogue",
+        "knight"
+      ],
+      "sha256": "4faba84fccd295f0e3e27b33152f027c5548af660477a37c1bb44cfece8336ee"
+    },
+    {
+      "file": "decoded-0-run.png",
+      "time": 3.833333,
+      "state": "run",
+      "dir": 0,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "orc",
+        "goblin",
+        "minotaur"
+      ],
+      "sha256": "31488c71cd314963c6872f18b84fe8cc27efae36a9dfa278e58bbac6e40c314f"
+    },
+    {
+      "file": "decoded-0-sprint.png",
+      "time": 4.75,
+      "state": "sprint",
+      "dir": 0,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "rogue",
+        "knight",
+        "orc"
+      ],
+      "sha256": "e05077bd3fa3ce6aae69de6746f982b23c4bc131f3591ba7e7a0646c66b6ed0a"
+    },
+    {
+      "file": "decoded-0-turn.png",
+      "time": 5.666667,
+      "state": "turn",
+      "dir": 0,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "goblin",
+        "minotaur",
+        "rogue"
+      ],
+      "sha256": "9f24db1ab554c688a172cb545795a72c656face6084907589bf1863e2d7135cf"
+    },
+    {
+      "file": "decoded-0-stop.png",
+      "time": 6.666667,
+      "state": "stop",
+      "dir": 0,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "knight",
+        "orc",
+        "goblin"
+      ],
+      "sha256": "a92aa845c81cc3e3697b016719cf0cf1fcdd7574a268067fa9f9be5228ae3ca8"
+    },
+    {
+      "file": "decoded-0-attack.png",
+      "time": 7.833333,
+      "state": "attack",
+      "dir": 0,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "minotaur",
+        "rogue"
+      ],
+      "sha256": "a22723fd826491a02951b583c41c4d4ad679e7c83fc3924efada64b4380cb1a0"
+    },
+    {
+      "file": "decoded-0-slash.png",
+      "time": 9.166667,
+      "state": "slash",
+      "dir": 0,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "knight",
+        "orc",
+        "goblin"
+      ],
+      "sha256": "ec3fe3647c532f50810560f13f50c80e9f12f65202af0f53949c168a36067e47"
+    },
+    {
+      "file": "decoded-0-charge.png",
+      "time": 10.5,
+      "state": "charge",
+      "dir": 0,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "minotaur",
+        "rogue",
+        "knight"
+      ],
+      "sha256": "091062dedfbb3c6a43d2f3ca44dd951e5d639606ed47fce50e036608e89963cf"
+    },
+    {
+      "file": "decoded-0-cast.png",
+      "time": 11.833333,
+      "state": "cast",
+      "dir": 0,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "orc",
+        "goblin",
+        "minotaur"
+      ],
+      "sha256": "bc7c3d0dee9a8889b6c2243c8ed12de3938254a2892db4b31c1d2e1b429d553b"
+    },
+    {
+      "file": "decoded-0-dash.png",
+      "time": 13,
+      "state": "dash",
+      "dir": 0,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "rogue",
+        "knight",
+        "orc"
+      ],
+      "sha256": "fee1945e190ab8f47f7f2ee7ceee1069418c5f93ddaab9cde3c9e7e02a456d79"
+    },
+    {
+      "file": "decoded-0-dodge.png",
+      "time": 14,
+      "state": "dodge",
+      "dir": 0,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "goblin",
+        "minotaur",
+        "rogue"
+      ],
+      "sha256": "7a2661d60071ef74b48a8ece300e9857066e7715062db1cbf11102a81f0fb95c"
+    },
+    {
+      "file": "decoded-0-hit.png",
+      "time": 15,
+      "state": "hit",
+      "dir": 0,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "knight",
+        "orc",
+        "goblin"
+      ],
+      "sha256": "f2cfff66f2badb0a6abb03e46e3d9e73d727b6f3955a09fd1ba0dfec0d72b1a7"
+    },
+    {
+      "file": "decoded-0-stagger.png",
+      "time": 16,
+      "state": "stagger",
+      "dir": 0,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "minotaur",
+        "rogue"
+      ],
+      "sha256": "e6db9bd6b6cd26c9db19e7ad97a61f4f03d681610c2c4aa63fb31f020dc1bcb5"
+    },
+    {
+      "file": "decoded-0-knockdown.png",
+      "time": 17.166667,
+      "state": "knockdown",
+      "dir": 0,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "knight",
+        "orc",
+        "goblin"
+      ],
+      "sha256": "1945e885e297f2756054e3550ae2e9ebe55a63bc2b51a432368e734efead7e21"
+    },
+    {
+      "file": "decoded-0-getup.png",
+      "time": 18.5,
+      "state": "getup",
+      "dir": 0,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "minotaur",
+        "rogue",
+        "knight"
+      ],
+      "sha256": "df5fcc62faccd9ef9f9895e1041a206765458e8fb11de25412cc50e1d8db4d18"
+    },
+    {
+      "file": "decoded-0-death.png",
+      "time": 19.833333,
+      "state": "death",
+      "dir": 0,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "orc",
+        "goblin",
+        "minotaur"
+      ],
+      "sha256": "8985ef24e99b1047b9dcc6c415c6436620c67c9b6d1fa71a9dd979d6e1130af9"
+    },
+    {
+      "file": "decoded-1-idle.png",
+      "time": 21.416667,
+      "state": "idle",
+      "dir": 1,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "rogue",
+        "knight",
+        "orc"
+      ],
+      "sha256": "e19eb231ce3672477c61738ebf3316419dfba8bcd0160fb0f24fece59955c7ef"
+    },
+    {
+      "file": "decoded-1-walk.png",
+      "time": 23.166667,
+      "state": "walk",
+      "dir": 1,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "goblin",
+        "minotaur",
+        "rogue"
+      ],
+      "sha256": "a3ac43d60eacb8c8bd8fda81bab396ff03ceb4fd25e0ae2f8f1bfbd6a929a907"
+    },
+    {
+      "file": "decoded-1-run.png",
+      "time": 24.333333,
+      "state": "run",
+      "dir": 1,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "knight",
+        "orc",
+        "goblin"
+      ],
+      "sha256": "5164b66b20b22b3a39441dafb72911131680f96542d9fc77b66439bcb8936edf"
+    },
+    {
+      "file": "decoded-1-sprint.png",
+      "time": 25.25,
+      "state": "sprint",
+      "dir": 1,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "minotaur",
+        "rogue"
+      ],
+      "sha256": "6ac6fe7c64954ce8c4a4c95c7b09309b31ce06976e184f7c1196c0b153296312"
+    },
+    {
+      "file": "decoded-1-turn.png",
+      "time": 26.166667,
+      "state": "turn",
+      "dir": 1,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "knight",
+        "orc",
+        "goblin"
+      ],
+      "sha256": "dbff30a5fa0c6a24badabe5805927d2ee89c1d8d19cd91fd8b01e34908842ced"
+    },
+    {
+      "file": "decoded-1-stop.png",
+      "time": 27.166667,
+      "state": "stop",
+      "dir": 1,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "minotaur",
+        "rogue",
+        "knight"
+      ],
+      "sha256": "c0d2c67f25f370a8ca369b639a2ac89a710f912d7fb1f31debd87943c8253b47"
+    },
+    {
+      "file": "decoded-1-attack.png",
+      "time": 28.333333,
+      "state": "attack",
+      "dir": 1,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "orc",
+        "goblin",
+        "minotaur"
+      ],
+      "sha256": "f166a4afee181494b06aa6e3f2ba7deeb73128eb48807d5cb0bb251746773723"
+    },
+    {
+      "file": "decoded-1-slash.png",
+      "time": 29.666667,
+      "state": "slash",
+      "dir": 1,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "rogue",
+        "knight",
+        "orc"
+      ],
+      "sha256": "d96e1af84ea9e8b4acfb62318298cdd85a2207bd3701bc159844da56af406293"
+    },
+    {
+      "file": "decoded-1-charge.png",
+      "time": 31,
+      "state": "charge",
+      "dir": 1,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "goblin",
+        "minotaur",
+        "rogue"
+      ],
+      "sha256": "906c0db0f4abe98268cc3e571ad8117feab099a62fce7be5e8a50e2e772ac6a9"
+    },
+    {
+      "file": "decoded-1-cast.png",
+      "time": 32.333333,
+      "state": "cast",
+      "dir": 1,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "knight",
+        "orc",
+        "goblin"
+      ],
+      "sha256": "19dac8b62507906fe96adf2ee4ca725e8612fdb05069f2b9dac05f93dcc1bfac"
+    },
+    {
+      "file": "decoded-1-dash.png",
+      "time": 33.5,
+      "state": "dash",
+      "dir": 1,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "minotaur",
+        "rogue"
+      ],
+      "sha256": "bb4de85bdc0d3c18e5c9e193ec8dc668498e53d027a250eca5f7462da1c123a4"
+    },
+    {
+      "file": "decoded-1-dodge.png",
+      "time": 34.5,
+      "state": "dodge",
+      "dir": 1,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "knight",
+        "orc",
+        "goblin"
+      ],
+      "sha256": "78fc8a8a60b8c7cf031bb67af55b89b77ad122a38c4df728dc6276ae7e06d925"
+    },
+    {
+      "file": "decoded-1-hit.png",
+      "time": 35.5,
+      "state": "hit",
+      "dir": 1,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "minotaur",
+        "rogue",
+        "knight"
+      ],
+      "sha256": "14f3550354125a56513aa5fd1700451d67267c9d139c575d5c69a047e0f992e5"
+    },
+    {
+      "file": "decoded-1-stagger.png",
+      "time": 36.5,
+      "state": "stagger",
+      "dir": 1,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "orc",
+        "goblin",
+        "minotaur"
+      ],
+      "sha256": "d4c9b9203e2bed5c3e6c49fea335cd88e8cb33cc82459862d16e30759dd8790e"
+    },
+    {
+      "file": "decoded-1-knockdown.png",
+      "time": 37.666667,
+      "state": "knockdown",
+      "dir": 1,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "rogue",
+        "knight",
+        "orc"
+      ],
+      "sha256": "0ac9f6f53ab870e3c378b0bb1c9b8143c11620718ad4416dc56434cc0ad00bdf"
+    },
+    {
+      "file": "decoded-1-getup.png",
+      "time": 39,
+      "state": "getup",
+      "dir": 1,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "goblin",
+        "minotaur",
+        "rogue"
+      ],
+      "sha256": "b0d4a44d2ab5033eb2a94836272889293936aa97b22228ea7be3ca25433d0999"
+    },
+    {
+      "file": "decoded-1-death.png",
+      "time": 40.333333,
+      "state": "death",
+      "dir": 1,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "knight",
+        "orc",
+        "goblin"
+      ],
+      "sha256": "23c44660a42e5070b9fbcbb03785fa60367a3f0ef7c874ddb20f920252134103"
+    },
+    {
+      "file": "decoded-2-idle.png",
+      "time": 41.916667,
+      "state": "idle",
+      "dir": 2,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "minotaur",
+        "rogue"
+      ],
+      "sha256": "23da127e3b01bde0a46b24e05a15b25c4c69e038daec49ab366b1dabc481553f"
+    },
+    {
+      "file": "decoded-2-walk.png",
+      "time": 43.666667,
+      "state": "walk",
+      "dir": 2,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "knight",
+        "orc",
+        "goblin"
+      ],
+      "sha256": "c3e40cb3081fa3b4df7a238269d5034b6b4c744358c77ebb98033e5c6f60fae1"
+    },
+    {
+      "file": "decoded-2-run.png",
+      "time": 44.833333,
+      "state": "run",
+      "dir": 2,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "minotaur",
+        "rogue",
+        "knight"
+      ],
+      "sha256": "baf85a6f6e1ca0612715b331a74195a91f71e88852952dd257dd6cc499303bb9"
+    },
+    {
+      "file": "decoded-2-sprint.png",
+      "time": 45.75,
+      "state": "sprint",
+      "dir": 2,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "orc",
+        "goblin",
+        "minotaur"
+      ],
+      "sha256": "d39a297c41c9480526b6e58669d2ab90d319177e616898cb0521aaeb3c626261"
+    },
+    {
+      "file": "decoded-2-turn.png",
+      "time": 46.666667,
+      "state": "turn",
+      "dir": 2,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "rogue",
+        "knight",
+        "orc"
+      ],
+      "sha256": "c7ac7ba7f1245ed094fe3a3d754e76baf2dd488778e430ed8b815982423d8837"
+    },
+    {
+      "file": "decoded-2-stop.png",
+      "time": 47.666667,
+      "state": "stop",
+      "dir": 2,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "goblin",
+        "minotaur",
+        "rogue"
+      ],
+      "sha256": "21c248d61b483cc2b575880adddca99e73f5240b1b66c1481e052b47fe1c1196"
+    },
+    {
+      "file": "decoded-2-attack.png",
+      "time": 48.833333,
+      "state": "attack",
+      "dir": 2,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "knight",
+        "orc",
+        "goblin"
+      ],
+      "sha256": "bbb6e32d105e9fde49901389e81316ef68ba62f99a1ebe4030ab793110a91a00"
+    },
+    {
+      "file": "decoded-2-slash.png",
+      "time": 50.166667,
+      "state": "slash",
+      "dir": 2,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "minotaur",
+        "rogue"
+      ],
+      "sha256": "febc138f954d685203c0be73bd6fad88c57f1d07be1fc59ec460d628a7fe7c7f"
+    },
+    {
+      "file": "decoded-2-charge.png",
+      "time": 51.5,
+      "state": "charge",
+      "dir": 2,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "knight",
+        "orc",
+        "goblin"
+      ],
+      "sha256": "c0feb32c6b09a7127c621e071ff85cb2a8c31bae5dcff0418e33ead0278f84fa"
+    },
+    {
+      "file": "decoded-2-cast.png",
+      "time": 52.833333,
+      "state": "cast",
+      "dir": 2,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "minotaur",
+        "rogue",
+        "knight"
+      ],
+      "sha256": "4f584ccf50292479c693947922e6e8a0a5f83c5bc6cec44d3dad7c5b89f73087"
+    },
+    {
+      "file": "decoded-2-dash.png",
+      "time": 54,
+      "state": "dash",
+      "dir": 2,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "orc",
+        "goblin",
+        "minotaur"
+      ],
+      "sha256": "e332d0fdb21f3bd85a93503e5eefee06b8624200c6af91362809bd8217c90d59"
+    },
+    {
+      "file": "decoded-2-dodge.png",
+      "time": 55,
+      "state": "dodge",
+      "dir": 2,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "rogue",
+        "knight",
+        "orc"
+      ],
+      "sha256": "b6f7bc65eda8a5ea456a5b0044db3044e6592cc8250405ec9181f6a5e222493f"
+    },
+    {
+      "file": "decoded-2-hit.png",
+      "time": 56,
+      "state": "hit",
+      "dir": 2,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "goblin",
+        "minotaur",
+        "rogue"
+      ],
+      "sha256": "fd43f6df555565e7b71da44d2d8a90a27d08f12e851e6eb55db98747dbd30c40"
+    },
+    {
+      "file": "decoded-2-stagger.png",
+      "time": 57,
+      "state": "stagger",
+      "dir": 2,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "knight",
+        "orc",
+        "goblin"
+      ],
+      "sha256": "ec6f8a43d2112a9f52ca651da6f679887b2e16d44838d5cc9bc4b64ce89e61e6"
+    },
+    {
+      "file": "decoded-2-knockdown.png",
+      "time": 58.166667,
+      "state": "knockdown",
+      "dir": 2,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "minotaur",
+        "rogue"
+      ],
+      "sha256": "d2574fef002b2a57d1d2470fecd8e5e5fad4c5ac4e0263bc8346bf9419d46941"
+    },
+    {
+      "file": "decoded-2-getup.png",
+      "time": 59.5,
+      "state": "getup",
+      "dir": 2,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "knight",
+        "orc",
+        "goblin"
+      ],
+      "sha256": "23defaccbb9e5f0c2a5592883c5d0875bae434f9c85fca7da23284d270eab53a"
+    },
+    {
+      "file": "decoded-2-death.png",
+      "time": 60.833333,
+      "state": "death",
+      "dir": 2,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "minotaur",
+        "rogue",
+        "knight"
+      ],
+      "sha256": "d819ae97e071ea38869e67b736cf907c240705bedf0c8649e7bfd060c4d1576e"
+    },
+    {
+      "file": "decoded-3-idle.png",
+      "time": 62.416667,
+      "state": "idle",
+      "dir": 3,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "orc",
+        "goblin",
+        "minotaur"
+      ],
+      "sha256": "4a42e0e2a7c2e385ef61b4917acc3e484249e3bed35bd7e8c3f79e33397d674b"
+    },
+    {
+      "file": "decoded-3-walk.png",
+      "time": 64.166667,
+      "state": "walk",
+      "dir": 3,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "rogue",
+        "knight",
+        "orc"
+      ],
+      "sha256": "9553df6c86333a6251e47dbed23f4ac8c71797670220bfada127e3610a3160de"
+    },
+    {
+      "file": "decoded-3-run.png",
+      "time": 65.333333,
+      "state": "run",
+      "dir": 3,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "goblin",
+        "minotaur",
+        "rogue"
+      ],
+      "sha256": "c53452e60d42381f35c09df0fde75e211851686fc1b5ada5271cbb3114523538"
+    },
+    {
+      "file": "decoded-3-sprint.png",
+      "time": 66.25,
+      "state": "sprint",
+      "dir": 3,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "knight",
+        "orc",
+        "goblin"
+      ],
+      "sha256": "e1b053dc551851837502bea2443aa27ad2568e6225bdeea8fc76fc9c9ba2d9a5"
+    },
+    {
+      "file": "decoded-3-turn.png",
+      "time": 67.166667,
+      "state": "turn",
+      "dir": 3,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "minotaur",
+        "rogue"
+      ],
+      "sha256": "2a0fd130cf5ddea33c0e573488d3be3251990925595224857363f18d61e60cc0"
+    },
+    {
+      "file": "decoded-3-stop.png",
+      "time": 68.166667,
+      "state": "stop",
+      "dir": 3,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "knight",
+        "orc",
+        "goblin"
+      ],
+      "sha256": "5030fc3c974aaa8fdda74291f3af8c1f2e62c6dfc9dbb9c0ce8e478ebdef28fc"
+    },
+    {
+      "file": "decoded-3-attack.png",
+      "time": 69.333333,
+      "state": "attack",
+      "dir": 3,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "minotaur",
+        "rogue",
+        "knight"
+      ],
+      "sha256": "ecccd560301cbe38476d66a96e5ed1aee15d1cb1cdf9d2d8bf0545e0ab817d40"
+    },
+    {
+      "file": "decoded-3-slash.png",
+      "time": 70.666667,
+      "state": "slash",
+      "dir": 3,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "orc",
+        "goblin",
+        "minotaur"
+      ],
+      "sha256": "8887e8e71a4b1a353b635bb44a7cc39959360ee309dced67605ad4b5757c5993"
+    },
+    {
+      "file": "decoded-3-charge.png",
+      "time": 72,
+      "state": "charge",
+      "dir": 3,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "rogue",
+        "knight",
+        "orc"
+      ],
+      "sha256": "9d54b1f8e7b8d2d51ba218d1dc546ddcbb5aa9951eb3a832873abd02c0eb99f0"
+    },
+    {
+      "file": "decoded-3-cast.png",
+      "time": 73.333333,
+      "state": "cast",
+      "dir": 3,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "goblin",
+        "minotaur",
+        "rogue"
+      ],
+      "sha256": "7c525eb061d7446a1a5f3555b2f91f1e861a2586734b6b38e76816cf7d5725cf"
+    },
+    {
+      "file": "decoded-3-dash.png",
+      "time": 74.5,
+      "state": "dash",
+      "dir": 3,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "knight",
+        "orc",
+        "goblin"
+      ],
+      "sha256": "672ada3368b72122f6023a960490602e2cba30af226648b1e6efe90ac123c198"
+    },
+    {
+      "file": "decoded-3-dodge.png",
+      "time": 75.5,
+      "state": "dodge",
+      "dir": 3,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "minotaur",
+        "rogue"
+      ],
+      "sha256": "6be139f89fad3854f4233a27320f5fea8b8b12e0d598ed85bcddb3e199529d66"
+    },
+    {
+      "file": "decoded-3-hit.png",
+      "time": 76.5,
+      "state": "hit",
+      "dir": 3,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "knight",
+        "orc",
+        "goblin"
+      ],
+      "sha256": "71d581b79817918b68381c9cb4c0894c4cd98c706cc48ab169164a886e86d314"
+    },
+    {
+      "file": "decoded-3-stagger.png",
+      "time": 77.5,
+      "state": "stagger",
+      "dir": 3,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "minotaur",
+        "rogue",
+        "knight"
+      ],
+      "sha256": "d6f91618a8a5cc0a8afdbf37497f06c59c4c268430fca977cc7a4b5ce4092bf9"
+    },
+    {
+      "file": "decoded-3-knockdown.png",
+      "time": 78.666667,
+      "state": "knockdown",
+      "dir": 3,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "orc",
+        "goblin",
+        "minotaur"
+      ],
+      "sha256": "579d5dd86fac98a500cad7b9cdb503fc7d68e6185874a7ff93a92298737d1af3"
+    },
+    {
+      "file": "decoded-3-getup.png",
+      "time": 80,
+      "state": "getup",
+      "dir": 3,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "rogue",
+        "knight",
+        "orc"
+      ],
+      "sha256": "3963291274942d5bbfa96a68cb631445e7e3d4aff0959e3dfb7be0066a4d7ffa"
+    },
+    {
+      "file": "decoded-3-death.png",
+      "time": 81.333333,
+      "state": "death",
+      "dir": 3,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "goblin",
+        "minotaur",
+        "rogue"
+      ],
+      "sha256": "4de4be34fb0694becc39eedf127c3ffc9b8f3cc8ad5aee5acc9a069f3542c6c1"
+    },
+    {
+      "file": "decoded-4-idle.png",
+      "time": 82.916667,
+      "state": "idle",
+      "dir": 4,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "knight",
+        "orc",
+        "goblin"
+      ],
+      "sha256": "4b219a0cf4869c1d7df703ba0480153d614a93046bc8b8dd621299bf662e967a"
+    },
+    {
+      "file": "decoded-4-walk.png",
+      "time": 84.666667,
+      "state": "walk",
+      "dir": 4,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "minotaur",
+        "rogue"
+      ],
+      "sha256": "f897100aef3e5af4fc4523afd96092f20dd448776da07e6540dbf343776bfaea"
+    },
+    {
+      "file": "decoded-4-run.png",
+      "time": 85.833333,
+      "state": "run",
+      "dir": 4,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "knight",
+        "orc",
+        "goblin"
+      ],
+      "sha256": "b56b59fd66b13d4db066c1d2d3b5fcd2b5cd394248747c33ccb2ca11add908bf"
+    },
+    {
+      "file": "decoded-4-sprint.png",
+      "time": 86.75,
+      "state": "sprint",
+      "dir": 4,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "minotaur",
+        "rogue",
+        "knight"
+      ],
+      "sha256": "5193202d207aeb8a6d814cd7052c0e810180c27235cff0bfb2cbafa40b034a85"
+    },
+    {
+      "file": "decoded-4-turn.png",
+      "time": 87.666667,
+      "state": "turn",
+      "dir": 4,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "orc",
+        "goblin",
+        "minotaur"
+      ],
+      "sha256": "93dde34881259b6b1dac7f1d2c0b456865de7e31e3fd87412d29a9565bcfd963"
+    },
+    {
+      "file": "decoded-4-stop.png",
+      "time": 88.666667,
+      "state": "stop",
+      "dir": 4,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "rogue",
+        "knight",
+        "orc"
+      ],
+      "sha256": "20bf94e79304f0cc1e17e05c4fc4073e5adef0819bf920fb764bdaf477f950aa"
+    },
+    {
+      "file": "decoded-4-attack.png",
+      "time": 89.833333,
+      "state": "attack",
+      "dir": 4,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "goblin",
+        "minotaur",
+        "rogue"
+      ],
+      "sha256": "225b425b10146c31ebbe164f240bfd7116300860911d15163ba52738d7c21c57"
+    },
+    {
+      "file": "decoded-4-slash.png",
+      "time": 91.166667,
+      "state": "slash",
+      "dir": 4,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "knight",
+        "orc",
+        "goblin"
+      ],
+      "sha256": "02a00a00cb7a5e5610567bda740e6484a545741f356e78d8687e5f91b5a4f058"
+    },
+    {
+      "file": "decoded-4-charge.png",
+      "time": 92.5,
+      "state": "charge",
+      "dir": 4,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "minotaur",
+        "rogue"
+      ],
+      "sha256": "7768da4eeaa6d3adb0f9cdc8e78a2bf81753ba1093ef40fa9aeb6bfe623f16d7"
+    },
+    {
+      "file": "decoded-4-cast.png",
+      "time": 93.833333,
+      "state": "cast",
+      "dir": 4,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "knight",
+        "orc",
+        "goblin"
+      ],
+      "sha256": "4326db120395df68ad491672ec7108f1453e617638300f54b99a55bbb828a9a7"
+    },
+    {
+      "file": "decoded-4-dash.png",
+      "time": 95,
+      "state": "dash",
+      "dir": 4,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "minotaur",
+        "rogue",
+        "knight"
+      ],
+      "sha256": "787ac72c30d91d34c08f5185b72d4a851afbc3dd4468595ca1be3a5d84c91363"
+    },
+    {
+      "file": "decoded-4-dodge.png",
+      "time": 96,
+      "state": "dodge",
+      "dir": 4,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "orc",
+        "goblin",
+        "minotaur"
+      ],
+      "sha256": "71241501ecbea1d1524ed9b90f701ee1cdc9a71d31e74a941f386de072ec426e"
+    },
+    {
+      "file": "decoded-4-hit.png",
+      "time": 97,
+      "state": "hit",
+      "dir": 4,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "rogue",
+        "knight",
+        "orc"
+      ],
+      "sha256": "4fb0878bbe643376b1e1f45a35856f60a68e3d34389f8ecf26dfc277fba1145d"
+    },
+    {
+      "file": "decoded-4-stagger.png",
+      "time": 98,
+      "state": "stagger",
+      "dir": 4,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "goblin",
+        "minotaur",
+        "rogue"
+      ],
+      "sha256": "d3bc18bcd289d11456866f38574b8a1ee0c1ca4fbdf0998129c33e6ee0e3fb41"
+    },
+    {
+      "file": "decoded-4-knockdown.png",
+      "time": 99.166667,
+      "state": "knockdown",
+      "dir": 4,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "knight",
+        "orc",
+        "goblin"
+      ],
+      "sha256": "df0989c7f0fc6cb80067ac1b0c1f86f2469b0f12e1c833d0a2ae72ceb1540e50"
+    },
+    {
+      "file": "decoded-4-getup.png",
+      "time": 100.5,
+      "state": "getup",
+      "dir": 4,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "minotaur",
+        "rogue"
+      ],
+      "sha256": "1995e6d7dd0e747613475709082bf7bfe23490ac8e0ae7dbc13cb24ee1a55dee"
+    },
+    {
+      "file": "decoded-4-death.png",
+      "time": 101.833333,
+      "state": "death",
+      "dir": 4,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "knight",
+        "orc",
+        "goblin"
+      ],
+      "sha256": "a4843c594780e8dac21c4e903f3daf550bc512a902280bf0ad9bce498ed80ab3"
+    },
+    {
+      "file": "decoded-5-idle.png",
+      "time": 103.416667,
+      "state": "idle",
+      "dir": 5,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "minotaur",
+        "rogue",
+        "knight"
+      ],
+      "sha256": "cedce6c2f3472e8b373a4e6455600f58b20add167fe1220ad6575d78dd38c8c0"
+    },
+    {
+      "file": "decoded-5-walk.png",
+      "time": 105.166667,
+      "state": "walk",
+      "dir": 5,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "orc",
+        "goblin",
+        "minotaur"
+      ],
+      "sha256": "bd15446bb21639c824ea67070b1fde4d6d49df055f04b48167c0503392792d6c"
+    },
+    {
+      "file": "decoded-5-run.png",
+      "time": 106.333333,
+      "state": "run",
+      "dir": 5,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "rogue",
+        "knight",
+        "orc"
+      ],
+      "sha256": "887baf3675b6f68d458131276e7da958afa16c5b741e50ce2dcde7510cc780fe"
+    },
+    {
+      "file": "decoded-5-sprint.png",
+      "time": 107.25,
+      "state": "sprint",
+      "dir": 5,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "goblin",
+        "minotaur",
+        "rogue"
+      ],
+      "sha256": "e5c7fd7f17207671595bcde88aacb6ca66b8d79d29ed2c233b2b35e1b65f13a2"
+    },
+    {
+      "file": "decoded-5-turn.png",
+      "time": 108.166667,
+      "state": "turn",
+      "dir": 5,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "knight",
+        "orc",
+        "goblin"
+      ],
+      "sha256": "2fb6aadb0a4c668f361334b728ca0e4a758ecc953bfd49a7895d61dca8994f03"
+    },
+    {
+      "file": "decoded-5-stop.png",
+      "time": 109.166667,
+      "state": "stop",
+      "dir": 5,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "minotaur",
+        "rogue"
+      ],
+      "sha256": "8be3c17c59f2279b8359f206a71471bfa6135f26d6053393cb349397a40ce2c7"
+    },
+    {
+      "file": "decoded-5-attack.png",
+      "time": 110.333333,
+      "state": "attack",
+      "dir": 5,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "knight",
+        "orc",
+        "goblin"
+      ],
+      "sha256": "d0a9387da96171ba920b6ccc50c35d5b7122a4a77c9ff9dc4ca9ea9d168b4a45"
+    },
+    {
+      "file": "decoded-5-slash.png",
+      "time": 111.666667,
+      "state": "slash",
+      "dir": 5,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "minotaur",
+        "rogue",
+        "knight"
+      ],
+      "sha256": "a1baba6d6f25dfd0928b5bb36cb9c8e76e7522501f8f0de907fdeb1cf8a1dc20"
+    },
+    {
+      "file": "decoded-5-charge.png",
+      "time": 113,
+      "state": "charge",
+      "dir": 5,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "orc",
+        "goblin",
+        "minotaur"
+      ],
+      "sha256": "d530d808279fcceda544857ec3eb964e66c61ef9ddb8f5aa85b2e1fd7b8d998e"
+    },
+    {
+      "file": "decoded-5-cast.png",
+      "time": 114.333333,
+      "state": "cast",
+      "dir": 5,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "rogue",
+        "knight",
+        "orc"
+      ],
+      "sha256": "b458ae8d33a9e2b4ac319b14665763ec2272e43146665fd2a2cbee3654083335"
+    },
+    {
+      "file": "decoded-5-dash.png",
+      "time": 115.5,
+      "state": "dash",
+      "dir": 5,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "goblin",
+        "minotaur",
+        "rogue"
+      ],
+      "sha256": "b6fb95ecbcbe516badd37424130a4804dacfb307f3471e1969e0d53e50f830c9"
+    },
+    {
+      "file": "decoded-5-dodge.png",
+      "time": 116.5,
+      "state": "dodge",
+      "dir": 5,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "knight",
+        "orc",
+        "goblin"
+      ],
+      "sha256": "5e677bd56c57b0501376732d5952fd40271140fe153f176b3ce9f93e113c037f"
+    },
+    {
+      "file": "decoded-5-hit.png",
+      "time": 117.5,
+      "state": "hit",
+      "dir": 5,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "minotaur",
+        "rogue"
+      ],
+      "sha256": "c79cad7bcf619283e50fc0e7053799e0b21866ab24e00650b5cf0ceda4819758"
+    },
+    {
+      "file": "decoded-5-stagger.png",
+      "time": 118.5,
+      "state": "stagger",
+      "dir": 5,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "knight",
+        "orc",
+        "goblin"
+      ],
+      "sha256": "ab30fc3bc8d494e4a64186a712598071ae4bdec049b4429c5424cd4ebcbeb916"
+    },
+    {
+      "file": "decoded-5-knockdown.png",
+      "time": 119.666667,
+      "state": "knockdown",
+      "dir": 5,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "minotaur",
+        "rogue",
+        "knight"
+      ],
+      "sha256": "f5804ad8bcddfbc7d479bfc9bea16cfe382efb9e6eae80a7ed4437d0768feec3"
+    },
+    {
+      "file": "decoded-5-getup.png",
+      "time": 121,
+      "state": "getup",
+      "dir": 5,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "orc",
+        "goblin",
+        "minotaur"
+      ],
+      "sha256": "84307b49b497ed66f5a67f9539efd7f52c5545e567aa8842c165d7c6f2d61bcc"
+    },
+    {
+      "file": "decoded-5-death.png",
+      "time": 122.333333,
+      "state": "death",
+      "dir": 5,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "rogue",
+        "knight",
+        "orc"
+      ],
+      "sha256": "bcdc007e7ab86b014680d215233ca82519c6e7e86d5147e159111af4f6833670"
+    },
+    {
+      "file": "decoded-6-idle.png",
+      "time": 123.916667,
+      "state": "idle",
+      "dir": 6,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "goblin",
+        "minotaur",
+        "rogue"
+      ],
+      "sha256": "bbf36f30a0fc50208f5d47114a68b8372a886bcaa798ef28b8b6eb4ef0c3f8f5"
+    },
+    {
+      "file": "decoded-6-walk.png",
+      "time": 125.666667,
+      "state": "walk",
+      "dir": 6,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "knight",
+        "orc",
+        "goblin"
+      ],
+      "sha256": "f1161dfc2c1bf77a3d948294a3ea56380ff65eaed1fcd9bd5b8e8b7482418964"
+    },
+    {
+      "file": "decoded-6-run.png",
+      "time": 126.833333,
+      "state": "run",
+      "dir": 6,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "minotaur",
+        "rogue"
+      ],
+      "sha256": "d4720d1c7f5c839f979753f23a519c1f272747f07fc7afd3f4b8e588f92c1591"
+    },
+    {
+      "file": "decoded-6-sprint.png",
+      "time": 127.75,
+      "state": "sprint",
+      "dir": 6,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "knight",
+        "orc",
+        "goblin"
+      ],
+      "sha256": "82dc53531dff5cba5ab8a3389fefb735cff14856b905ae5782d9fa096383de2c"
+    },
+    {
+      "file": "decoded-6-turn.png",
+      "time": 128.666667,
+      "state": "turn",
+      "dir": 6,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "minotaur",
+        "rogue",
+        "knight"
+      ],
+      "sha256": "c6d8aa2980b7a5840daa8ae926f729f34521612fba577e729f9d1a1312234067"
+    },
+    {
+      "file": "decoded-6-stop.png",
+      "time": 129.666667,
+      "state": "stop",
+      "dir": 6,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "orc",
+        "goblin",
+        "minotaur"
+      ],
+      "sha256": "be300253f569cb951002363ac7a41dfda4388c64d91ebf3d95fe8337e5418ad7"
+    },
+    {
+      "file": "decoded-6-attack.png",
+      "time": 130.833333,
+      "state": "attack",
+      "dir": 6,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "rogue",
+        "knight",
+        "orc"
+      ],
+      "sha256": "b61090381975397c7684e64efb62c886a10bcc1c6b2075f93442633928255387"
+    },
+    {
+      "file": "decoded-6-slash.png",
+      "time": 132.166667,
+      "state": "slash",
+      "dir": 6,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "goblin",
+        "minotaur",
+        "rogue"
+      ],
+      "sha256": "f866f9a47877d8f21f48f0d5fec99be982afeb9a5fecac5cccee9cc88627525f"
+    },
+    {
+      "file": "decoded-6-charge.png",
+      "time": 133.5,
+      "state": "charge",
+      "dir": 6,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "knight",
+        "orc",
+        "goblin"
+      ],
+      "sha256": "f7ee50cef0d83946e767cabdbc41b898172b0cf3bd302f0ac683b17465094ae9"
+    },
+    {
+      "file": "decoded-6-cast.png",
+      "time": 134.833333,
+      "state": "cast",
+      "dir": 6,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "minotaur",
+        "rogue"
+      ],
+      "sha256": "a06a37af40620bc3bde78e3b57ee60d32bc6d5018b0405baef3ce3aacfb782c6"
+    },
+    {
+      "file": "decoded-6-dash.png",
+      "time": 136,
+      "state": "dash",
+      "dir": 6,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "knight",
+        "orc",
+        "goblin"
+      ],
+      "sha256": "4acdd2e8d5fe06cf6e09730adb55fa5638c5b917755999206fbd12baeea27da6"
+    },
+    {
+      "file": "decoded-6-dodge.png",
+      "time": 137,
+      "state": "dodge",
+      "dir": 6,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "minotaur",
+        "rogue",
+        "knight"
+      ],
+      "sha256": "afba8775f175c7181ac0b6839536e1647e08bb3c4251361448c10e6d9e755c5e"
+    },
+    {
+      "file": "decoded-6-hit.png",
+      "time": 138,
+      "state": "hit",
+      "dir": 6,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "orc",
+        "goblin",
+        "minotaur"
+      ],
+      "sha256": "322ffd60cb47dba029fd8b5f4f243aa7dc111100c6f261d8bfdffd6ea524f4ff"
+    },
+    {
+      "file": "decoded-6-stagger.png",
+      "time": 139,
+      "state": "stagger",
+      "dir": 6,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "rogue",
+        "knight",
+        "orc"
+      ],
+      "sha256": "0ae74e9e4d82baa26355c99b806883777d839c6b491c54a27e6debda9b069f49"
+    },
+    {
+      "file": "decoded-6-knockdown.png",
+      "time": 140.166667,
+      "state": "knockdown",
+      "dir": 6,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "goblin",
+        "minotaur",
+        "rogue"
+      ],
+      "sha256": "8f975d4bc662a699e68348a5bf2ab3d35f89ac88f5dfe8079b62be9c3f31ddd6"
+    },
+    {
+      "file": "decoded-6-getup.png",
+      "time": 141.5,
+      "state": "getup",
+      "dir": 6,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "knight",
+        "orc",
+        "goblin"
+      ],
+      "sha256": "a3ba6367a5fe4dcbdf8ccd6b5bdbba1a52cbba8f73c1744f2070cb54c6accff7"
+    },
+    {
+      "file": "decoded-6-death.png",
+      "time": 142.833333,
+      "state": "death",
+      "dir": 6,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "minotaur",
+        "rogue"
+      ],
+      "sha256": "293697d06a68a5c63c2e0dea7e1705e48a2207a4524a42b0d79323fec83b2656"
+    },
+    {
+      "file": "decoded-7-idle.png",
+      "time": 144.416667,
+      "state": "idle",
+      "dir": 7,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "knight",
+        "orc",
+        "goblin"
+      ],
+      "sha256": "ef0895a61b23855ccdd8f39b363cd8ed21a9752339f3a44ac27b50b9f29dac4b"
+    },
+    {
+      "file": "decoded-7-walk.png",
+      "time": 146.166667,
+      "state": "walk",
+      "dir": 7,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "minotaur",
+        "rogue",
+        "knight"
+      ],
+      "sha256": "88ae635d7e464f197467919b2fd6d617ca6362da03dbdedcbda951b9bd3f4bbb"
+    },
+    {
+      "file": "decoded-7-run.png",
+      "time": 147.333333,
+      "state": "run",
+      "dir": 7,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "orc",
+        "goblin",
+        "minotaur"
+      ],
+      "sha256": "75f70bb667db3e6117c197036c0d72a8bf81fdbb1e8a833d60d678c4d4dc9621"
+    },
+    {
+      "file": "decoded-7-sprint.png",
+      "time": 148.25,
+      "state": "sprint",
+      "dir": 7,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "rogue",
+        "knight",
+        "orc"
+      ],
+      "sha256": "0f53a5c479fd42dfce17f717baa066228b1c3ce9ff17bde04e3ce6df02492712"
+    },
+    {
+      "file": "decoded-7-turn.png",
+      "time": 149.166667,
+      "state": "turn",
+      "dir": 7,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "goblin",
+        "minotaur",
+        "rogue"
+      ],
+      "sha256": "8f1a2b26cf293f91d5b3ebacd84e83b7c876662127a9e53408e7efc030c0e67d"
+    },
+    {
+      "file": "decoded-7-stop.png",
+      "time": 150.166667,
+      "state": "stop",
+      "dir": 7,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "knight",
+        "orc",
+        "goblin"
+      ],
+      "sha256": "a9b784e0b9768f0eb5d699c90d045006a4ee722a024795a82a306e6886b3994e"
+    },
+    {
+      "file": "decoded-7-attack.png",
+      "time": 151.333333,
+      "state": "attack",
+      "dir": 7,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "minotaur",
+        "rogue"
+      ],
+      "sha256": "caef3e3a59a9ebd72535bd0819c67bf5cc632aefe645c7afbaba0512c2b3956b"
+    },
+    {
+      "file": "decoded-7-slash.png",
+      "time": 152.666667,
+      "state": "slash",
+      "dir": 7,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "knight",
+        "orc",
+        "goblin"
+      ],
+      "sha256": "90a4efa6018a1299c905b769e501847f146b54c5a942f30ae220eefde74a7174"
+    },
+    {
+      "file": "decoded-7-charge.png",
+      "time": 154,
+      "state": "charge",
+      "dir": 7,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "minotaur",
+        "rogue",
+        "knight"
+      ],
+      "sha256": "3017d188f2796033dd647d121d8a8f7fff10e8385b7f2eafd900636c74a3475e"
+    },
+    {
+      "file": "decoded-7-cast.png",
+      "time": 155.333333,
+      "state": "cast",
+      "dir": 7,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "orc",
+        "goblin",
+        "minotaur"
+      ],
+      "sha256": "81c168bf8ecaaff083c2e3668761e0f642ab0cc146482b3216310b99ef6aa4ad"
+    },
+    {
+      "file": "decoded-7-dash.png",
+      "time": 156.5,
+      "state": "dash",
+      "dir": 7,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "rogue",
+        "knight",
+        "orc"
+      ],
+      "sha256": "8e8bb7a32c0b9a8ead2028a2f042db3e6b4ce708266348395a26319faea7ad09"
+    },
+    {
+      "file": "decoded-7-dodge.png",
+      "time": 157.5,
+      "state": "dodge",
+      "dir": 7,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "goblin",
+        "minotaur",
+        "rogue"
+      ],
+      "sha256": "aa237f5f065773a1ed42492dcdd2c74f1fa51484bb6b888353e466dc0566e36b"
+    },
+    {
+      "file": "decoded-7-hit.png",
+      "time": 158.5,
+      "state": "hit",
+      "dir": 7,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "knight",
+        "orc",
+        "goblin"
+      ],
+      "sha256": "8f8602f559d6f1231f7b5b3e0af2ddb939806ab738bd4bbbb68e413c5e16f3f7"
+    },
+    {
+      "file": "decoded-7-stagger.png",
+      "time": 159.5,
+      "state": "stagger",
+      "dir": 7,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "minotaur",
+        "rogue"
+      ],
+      "sha256": "2c6e89172f27c5b4a230e61fe824c6bf7631ed145ec4d0704d2e8b549b0874e1"
+    },
+    {
+      "file": "decoded-7-knockdown.png",
+      "time": 160.666667,
+      "state": "knockdown",
+      "dir": 7,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "knight",
+        "orc",
+        "goblin"
+      ],
+      "sha256": "8a7a93e47c0ca0ef122c9ceca681061f83731ac9519b919c717e80ed55f2dc09"
+    },
+    {
+      "file": "decoded-7-getup.png",
+      "time": 162,
+      "state": "getup",
+      "dir": 7,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "minotaur",
+        "rogue",
+        "knight"
+      ],
+      "sha256": "4ae4c54eb4d44695ed281de844008fa06115e01b4572724a697cf947e03f0a82"
+    },
+    {
+      "file": "decoded-7-death.png",
+      "time": 163.333333,
+      "state": "death",
+      "dir": 7,
+      "enlargedFamilies": [
+        "troll",
+        "dwarf",
+        "orc",
+        "goblin",
+        "minotaur"
+      ],
+      "sha256": "d0485c47dec55f9bac2b209cd78adde5e98ee02b7690b5b689425102694caf9e"
+    }
+  ],
+  "errors": []
+}

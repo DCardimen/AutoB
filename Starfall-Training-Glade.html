@@ -2706,6 +2706,34 @@
     const n = Math.hypot(v.x, v.y) || 1;
     return { x: v.x / n, y: v.y / n };
   };
+  function skinProjection(profile, root, joint, end, fit, scale) {
+    const axis = unit2(sub(profile.end, profile.root)), length2 = Math.hypot(profile.end.x - profile.root.x, profile.end.y - profile.root.y) || 1, hinge = dot2(sub(profile.joint, profile.root), axis), thickness = fit * scale.width;
+    const upper = unit2(sub(joint, root)), lower = unit2(sub(end, joint)), upperAngle = Math.atan2(upper.y, upper.x), bend = Math.atan2(upper.x * lower.y - upper.y * lower.x, dot2(upper, lower)), blend = Math.min(1.5, length2 * 0.2);
+    const warp = (x, y) => {
+      const offset = { x: x - profile.root.x, y: y - profile.root.y }, along = dot2(offset, axis), across = offset.x * -axis.y + offset.y * axis.x;
+      const first = along <= hinge, a = first ? root : joint, z = first ? joint : end, t = first ? along / (hinge || 1) : (along - hinge) / (length2 - hinge || 1), center = mix2(a, z, t);
+      const w = Math.max(0, Math.min(1, (along - hinge + blend) / (blend * 2))), theta = upperAngle + bend * w * w * (3 - 2 * w);
+      return { x: center.x - Math.sin(theta) * across * thickness, y: center.y + Math.cos(theta) * across * thickness };
+    };
+    return { warp, axis, length: length2 };
+  }
+  function authoredArmBounds(rig) {
+    const { art, fit, scale } = rig.artArmSkin, points = [];
+    for (const arm of rig.arms) {
+      const profile = art.profiles.get(rig.artArmScreens[arm.side]);
+      if (!profile) continue;
+      const root = rig.artArmRoots[arm.side], joint = rig.artProject(arm.joint), end = rig.artProject(arm.end);
+      profile.skinPadding ?? (profile.skinPadding = Math.max(...profile.pixels.map((p) => {
+        const dx = profile.end.x - profile.root.x, dy = profile.end.y - profile.root.y, t = Math.max(0, Math.min(1, ((p.x - profile.root.x) * dx + (p.y - profile.root.y) * dy) / (dx * dx + dy * dy || 1)));
+        return Math.hypot(p.x - profile.root.x - dx * t, p.y - profile.root.y - dy * t) + 1;
+      })));
+      const pad = profile.skinPadding * fit * Math.max(scale.width, scale.height);
+      if ([root, joint, end].every((p) => p.x - pad >= 1 && p.x + pad <= 62 && p.y - pad >= 1 && p.y + pad <= 62)) continue;
+      const { warp } = skinProjection(profile, root, joint, end, fit, scale);
+      for (const p of profile.pixels) for (const [dx, dy] of [[-0.5, -0.5], [0.5, -0.5], [0.5, 0.5], [-0.5, 0.5]]) points.push(warp(p.x + dx, p.y + dy));
+    }
+    return points;
+  }
   function authoredArmArt(asset, hands) {
     if (asset.armArt) return asset.armArt;
     const grid = new Map(asset.pixels.map((p) => [key(p.x, p.y), p])), profiles2 = /* @__PURE__ */ new Map(), mask = /* @__PURE__ */ new Set();
@@ -2747,15 +2775,8 @@
       const profile = art.profiles.get(rig.artArmScreens[arm.side]);
       if (!profile) continue;
       const root = rig.artArmRoots[arm.side], joint = rig.artProject(arm.joint), end = rig.artProject(arm.end);
-      const axis = unit2(sub(profile.end, profile.root)), length2 = Math.hypot(profile.end.x - profile.root.x, profile.end.y - profile.root.y) || 1, hinge = dot2(sub(profile.joint, profile.root), axis), thickness = fit * scale.width;
-      const upper = unit2(sub(joint, root)), lower = unit2(sub(end, joint)), upperAngle = Math.atan2(upper.y, upper.x), bend = Math.atan2(upper.x * lower.y - upper.y * lower.x, dot2(upper, lower)), blend = Math.min(1.5, length2 * 0.2);
+      const { warp, axis, length: length2 } = skinProjection(profile, root, joint, end, fit, scale);
       const depths = [at(arm.root).depth, at(arm.joint).depth, at(arm.end).depth], bodyDepth = at(rig.body).depth;
-      const warp = (x, y) => {
-        const offset = { x: x - profile.root.x, y: y - profile.root.y }, along = dot2(offset, axis), across = offset.x * -axis.y + offset.y * axis.x;
-        const first = along <= hinge, a = first ? root : joint, z = first ? joint : end, t = first ? along / (hinge || 1) : (along - hinge) / (length2 - hinge || 1), center = mix2(a, z, t);
-        const w = Math.max(0, Math.min(1, (along - hinge + blend) / (blend * 2))), theta = upperAngle + bend * w * w * (3 - 2 * w);
-        return { x: center.x - Math.sin(theta) * across * thickness, y: center.y + Math.cos(theta) * across * thickness };
-      };
       const mapped = /* @__PURE__ */ new Map();
       for (const p of profile.pixels) {
         const along = dot2(sub(p, profile.root), axis), t = Math.max(0, Math.min(1, along / length2)), depth = t < 0.5 ? depths[0] + (depths[1] - depths[0]) * t * 2 : depths[1] + (depths[2] - depths[1]) * (t - 0.5) * 2;
@@ -2791,13 +2812,13 @@
   var ARM_WRISTS = {
     knight: [
       [[25, 36, 42, 35], [24, 36, 42, 35], [22, 36, 42, 36], [22, 34, 39, 36], [21, 34, 36, 36], [24, 36, 42, 34], [23, 36, 42, 36], [23, 34, 41, 36]],
-      [[27, 30, 44, 30], [24, 31, 44, 31], [20, 32, 45, 32], [20, 30, 42, 32], [19, 30, 36, 32], [22, 31, 44, 30], [20, 32, 45, 32], [21, 30, 43, 31]],
-      [[27, 30, 46, 30], [24, 31, 46, 31], [21, 31, 46, 31], [20, 30, 43, 31], [18, 30, 37, 30], [23, 31, 45, 30], [21, 30, 46, 30], [21, 30, 45, 31]]
+      [[27, 30, 44, 30], [24, 31, 44, 31], [20, 32, 45, 32], [20, 30, 42, 32], [19, 30, 28, 34], [22, 31, 44, 30], [20, 32, 45, 32], [21, 30, 43, 31]],
+      [[27, 30, 46, 30], [24, 31, 46, 31], [21, 31, 46, 31], [20, 30, 43, 31], [18, 30, 32, 32], [23, 31, 45, 30], [21, 30, 46, 30], [21, 30, 45, 31]]
     ],
     orc: [
       [[23, 35, 43, 34], [23, 35, 43, 34], [21, 35, 43, 35], [21, 34, 41, 35], [20, 34, 37, 35], [22, 35, 42, 34], [21, 35, 43, 35], [22, 34, 42, 35]],
-      [[23, 32, 47, 30], [21, 32, 48, 31], [17, 32, 49, 32], [18, 30, 45, 32], [18, 30, 33, 32], [20, 32, 45, 30], [18, 32, 48, 32], [20, 30, 46, 32]],
-      [[23, 34, 48, 32], [21, 33, 48, 33], [17, 33, 49, 33], [18, 31, 45, 33], [18, 31, 33, 34], [20, 33, 46, 31], [18, 33, 48, 33], [20, 31, 46, 33]]
+      [[23, 32, 47, 30], [21, 32, 48, 31], [17, 32, 49, 32], [18, 30, 45, 32], [18, 30, 29, 33], [20, 32, 45, 30], [18, 32, 48, 32], [20, 30, 46, 32]],
+      [[23, 34, 48, 32], [21, 33, 48, 33], [17, 33, 49, 33], [18, 31, 45, 33], [18, 31, 42, 35], [20, 33, 46, 31], [18, 33, 48, 33], [20, 31, 46, 33]]
     ],
     dwarf: [
       [[27, 29, 40, 27], [25, 29, 41, 27], [22, 28, 43, 28], [23, 26, 41, 29], [24, 26, 37, 29], [24, 29, 42, 27], [22, 28, 43, 28], [23, 26, 40, 29]],
@@ -2826,8 +2847,8 @@
     ],
     goblin: [
       [[25, 33, 42, 32], [24, 33, 43, 32], [22, 33, 43, 33], [22, 32, 40, 33], [21, 32, 37, 33], [24, 33, 42, 32], [22, 33, 43, 33], [22, 32, 42, 33]],
-      [[26, 30, 46, 30], [23, 31, 48, 30], [20, 31, 46, 31], [17, 29, 44, 31], [15, 28, 30, 30], [15, 29, 42, 30], [17, 30, 48, 30], [22, 30, 49, 29]],
-      [[25, 28, 47, 27], [23, 28, 48, 27], [20, 29, 46, 29], [17, 27, 44, 29], [15, 26, 30, 27], [15, 27, 43, 29], [17, 28, 48, 28], [22, 29, 49, 27]]
+      [[26, 30, 46, 30], [23, 31, 48, 30], [20, 31, 46, 31], [17, 29, 44, 31], [15, 28, 34, 31], [15, 29, 42, 30], [17, 30, 48, 30], [22, 30, 49, 29]],
+      [[25, 28, 47, 27], [23, 28, 48, 27], [20, 29, 46, 29], [17, 27, 44, 29], [15, 26, 38, 30], [15, 27, 43, 29], [17, 28, 48, 28], [22, 29, 49, 27]]
     ],
     minotaur: [
       [[25, 34, 42, 33], [23, 34, 43, 33], [21, 34, 44, 34], [21, 33, 41, 34], [23, 33, 39, 34], [24, 34, 43, 33], [21, 34, 44, 34], [21, 33, 40, 34]],
@@ -2841,8 +2862,8 @@
     ],
     rogue: [
       [[27, 32, 43, 31], [26, 32, 44, 31], [23, 32, 43, 32], [21, 31, 38, 32], [19, 31, 35, 32], [20, 31, 41, 30], [22, 30, 43, 30], [24, 30, 44, 31]],
-      [[28, 27, 47, 28], [26, 28, 48, 28], [24, 28, 44, 28], [19, 27, 38, 28], [16, 27, 31, 28], [16, 26, 43, 28], [18, 27, 46, 27], [24, 28, 49, 26]],
-      [[28, 26, 46, 27], [26, 27, 47, 27], [23, 27, 44, 27], [19, 26, 38, 27], [16, 26, 31, 27], [16, 25, 43, 27], [18, 26, 46, 26], [24, 27, 46, 27]]
+      [[28, 27, 47, 28], [26, 28, 48, 28], [24, 28, 44, 28], [19, 27, 38, 28], [16, 27, 27, 29], [16, 26, 43, 28], [18, 27, 46, 27], [24, 28, 49, 26]],
+      [[28, 26, 46, 27], [26, 27, 47, 27], [23, 27, 44, 27], [19, 26, 38, 27], [16, 26, 30, 33], [16, 25, 43, 27], [18, 26, 46, 26], [24, 27, 46, 27]]
     ],
     frostelf: [
       [[28, 32, 46, 30], [27, 32, 46, 30], [23, 32, 43, 32], [20, 30, 37, 32], [17, 30, 32, 32], [17, 30, 43, 30], [20, 31, 44, 31], [24, 31, 49, 30]],
@@ -3008,6 +3029,14 @@
   var key2 = (x, y) => y * 64 + x;
   var mix3 = (a, b, t) => ({ x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t });
   var clamp3 = (v, a, b) => Math.max(a, Math.min(b, v));
+  var MELEE_ARM_FAMILIES = /* @__PURE__ */ new Set(["knight", "orc", "dwarf", "troll", "goblin", "minotaur", "rogue"]);
+  function meleeOverlay(identity, p) {
+    const [r, g, b] = p.rgb;
+    return ["knight", "goblin", "orc"].includes(identity) ? r > g * 1.8 && g < b * 1.5 : identity === "rogue" ? b > r * 1.08 : false;
+  }
+  function occludedMeleeArm(identity, dir, side) {
+    return identity === "rogue" && (dir === 6 || dir === 5 && side === 1 || dir === 7 && side === -1);
+  }
   function segment(p, a, z) {
     const dx = z.x - a.x, dy = z.y - a.y, t = clamp3(((p.x - a.x) * dx + (p.y - a.y) * dy) / (dx * dx + dy * dy || 1), 0, 1), q = mix3(a, z, t);
     return { distance: Math.hypot(p.x - q.x, p.y - q.y), t };
@@ -3030,6 +3059,14 @@
   }
   function torsoEnvelope(pixels, identity, registration, profiles2) {
     const arms = [...profiles2.values()], top = Math.min(...arms.map((a) => a.root.y)) - 2;
+    if (MELEE_ARM_FAMILIES.has(identity)) {
+      const rows2 = /* @__PURE__ */ new Map(), shoulder = Math.min(...Object.values(registration.roots).map((p) => p.y)) + 2;
+      for (let y = top; y <= registration.pelvis; y++) {
+        const taper = clamp3((y - shoulder) / (registration.pelvis - shoulder || 1), 0, 1), radius2 = registration.torso * (1 - 0.22 * taper);
+        rows2.set(y, { left: Math.ceil(32 - radius2), right: Math.floor(32 + radius2) });
+      }
+      return rows2;
+    }
     const radius = Math.max(registration.torso + registration.upper * 2, ...arms.flatMap((a) => a.pixels.map((p) => Math.abs(p.x - 32) + 2)));
     let bottom = registration.pelvis;
     while (bottom > top + 4 && !pixels.some((p) => p.y === bottom && Math.abs(p.x - 32) <= 2)) bottom--;
@@ -3066,6 +3103,13 @@
     if (!registration) return null;
     const grid = new Map(asset.pixels.map((p) => [key2(p.x, p.y), p])), hands = {}, profiles2 = /* @__PURE__ */ new Map(), mask = /* @__PURE__ */ new Set();
     for (const side of [-1, 1]) {
+      if (occludedMeleeArm(identity, dir, side)) {
+        const sourceDir = 2, source = authoredParts(asset.sourceFrame(sourceDir), identity, stage, sourceDir).arms.profiles.get(side), end2 = registration.hands[side], dx = end2.x - source.end.x, dy = end2.y - source.end.y;
+        const translate = (p) => ({ ...p, x: p.x + dx, y: p.y + dy }), pixels2 = source.pixels.map(translate), profile2 = { ...source, root: translate(source.root), joint: translate(source.joint), end: { ...end2 }, pixels: pixels2, grid: new Map(pixels2.map((p) => [key2(p.x, p.y), p])), occluded: true, sourceDir };
+        profiles2.set(side, profile2);
+        hands[side] = { ...profile2.grid.get(key2(end2.x, end2.y)) };
+        continue;
+      }
       const socket = registration.hands[side], near = asset.pixels.filter((p) => Math.hypot(p.x - socket.x, p.y - socket.y) <= 3).sort((a, b) => Math.hypot(a.x - socket.x, a.y - socket.y) - Math.hypot(b.x - socket.x, b.y - socket.y));
       const sample = near[0];
       if (!sample) continue;
@@ -3074,15 +3118,17 @@
       const candidates = asset.pixels.filter((p) => {
         if (p.y < root.y - 1 || p.y > end.y + registration.lower) return false;
         if (Math.hypot(p.x - end.x, p.y - end.y) <= registration.lower) return true;
-        if (side * (p.x - 32) < registration.torso * 0.25) return false;
+        if (MELEE_ARM_FAMILIES.has(identity) && meleeOverlay(identity, p)) return false;
+        if (!(MELEE_ARM_FAMILIES.has(identity) && side * (end.x - 32) < registration.torso * 0.25) && side * (p.x - 32) < registration.torso * 0.25) return false;
         if (!armMaterial(identity, p)) return false;
         const region = segment(p, root, end), radius = registration.upper + (registration.lower - registration.upper) * region.t;
         return region.distance <= radius + 0.6;
       });
-      const selected2 = new Map(candidates.map((p) => [key2(p.x, p.y), p]));
+      const selected2 = new Map(candidates.filter((p) => !mask.has(key2(p.x, p.y))).map((p) => [key2(p.x, p.y), p]));
       for (const p of candidates) for (const [dx, dy] of [[-1, 0], [1, 0], [0, -1], [0, 1]]) {
         const q = grid.get(key2(p.x + dx, p.y + dy));
-        if (!q || q.y < root.y - 1 || q.y > end.y + registration.lower || side * (q.x - 32) < registration.torso * 0.25) continue;
+        if (!q || mask.has(key2(q.x, q.y)) || q.y < root.y - 1 || q.y > end.y + registration.lower || side * (q.x - 32) < registration.torso * 0.25) continue;
+        if (MELEE_ARM_FAMILIES.has(identity) && meleeOverlay(identity, q)) continue;
         const region = segment(q, root, end), radius = registration.upper + (registration.lower - registration.upper) * region.t;
         if (region.distance <= radius + 0.8 && Math.max(...q.rgb) < 100) selected2.set(key2(q.x, q.y), q);
       }
@@ -3097,6 +3143,23 @@
       const profile = { side, root: attached, joint: mix3(attached, end, 0.5), end, pixels, grid: new Map(pixels.map((p) => [key2(p.x, p.y), p])) };
       profiles2.set(side, profile);
       for (const p of pixels) mask.add(key2(p.x, p.y));
+    }
+    if (MELEE_ARM_FAMILIES.has(identity)) {
+      const rows = torsoEnvelope(asset.pixels, identity, registration, profiles2);
+      for (const profile of profiles2.values()) {
+        if (profile.occluded) continue;
+        const { side, end } = profile, root = registration.roots[side];
+        for (const p of asset.pixels) {
+          if (mask.has(key2(p.x, p.y)) || p.y < root.y - 2 || p.y > Math.min(registration.pelvis - 1, end.y + Math.ceil(registration.lower) + 1) || side * (p.x - 32) < registration.torso * 0.25) continue;
+          if (p.y > end.y && Math.abs(p.x - 32) <= registration.torso) continue;
+          if (meleeOverlay(identity, p)) continue;
+          const row = rows.get(p.y), outside = !row || p.x < row.left || p.x > row.right, hand = Math.hypot(p.x - end.x, p.y - end.y) <= registration.lower + 1.5;
+          if (!hand && !outside) continue;
+          profile.pixels.push(p);
+          profile.grid.set(key2(p.x, p.y), p);
+          mask.add(key2(p.x, p.y));
+        }
+      }
     }
     const retained = asset.pixels.filter((p) => !mask.has(key2(p.x, p.y))), bodyGrid = new Map(retained.map((p) => [key2(p.x, p.y), p])), repairs = [];
     const bodyRows = torsoEnvelope(retained, identity, registration, profiles2);
@@ -3746,7 +3809,7 @@
       if (id === "stag" && stage === 2) cleanStagSoles(pixels, colors2, dir);
       const shades = pixels.filter((p) => Math.max(...p.rgb) - Math.min(...p.rgb) < 48 && Math.min(...p.rgb) > 45 && Math.max(...p.rgb) < 232).sort((a2, b) => a2.rgb.reduce((n, v) => n + v, 0) - b.rgb.reduce((n, v) => n + v, 0));
       const metal = shades.length > 12 ? [0.08, 0.4, 0.72, 0.95].map((t) => shades[Math.floor((shades.length - 1) * t)].color) : null;
-      decoded.set(key4, { pixels, colors: colors2, metal });
+      decoded.set(key4, { pixels, colors: colors2, metal, sourceFrame: (facing) => frameFor(id, facing, stage) });
     }
     return decoded.get(key4);
   }
@@ -3964,7 +4027,12 @@
     asset.legProfiles.set(key4, result);
     return result;
   }
-  function paintAtlasCharacter(b, id, rig, at) {
+  function paintAtlasCharacter(b, id, rig, at, cellPass = 0) {
+    if (!cellPass) {
+      rig.artCellFit = 1;
+      rig.artCellShift = { x: 0, y: 0 };
+      rig.artCellPass = 0;
+    }
     const identity = atlasIdentity(id, rig);
     if (!identity) return false;
     const artStage = Math.min(2, rig.artStage ?? rig.form ?? 0), asset = frameFor(identity, rig.dir, artStage), rest = rig.artBind || restFor(id), angle = rig.dir * Math.PI / 4, base = (q) => point2(q, angle), poseHead = at(rig.head), poseBody = at(rig.body), posePelvis = at(rig.pelvis), head0 = base(rest.head), body0 = base(rest.body), pelvis0 = base(rest.pelvis), dh = difference(poseHead, head0), dc = difference(poseBody, body0), dp = difference(posePelvis, pelvis0);
@@ -4143,6 +4211,9 @@
       ox += (lx < 1 ? 1 - lx : rx > 62 ? 62 - rx : 0) / fit;
       oy += (ty < 1 ? 1 - ty : by > 62 ? 62 - by : 0) / fit;
     }
+    fit *= rig.artCellFit || 1;
+    ox += (rig.artCellShift?.x || 0) / fit;
+    oy += (rig.artCellShift?.y || 0) / fit;
     if (!authoredLegs) for (const p of pixels) {
       const x = 32 + (p.x - 32 + ox) * fit, y = 44 + (p.y - 44 + oy) * fit;
       b.dot(x, y, p.color);
@@ -4317,7 +4388,7 @@
         const neutral = anchor({ x: 32 + (socket.x - 32) * scale.width + dc.x, y: 44 + (socket.y - 45) * scale.height + dc.y }), bind = rest.arms.find((a) => a.side === arm.side), drift = bind ? difference(limbPoint(arm.end), limbPoint(bind.end)) : { x: 0, y: 0 };
         neutral.x += drift.x * 0.4;
         neutral.y += drift.y * 0.4;
-        if (armCarryWeight === 1) neutral.x = rig.artAnchors.body.x + screenSide * Math.max(2 * fit, screenSide * (neutral.x - rig.artAnchors.body.x));
+        if (armCarryWeight === 1 && !MELEE_ARM_FAMILIES.has(identity)) neutral.x = rig.artAnchors.body.x + screenSide * Math.max(2 * fit, screenSide * (neutral.x - rig.artAnchors.body.x));
         end.x += (neutral.x - end.x) * armCarryWeight;
         end.y += (neutral.y - end.y) * armCarryWeight;
         root.x += (neutral.x - screenSide * 1.5 * fit - root.x) * armCarryWeight;
@@ -4428,6 +4499,25 @@
     rig.artSourceProject = (x, y) => anchor(warped(x, y));
     rig.artSourcePixels = new Map(layer.map((p, i) => [p.y * 64 + p.x, anchor(pixels[i])]));
     rig.artParts = parts;
+    if (rig.artArmSkin && (rig.artCellPass || 0) < 4) {
+      const points = authoredArmBounds(rig);
+      if (points.some((p) => p.x < 1 || p.x > 62 || p.y < 1 || p.y > 62)) {
+        for (let i = 3; i < b.data.length; i += 4) if (b.data[i]) points.push({ x: (i >> 2) % 64, y: i >> 2 >> 6 });
+        if (melee) {
+          const bounds = meleeWeaponBounds(rig, paintedGrip, heldPoint(rig.weapon.tip));
+          points.push({ x: bounds.minX, y: bounds.minY }, { x: bounds.maxX, y: bounds.maxY });
+        }
+        const xs = points.map((p) => p.x), ys = points.map((p) => p.y), left = Math.min(...xs), right = Math.max(...xs), top = Math.min(...ys), bottom = Math.max(...ys), factor = Math.min(1, 61 / (right - left), 61 / (bottom - top));
+        const shift = rig.artCellShift || { x: 0, y: 0 }, lx = 32 + (left - shift.x - 32) * factor + shift.x, rx = 32 + (right - shift.x - 32) * factor + shift.x, ty = 44 + (top - shift.y - 44) * factor + shift.y, by = 44 + (bottom - shift.y - 44) * factor + shift.y;
+        rig.artCellShift = { x: shift.x + (lx < 1 ? 1 - lx : rx > 62 ? 62 - rx : 0), y: shift.y + (ty < 1 ? 1 - ty : by > 62 ? 62 - by : 0) };
+        rig.artCellFit = (rig.artCellFit || 1) * factor;
+        rig.artCellPass = (rig.artCellPass || 0) + 1;
+        b.data.fill(0);
+        b.data.clipSamples = [];
+        b.clipped = 0;
+        return paintAtlasCharacter(b, id, rig, at, cellPass + 1);
+      }
+    }
     rig.authoredEvolution = true;
     b.data.artIdentity = identity;
     b.data.artStage = artStage;

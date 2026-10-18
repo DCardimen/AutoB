@@ -1,0 +1,25 @@
+{"naturalFamilies":29,"poses":35496,"quads":26205840,"minArea":0.0649875694638062}
+{"humanoidFamilies":12,"poses":14688,"quads":8797194,"minArea":0.2274881308948321}
+✔ painted natural heads and necks retain positive area through every facing, form and motion state (222760.5215ms)
+✔ humanoid head and collar skin retains positive area through every form, facing and motion (136332.4488ms)
+✔ limbless and flying bodies retain a visible fall instead of remaining upright (13.2314ms)
+✔ natural fall silhouettes settle progressively without spinning or jumping on entry (1083.8308ms)
+✔ rooted mushroom caps preserve their painted width instead of inheriting jelly squash (264.1524ms)
+✔ arena uses a readable physical size; all families and evolutions stay within 70–150% of the new default (5.5482ms)
+✔ an evolution unlocks an executable skill, a separate gear slot and a support socket without destroying links (6.035ms)
+✔ equipment respects capacity and applies health, healing, cooldown, speed, shields and poise in combat (2.0279ms)
+✔ weapon contacts and projectile origins scale with the same body as the rendered rig (15.6278ms)
+✔ grand evolution changes normalized anatomy instead of passing on enlargement alone (3022.6052ms)
+✔ cloth anchors remain on the shoulders while lower panels lag through a turn and settle above the floor (145.3886ms)
+✔ damage text reports actual HP loss and absorbed shield on the victim, aggregates status ticks and fades (3.6494ms)
+✔ every pixel family and form remains within its 64-pixel cell during all combat motions (568315.3794ms)
+✔ grandfathered ascended companions retain complete valid loadouts even after their family loses an evolution route (2.3806ms)
+✔ raised weapons and fallen bodies stay inside cells at both character-height slider limits (46885.2902ms)
+ℹ tests 15
+ℹ suites 0
+ℹ pass 15
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 618786.9582

@@ -5,6 +5,7 @@ import {once} from 'node:events';
 import {createHash} from 'node:crypto';
 import {authoredIdentities} from '../authored-sprite-renderer.js';
 import {ARM_ANATOMY} from '../companion-anatomy.js';
+import {MELEE_ARM_FAMILIES} from '../authored-parts.js';
 import {PIXEL_SPECIES} from '../native-content.js';
 import {nativePoseRig} from '../native-poses.js';
 import {paintCharacterPixels} from '../prototype-pixel-art.js';
@@ -13,7 +14,7 @@ import {runtimeFiles,fingerprint,verifiedVideo,acquireLock,validateVideoManifest
 
 const out=path.resolve(process.argv.find(a=>a.startsWith('--out='))?.slice(6)||'playtest-artifacts/companion-animation');fs.mkdirSync(out,{recursive:true});
 const evolutionPath=process.argv.includes('--path=warden')?'warden':'wild';
-const identities=process.argv.includes('--families=arms')?authoredIdentities.filter(id=>ARM_ANATOMY[id]):authoredIdentities;
+const identities=process.argv.includes('--families=melee')?authoredIdentities.filter(id=>MELEE_ARM_FAMILIES.has(id)):process.argv.includes('--families=arms')?authoredIdentities.filter(id=>ARM_ANATOMY[id]):authoredIdentities;
 const hash=file=>createHash('sha256').update(fs.readFileSync(file)).digest('hex'),inputs=fingerprint([...runtimeFiles(),'scripts/review-companion-animation.mjs','scripts/animation-artifacts.mjs','scripts/animation-contract.mjs']);
 const lock=path.join(out,'encoding.lock');
 const release=acquireLock(lock);process.on('exit',release);let encoder;

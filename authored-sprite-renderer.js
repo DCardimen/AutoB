@@ -11,8 +11,8 @@ import {AUTHORED_LEGACY} from './authored-legacy-data.js';
 import {AUTHORED_LEGACY_STAGE1} from './authored-legacy-stage1-data.js';
 import {AUTHORED_LEGACY_STAGE2} from './authored-legacy-stage2-data.js';
 import {meleeWeaponBounds} from './melee-weapon-art.js';
-import {authoredArmArt} from './authored-arm-skin.js';
-import {authoredParts,connectAuthoredArm,constrainHeldGrip} from './authored-parts.js';
+import {authoredArmArt,authoredArmBounds} from './authored-arm-skin.js';
+import {authoredParts,connectAuthoredArm,constrainHeldGrip,MELEE_ARM_FAMILIES} from './authored-parts.js';
 import {NATURAL_ANATOMY,naturalHeadWeight,naturalHeadDelta,companionFallAngle} from './companion-anatomy.js';
 import {portraitExpressionAt,portraitExpressionLayer,portraitSourceOffset} from './portrait-expressions.js';
 import {characterRig,projectRig} from './prototype-rig.js';
@@ -75,7 +75,7 @@ function cleanStagSoles(pixels,colors,dir){
  const dark=colors.indexOf('#453329'),shadow=colors.indexOf('#331f13');
  for(const p of pixels)if(p.y===sole&&dark>=0&&shadow>=0){p.index=p.x%3?dark:shadow;p.color=colors[p.index];p.rgb=p.color.slice(1).match(/../g).map(c=>parseInt(c,16));}
 }
-function frameFor(id,dir,stage=0){const key=id+':'+dir+':'+stage;if(!decoded.has(key)){const a=STAGES[stage][id],hex=a.frames[dir],colors=a.palette.map(c=>'#'+c),pixels=[];for(let y=0;y<64;y++)for(let x=0;x<64;x++){const n=parseInt(hex.slice((y*64+x)*2,(y*64+x)*2+2),16);if(n)pixels.push({x,y,color:colors[n],rgb:colors[n].slice(1).match(/../g).map(v=>parseInt(v,16)),index:n});}if(['crab','mech'].includes(id)&&stage)restoreCrystalCrown(pixels,colors,id,stage);if(id==='stag'&&stage===2)cleanStagSoles(pixels,colors,dir);const shades=pixels.filter(p=>Math.max(...p.rgb)-Math.min(...p.rgb)<48&&Math.min(...p.rgb)>45&&Math.max(...p.rgb)<232).sort((a,b)=>a.rgb.reduce((n,v)=>n+v,0)-b.rgb.reduce((n,v)=>n+v,0));const metal=shades.length>12?[.08,.4,.72,.95].map(t=>shades[Math.floor((shades.length-1)*t)].color):null;decoded.set(key,{pixels,colors,metal});}return decoded.get(key);}
+function frameFor(id,dir,stage=0){const key=id+':'+dir+':'+stage;if(!decoded.has(key)){const a=STAGES[stage][id],hex=a.frames[dir],colors=a.palette.map(c=>'#'+c),pixels=[];for(let y=0;y<64;y++)for(let x=0;x<64;x++){const n=parseInt(hex.slice((y*64+x)*2,(y*64+x)*2+2),16);if(n)pixels.push({x,y,color:colors[n],rgb:colors[n].slice(1).match(/../g).map(v=>parseInt(v,16)),index:n});}if(['crab','mech'].includes(id)&&stage)restoreCrystalCrown(pixels,colors,id,stage);if(id==='stag'&&stage===2)cleanStagSoles(pixels,colors,dir);const shades=pixels.filter(p=>Math.max(...p.rgb)-Math.min(...p.rgb)<48&&Math.min(...p.rgb)>45&&Math.max(...p.rgb)<232).sort((a,b)=>a.rgb.reduce((n,v)=>n+v,0)-b.rgb.reduce((n,v)=>n+v,0));const metal=shades.length>12?[.08,.4,.72,.95].map(t=>shades[Math.floor((shades.length-1)*t)].color):null;decoded.set(key,{pixels,colors,metal,sourceFrame:facing=>frameFor(id,facing,stage)});}return decoded.get(key);}
 export const authoredIdentities=Object.keys(AUTHORED_SPRITES);
 export const authoredSourceFrame=(identity,dir,stage=0)=>frameFor(identity,dir,stage);
 const eyeColor=(id,[r,g,b])=>id==='elf'?g>r*1.2&&g>b*1.1:id==='caster'?b>g*1.5&&r<90&&b<90:['knight','fox','orc','goblin','fairy','dwarf','minotaur','rogue','troll','skeleton','frostelf'].includes(id)?Math.max(r,g,b)<65:false;
@@ -207,7 +207,8 @@ function legProfiles(asset,footIndices,footDeltas,identity,stage){
  }
  const result={profiles,mask,repairs};asset.legProfiles.set(key,result);return result;
 }
-export function paintAtlasCharacter(b,id,rig,at){
+export function paintAtlasCharacter(b,id,rig,at,cellPass=0){
+ if(!cellPass){rig.artCellFit=1;rig.artCellShift={x:0,y:0};rig.artCellPass=0;}
  const identity=atlasIdentity(id,rig);if(!identity)return false;
  const artStage=Math.min(2,rig.artStage??rig.form??0),asset=frameFor(identity,rig.dir,artStage),rest=rig.artBind||restFor(id),angle=rig.dir*Math.PI/4,base=q=>point(q,angle),poseHead=at(rig.head),poseBody=at(rig.body),posePelvis=at(rig.pelvis),head0=base(rest.head),body0=base(rest.body),pelvis0=base(rest.pelvis),dh=difference(poseHead,head0),dc=difference(poseBody,body0),dp=difference(posePelvis,pelvis0);
  const bodyPlan=NATURAL_ANATOMY[identity]?.plan,idleAmplitude=['shell','crustacean','walker','rooted'].includes(bodyPlan)?.65:['floating','tentacled','finned'].includes(bodyPlan)?.8:rig.legs.length>2?.7:1;
@@ -336,6 +337,7 @@ export function paintAtlasCharacter(b,id,rig,at){
   const lx=32+(left-32+ox)*fit,rx=32+(right-32+ox)*fit,ty=44+(top-44+oy)*fit,by=44+(bottom-44+oy)*fit;
   ox+=(lx<1?1-lx:rx>62?62-rx:0)/fit;oy+=(ty<1?1-ty:by>62?62-by:0)/fit;
  }
+ fit*=rig.artCellFit||1;ox+=(rig.artCellShift?.x||0)/fit;oy+=(rig.artCellShift?.y||0)/fit;
  if(!authoredLegs)for(const p of pixels){const x=32+(p.x-32+ox)*fit,y=44+(p.y-44+oy)*fit;b.dot(x,y,p.color);if(p.spanX*fit>1.01||p.spanY*fit>1.01)b.rect(clamp(Math.round(x-p.spanX*.3),0,63),clamp(Math.round(y-p.spanY*.3),0,63),Math.min(64-Math.round(x-p.spanX*.3),Math.ceil(p.spanX*fit)),Math.min(64-Math.round(y-p.spanY*.3),Math.ceil(p.spanY*fit)),p.color);}
  if(!authoredLegs){
   // Fins and wing membranes need the same source-edge continuity as legs.
@@ -456,7 +458,10 @@ export function paintAtlasCharacter(b,id,rig,at){
    const socket=hand||{x:32+screenSide*(Math.abs((bindGear?.[0]??41)-32)||9),y:bindGear?.[1]??34};
    const neutral=anchor({x:32+(socket.x-32)*scale.width+dc.x,y:44+(socket.y-45)*scale.height+dc.y}),bind=rest.arms.find(a=>a.side===arm.side),drift=bind?difference(limbPoint(arm.end),limbPoint(bind.end)):{x:0,y:0};
    neutral.x+=drift.x*.4;neutral.y+=drift.y*.4;
-   if(armCarryWeight===1)neutral.x=rig.artAnchors.body.x+screenSide*Math.max(2*fit,screenSide*(neutral.x-rig.artAnchors.body.x));
+   // Profile-view hands can both lie on the same side of the chest. Keep
+   // those authored sockets; forcing the near hand across the center pulled
+   // the shield/cuff away from its original arm by several source pixels.
+   if(armCarryWeight===1&&!MELEE_ARM_FAMILIES.has(identity))neutral.x=rig.artAnchors.body.x+screenSide*Math.max(2*fit,screenSide*(neutral.x-rig.artAnchors.body.x));
    end.x+=(neutral.x-end.x)*armCarryWeight;end.y+=(neutral.y-end.y)*armCarryWeight;
    root.x+=(neutral.x-screenSide*1.5*fit-root.x)*armCarryWeight;root.y+=(neutral.y-5.5*fit-root.y)*armCarryWeight;
   }
@@ -524,6 +529,20 @@ export function paintAtlasCharacter(b,id,rig,at){
  rig.artSourceProject=(x,y)=>anchor(warped(x,y));
  rig.artSourcePixels=new Map(layer.map((p,i)=>[p.y*64+p.x,anchor(pixels[i])]));
  rig.artParts=parts;
+ if(rig.artArmSkin&&(rig.artCellPass||0)<4){
+  const points=authoredArmBounds(rig);
+  if(points.some(p=>p.x<1||p.x>62||p.y<1||p.y>62)){
+   // Fit the COMPLETE painted pose. A wider source cuff can reach beyond
+   // its wrist in a fall; moving just the hand would deform or clip it.
+   // Prefer a translation, keeping every limb at its authored size.
+   for(let i=3;i<b.data.length;i+=4)if(b.data[i])points.push({x:(i>>2)%64,y:(i>>2)>>6});
+   if(melee){const bounds=meleeWeaponBounds(rig,paintedGrip,heldPoint(rig.weapon.tip));points.push({x:bounds.minX,y:bounds.minY},{x:bounds.maxX,y:bounds.maxY});}
+   const xs=points.map(p=>p.x),ys=points.map(p=>p.y),left=Math.min(...xs),right=Math.max(...xs),top=Math.min(...ys),bottom=Math.max(...ys),factor=Math.min(1,61/(right-left),61/(bottom-top));
+   const shift=rig.artCellShift||{x:0,y:0},lx=32+(left-shift.x-32)*factor+shift.x,rx=32+(right-shift.x-32)*factor+shift.x,ty=44+(top-shift.y-44)*factor+shift.y,by=44+(bottom-shift.y-44)*factor+shift.y;
+   rig.artCellShift={x:shift.x+(lx<1?1-lx:rx>62?62-rx:0),y:shift.y+(ty<1?1-ty:by>62?62-by:0)};rig.artCellFit=(rig.artCellFit||1)*factor;rig.artCellPass=(rig.artCellPass||0)+1;
+   b.data.fill(0);b.data.clipSamples=[];b.clipped=0;return paintAtlasCharacter(b,id,rig,at,cellPass+1);
+  }
+ }
  rig.authoredEvolution=true;b.data.artIdentity=identity;b.data.artStage=artStage;b.data.artFit=fit;b.data.contactGear=Boolean(rig.weapon&&rig.arms.length);b.data.expression=eyePixels.length?expression:'hidden';return true;
 }
 export function paintAtlasHead(b,id,rig,center){

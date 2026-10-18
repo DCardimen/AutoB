@@ -7,31 +7,24 @@ import {PIXEL_SPECIES} from '../native-content.js';
 import {nativePoseRig,NATIVE_POSES} from '../native-poses.js';
 import {PixelBrush,spritePoint} from '../prototype-pixel-art.js';
 
-// Reviewed holes beneath the shoulders, in E/SE/S/SW/W/NW/N/NE order.
-// Every one of these was transparent in the previous completed-body layer.
-// Checking explicit missing regions prevents a test from only validating
-// whatever small set of repairs the implementation happened to generate.
-const holes={
- knight:[[[26,33],[26,33],[25,33],[25,32],[25,30],[25,33],[25,33],[25,33]],[[25,26],[24,26],[24,26],[24,25],[22,26],[22,26],[23,26],[24,26]],[[41,26],[22,25],[20,26],[19,26],[20,26],[21,26],[21,26],[20,26]]],
- orc:[[[24,32],[24,32],[24,32],[38,32],[24,31],[26,33],[24,31],[24,32]],[[20,27],[19,27],[21,27],[19,27],[20,27],[20,27],[19,27],[19,27]],[[20,27],[18,27],[18,27],[19,27],[19,27],[18,27],[18,27],[18,27]]],
- dwarf:[[[25,26],[25,26],[25,26],[25,26],[25,26],[25,26],[25,26],[25,26]],[[22,26],[21,26],[21,26],[22,26],[23,26],[21,26],[21,26],[21,26]],[[41,26],[23,26],[20,26],[21,26],[20,26],[21,26],[20,26],[20,26]]],
- troll:[[[22,32],[23,32],[22,32],[22,32],[22,32],[24,32],[23,32],[22,32]],[[19,27],[17,27],[18,27],[17,27],[17,27],[18,27],[18,27],[17,27]],[[19,27],[17,27],[17,27],[17,27],[17,27],[17,27],[17,27],[17,27]]],
- goblin:[[[25,31],[25,31],[39,30],[39,30],[38,31],[25,31],[25,31],[38,31]],[[24,27],[23,27],[23,27],[22,27],[39,27],[23,28],[22,27],[23,28]],[[24,25],[22,26],[23,26],[39,26],[22,25],[41,28],[42,26],[23,27]]],
- minotaur:[[[23,31],[22,31],[22,31],[22,31],[22,31],[39,31],[22,31],[22,31]],[[20,26],[18,26],[18,26],[18,26],[19,26],[18,26],[18,26],[18,26]],[[19,25],[18,25],[17,25],[19,25],[16,25],[18,25],[17,25],[16,25]]],
- rogue:[[[25,30],[24,30],[24,30],[24,30],[24,29],[24,30],[24,30],[24,30]],[[26,25],[24,26],[23,26],[23,26],[23,24],[39,26],[23,26],[24,26]],[[26,25],[24,25],[23,25],[23,25],[23,23],[38,25],[23,25],[26,25]]],
-};
+// Independent chest-side landmarks, reviewed against the jacket/armor in
+// every facing. The previous outer-sleeve probes required body material at
+// the original hand outline and therefore enforced a second stationary arm.
+const chests={knight:[[33,27,37],[27,26,38],[27,25,39]],orc:[[33,27,37],[28,24,40],[28,23,41]],dwarf:[[27,28,36],[27,25,39],[27,25,39]],troll:[[33,26,38],[28,23,41],[28,23,41]],goblin:[[31,28,36],[27,26,38],[26,26,38]],minotaur:[[32,26,38],[27,23,41],[26,22,42]],rogue:[[30,28,36],[27,27,37],[26,27,37]]};
 
-test('all 168 reviewed melee shoulder cutouts contain independent body material',()=>{
- for(const [identity,forms]of Object.entries(holes))for(let stage=0;stage<3;stage++)for(let dir=0;dir<8;dir++){
-  const [x,y]=forms[stage][dir],parts=authoredParts(authoredSourceFrame(identity,dir,stage),identity,stage,dir),pixel=parts.body.find(p=>p.x===x&&p.y===y);
-  assert.ok(pixel?.bodyUnderlay,`${identity}/${stage}/${dir}: missing chest at ${x},${y}`);
+test('both sides of the actual chest stay filled in all 168 melee cells',()=>{
+ for(const [identity,forms]of Object.entries(chests))for(let stage=0;stage<3;stage++)for(let dir=0;dir<8;dir++){
+  const [y,left,right]=forms[stage],parts=authoredParts(authoredSourceFrame(identity,dir,stage),identity,stage,dir);
+  for(let x=left;x<=right;x++)assert.ok(parts.underbody.some(p=>p.x===x&&p.y===y),`${identity}/${stage}/${dir}: actual chest at ${x},${y}`);
  }
 });
 
-test('the fill reaches the painted outer side of the sleeve opening, rather than stopping at the central chest',()=>{
+test('former outside sleeve outlines move with the arm and are absent from the independent torso',()=>{
  for(const [identity,stage,dir,x,y]of [['troll',0,2,18,32],['orc',0,2,19,33],['knight',2,2,19,29],['troll',1,2,15,29]]){
   const parts=authoredParts(authoredSourceFrame(identity,dir,stage),identity,stage,dir);
-  assert.ok(parts.underbody.some(p=>p.x===x&&p.y===y),`${identity}/${stage}/${dir}: outer sleeve cutout at ${x},${y}`);
+  assert.ok(parts.arms.mask.has(y*64+x),'the complete original arm outline has a moving owner');
+  assert.ok(!parts.body.some(p=>p.x===x&&p.y===y),'no stationary arm outline');
+  assert.ok(!parts.underbody.some(p=>p.x===x&&p.y===y),'no arm-shaped replacement painted beneath it');
  }
 });
 

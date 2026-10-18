@@ -4,7 +4,7 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 
 // Review movies need byte ranges for reliable native-player scrubbing.
-const folder=process.argv.includes('--review=torso-fill')?'torso-fill-review':'arm-animation-review';
+const folder=process.argv.includes('--review=melee')?'melee-arm-review':process.argv.includes('--review=torso-fill')?'torso-fill-review':'arm-animation-review';
 const root=fileURLToPath(new URL('../public/'+folder+'/',import.meta.url));
 const port=Number(process.argv.find(a=>a.startsWith('--port='))?.slice(7)||3048);
 const types={'.html':'text/html; charset=utf-8','.json':'application/json','.txt':'text/plain; charset=utf-8','.png':'image/png','.mp4':'video/mp4','.webm':'video/webm'};

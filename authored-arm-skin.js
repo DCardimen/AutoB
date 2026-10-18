@@ -5,6 +5,33 @@ const dot=(a,b)=>a.x*b.x+a.y*b.y;
 const sub=(a,b)=>({x:a.x-b.x,y:a.y-b.y});
 const mix=(a,b,t)=>({x:a.x+(b.x-a.x)*t,y:a.y+(b.y-a.y)*t});
 const unit=v=>{const n=Math.hypot(v.x,v.y)||1;return {x:v.x/n,y:v.y/n};};
+function skinProjection(profile,root,joint,end,fit,scale){
+ const axis=unit(sub(profile.end,profile.root)),length=Math.hypot(profile.end.x-profile.root.x,profile.end.y-profile.root.y)||1,hinge=dot(sub(profile.joint,profile.root),axis),thickness=fit*scale.width;
+ const upper=unit(sub(joint,root)),lower=unit(sub(end,joint)),upperAngle=Math.atan2(upper.y,upper.x),bend=Math.atan2(upper.x*lower.y-upper.y*lower.x,dot(upper,lower)),blend=Math.min(1.5,length*.2);
+ const warp=(x,y)=>{
+  const offset={x:x-profile.root.x,y:y-profile.root.y},along=dot(offset,axis),across=offset.x*-axis.y+offset.y*axis.x;
+  const first=along<=hinge,a=first?root:joint,z=first?joint:end,t=first?along/(hinge||1):(along-hinge)/(length-hinge||1),center=mix(a,z,t);
+  const w=Math.max(0,Math.min(1,(along-hinge+blend)/(blend*2))),theta=upperAngle+bend*w*w*(3-2*w);
+  return {x:center.x-Math.sin(theta)*across*thickness,y:center.y+Math.cos(theta)*across*thickness};
+ };
+ return {warp,axis,length};
+}
+export function authoredArmBounds(rig){
+ const {art,fit,scale}=rig.artArmSkin,points=[];
+ for(const arm of rig.arms){
+  const profile=art.profiles.get(rig.artArmScreens[arm.side]);if(!profile)continue;
+  const root=rig.artArmRoots[arm.side],joint=rig.artProject(arm.joint),end=rig.artProject(arm.end);
+  profile.skinPadding??=Math.max(...profile.pixels.map(p=>{
+   const dx=profile.end.x-profile.root.x,dy=profile.end.y-profile.root.y,t=Math.max(0,Math.min(1,((p.x-profile.root.x)*dx+(p.y-profile.root.y)*dy)/(dx*dx+dy*dy||1)));
+   return Math.hypot(p.x-profile.root.x-dx*t,p.y-profile.root.y-dy*t)+1;
+  }));
+  const pad=profile.skinPadding*fit*Math.max(scale.width,scale.height);
+  if([root,joint,end].every(p=>p.x-pad>=1&&p.x+pad<=62&&p.y-pad>=1&&p.y+pad<=62))continue;
+  const {warp}=skinProjection(profile,root,joint,end,fit,scale);
+  for(const p of profile.pixels)for(const [dx,dy]of [[-.5,-.5],[.5,-.5],[.5,.5],[-.5,.5]])points.push(warp(p.x+dx,p.y+dy));
+ }
+ return points;
+}
 
 export function authoredArmArt(asset,hands){
  if(asset.armArt)return asset.armArt;
@@ -42,15 +69,8 @@ export function paintAuthoredArms(brush,rig,near,at){
  for(const arm of rig.arms){
   const profile=art.profiles.get(rig.artArmScreens[arm.side]);if(!profile)continue;
   const root=rig.artArmRoots[arm.side],joint=rig.artProject(arm.joint),end=rig.artProject(arm.end);
-  const axis=unit(sub(profile.end,profile.root)),length=Math.hypot(profile.end.x-profile.root.x,profile.end.y-profile.root.y)||1,hinge=dot(sub(profile.joint,profile.root),axis),thickness=fit*scale.width;
-  const upper=unit(sub(joint,root)),lower=unit(sub(end,joint)),upperAngle=Math.atan2(upper.y,upper.x),bend=Math.atan2(upper.x*lower.y-upper.y*lower.x,dot(upper,lower)),blend=Math.min(1.5,length*.2);
+  const {warp,axis,length}=skinProjection(profile,root,joint,end,fit,scale);
   const depths=[at(arm.root).depth,at(arm.joint).depth,at(arm.end).depth],bodyDepth=at(rig.body).depth;
-  const warp=(x,y)=>{
-   const offset={x:x-profile.root.x,y:y-profile.root.y},along=dot(offset,axis),across=offset.x*-axis.y+offset.y*axis.x;
-   const first=along<=hinge,a=first?root:joint,z=first?joint:end,t=first?along/(hinge||1):(along-hinge)/(length-hinge||1),center=mix(a,z,t);
-   const w=Math.max(0,Math.min(1,(along-hinge+blend)/(blend*2))),theta=upperAngle+bend*w*w*(3-2*w);
-   return {x:center.x-Math.sin(theta)*across*thickness,y:center.y+Math.cos(theta)*across*thickness};
-  };
   const mapped=new Map();
   for(const p of profile.pixels){
    const along=dot(sub(p,profile.root),axis),t=Math.max(0,Math.min(1,along/length)),depth=t<.5?depths[0]+(depths[1]-depths[0])*t*2:depths[1]+(depths[2]-depths[1])*(t-.5)*2;
