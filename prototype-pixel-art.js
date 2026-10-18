@@ -9,7 +9,7 @@ import {paintAuthoredArms,paintAuthoredGrips} from './authored-arm-skin.js';
 import {paintLegVolumes} from './leg-volume.js';
 import {paintCreatureAttack} from './creature-attacks.js';
 export const CELL=64,PIVOT={x:32,y:44},PIXEL_WORLD=3;
-export const SPRITE_ART_REVISION=15;
+export const SPRITE_ART_REVISION=16;
 const OUT='#192328';
 export const PIXEL_PALETTES={
  crab:{skin:['#496b63','#7daca0','#c6d9be'],cloth:['#385c69','#5b95aa','#a9d1db'],metal:['#324d52','#668d8c','#b0c8bd','#e5e0b9'],hair:['#364c58','#638e99','#abd5ce']},
@@ -27,7 +27,7 @@ export const PIXEL_PALETTES={
  flyer:{skin:['#68554b','#b89a75','#e2c49b'],cloth:['#304c61','#5f92aa','#b3d9ce'],metal:['#425970','#7897a6','#c5d1c5','#f0dfae'],hair:['#52527c','#9497bd','#d1d6dc']},
 };
 const colors=new Map();function rgba(c){if(!colors.has(c))colors.set(c,[parseInt(c.slice(1,3),16),parseInt(c.slice(3,5),16),parseInt(c.slice(5,7),16),255]);return colors.get(c);}
-class PixelBrush{
+export class PixelBrush{
  constructor(){this.data=new Uint8ClampedArray(CELL*CELL*4);this.clipped=0;this.data.clipSamples=[];}
  dot(x,y,c){x=Math.round(x);y=Math.round(y);if(x<0||y<0||x>=CELL||y>=CELL){this.clipped++;if(this.data.clipSamples.length<12)this.data.clipSamples.push({x,y,c});return;}this.data.set(rgba(c),(y*CELL+x)*4);}
  rect(x,y,w,h,c){for(let j=Math.round(y);j<Math.round(y+h);j++)for(let i=Math.round(x);i<Math.round(x+w);i++)this.dot(i,j,c);}
@@ -208,19 +208,19 @@ export function paintCharacterPixels(id,rig,angle){
 function drawGearPart(b,id,rig,angle,p,at,outlinedOval,weapon,shield){
  if(weapon&&rig.weapon){
    const g=at(rig.weapon.grip),tip=at(rig.weapon.tip);
-   if(['elf','fox'].includes(id)){
+   if(rig.weapon.kind==='bow'){
      const bowPoint=(length,bend)=>rig.ragdoll?{...rig.weapon.grip,x:rig.weapon.grip.x+length,y:rig.weapon.grip.y+bend}:{...rig.weapon.grip,x:rig.weapon.grip.x+bend,z:rig.weapon.grip.z+length};
      const top=at(bowPoint(24,-6)),bottom=at(bowPoint(-24,-6)),upper=at(bowPoint(12,1)),lower=at(bowPoint(-12,1));
      for(const [a,z]of [[top,upper],[upper,g],[g,lower],[lower,bottom]]){b.line(a,z,OUT,1.2);b.line(a,z,'#815735',.65);b.line({x:a.x-.4,y:a.y-.4},{x:z.x-.4,y:z.y-.4},'#c09b59');}b.oval(g.x,g.y,1.3,2,'#49382d');b.dot(top.x,top.y,'#e7d9a7');b.dot(bottom.x,bottom.y,'#e7d9a7');
      const pull=rig.arms.find(a=>a.side===1);if(rig.state==='attack'&&rig.bowString?.draw>0.05){b.line(top,at(pull.end),p.metal[3]);b.line(at(pull.end),bottom,p.metal[3]);}else b.line(top,bottom,p.metal[3]);
      if(rig.bowString?.draw>0.4)b.line(at(pull.end),{x:g.x+Math.cos(angle)*7,y:g.y+Math.sin(angle)*4},p.metal[2]);
-   }else if(id==='caster'){
+   }else if(rig.weapon.kind==='staff'){
      b.line(g,tip,OUT,1.2);b.line(g,tip,rig.gear==='orb'?'#587346':'#795338',.65);b.line({x:g.x-.4,y:g.y-.4},{x:tip.x-.4,y:tip.y-.4},'#be9b61');const collar={x:g.x+(tip.x-g.x)*.8,y:g.y+(tip.y-g.y)*.8};b.oval(collar.x,collar.y,1.5,1,p.metal[1]);b.dot(collar.x-.5,collar.y-.5,p.metal[3]);
      const crystal=rig.gear==='orb'?['#397654','#8bc975','#e7f2ac']:rig.gear==='ice-staff'?['#416fa3','#8ccde4','#e8faf2']:['#485b91','#87c4d2','#ecf5da'];
      b.outlined([{x:tip.x,y:tip.y-3},{x:tip.x+2,y:tip.y-1},{x:tip.x+2,y:tip.y+1},{x:tip.x,y:tip.y+3},{x:tip.x-2,y:tip.y+1},{x:tip.x-2,y:tip.y-1}],crystal[0]);b.poly([{x:tip.x,y:tip.y-2},{x:tip.x+1,y:tip.y},{x:tip.x,y:tip.y+2},{x:tip.x-1,y:tip.y}],crystal[1]);b.dot(tip.x-1,tip.y-1,crystal[2]);b.dot(tip.x,tip.y-2,crystal[2]);
      if(rig.state==='cast'){const q=Math.round(rig.phase*3);for(const dx of [-4-q,4+q])b.dot(tip.x+dx,tip.y-2,'#a393e9');b.dot(tip.x,tip.y-2-Math.min(2,q),'#dfd9f7');}
    }else{paintMeleeWeapon(b,rig,p,g,tip,OUT);}
-   for(const hand of rig.arms.filter(a=>a.side===(rig.weapon.hand==='left'?-1:1)||id==='orc')){const h=at(hand.end);outlinedOval(h.x,h.y,1.2,1.2,rig.artHandColors?.[hand.side]||(id==='knight'?p.metal[1]:p.skin[1]));b.dot(h.x-1,h.y-1,rig.artHandColors?.[hand.side]||(id==='knight'?p.metal[3]:p.skin[2]));}
+   if(!rig.artArmSkin)for(const hand of rig.arms.filter(a=>a.side===(rig.weapon.hand==='left'?-1:1)||id==='orc')){const h=at(hand.end);outlinedOval(h.x,h.y,1.2,1.2,rig.artHandColors?.[hand.side]||(id==='knight'?p.metal[1]:p.skin[1]));b.dot(h.x-1,h.y-1,rig.artHandColors?.[hand.side]||(id==='knight'?p.metal[3]:p.skin[2]));}
  }
  if(shield&&rig.shield){
   const q=rig.artShieldProject?rig.artShieldProject(rig.shield.grip):at(rig.shield.grip),w=1.5+Math.abs(Math.sin(angle))*2.5;

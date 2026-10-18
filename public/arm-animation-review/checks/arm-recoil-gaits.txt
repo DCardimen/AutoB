@@ -1,0 +1,23 @@
+✔ every four-leg physics proxy has an explicit source-anatomy classification (14.8451ms)
+✔ all quadruped anatomies alternate visible footfall groups through walk, run and sprint in every form and facing (7949.9832ms)
+✔ humanoid weapon identity and authored carry hand remain fixed throughout walking cycles (10107.726ms)
+✔ production humanoids retain painted boots and clothing with no replacement leg mesh showing through (3001.7416ms)
+✔ every anatomy retains reachable, fixed-length legs at both stride extremes throughout three gait cycles (177.4388ms)
+✔ heavy animals retain authored limb widths and textured materials in each facing and evolution (1237.7019ms)
+✔ material selection rejects neighboring crystals and outline pixels without recoloring white fur (1.1224ms)
+✔ all 89 collection families retain unclipped legs through movement, dodging and falls in eight views and three forms (32359.0944ms)
+✔ stride length migrates, clamps, resets and changes steps without changing combat travel or stats (7.1432ms)
+✔ 13,056 rendered idle and gait poses introduce no detached lower-limb clusters (36159.8055ms)
+✔ natural bodies and legs use exactly the same authored palette through every form and facing (2672.3551ms)
+✔ idle retains the authored stance and motion cannot exceed the source limb proportions (1273.7963ms)
+✔ every evolved crab crown has a tapered top and clear cell margins (105.0759ms)
+✔ stride tuning remains visible in the authored limbs, including short many-legged anatomies (209.1694ms)
+✔ apex stag hooves end in separate warm toes instead of a moving blue ground platform (11.2047ms)
+ℹ tests 15
+ℹ suites 0
+ℹ pass 15
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 40647.0369

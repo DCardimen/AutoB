@@ -57,6 +57,13 @@ export function nativeFormRig(spec,c,source,height=1){
  rig.design=spec.nativeDesign;rig.artSpecies=spec.nativeDesign||spec.nativeRig;rig.form=design.stage;rig.artStage=design.stage?(spec.evolutionLimit===1?2:design.stage):0;rig.formPath=c.evolutionPath;rig.gear=grand.gear||design.gear;rig.flyerDesign=spec.nativeDesign;
  if(design.stage){const colors={ember:['#582b33','#aa4d3e','#ebac62'],grove:['#2b4939','#5e8a52','#bfd087'],tide:['#283e62','#5b8caa','#bbdce0'],storm:['#45365f','#8a70b3','#ddc4e9'],void:['#322841','#725189','#cda4ce']};rig.palette.cloth=colors[spec.element]||rig.palette.cloth;}
  rig.id=nativeRigFor(spec,c);rig.grand=c.evolution?grand:null;if(grand.gear==='gauntlet')rig.shield=null;rig.pixelMark=spec.pixelMark;rig.equipment=c.equipment||[];
+ // A shared archer motion proxy cannot turn an evolved lich's staff into a
+ // bow or bind its free hand to an imaginary string.
+ if(rig.weapon&&['royal-staff','ice-staff','orb'].includes(rig.gear)){rig.weapon.kind='staff';rig.bowString=null;}
+ // Bloomkin uses a caster motion proxy, but shares the fairy's authored
+ // winged body and painted hands. Never add a second procedural pair of
+ // arms or a staff to that flattened natural skin.
+ if(spec.nativeDesign==='faerie'){rig.arms=[];rig.weapon=null;rig.shield=null;rig.bowString=null;}
  rig.artVariant=spec.pixelConverted?spec.id:null;rig.artVariantPalette=spec.pixelConverted?spec.pixelPalette:null;
  const bind=characterRig(rig.id,'idle',.25);rig.artBind={head:point(bind.head),body:point(bind.body),pelvis:point(bind.pelvis),legs:bind.legs.map(l=>({...l,root:point(l.root),joint:point(l.joint),hock:point(l.hock),end:point(l.end)})),arms:bind.arms.map(a=>({...a,root:point(a.root),joint:point(a.joint),end:point(a.end)})),weapon:bind.weapon?{grip:point(bind.weapon.grip),tip:point(bind.weapon.tip)}:null};rig.artScale={width:design.width,height:design.height*height};
  if(rig.grand&&rig.wings)rig.wings=rig.wings.map(wing=>wing.map(p=>({...p,y:p.y*1.12,x:p.x*.95})));
@@ -67,5 +74,6 @@ export function nativeFormRig(spec,c,source,height=1){
  if(spec.nativeDesign==='drake'&&!c.evolution)rig.grand={motif:'drake',wings:true};
  applyCreatureAnatomy(rig,spec);
  applyCreatureAnatomy(rig.artBind,spec);
+ if(spec.nativeDesign==='faerie'){rig.artBind.arms=[];rig.artBind.weapon=null;}
  return rig;
 }

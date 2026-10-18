@@ -80,7 +80,12 @@ export function skinCreatureLegs(rig,rest,angle,art,bodyDelta){
   // relative compression by the actual socket-to-sole distance.
   const length=Math.max(2,source.sole-art.rootY),scale=rig.artScale||{width:1,height:1};
   const bounded=(value,extent)=>extent*Math.tanh(value/extent);
-  const delta=moving||fallen||rig.creatureAttack?.active?{x:bodyDelta.x+bounded(dx-bodyDelta.x,length*.35*scale.width),y:bodyDelta.y+bounded(dy-bodyDelta.y,length*.35*scale.height)}:{x:0,y:0};
+  // Recoil lowers the torso while the physical feet stay planted. Leaving
+  // those feet at an unbounded zero offset can invert a short painted leg
+  // and its adjacent neck/chest skin. Apply the same source-length limit
+  // during hits and staggers; genuinely idle feet still have zero motion.
+  const displaced=moving||fallen||rig.creatureAttack?.active||['hit','stagger'].includes(rig.state);
+  const delta=displaced?{x:bodyDelta.x+bounded(dx-bodyDelta.x,length*.35*scale.width),y:bodyDelta.y+bounded(dy-bodyDelta.y,length*.35*scale.height)}:{x:0,y:0};
   return {...source,index,delta,planted:rig.legs[index].foot?.planted!==false};
  });
  const offset=(x,y)=>{

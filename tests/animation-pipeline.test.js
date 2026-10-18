@@ -8,7 +8,7 @@ import {states,validateVideoManifest,verifiedVideo,acquireLock,hashFile} from '.
 import {png,decodePng} from '../scripts/animation-artifacts.mjs';
 const temp=()=>fs.mkdtempSync(path.join(os.tmpdir(),'animation-quality-'));
 function clean(folder){const target=fs.realpathSync(folder),parent=fs.realpathSync(os.tmpdir());assert.equal(path.dirname(target).toLowerCase(),parent.toLowerCase());assert.ok(path.basename(target).startsWith('animation-quality-'));fs.rmSync(target,{recursive:true,force:true});}
-function manifest(videoHash){return {forms:3,directions:8,fps:12,width:240,height:64,families:1,positions:[{identity:'test',forms:[0,1,2].map(stage=>({stage,x:stage*72,y:0}))}],states,clipped:[],timeline:Array.from({length:72},(_,i)=>({dir:Math.floor(i/9),state:states[i%9],start:i,end:i+1})),duration:72,frames:864,renderedPoses:2592,videoHash,inputs:{runtime:'registered-source-hash'}};}
+function manifest(videoHash){const segments=states.length*8;return {forms:3,directions:8,fps:12,width:240,height:64,families:1,positions:[{identity:'test',forms:[0,1,2].map(stage=>({stage,x:stage*72,y:0}))}],states,clipped:[],timeline:Array.from({length:segments},(_,i)=>({dir:Math.floor(i/states.length),state:states[i%states.length],start:i,end:i+1})),duration:segments,frames:segments*12,renderedPoses:segments*36,videoHash,inputs:{runtime:'registered-source-hash'}};}
 
 test('movie acceptance rejects omitted facings, missing idle/turn/stop, clipped poses and inconsistent timing',()=>{
  const valid=manifest('a'.repeat(64));assert.equal(validateVideoManifest(valid),valid);

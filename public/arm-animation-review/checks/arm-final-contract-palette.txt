@@ -1,0 +1,21 @@
+✔ movie acceptance rejects omitted facings, missing idle/turn/stop, clipped poses and inconsistent timing (7.093ms)
+✔ movie cache requires matching bytes, source inputs, complete coverage and a review player (20.5047ms)
+✔ PNG validation checks actual decoded pixels and rejects corruption or truncation (1.4512ms)
+✔ animation output lock rejects a live owner and recovers an abandoned process (15.2828ms)
+✔ a failed encoder preserves the last movie and releases its output lock (224.7047ms)
+✔ an independent stage reports its own result without claiming complete pipeline approval (1836.1118ms)
+✔ base Brakk removes the old sleeves/hands from the body and paints one authored pair (137.7072ms)
+✔ base Brakk arms stay connected and unclipped through every facing and combat motion (2868.0444ms)
+✔ Brakk waves with his free hand while his hatchet remains on its original hand (213.2927ms)
+✔ minotaur upper arms retain the authored brown fur in every form and facing (58.9563ms)
+✔ expressive eye clusters are present in front/profile faces and absent from rear faces (7.4244ms)
+✔ tiny idle phase changes leave the authored pixel clusters stable (625.3753ms)
+✔ the neck and clothed torso stay connected to the head across living animation frames (4057.7824ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 13
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4971.6241

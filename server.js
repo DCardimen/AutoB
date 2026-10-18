@@ -18,7 +18,7 @@ const types = {
 const entryFiles = new Set([
   "/menagerie-browser.js",
   "/opening-journey.js",
-  "/companion-anatomy.js", "/authored-parts.js",
+  "/companion-anatomy.js", "/companion-arm-bindings.js", "/authored-parts.js",
   "/reward-loadout.js",
   "/stage-background-loop.js",
   "/skill-visuals.js",
