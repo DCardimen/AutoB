@@ -7,8 +7,8 @@ import {nativePoseRig} from '../native-poses.js';
 import {paintCharacterPixels} from '../prototype-pixel-art.js';
 
 test('side-view evolved grips use the actual hand rather than cape or belt samples',()=>{
- for(const [id,stage,x,y]of [['knight',1,28,34],['knight',2,32,32],['orc',1,29,33],['orc',2,42,35],['goblin',1,34,31],['goblin',2,38,30],['rogue',1,27,29],['rogue',2,30,33]]){
-  const asset=authoredSourceFrame(id,4,stage),parts=authoredParts(asset,id,stage,4),arm=parts.arms.profiles.get(1);
+ for(const [id,stage,x,y,side=1]of [['knight',1,28,34],['knight',2,32,32],['orc',1,29,33],['orc',2,42,35],['goblin',1,34,31],['goblin',2,38,30],['rogue',1,16,29,-1],['rogue',2,18,30,-1]]){
+  const asset=authoredSourceFrame(id,4,stage),parts=authoredParts(asset,id,stage,4),arm=parts.arms.profiles.get(side);
   assert.deepEqual(arm.end,{x,y},id+'/'+stage);
   assert.ok(arm.grid.has(y*64+x),'the actual glove is present');
   if(id==='orc'||id==='goblin'&&stage===2){const [r,g,b]=arm.grid.get(y*64+x).rgb;assert.ok(g>r*.9&&g>b*1.3,'grip is on the painted green hand');}
@@ -19,19 +19,19 @@ test('side-view evolved grips use the actual hand rather than cape or belt sampl
 test('concealed rear rogue arms use original indexed arm art without cutting holes in the cloak',()=>{
  for(let stage=0;stage<3;stage++)for(const dir of [5,6,7]){
   const asset=authoredSourceFrame('rogue',dir,stage),parts=authoredParts(asset,'rogue',stage,dir),front=authoredParts(authoredSourceFrame('rogue',2,stage),'rogue',stage,2);
-  for(const side of [-1,1])if(occludedMeleeArm('rogue',dir,side)){
+  for(const side of [-1,1])if(occludedMeleeArm('rogue',dir,side,stage)){
    const arm=parts.arms.profiles.get(side),original=front.arms.profiles.get(side);
    assert.equal(arm.sourceDir,2);assert.equal(arm.pixels.length,original.pixels.length);
    arm.pixels.forEach((p,i)=>{assert.equal(p.index,original.pixels[i].index);assert.equal(p.color,asset.colors[p.index]);});
   }
-  if(dir===6)for(const p of asset.pixels)assert.ok(parts.body.some(q=>q.x===p.x&&q.y===p.y&&q.index===p.index),'complete authored rear cloak retained');
+  if(dir===6)for(const p of asset.pixels)if(!parts.arms.mask.has(p.y*64+p.x))assert.ok(parts.body.some(q=>q.x===p.x&&q.y===p.y&&q.index===p.index),'complete authored rear cloak retained outside its visible sleeves');
  }
 });
 
 test('relaxed profile-view hands stay on their authored side even when both hands are left of the chest',()=>{
  for(const id of ['aurel','sable']){
   const spec=PIXEL_SPECIES.find(s=>s.id===id),rig=nativePoseRig(spec,{id,evolution:1,evolutionPath:'wild'},'idle',.25);paintCharacterPixels(rig.id,rig,Math.PI);
-  const arm=rig.arms.find(a=>rig.artArmScreens[a.side]===1),source=rig.artArmSkin.art.profiles.get(1).end,expected=rig.artSourceProject(source.x,source.y),actual=rig.artProject(arm.end);
+  const screen=id==='sable'?-1:1,arm=rig.arms.find(a=>rig.artArmScreens[a.side]===screen),source=rig.artArmSkin.art.profiles.get(screen).end,expected=rig.artSourceProject(source.x,source.y),actual=rig.artProject(arm.end);
   assert.ok(Math.hypot(actual.x-expected.x,actual.y-expected.y)<1,id+': do not force the registered hand across the torso');
   assert.ok(actual.x<rig.artAnchors.body.x,id+': original profile stance');
  }

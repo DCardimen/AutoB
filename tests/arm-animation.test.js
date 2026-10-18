@@ -25,7 +25,7 @@ test('source wrist ownership is complete and exclusive in all 288 articulated bi
   const asset=authoredSourceFrame(identity,dir,form),parts=authoredParts(asset,identity,form,dir),owners=new Set(),body=new Map(parts.body.map(p=>[p.y*64+p.x,p]));
   for(const profile of parts.arms.profiles.values()){
    assert.ok(profile.grid.has(profile.end.y*64+profile.end.x),`${identity}/${form}/${dir}: actual painted wrist`);
-   for(const p of profile.pixels){const key=p.y*64+p.x;assert.ok(!owners.has(key),`${identity}/${form}/${dir}: one moving owner per source pixel`);owners.add(key);assert.ok(profile.occluded||!body.has(key)||body.get(key).bodyUnderlay,'no frozen sleeve behind a moving one');assert.equal(p.color,asset.colors[p.index]);}
+   for(const p of profile.pixels){const key=p.y*64+p.x;if(!profile.occluded){assert.ok(!owners.has(key),`${identity}/${form}/${dir}: one moving owner per visible source pixel`);owners.add(key);}else assert.notEqual(profile.sourceDir,dir,'a concealed reconstructed layer is not an original visible pixel in this facing');assert.ok(profile.occluded||!body.has(key)||body.get(key).bodyUnderlay,'no frozen sleeve behind a moving one');assert.equal(p.color,asset.colors[p.index]);}
   }
  }
 });

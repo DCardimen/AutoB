@@ -1,5 +1,8 @@
 # Melee arm ownership and complete bodies
 
+Archived review. This evidence was superseded by [explicit authored layers and recovered source references](MELEE-AUTHORED-LAYERS.md). Earlier converted-bind and form labels are not a reliable untouched-art baseline.
+
+
 Archived PR66 review: this pass missed cape highlights and folds being removed with the arms. It is superseded by [complete melee clothing](MELEE-CLOTHING.md), including the user's marked knight example and new garment-only regression checks.
 
 This review supersedes the PR65 torso-fill review. That repair followed the outside of the resting arm, leaving an arm-shaped body bulge under the animated arm. Some source cuffs and hand outlines also remained stationary. A filled silhouette alone did not establish correct anatomy.

@@ -1,5 +1,8 @@
 # Complete melee clothing behind moving arms
 
+Archived review. This evidence was superseded by [explicit authored layers and recovered source references](MELEE-AUTHORED-LAYERS.md). Earlier converted-bind and form labels are not a reliable untouched-art baseline.
+
+
 This change supersedes the PR66 arm-ownership review. That review missed visible cape damage: orange highlights, red hem edges and dark folds were still being extracted into arms. A hand-radius shortcut ran before clothing protection, and RGB thresholds could not distinguish the full authored garment palette. Cape hems could also follow the leg skin instead of their shoulder attachment.
 
 The repair uses reviewed indexed garment materials for each authored form, fixed source hand contact patches where a dark cuff shares a palette index, and a separate cloth background beneath moving foreground arms. Background repairs use the exact facing's painted cloth silhouette and existing cloth indices. The independent chest remains underneath the clothing. Arms, armor, skin and fur keep their original source ownership. Garments retain their own deformation below the waist instead of following a foot.

@@ -39,7 +39,8 @@ for(let dir=0;dir<8;dir++)for(const [state,count]of states){
   if(failure)throw failure;
   const rgba=blank.slice(),phase=f/count;
   for(let i=0;i<specs.length;i++)for(const location of positions[i].forms){
-   const rig=nativePoseRig(specs[i],{id:specs[i].id,evolution:location.stage,evolutionPath},state,phase),pixels=paintCharacterPixels(rig.id,rig,dir*Math.PI/4);
+   const rig=nativePoseRig(specs[i],{id:specs[i].id,evolution:location.stage,evolutionPath},state,phase);rig.artStage=location.stage;const pixels=paintCharacterPixels(rig.id,rig,dir*Math.PI/4);
+   if(pixels.artStage!==location.stage)throw Error('Review art stage differs from its label: '+positions[i].identity);
    if(pixels.clipped)clipped.push({identity:positions[i].identity,stage:location.stage,state,phase,dir,clipped:pixels.clipped});
    for(const arm of rig.arms){
     const profile=rig.artArmSkin?.art.profiles.get(rig.artArmScreens[arm.side]);if(!profile)throw Error('Unregistered procedural arm in '+positions[i].identity);

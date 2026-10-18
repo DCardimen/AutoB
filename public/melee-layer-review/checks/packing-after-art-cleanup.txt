@@ -1,0 +1,1 @@
+{"unchangedCompletePoses":7344,"intentionallyChangedRoguePoses":1224,"reason":"Blue cloak underpainting, source-only floor exclusion and individually registered boots; other families unchanged."}

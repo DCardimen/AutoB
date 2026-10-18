@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "animation:layers": "node scripts/build-melee-layers.mjs",
     "animation:parts": "node scripts/build-companion-parts.mjs",
     "animation:review": "node scripts/review-companion-animation.mjs",
     "animation:verify-video": "node scripts/verify-animation-video.mjs",

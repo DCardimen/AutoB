@@ -12,6 +12,10 @@ const arthropods=new Set(['spider','crab','mantis','beetle','centipede','mech'])
 export function creatureLegArt(asset,rig,colors=asset.colors){
  const design=rig.design||rig.id;
  asset.creatureSkins??=new Map();if(asset.creatureSkins.has(design))return asset.creatureSkins.get(design);
+ if(asset.parts?.legRegistration){
+  const saved=asset.parts.legRegistration,ps=asset.parts.legs,result={...saved,occupied:new Set(ps.map(p=>p.y*64+p.x)),arthropod:false,sourcePixels:ps.length,materialIndices:sampleLegMaterial({...asset,colors},ps)};
+  asset.creatureSkins.set(design,result);return result;
+ }
  const bottom=Math.max(...asset.pixels.map(p=>p.y)),top=Math.min(...asset.pixels.map(p=>p.y));
  const robe=['caster','frostelf','elf','fox','skeleton'].includes(design);
  const height=Math.min((bottom-top)*.36,NATURAL_ANATOMY[design]?.legHeights?.[rig.artStage||0]||legAnatomy(design).height||(robe?5:9)),rootY=bottom-height;

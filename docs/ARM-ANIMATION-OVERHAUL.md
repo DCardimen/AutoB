@@ -1,5 +1,8 @@
 # Authored arm animation overhaul
 
+Archived review. This evidence was superseded by [explicit authored layers and recovered source references](MELEE-AUTHORED-LAYERS.md). Earlier converted-bind and form labels are not a reliable untouched-art baseline.
+
+
 The follow-up [torso fill correction](TORSO-FILL.md) fixes the exposed shoulder cutouts missed by this pass. Its before/after evidence and body-only opacity tests are the current acceptance evidence for body completeness.
 
 Moving sleeves, forearms and hands now use one continuous indexed skin. The complete cuff and its outline leave the body together; the torso retains its own underpainting. Weapon rendering no longer draws a second set of generic fists over those original hand pixels.

@@ -1,4 +1,5 @@
 import {armRegistration,capePixel,authoredClothing,completeClothing} from './companion-anatomy.js';
+import {meleeLayerParts} from './melee-layer-art.js';
 const key=(x,y)=>y*64+x;
 const mix=(a,b,t)=>({x:a.x+(b.x-a.x)*t,y:a.y+(b.y-a.y)*t});
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
@@ -9,7 +10,7 @@ function meleeOverlay(identity,p){
  // cape classifier's neck/width gates are unsuitable for arm extraction.
  return ['knight','goblin','orc'].includes(identity)?r>g*1.8&&g<b*1.5:identity==='rogue'?b>r*1.08:false;
 }
-export function occludedMeleeArm(identity,dir,side){return identity==='rogue'&&(dir===6||dir===5&&side===1||dir===7&&side===-1);}
+export function occludedMeleeArm(identity,dir,side,stage=0){return identity==='rogue'&&(stage===0&&dir===6||stage>0&&dir===4&&side===1||dir===5&&side===1||dir===7&&side===-1);}
 function segment(p,a,z){const dx=z.x-a.x,dy=z.y-a.y,t=clamp(((p.x-a.x)*dx+(p.y-a.y)*dy)/(dx*dx+dy*dy||1),0,1),q=mix(a,z,t);return {distance:Math.hypot(p.x-q.x,p.y-q.y),t};}
 function armMaterial(identity,p){
  const [r,g,b]=p.rgb,range=Math.max(r,g,b)-Math.min(r,g,b);
@@ -66,6 +67,7 @@ function torsoEnvelope(pixels,identity,registration,profiles){
 // No palette is created and no animated pose is used for ownership.
 export function authoredParts(asset,identity,stage,dir){
  if(asset.parts)return asset.parts;
+ const layered=meleeLayerParts(asset,identity,stage,dir);if(layered)return asset.parts=layered;
  const registration=armRegistration(identity,stage,dir);if(!registration)return null;
  const clothing=authoredClothing(asset,identity,stage,dir,registration);
  const grid=new Map(asset.pixels.map(p=>[key(p.x,p.y),p])),hands={},profiles=new Map(),mask=new Set();
