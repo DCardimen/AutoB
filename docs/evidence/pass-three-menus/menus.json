@@ -1,0 +1,74 @@
+[
+  {
+    "label": "source-1440",
+    "search": true,
+    "sort": true,
+    "emptyRecovery": true,
+    "companionShortcuts": true,
+    "realPurchase": true,
+    "sharedLogo": true,
+    "noOverflow": true,
+    "errors": [],
+    "requests": []
+  },
+  {
+    "label": "source-768",
+    "search": true,
+    "sort": true,
+    "emptyRecovery": true,
+    "companionShortcuts": true,
+    "realPurchase": true,
+    "sharedLogo": true,
+    "noOverflow": true,
+    "errors": [],
+    "requests": []
+  },
+  {
+    "label": "source-390",
+    "search": true,
+    "sort": true,
+    "emptyRecovery": true,
+    "companionShortcuts": true,
+    "realPurchase": true,
+    "sharedLogo": true,
+    "noOverflow": true,
+    "errors": [],
+    "requests": []
+  },
+  {
+    "label": "offline-1440",
+    "search": true,
+    "sort": true,
+    "emptyRecovery": true,
+    "companionShortcuts": true,
+    "realPurchase": true,
+    "sharedLogo": true,
+    "noOverflow": true,
+    "errors": [],
+    "requests": []
+  },
+  {
+    "label": "offline-768",
+    "search": true,
+    "sort": true,
+    "emptyRecovery": true,
+    "companionShortcuts": true,
+    "realPurchase": true,
+    "sharedLogo": true,
+    "noOverflow": true,
+    "errors": [],
+    "requests": []
+  },
+  {
+    "label": "offline-390",
+    "search": true,
+    "sort": true,
+    "emptyRecovery": true,
+    "companionShortcuts": true,
+    "realPurchase": true,
+    "sharedLogo": true,
+    "noOverflow": true,
+    "errors": [],
+    "requests": []
+  }
+]

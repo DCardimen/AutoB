@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {pathToFileURL} from 'node:url';
 import {makeRun,generateRoute} from '../game.js';
-const out='docs/evidence/stage-loop-seam';fs.mkdirSync(out,{recursive:true});
+const out=process.env.STAGE_LOOP_OUT||'playtest-artifacts/stage-loop-seam';fs.mkdirSync(out,{recursive:true});
 const browser=await chromium.launch({headless:true,executablePath:process.env.CHROMIUM_PATH||(process.platform==='win32'?'C:/Program Files/Google/Chrome/Application/chrome.exe':undefined)}),report=[];
 try{for(const offline of [false,true]){
  const context=await browser.newContext({viewport:{width:1440,height:1000},recordVideo:{dir:'playtest-artifacts/stage-loop-seam-video',size:{width:1440,height:1000}}}),page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));

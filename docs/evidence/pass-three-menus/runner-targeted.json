@@ -1,0 +1,49 @@
+{
+  "workers": 4,
+  "timeoutMs": 300000,
+  "seconds": 0.45,
+  "passed": 5,
+  "failed": 0,
+  "results": [
+    {
+      "file": "tests/journey-polish.test.js",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "seconds": 0.27,
+      "log": "playtest-artifacts/unit-suite/journey-polish.test.js.txt"
+    },
+    {
+      "file": "tests/menagerie-browser.test.js",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "seconds": 0.14,
+      "log": "playtest-artifacts/unit-suite/menagerie-browser.test.js.txt"
+    },
+    {
+      "file": "tests/opening-journey.test.js",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "seconds": 0.3,
+      "log": "playtest-artifacts/unit-suite/opening-journey.test.js.txt"
+    },
+    {
+      "file": "tests/reward-loadout.test.js",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "seconds": 0.24,
+      "log": "playtest-artifacts/unit-suite/reward-loadout.test.js.txt"
+    },
+    {
+      "file": "tests/uploaded-art.test.js",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "seconds": 0.39,
+      "log": "playtest-artifacts/unit-suite/uploaded-art.test.js.txt"
+    }
+  ]
+}

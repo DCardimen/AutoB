@@ -1,0 +1,17 @@
+{
+  "workers": 4,
+  "timeoutMs": 1000,
+  "seconds": 1.51,
+  "passed": 0,
+  "failed": 1,
+  "results": [
+    {
+      "file": "playtest-artifacts/pass-three/timeout-fixture.test.js",
+      "code": 1,
+      "signal": null,
+      "timedOut": true,
+      "seconds": 1.51,
+      "log": "playtest-artifacts/unit-suite/timeout-fixture.test.js.txt"
+    }
+  ]
+}

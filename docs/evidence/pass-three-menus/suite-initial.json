@@ -1,0 +1,496 @@
+{
+  "workers": 4,
+  "seconds": 346.44,
+  "passed": 55,
+  "failed": 6,
+  "results": [
+    {
+      "file": "tests/animation-pipeline.test.js",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "seconds": 3.01,
+      "log": "playtest-artifacts/unit-suite/animation-pipeline.test.js.txt"
+    },
+    {
+      "file": "tests/arena.test.js",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "seconds": 0.44,
+      "log": "playtest-artifacts/unit-suite/arena.test.js.txt"
+    },
+    {
+      "file": "tests/aura-stones.test.js",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "seconds": 1.32,
+      "log": "playtest-artifacts/unit-suite/aura-stones.test.js.txt"
+    },
+    {
+      "file": "tests/authored-art-v3.test.js",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "seconds": 55.09,
+      "log": "playtest-artifacts/unit-suite/authored-art-v3.test.js.txt"
+    },
+    {
+      "file": "tests/brakk-arms.test.js",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "seconds": 10.21,
+      "log": "playtest-artifacts/unit-suite/brakk-arms.test.js.txt"
+    },
+    {
+      "file": "tests/capture-forecast.test.js",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "seconds": 0.45,
+      "log": "playtest-artifacts/unit-suite/capture-forecast.test.js.txt"
+    },
+    {
+      "file": "tests/capture-recruitment.test.js",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "seconds": 0.52,
+      "log": "playtest-artifacts/unit-suite/capture-recruitment.test.js.txt"
+    },
+    {
+      "file": "tests/chaos-combat.test.js",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "seconds": 1,
+      "log": "playtest-artifacts/unit-suite/chaos-combat.test.js.txt"
+    },
+    {
+      "file": "tests/combat-spacing.test.js",
+      "code": 1,
+      "signal": null,
+      "timedOut": false,
+      "seconds": 49.62,
+      "log": "playtest-artifacts/unit-suite/combat-spacing.test.js.txt"
+    },
+    {
+      "file": "tests/companion-deformation.test.js",
+      "code": null,
+      "signal": "SIGTERM",
+      "timedOut": true,
+      "seconds": 120.02,
+      "log": "playtest-artifacts/unit-suite/companion-deformation.test.js.txt"
+    },
+    {
+      "file": "tests/companion-material-ownership.test.js",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "seconds": 0.32,
+      "log": "playtest-artifacts/unit-suite/companion-material-ownership.test.js.txt"
+    },
+    {
+      "file": "tests/companion-parts.test.js",
+      "code": null,
+      "signal": "SIGTERM",
+      "timedOut": true,
+      "seconds": 120.03,
+      "log": "playtest-artifacts/unit-suite/companion-parts.test.js.txt"
+    },
+    {
+      "file": "tests/companion-rules-v2.test.js",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "seconds": 23.23,
+      "log": "playtest-artifacts/unit-suite/companion-rules-v2.test.js.txt"
+    },
+    {
+      "file": "tests/creature-anatomy.test.js",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "seconds": 44.58,
+      "log": "playtest-artifacts/unit-suite/creature-anatomy.test.js.txt"
+    },
+    {
+      "file": "tests/creature-motion-v17.test.js",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "seconds": 17.3,
+      "log": "playtest-artifacts/unit-suite/creature-motion-v17.test.js.txt"
+    },
+    {
+      "file": "tests/deployment-selection.test.js",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "seconds": 9.37,
+      "log": "playtest-artifacts/unit-suite/deployment-selection.test.js.txt"
+    },
+    {
+      "file": "tests/elite-modifiers.test.js",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "seconds": 0.26,
+      "log": "playtest-artifacts/unit-suite/elite-modifiers.test.js.txt"
+    },
+    {
+      "file": "tests/empty-roster.test.js",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "seconds": 0.22,
+      "log": "playtest-artifacts/unit-suite/empty-roster.test.js.txt"
+    },
+    {
+      "file": "tests/enrage-tuning.test.js",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "seconds": 0.29,
+      "log": "playtest-artifacts/unit-suite/enrage-tuning.test.js.txt"
+    },
+    {
+      "file": "tests/equipment-capture-polish.test.js",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "seconds": 0.28,
+      "log": "playtest-artifacts/unit-suite/equipment-capture-polish.test.js.txt"
+    },
+    {
+      "file": "tests/evolution-bonus-skills.test.js",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "seconds": 0.35,
+      "log": "playtest-artifacts/unit-suite/evolution-bonus-skills.test.js.txt"
+    },
+    {
+      "file": "tests/evolution.test.js",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "seconds": 0.24,
+      "log": "playtest-artifacts/unit-suite/evolution.test.js.txt"
+    },
+    {
+      "file": "tests/expedition-v12.test.js",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "seconds": 1.33,
+      "log": "playtest-artifacts/unit-suite/expedition-v12.test.js.txt"
+    },
+    {
+      "file": "tests/expedition-v15.test.js",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "seconds": 0.45,
+      "log": "playtest-artifacts/unit-suite/expedition-v15.test.js.txt"
+    },
+    {
+      "file": "tests/gaits-carry.test.js",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "seconds": 69.62,
+      "log": "playtest-artifacts/unit-suite/gaits-carry.test.js.txt"
+    },
+    {
+      "file": "tests/game.test.js",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "seconds": 12.68,
+      "log": "playtest-artifacts/unit-suite/game.test.js.txt"
+    },
+    {
+      "file": "tests/grand-forms.test.js",
+      "code": null,
+      "signal": "SIGTERM",
+      "timedOut": true,
+      "seconds": 120.03,
+      "log": "playtest-artifacts/unit-suite/grand-forms.test.js.txt"
+    },
+    {
+      "file": "tests/inventory-pouches.test.js",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "seconds": 0.25,
+      "log": "playtest-artifacts/unit-suite/inventory-pouches.test.js.txt"
+    },
+    {
+      "file": "tests/journey-polish.test.js",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "seconds": 0.25,
+      "log": "playtest-artifacts/unit-suite/journey-polish.test.js.txt"
+    },
+    {
+      "file": "tests/leg-volume.test.js",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "seconds": 9.29,
+      "log": "playtest-artifacts/unit-suite/leg-volume.test.js.txt"
+    },
+    {
+      "file": "tests/legs-v2.test.js",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "seconds": 114.67,
+      "log": "playtest-artifacts/unit-suite/legs-v2.test.js.txt"
+    },
+    {
+      "file": "tests/legs-v3.test.js",
+      "code": null,
+      "signal": "SIGTERM",
+      "timedOut": true,
+      "seconds": 120.02,
+      "log": "playtest-artifacts/unit-suite/legs-v3.test.js.txt"
+    },
+    {
+      "file": "tests/manual-skills-v2.test.js",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "seconds": 0.49,
+      "log": "playtest-artifacts/unit-suite/manual-skills-v2.test.js.txt"
+    },
+    {
+      "file": "tests/melee-weapon-art.test.js",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "seconds": 78.08,
+      "log": "playtest-artifacts/unit-suite/melee-weapon-art.test.js.txt"
+    },
+    {
+      "file": "tests/native-expedition.test.js",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "seconds": 71.66,
+      "log": "playtest-artifacts/unit-suite/native-expedition.test.js.txt"
+    },
+    {
+      "file": "tests/native-lineage.test.js",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "seconds": 58.21,
+      "log": "playtest-artifacts/unit-suite/native-lineage.test.js.txt"
+    },
+    {
+      "file": "tests/native-tactics.test.js",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "seconds": 3.97,
+      "log": "playtest-artifacts/unit-suite/native-tactics.test.js.txt"
+    },
+    {
+      "file": "tests/opening-journey.test.js",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "seconds": 0.39,
+      "log": "playtest-artifacts/unit-suite/opening-journey.test.js.txt"
+    },
+    {
+      "file": "tests/overhaul.test.js",
+      "code": 1,
+      "signal": null,
+      "timedOut": false,
+      "seconds": 1.54,
+      "log": "playtest-artifacts/unit-suite/overhaul.test.js.txt"
+    },
+    {
+      "file": "tests/portrait-expressions.test.js",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "seconds": 26.92,
+      "log": "playtest-artifacts/unit-suite/portrait-expressions.test.js.txt"
+    },
+    {
+      "file": "tests/prototype-combat-v7.test.js",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "seconds": 1.83,
+      "log": "playtest-artifacts/unit-suite/prototype-combat-v7.test.js.txt"
+    },
+    {
+      "file": "tests/prototype-models.test.js",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "seconds": 2.07,
+      "log": "playtest-artifacts/unit-suite/prototype-models.test.js.txt"
+    },
+    {
+      "file": "tests/prototype-pixels.test.js",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "seconds": 83.62,
+      "log": "playtest-artifacts/unit-suite/prototype-pixels.test.js.txt"
+    },
+    {
+      "file": "tests/prototype-rig.test.js",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "seconds": 2.13,
+      "log": "playtest-artifacts/unit-suite/prototype-rig.test.js.txt"
+    },
+    {
+      "file": "tests/prototype.test.js",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "seconds": 20.64,
+      "log": "playtest-artifacts/unit-suite/prototype.test.js.txt"
+    },
+    {
+      "file": "tests/rarity-atmosphere.test.js",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "seconds": 1,
+      "log": "playtest-artifacts/unit-suite/rarity-atmosphere.test.js.txt"
+    },
+    {
+      "file": "tests/readable-combat.test.js",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "seconds": 0.14,
+      "log": "playtest-artifacts/unit-suite/readable-combat.test.js.txt"
+    },
+    {
+      "file": "tests/relic-supplies.test.js",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "seconds": 0.32,
+      "log": "playtest-artifacts/unit-suite/relic-supplies.test.js.txt"
+    },
+    {
+      "file": "tests/reward-loadout.test.js",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "seconds": 0.26,
+      "log": "playtest-artifacts/unit-suite/reward-loadout.test.js.txt"
+    },
+    {
+      "file": "tests/route-preview.test.js",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "seconds": 0.13,
+      "log": "playtest-artifacts/unit-suite/route-preview.test.js.txt"
+    },
+    {
+      "file": "tests/secondary-level-growth.test.js",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "seconds": 0.25,
+      "log": "playtest-artifacts/unit-suite/secondary-level-growth.test.js.txt"
+    },
+    {
+      "file": "tests/settings-movement.test.js",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "seconds": 0.29,
+      "log": "playtest-artifacts/unit-suite/settings-movement.test.js.txt"
+    },
+    {
+      "file": "tests/skill-visuals-v2.test.js",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "seconds": 0.19,
+      "log": "playtest-artifacts/unit-suite/skill-visuals-v2.test.js.txt"
+    },
+    {
+      "file": "tests/sprite-art-v2.test.js",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "seconds": 10.32,
+      "log": "playtest-artifacts/unit-suite/sprite-art-v2.test.js.txt"
+    },
+    {
+      "file": "tests/sprite-colors.test.js",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "seconds": 40.88,
+      "log": "playtest-artifacts/unit-suite/sprite-colors.test.js.txt"
+    },
+    {
+      "file": "tests/sprite-drag.test.js",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "seconds": 0.27,
+      "log": "playtest-artifacts/unit-suite/sprite-drag.test.js.txt"
+    },
+    {
+      "file": "tests/starter-reactions.test.js",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "seconds": 9.54,
+      "log": "playtest-artifacts/unit-suite/starter-reactions.test.js.txt"
+    },
+    {
+      "file": "tests/swing-body.test.js",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "seconds": 24.48,
+      "log": "playtest-artifacts/unit-suite/swing-body.test.js.txt"
+    },
+    {
+      "file": "tests/uploaded-art.test.js",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "seconds": 0.46,
+      "log": "playtest-artifacts/unit-suite/uploaded-art.test.js.txt"
+    },
+    {
+      "file": "tests/weapon-relic-start.test.js",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "seconds": 0.33,
+      "log": "playtest-artifacts/unit-suite/weapon-relic-start.test.js.txt"
+    },
+    {
+      "file": "tests/xp-celebration.test.js",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "seconds": 0.28,
+      "log": "playtest-artifacts/unit-suite/xp-celebration.test.js.txt"
+    }
+  ]
+}

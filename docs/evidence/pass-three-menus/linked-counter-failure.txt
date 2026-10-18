@@ -1,0 +1,168 @@
+TAP version 13
+# Subtest: every family has a functional specialty; 30 supports and 194 relics have unique IDs
+ok 1 - every family has a functional specialty; 30 supports and 194 relics have unique IDs
+  ---
+  duration_ms: 1.0509
+  ...
+# Subtest: route seeds change layouts, scouting and weather, and repeat deterministically
+ok 2 - route seeds change layouts, scouting and weather, and repeat deterministically
+  ---
+  duration_ms: 4.7996
+  ...
+# Subtest: six creatures can occupy unique grid cells; moving to an occupied default cell swaps
+ok 3 - six creatures can occupy unique grid cells; moving to an occupied default cell swaps
+  ---
+  duration_ms: 5.39
+  ...
+# Subtest: AI holds healing at full health, then releases it when an ally is injured
+ok 4 - AI holds healing at full health, then releases it when an ally is injured
+  ---
+  duration_ms: 2.7113
+  ...
+# Subtest: healer hunting selects a support; taunts still override it
+ok 5 - healer hunting selects a support; taunts still override it
+  ---
+  duration_ms: 2.6921
+  ...
+# Subtest: area AI selects the denser enemy group instead of its isolated initial target
+ok 6 - area AI selects the denser enemy group instead of its isolated initial target
+  ---
+  duration_ms: 4.8167
+  ...
+# Subtest: a Common pressure-fracture creature bypasses shields while an ordinary hit does not
+ok 7 - a Common pressure-fracture creature bypasses shields while an ordinary hit does not
+  ---
+  duration_ms: 4.9315
+  ...
+# Subtest: Shieldbreaker materially bypasses shields, with the advertised damage tradeoff
+ok 8 - Shieldbreaker materially bypasses shields, with the advertised damage tradeoff
+  ---
+  duration_ms: 4.9957
+  ...
+# Subtest: Withering reduces actual healing and Fork adds non-recursive projectiles
+ok 9 - Withering reduces actual healing and Fork adds non-recursive projectiles
+  ---
+  duration_ms: 8.1193
+  ...
+# Subtest: Reservoir saves excess healing and Purification removes roots, burns and poison
+ok 10 - Reservoir saves excess healing and Purification removes roots, burns and poison
+  ---
+  duration_ms: 6.0321
+  ...
+# Subtest: capture odds reward weakening, statuses and Mercy; boss capture is excluded
+ok 11 - capture odds reward weakening, statuses and Mercy; boss capture is excluded
+  ---
+  duration_ms: 0.4286
+  ...
+# Subtest: tactical capture resolves once and removes a successful target from combat
+ok 12 - tactical capture resolves once and removes a successful target from combat
+  ---
+  duration_ms: 2.7164
+  ...
+# Subtest: a resolved capture reservation is reused on replay rather than rerolled
+ok 13 - a resolved capture reservation is reused on replay rather than rerolled
+  ---
+  duration_ms: 2.9902
+  ...
+# Subtest: every habitat offers Legendary beacon encounters; beacons cannot be purchased twice
+ok 14 - every habitat offers Legendary beacon encounters; beacons cannot be purchased twice
+  ---
+  duration_ms: 1.8586
+  ...
+# Subtest: Legendary shop contracts use real gold and bench space; Chaos shop prices agree
+ok 15 - Legendary shop contracts use real gold and bench space; Chaos shop prices agree
+  ---
+  duration_ms: 0.3283
+  ...
+# Subtest: Chaos unlocks after victory, advances one tier, and stops at twenty
+ok 16 - Chaos unlocks after victory, advances one tier, and stops at twenty
+  ---
+  duration_ms: 0.2217
+  ...
+# Subtest: Chaos starting resources and cumulative enemy scaling follow the selected tier
+ok 17 - Chaos starting resources and cumulative enemy scaling follow the selected tier
+  ---
+  duration_ms: 12.6833
+  ...
+# Subtest: the three bosses perform different mechanics and transition to a third phase
+ok 18 - the three bosses perform different mechanics and transition to a third phase
+  ---
+  duration_ms: 7.2607
+  ...
+# Subtest: interception protects a nearby ally and reports transferred damage
+ok 19 - interception protects a nearby ally and reports transferred damage
+  ---
+  duration_ms: 0.7858
+  ...
+# Subtest: Wild and Warden evolutions change combat behavior, not just statistics
+ok 20 - Wild and Warden evolutions change combat behavior, not just statistics
+  ---
+  duration_ms: 1.4556
+  ...
+# Subtest: event contracts apply a stated next-battle risk and gem trades respect inventory
+ok 21 - event contracts apply a stated next-battle risk and gem trades respect inventory
+  ---
+  duration_ms: 1.0236
+  ...
+# Subtest: battle reports explain enemy healing and shield absorption
+ok 22 - battle reports explain enemy healing and shield absorption
+  ---
+  duration_ms: 1.5307
+  ...
+# Subtest: animation v2 dashes interpolate and falls progress smoothly at fixed game time
+ok 23 - animation v2 dashes interpolate and falls progress smoothly at fixed game time
+  ---
+  duration_ms: 0.5439
+  ...
+# Subtest: repeated capture bonds cap at five and let two mastered Legendary starters fit twelve points
+ok 24 - repeated capture bonds cap at five and let two mastered Legendary starters fit twelve points
+  ---
+  duration_ms: 0.2972
+  ...
+# Subtest: a correctly linked counter support can turn the same shield encounter into a victory
+not ok 25 - a correctly linked counter support can turn the same shield encounter into a victory
+  ---
+  duration_ms: 531.9894
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+
+    0 !== 1
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 1
+  actual: 0
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/David%20Cardimen/Downloads/AutoB-uploaded-art-pass/tests/overhaul.test.js:404:10)
+    Test.runInAsyncScope (node:async_hooks:203:9)
+    Test.run (node:internal/test_runner/test:547:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:300:27)
+    Test.postRun (node:internal/test_runner/test:637:19)
+    Test.run (node:internal/test_runner/test:575:10)
+    async Test.processPendingSubtests (node:internal/test_runner/test:300:7)
+  ...
+# Subtest: support compatibility prevents inert links and automatically chooses a valid skill
+ok 26 - support compatibility prevents inert links and automatically chooses a valid skill
+  ---
+  duration_ms: 0.306
+  ...
+# Subtest: combat outcomes are independent of browser frame rate and simulation call interval
+ok 27 - combat outcomes are independent of browser frame rate and simulation call interval
+  ---
+  duration_ms: 605.3024
+  ...
+# Subtest: the final knockout finishes falling without advancing settled combat state
+ok 28 - the final knockout finishes falling without advancing settled combat state
+  ---
+  duration_ms: 0.338
+  ...
+1..28
+# tests 28
+# pass 27
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1467.7184

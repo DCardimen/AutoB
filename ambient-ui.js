@@ -29,8 +29,9 @@ export function decorateAmbientBackgrounds(root=document){
   if(scenes.has(host))continue;host.querySelector(':scope>.background-motion')?.remove();
   const route=host.matches('.field-world-preview')?host.style.backgroundImage:host.closest('.reference-map')?.style.getPropertyValue('--route-art')||'',routeWorld=[0,1,2].find(i=>route.includes(UI_ART['world-'+i])||i===0&&route.includes(UI_ART['stage-grasslands']));
   const i=host.matches('.field-world')?[...document.querySelectorAll('.field-world')].indexOf(host)%3:routeWorld??planet;
-  if(i===0&&host.matches('.biome-route')){
-   const loop=stageBackgroundLoop(host,{src:UI_ART['stage-grasslands-video'],poster:UI_ART['stage-grasslands']});host.classList.add('ambient-host');
+  if(host.matches('.rewards-landscape')||i===0&&host.matches('.biome-route')){
+   const rewards=host.matches('.rewards-landscape');
+   const loop=stageBackgroundLoop(host,{src:UI_ART[rewards?'rewards-valley-video':'stage-grasslands-video'],poster:UI_ART[rewards?'rewards-backdrop':'stage-grasslands']});host.classList.add('ambient-host');
    scenes.set(host,{loop,get video(){return loop.video;},visible:!observer,playPending:false,playBlocked:false});observer?.observe(host);continue;
   }
   const canvas=document.createElement('canvas');canvas.className='background-motion';canvas.setAttribute('aria-hidden','true');canvas.style.opacity=opacity;

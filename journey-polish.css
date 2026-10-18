@@ -652,3 +652,51 @@ body.ui-v3.native-expedition .reward-quick-equip .result-hero{padding:16px;borde
  body.ui-v3.native-expedition .reward-awarded-note{font-size:11px}
  body.ui-v3.native-expedition .roster-manage [data-action="journey-advanced"]{min-height:32px;font-size:8px}
 }
+
+/* Pass 3: browse permanent families and move through long expedition tools. */
+body.ui-v3[data-screen="collection"] #opening-guide{display:none}
+body.ui-v3 .collection-banner{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:22px 26px}
+body.ui-v3 .collection-banner>div{max-width:780px;min-width:0}.collection-banner .section-kicker{font-size:10px}.collection-banner h2{font-size:30px;margin:8px 0}.collection-banner p{font:13px/1.6 var(--sans);margin:6px 0;color:#bed0c5}
+.collection-progress{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:14px 0;font:11px var(--sans);color:#b9cfbf}.collection-progress strong{color:#ecdb9f}.collection-progress progress{appearance:none;width:150px;height:6px;border:0;border-radius:9px;background:#0a2229;overflow:hidden}.collection-progress progress::-webkit-progress-bar{background:#0a2229}.collection-progress progress::-webkit-progress-value{background:#b7c68d;border-radius:9px}.collection-progress progress::-moz-progress-bar{background:#b7c68d}
+.collection-rules summary{cursor:pointer;min-height:32px;align-content:center;font:11px var(--sans);color:#cbd8b6}.collection-rules p{max-width:720px}
+body.ui-v3 .collection-toolbar{display:grid;gap:14px;padding:18px 0;margin:0}.collection-search-row{display:grid;grid-template-columns:minmax(180px,1fr) minmax(150px,230px);gap:14px}.collection-search-row label{display:grid;gap:6px;font:600 11px var(--sans);color:#c4d1bc}.collection-search-row input,.collection-search-row select{box-sizing:border-box;min-width:0;width:100%;min-height:44px;border:1px solid #72958c88;border-radius:8px;background:#092832;color:#ecdfba;padding:10px 12px;font:13px var(--sans)}
+body.ui-v3 .collection-toolbar .filters{display:flex;flex-wrap:wrap;gap:6px}.collection-toolbar .filters button{min-height:44px;padding:7px 14px;font:11px var(--sans)}.collection-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.collection-actions p{margin:0 auto 0 0;font:12px var(--sans);color:#c3d0c0}.collection-actions button{min-height:40px}
+body.ui-v3 .codex-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}body.ui-v3 .codex-card{min-height:240px;padding:16px 12px;min-width:0;text-align:center;transition:border-color .16s,background .16s}body.ui-v3 .codex-card .creature-art{width:100%;height:112px;object-fit:contain;image-rendering:pixelated;filter:drop-shadow(0 7px 3px #0008)}body.ui-v3 .codex-card strong{font-size:18px}.codex-card .card-meta{font-size:10px;gap:6px;flex-wrap:wrap;justify-content:center}.codex-card:focus-visible,.collection-search-row :focus-visible,.companion-jump button:focus-visible{outline:2px solid #ebd591;outline-offset:3px}
+.collection-empty{grid-column:1/-1;display:grid;justify-items:center;gap:8px;padding:42px 20px;border:1px dashed #789b8b88;border-radius:12px;background:#0b2931;color:#dfd9b9;text-align:center}.collection-empty h3,.collection-empty p{margin:0}.collection-empty p{font:13px/1.6 var(--sans);color:#b8ccbf}
+.companion-jump{display:flex;gap:6px;margin:8px 0 14px}.companion-jump button{flex:1;min-height:44px;border:1px solid #789c8a77;border-radius:7px;background:#12353b;color:#e2dbba;font:600 11px var(--sans);cursor:pointer}.companion-jump button:hover{background:#25483f}.modal[data-kind="companions"] .companion-equipment,.modal[data-kind="companions"] .inventory-sidebar,.modal[data-kind="companions"] .reserve-panel{scroll-margin-top:125px}
+@media(min-width:1051px){.companion-jump{display:none}}
+@media(max-width:700px){
+ body.ui-v3[data-screen="collection"] .page-heading{padding:14px 0;margin-bottom:8px}body.ui-v3[data-screen="collection"] .page-heading>div:first-child{min-width:0}body.ui-v3[data-screen="collection"] .page-heading h1{font-size:26px}body.ui-v3[data-screen="collection"] .resources{display:none}
+ body.ui-v3 .collection-banner{padding:16px;display:grid;gap:10px}.collection-banner h2{font-size:24px}.collection-banner p{font-size:12px}.collection-progress{gap:8px;margin:10px 0}.collection-progress progress{width:100px}.collection-progress>span{width:100%}.collection-banner>.button{width:100%;box-sizing:border-box;min-height:44px}
+ .collection-search-row{grid-template-columns:minmax(0,1fr) minmax(100px,125px);gap:8px}.collection-search-row input,.collection-search-row select{font-size:12px;padding:9px}.collection-toolbar .filters button{padding:7px 10px}.collection-actions{gap:6px}.collection-actions p{width:100%;margin-bottom:2px}.collection-actions button{flex:1;font-size:10px;min-height:44px;padding:8px}
+ body.ui-v3 .codex-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}body.ui-v3 .codex-card{min-height:220px;padding:12px 8px}body.ui-v3 .codex-card .creature-art{height:96px}body.ui-v3 .codex-card strong{font-size:16px}.codex-card .card-top{font-size:8px}
+ .modal[data-kind="companions"] .tool-heading{padding-right:38px}.modal[data-kind="companions"] .tool-heading h2{font-size:24px}.modal[data-kind="companions"] .tool-heading p{font-size:11px}.modal[data-kind="companions"] .companion-jump{position:sticky;top:40px;z-index:24;padding:5px 0;background:#08242ef5}.modal[data-kind="companions"] .pouch-companions{top:-12px;margin-bottom:0}.modal[data-kind="companions"] .modal-close{z-index:30}
+ body.ui-v3 .modal[data-kind="companions"] .companion-equipment>header{flex-wrap:wrap}body.ui-v3 .modal[data-kind="companions"] .companion-equipment>header h3{font-size:20px}body.ui-v3 .modal[data-kind="companions"] .companion-equipment>header button{min-height:44px;margin-left:auto}
+ body.ui-v3 .modal[data-kind="shop"] .shop-grid{grid-template-columns:1fr}.modal[data-kind="shop"] .shop-personal-grid,.modal[data-kind="shop"] .shop-gear-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.modal[data-kind="shop"] .shop-supplies{flex-wrap:wrap;gap:10px}.modal[data-kind="shop"] button{min-height:44px}.modal[data-kind="shop"] .legendary-outpost .shop-supplies{display:flex;flex-wrap:wrap}.modal[data-kind="shop"] .legendary-outpost .shop-supplies>span{flex:1;min-width:0}
+}
+
+body.ui-v3[data-screen="collection"] .run-bar,body.ui-v3[data-screen="collection"] .page-heading,body.ui-v3[data-screen="collection"] .expedition-relic-bar{display:none}
+body.ui-v3[data-screen="collection"] #app{padding-top:18px}
+body.ui-v3 .codex-card.locked .creature-art{filter:brightness(.2) drop-shadow(0 5px 3px #0008);opacity:.7}
+@media(max-width:700px){
+ body.ui-v3[data-screen="collection"] #app{padding-top:12px}
+ body.ui-v3 .modal[data-kind="companions"] .modal-close{position:sticky;float:right;top:-6px;right:0;z-index:40;margin:0 0 -44px 0;min-width:44px;min-height:44px}
+ .modal[data-kind="companions"] .pouch-companions{padding-right:48px;box-sizing:border-box;gap:4px}.modal[data-kind="companions"] .pouch-companions button{padding:5px;min-width:0;gap:4px;font-size:10px}.modal[data-kind="companions"] .pouch-companions img{width:24px;height:28px}
+ body.ui-v3.native-expedition .modal[data-kind="companions"] .character-attachments .equipment-panel>.gear-grid.equipment-slots{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+ body.ui-v3 .modal[data-kind="companions"] .character-attachments .equipment-slot{min-height:80px;min-width:0;padding:8px;box-sizing:border-box;grid-template-columns:32px minmax(0,1fr);gap:4px}
+ body.ui-v3 .modal[data-kind="companions"] .character-attachments .equipment-slot>strong{font-size:11px;overflow-wrap:anywhere}.modal[data-kind="companions"] .character-attachments .equipment-slot small{font-size:9px}.modal[data-kind="companions"] .character-attachments .equipment-slot img{max-width:32px;max-height:32px}
+}
+
+body.ui-v3 .collection-toolbar{grid-template-columns:minmax(0,1fr);align-items:stretch;justify-content:stretch}
+@media(max-width:700px){
+ body.ui-v3 .collection-banner{padding:12px;gap:6px}.collection-progress>span{display:none}.collection-progress{margin:8px 0}.collection-banner h2{font-size:22px}.collection-banner>div>p{font-size:11px}
+ body.ui-v3 .collection-toolbar .filters{flex-wrap:nowrap;overflow-x:auto;overscroll-behavior-x:contain;padding-bottom:4px;scrollbar-width:thin}.collection-toolbar .filters button{flex:none}
+ body.ui-v3 .modal[data-kind="companions"] .character-attachments .equipment-slot>b{width:32px;height:32px;font-size:22px}
+ .modal[data-kind="companions"] .companion-tools{position:static}
+}
+
+/* Keep the uploaded valley framed to the viewport as reward content scrolls. */
+body.ui-v3.native-expedition .rewards-layout .rewards-landscape{position:fixed;inset:0;background-position:center;background-attachment:initial}
+body.ui-v3.native-expedition .rewards-landscape>video.background-motion{object-fit:cover;object-position:center;image-rendering:auto}
+.rewards-landscape:after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(90deg,#06202c44,#06202c22 55%,#03192577)}
+@media(max-width:700px){body.ui-v3.native-expedition .rewards-layout .rewards-landscape{background-position:35% center}body.ui-v3.native-expedition .rewards-landscape>video.background-motion{object-position:35% center}}

@@ -15,7 +15,10 @@ export function stageBackgroundLoop(host,{src,poster}){
     // Complementary opacities would expose the poster and produce a dark dip.
     host.insertBefore(active,host.firstChild);host.insertBefore(incoming,active.nextSibling);
     incoming.play().then(()=>{if(disposed||phase!=='warming')return;phase='blending';incoming.style.transition='opacity 600ms linear';incoming.style.opacity='1';fadeEnd=performance.now()+600;}).catch(()=>{blocked=true;phase='idle';});
-   }else if(phase==='blending'&&now>=fadeEnd)promote();
+   // The compositor starts its transition after the style change is painted,
+   // sometimes a frame later than play() resolves. Do not snap the final few
+   // percent of opacity by promoting solely against the JavaScript clock.
+   }else if(phase==='blending'&&now>=fadeEnd&&Number(getComputedStyle(incoming).opacity)>=.999)promote();
   },
   pause(){if(phase==='blending')promote();else if(phase==='warming'){phase='idle';incoming.pause();incoming.style.opacity='0';}for(const v of tracks)v.pause();},
   destroy(){disposed=true;for(const v of tracks){v.pause();v.removeAttribute('src');v.load();v.remove();}},
