@@ -1,0 +1,164 @@
+[
+  {
+    "offline": false,
+    "evolution": 0,
+    "families": [
+      "luma",
+      "nix",
+      "duskcap",
+      "moonjelly",
+      "frostursa",
+      "cogwalker",
+      "brookfin",
+      "pearlsquid",
+      "zephyr",
+      "onyxscarab",
+      "runespider",
+      "sunlion"
+    ],
+    "states": [
+      "travel",
+      "windup",
+      "recovery"
+    ],
+    "bladeContacts": 4,
+    "animated": true,
+    "errors": [],
+    "requests": []
+  },
+  {
+    "offline": false,
+    "evolution": 1,
+    "families": [
+      "luma",
+      "nix",
+      "duskcap",
+      "moonjelly",
+      "frostursa",
+      "cogwalker",
+      "brookfin",
+      "pearlsquid",
+      "zephyr",
+      "onyxscarab",
+      "runespider",
+      "sunlion"
+    ],
+    "states": [
+      "travel",
+      "windup",
+      "recovery"
+    ],
+    "bladeContacts": 2,
+    "animated": true,
+    "errors": [],
+    "requests": []
+  },
+  {
+    "offline": false,
+    "evolution": 2,
+    "families": [
+      "luma",
+      "nix",
+      "duskcap",
+      "moonjelly",
+      "frostursa",
+      "cogwalker",
+      "brookfin",
+      "pearlsquid",
+      "zephyr",
+      "onyxscarab",
+      "runespider",
+      "sunlion"
+    ],
+    "states": [
+      "travel",
+      "recovery",
+      "windup"
+    ],
+    "bladeContacts": 1,
+    "animated": true,
+    "errors": [],
+    "requests": []
+  },
+  {
+    "offline": true,
+    "evolution": 0,
+    "families": [
+      "luma",
+      "nix",
+      "duskcap",
+      "moonjelly",
+      "frostursa",
+      "cogwalker",
+      "brookfin",
+      "pearlsquid",
+      "zephyr",
+      "onyxscarab",
+      "runespider",
+      "sunlion"
+    ],
+    "states": [
+      "travel",
+      "windup",
+      "recovery"
+    ],
+    "bladeContacts": 4,
+    "animated": true,
+    "errors": [],
+    "requests": []
+  },
+  {
+    "offline": true,
+    "evolution": 1,
+    "families": [
+      "luma",
+      "nix",
+      "duskcap",
+      "moonjelly",
+      "frostursa",
+      "cogwalker",
+      "brookfin",
+      "pearlsquid",
+      "zephyr",
+      "onyxscarab",
+      "runespider",
+      "sunlion"
+    ],
+    "states": [
+      "travel",
+      "windup",
+      "recovery"
+    ],
+    "bladeContacts": 2,
+    "animated": true,
+    "errors": [],
+    "requests": []
+  },
+  {
+    "offline": true,
+    "evolution": 2,
+    "families": [
+      "luma",
+      "nix",
+      "duskcap",
+      "moonjelly",
+      "frostursa",
+      "cogwalker",
+      "brookfin",
+      "pearlsquid",
+      "zephyr",
+      "onyxscarab",
+      "runespider",
+      "sunlion"
+    ],
+    "states": [
+      "travel",
+      "recovery",
+      "windup"
+    ],
+    "bladeContacts": 1,
+    "animated": true,
+    "errors": [],
+    "requests": []
+  }
+]

@@ -458,3 +458,130 @@ body.ui-v3.native-expedition .evolution-skill-bonuses .skill-detail[data-skill-v
 .armor-stat.armor-vulnerable>span{color:#f0b295}
 @media(max-width:700px){body.ui-v3.native-expedition .skill-choice-card[data-skill-visual="2"]{grid-template-columns:64px minmax(0,1fr);column-gap:12px}body.ui-v3.native-expedition .skill-choice-card[data-skill-visual="2"] .skill-choice-art{width:64px;height:64px;margin:0}}
 @media(max-width:500px){body.ui-v3.native-expedition .skill-detail[data-skill-visual="2"]{gap:9px;padding:11px}body.ui-v3.native-expedition .skill-detail[data-skill-visual="2"]>.skill-icon,body.ui-v3.native-expedition .skill-detail[data-skill-visual="2"]>.skill-icon img{width:45px;height:45px;min-width:45px}body.ui-v3.native-expedition .skill-detail[data-skill-visual="2"] h3{gap:5px;flex-wrap:wrap}body.ui-v3.native-expedition .skill-choice-card[data-skill-visual="2"]{grid-template-columns:56px minmax(0,1fr)}body.ui-v3.native-expedition .skill-choice-card[data-skill-visual="2"] .skill-choice-art{width:56px;height:56px}}
+/* Postmatch: companions stay beside the rewards, with quiet, usable drop fields. */
+/* Expedition selection keeps the party and confirmation ahead of the catalogue. */
+@media(min-width:1101px){
+ body.ui-v3.native-expedition[data-screen="arena"] #app{width:100%;max-width:none;padding-inline:clamp(14px,1.4vw,36px)}
+ body.ui-v3.native-expedition[data-screen="arena"] .arena-grid,body.ui-v3.native-expedition[data-screen="arena"][data-phase="battle"] .arena-grid,body.ui-v3.native-expedition[data-screen="arena"] .arena-grid:has(.elite-encounter){align-items:stretch;grid-template-columns:minmax(0,1fr) clamp(310px,22vw,390px);gap:12px}
+ body.ui-v3.native-expedition[data-screen="arena"] .side-column{display:flex;flex-direction:column;height:100%;min-height:0;overflow:hidden;gap:10px}
+ body.ui-v3.native-expedition[data-screen="arena"] .side-column>.briefing{flex:1;min-height:0;max-height:none;overflow:auto;padding:14px}
+ body.ui-v3.native-expedition .side-column>.arena-roster-deck,body.ui-v3.native-expedition .side-column>#live-roster{flex:none;max-height:40dvh;overflow:auto;scrollbar-width:thin;scrollbar-color:#729f92 #07242d;border:1px solid #59868c;border-radius:8px;padding:8px;background:#05232b}
+ body.ui-v3.native-expedition .side-column #ally-orders,body.ui-v3.native-expedition .side-column #ally-orders:not(:has(> :nth-child(4))){display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-flow:row;grid-auto-columns:auto;gap:5px}
+ body.ui-v3.native-expedition .side-column .ally-orders>[data-ally-order]{display:flex;flex-direction:column;gap:4px;min-width:0;padding:6px;min-height:70px}
+ body.ui-v3.native-expedition .side-column .prep-roster-portrait{gap:4px;min-width:0;width:100%}
+ body.ui-v3.native-expedition .side-column .prep-roster-portrait img{width:31px;height:31px}
+ body.ui-v3.native-expedition .side-column .prep-roster-portrait strong{font-size:12px}
+ body.ui-v3.native-expedition .side-column .prep-roster-portrait small{font-size:8px}
+ body.ui-v3.native-expedition .side-column .roster-commands{width:100%;margin:0}
+ body.ui-v3.native-expedition .side-column .roster-commands select{width:100%;font-size:9px}
+ body.ui-v3.native-expedition .side-column .prep-roster-vitals{width:100%}
+ body.ui-v3.native-expedition .side-column .prep-roster-vitals>span{font-size:7px}
+ body.ui-v3.native-expedition .side-column .arena-roster-deck h3{font-size:9px;gap:4px;flex-wrap:wrap;margin-bottom:7px}
+ body.ui-v3.native-expedition .side-column .roster-manage{margin-left:auto}
+ body.ui-v3.native-expedition .side-column .roster-manage button{font-size:7px;padding:4px}
+ body.ui-v3.native-expedition .side-column .roster-manage button:first-child{display:none}
+ body.ui-v3.native-expedition .side-column .live-roster.paired-rosters{display:block}
+ body.ui-v3.native-expedition .side-column .live-roster-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px}
+ body.ui-v3.native-expedition .side-column .live-unit-card{min-width:0}
+ body.ui-v3.native-expedition .side-column .live-roster>[data-roster-panel]{margin-bottom:6px}
+}
+body.ui-v3 .header .header-new-expedition{border:1px solid #9cbba077;border-radius:7px;color:#e8d9a1;padding:7px 11px;min-height:34px;white-space:nowrap;font:600 11px var(--sans)}
+body.ui-v3 .header .header-new-expedition:hover{background:#214944;border-color:#d7d995}
+@media(max-width:380px){body.ui-v3 .header{padding-inline:8px}body.ui-v3 .header .header-end{gap:4px}body.ui-v3 .header .header-end .icon-button{width:32px;min-width:32px;height:32px}}
+body.ui-v3 .modal.team-select{padding:20px 2.4vw 12px}
+body.ui-v3 .team-select .team-select-heading{padding:0 65px 12px 8px}
+body.ui-v3 .team-select-heading h2{font-size:clamp(28px,2.6vw,43px);margin:8px 0 4px}
+body.ui-v3 .team-select-heading p{font:13px/1.5 var(--sans);color:#afc9bd}
+body.ui-v3 .team-select .team-party{grid-template-columns:minmax(0,1.8fr) minmax(170px,.7fr) minmax(170px,.65fr) minmax(210px,.8fr);gap:12px;margin:0 0 14px;padding:8px 12px;min-height:0;border-width:10px;border-image:none;border:1px solid #9eb68b66;border-radius:12px;background:linear-gradient(110deg,#173d3be8,#0b2632e8);box-shadow:0 8px 22px #00191c44}
+body.ui-v3 .team-select .team-party-roster{grid-column:auto}
+body.ui-v3 .team-select .team-party-roster h3{padding:0;margin-bottom:6px;font-size:8px;letter-spacing:1.3px}
+body.ui-v3 .team-select .party-companion{padding:4px 7px;gap:5px;min-height:48px}
+body.ui-v3 .team-select .party-companion>.starter-portrait{width:36px;height:40px}
+body.ui-v3 .team-select .party-companion strong{font-size:14px}
+body.ui-v3 .team-select .party-companion small{font-size:8px}
+body.ui-v3 .team-select .party-companion.open-slot>b{width:30px;height:32px;font-size:22px}
+body.ui-v3 .team-select .starter-budget{padding:4px 10px;font-size:10px;gap:8px}
+body.ui-v3 .team-select .starter-budget strong{font-size:20px}
+body.ui-v3 .team-select .starter-point-dots{gap:3px;margin-top:6px}
+body.ui-v3 .team-select .starter-point-dots>i{width:8px;height:8px}
+body.ui-v3 .team-select .expedition-confirm-note{font:10px/1.5 var(--sans);margin:0;color:#b8cebd}
+.expedition-confirm-note>b,.expedition-confirm-note>span{display:block}
+.expedition-confirm-note>b{color:#e9dfa9;margin-bottom:4px}
+body.ui-v3 .modal.team-select .button.team-begin{min-height:50px;padding:10px 14px;font-size:20px}
+body.ui-v3 .team-select-layout{grid-template-columns:minmax(260px,.7fr) minmax(0,2fr);gap:14px}
+body.ui-v3 .team-select .team-art-panel:not(.team-party){border-width:11px}
+body.ui-v3 .team-select .difficulty-options{gap:8px;margin:12px 0}
+body.ui-v3 .team-select .difficulty-options button{min-height:94px;padding:11px 8px;gap:8px}
+body.ui-v3 .team-select .difficulty-options button.selected{padding:10px 7px}
+body.ui-v3 .team-select .difficulty-options strong{font-size:18px}
+body.ui-v3 .team-select .difficulty-options small{font:10px/1.4 var(--sans)}
+body.ui-v3 .team-select .team-foliage{opacity:.4}
+@media(max-width:1100px){body.ui-v3 .team-select .team-party{grid-template-columns:minmax(0,1fr) minmax(180px,.7fr);gap:10px}body.ui-v3 .team-select .team-party-roster{grid-column:1}body.ui-v3 .team-select .starter-budget{grid-column:2;grid-row:1}body.ui-v3 .team-select .expedition-confirm-note{grid-column:1;grid-row:2}body.ui-v3 .team-select .team-begin{grid-column:2;grid-row:2}}
+@media(max-width:760px){body.ui-v3 .header .header-new-expedition{padding:5px 7px;min-height:32px;font-size:9px}body.ui-v3 .header .header-new-expedition>span{display:none}body.ui-v3 .modal.team-select{padding:18px 3vw 10px}body.ui-v3 .team-select .team-party{grid-template-columns:minmax(0,1fr);padding:10px;gap:8px}body.ui-v3 .team-select .team-party-roster,body.ui-v3 .team-select .starter-budget,body.ui-v3 .team-select .expedition-confirm-note,body.ui-v3 .team-select .team-begin{grid-column:1;grid-row:auto}body.ui-v3 .team-select .starter-budget{border:0;border-top:1px solid #8db7a333;padding:8px 0 0}body.ui-v3 .team-select .party-companion{flex:1 0 100px}body.ui-v3 .team-select .team-party-roster>div{gap:5px}body.ui-v3 .team-select-layout{display:flex;flex-direction:column-reverse}body.ui-v3 .team-select .team-select-heading{padding-bottom:12px}body.ui-v3 .team-select .team-select-heading h2{font-size:28px}body.ui-v3 .team-select .team-select-heading p{font-size:11px}body.ui-v3 .team-select .companion-scroll{max-height:65dvh}body.ui-v3 .team-select .challenge-scroll{max-height:none}}
+body.ui-v3.native-expedition .rewards-layout.reward-quick-equip{display:grid;grid-template-columns:minmax(310px,.85fr) minmax(0,1.4fr);grid-template-rows:auto auto;gap:22px;padding:30px 3vw 0}
+body.ui-v3.native-expedition .reward-quick-equip .rewards-stage{display:flex;grid-column:2;grid-row:1;min-height:0}
+body.ui-v3.native-expedition .reward-quick-equip .rewards-expedition{display:block;grid-column:1;grid-row:1;align-self:start;margin-top:0;padding:10px;border:1px solid #68918b66;border-radius:14px;background:linear-gradient(145deg,#12343be8,#041d29ed);box-shadow:0 10px 40px #00141a66}
+body.ui-v3.native-expedition .reward-quick-equip .rewards-expedition>header{display:flex;padding:4px 4px 12px;align-items:center;gap:8px;justify-content:space-between;border-bottom:1px solid #709f9255}
+body.ui-v3.native-expedition .reward-quick-equip .rewards-expedition>header h3{font-size:25px;margin:0}
+body.ui-v3.native-expedition .reward-quick-equip .rewards-expedition>header button{font-size:10px}
+body.ui-v3.native-expedition .reward-quick-equip .experience-story{display:block;padding:0;border:0;background:none}
+body.ui-v3.native-expedition .reward-quick-equip .growth-heading{margin:12px 3px 8px}
+body.ui-v3.native-expedition .reward-quick-equip .growth-heading p{display:none}
+body.ui-v3.native-expedition .reward-quick-equip .growth-row{display:grid;grid-template-columns:42px minmax(0,1fr);gap:6px 10px;padding:10px;margin:8px 0;min-height:0;text-align:left;transition:border-color .15s,background .15s}
+body.ui-v3.native-expedition .reward-quick-equip .growth-portrait{width:42px;grid-row:1}
+body.ui-v3.native-expedition .reward-quick-equip .growth-portrait>img{width:40px;height:43px!important}
+body.ui-v3.native-expedition .reward-quick-equip .growth-portrait>span{font-size:8px;padding:2px 4px}
+body.ui-v3.native-expedition .reward-quick-equip .growth-info{width:auto;min-width:0}
+body.ui-v3.native-expedition .reward-quick-equip .growth-info>strong{font-size:17px;gap:5px}
+body.ui-v3.native-expedition .reward-quick-equip .xp-before-after{gap:5px;margin:5px 0}
+body.ui-v3.native-expedition .reward-quick-equip .xp-before-after small{font-size:6px!important}
+body.ui-v3.native-expedition .reward-quick-equip .xp-before-after b{font-size:9px}
+body.ui-v3.native-expedition .reward-quick-equip .xp-before-after em{font-size:8px}
+body.ui-v3.native-expedition .reward-quick-equip .growth-track{height:6px;margin:5px 0}
+body.ui-v3.native-expedition .reward-quick-equip .xp-readouts small{font-size:8px!important}
+body.ui-v3.native-expedition .reward-quick-equip .quick-attachments{grid-column:1/-1;display:flex;align-items:start;gap:8px;min-width:0;padding-top:4px;border-top:1px solid #69988f33}
+body.ui-v3.native-expedition .reward-quick-equip .quick-equipment{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));flex:5;gap:3px;padding:0;border:0;background:none}
+body.ui-v3.native-expedition .reward-quick-equip .quick-auras{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));flex:2;gap:3px;min-width:0}
+body.ui-v3.native-expedition .reward-quick-equip .quick-equipment>button,body.ui-v3.native-expedition .reward-quick-equip .quick-auras>button{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-width:0;min-height:43px;padding:4px 2px;border-radius:5px;border:1px solid #80b4b344;background:#061f2ab3}
+body.ui-v3.native-expedition .reward-quick-equip .slot-label{font:600 5px var(--sans);letter-spacing:.2px;line-height:1.2;color:#94b5ad}
+body.ui-v3.native-expedition .reward-quick-equip .quick-attachments button>small,body.ui-v3.native-expedition .reward-quick-equip .visible-gear-effect{display:none}
+body.ui-v3.native-expedition .reward-quick-equip .quick-attachments button>img,body.ui-v3.native-expedition .reward-quick-equip .quick-attachments .gear-symbol,body.ui-v3.native-expedition .reward-quick-equip .quick-attachments .stone-symbol{width:23px;height:23px;object-fit:contain}
+body.ui-v3.native-expedition .reward-quick-equip .quick-attachments button>b{font-size:18px;color:#87a98f}
+body.ui-v3.native-expedition .reward-quick-equip .reward-companion-grade{grid-column:1/-1;font:600 9px/1.4 var(--sans);display:none;min-height:0}
+body.ui-v3.native-expedition .reward-quick-equip .rewards-expedition .experience-story .growth-row{display:grid;grid-template-columns:42px minmax(0,1fr);gap:6px 10px;min-height:0;margin:8px 0;padding:10px;text-align:left}
+body.ui-v3.native-expedition .reward-quick-equip .rewards-expedition .experience-story .growth-info{grid-column:2;grid-row:1;width:auto;min-width:0}
+body.ui-v3.native-expedition .reward-quick-equip .rewards-expedition .experience-story .growth-portrait{grid-column:1;grid-row:1}
+body.ui-v3.native-expedition .reward-quick-equip .rewards-expedition .experience-story .quick-attachments{grid-column:1/-1}
+body.ui-v3.native-expedition .reward-quick-equip [data-reward-grade] .reward-companion-grade{display:block}
+.grade-upgrade,[data-reward-grade="upgrade"] .reward-companion-grade{color:#b8ee9c}
+.grade-maybe,[data-reward-grade="maybe"] .reward-companion-grade{color:#f0ba6a}
+.grade-blocked,.grade-worse,[data-reward-grade="blocked"] .reward-companion-grade,[data-reward-grade="worse"] .reward-companion-grade{color:#ed9a8e}
+body.ui-v3.native-expedition .reward-quick-equip [data-reward-grade="upgrade"]{border-color:#b0df83}
+body.ui-v3.native-expedition .reward-quick-equip [data-reward-grade="maybe"]{border-color:#d99f56}
+body.ui-v3.native-expedition .reward-quick-equip .reward-equip-hint{font:10px/1.6 var(--sans);color:#b0c9bb;text-align:center;margin:0 0 8px}
+.reward-equip-hint>span{display:inline-block;margin-inline:5px;font-weight:700}
+body.ui-v3.native-expedition .reward-quick-equip .reward-showcase{min-height:385px;height:auto;flex:1}
+body.ui-v3.native-expedition .reward-quick-equip .loot-v2 .loot-drop{min-width:0;min-height:220px;max-width:210px;padding-bottom:10px}
+body.ui-v3.native-expedition .reward-quick-equip .loot-v2 .loot-drops{gap:8px;align-items:stretch}
+body.ui-v3.native-expedition .reward-quick-equip .loot-v2 .reward-quick{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;border:1px solid currentColor;border-radius:6px;background:#001b25b3;margin-top:8px;padding:5px;cursor:pointer;font:700 10px var(--sans);text-align:left}
+body.ui-v3.native-expedition .reward-quick-equip .reward-quick>b{font:700 25px var(--sans);color:inherit}
+.reward-quick small{display:block;font-size:8px;font-weight:400;margin-top:2px;color:#c7d7c7}
+body.ui-v3.native-expedition .reward-quick-equip .reward-quick:disabled{opacity:.7;cursor:default}
+body.ui-v3.native-expedition .reward-quick-equip .loot-drop[data-loot-claimed="true"]{opacity:.85}
+body.ui-v3.native-expedition .reward-quick-equip .rewards-footer{grid-column:1/-1;grid-row:2;margin:0 -3vw;padding:12px 3vw}
+@media(max-width:900px){
+ body.ui-v3.native-expedition .rewards-layout.reward-quick-equip{display:flex;padding:24px 3vw 0;gap:12px}
+ body.ui-v3.native-expedition .reward-quick-equip .rewards-stage{display:contents}
+ body.ui-v3.native-expedition .reward-quick-equip .result-hero{order:0;min-height:0;margin-bottom:8px}
+ body.ui-v3.native-expedition .reward-quick-equip .rewards-expedition{order:1}
+ body.ui-v3.native-expedition .reward-quick-equip .reward-showcase{order:2;min-height:360px;height:auto}
+ body.ui-v3.native-expedition .reward-quick-equip .reward-upgrades{order:3}
+ body.ui-v3.native-expedition .reward-quick-equip .rewards-footer{order:4}
+ body.ui-v3.native-expedition .reward-quick-equip .rewards-numbers{display:none}
+ body.ui-v3.native-expedition .reward-quick-equip .rewards-expedition>header h3{font-size:22px}
+ body.ui-v3.native-expedition .reward-quick-equip .capture-outcome{padding:8px;font-size:9px;margin-bottom:0}
+ body.ui-v3.native-expedition .reward-quick-equip .rewards-expedition .capture-outcome{display:flex;align-items:center;gap:10px;padding:10px}
+ body.ui-v3.native-expedition .reward-quick-equip .rewards-expedition .capture-outcome.neutral>img{position:static;transform:none;flex:none;width:25px;height:25px}
+ body.ui-v3.native-expedition .reward-quick-equip .capture-outcome p{font-size:9px;margin:3px 0}
+ body.ui-v3.native-expedition .reward-quick-equip .loot-v2 .loot-drop{max-width:none}
+}

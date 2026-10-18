@@ -1,0 +1,54 @@
+[
+  {
+    "offline": false,
+    "width": 1440,
+    "compactSlots": 5,
+    "hoverGrades": true,
+    "dragUpgrade": true,
+    "quickStoneUpgrade": true,
+    "individualClaim": true,
+    "reload": true,
+    "noDuplication": true,
+    "noOverflow": true,
+    "errors": []
+  },
+  {
+    "offline": false,
+    "width": 390,
+    "compactSlots": 5,
+    "hoverGrades": true,
+    "dragUpgrade": true,
+    "quickStoneUpgrade": true,
+    "individualClaim": true,
+    "reload": true,
+    "noDuplication": true,
+    "noOverflow": true,
+    "errors": []
+  },
+  {
+    "offline": true,
+    "width": 1440,
+    "compactSlots": 5,
+    "hoverGrades": true,
+    "dragUpgrade": true,
+    "quickStoneUpgrade": true,
+    "individualClaim": true,
+    "reload": true,
+    "noDuplication": true,
+    "noOverflow": true,
+    "errors": []
+  },
+  {
+    "offline": true,
+    "width": 390,
+    "compactSlots": 5,
+    "hoverGrades": true,
+    "dragUpgrade": true,
+    "quickStoneUpgrade": true,
+    "individualClaim": true,
+    "reload": true,
+    "noDuplication": true,
+    "noOverflow": true,
+    "errors": []
+  }
+]

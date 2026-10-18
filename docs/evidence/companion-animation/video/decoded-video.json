@@ -1,0 +1,522 @@
+{
+  "playbackRate": 1,
+  "dimensions": [
+    960,
+    1000
+  ],
+  "duration": 89.33333333333333,
+  "enlargedFamilies": [
+    "feralfox",
+    "drake",
+    "troll",
+    "dwarf",
+    "knight",
+    "orc",
+    "elf",
+    "caster",
+    "fox",
+    "goblin",
+    "fairy",
+    "wolf",
+    "mech",
+    "spider",
+    "jelly",
+    "serpent",
+    "harpy",
+    "moth",
+    "crab",
+    "centipede",
+    "minotaur",
+    "skeleton",
+    "lion",
+    "bear",
+    "stag",
+    "beetle",
+    "bat",
+    "phoenix",
+    "rogue",
+    "frostelf",
+    "cat",
+    "rabbit",
+    "rodent",
+    "rhino",
+    "turtle",
+    "owl",
+    "fish",
+    "mushroom",
+    "mantis",
+    "clam",
+    "squid"
+  ],
+  "captures": [
+    {
+      "file": "decoded-0-walk.png",
+      "time": 2.666667,
+      "state": "walk",
+      "dir": 0,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "knight",
+        "orc",
+        "elf",
+        "caster"
+      ]
+    },
+    {
+      "file": "decoded-0-run.png",
+      "time": 3.833333,
+      "state": "run",
+      "dir": 0,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "fox",
+        "goblin",
+        "fairy",
+        "wolf"
+      ]
+    },
+    {
+      "file": "decoded-0-sprint.png",
+      "time": 4.75,
+      "state": "sprint",
+      "dir": 0,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "mech",
+        "spider",
+        "jelly",
+        "serpent"
+      ]
+    },
+    {
+      "file": "decoded-0-attack.png",
+      "time": 7.833333,
+      "state": "attack",
+      "dir": 0,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "harpy",
+        "moth",
+        "crab",
+        "centipede"
+      ]
+    },
+    {
+      "file": "decoded-0-cast.png",
+      "time": 9.166667,
+      "state": "cast",
+      "dir": 0,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "minotaur",
+        "skeleton",
+        "lion"
+      ]
+    },
+    {
+      "file": "decoded-0-death.png",
+      "time": 10.5,
+      "state": "death",
+      "dir": 0,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "bear",
+        "stag",
+        "beetle"
+      ]
+    },
+    {
+      "file": "decoded-1-walk.png",
+      "time": 13.833333,
+      "state": "walk",
+      "dir": 1,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "bat",
+        "phoenix",
+        "rogue",
+        "frostelf"
+      ]
+    },
+    {
+      "file": "decoded-1-run.png",
+      "time": 15,
+      "state": "run",
+      "dir": 1,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "cat",
+        "rabbit"
+      ]
+    },
+    {
+      "file": "decoded-1-sprint.png",
+      "time": 15.916667,
+      "state": "sprint",
+      "dir": 1,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "rodent",
+        "rhino",
+        "turtle",
+        "owl"
+      ]
+    },
+    {
+      "file": "decoded-1-attack.png",
+      "time": 19,
+      "state": "attack",
+      "dir": 1,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "fish",
+        "mushroom",
+        "mantis",
+        "clam"
+      ]
+    },
+    {
+      "file": "decoded-1-cast.png",
+      "time": 20.333333,
+      "state": "cast",
+      "dir": 1,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "squid",
+        "knight",
+        "orc",
+        "elf"
+      ]
+    },
+    {
+      "file": "decoded-1-death.png",
+      "time": 21.666667,
+      "state": "death",
+      "dir": 1,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "caster",
+        "fox",
+        "goblin",
+        "fairy"
+      ]
+    },
+    {
+      "file": "decoded-4-walk.png",
+      "time": 47.333333,
+      "state": "walk",
+      "dir": 4,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "wolf",
+        "mech",
+        "spider",
+        "jelly"
+      ]
+    },
+    {
+      "file": "decoded-4-run.png",
+      "time": 48.5,
+      "state": "run",
+      "dir": 4,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "serpent",
+        "harpy",
+        "moth",
+        "crab"
+      ]
+    },
+    {
+      "file": "decoded-4-sprint.png",
+      "time": 49.416667,
+      "state": "sprint",
+      "dir": 4,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "centipede",
+        "minotaur",
+        "skeleton"
+      ]
+    },
+    {
+      "file": "decoded-4-attack.png",
+      "time": 52.5,
+      "state": "attack",
+      "dir": 4,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "lion",
+        "bear",
+        "stag"
+      ]
+    },
+    {
+      "file": "decoded-4-cast.png",
+      "time": 53.833333,
+      "state": "cast",
+      "dir": 4,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "beetle",
+        "bat",
+        "phoenix",
+        "rogue"
+      ]
+    },
+    {
+      "file": "decoded-4-death.png",
+      "time": 55.166667,
+      "state": "death",
+      "dir": 4,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "frostelf",
+        "cat"
+      ]
+    },
+    {
+      "file": "decoded-6-walk.png",
+      "time": 69.666667,
+      "state": "walk",
+      "dir": 6,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "rabbit",
+        "rodent",
+        "rhino",
+        "turtle"
+      ]
+    },
+    {
+      "file": "decoded-6-run.png",
+      "time": 70.833333,
+      "state": "run",
+      "dir": 6,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "owl",
+        "fish",
+        "mushroom",
+        "mantis"
+      ]
+    },
+    {
+      "file": "decoded-6-sprint.png",
+      "time": 71.75,
+      "state": "sprint",
+      "dir": 6,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "clam",
+        "squid",
+        "knight",
+        "orc"
+      ]
+    },
+    {
+      "file": "decoded-6-attack.png",
+      "time": 74.833333,
+      "state": "attack",
+      "dir": 6,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "elf",
+        "caster",
+        "fox",
+        "goblin"
+      ]
+    },
+    {
+      "file": "decoded-6-cast.png",
+      "time": 76.166667,
+      "state": "cast",
+      "dir": 6,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "fairy",
+        "wolf",
+        "mech",
+        "spider"
+      ]
+    },
+    {
+      "file": "decoded-6-death.png",
+      "time": 77.5,
+      "state": "death",
+      "dir": 6,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "jelly",
+        "serpent",
+        "harpy",
+        "moth"
+      ]
+    },
+    {
+      "file": "decoded-7-walk.png",
+      "time": 80.833333,
+      "state": "walk",
+      "dir": 7,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "crab",
+        "centipede",
+        "minotaur"
+      ]
+    },
+    {
+      "file": "decoded-7-run.png",
+      "time": 82,
+      "state": "run",
+      "dir": 7,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "skeleton",
+        "lion",
+        "bear",
+        "stag"
+      ]
+    },
+    {
+      "file": "decoded-7-sprint.png",
+      "time": 82.916667,
+      "state": "sprint",
+      "dir": 7,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "beetle",
+        "bat",
+        "phoenix"
+      ]
+    },
+    {
+      "file": "decoded-7-attack.png",
+      "time": 86,
+      "state": "attack",
+      "dir": 7,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "rogue",
+        "frostelf"
+      ]
+    },
+    {
+      "file": "decoded-7-cast.png",
+      "time": 87.333333,
+      "state": "cast",
+      "dir": 7,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "cat",
+        "rabbit",
+        "rodent",
+        "rhino"
+      ]
+    },
+    {
+      "file": "decoded-7-death.png",
+      "time": 88.666667,
+      "state": "death",
+      "dir": 7,
+      "enlargedFamilies": [
+        "feralfox",
+        "drake",
+        "troll",
+        "dwarf",
+        "turtle",
+        "owl",
+        "fish",
+        "mushroom"
+      ]
+    }
+  ],
+  "errors": []
+}

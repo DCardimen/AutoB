@@ -1,0 +1,124 @@
+TAP version 13
+# Subtest: multi-legged families skin their visible authored limbs without moving anatomical joints
+ok 1 - multi-legged families skin their visible authored limbs without moving anatomical joints
+  ---
+  duration_ms: 1837.5287
+  ...
+# Subtest: all natural attack categories are distinct and attack poses remain inside the sprite in every facing
+ok 2 - all natural attack categories are distinct and attack poses remain inside the sprite in every facing
+  ---
+  duration_ms: 25847.1041
+  ...
+# Subtest: canine jaws open before impact, snap at contact, close on recovery and stay hidden on rear views
+ok 3 - canine jaws open before impact, snap at contact, close on recovery and stay hidden on rear views
+  ---
+  duration_ms: 62.2144
+  ...
+# Subtest: mantises have four walking legs and two separate scythes with a wide crossing slash
+ok 4 - mantises have four walking legs and two separate scythes with a wide crossing slash
+  ---
+  duration_ms: 0.8152
+  ...
+# Subtest: crabs pinch, cats rake, horned creatures ram, and segmented predators use mandibles
+ok 5 - crabs pinch, cats rake, horned creatures ram, and segmented predators use mandibles
+  ---
+  duration_ms: 1.1539
+  ...
+# Subtest: natural attacks use their animated tips for physical hits and never apply duplicate contact damage
+ok 6 - natural attacks use their animated tips for physical hits and never apply duplicate contact damage
+  ---
+  duration_ms: 21.6619
+  ...
+# Subtest: original soles, limb textures and socket pixels are retained instead of cut away
+ok 7 - original soles, limb textures and socket pixels are retained instead of cut away
+  ---
+  duration_ms: 530.7324
+  ...
+# Subtest: registered legs stay inside the cell during movement, dodges and falls
+ok 8 - registered legs stay inside the cell during movement, dodges and falls
+  ---
+  duration_ms: 2282.1685
+  ...
+# Subtest: every four-leg physics proxy has an explicit source-anatomy classification
+ok 2 - every four-leg physics proxy has an explicit source-anatomy classification
+  ---
+  duration_ms: 20.5136
+  ...
+# Subtest: all quadruped anatomies alternate visible footfall groups through walk, run and sprint in every form and facing
+ok 3 - all quadruped anatomies alternate visible footfall groups through walk, run and sprint in every form and facing
+  ---
+  duration_ms: 20248.1641
+  ...
+# Subtest: humanoid weapon identity and authored carry hand remain fixed throughout walking cycles
+ok 4 - humanoid weapon identity and authored carry hand remain fixed throughout walking cycles
+  ---
+  duration_ms: 19357.8042
+  ...
+# Subtest: production humanoids retain painted boots and clothing with no replacement leg mesh showing through
+ok 5 - production humanoids retain painted boots and clothing with no replacement leg mesh showing through
+  ---
+  duration_ms: 5601.791
+  ...
+# Subtest: every anatomy retains reachable, fixed-length legs at both stride extremes throughout three gait cycles
+ok 3 - every anatomy retains reachable, fixed-length legs at both stride extremes throughout three gait cycles
+  ---
+  duration_ms: 720.4307
+  ...
+# Subtest: heavy animals retain authored limb widths and textured materials in each facing and evolution
+ok 4 - heavy animals retain authored limb widths and textured materials in each facing and evolution
+  ---
+  duration_ms: 1713.6734
+  ...
+# Subtest: material selection rejects neighboring crystals and outline pixels without recoloring white fur
+ok 5 - material selection rejects neighboring crystals and outline pixels without recoloring white fur
+  ---
+  duration_ms: 0.4484
+  ...
+# Subtest: all 89 collection families retain unclipped legs through movement, dodging and falls in eight views and three forms
+ok 6 - all 89 collection families retain unclipped legs through movement, dodging and falls in eight views and three forms
+  ---
+  duration_ms: 76850.2347
+  ...
+# Subtest: stride length migrates, clamps, resets and changes steps without changing combat travel or stats
+ok 7 - stride length migrates, clamps, resets and changes steps without changing combat travel or stats
+  ---
+  duration_ms: 7.5605
+  ...
+# Subtest: 13,056 rendered idle and gait poses introduce no detached lower-limb clusters
+ok 4 - 13,056 rendered idle and gait poses introduce no detached lower-limb clusters
+  ---
+  duration_ms: 100964.7241
+  ...
+# Subtest: natural bodies and legs use exactly the same authored palette through every form and facing
+ok 5 - natural bodies and legs use exactly the same authored palette through every form and facing
+  ---
+  duration_ms: 12114.8175
+  ...
+# Subtest: idle retains the authored stance and motion cannot exceed the source limb proportions
+ok 6 - idle retains the authored stance and motion cannot exceed the source limb proportions
+  ---
+  duration_ms: 5276.3059
+  ...
+# Subtest: every evolved crab crown has a tapered top and clear cell margins
+ok 7 - every evolved crab crown has a tapered top and clear cell margins
+  ---
+  duration_ms: 551.8298
+  ...
+# Subtest: stride tuning remains visible in the authored limbs, including short many-legged anatomies
+ok 8 - stride tuning remains visible in the authored limbs, including short many-legged anatomies
+  ---
+  duration_ms: 1167.2018
+  ...
+# Subtest: apex stag hooves end in separate warm toes instead of a moving blue ground platform
+ok 9 - apex stag hooves end in separate warm toes instead of a moving blue ground platform
+  ---
+  duration_ms: 67.3271
+  ...
+1..23
+# tests 23
+# pass 23
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 276170.6528

@@ -1,4 +1,5 @@
 import {solveLimb} from './prototype-rig.js';
+import {mouthRegistration} from './companion-anatomy.js';
 // Natural attacks share the combat windup/contact/recovery clock. Species
 // retain their own anatomy instead of inheriting their proxy rig's weapon.
 const clamp=n=>Math.max(0,Math.min(1,n)),ease=n=>{n=clamp(n);return n*n*(3-2*n);};
@@ -11,9 +12,10 @@ const profiles={
  squid:['tentacle-lash',15,0],clam:['shell-snap',8,5],jelly:['gel-pulse',9,0],mushroom:['spore-burst',7,0],moth:['wing-gust',9,0],
 };
 export const CREATURE_ATTACK_CATEGORIES=Object.fromEntries(Object.entries(profiles).map(([id,[category]])=>[id,category]));
-export const CREATURE_ATTACK_EFFECTS={wolf:'bite',feralfox:'bite',cat:'claw',lion:'claw',bear:'claw',mantis:'scythe',crab:'pinch',rhino:'ram',stag:'ram',beetle:'ram',spider:'bite',centipede:'bite',serpent:'bite',drake:'bite',bat:'bite',turtle:'bite',rodent:'bite',rabbit:'claw'};
+export const CREATURE_ATTACK_EFFECTS={wolf:'bite',feralfox:'bite',cat:'claw',lion:'claw',bear:'claw',mantis:'scythe',crab:'pinch',rhino:'ram',stag:'ram',beetle:'ram',spider:'bite',centipede:'bite',serpent:'bite',drake:'bite',bat:'bite',turtle:'bite',rodent:'bite',fish:'bite',rabbit:'claw'};
 export function creatureMouthSource(rig){
  const design=rig.creatureAttack?.design,dir=rig.dir,sign=dir<2?1:dir>2&&dir<5?-1:0;
+ const registered=mouthRegistration(design,rig.artStage??rig.form??0,dir);if(registered)return registered;
  const low=design==='spider'?10:design==='centipede'?5:design==='turtle'?3:0;
  return {x:32+sign*(dir===0||dir===4?13:9),y:(design==='clam'?37:27)+low};
 }
@@ -86,6 +88,10 @@ export function applyCreatureAnatomy(rig,spec){
 
 export function paintCreatureAttack(b,rig,layer='near'){
  const a=rig.creatureAttack,at=rig.artCreatureProject;if(!a||!at||!a.active)return; // Resting claws/scythes are already in the authored sprite.
+ // Indexed source skin owns the visible anatomy, including its lower jaw.
+ // Physical appendages still supply action goals/contact intent; drawing
+ // another set of tubes over painted pincers, fangs or wings duplicates them.
+ if(rig.authoredEvolution){rig.artJawOpen=rig.artJawDeformation||0;return;}
  const ramp=rig.artNaturalPalette||rig.palette.skin,O='#192328';
  const line=(x,y,r)=>{b.line(x,y,O,r+.5);b.line(x,y,ramp[0],r);b.line({x:x.x-.4,y:x.y-.4},{x:y.x-.4,y:y.y-.4},ramp[1],Math.max(.3,r*.6));};
  for(const limb of rig.creatureAppendages||[]){

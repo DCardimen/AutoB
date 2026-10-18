@@ -10,7 +10,7 @@ try{
   const modules=await Promise.all(['/authored-sprite-data.js','/authored-body-data.js','/authored-family-data.js','/authored-legacy-data.js','/authored-sprite-stage1-data.js','/authored-body-stage1-data.js','/authored-family-stage1-data.js','/authored-legacy-stage1-data.js','/authored-sprite-stage2-data.js','/authored-body-stage2-data.js','/authored-family-stage2-data.js','/authored-legacy-stage2-data.js'].map(url=>import(url)));
   const stages=[0,1,2].map(stage=>Object.assign({},...modules.slice(stage*4,stage*4+4).map(m=>Object.values(m)[0])));
   const {PIXEL_SPECIES}=await import('/native-content.js'),{nativePoseRig}=await import('/native-poses.js'),{paintCharacterPixels}=await import('/prototype-pixel-art.js'),{atlasIdentity}=await import('/authored-sprite-renderer.js');
-  const designs=['wolf','feralfox','cat','lion','bear','rhino','stag','rabbit','rodent','turtle','knight','orc','elf','caster','fox','dwarf','goblin','troll','skeleton','minotaur','rogue','frostelf','faerie','beetle','mech','spider','crab','centipede'],sheets=[];
+  const designs=Object.keys(stages[0]).map(id=>id==='fairy'?'faerie':id),sheets=[];
   for(const design of designs){
    const spec=PIXEL_SPECIES.find(s=>(s.nativeDesign||s.nativeRig)===design&&!s.pixelConverted)||PIXEL_SPECIES.find(s=>(s.nativeDesign||s.nativeRig)===design),canvas=document.createElement('canvas');canvas.width=1536;canvas.height=3*408;const c=canvas.getContext('2d');c.imageSmoothingEnabled=false;c.fillStyle='#183139';c.fillRect(0,0,canvas.width,canvas.height);
    const cell=document.createElement('canvas');cell.width=cell.height=64;const sc=cell.getContext('2d');

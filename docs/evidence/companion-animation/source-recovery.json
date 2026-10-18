@@ -1,0 +1,17 @@
+{
+  "authored-body-stage2-data.js": {
+    "source": "7eb7714b992132e6ee1a836923d1ebab25bec628b6ec8acc5853bdb7e81b3ca6",
+    "recovered": "7eb7714b992132e6ee1a836923d1ebab25bec628b6ec8acc5853bdb7e81b3ca6",
+    "identical": true
+  },
+  "authored-family-stage1-data.js": {
+    "source": "01e93e0b7d6d8cd4d3145ad618ed20924a6e18cc110d37c2f98238bbbd0205b3",
+    "recovered": "01e93e0b7d6d8cd4d3145ad618ed20924a6e18cc110d37c2f98238bbbd0205b3",
+    "identical": true
+  },
+  "authored-family-stage2-data.js": {
+    "source": "2f5b8b6364f9d02a2a720343bfe7c00767fd8d852b05f5f8ca52efe465449445",
+    "recovered": "2f5b8b6364f9d02a2a720343bfe7c00767fd8d852b05f5f8ca52efe465449445",
+    "identical": true
+  }
+}

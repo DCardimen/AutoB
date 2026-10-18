@@ -84,14 +84,14 @@ export async function animateRewardCollection(reducedMotion=false){
  if(reducedMotion||reduced()){settleReveal(stage);stage.querySelectorAll('.loot-drop').forEach(card=>card.classList.add('card-departed'));return;}
  await reveals.get(stage);if(!stage.isConnected)return;
  stage.classList.add('collecting');const pack=stage.querySelector('.knapsack-art');if(!pack)return;
- await Promise.all([playPack(pack,[0,1,2,3,4,5,6,7],{step:50}),...[...stage.querySelectorAll('.loot-drop')].map((card,i)=>fly(stage,{from:card,to:pack.querySelector('.knapsack-mouth'),html:`<div class="flying-reward-card">${card.querySelector('.loot-medallion').outerHTML}<strong>${card.querySelector('strong').textContent}</strong></div>`,kind:'card',delay:i*110,duration:900,bend:85,index:i,onStart:()=>card.classList.add('card-departed'),onArrival:()=>{card.classList.add('card-packed');pulse(pack);}}))]);
+ await Promise.all([playPack(pack,[0,1,2,3,4,5,6,7],{step:50}),...[...stage.querySelectorAll('.loot-drop:not([data-loot-claimed="true"])')].map((card,i)=>fly(stage,{from:card,to:pack.querySelector('.knapsack-mouth'),html:`<div class="flying-reward-card">${card.querySelector('.loot-medallion').outerHTML}<strong>${card.querySelector('strong').textContent}</strong></div>`,kind:'card',delay:i*110,duration:900,bend:85,index:i,onStart:()=>card.classList.add('card-departed'),onArrival:()=>{card.classList.add('card-packed');pulse(pack);}}))]);
  await playPack(pack,[8,9,10,11],{step:75});
  stage.classList.add('collection-complete');
 }
 
 export function rewardsShell({won,gold,xp,time,claimed,loot,upgrades,growth,capture,casualty,report,continueButton,collectionButton='',slots='',reveal=true}) {
  const totals=report?summaryTotals(report,0):{};
- return `<div class="rewards-layout ${won?'victory':'defeat'} ${claimed?'spoils-claimed':''} ${reveal&&!claimed&&won?'reward-reveal-pending':'rewards-revealed'}">
+ return `<div class="rewards-layout reward-quick-equip ${won?'victory':'defeat'} ${claimed?'spoils-claimed':''} ${reveal&&!claimed&&won?'reward-reveal-pending':'rewards-revealed'}">
   <div class="rewards-landscape" aria-hidden="true"></div>
   <section class="rewards-stage" aria-label="${won?'Victory spoils':'Encounter outcome'}">
    <header class="result-hero">${artImage(won?'treasure-08':'rich-04','result-sigil')}<div><span class="section-kicker">${won?'VICTORY':'THE COST OF RETREAT'}</span><h2>${won?'A little treasure. A new possibility.':'A difficult lesson.'}</h2><div class="result-summary"><span>${artImage('treasure-04')} +${gold} gold</span><span>${artImage('icon-star')} +${xp} EXP</span><span>${artImage('rich-10')} ${Math.floor(time||0)}s</span></div></div></header>
@@ -102,6 +102,6 @@ export function rewardsShell({won,gold,xp,time,claimed,loot,upgrades,growth,capt
  </div>`;
 }
 
-export function rewardDropHTML(d,i,{name,description,color,tier,claimed}) {
- return `<article data-from-capture="${!!d.fromCapture}" class="loot-drop ${d.kind} ${d.rarity||''}" style="--delay:${.7+i*.13}s;--loot-color:${color}"><button class="loot-inspect" data-loot-inspect="${i}" aria-label="Inspect ${name}">${artImage('rich-08')}</button><div class="loot-medallion">${artImage(lootArt(d))}</div><small class="loot-tier">${tier}</small><strong>${name}</strong><p>${description}</p>${d.sourceName?`<small class="loot-source">${d.fromCapture?'FROM CAPTURE':'From'} ${d.sourceName} · Lv. ${d.sourceLevel}<br>${d.kind==='gear'?Math.round(d.quality*100)+'% item quality':'Aura Stone recovered'}</small>`:''}<span class="loot-collected">${claimed?'✓ COLLECTED':'READY TO CLAIM'}</span></article>`;
+export function rewardDropHTML(d,i,{name,description,color,tier,claimed,equipped,recommendation}) {
+ return `<article ${recommendation?`data-reward-loot="${d.id}"`:''} data-loot-claimed="${!!claimed}" data-from-capture="${!!d.fromCapture}" class="loot-drop ${d.kind} ${d.rarity||''}" style="--delay:${.7+i*.13}s;--loot-color:${color}"><button class="loot-inspect" data-loot-inspect="${i}" aria-label="Inspect ${name}">${artImage('rich-08')}</button><div class="loot-medallion">${artImage(lootArt(d))}</div><small class="loot-tier">${tier}</small><strong>${name}</strong><p>${description}</p>${d.sourceName?`<small class="loot-source">${d.fromCapture?'FROM CAPTURE':'From'} ${d.sourceName} · Lv. ${d.sourceLevel}<br>${d.kind==='gear'?Math.round(d.quality*100)+'% item quality':'Aura Stone recovered'}</small>`:''}<span class="loot-collected">${equipped?`Equipped · ${equipped}`:claimed?'✓ COLLECTED':'READY TO CLAIM'}</span>${recommendation?`<button class="reward-quick grade-${recommendation.grade}" data-reward-quick="${d.id}" title="${recommendation.reason}${recommendation.companion?' · '+recommendation.companion:''}" ${['blocked','worse'].includes(recommendation.grade)?'disabled':''} aria-label="${recommendation.label}: ${name}${recommendation.companion?' on '+recommendation.companion:''}"><b>${recommendation.symbol}</b><span>${recommendation.label}${recommendation.companion?`<small>${recommendation.companion}</small>`:''}</span></button>`:''}</article>`;
 }

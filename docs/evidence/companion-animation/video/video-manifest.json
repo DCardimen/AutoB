@@ -1,0 +1,1526 @@
+{
+  "schema": 1,
+  "inputs": {
+    "affinity-gear.js": "0c5778f3a601d902df855f273c535e03270290997480560b2a821bfd3fe05b41",
+    "ai-relics.js": "17eeb1ecc72f92bb92f2ca2995e9c68aff2f1d8046690c3fa297f403a367651e",
+    "ambient-art.js": "0bc9948d5bb9307fb0e25908d5c04ebf3a7e39f4b5b87334417f9587271e3f99",
+    "ambient-ui.js": "8a57b5767ad385e7364d3c8a0e98bf2bb3a5f79ce7221dab71880180a2522373",
+    "animation.js": "5ec10e51220ef506ec3ea31d81cea1f042938cb66456cc1755b74f45f2006a55",
+    "app.js": "b9657c62c80079f73308010a1242ac023ca56acd7e4c582b54a8a0645a00a666",
+    "arena-camera.js": "9c3c36bdccd216ffcba01a97414a1fd5935bc5fd9d64044fdeb8b65cc540bb4b",
+    "arena.js": "e78488981c9c21e1879e832498669b227e8fd1c6740a4fc9855879e65b1db6fb",
+    "art.js": "3fc3e18c21da1e7624c0c3cb1f628f977b1d3885938c77e5432635b2bf305835",
+    "aura-stones.js": "6d266096c81182ebd20534e75b37db0280014d0d60f6d28951e8fb822ef1be8e",
+    "authored-arm-skin.js": "221473b42067f13484aa8eb8fa91aa9ec5de8d4eb200d4dc06a4f4339d72b8f9",
+    "authored-body-data.js": "56edb58b077f166dbbdf28d4f254e3f8a5fc49ac5c6a5af5ff2ad9c72c9f783a",
+    "authored-body-stage1-data.js": "4a7720a8e4aca01cf29da90dd14ef11933b92b63891708ef181f00d230405824",
+    "authored-body-stage2-data.js": "7eb7714b992132e6ee1a836923d1ebab25bec628b6ec8acc5853bdb7e81b3ca6",
+    "authored-family-data.js": "1dcde00f7109ce07b5c5b7088a8e11a90de2b8c04f362bd2c45da3cd591e64fc",
+    "authored-family-stage1-data.js": "01e93e0b7d6d8cd4d3145ad618ed20924a6e18cc110d37c2f98238bbbd0205b3",
+    "authored-family-stage2-data.js": "2f5b8b6364f9d02a2a720343bfe7c00767fd8d852b05f5f8ca52efe465449445",
+    "authored-legacy-data.js": "6b917edf37e12e2270b92859a0ab15778f19d763205badaa49b4a8d5ffe19776",
+    "authored-legacy-stage1-data.js": "efa0aadc679825b807d79e8af39ab1bfd3d64d2c622e561e81c92201b37d76ee",
+    "authored-legacy-stage2-data.js": "0a1f07d2b1cce55c4ddb0dc0e70abf2570eb52c07e6447398113fca0defcb569",
+    "authored-parts.js": "f054c8c27bacd5b9ff2279194d9d37f1169429e094268341012dba8d436056f7",
+    "authored-pixel-art.js": "07e7a9ea5ba7e5f59ea3f58f7d4b05359da458ce9b8a2a68b0b34e6677a2c4c6",
+    "authored-pixel-maps.js": "888afe4efa02fdac9fc65a73d062a53136af6bc26541cf74cc4af0606ce1bc0f",
+    "authored-sprite-data.js": "2a1b79e2bbd6bb9a9fc532eadf148fefb82452f483d85cb7d390592ae6806490",
+    "authored-sprite-renderer.js": "9cec3356e0dea3bea1224ae04bf04088d6fc03dd482914015cf13c8e54c12368",
+    "authored-sprite-stage1-data.js": "4c2b497a6bd613265f17c667f094bde3bb586a04e765ae1080922c96c8e1b5a7",
+    "authored-sprite-stage2-data.js": "5d8fab2d6b2a5cbe052848f8a7c8cf0d68e4399595d54c90c35d15c23f3c82bd",
+    "battle-enrage.js": "6e9972717bb4bb0da594a2021e11ba2c9db873f113782bfaab4bab8fe2b4b607",
+    "battle-summary.js": "f294df276cb3b4453912b2532766a55f57b98a42ecb2548dec0053634b145168",
+    "capture-celebration.js": "81b8ad8cf1d5efd75c4735a561c22a39e71384b7ddabb0314a8ca2a1a199d3b0",
+    "capture-tracker.js": "bbb875f9a1234e81b7ec0da1c018362b9fa5d1017f9e72b3c3d45faa3376b164",
+    "combat-expansion.js": "57269d0aa2b7eb30a2a1bef5235d8ab224457e166931ccb0751d9d1291f38668",
+    "combat-feedback.js": "779e99fd0d1aaa494380ace8ee21b80a7368ccc5fd205bc86ab959bc6bff869b",
+    "combat-text.js": "f7fa9bfe744d40e835ecaf88d4e0ebca827bb70c2edef424d705f4cd64654ce1",
+    "companion-anatomy.js": "c4dcfdb70d2da573523afd899c6101e5ba716e0122d3d49317bd4523d3c3f570",
+    "core-species.js": "bde68cd97a9179a0e2b11a599879d1f15a4c4160b31c6e7840dd60a03d2cd94d",
+    "creature-attacks.js": "7b6bf250d8155d8bc2787eb5cf9e9b9a611ec88c280f1ddf653e80ae38b71a45",
+    "creature-equipment.js": "22609d73c778d3a1e39a4f3e7d73801582cccfe2aba5c4c3d7ede0cd6b02290c",
+    "creature-leg-volume.js": "9ae4a459140389a062f6caeff606024c728d65b05c261469758edf63d9340e19",
+    "deployment-physics.js": "ba4fb5c70e9bfc18d5505bfe48f4da6e09b7aef064408e74124aa51260af7942",
+    "elite-modifiers.js": "dbdf65c9da6cab03813f0710097d9b2cd2770091a5eb095b153b115e2d1921ba",
+    "equipment-affinity.js": "8255a371ad49e02092723a37565a44610d1be02487a2460ea51b503eedf864ef",
+    "equipment-catalog.js": "4ea09bb2ad838e27325dfaeb6f823caa6844ed0594d60febab5c70fafcd7234b",
+    "equipment-loot.js": "06d420455e06a373bf7724f5c88d56b64d43277f8c1f99f19bbd604bd3e21094",
+    "evolution-skills.js": "5f93363e366e68ef09d6383de07fd21066922c4f6613571b70c209e8bc4c36a8",
+    "expedition-rules.js": "c3c03739d858105513fd8c80271f80d87aa47076c32182e38133ad1be07c8dea",
+    "field-ui.js": "d1aac8fa1fc332a0826077d36622ba18a1991a69b5cf6dc5290f5de45dccc1c5",
+    "game.js": "cf430a7589107e3ad659e91c169af74c16e6b24060beec18fcb78b93b001f34a",
+    "grand-designs.js": "bbc666708e399a747ee0a17b6a44f3945c32a3bb684b2098396cfa91f4951385",
+    "grand-pixels.js": "dfdfc9af44cbf8315b5b8f60900b1445d5d1d444b1f7f9fc6d6209f8c248d5df",
+    "intro.js": "7616b61da468461b03f5adbaf57438935c76e890e9b759f0db38cf2f7b413a96",
+    "inventory-pouches.js": "989aa3f23467841e6b4f5b0d44781fc6a4f329d76f082206fdd57bdb4346626d",
+    "item-effects.js": "08463357de80cf143502b9d3e3e3174bda42aa6ebb3896fbddbdad16068bb926",
+    "leg-anatomy.js": "3be593b6c3132556dfa3ce272f44164c30f3c08138c50479d988cebc02013928",
+    "leg-volume.js": "3962d1f56da7ee12b3553529b93976b03f999a967664b2f514b074b3e6ca0ba3",
+    "live-roster.js": "bc0ff4a280c82e27ab93e11817552f2bdb699f97ea0acbd2cc9137c888ecd635",
+    "loadout-drag-ui.js": "7d3a2837fb335b1b86fe81e3821c03e3bc5aa5c3ea6c1d422b2bad8483fc14fc",
+    "loadout-interactions.js": "75838fea168d1e0a3da191f29c74ff5568117b6ac83ad1db15a9363b74bba97b",
+    "melee-weapon-art.js": "d5938c7387f656eb3db5cb6ea65aedbd8f0dd39d61d693672f9f14b3ebf8abde",
+    "modal-content.js": "e1c35a596de819c0bf22b26556d71fba0a4e7708706b0b87b994147f753e3147",
+    "movement-tuning.js": "3d107b859a6b892d668c9047672617302623cdf338f20d9821479908eb8abdf5",
+    "native-art.js": "018703fac3a48e8b415436e91514a5eb7df9b6f051e61389342c3fa252d0a652",
+    "native-batch-two.js": "cebd831f650a9c2093b85fac2a080988d6f505d5008685e1f1c9f464e677b875",
+    "native-batch.js": "acfb94d327f762ec0d870d0372783233fb25ac380202a11760212e69e25ce5e7",
+    "native-cloth.js": "00bbdb07f47bbd3a64ac552d203a016578b0a7245c28792df946a6747111178b",
+    "native-combat.js": "14429b67e3041626126bc4a421f9f2dfc8ae9e23e047f4b3e9a4161a1293ca99",
+    "native-content.js": "9eeca6e01d3b9e071f472e8d2b17b2fe69f6ab25a4b056fcd98d9171cf04b2e0",
+    "native-export.js": "c4e7953a1313bfa4e5284d9f834840c2d62872cdb90293794e5c5da86d991de1",
+    "native-faces.js": "7d1bbf7a6ed8f4653cf12ff27fa32bf147eccfcfb680617137ee61ef2028e280",
+    "native-forms.js": "146d90d0ffc5862dd99d76c590f5628330ac6a006ed3f6db6b68d5307ab18e8b",
+    "native-motion.js": "4abdb4d5eb5fa662b6ba628db1185125f6a66aec93d459909064ecbb20f0e815",
+    "native-poses.js": "45cf9bc50106b559ca516c2a26d7e7ac1ce2579aec4b5b3d47fb2663b34dff7a",
+    "native-size.js": "f76150cb57ec4caefb3af38f2743640db6d3b426c3dec66551dcbf066d5126b1",
+    "native-tactics.js": "b51d449f95b0c8562985b8de9a62d57dba0c3e07e27506fdd43ffccb306a8cd4",
+    "opening-relics.js": "ac61d0170aab3bbaae82a471c048355108c34eda9e63601779eff745ba388537",
+    "pixel-face-tools.js": "34f91c988f6b14fa8560067075585183f4fcdc9fe2dd30216e9e926cbaef51d2",
+    "pixel-legacy.js": "6be7f9560d1ffeea5a3fcf89d66b97a57d8fcc93177b40288e9e428d7f86503e",
+    "planet-ui.js": "b0625f30b23c9500930bc0ac3db2e9da990f373835317def4a8dc87f3639bdec",
+    "portrait-expressions.js": "72fd6e006f70680cc92094fc6b06fc914d81bc39cb987fba8368ab7806c3c3e2",
+    "practice.js": "b8c29a4baff892e57ead679fc869dee5662eb321d75c1e8370c0e995f6d68211",
+    "prototype-dynamics.js": "bdbda534aa75182264b563c864dcbabc106f03b8719f7c1d2bebf5fbff6c50d9",
+    "prototype-engine.js": "75eaeaf88fa8717b19fda3dfe5fa983a540e6dc9c526dc7ce1e22c08848be50f",
+    "prototype-export.js": "2c75c0dda74abbad3ee57ffed1c2b39f379b73cf7512f74e67bfe6d90c75cfbe",
+    "prototype-faces.js": "760a79c02a5a74e1530121e6ca0f5602c92a17dfbc950e77d3ffc269cd77d5c0",
+    "prototype-models.js": "633170c26301f285627eaa948be061470128d6e282b2feb367a302e33ae0addc",
+    "prototype-motion.js": "9a098e139b14cdbcce08a37f9a4b50de6eb2c5e76a918a139b1b79d9487820d5",
+    "prototype-pixel-art.js": "e7390381299ee0ef1c4249362ab70f66c3131c3e9f103303d7efe747f52cc2a2",
+    "prototype-renderer.js": "ffff6f25b0d44d14fe233a28e08c0bfa18c25087dfe7b69cdbe636498733bcf0",
+    "prototype-rig.js": "46c4066f3c6f1a84fdc647e5695dd758833f44587da1e01aee83dcfa6e826303",
+    "prototype-sprites.js": "57ef086250e21897e6890ea65f95d8c680613eb1bb059f5f5533806b3062c8fe",
+    "prototype.js": "fdaf73115e3d8045484659319d63d3d047b7cb1e5472de8adb877b1617c80be5",
+    "rarity-aura.js": "c632cbd50c4cdcf2647eecb2cc80034bec6fae0f21722a5ba0d48d809de84778",
+    "relic-design.js": "a16f6abdeb1b6c6e5dbf7484ecaa6f0b389eb16370521aade4e32ffd9df195e2",
+    "relic-illustrations.js": "5aa865e59b047848f393d00a17eaf1c28d397df793403fac369d5b16e6f17a45",
+    "relic-pacts.js": "d17a2b4b70e9d66e38616a1f17d11257180e425aca3c84098a4bcee7141e5d47",
+    "relic-selection-ui.js": "cca7668f2477dd77462eac0350421d0264d7dd1857754a05d7cc565d6cdf7454",
+    "relic-ui.js": "c7e2efe100ea301ab5463a87b431fd2ff90178e717bd93410dd9778d6d6b7057",
+    "reward-loadout.js": "5df933265b113040598686aeff1f354bfaf9af233f1584d637c5c1042924e463",
+    "rewards-ui.js": "afcb9ad86215ef51ab78b2be11e2bb10810bbee044a523558fdcaa8216fa7287",
+    "roster.js": "f2e55c8ddd7090d465300a48513aefeba62ab07e673ed9ea0bc0bc9b6b573a5d",
+    "route-preview.js": "1eda594993261f787fe027520d4ba0b57466c57f123371263af8b0f6e5481831",
+    "run-relics.js": "0019b14a9b927c51e86059ac748e15f233834414d6cc2f01cd99b64f78f53fbe",
+    "server.js": "da84f98f1443e8b7433e8ed9e9c0e991e4db59dcb3e44f7eba83752574efcb6f",
+    "settings-movement-preview.js": "f3669304695c18fada8fa1f514ba3bee71522bd9e6d2e4329b5259aff2a98eb9",
+    "skill-vfx.js": "6ffb4d0d1dad52ad79a7722c327d217bd12c39f3a641a32e14201dc3e0300f2f",
+    "skill-visuals.js": "82634d6ac47f52dcb22cd19e303a2b5152eedd0dfc22b231fcd7f6d322f0bfda",
+    "skills.js": "4cdf30a4ea050670d9056a1a1dbb785bb50b899d39d38cbc4bc20b1835a51451",
+    "sound.js": "30284b0c9fe1ffcec060e8edfa667276eca0ad227f0a9da6eed6293b9592c93b",
+    "stage-background-loop.js": "3c73d6030cc0eb7909286be74704498f14d0dfc32ac63f61b8981e8f26fd0222",
+    "starter-equipment.js": "f93006cf563a122de12ede8b2714975879d43943c8eee560e893a00dacc7106f",
+    "starter-reactions.js": "5facf039c5bfd3f1f0958920daf09fc4b8889a926eab1081d83ec520e923a342",
+    "status-ailments.js": "a1bdf481f240f7e4f0d13eaa2b982c620b3d3c52347fb3d323510b60c3771ab7",
+    "tactics.js": "11f6e1921d497bb4623afaaf2dc79f3423dcef4059408029e1eb411d12af214a",
+    "tuning.js": "978dd20d3598764a2a2652b65fc9ea886edc7ea38a9d21c7eaee2ac694d5fe93",
+    "ui-art-assets.js": "9ea49ccf32aade3a7c97506940b107c0c55e8acf628924c10afb03039da3993a",
+    "ui-art.js": "202e664c132a86ce1ad74a107917ae065c15b5483871a99b461543c142a765e9",
+    "wearer-relics.js": "59a3dcce7bc58e47246823dd1143530106f08e86c7db72fe11faa6d69c57be18",
+    "xp-celebration.js": "498c2b52dabc428fad2ada70d36bc9bcd33c38b12cfa8e71eeebf7dff857e3ea",
+    "scripts/review-companion-animation.mjs": "7b41221ba7af59a4fd131c19b2824ca5319fb9b59b58abf607d74830078ae997",
+    "scripts/animation-artifacts.mjs": "483db42b768d0f3a19e67c718825a3fca64765a26eeb39ae7944b5497abaf304"
+  },
+  "videoHash": "a5aadcebb9e8fe782952ba3a226c847537f20cacf0fcc59ddd8decd457000708",
+  "fps": 12,
+  "width": 960,
+  "height": 1000,
+  "duration": 89.33333333333333,
+  "frames": 1072,
+  "renderedPoses": 131856,
+  "families": 41,
+  "forms": 3,
+  "directions": 8,
+  "states": [
+    "idle",
+    "walk",
+    "run",
+    "sprint",
+    "turn",
+    "stop",
+    "attack",
+    "cast",
+    "death"
+  ],
+  "positions": [
+    {
+      "identity": "knight",
+      "id": "aurel",
+      "x": 0,
+      "y": 32,
+      "forms": [
+        {
+          "stage": 0,
+          "x": 8,
+          "y": 48
+        },
+        {
+          "stage": 1,
+          "x": 80,
+          "y": 48
+        },
+        {
+          "stage": 2,
+          "x": 152,
+          "y": 48
+        }
+      ]
+    },
+    {
+      "identity": "orc",
+      "id": "brakk",
+      "x": 240,
+      "y": 32,
+      "forms": [
+        {
+          "stage": 0,
+          "x": 248,
+          "y": 48
+        },
+        {
+          "stage": 1,
+          "x": 320,
+          "y": 48
+        },
+        {
+          "stage": 2,
+          "x": 392,
+          "y": 48
+        }
+      ]
+    },
+    {
+      "identity": "elf",
+      "id": "syl",
+      "x": 480,
+      "y": 32,
+      "forms": [
+        {
+          "stage": 0,
+          "x": 488,
+          "y": 48
+        },
+        {
+          "stage": 1,
+          "x": 560,
+          "y": 48
+        },
+        {
+          "stage": 2,
+          "x": 632,
+          "y": 48
+        }
+      ]
+    },
+    {
+      "identity": "caster",
+      "id": "nyra",
+      "x": 720,
+      "y": 32,
+      "forms": [
+        {
+          "stage": 0,
+          "x": 728,
+          "y": 48
+        },
+        {
+          "stage": 1,
+          "x": 800,
+          "y": 48
+        },
+        {
+          "stage": 2,
+          "x": 872,
+          "y": 48
+        }
+      ]
+    },
+    {
+      "identity": "fox",
+      "id": "rowan",
+      "x": 0,
+      "y": 120,
+      "forms": [
+        {
+          "stage": 0,
+          "x": 8,
+          "y": 136
+        },
+        {
+          "stage": 1,
+          "x": 80,
+          "y": 136
+        },
+        {
+          "stage": 2,
+          "x": 152,
+          "y": 136
+        }
+      ]
+    },
+    {
+      "identity": "goblin",
+      "id": "grit",
+      "x": 240,
+      "y": 120,
+      "forms": [
+        {
+          "stage": 0,
+          "x": 248,
+          "y": 136
+        },
+        {
+          "stage": 1,
+          "x": 320,
+          "y": 136
+        },
+        {
+          "stage": 2,
+          "x": 392,
+          "y": 136
+        }
+      ]
+    },
+    {
+      "identity": "fairy",
+      "id": "luma",
+      "x": 480,
+      "y": 120,
+      "forms": [
+        {
+          "stage": 0,
+          "x": 488,
+          "y": 136
+        },
+        {
+          "stage": 1,
+          "x": 560,
+          "y": 136
+        },
+        {
+          "stage": 2,
+          "x": 632,
+          "y": 136
+        }
+      ]
+    },
+    {
+      "identity": "wolf",
+      "id": "emberhound",
+      "x": 720,
+      "y": 120,
+      "forms": [
+        {
+          "stage": 0,
+          "x": 728,
+          "y": 136
+        },
+        {
+          "stage": 1,
+          "x": 800,
+          "y": 136
+        },
+        {
+          "stage": 2,
+          "x": 872,
+          "y": 136
+        }
+      ]
+    },
+    {
+      "identity": "mech",
+      "id": "cogwalker",
+      "x": 0,
+      "y": 208,
+      "forms": [
+        {
+          "stage": 0,
+          "x": 8,
+          "y": 224
+        },
+        {
+          "stage": 1,
+          "x": 80,
+          "y": 224
+        },
+        {
+          "stage": 2,
+          "x": 152,
+          "y": 224
+        }
+      ]
+    },
+    {
+      "identity": "spider",
+      "id": "runespider",
+      "x": 240,
+      "y": 208,
+      "forms": [
+        {
+          "stage": 0,
+          "x": 248,
+          "y": 224
+        },
+        {
+          "stage": 1,
+          "x": 320,
+          "y": 224
+        },
+        {
+          "stage": 2,
+          "x": 392,
+          "y": 224
+        }
+      ]
+    },
+    {
+      "identity": "jelly",
+      "id": "moonjelly",
+      "x": 480,
+      "y": 208,
+      "forms": [
+        {
+          "stage": 0,
+          "x": 488,
+          "y": 224
+        },
+        {
+          "stage": 1,
+          "x": 560,
+          "y": 224
+        },
+        {
+          "stage": 2,
+          "x": 632,
+          "y": 224
+        }
+      ]
+    },
+    {
+      "identity": "serpent",
+      "id": "nix",
+      "x": 720,
+      "y": 208,
+      "forms": [
+        {
+          "stage": 0,
+          "x": 728,
+          "y": 224
+        },
+        {
+          "stage": 1,
+          "x": 800,
+          "y": 224
+        },
+        {
+          "stage": 2,
+          "x": 872,
+          "y": 224
+        }
+      ]
+    },
+    {
+      "identity": "harpy",
+      "id": "zephyr",
+      "x": 0,
+      "y": 296,
+      "forms": [
+        {
+          "stage": 0,
+          "x": 8,
+          "y": 312
+        },
+        {
+          "stage": 1,
+          "x": 80,
+          "y": 312
+        },
+        {
+          "stage": 2,
+          "x": 152,
+          "y": 312
+        }
+      ]
+    },
+    {
+      "identity": "moth",
+      "id": "nyxwing",
+      "x": 240,
+      "y": 296,
+      "forms": [
+        {
+          "stage": 0,
+          "x": 248,
+          "y": 312
+        },
+        {
+          "stage": 1,
+          "x": 320,
+          "y": 312
+        },
+        {
+          "stage": 2,
+          "x": 392,
+          "y": 312
+        }
+      ]
+    },
+    {
+      "identity": "crab",
+      "id": "mireclaw",
+      "x": 480,
+      "y": 296,
+      "forms": [
+        {
+          "stage": 0,
+          "x": 488,
+          "y": 312
+        },
+        {
+          "stage": 1,
+          "x": 560,
+          "y": 312
+        },
+        {
+          "stage": 2,
+          "x": 632,
+          "y": 312
+        }
+      ]
+    },
+    {
+      "identity": "centipede",
+      "id": "ironscolopendra",
+      "x": 720,
+      "y": 296,
+      "forms": [
+        {
+          "stage": 0,
+          "x": 728,
+          "y": 312
+        },
+        {
+          "stage": 1,
+          "x": 800,
+          "y": 312
+        },
+        {
+          "stage": 2,
+          "x": 872,
+          "y": 312
+        }
+      ]
+    },
+    {
+      "identity": "dwarf",
+      "id": "brom",
+      "x": 0,
+      "y": 384,
+      "forms": [
+        {
+          "stage": 0,
+          "x": 8,
+          "y": 400
+        },
+        {
+          "stage": 1,
+          "x": 80,
+          "y": 400
+        },
+        {
+          "stage": 2,
+          "x": 152,
+          "y": 400
+        }
+      ]
+    },
+    {
+      "identity": "minotaur",
+      "id": "tarka",
+      "x": 240,
+      "y": 384,
+      "forms": [
+        {
+          "stage": 0,
+          "x": 248,
+          "y": 400
+        },
+        {
+          "stage": 1,
+          "x": 320,
+          "y": 400
+        },
+        {
+          "stage": 2,
+          "x": 392,
+          "y": 400
+        }
+      ]
+    },
+    {
+      "identity": "skeleton",
+      "id": "morrow",
+      "x": 480,
+      "y": 384,
+      "forms": [
+        {
+          "stage": 0,
+          "x": 488,
+          "y": 400
+        },
+        {
+          "stage": 1,
+          "x": 560,
+          "y": 400
+        },
+        {
+          "stage": 2,
+          "x": 632,
+          "y": 400
+        }
+      ]
+    },
+    {
+      "identity": "lion",
+      "id": "sunlion",
+      "x": 720,
+      "y": 384,
+      "forms": [
+        {
+          "stage": 0,
+          "x": 728,
+          "y": 400
+        },
+        {
+          "stage": 1,
+          "x": 800,
+          "y": 400
+        },
+        {
+          "stage": 2,
+          "x": 872,
+          "y": 400
+        }
+      ]
+    },
+    {
+      "identity": "bear",
+      "id": "frostursa",
+      "x": 0,
+      "y": 472,
+      "forms": [
+        {
+          "stage": 0,
+          "x": 8,
+          "y": 488
+        },
+        {
+          "stage": 1,
+          "x": 80,
+          "y": 488
+        },
+        {
+          "stage": 2,
+          "x": 152,
+          "y": 488
+        }
+      ]
+    },
+    {
+      "identity": "stag",
+      "id": "crownstag",
+      "x": 240,
+      "y": 472,
+      "forms": [
+        {
+          "stage": 0,
+          "x": 248,
+          "y": 488
+        },
+        {
+          "stage": 1,
+          "x": 320,
+          "y": 488
+        },
+        {
+          "stage": 2,
+          "x": 392,
+          "y": 488
+        }
+      ]
+    },
+    {
+      "identity": "drake",
+      "id": "stormdrake",
+      "x": 480,
+      "y": 472,
+      "forms": [
+        {
+          "stage": 0,
+          "x": 488,
+          "y": 488
+        },
+        {
+          "stage": 1,
+          "x": 560,
+          "y": 488
+        },
+        {
+          "stage": 2,
+          "x": 632,
+          "y": 488
+        }
+      ]
+    },
+    {
+      "identity": "beetle",
+      "id": "onyxscarab",
+      "x": 720,
+      "y": 472,
+      "forms": [
+        {
+          "stage": 0,
+          "x": 728,
+          "y": 488
+        },
+        {
+          "stage": 1,
+          "x": 800,
+          "y": 488
+        },
+        {
+          "stage": 2,
+          "x": 872,
+          "y": 488
+        }
+      ]
+    },
+    {
+      "identity": "bat",
+      "id": "vesper",
+      "x": 0,
+      "y": 560,
+      "forms": [
+        {
+          "stage": 0,
+          "x": 8,
+          "y": 576
+        },
+        {
+          "stage": 1,
+          "x": 80,
+          "y": 576
+        },
+        {
+          "stage": 2,
+          "x": 152,
+          "y": 576
+        }
+      ]
+    },
+    {
+      "identity": "phoenix",
+      "id": "solara",
+      "x": 240,
+      "y": 560,
+      "forms": [
+        {
+          "stage": 0,
+          "x": 248,
+          "y": 576
+        },
+        {
+          "stage": 1,
+          "x": 320,
+          "y": 576
+        },
+        {
+          "stage": 2,
+          "x": 392,
+          "y": 576
+        }
+      ]
+    },
+    {
+      "identity": "rogue",
+      "id": "sable",
+      "x": 480,
+      "y": 560,
+      "forms": [
+        {
+          "stage": 0,
+          "x": 488,
+          "y": 576
+        },
+        {
+          "stage": 1,
+          "x": 560,
+          "y": 576
+        },
+        {
+          "stage": 2,
+          "x": 632,
+          "y": 576
+        }
+      ]
+    },
+    {
+      "identity": "frostelf",
+      "id": "eira",
+      "x": 720,
+      "y": 560,
+      "forms": [
+        {
+          "stage": 0,
+          "x": 728,
+          "y": 576
+        },
+        {
+          "stage": 1,
+          "x": 800,
+          "y": 576
+        },
+        {
+          "stage": 2,
+          "x": 872,
+          "y": 576
+        }
+      ]
+    },
+    {
+      "identity": "troll",
+      "id": "grum",
+      "x": 0,
+      "y": 648,
+      "forms": [
+        {
+          "stage": 0,
+          "x": 8,
+          "y": 664
+        },
+        {
+          "stage": 1,
+          "x": 80,
+          "y": 664
+        },
+        {
+          "stage": 2,
+          "x": 152,
+          "y": 664
+        }
+      ]
+    },
+    {
+      "identity": "feralfox",
+      "id": "cinderfox",
+      "x": 240,
+      "y": 648,
+      "forms": [
+        {
+          "stage": 0,
+          "x": 248,
+          "y": 664
+        },
+        {
+          "stage": 1,
+          "x": 320,
+          "y": 664
+        },
+        {
+          "stage": 2,
+          "x": 392,
+          "y": 664
+        }
+      ]
+    },
+    {
+      "identity": "cat",
+      "id": "nightmaw",
+      "x": 480,
+      "y": 648,
+      "forms": [
+        {
+          "stage": 0,
+          "x": 488,
+          "y": 664
+        },
+        {
+          "stage": 1,
+          "x": 560,
+          "y": 664
+        },
+        {
+          "stage": 2,
+          "x": 632,
+          "y": 664
+        }
+      ]
+    },
+    {
+      "identity": "rabbit",
+      "id": "sparkhare",
+      "x": 720,
+      "y": 648,
+      "forms": [
+        {
+          "stage": 0,
+          "x": 728,
+          "y": 664
+        },
+        {
+          "stage": 1,
+          "x": 800,
+          "y": 664
+        },
+        {
+          "stage": 2,
+          "x": 872,
+          "y": 664
+        }
+      ]
+    },
+    {
+      "identity": "rodent",
+      "id": "zipmouse",
+      "x": 0,
+      "y": 736,
+      "forms": [
+        {
+          "stage": 0,
+          "x": 8,
+          "y": 752
+        },
+        {
+          "stage": 1,
+          "x": 80,
+          "y": 752
+        },
+        {
+          "stage": 2,
+          "x": 152,
+          "y": 752
+        }
+      ]
+    },
+    {
+      "identity": "rhino",
+      "id": "pyrehorn",
+      "x": 240,
+      "y": 736,
+      "forms": [
+        {
+          "stage": 0,
+          "x": 248,
+          "y": 752
+        },
+        {
+          "stage": 1,
+          "x": 320,
+          "y": 752
+        },
+        {
+          "stage": 2,
+          "x": 392,
+          "y": 752
+        }
+      ]
+    },
+    {
+      "identity": "turtle",
+      "id": "flintback",
+      "x": 480,
+      "y": 736,
+      "forms": [
+        {
+          "stage": 0,
+          "x": 488,
+          "y": 752
+        },
+        {
+          "stage": 1,
+          "x": 560,
+          "y": 752
+        },
+        {
+          "stage": 2,
+          "x": 632,
+          "y": 752
+        }
+      ]
+    },
+    {
+      "identity": "owl",
+      "id": "voltwing",
+      "x": 720,
+      "y": 736,
+      "forms": [
+        {
+          "stage": 0,
+          "x": 728,
+          "y": 752
+        },
+        {
+          "stage": 1,
+          "x": 800,
+          "y": 752
+        },
+        {
+          "stage": 2,
+          "x": 872,
+          "y": 752
+        }
+      ]
+    },
+    {
+      "identity": "fish",
+      "id": "brookfin",
+      "x": 0,
+      "y": 824,
+      "forms": [
+        {
+          "stage": 0,
+          "x": 8,
+          "y": 840
+        },
+        {
+          "stage": 1,
+          "x": 80,
+          "y": 840
+        },
+        {
+          "stage": 2,
+          "x": 152,
+          "y": 840
+        }
+      ]
+    },
+    {
+      "identity": "mushroom",
+      "id": "duskcap",
+      "x": 240,
+      "y": 824,
+      "forms": [
+        {
+          "stage": 0,
+          "x": 248,
+          "y": 840
+        },
+        {
+          "stage": 1,
+          "x": 320,
+          "y": 840
+        },
+        {
+          "stage": 2,
+          "x": 392,
+          "y": 840
+        }
+      ]
+    },
+    {
+      "identity": "mantis",
+      "id": "orchimantis",
+      "x": 480,
+      "y": 824,
+      "forms": [
+        {
+          "stage": 0,
+          "x": 488,
+          "y": 840
+        },
+        {
+          "stage": 1,
+          "x": 560,
+          "y": 840
+        },
+        {
+          "stage": 2,
+          "x": 632,
+          "y": 840
+        }
+      ]
+    },
+    {
+      "identity": "clam",
+      "id": "brineclam",
+      "x": 720,
+      "y": 824,
+      "forms": [
+        {
+          "stage": 0,
+          "x": 728,
+          "y": 840
+        },
+        {
+          "stage": 1,
+          "x": 800,
+          "y": 840
+        },
+        {
+          "stage": 2,
+          "x": 872,
+          "y": 840
+        }
+      ]
+    },
+    {
+      "identity": "squid",
+      "id": "pearlsquid",
+      "x": 0,
+      "y": 912,
+      "forms": [
+        {
+          "stage": 0,
+          "x": 8,
+          "y": 928
+        },
+        {
+          "stage": 1,
+          "x": 80,
+          "y": 928
+        },
+        {
+          "stage": 2,
+          "x": 152,
+          "y": 928
+        }
+      ]
+    }
+  ],
+  "timeline": [
+    {
+      "dir": 0,
+      "state": "idle",
+      "start": 0,
+      "end": 2
+    },
+    {
+      "dir": 0,
+      "state": "walk",
+      "start": 2,
+      "end": 3.3333333333333335
+    },
+    {
+      "dir": 0,
+      "state": "run",
+      "start": 3.3333333333333335,
+      "end": 4.333333333333333
+    },
+    {
+      "dir": 0,
+      "state": "sprint",
+      "start": 4.333333333333333,
+      "end": 5.166666666666667
+    },
+    {
+      "dir": 0,
+      "state": "turn",
+      "start": 5.166666666666667,
+      "end": 6.166666666666667
+    },
+    {
+      "dir": 0,
+      "state": "stop",
+      "start": 6.166666666666667,
+      "end": 7.166666666666667
+    },
+    {
+      "dir": 0,
+      "state": "attack",
+      "start": 7.166666666666667,
+      "end": 8.5
+    },
+    {
+      "dir": 0,
+      "state": "cast",
+      "start": 8.5,
+      "end": 9.833333333333334
+    },
+    {
+      "dir": 0,
+      "state": "death",
+      "start": 9.833333333333334,
+      "end": 11.166666666666666
+    },
+    {
+      "dir": 1,
+      "state": "idle",
+      "start": 11.166666666666666,
+      "end": 13.166666666666666
+    },
+    {
+      "dir": 1,
+      "state": "walk",
+      "start": 13.166666666666666,
+      "end": 14.5
+    },
+    {
+      "dir": 1,
+      "state": "run",
+      "start": 14.5,
+      "end": 15.5
+    },
+    {
+      "dir": 1,
+      "state": "sprint",
+      "start": 15.5,
+      "end": 16.333333333333332
+    },
+    {
+      "dir": 1,
+      "state": "turn",
+      "start": 16.333333333333332,
+      "end": 17.333333333333332
+    },
+    {
+      "dir": 1,
+      "state": "stop",
+      "start": 17.333333333333332,
+      "end": 18.333333333333332
+    },
+    {
+      "dir": 1,
+      "state": "attack",
+      "start": 18.333333333333332,
+      "end": 19.666666666666668
+    },
+    {
+      "dir": 1,
+      "state": "cast",
+      "start": 19.666666666666668,
+      "end": 21
+    },
+    {
+      "dir": 1,
+      "state": "death",
+      "start": 21,
+      "end": 22.333333333333332
+    },
+    {
+      "dir": 2,
+      "state": "idle",
+      "start": 22.333333333333332,
+      "end": 24.333333333333332
+    },
+    {
+      "dir": 2,
+      "state": "walk",
+      "start": 24.333333333333332,
+      "end": 25.666666666666668
+    },
+    {
+      "dir": 2,
+      "state": "run",
+      "start": 25.666666666666668,
+      "end": 26.666666666666668
+    },
+    {
+      "dir": 2,
+      "state": "sprint",
+      "start": 26.666666666666668,
+      "end": 27.5
+    },
+    {
+      "dir": 2,
+      "state": "turn",
+      "start": 27.5,
+      "end": 28.5
+    },
+    {
+      "dir": 2,
+      "state": "stop",
+      "start": 28.5,
+      "end": 29.5
+    },
+    {
+      "dir": 2,
+      "state": "attack",
+      "start": 29.5,
+      "end": 30.833333333333332
+    },
+    {
+      "dir": 2,
+      "state": "cast",
+      "start": 30.833333333333332,
+      "end": 32.166666666666664
+    },
+    {
+      "dir": 2,
+      "state": "death",
+      "start": 32.166666666666664,
+      "end": 33.5
+    },
+    {
+      "dir": 3,
+      "state": "idle",
+      "start": 33.5,
+      "end": 35.5
+    },
+    {
+      "dir": 3,
+      "state": "walk",
+      "start": 35.5,
+      "end": 36.833333333333336
+    },
+    {
+      "dir": 3,
+      "state": "run",
+      "start": 36.833333333333336,
+      "end": 37.833333333333336
+    },
+    {
+      "dir": 3,
+      "state": "sprint",
+      "start": 37.833333333333336,
+      "end": 38.666666666666664
+    },
+    {
+      "dir": 3,
+      "state": "turn",
+      "start": 38.666666666666664,
+      "end": 39.666666666666664
+    },
+    {
+      "dir": 3,
+      "state": "stop",
+      "start": 39.666666666666664,
+      "end": 40.666666666666664
+    },
+    {
+      "dir": 3,
+      "state": "attack",
+      "start": 40.666666666666664,
+      "end": 42
+    },
+    {
+      "dir": 3,
+      "state": "cast",
+      "start": 42,
+      "end": 43.333333333333336
+    },
+    {
+      "dir": 3,
+      "state": "death",
+      "start": 43.333333333333336,
+      "end": 44.666666666666664
+    },
+    {
+      "dir": 4,
+      "state": "idle",
+      "start": 44.666666666666664,
+      "end": 46.666666666666664
+    },
+    {
+      "dir": 4,
+      "state": "walk",
+      "start": 46.666666666666664,
+      "end": 48
+    },
+    {
+      "dir": 4,
+      "state": "run",
+      "start": 48,
+      "end": 49
+    },
+    {
+      "dir": 4,
+      "state": "sprint",
+      "start": 49,
+      "end": 49.833333333333336
+    },
+    {
+      "dir": 4,
+      "state": "turn",
+      "start": 49.833333333333336,
+      "end": 50.833333333333336
+    },
+    {
+      "dir": 4,
+      "state": "stop",
+      "start": 50.833333333333336,
+      "end": 51.833333333333336
+    },
+    {
+      "dir": 4,
+      "state": "attack",
+      "start": 51.833333333333336,
+      "end": 53.166666666666664
+    },
+    {
+      "dir": 4,
+      "state": "cast",
+      "start": 53.166666666666664,
+      "end": 54.5
+    },
+    {
+      "dir": 4,
+      "state": "death",
+      "start": 54.5,
+      "end": 55.833333333333336
+    },
+    {
+      "dir": 5,
+      "state": "idle",
+      "start": 55.833333333333336,
+      "end": 57.833333333333336
+    },
+    {
+      "dir": 5,
+      "state": "walk",
+      "start": 57.833333333333336,
+      "end": 59.166666666666664
+    },
+    {
+      "dir": 5,
+      "state": "run",
+      "start": 59.166666666666664,
+      "end": 60.166666666666664
+    },
+    {
+      "dir": 5,
+      "state": "sprint",
+      "start": 60.166666666666664,
+      "end": 61
+    },
+    {
+      "dir": 5,
+      "state": "turn",
+      "start": 61,
+      "end": 62
+    },
+    {
+      "dir": 5,
+      "state": "stop",
+      "start": 62,
+      "end": 63
+    },
+    {
+      "dir": 5,
+      "state": "attack",
+      "start": 63,
+      "end": 64.33333333333333
+    },
+    {
+      "dir": 5,
+      "state": "cast",
+      "start": 64.33333333333333,
+      "end": 65.66666666666667
+    },
+    {
+      "dir": 5,
+      "state": "death",
+      "start": 65.66666666666667,
+      "end": 67
+    },
+    {
+      "dir": 6,
+      "state": "idle",
+      "start": 67,
+      "end": 69
+    },
+    {
+      "dir": 6,
+      "state": "walk",
+      "start": 69,
+      "end": 70.33333333333333
+    },
+    {
+      "dir": 6,
+      "state": "run",
+      "start": 70.33333333333333,
+      "end": 71.33333333333333
+    },
+    {
+      "dir": 6,
+      "state": "sprint",
+      "start": 71.33333333333333,
+      "end": 72.16666666666667
+    },
+    {
+      "dir": 6,
+      "state": "turn",
+      "start": 72.16666666666667,
+      "end": 73.16666666666667
+    },
+    {
+      "dir": 6,
+      "state": "stop",
+      "start": 73.16666666666667,
+      "end": 74.16666666666667
+    },
+    {
+      "dir": 6,
+      "state": "attack",
+      "start": 74.16666666666667,
+      "end": 75.5
+    },
+    {
+      "dir": 6,
+      "state": "cast",
+      "start": 75.5,
+      "end": 76.83333333333333
+    },
+    {
+      "dir": 6,
+      "state": "death",
+      "start": 76.83333333333333,
+      "end": 78.16666666666667
+    },
+    {
+      "dir": 7,
+      "state": "idle",
+      "start": 78.16666666666667,
+      "end": 80.16666666666667
+    },
+    {
+      "dir": 7,
+      "state": "walk",
+      "start": 80.16666666666667,
+      "end": 81.5
+    },
+    {
+      "dir": 7,
+      "state": "run",
+      "start": 81.5,
+      "end": 82.5
+    },
+    {
+      "dir": 7,
+      "state": "sprint",
+      "start": 82.5,
+      "end": 83.33333333333333
+    },
+    {
+      "dir": 7,
+      "state": "turn",
+      "start": 83.33333333333333,
+      "end": 84.33333333333333
+    },
+    {
+      "dir": 7,
+      "state": "stop",
+      "start": 84.33333333333333,
+      "end": 85.33333333333333
+    },
+    {
+      "dir": 7,
+      "state": "attack",
+      "start": 85.33333333333333,
+      "end": 86.66666666666667
+    },
+    {
+      "dir": 7,
+      "state": "cast",
+      "start": 86.66666666666667,
+      "end": 88
+    },
+    {
+      "dir": 7,
+      "state": "death",
+      "start": 88,
+      "end": 89.33333333333333
+    }
+  ],
+  "clipped": []
+}
