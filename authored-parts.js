@@ -16,6 +16,34 @@ function armMaterial(identity,p){
  if(identity==='skeleton')return !(b>r*1.05&&b>g*1.1);
  return true;
 }
+function torsoOccluder(identity,p,registration){
+ if(capePixel(identity,p,registration))return true;
+ const [r,g,b]=p.rgb,range=Math.max(r,g,b)-Math.min(r,g,b),lum=(r+g+b)/3;
+ return p.y>19&&p.y<42&&(['caster','frostelf'].includes(identity)?range<55&&lum>105:['elf','dwarf'].includes(identity)?r>g*1.1&&g>b*1.4&&r>110:identity==='orc'?lum<65&&range<35:identity==='fox'?r>g*1.55&&g>b*1.5&&r>140:false);
+}
+function torsoEnvelope(pixels,identity,registration,profiles){
+ const arms=[...profiles.values()],top=Math.min(...arms.map(a=>a.root.y))-2;
+ // Follow the actual painted side outline around the removed sleeve. A
+ // generic chest radius still leaves a hollow strip inside that outline.
+ const radius=Math.max(registration.torso+registration.upper*2,...arms.flatMap(a=>a.pixels.map(p=>Math.abs(p.x-32)+2)));
+ let bottom=registration.pelvis;
+ while(bottom>top+4&&!pixels.some(p=>p.y===bottom&&Math.abs(p.x-32)<=2))bottom--;
+ // The shoulder caps, jacket sides and waist describe the occluded trunk.
+ // A radius around the center alone cuts away its sides with the sleeves.
+ const points=pixels.filter(p=>p.y>=top&&p.y<=bottom&&Math.abs(p.x-32)<=radius&&!capePixel(identity,p,registration)).map(p=>({x:p.x,y:p.y}));
+ points.sort((a,b)=>a.x-b.x||a.y-b.y);
+ const cross=(a,b,c)=>(b.x-a.x)*(c.y-a.y)-(b.y-a.y)*(c.x-a.x),hull=[];
+ for(const p of points){while(hull.length>1&&cross(hull.at(-2),hull.at(-1),p)<=0)hull.pop();hull.push(p);}
+ const lower=hull.length;
+ for(let i=points.length-2;i>=0;i--){const p=points[i];while(hull.length>lower&&cross(hull.at(-2),hull.at(-1),p)<=0)hull.pop();hull.push(p);}
+ hull.pop();const rows=new Map();
+ for(let y=top;y<=bottom;y++){
+  const intersections=[];
+  for(let i=0;i<hull.length;i++){const a=hull[i],b=hull[(i+1)%hull.length];if(y<Math.min(a.y,b.y)||y>Math.max(a.y,b.y))continue;if(a.y===b.y)intersections.push(a.x,b.x);else intersections.push(a.x+(b.x-a.x)*(y-a.y)/(b.y-a.y));}
+  if(intersections.length)rows.set(y,{left:Math.ceil(Math.min(...intersections)),right:Math.floor(Math.max(...intersections))});
+ }
+ return rows;
+}
 // Generate independent indexed parts once from the registered bind frame.
 // No palette is created and no animated pose is used for ownership.
 export function authoredParts(asset,identity,stage,dir){
@@ -60,22 +88,36 @@ export function authoredParts(asset,identity,stage,dir){
   profiles.set(side,profile);for(const p of pixels)mask.add(key(p.x,p.y));
  }
  const retained=asset.pixels.filter(p=>!mask.has(key(p.x,p.y))),bodyGrid=new Map(retained.map(p=>[key(p.x,p.y),p])),repairs=[];
- // A complete tapered trunk exists independently of the arms. Extend the
- // same row's jacket/armor texture into the source area covered by a sleeve.
- // This includes genuinely occluded pixels absent from the flattened master.
- for(let y=registration.neck+1;y<=registration.pelvis;y++){
-  const t=(y-registration.neck)/(registration.pelvis-registration.neck),half=registration.torso*(t<.25?.75+t:.99-(t-.25)*.23);
-  const row=retained.filter(p=>p.y===y&&Math.abs(p.x-32)<=registration.torso*.55);if(!row.length)continue;
-  for(let x=Math.ceil(32-half);x<=Math.floor(32+half);x++){
+ const bodyRows=torsoEnvelope(retained,identity,registration,profiles);
+ // Paint an entire independent chest beneath the arm holes, not just the
+ // narrow central column. Reflect a patch of the surviving same-row torso
+ // into each opening so folds/armor have width instead of repeated stripes.
+ for(const [y,{left,right}]of bodyRows){
+  const row=retained.filter(p=>p.y===y&&Math.abs(p.x-32)<=registration.torso*.7);if(!row.length)continue;
+  const seed=row.reduce((a,b)=>Math.abs(a.x-32)<Math.abs(b.x-32)?a:b);let innerLeft=seed.x,innerRight=seed.x;
+  while(bodyGrid.has(key(innerLeft-1,y))&&innerLeft>32-registration.torso)innerLeft--;
+  while(bodyGrid.has(key(innerRight+1,y))&&innerRight<32+registration.torso)innerRight++;
+  for(let x=left;x<=right;x++){
    if(bodyGrid.has(key(x,y)))continue;
    if(identity==='skeleton'&&!mask.has(key(x,y)))continue; // authored rib gaps stay hollow
-   const side=Math.sign(x-32)||1,candidates=row.filter(p=>side*(p.x-32)>=0).sort((a,b)=>Math.abs(a.x-x)-Math.abs(b.x-x)),sample=candidates[0]||row[0];
+   const reflected=x<innerLeft?innerLeft+(innerLeft-x-1):x>innerRight?innerRight-(x-innerRight-1):x,donorX=clamp(reflected,innerLeft,innerRight);
+   const sample=bodyGrid.get(key(donorX,y))||row.reduce((a,b)=>Math.abs(a.x-donorX)<Math.abs(b.x-donorX)?a:b);
    const pixel={...sample,x,y,bodyUnderlay:true};bodyGrid.set(key(x,y),pixel);repairs.push(pixel);
   }
  }
+ const underbody=[];
+ // Hair and capes may cross the trunk too. Its own indexed material must
+ // still exist underneath those moving overlays, not borrow their motion.
+ const material=retained.filter(p=>p.y>registration.neck&&p.y<=registration.pelvis&&!torsoOccluder(identity,p,registration)&&Math.abs(p.x-32)<=registration.torso);
+ for(const [y,{left,right}]of bodyRows)for(let x=left;x<=right;x++){
+  if(identity==='skeleton'&&!bodyGrid.has(key(x,y)))continue;
+  let sample=bodyGrid.get(key(x,y));
+  if(!sample||torsoOccluder(identity,sample,registration))sample=material.reduce((a,b)=>!a||Math.abs(b.y-y)*3+Math.abs(b.x-x)<Math.abs(a.y-y)*3+Math.abs(a.x-x)?b:a,null);
+  if(sample)underbody.push({...sample,x,y,bodyUnderlay:true});
+ }
  const body=[...retained,...repairs],head=body.filter(p=>p.y<=registration.neck),torso=body.filter(p=>p.y>registration.neck&&p.y<=registration.pelvis),legs=body.filter(p=>p.y>registration.pelvis);
  const cape=body.filter(p=>capePixel(identity,p,registration)),capeMask=new Set(cape.map(p=>key(p.x,p.y)));
- return asset.parts={registration,hands,arms:{profiles,mask},body,head,torso,legs,cape,capeMask,repairs};
+ return asset.parts={registration,hands,arms:{profiles,mask},body,head,torso,legs,cape,capeMask,repairs,bodyRows,underbody};
 }
 
 export function connectAuthoredArm(profile,root,goal,preferredJoint,scale){

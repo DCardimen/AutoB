@@ -3023,6 +3023,43 @@
     if (identity === "skeleton") return !(b > r * 1.05 && b > g * 1.1);
     return true;
   }
+  function torsoOccluder(identity, p, registration) {
+    if (capePixel(identity, p, registration)) return true;
+    const [r, g, b] = p.rgb, range = Math.max(r, g, b) - Math.min(r, g, b), lum = (r + g + b) / 3;
+    return p.y > 19 && p.y < 42 && (["caster", "frostelf"].includes(identity) ? range < 55 && lum > 105 : ["elf", "dwarf"].includes(identity) ? r > g * 1.1 && g > b * 1.4 && r > 110 : identity === "orc" ? lum < 65 && range < 35 : identity === "fox" ? r > g * 1.55 && g > b * 1.5 && r > 140 : false);
+  }
+  function torsoEnvelope(pixels, identity, registration, profiles2) {
+    const arms = [...profiles2.values()], top = Math.min(...arms.map((a) => a.root.y)) - 2;
+    const radius = Math.max(registration.torso + registration.upper * 2, ...arms.flatMap((a) => a.pixels.map((p) => Math.abs(p.x - 32) + 2)));
+    let bottom = registration.pelvis;
+    while (bottom > top + 4 && !pixels.some((p) => p.y === bottom && Math.abs(p.x - 32) <= 2)) bottom--;
+    const points = pixels.filter((p) => p.y >= top && p.y <= bottom && Math.abs(p.x - 32) <= radius && !capePixel(identity, p, registration)).map((p) => ({ x: p.x, y: p.y }));
+    points.sort((a, b) => a.x - b.x || a.y - b.y);
+    const cross2 = (a, b, c2) => (b.x - a.x) * (c2.y - a.y) - (b.y - a.y) * (c2.x - a.x), hull = [];
+    for (const p of points) {
+      while (hull.length > 1 && cross2(hull.at(-2), hull.at(-1), p) <= 0) hull.pop();
+      hull.push(p);
+    }
+    const lower = hull.length;
+    for (let i = points.length - 2; i >= 0; i--) {
+      const p = points[i];
+      while (hull.length > lower && cross2(hull.at(-2), hull.at(-1), p) <= 0) hull.pop();
+      hull.push(p);
+    }
+    hull.pop();
+    const rows = /* @__PURE__ */ new Map();
+    for (let y = top; y <= bottom; y++) {
+      const intersections = [];
+      for (let i = 0; i < hull.length; i++) {
+        const a = hull[i], b = hull[(i + 1) % hull.length];
+        if (y < Math.min(a.y, b.y) || y > Math.max(a.y, b.y)) continue;
+        if (a.y === b.y) intersections.push(a.x, b.x);
+        else intersections.push(a.x + (b.x - a.x) * (y - a.y) / (b.y - a.y));
+      }
+      if (intersections.length) rows.set(y, { left: Math.ceil(Math.min(...intersections)), right: Math.floor(Math.max(...intersections)) });
+    }
+    return rows;
+  }
   function authoredParts(asset, identity, stage, dir) {
     if (asset.parts) return asset.parts;
     const registration = armRegistration(identity, stage, dir);
@@ -3062,22 +3099,35 @@
       for (const p of pixels) mask.add(key2(p.x, p.y));
     }
     const retained = asset.pixels.filter((p) => !mask.has(key2(p.x, p.y))), bodyGrid = new Map(retained.map((p) => [key2(p.x, p.y), p])), repairs = [];
-    for (let y = registration.neck + 1; y <= registration.pelvis; y++) {
-      const t = (y - registration.neck) / (registration.pelvis - registration.neck), half = registration.torso * (t < 0.25 ? 0.75 + t : 0.99 - (t - 0.25) * 0.23);
-      const row = retained.filter((p) => p.y === y && Math.abs(p.x - 32) <= registration.torso * 0.55);
+    const bodyRows = torsoEnvelope(retained, identity, registration, profiles2);
+    for (const [y, { left, right }] of bodyRows) {
+      const row = retained.filter((p) => p.y === y && Math.abs(p.x - 32) <= registration.torso * 0.7);
       if (!row.length) continue;
-      for (let x = Math.ceil(32 - half); x <= Math.floor(32 + half); x++) {
+      const seed = row.reduce((a, b) => Math.abs(a.x - 32) < Math.abs(b.x - 32) ? a : b);
+      let innerLeft = seed.x, innerRight = seed.x;
+      while (bodyGrid.has(key2(innerLeft - 1, y)) && innerLeft > 32 - registration.torso) innerLeft--;
+      while (bodyGrid.has(key2(innerRight + 1, y)) && innerRight < 32 + registration.torso) innerRight++;
+      for (let x = left; x <= right; x++) {
         if (bodyGrid.has(key2(x, y))) continue;
         if (identity === "skeleton" && !mask.has(key2(x, y))) continue;
-        const side = Math.sign(x - 32) || 1, candidates = row.filter((p) => side * (p.x - 32) >= 0).sort((a, b) => Math.abs(a.x - x) - Math.abs(b.x - x)), sample = candidates[0] || row[0];
+        const reflected = x < innerLeft ? innerLeft + (innerLeft - x - 1) : x > innerRight ? innerRight - (x - innerRight - 1) : x, donorX = clamp3(reflected, innerLeft, innerRight);
+        const sample = bodyGrid.get(key2(donorX, y)) || row.reduce((a, b) => Math.abs(a.x - donorX) < Math.abs(b.x - donorX) ? a : b);
         const pixel = { ...sample, x, y, bodyUnderlay: true };
         bodyGrid.set(key2(x, y), pixel);
         repairs.push(pixel);
       }
     }
+    const underbody = [];
+    const material = retained.filter((p) => p.y > registration.neck && p.y <= registration.pelvis && !torsoOccluder(identity, p, registration) && Math.abs(p.x - 32) <= registration.torso);
+    for (const [y, { left, right }] of bodyRows) for (let x = left; x <= right; x++) {
+      if (identity === "skeleton" && !bodyGrid.has(key2(x, y))) continue;
+      let sample = bodyGrid.get(key2(x, y));
+      if (!sample || torsoOccluder(identity, sample, registration)) sample = material.reduce((a, b) => !a || Math.abs(b.y - y) * 3 + Math.abs(b.x - x) < Math.abs(a.y - y) * 3 + Math.abs(a.x - x) ? b : a, null);
+      if (sample) underbody.push({ ...sample, x, y, bodyUnderlay: true });
+    }
     const body = [...retained, ...repairs], head = body.filter((p) => p.y <= registration.neck), torso = body.filter((p) => p.y > registration.neck && p.y <= registration.pelvis), legs = body.filter((p) => p.y > registration.pelvis);
     const cape = body.filter((p) => capePixel(identity, p, registration)), capeMask = new Set(cape.map((p) => key2(p.x, p.y)));
-    return asset.parts = { registration, hands, arms: { profiles: profiles2, mask }, body, head, torso, legs, cape, capeMask, repairs };
+    return asset.parts = { registration, hands, arms: { profiles: profiles2, mask }, body, head, torso, legs, cape, capeMask, repairs, bodyRows, underbody };
   }
   function connectAuthoredArm(profile, root, goal, preferredJoint, scale) {
     const upper = Math.hypot(profile.joint.x - profile.root.x, profile.joint.y - profile.root.y) * scale, lower = Math.hypot(profile.end.x - profile.joint.x, profile.end.y - profile.joint.y) * scale;
@@ -4108,6 +4158,28 @@
       }
     }
     if (authoredLegs) {
+      const trunk = new Map((parts?.underbody || []).map((p) => {
+        const q = warped(p.x, p.y);
+        return [p.y * 64 + p.x, { ...p, q: { x: 32 + (q.x - 32 + ox) * fit, y: 44 + (q.y - 44 + oy) * fit }, shade: artColors[p.index] }];
+      }));
+      for (const p of trunk.values()) {
+        b.dot(p.q.x, p.q.y, p.shade);
+        const samples = [[p.x, p.y], [p.x + 1, p.y], [p.x + 1, p.y + 1], [p.x, p.y + 1]].map(([x, y]) => trunk.get(y * 64 + x));
+        if (samples.some((p2) => !p2)) continue;
+        const vertices = samples.map((p2) => p2.q), ys = vertices.map((p2) => p2.y);
+        for (let y = Math.ceil(Math.min(...ys)); y <= Math.floor(Math.max(...ys)); y++) {
+          const intersections = [];
+          for (let i = 0; i < 4; i++) {
+            const a = vertices[i], z2 = vertices[(i + 1) % 4];
+            if (y < Math.min(a.y, z2.y) || y > Math.max(a.y, z2.y)) continue;
+            if (a.y === z2.y) intersections.push(a.x, z2.x);
+            else intersections.push(a.x + (z2.x - a.x) * (y - a.y) / (z2.y - a.y));
+          }
+          if (intersections.length) for (let x = Math.ceil(Math.min(...intersections)); x <= Math.floor(Math.max(...intersections)); x++) b.dot(x, y, p.shade);
+        }
+        const mid = warped(p.x + 0.5, p.y + 0.5);
+        b.dot(32 + (mid.x - 32 + ox) * fit, 44 + (mid.y - 44 + oy) * fit, p.shade);
+      }
       const mapped = new Map(layer.map((p, i) => [p.y * 64 + p.x, { ...p, shade: pixels[i].color, q: { x: 32 + (pixels[i].x - 32 + ox) * fit, y: 44 + (pixels[i].y - 44 + oy) * fit } }]));
       for (const p of mapped.values()) {
         b.dot(p.q.x, p.q.y, p.shade);
@@ -4135,7 +4207,7 @@
       }
       const reached = new Uint8Array(4096), queue2 = new Uint16Array(4096);
       let count = 0;
-      for (const p of mapped.values()) {
+      for (const p of [...mapped.values(), ...trunk.values()]) {
         const x = Math.round(p.q.x), y = Math.round(p.q.y), k = y * 64 + x;
         if (x >= 0 && x < 64 && y >= 0 && y < 64 && !reached[k]) {
           reached[k] = 1;
