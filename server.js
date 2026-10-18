@@ -16,6 +16,7 @@ const types = {
   ".woff2": "font/woff2",
 };
 const entryFiles = new Set([
+  "/opening-journey.js",
   "/companion-anatomy.js", "/authored-parts.js",
   "/reward-loadout.js",
   "/stage-background-loop.js",

@@ -1,0 +1,53 @@
+import {chromium} from 'playwright';
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import {makeRun,generateRoute,encounter,BY_ID} from '../game.js';
+import {prepareOpeningRelics} from '../opening-relics.js';
+
+const out=process.env.OPENING_REVIEW_OUT||'playtest-artifacts/pass-two/review';fs.mkdirSync(out,{recursive:true});const report=[];
+const browser=await chromium.launch({headless:true,executablePath:process.env.CHROMIUM_PATH||(process.platform==='win32'?'C:/Program Files/Google/Chrome/Application/chrome.exe':undefined)});
+try{for(const offline of process.env.OPENING_SOURCE_ONLY?[false]:[false,true])for(const width of [1440,390]){
+ const label=`${offline?'offline':'source'}-${width}`,height=width===390?844:1000;
+ const context=await browser.newContext({viewport:{width,height},deviceScaleFactor:width===390?3:1,hasTouch:width===390,recordVideo:{dir:out,size:{width,height}}}),page=await context.newPage(),errors=[],requests=[];
+ page.on('pageerror',e=>errors.push(e.message));page.on('response',r=>{if(r.status()>=400)errors.push(r.status()+' '+r.url());});
+ const run=makeRun(62,['aurel','brakk'],{manualSkills:true});run.route=generateRoute(run);const node=run.route[0][0];prepareOpeningRelics(run,{},BY_ID);
+ await page.addInitScript(saved=>{if(!localStorage.getItem('starfall-menagerie-v1'))localStorage.setItem('starfall-menagerie-v1',JSON.stringify(saved));if(!localStorage.getItem('opening-review-intro'))sessionStorage.setItem('fang-feather-intro','seen');},{version:7,run,node,foes:encounter(run,node.type,node.seed),phase:'prep',profile:{owned:['aurel','brakk'],tutorial:false,best:0}});
+ if(offline)await page.route('**/*',r=>r.request().isNavigationRequest()?r.continue():(requests.push(r.request().url()),r.abort()));
+ await page.goto((process.env.BASE_URL||'http://127.0.0.1:3000')+(offline?'/Starfall-Menagerie.html':''));
+ await page.locator('[data-opening-relic]').first().waitFor();assert.equal(await page.locator('.opening-relic-fit.active').count(),2);
+ await page.screenshot({path:`${out}/${label}-relic.png`,scale:'css'});await page.locator('[data-opening-relic]').first().click();
+ await page.locator('[data-journey-step="ready"]').waitFor();assert.equal(await page.locator('.tutorial-callout').count(),0);
+ await page.locator('[data-action="journey-loadout"]').click();assert.equal(await page.locator('[data-detail-tab="equipment"]').getAttribute('aria-selected'),'true');
+ await page.locator('.modal-close').click();await page.locator('[data-action="journey-advanced"]').click();assert.equal(await page.locator('body').getAttribute('data-learning'),'false');await page.locator('[data-action="journey-advanced"]').click();
+ await page.screenshot({path:`${out}/${label}-ready.png`,scale:'css'});
+ await page.locator('[data-action="battle"]').click();if(width>900){await page.waitForFunction(()=>starfall.state.battle.time>=8);await page.waitForTimeout(200);assert.equal(await page.locator('[data-journey-step="combat"]').count(),0);await page.locator('[data-action="pause"]').click();await page.locator('[data-live-inspect]').first().click();}else await page.locator('[data-action="journey-pause"]').click();
+ const pausedTime=await page.evaluate(()=>starfall.state.battle.time);await page.waitForTimeout(300);assert.equal(await page.evaluate(()=>starfall.state.battle.time),pausedTime);
+ await page.locator('.modal-close').click();await page.locator('[data-action="pause"]').click();assert.equal(await page.locator('[data-journey-step="combat"]').count(),0);
+ // Let the actual first encounter settle at 1×; do not force a win or alter HP.
+ await page.waitForFunction(()=>starfall.state.phase==='reward',null,{timeout:60000});await page.locator('.reward-checklist').waitFor();await page.locator('.rewards-layout.rewards-revealed').waitFor();
+ assert.match(await page.locator('.reward-awarded-note').innerText(),/already been awarded/);assert.ok(await page.locator('[data-action="continue"]').isDisabled());
+ assert.equal(await page.locator('.next-spell-milestone').count(),2);await page.screenshot({path:`${out}/${label}-rewards.png`,scale:'css'});
+ const won=await page.evaluate(()=>starfall.state.run.wins);assert.equal(won,1);
+ await page.locator('[data-upgrade]').first().click();await page.locator('[data-action="claim-loot"]:not([disabled])').last().click();
+ await page.waitForFunction(()=>JSON.parse(localStorage.getItem('starfall-menagerie-v1')).reward.loot.claimed);await page.waitForTimeout(2200);
+ await page.locator('[data-action="continue"]:not([disabled])').waitFor();
+ const granted=await page.evaluate(()=>({gold:starfall.state.run.gold,xp:starfall.state.run.team.map(c=>c.xp),items:starfall.state.run.gearInventory.length,chosen:JSON.parse(localStorage.getItem('starfall-menagerie-v1')).upgradeChosen}));
+ await page.reload();await page.locator('[data-action="continue"]:not([disabled])').waitFor();
+ assert.deepEqual(await page.evaluate(()=>({gold:starfall.state.run.gold,xp:starfall.state.run.team.map(c=>c.xp),items:starfall.state.run.gearInventory.length,chosen:JSON.parse(localStorage.getItem('starfall-menagerie-v1')).upgradeChosen})),granted);
+ assert.match(await page.locator('.reward-checklist').innerText(),/Ready for the next encounter/);
+ await page.locator('[data-action="continue"]').click();await page.locator('[data-journey-step="route"]').waitFor();
+ await page.screenshot({path:`${out}/${label}-route.png`,scale:'css'});
+ const next=page.locator('[data-field-node]:not([disabled])').first(),id=await next.getAttribute('data-field-node');await next.click();await page.locator(`[data-field-enter="${id}"]`).last().click();
+ await page.locator('[data-journey-step="capture"]').waitFor();await page.locator('[data-action="capture-kit"]').first().click();
+ const target=page.locator('#kit-capture-target'),value=await target.locator('option[value]:not([value=""])').first().getAttribute('value');await target.selectOption(value);
+ await page.locator('.modal-close').click();assert.equal(await page.locator('[data-journey-step]').count(),0);assert.ok(await page.evaluate(()=>starfall.state.profile.tutorial));
+ await page.reload();await page.waitForFunction(()=>window.starfall);assert.equal(await page.locator('[data-journey-step]').count(),0);
+ await page.locator('#help').click();assert.equal(await page.locator('.field-notes details').count(),6);assert.equal(await page.locator('.field-notes details[open]').count(),1);await page.screenshot({path:`${out}/${label}-help.png`,scale:'css'});
+ await page.locator('[data-action="replay-journey"]').click();await page.locator('[data-journey-step="ready"]').waitFor();await page.locator('[data-action="skip-journey"]').click();assert.equal(await page.locator('[data-journey-step]').count(),0);
+ await page.evaluate(()=>{localStorage.setItem('opening-review-intro','yes');sessionStorage.removeItem('fang-feather-intro');});
+ await page.goto((process.env.BASE_URL||'http://127.0.0.1:3000')+(offline?'/Starfall-Menagerie.html':''),{waitUntil:'domcontentloaded'});await page.locator('.intro-premise').waitFor();await page.waitForTimeout(250);await page.screenshot({path:`${out}/${label}-intro.png`,scale:'css'});assert.match(await page.locator('.intro-premise').innerText(),/Capture wild companions/);await page.waitForTimeout(2400);assert.equal(await page.locator('#logo-intro').count(),0);
+ assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));assert.deepEqual(errors,[]);if(offline)assert.deepEqual(requests,[]);
+ report.push({label,realBattle:true,pausedInspection:true,reloadWithoutDuplicateGrants:true,guideCompleted:true,granted,errors,requests});
+ const video=page.video();await context.close();await video.saveAs(`${out}/${label}.webm`);
+ }}finally{await browser.close();fs.writeFileSync(`${out}/browser.json`,JSON.stringify(report,null,2));}
+console.log(JSON.stringify(report));

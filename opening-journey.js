@@ -1,0 +1,34 @@
+import {ENRAGE_START,DAMAGE_RAMP_PER_SECOND,ACTION_RAMP_PER_SECOND,HEALING_DECAY_PER_SECOND} from './battle-enrage.js';
+
+export function learningJourney(profile,run){return !profile.tutorial&&(profile.guideReplay||(profile.best||0)<3&&(run.wins||0)<3);}
+export function completeJourneyStep(profile,id){
+ if(!['ready','combat','rewards','route','capture'].includes(id))return false;
+ profile.firstJourney??={};profile.firstJourney[id]=true;if(['ready','combat','rewards','route','capture'].every(key=>profile.firstJourney[key])){profile.tutorial=true;profile.guideReplay=false;}return true;
+}
+export function journeyStep(profile,run,phase,time=0){
+ if(!learningJourney(profile,run))return null;
+ const seen=profile.firstJourney||{};
+ if(phase==='prep'&&!seen.ready&&(!run.wins||profile.guideReplay))return {id:'ready',number:1,title:'Your party is ready',text:'Your companions fight automatically. Starter gear is equipped; you can enter battle now.',action:'journey-loadout',label:'Inspect loadout'};
+ if(phase==='battle'&&!seen.combat&&time<8)return {id:'combat',number:2,title:'Watch the first exchange',text:'Tap an enemy to focus your party. Pause to inspect a companion.',action:'journey-pause',label:'Pause & inspect'};
+ if(phase==='map'&&!seen.route)return {id:'route',number:4,title:'Choose the next encounter',text:'Follow a glowing connection. An outpost spends gold; a grove offers recovery. You can preview a node before entering.'};
+ if(phase==='prep'&&run.wins>=1&&!seen.capture&&!run.captureOrder)return {id:'capture',number:5,title:'Recruit from the wilds',text:'Choose a target before battle to attempt a capture. A failed throw spends a prism; you can also fight without capturing.',action:'capture-kit',label:'Plan a capture'};
+ return null;
+}
+export function journeyGuideHTML(step){
+ if(!step)return '';
+ return `<section class="journey-guide" data-journey-step="${step.id}" aria-label="First expedition guide"><span class="guide-number" aria-hidden="true">${step.number}</span><div><strong>${step.title}</strong><p>${step.text}</p></div><nav aria-label="Guide actions">${step.action?`<button data-action="${step.action}">${step.label}</button>`:''}<button data-journey-done="${step.id}">${step.id==='capture'?'Not now':'Got it'}</button><button data-action="skip-journey" aria-label="Turn off the first expedition guide">Skip guide</button></nav></section>`;
+}
+export function rewardStepsHTML({won,hasLoot,claimed,chosen}){
+ const steps=[...(hasLoot?[{label:'Pack spoils',done:!!claimed}]:[]),...(won?[{label:'Choose upgrade',done:!!chosen}]:[])];
+ const ready=steps.every(s=>s.done);
+ return `<ol class="reward-checklist" aria-label="Before you continue">${steps.map((s,i)=>`<li class="${s.done?'done':'pending'}"><span aria-hidden="true">${s.done?'✓':i+1}</span><b>${s.label}</b><small>${s.done?'Done':'To do'}</small></li>`).join('')}<li class="${ready?'ready':'locked'}"><span aria-hidden="true">→</span>${ready?'Ready for the next encounter':'Then continue'}</li></ol>`;
+}
+export function nextSpellMilestone(c,xpNeeded){
+ if(c.pendingSkills?.length)return 'Spell choice waiting — open Skills to learn it.';
+ const target=[3,5,7].find(level=>level>c.level);if(!target)return '';
+ let remaining=-Math.max(0,c.xp||0);for(let level=c.level;level<target;level++)remaining+=xpNeeded(level);
+ return `Level ${target}: new spell choice · ${Math.max(0,Math.ceil(remaining))} EXP away`;
+}
+export function fieldNotesHTML(){
+ return `<span class="section-kicker">FANG & FEATHER · FIELD NOTES</span><h2>Lead the expedition.</h2><p>Choose the party, equipment and route. Companions handle their own movement, attacks and spells.</p><div class="field-notes"><details open><summary>Start here</summary><p>Starter gear is already equipped. Enter battle, tap an enemy to focus it, and use Pause or Space to inspect. The 1×, 2× and 3× buttons change playback speed.</p><p>Gold and EXP are awarded after battle. Pack the cache, choose one upgrade, then follow a connected route.</p></details><details><summary>Equipment, stones and team bonuses</summary><p>Drag equipment and Aura Stones onto the compact companion fields in rewards, or open Companions. Hovering an item highlights compatible slots. Five equipment fields appear for every companion; compatibility still depends on the body and weapon.</p><p>Two companions of an element activate a team bonus; four unlock the next tier. Aura Stone slots depend on rarity: Common 0, Uncommon 1, Rare 2, Epic 3, Legendary 4.</p></details><details><summary>Capture a companion</summary><p>Before battle, open Capture and choose a wild target, prism and health threshold. Lower health improves the chance, but lethal damage can knock it out before the throw. A failed throw spends the prism. Capturing is optional.</p><p>A successful capture fights for you immediately, then joins an open team place or Reserves. The family stays unlocked for future starts.</p></details><details><summary>Levels and evolution</summary><p>Levels 3, 5 and 7 offer another regular spell slot. Evolution grants its own bonus spell separately and does not consume a regular slot. Inspect the companion to see its family's actual evolution requirements.</p><p>Surviving companions recover between encounters. Recruitment, reserves and equipment let you adapt the party along the route.</p></details><details><summary>Combat details and advanced orders</summary><p>Stamina pays for attacks and dodges. Heavy impacts build poise damage; a stagger interrupts ordinary windups. Charged attacks resist interruption. Use Deployment & AI to change target policies, formation and conditional orders.</p><p>After ${ENRAGE_START} combat seconds, each further second gradually adds ${DAMAGE_RAMP_PER_SECOND*100}% damage and ${ACTION_RAMP_PER_SECOND*100}% action speed, while healing effectiveness falls by ${HEALING_DECAY_PER_SECOND*100} percentage point. Damage caps at 3× and action speed at 1.5×; healing can fall to zero. Both teams follow the same ramp.</p><p>Positive armor reduces direct-hit damage; negative armor increases it. Damage over time bypasses armor.</p></details><details><summary>What carries into another expedition?</summary><p>Captured families, bonds and permanent unlocks stay. Levels, equipment and expedition relics belong to the current run.</p><p>A defeat costs an expedition life and permanently removes one deployed starter, or another deployed companion when no starter remains. Its worn equipment is destroyed; Aura Stones return to the pack and expedition relics are kept. Keep reserves for dangerous encounters.</p><p>The game saves on this device. Keep the same browser profile or offline file location to keep using that save.</p></details></div><div class="modal-actions"><button class="button secondary" data-action="replay-journey">Show the first-expedition guide</button><button class="button" data-action="close">Return to expedition</button></div>`;
+}

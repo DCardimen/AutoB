@@ -71,6 +71,9 @@ jobs:
       - run: node tests/arena-elite.browser.mjs
       - run: node tests/uploaded-ui.browser.mjs
       - run: node tests/journey-polish.browser.mjs
+      - run: node tests/opening-journey.browser.mjs
+        env:
+          BASE_URL: http://127.0.0.1:3000
       - run: node tests/weapon-relic-start.browser.mjs
       - run: node tests/settings-movement.browser.mjs
       - run: node tests/legs-v2.browser.mjs
@@ -112,6 +115,8 @@ jobs:
             playtest-artifacts/companion-animation-live/
             playtest-artifacts/journey-*.png
             playtest-artifacts/journey-browser.json
+            playtest-artifacts/pass-two/
+            playtest-artifacts/postmatch-quick-equip/
             playtest-artifacts/uploaded-*.png
             playtest-artifacts/uploaded-*.json
             public/uploaded-ui-preview.webm
