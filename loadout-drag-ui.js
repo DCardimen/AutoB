@@ -6,7 +6,9 @@ export function clearDragSprites(){
 }
 // Carry only the authored sprite, never the surrounding inventory/card UI.
 export function dragSprite(source,fallbackHTML=''){
- let art=source.querySelector('.item-art,.skill-icon img,.idle-portrait canvas,img,canvas');
+ // Reward cards put an inspect button before their item. Prefer the carried
+ // object explicitly so DOM order cannot turn a weapon into a magnifier.
+ let art=source.querySelector('.loot-medallion img,.item-art')||source.querySelector('.skill-icon img,.idle-portrait canvas')||source.querySelector('img,canvas');
  if(!art&&fallbackHTML){const fallback=document.createElement('div');fallback.innerHTML=fallbackHTML;art=fallback.querySelector('img');}
  art||=source.querySelector('.skill-icon,.relic-symbol')||source;
  const ghost=document.createElement('div');ghost.className='loadout-sprite-ghost';ghost.setAttribute('aria-hidden','true');

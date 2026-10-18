@@ -14,6 +14,7 @@
     "test": "node --test tests/*.test.js",
     "test:relic-v2": "node --test tests/weapon-relic-start.test.js tests/uploaded-art.test.js tests/prototype-rig.test.js && node tests/weapon-relic-start.browser.mjs",
     "review:relic-v2": "node scripts/review-relics-v2.mjs",
+    "test:opening-journey": "npm run build:standalone && node --test tests/opening-journey.test.js && node tests/opening-journey.browser.mjs",
     "test:journey": "node --test tests/journey-polish.test.js && node tests/journey-polish.browser.mjs",
     "record:journey": "node scripts/record-journey-polish.mjs",
     "test:art": "node --test tests/sprite-art-v2.test.js && node tests/sprite-art-v2.browser.mjs",

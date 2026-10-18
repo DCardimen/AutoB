@@ -43,7 +43,7 @@ Object.assign(GEAR_ART,{
 export const RELIC_ART=Object.fromEntries([...RELICS,...WEARER_RELICS,...AURA_STONES].map(r=>[r.id,relicIllustration(r)]));
 export const gearArt=id=>GEAR_ART[id]||'weapon-00';
 export const relicArt=id=>RELIC_ART[id]||'relic-1-00';
-export const lootArt=d=>d.kind==='gear'?gearArt(d.gear):d.kind==='capturer'?`capture-${d.tier}-idle`:d.kind==='stone'?relicArt(d.stone):d.kind==='relic'?relicArt(d.relic):'treasure-01';
+export const lootArt=d=>d.kind==='gear'?gearArt(d.gear):d.kind==='capturer'?`capture-${d.tier}-idle`:d.kind==='stone'?relicArt(d.stone):d.kind==='relic'?relicArt(d.relic):'icon-gold';
 export function skillArt(skill) {
  return skillIconData(skill);
 }

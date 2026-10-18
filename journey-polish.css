@@ -618,3 +618,37 @@ body.ui-v3.native-expedition[data-phase="battle"] .arena-field-tools{display:non
  body.ui-v3.native-expedition[data-screen="arena"] .arena-label small{font-size:7px}
 }
 @media(max-width:370px){body.ui-v3.native-expedition[data-screen="arena"] .brand .brand-name{display:none}}
+/* Pass 2: one first-expedition decision at a time. */
+#opening-guide:empty{display:none}
+#opening-guide{flex:none;position:relative;z-index:2}
+body.ui-v3.native-expedition .journey-guide{display:flex;align-items:center;gap:12px;margin:0 0 8px;padding:10px 14px;border:1px solid #9cb59088;border-radius:9px;background:linear-gradient(110deg,#214642,#102c32);color:#e5e9d2;box-shadow:0 5px 14px #00182044}
+.journey-guide .guide-number{display:grid;place-items:center;width:30px;height:30px;flex:none;border-radius:50%;border:1px solid #d3c68d;color:#e5d59b;font:700 16px var(--sans)}
+.journey-guide>div{flex:1;min-width:0}.journey-guide strong{font:700 14px var(--sans)}.journey-guide p{font:12px/1.45 var(--sans);color:#bbd1c5;margin:3px 0 0}
+.journey-guide nav{display:flex;gap:6px;flex:none}.journey-guide button{border:1px solid #88a79766;border-radius:6px;background:#0a292d;color:#e3ddba;min-height:38px;padding:6px 10px;font:600 11px var(--sans);cursor:pointer}.journey-guide button:hover,.journey-guide button:focus-visible{border-color:#e3d18e;background:#25483d}
+body.ui-v3.native-expedition[data-learning="true"] .arena-roster-deck .roster-commands,body.ui-v3.native-expedition[data-learning="true"] .prep-roster-poise,body.ui-v3.native-expedition[data-learning="true"] .briefing .scout-comparison,body.ui-v3.native-expedition[data-learning="true"] .briefing .tactical-tip,body.ui-v3.native-expedition[data-learning="true"] .enemy-head-ui .capture-estimate{display:none}
+body.ui-v3.native-expedition[data-screen="map"] #opening-guide{position:fixed;z-index:35;left:50%;top:76px;transform:translateX(-50%);width:min(760px,calc(100% - 28px))}
+.opening-relic-fit{display:flex;flex-direction:column;gap:5px;padding:10px;border:1px solid #9bb58c66;border-radius:7px;background:#112c28;color:#b9cec0;font:11px/1.5 var(--sans);text-align:left}
+.opening-relic-fit b{color:#d5e5bb;font-size:12px}.opening-relic-fit.conditional{border-color:#c4a264;color:#e3c398}.opening-relic-fit.conditional b{color:#edce92}
+body.ui-v3.native-expedition .opening-relic-card .opening-relic-fit{margin:12px 0 4px;align-self:stretch}
+body.ui-v3.native-expedition .reward-checklist{display:flex;gap:8px;flex:1 0 100%;width:100%;list-style:none;padding:0;margin:0 0 8px;font:600 12px/1.3 var(--sans)}
+.reward-checklist li{flex:1;display:flex;align-items:center;gap:8px;padding:8px 10px;min-width:0;border:1px solid #78988d66;border-radius:7px;background:#0a2930;color:#c4d3c5}.reward-checklist li>span{font-size:17px;color:#e3cd95}.reward-checklist li>small{margin-left:auto;font:10px var(--sans)}.reward-checklist .done,.reward-checklist .ready{border-color:#8dbb8866;color:#c9e9ad;background:#173a33}.reward-checklist .locked{opacity:.65}
+body.ui-v3.native-expedition .rewards-footer{flex-wrap:wrap}
+body.ui-v3.native-expedition .reward-awarded-note{font:12px/1.5 var(--sans);color:#b7cbbd;max-width:580px;margin:8px 0 0}
+body.ui-v3.native-expedition .reward-quick-equip .next-spell-milestone{grid-column:1/-1;font:10px/1.5 var(--sans);color:#d7c98f;display:block;margin-top:4px}
+.next-spell-milestone:empty{display:none!important}
+/* A hover grade must not push the reward card away from the pointer on phones. */
+body.ui-v3.native-expedition .reward-quick-equip .reward-companion-grade{display:block;height:14px;min-height:14px;max-height:14px;line-height:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.field-notes{display:grid;gap:8px;margin:18px 0}.field-notes details{border:1px solid #71998b66;border-radius:9px;background:#0b2930;padding:0 14px}.field-notes summary{cursor:pointer;min-height:48px;display:list-item;align-content:center;font:600 15px var(--sans);color:#e7dbb2}.field-notes p{font:13px/1.65 var(--sans);color:#bed0c5;margin:5px 0 14px}
+#logo-intro .intro-premise{color:#ded9b8;text-align:center;font:15px/1.7 var(--sans);margin:18px 20px 0}
+body.ui-v3.native-expedition .reward-quick-equip .result-hero{padding:16px;border:1px solid #7b9b8a66;border-radius:12px;background:linear-gradient(110deg,#062831f2,#092932dd);box-sizing:border-box}
+.reward-checklist li>b{font:inherit;flex:1;min-width:0}
+@media(max-width:900px){
+ body.ui-v3.native-expedition .journey-guide{padding:8px;gap:8px;flex-wrap:wrap;margin-bottom:5px}
+ .journey-guide .guide-number{width:25px;height:25px;font-size:13px}.journey-guide strong{font-size:12px}.journey-guide p{font-size:11px}.journey-guide nav{width:100%;justify-content:flex-end;gap:5px}.journey-guide button{min-height:44px;font-size:10px;padding:5px 9px}
+ body.ui-v3.native-expedition[data-screen="map"] #opening-guide{top:66px}
+ body.ui-v3.native-expedition .reward-checklist{gap:4px;font-size:10px}.reward-checklist li{flex-wrap:nowrap;min-height:36px;box-sizing:border-box;padding:6px;gap:4px}.reward-checklist li>small{display:none}.reward-checklist li>span{font-size:14px}
+ body.ui-v3.native-expedition .reward-quick-equip .rewards-expedition{width:100%;box-sizing:border-box;align-self:stretch}
+ body.ui-v3.native-expedition .reward-quick-equip .rewards-footer{position:relative;bottom:auto}
+ body.ui-v3.native-expedition .reward-awarded-note{font-size:11px}
+ body.ui-v3.native-expedition .roster-manage [data-action="journey-advanced"]{min-height:32px;font-size:8px}
+}

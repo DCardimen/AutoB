@@ -1,0 +1,74 @@
+[
+  {
+    "label": "source-1440",
+    "realBattle": true,
+    "pausedInspection": true,
+    "reloadWithoutDuplicateGrants": true,
+    "guideCompleted": true,
+    "granted": {
+      "gold": 191,
+      "xp": [
+        32,
+        32
+      ],
+      "items": 3,
+      "chosen": "orbs"
+    },
+    "errors": [],
+    "requests": []
+  },
+  {
+    "label": "source-390",
+    "realBattle": true,
+    "pausedInspection": true,
+    "reloadWithoutDuplicateGrants": true,
+    "guideCompleted": true,
+    "granted": {
+      "gold": 191,
+      "xp": [
+        32,
+        32
+      ],
+      "items": 3,
+      "chosen": "orbs"
+    },
+    "errors": [],
+    "requests": []
+  },
+  {
+    "label": "offline-1440",
+    "realBattle": true,
+    "pausedInspection": true,
+    "reloadWithoutDuplicateGrants": true,
+    "guideCompleted": true,
+    "granted": {
+      "gold": 191,
+      "xp": [
+        32,
+        32
+      ],
+      "items": 3,
+      "chosen": "orbs"
+    },
+    "errors": [],
+    "requests": []
+  },
+  {
+    "label": "offline-390",
+    "realBattle": true,
+    "pausedInspection": true,
+    "reloadWithoutDuplicateGrants": true,
+    "guideCompleted": true,
+    "granted": {
+      "gold": 191,
+      "xp": [
+        32,
+        32
+      ],
+      "items": 3,
+      "chosen": "orbs"
+    },
+    "errors": [],
+    "requests": []
+  }
+]
