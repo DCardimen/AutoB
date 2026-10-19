@@ -1,0 +1,57 @@
+{
+  "mode": "built-in image_gen",
+  "coverage": {
+    "family": "fox",
+    "forms": [
+      "rowan",
+      "mature",
+      "moontrail"
+    ],
+    "directionOrder": [
+      "E",
+      "SE",
+      "S",
+      "SW",
+      "W",
+      "NW",
+      "N",
+      "NE"
+    ],
+    "kind": "static art-direction sheets",
+    "riggedDirections": 0,
+    "gameIntegration": false,
+    "variantsReviewed": []
+  },
+  "sources": [
+    {
+      "form": "rowan",
+      "file": "rowan.png",
+      "source": "C:/Users/David Cardimen/.codex/generated_images/01a15565-e71c-7a91-b0df-da333a453ad5/exec-0dec16e2-897d-4324-87b3-5e863cc27f40.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 1898328,
+      "sha256": "99a133d8a72908a79abeb166a41bd1a3caefb8c42f547a165a580101b24292b1",
+      "review": "static art draft; equipment corrections pending"
+    },
+    {
+      "form": "mature",
+      "file": "mature.png",
+      "source": "C:/Users/David Cardimen/.codex/generated_images/01a15565-e71c-7a91-b0df-da333a453ad5/exec-121cef0a-b118-41ae-8183-405e22690d21.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 1983797,
+      "sha256": "34830f2eeab40e911e5f579f3ced19081c525b3d41abff4b30fee4bc20ab67cc",
+      "review": "static art draft; equipment corrections pending"
+    },
+    {
+      "form": "moontrail",
+      "file": "moontrail.png",
+      "source": "C:/Users/David Cardimen/.codex/generated_images/01a15565-e71c-7a91-b0df-da333a453ad5/exec-be2ccdd9-fd7d-4cde-9b57-99f9c70215b8.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 2009148,
+      "sha256": "11c02e2fe25f5374e7748fc1d12bc8321e7241ebf5be9226b2488285bcc7d752",
+      "review": "static art draft; equipment corrections pending"
+    }
+  ]
+}
