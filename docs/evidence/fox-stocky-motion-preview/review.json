@@ -1,0 +1,60 @@
+{
+  "coverage": {
+    "forms": [
+      "rowan"
+    ],
+    "motionDirections": [
+      "SW"
+    ],
+    "targetDirectionCount": 8,
+    "gameIntegration": false
+  },
+  "errors": [],
+  "fps": 144.36479491613667,
+  "checks": [
+    {
+      "form": "rowan",
+      "frames": 192,
+      "colors": 11843,
+      "maxTailError": 0.0014445615555311875,
+      "tailCount": 1,
+      "rasterSize": 256,
+      "failures": []
+    }
+  ],
+  "layouts": [
+    {
+      "width": 288,
+      "scroll": 288
+    },
+    {
+      "width": 704,
+      "scroll": 704
+    },
+    {
+      "width": 992,
+      "scroll": 992
+    }
+  ],
+  "clips": {
+    "run": 1.696,
+    "idle": 3.241,
+    "blink": 6.146,
+    "draw": 7.206,
+    "release": 7.456
+  },
+  "canvasRects": [
+    {
+      "x": 312,
+      "y": 224,
+      "width": 400,
+      "height": 320
+    }
+  ],
+  "sourceCheck": {
+    "actors": 1,
+    "raster": 256,
+    "form": "rowan",
+    "hand": "right"
+  }
+}

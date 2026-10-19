@@ -1,0 +1,18 @@
+import fs from 'node:fs';
+import path from 'node:path';
+const root=path.resolve('public/fox-layered-preview');
+const manifest=JSON.parse(fs.readFileSync(path.join(root,'base-directions.json'),'utf8'));
+delete manifest.directions;
+for(const form of manifest.forms)form.image='data:image/png;base64,'+fs.readFileSync(path.join(root,form.image)).toString('base64');
+const strip=source=>source.replace(/^import[^\n]*\n/gm,'').replace(/\bexport\s+(?=(?:const|function|let)\b)/g,'');
+const model=strip(fs.readFileSync(path.join(root,'model.mjs'),'utf8')),renderer=strip(fs.readFileSync(path.join(root,'renderer.mjs'),'utf8'));
+let preview=strip(fs.readFileSync(path.join(root,'preview.mjs'),'utf8'));
+preview=preview.replace("const $=id=>document.getElementById(id)","const root=document.getElementById('fox-stocky-inline');const $=id=>root.querySelector('[data-control=\"'+id+'\"]')");
+preview=preview.replace(/^const manifest=await fetch[^\n]*$/m,'const manifest='+JSON.stringify(manifest)+';');
+preview=preview.replaceAll('document.documentElement.dataset.','root.dataset.');
+if(preview.includes('await fetch'))throw Error('Inline preview must not use network calls');
+const template=fs.readFileSync(path.join(root,'stocky-inline.template.html'),'utf8');
+const fragment=template.replace('/* MODEL */',()=>model).replace('/* RENDERER */',()=>renderer).replace('/* PREVIEW */',()=>preview);
+if(Buffer.byteLength(fragment)>1_000_000)throw Error('Inline preview exceeds 1MB: '+Buffer.byteLength(fragment));
+fs.writeFileSync(path.join(root,'fox-stocky-motion.html'),fragment);
+console.log('Wrote stocky motion preview: '+Buffer.byteLength(fragment)+' bytes');

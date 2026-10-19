@@ -1,0 +1,50 @@
+[
+  {
+    "direction": "E",
+    "parts": 12,
+    "width": 512,
+    "height": 384
+  },
+  {
+    "direction": "SE",
+    "parts": 12,
+    "width": 512,
+    "height": 384
+  },
+  {
+    "direction": "S",
+    "parts": 12,
+    "width": 512,
+    "height": 384
+  },
+  {
+    "direction": "SW",
+    "parts": 12,
+    "width": 512,
+    "height": 384
+  },
+  {
+    "direction": "W",
+    "parts": 12,
+    "width": 512,
+    "height": 384
+  },
+  {
+    "direction": "NW",
+    "parts": 12,
+    "width": 512,
+    "height": 384
+  },
+  {
+    "direction": "N",
+    "parts": 12,
+    "width": 512,
+    "height": 384
+  },
+  {
+    "direction": "NE",
+    "parts": 12,
+    "width": 512,
+    "height": 384
+  }
+]
