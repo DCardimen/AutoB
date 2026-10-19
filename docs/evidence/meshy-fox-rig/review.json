@@ -1,0 +1,21 @@
+{
+  "frames": 512,
+  "nonFiniteVertices": 0,
+  "outOfViewVertices": 0,
+  "tailVertexTravel": 0.22167458701524798,
+  "headDriftInTailClip": 1.3877787807814457e-16,
+  "directions": [
+    "S",
+    "SE",
+    "E",
+    "NE",
+    "N",
+    "NW",
+    "W",
+    "SW"
+  ],
+  "clipNames": [
+    "Relaxed_Tail_Sway_Preview",
+    "Joint_Check_Preview"
+  ]
+}

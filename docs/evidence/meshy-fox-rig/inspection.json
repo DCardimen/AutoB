@@ -1,0 +1,268 @@
+{
+  "meshes": [
+    {
+      "name": "FoxMesh",
+      "vertices": 12572,
+      "triangles": 10353,
+      "skin": true
+    }
+  ],
+  "animations": [
+    "Relaxed_Tail_Sway_Preview",
+    "Joint_Check_Preview"
+  ],
+  "bones": [
+    {
+      "name": "Root",
+      "parent": "FoxRepairArmature",
+      "position": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "Pelvis",
+      "parent": "Root",
+      "position": [
+        0,
+        0.52,
+        0.035
+      ]
+    },
+    {
+      "name": "Spine",
+      "parent": "Pelvis",
+      "position": [
+        0,
+        0.65,
+        0.035
+      ]
+    },
+    {
+      "name": "Chest",
+      "parent": "Spine",
+      "position": [
+        0,
+        0.81,
+        0.035
+      ]
+    },
+    {
+      "name": "Neck",
+      "parent": "Chest",
+      "position": [
+        0,
+        0.925,
+        0.045
+      ]
+    },
+    {
+      "name": "Head",
+      "parent": "Neck",
+      "position": [
+        0,
+        1.015,
+        0.06
+      ]
+    },
+    {
+      "name": "Clavicle_R",
+      "parent": "Chest",
+      "position": [
+        -0.14,
+        0.85,
+        0.035
+      ]
+    },
+    {
+      "name": "UpperArm_R",
+      "parent": "Clavicle_R",
+      "position": [
+        -0.275,
+        0.84,
+        0.035
+      ]
+    },
+    {
+      "name": "Forearm_R",
+      "parent": "UpperArm_R",
+      "position": [
+        -0.3738861236040836,
+        0.7017193633475586,
+        0.035
+      ]
+    },
+    {
+      "name": "Hand_R",
+      "parent": "Forearm_R",
+      "position": [
+        -0.48229563445572754,
+        0.5501213874802345,
+        -0.003280955424017157
+      ]
+    },
+    {
+      "name": "Clavicle_L",
+      "parent": "Chest",
+      "position": [
+        0.14,
+        0.85,
+        0.035
+      ]
+    },
+    {
+      "name": "UpperArm_L",
+      "parent": "Clavicle_L",
+      "position": [
+        0.275,
+        0.84,
+        0.035
+      ]
+    },
+    {
+      "name": "Forearm_L",
+      "parent": "UpperArm_L",
+      "position": [
+        0.3738861236040836,
+        0.7017193633475586,
+        0.035
+      ]
+    },
+    {
+      "name": "Hand_L",
+      "parent": "Forearm_L",
+      "position": [
+        0.48229563445572754,
+        0.5501213874802345,
+        -0.003280955424017157
+      ]
+    },
+    {
+      "name": "Thigh_R",
+      "parent": "Pelvis",
+      "position": [
+        -0.145,
+        0.46,
+        0.025
+      ]
+    },
+    {
+      "name": "Shin_R",
+      "parent": "Thigh_R",
+      "position": [
+        -0.17,
+        0.285,
+        0.025
+      ]
+    },
+    {
+      "name": "Foot_R",
+      "parent": "Shin_R",
+      "position": [
+        -0.195,
+        0.125,
+        0.035
+      ]
+    },
+    {
+      "name": "Toe_R",
+      "parent": "Foot_R",
+      "position": [
+        -0.21,
+        0.045,
+        0.13
+      ]
+    },
+    {
+      "name": "Thigh_L",
+      "parent": "Pelvis",
+      "position": [
+        0.145,
+        0.46,
+        0.025
+      ]
+    },
+    {
+      "name": "Shin_L",
+      "parent": "Thigh_L",
+      "position": [
+        0.17,
+        0.285,
+        0.025
+      ]
+    },
+    {
+      "name": "Foot_L",
+      "parent": "Shin_L",
+      "position": [
+        0.195,
+        0.125,
+        0.035
+      ]
+    },
+    {
+      "name": "Toe_L",
+      "parent": "Foot_L",
+      "position": [
+        0.21,
+        0.045,
+        0.13
+      ]
+    },
+    {
+      "name": "Tail_00",
+      "parent": "Pelvis",
+      "position": [
+        0.035,
+        0.515,
+        -0.11500000000000002
+      ]
+    },
+    {
+      "name": "Tail_01",
+      "parent": "Tail_00",
+      "position": [
+        0.13020193923797735,
+        0.49972766874887325,
+        -0.19972512415737415
+      ]
+    },
+    {
+      "name": "Tail_02",
+      "parent": "Tail_01",
+      "position": [
+        0.26663934198859496,
+        0.46882399393272395,
+        -0.2419127765460929
+      ]
+    },
+    {
+      "name": "Tail_03",
+      "parent": "Tail_02",
+      "position": [
+        0.4068875735900864,
+        0.4499731042259941,
+        -0.24163440234672895
+      ]
+    },
+    {
+      "name": "Tail_04",
+      "parent": "Tail_03",
+      "position": [
+        0.5387806746791522,
+        0.4445189366020067,
+        -0.20962718530901112
+      ]
+    },
+    {
+      "name": "Tail_05",
+      "parent": "Tail_04",
+      "position": [
+        0.6612121781904703,
+        0.42424600371476023,
+        -0.15531756235262476
+      ]
+    }
+  ]
+}

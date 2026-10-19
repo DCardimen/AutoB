@@ -1,0 +1,26 @@
+<div id="meshy-fox-tail-review">
+  <div class="text-small">Base fox · tail articulation</div>
+  <video controls muted loop playsinline preload="auto" aria-label="Repaired fox rig showing tail articulation from rear quarter and rear views">
+    <source src="data:video/webm;base64,{{TAIL_VIDEO}}" type="video/webm">
+  </video>
+</div>
+<style>
+  #meshy-fox-tail-review video { display:block; width:100%; height:auto; aspect-ratio:1000 / 690; }
+</style>
+<script>
+(() => {
+  const root=document.getElementById('meshy-fox-tail-review');
+  const video=root.querySelector('video');
+  let restoring=true;
+  function restore(state) {
+    if(state?.privateContent?.paused || matchMedia('(prefers-reduced-motion: reduce)').matches) video.pause();
+    else video.play().catch(()=>{});
+  }
+  restore(window.openai?.widgetState);
+  addEventListener('openai:set_globals',e=>{if(e.detail?.globals?.widgetState)restore(e.detail.globals.widgetState);});
+  setTimeout(()=>{restoring=false;},600);
+  function save(){if(!restoring)window.openai?.setWidgetState({modelContent:{preview:'base fox tail rig'},privateContent:{paused:video.paused}}).catch(()=>{});}
+  video.addEventListener('play',save);
+  video.addEventListener('pause',save);
+})();
+</script>
