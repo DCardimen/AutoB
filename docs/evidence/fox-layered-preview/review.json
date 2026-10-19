@@ -1,0 +1,77 @@
+{
+  "coverage": {
+    "forms": [
+      "rowan",
+      "mature",
+      "moontrail"
+    ],
+    "facings": 1,
+    "gameIntegration": false
+  },
+  "errors": [],
+  "sweep": [
+    {
+      "form": "rowan",
+      "frames": 192,
+      "maxTailError": 0.0014657466908838401,
+      "failures": [],
+      "firstImage": null
+    },
+    {
+      "form": "mature",
+      "frames": 192,
+      "maxTailError": 0.0015858867896096918,
+      "failures": [],
+      "firstImage": null
+    },
+    {
+      "form": "moontrail",
+      "frames": 192,
+      "maxTailError": 0.0036782318449808393,
+      "failures": [],
+      "firstImage": null
+    }
+  ],
+  "layouts": [
+    {
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "width": 736,
+      "scroll": 736
+    },
+    {
+      "width": 1100,
+      "scroll": 1100
+    }
+  ],
+  "clips": {
+    "idle": 0.272,
+    "blink": 3.11,
+    "run": 5.094,
+    "attack": 7.57,
+    "release": 7.804
+  },
+  "canvasRects": [
+    {
+      "x": 35.328125,
+      "y": 186,
+      "width": 320,
+      "height": 256
+    },
+    {
+      "x": 389.984375,
+      "y": 186,
+      "width": 320,
+      "height": 256
+    },
+    {
+      "x": 744.65625,
+      "y": 186,
+      "width": 320,
+      "height": 256
+    }
+  ],
+  "video": "docs/evidence/fox-layered-preview/normal-speed.webm"
+}

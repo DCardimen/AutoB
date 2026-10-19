@@ -1,0 +1,4 @@
+interface:
+  display_name: "Layered Creature Art"
+  short_description: "Painted creature parts, rigged motion and visual review"
+  default_prompt: "Use $layered-creature-art to create and review layered creature art and animation for the requested forms."
