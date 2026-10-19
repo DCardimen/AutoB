@@ -51,7 +51,7 @@ test at tests\combat-spacing.test.js:57:1
 ✖ every melee companion and form reaches actual authored contact from all eight approach directions (40735.7169ms)
   AssertionError [ERR_ASSERTION]: body footprints must leave every authored attack physically reachable: ["coalcrab/0/0","coalcrab/0/1","coalcrab/0/2","coalcrab/0/3","coalcrab/0/4","coalcrab/0/5","coalcrab/0/6","coalcrab/0/7","coalcrab/1/0","coalcrab/1/1","coalcrab/1/2","coalcrab/1/3","coalcrab/1/4","coalcrab/1/5","coalcrab/1/6","coalcrab/1/7","coalcrab/2/0","coalcrab/2/1","coalcrab/2/2","coalcrab/2/3","coalcrab/2/4","coalcrab/2/5","coalcrab/2/6","coalcrab/2/7","mireclaw/0/0","mireclaw/0/1","mireclaw/0/2","mireclaw/0/3","mireclaw/0/4","mireclaw/0/5","mireclaw/0/6","mireclaw/0/7","mireclaw/1/0","mireclaw/1/1","mireclaw/1/2","mireclaw/1/3","mireclaw/1/4","mireclaw/1/5","mireclaw/1/6","mireclaw/1/7","mireclaw/2/0","mireclaw/2/1","mireclaw/2/2","mireclaw/2/3","mireclaw/2/4","mireclaw/2/5","mireclaw/2/6","mireclaw/2/7"]
   + actual - expected
-  
+
   + [
   +   'coalcrab/0/0',
   +   'coalcrab/0/1',
@@ -103,7 +103,7 @@ test at tests\combat-spacing.test.js:57:1
   +   'mireclaw/2/7'
   + ]
   - []
-  
+
       at TestContext.<anonymous> (file:///C:/Users/David%20Cardimen/Downloads/AutoB-uploaded-art-pass/tests/combat-spacing.test.js:66:34)
       at Test.runInAsyncScope (node:async_hooks:227:14)
       at Test.run (node:internal/test_runner/test:1382:25)
@@ -139,9 +139,9 @@ test at tests\combat-spacing.test.js:57:1
 test at tests\overhaul.test.js:392:1
 ✖ a correctly linked counter support can turn the same shield encounter into a victory (962.0029ms)
   AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
-  
+
   0 !== 1
-  
+
       at TestContext.<anonymous> (file:///C:/Users/David%20Cardimen/Downloads/AutoB-uploaded-art-pass/tests/overhaul.test.js:404:10)
       at Test.runInAsyncScope (node:async_hooks:227:14)
       at Test.run (node:internal/test_runner/test:1382:25)
