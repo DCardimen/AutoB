@@ -20,6 +20,7 @@ const entryFiles = new Set([
   "/opening-journey.js",
   "/companion-anatomy.js", "/companion-arm-bindings.js", "/authored-parts.js",
   "/melee-layer-art.js", "/melee-layer-data.js",
+  "/melee-shoulder-skin.js",
   "/indexed-layer-codec.js",
   "/reward-loadout.js",
   "/stage-background-loop.js",

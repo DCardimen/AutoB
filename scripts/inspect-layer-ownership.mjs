@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import {chromium} from 'playwright';
-const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||'C:/Program Files/Google/Chrome/Application/chrome.exe',headless:true}),out='public/melee-layer-review/ownership';fs.mkdirSync(out,{recursive:true});
+const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||'C:/Program Files/Google/Chrome/Application/chrome.exe',headless:true}),out=(process.argv.find(a=>a.startsWith('--out='))?.slice(6)||'public/melee-layer-review')+'/ownership';fs.mkdirSync(out,{recursive:true});
 try{
  const page=await browser.newPage();await page.goto(process.env.BASE_URL||'http://127.0.0.1:3053');
  const images=await page.evaluate(async()=>{

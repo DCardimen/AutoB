@@ -1,0 +1,123 @@
+{
+  "status": "passed",
+  "baseline": "6cb3e2caf8e1419c440bfefc7bdfc78894492352",
+  "masters": [
+    {
+      "file": "dwarf-0.json",
+      "sha256": "731d26c97c5097be8355d92197ee4872c1502e2a21ac4d84931346f81d9a1054",
+      "facings": 8
+    },
+    {
+      "file": "dwarf-1.json",
+      "sha256": "a76fac9adab1dea00d4528a3915362d7d5af80a1b240598191769c7cf7174d3b",
+      "facings": 8
+    },
+    {
+      "file": "dwarf-2.json",
+      "sha256": "9bfa21eb87cbce068ff3a4b63c30d2e736cf6193d8d1f2f0403ceb5da36e1066",
+      "facings": 8
+    },
+    {
+      "file": "goblin-0.json",
+      "sha256": "d8d204140a71ef5d4201230b401494971375d6f7c828ef0875f786c06cc6c2c3",
+      "facings": 8
+    },
+    {
+      "file": "goblin-1.json",
+      "sha256": "b54d4d902114cea24c0c59b26c953ae0a45b9ca3db3cc4bd1b9fa68b85a6cb16",
+      "facings": 8
+    },
+    {
+      "file": "goblin-2.json",
+      "sha256": "e49f024328407b905a4909f6c43a71dbf484213805fb7d81f22171774292c956",
+      "facings": 8
+    },
+    {
+      "file": "knight-0.json",
+      "sha256": "6957daa269e3f51220e174cd4a2af8e6d81d740a8ef5efa7145ca032532ae031",
+      "facings": 8
+    },
+    {
+      "file": "knight-1.json",
+      "sha256": "0adcb4ec630afd9ae35cecec306802204cf436b08c25515e17a36a5055989b65",
+      "facings": 8
+    },
+    {
+      "file": "knight-2.json",
+      "sha256": "258fe4658b8b40b64989fa4f4e0f274a3a6702116b7cc4eb0626372dc2d97b10",
+      "facings": 8
+    },
+    {
+      "file": "minotaur-0.json",
+      "sha256": "369823ee1e18924c875fab749e5eda1feb8e5055e46d9a20ad8fd7507f653b7e",
+      "facings": 8
+    },
+    {
+      "file": "minotaur-1.json",
+      "sha256": "3a837be56474ec9b46ecfd2bcd2dfba44fc3d5dda89ecdde26f99761d6adc6c3",
+      "facings": 8
+    },
+    {
+      "file": "minotaur-2.json",
+      "sha256": "73a55d38a2a3da6c0993a304f19f43d55690559c48170686a489c0daeb089e4c",
+      "facings": 8
+    },
+    {
+      "file": "orc-0.json",
+      "sha256": "b672be727a3877857ae22d1aa2e6a0dda26eb83bfcaaf8af06d640a6f1c7306b",
+      "facings": 8
+    },
+    {
+      "file": "orc-1.json",
+      "sha256": "4baf271894d226ad3799645a3a3b97d523fffa18c5039710a20741982efb8cb7",
+      "facings": 8
+    },
+    {
+      "file": "orc-2.json",
+      "sha256": "013afa44d9a20db8bf0a2e40ff9dfbd73c3ef63eee6a20edca022a1034e8e918",
+      "facings": 8
+    },
+    {
+      "file": "rogue-0.json",
+      "sha256": "667a95af33e535cd9f527f10ad3f1f670a09688163ef2d8d8906e568201ce8e5",
+      "facings": 8
+    },
+    {
+      "file": "rogue-1.json",
+      "sha256": "27f2809902139acbe48504243cfdf63ad2adc0ed98091109a5147362f98c62c2",
+      "facings": 8
+    },
+    {
+      "file": "rogue-2.json",
+      "sha256": "1bf8158eb9861a7dc6b3511a12df0f4d2906faad090a22021c1bbd8c0f4ee363",
+      "facings": 8
+    },
+    {
+      "file": "troll-0.json",
+      "sha256": "5142716c774d2a00fddcda8d00bb86f1735081c6cd4207e98e8a0f5de8d75679",
+      "facings": 8
+    },
+    {
+      "file": "troll-1.json",
+      "sha256": "dde4b3bdc14733db34d0d65d8ab736b477071dbf50b88d45abc2f196e7ff965e",
+      "facings": 8
+    },
+    {
+      "file": "troll-2.json",
+      "sha256": "681f4eec47c4cd6e5e693609437d1d38f8b5a03937d53c5415a5e1dcb434bc2a",
+      "facings": 8
+    }
+  ],
+  "cells": 168,
+  "unchanged": [
+    "raw artwork",
+    "palette indices",
+    "frozen bind",
+    "layer ownership",
+    "body and cape backing",
+    "painted arms and legs",
+    "sockets",
+    "source-facing registrations"
+  ],
+  "changes": "Only shoulder motion registrations and explanatory notes"
+}

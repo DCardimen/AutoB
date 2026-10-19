@@ -5038,7 +5038,27 @@
             "y": 29
           },
           "occluded": false,
-          "sourceDir": 0
+          "sourceDir": 0,
+          "shoulder": {
+            "bounds": [
+              23,
+              36,
+              15,
+              29
+            ],
+            "fade": 3,
+            "follow": 0.45,
+            "rest": [
+              -4.40631,
+              7.53172
+            ],
+            "protect": [
+              30,
+              42,
+              0,
+              20
+            ]
+          }
         },
         {
           "side": 1,
@@ -5055,7 +5075,27 @@
             "y": 30
           },
           "occluded": false,
-          "sourceDir": 0
+          "sourceDir": 0,
+          "shoulder": {
+            "bounds": [
+              40,
+              53,
+              16,
+              30
+            ],
+            "fade": 3,
+            "follow": 0.45,
+            "rest": [
+              3.5069,
+              7.49295
+            ],
+            "protect": [
+              30,
+              42,
+              0,
+              20
+            ]
+          }
         }
       ],
       "legs": {
@@ -7713,7 +7753,8 @@
         "Source-grid reviewed upper-arm boundaries and glove centers; no stationary biceps in the head. Rear N rogue arms use their visible source art. W/NW far and NE far rogue arms are concealed beneath the cloak.",
         "Torso follows this facing’s measured chest center and includes backing at every shoulder socket.",
         "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot.",
-        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors."
+        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors.",
+        "Shoulder field: original deltoid/pauldron and backing roll with stable solved arm reach, blended into the fixed clavicle/chest. The driver is independent of elbow-branch and angle-wrap changes. Saved face/beard exclusions preserve the head; no source ownership or palette is changed."
       ],
       "armContours": [
         {
@@ -12428,7 +12469,27 @@
             "y": 29
           },
           "occluded": false,
-          "sourceDir": 1
+          "sourceDir": 1,
+          "shoulder": {
+            "bounds": [
+              22,
+              35,
+              15,
+              29
+            ],
+            "fade": 3,
+            "follow": 0.45,
+            "rest": [
+              -3.5069,
+              7.49295
+            ],
+            "protect": [
+              29,
+              41,
+              0,
+              20
+            ]
+          }
         },
         {
           "side": 1,
@@ -12445,7 +12506,27 @@
             "y": 30
           },
           "occluded": false,
-          "sourceDir": 1
+          "sourceDir": 1,
+          "shoulder": {
+            "bounds": [
+              40,
+              53,
+              16,
+              30
+            ],
+            "fade": 3,
+            "follow": 0.45,
+            "rest": [
+              4.40631,
+              7.53172
+            ],
+            "protect": [
+              29,
+              41,
+              0,
+              20
+            ]
+          }
         }
       ],
       "legs": {
@@ -14593,7 +14674,8 @@
         "Source-grid reviewed upper-arm boundaries and glove centers; no stationary biceps in the head. Rear N rogue arms use their visible source art. W/NW far and NE far rogue arms are concealed beneath the cloak.",
         "Torso follows this facing’s measured chest center and includes backing at every shoulder socket.",
         "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot.",
-        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors."
+        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors.",
+        "Shoulder field: original deltoid/pauldron and backing roll with stable solved arm reach, blended into the fixed clavicle/chest. The driver is independent of elbow-branch and angle-wrap changes. Saved face/beard exclusions preserve the head; no source ownership or palette is changed."
       ],
       "armContours": [
         {
@@ -19751,7 +19833,27 @@
             "y": 29
           },
           "occluded": false,
-          "sourceDir": 2
+          "sourceDir": 2,
+          "shoulder": {
+            "bounds": [
+              15,
+              28,
+              15,
+              29
+            ],
+            "fade": 3,
+            "follow": 0.45,
+            "rest": [
+              -5.3146,
+              7.57022
+            ],
+            "protect": [
+              26,
+              38,
+              0,
+              20
+            ]
+          }
         },
         {
           "side": 1,
@@ -19768,7 +19870,27 @@
             "y": 30
           },
           "occluded": false,
-          "sourceDir": 2
+          "sourceDir": 2,
+          "shoulder": {
+            "bounds": [
+              36,
+              49,
+              15,
+              29
+            ],
+            "fade": 3,
+            "follow": 0.45,
+            "rest": [
+              4.39364,
+              8.44881
+            ],
+            "protect": [
+              26,
+              38,
+              0,
+              20
+            ]
+          }
         }
       ],
       "legs": {
@@ -22996,7 +23118,8 @@
         "Source-grid reviewed upper-arm boundaries and glove centers; no stationary biceps in the head. Rear N rogue arms use their visible source art. W/NW far and NE far rogue arms are concealed beneath the cloak.",
         "Torso follows this facing’s measured chest center and includes backing at every shoulder socket.",
         "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot.",
-        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors."
+        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors.",
+        "Shoulder field: original deltoid/pauldron and backing roll with stable solved arm reach, blended into the fixed clavicle/chest. The driver is independent of elbow-branch and angle-wrap changes. Saved face/beard exclusions preserve the head; no source ownership or palette is changed."
       ],
       "armContours": [
         {
@@ -27807,7 +27930,27 @@
             "y": 29
           },
           "occluded": false,
-          "sourceDir": 3
+          "sourceDir": 3,
+          "shoulder": {
+            "bounds": [
+              11,
+              24,
+              15,
+              29
+            ],
+            "fade": 3,
+            "follow": 0.45,
+            "rest": [
+              -6.23016,
+              7.60659
+            ],
+            "protect": [
+              22,
+              34,
+              0,
+              20
+            ]
+          }
         },
         {
           "side": 1,
@@ -27824,7 +27967,27 @@
             "y": 30
           },
           "occluded": false,
-          "sourceDir": 3
+          "sourceDir": 3,
+          "shoulder": {
+            "bounds": [
+              29,
+              42,
+              15,
+              29
+            ],
+            "fade": 3,
+            "follow": 0.45,
+            "rest": [
+              0.86646,
+              8.33084
+            ],
+            "protect": [
+              22,
+              34,
+              0,
+              20
+            ]
+          }
         }
       ],
       "legs": {
@@ -29972,7 +30135,8 @@
         "Source-grid reviewed upper-arm boundaries and glove centers; no stationary biceps in the head. Rear N rogue arms use their visible source art. W/NW far and NE far rogue arms are concealed beneath the cloak.",
         "Torso follows this facing’s measured chest center and includes backing at every shoulder socket.",
         "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot.",
-        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors."
+        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors.",
+        "Shoulder field: original deltoid/pauldron and backing roll with stable solved arm reach, blended into the fixed clavicle/chest. The driver is independent of elbow-branch and angle-wrap changes. Saved face/beard exclusions preserve the head; no source ownership or palette is changed."
       ],
       "armContours": [
         {
@@ -34681,7 +34845,27 @@
             "y": 30
           },
           "occluded": false,
-          "sourceDir": 4
+          "sourceDir": 4,
+          "shoulder": {
+            "bounds": [
+              12,
+              25,
+              15,
+              29
+            ],
+            "fade": 3,
+            "follow": 0.45,
+            "rest": [
+              -3.49913,
+              8.41087
+            ],
+            "protect": [
+              21,
+              33,
+              0,
+              20
+            ]
+          }
         },
         {
           "side": 1,
@@ -34698,7 +34882,27 @@
             "y": 29
           },
           "occluded": true,
-          "sourceDir": 2
+          "sourceDir": 2,
+          "shoulder": {
+            "bounds": [
+              17,
+              30,
+              14,
+              28
+            ],
+            "fade": 3,
+            "follow": 0.45,
+            "rest": [
+              4.39364,
+              8.44881
+            ],
+            "protect": [
+              21,
+              33,
+              0,
+              20
+            ]
+          }
         }
       ],
       "legs": {
@@ -36990,7 +37194,8 @@
         "Source-grid reviewed upper-arm boundaries and glove centers; no stationary biceps in the head. Rear N rogue arms use their visible source art. W/NW far and NE far rogue arms are concealed beneath the cloak.",
         "Torso follows this facing’s measured chest center and includes backing at every shoulder socket.",
         "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot.",
-        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors."
+        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors.",
+        "Shoulder field: original deltoid/pauldron and backing roll with stable solved arm reach, blended into the fixed clavicle/chest. The driver is independent of elbow-branch and angle-wrap changes. Saved face/beard exclusions preserve the head; no source ownership or palette is changed."
       ],
       "armContours": [
         {
@@ -41304,7 +41509,21 @@
             "y": 30
           },
           "occluded": false,
-          "sourceDir": 5
+          "sourceDir": 5,
+          "shoulder": {
+            "bounds": [
+              14,
+              27,
+              15,
+              29
+            ],
+            "fade": 3,
+            "follow": 0.45,
+            "rest": [
+              -6.20718,
+              8.52585
+            ]
+          }
         },
         {
           "side": 1,
@@ -41321,7 +41540,21 @@
             "y": 28
           },
           "occluded": true,
-          "sourceDir": 2
+          "sourceDir": 2,
+          "shoulder": {
+            "bounds": [
+              35,
+              48,
+              12,
+              26
+            ],
+            "fade": 3,
+            "follow": 0.45,
+            "rest": [
+              4.38363,
+              9.36618
+            ]
+          }
         }
       ],
       "legs": {
@@ -42248,7 +42481,8 @@
         "Torso follows this facing’s measured chest center and includes backing at every shoulder socket.",
         "Arm 1 pivot registered to the retained source seam at 38,18.",
         "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot.",
-        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors."
+        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors.",
+        "Shoulder field: original deltoid/pauldron and backing roll with stable solved arm reach, blended into the fixed clavicle/chest. The driver is independent of elbow-branch and angle-wrap changes. Saved face/beard exclusions preserve the head; no source ownership or palette is changed."
       ],
       "armContours": [
         {
@@ -47057,7 +47291,21 @@
             "y": 28
           },
           "occluded": false,
-          "sourceDir": 6
+          "sourceDir": 6,
+          "shoulder": {
+            "bounds": [
+              13,
+              26,
+              15,
+              29
+            ],
+            "fade": 3,
+            "follow": 0.45,
+            "rest": [
+              -3.51722,
+              6.57562
+            ]
+          }
         },
         {
           "side": 1,
@@ -47074,7 +47322,21 @@
             "y": 28
           },
           "occluded": false,
-          "sourceDir": 6
+          "sourceDir": 6,
+          "shoulder": {
+            "bounds": [
+              39,
+              52,
+              15,
+              29
+            ],
+            "fade": 3,
+            "follow": 0.45,
+            "rest": [
+              3.51722,
+              6.57562
+            ]
+          }
         }
       ],
       "legs": {
@@ -48010,7 +48272,8 @@
         "Source-grid reviewed upper-arm boundaries and glove centers; no stationary biceps in the head. Rear N rogue arms use their visible source art. W/NW far and NE far rogue arms are concealed beneath the cloak.",
         "Torso follows this facing’s measured chest center and includes backing at every shoulder socket.",
         "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot.",
-        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors."
+        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors.",
+        "Shoulder field: original deltoid/pauldron and backing roll with stable solved arm reach, blended into the fixed clavicle/chest. The driver is independent of elbow-branch and angle-wrap changes. Saved face/beard exclusions preserve the head; no source ownership or palette is changed."
       ],
       "armContours": [
         {
@@ -52324,7 +52587,21 @@
             "y": 28
           },
           "occluded": true,
-          "sourceDir": 2
+          "sourceDir": 2,
+          "shoulder": {
+            "bounds": [
+              20,
+              33,
+              14,
+              28
+            ],
+            "fade": 3,
+            "follow": 0.45,
+            "rest": [
+              -5.3146,
+              7.57022
+            ]
+          }
         },
         {
           "side": 1,
@@ -52341,7 +52618,21 @@
             "y": 30
           },
           "occluded": false,
-          "sourceDir": 7
+          "sourceDir": 7,
+          "shoulder": {
+            "bounds": [
+              36,
+              49,
+              15,
+              29
+            ],
+            "fade": 3,
+            "follow": 0.45,
+            "rest": [
+              7.1238,
+              8.56176
+            ]
+          }
         }
       ],
       "legs": {
@@ -53315,7 +53606,8 @@
         "Source-grid reviewed upper-arm boundaries and glove centers; no stationary biceps in the head. Rear N rogue arms use their visible source art. W/NW far and NE far rogue arms are concealed beneath the cloak.",
         "Torso follows this facing’s measured chest center and includes backing at every shoulder socket.",
         "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot.",
-        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors."
+        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors.",
+        "Shoulder field: original deltoid/pauldron and backing roll with stable solved arm reach, blended into the fixed clavicle/chest. The driver is independent of elbow-branch and angle-wrap changes. Saved face/beard exclusions preserve the head; no source ownership or palette is changed."
       ],
       "armContours": [
         {

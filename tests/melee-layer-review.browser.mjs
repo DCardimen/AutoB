@@ -14,4 +14,4 @@ try{const page=await browser.newPage();page.on('pageerror',e=>errors.push(e.mess
  }
  assert.equal(report.movieSelections,104);assert.equal(report.enlargedSelections,14);for(const link of links){if(link===base+'/checks/review-browser.json')continue;const r=await fetch(link);assert.ok(r.ok,`${r.status}: ${link}`);await r.arrayBuffer();report.links++;}assert.deepEqual(errors,[]);assert.deepEqual(badResponses,[]);
 }finally{await browser.close();}
-report.links++;fs.writeFileSync('public/melee-layer-review/checks/review-browser.json',JSON.stringify({status:'passed',...report},null,2)+'\n');const published=await fetch(base+'/checks/review-browser.json');assert.ok(published.ok);assert.equal((await published.json()).status,'passed');console.log(JSON.stringify(report));
+report.links++;fs.writeFileSync((process.argv.find(a=>a.startsWith('--out='))?.slice(6)||'public/melee-layer-review')+'/checks/review-browser.json',JSON.stringify({status:'passed',...report},null,2)+'\n');const published=await fetch(base+'/checks/review-browser.json');assert.ok(published.ok);assert.equal((await published.json()).status,'passed');console.log(JSON.stringify(report));
