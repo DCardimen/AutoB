@@ -19470,7 +19470,7 @@
             "000000000000071f2b2b2b222a222b0a040105191b1a14082d222d150a060009050501050621",
             "000000000000000000000000300c020909021b1a2828281d2d2d2d0000000000000000000000",
             "00000000000000000000000000000000061a1428281314000000000000000000000000000000",
-            "00000000000000000000000000001a001428282813281a000000000000000000000000000000"
+            "000000000000000000000000000000001428282813281a000000000000000000000000000000"
           ]
         },
         "cape-front": {
@@ -19488,7 +19488,7 @@
           "rows": [
             "00021f302b00000000",
             "0000060f1b1a1b0501",
-            "000108011b141a000f",
+            "000108011b141a1a0f",
             "090501051b141a0000",
             "07060602211a140000",
             "0e01060e1114140400",
@@ -22415,7 +22415,7 @@
         ],
         [
           1819,
-          "head"
+          "left-arm"
         ],
         [
           1820,
@@ -24071,7 +24071,8 @@
         "Hidden chest, waist, pelvis and cape regions are reconstructed indexed artwork.",
         "Weapon layer is empty because these weaponless source masters use the separate equipped weapon renderer.",
         "Cape completion uses its saved visible ownership only. Legacy color-list repairs (which included gray armor) are discarded.",
-        "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot."
+        "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot.",
+        "Stranded outline islands bordering one arm belong to that arm (scripts/migrate-melee-arm-fragments.mjs)."
       ],
       "backingBottom": 38,
       "sourceCrop": {

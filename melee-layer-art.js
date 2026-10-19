@@ -9,7 +9,9 @@ export function meleeLayerParts(asset,identity,stage,dir){
  for(const p of asset.pixels){const n=key(p.x,p.y),name=ownership.get(n);if(!name)throw Error('Unregistered source pixel');grids[name].set(n,p.index);}
  for(const [name,encoded]of Object.entries(master.layers))for(const [n,index]of decodeIndexedGrid(encoded))grids[name].set(n,index);
  const layers=Object.fromEntries(Object.entries(grids).map(([n,g])=>[n,pixels(g,asset,n)])),bodyRows=new Map(),reconstruction=decodeIndexedGrid(master.reconstructed);
- const backing=pixels(decodeIndexedGrid(master.backing),asset,'body',true),reconstructed=new Set([...reconstruction].filter(([,id])=>id&1).map(([n])=>n));
+ // A back-cape pixel visible in the source proves no torso lies in front of
+ // it. Reconstructed fill painted there replaced original artwork at rest.
+ const backing=pixels(decodeIndexedGrid(master.backing),asset,'body',true).filter(p=>ownership.get(key(p.x,p.y))!=='cape-back'),reconstructed=new Set([...reconstruction].filter(([,id])=>id&1).map(([n])=>n));
  for(const p of backing){const row=bodyRows.get(p.y);if(row){row.left=Math.min(row.left,p.x);row.right=Math.max(row.right,p.x);}else bodyRows.set(p.y,{left:p.x,right:p.x});}
  for(const p of layers.body)if(reconstructed.has(key(p.x,p.y)))p.bodyUnderlay=true;
  const reconstructedCape=new Set([...reconstruction].filter(([,id])=>id&2).map(([n])=>n));
@@ -23,18 +25,26 @@ export function meleeLayerParts(asset,identity,stage,dir){
 // Each saved surface owns its transform and rasterization. A cape and the
 // torso behind it may occupy the SAME bind coordinate with different motion.
 // They must never share the inverse estimate of a flattened combined image.
+// The backing is the torso surface BEHIND the arms, so it also lies beneath
+// the far arm. `brush.data.backingMask` records which final pixels are still
+// that hidden fill, letting the compositor put them under the far limb.
+// Painting it together with the visible body erased far arms that overlap
+// the chest in quarter and profile views.
 export function paintMeleeLayers(brush,parts,colors,project){
- const grids=[];
+ const grids=[],mask=new Uint8Array(64*64),hidden=new Set(parts.underbody);
+ const dot=(x,y,color,fill)=>{brush.dot(x,y,color);x=Math.round(x);y=Math.round(y);if(x>=0&&y>=0&&x<64&&y<64)mask[y*64+x]=fill;};
+ brush.data.backingMask=mask;
  for(const name of MELEE_LAYER_ORDER){
   const ps=name==='body'?[...parts.underbody,...parts.layers.body]:parts.layers[name],mapped=new Map();
   for(const p of ps){
+   const fill=hidden.has(p)?1:0;
    const q=project(name,p.x,p.y),corners=[[-.5,-.5],[.5,-.5],[.5,.5],[-.5,.5]].map(([dx,dy])=>project(name,p.x+dx,p.y+dy)),xs=corners.map(v=>v.x),ys=corners.map(v=>v.y),color=colors[p.index];
    const left=Math.ceil(Math.min(...xs)-1e-8),right=Math.floor(Math.max(...xs)+1e-8),top=Math.ceil(Math.min(...ys)-1e-8),bottom=Math.floor(Math.max(...ys)+1e-8);
    for(let y=top;y<=bottom;y++)for(let x=left;x<=right;x++){
     let positive=false,negative=false;for(let i=0;i<4;i++){const a=corners[i],b=corners[(i+1)%4],c=(b.x-a.x)*(y-a.y)-(b.y-a.y)*(x-a.x);if(c>1e-8)positive=true;if(c< -1e-8)negative=true;}
-    if(!(positive&&negative))brush.dot(x,y,color);
+    if(!(positive&&negative))dot(x,y,color,fill);
    }
-   brush.dot(q.x,q.y,color);mapped.set(key(p.x,p.y),q);
+   dot(q.x,q.y,color,fill);mapped.set(key(p.x,p.y),q);
   }grids.push({name,mapped});
  }return grids;
 }

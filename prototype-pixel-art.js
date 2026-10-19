@@ -64,10 +64,14 @@ export function paintCharacterPixels(id,rig,angle){
    }
   };
   const gear=(brush,near)=>drawGearPart(brush,id,rig,angle,{...p,...rig.artGearPalette},rig.artProject,(x,y,rx,ry,color)=>{brush.oval(x,y,rx+1,ry+1,OUT);brush.oval(x,y,rx,ry,color);},art.data.contactGear&&Boolean(rig.weapon)&&far(rig.weapon.grip)!==near,art.data.contactGear&&Boolean(rig.shield)&&far(rig.shield.grip)!==near);
+  // Hidden torso first, then the far arm over it, then the visible body.
+  // The far arm is behind the torso SURFACE, never behind its occluded fill.
+  const hidden=art.data.backingMask;
+  if(hidden)for(let i=0;i<4096;i++)if(hidden[i]&&art.data[i*4+3])farArt.data.set(art.data.subarray(i*4,i*4+4),i*4);
   arms(farArt,false);
   gear(farArt,false);
   paintAuthoredGrips(farArt,rig,false);
-  for(let i=0;i<art.data.length;i+=4)if(art.data[i+3])farArt.data.set(art.data.subarray(i,i+4),i);b=farArt;
+  for(let i=0;i<art.data.length;i+=4)if(art.data[i+3]&&!hidden?.[i>>2])farArt.data.set(art.data.subarray(i,i+4),i);b=farArt;
   paintGrandPixels(b,rig,at,p,'body');paintGrandPixels(b,rig,at,p,'head');
   if(rig.artLegLayered)paintLegVolumes(b,rig,'near');
   paintCreatureAttack(b,rig);

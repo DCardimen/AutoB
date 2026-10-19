@@ -5,7 +5,7 @@ import {once} from 'node:events';
 import {createHash} from 'node:crypto';
 import {authoredIdentities} from '../authored-sprite-renderer.js';
 import {ARM_ANATOMY} from '../companion-anatomy.js';
-import {MELEE_ARM_FAMILIES} from '../authored-parts.js';
+import {MELEE_ARM_FAMILIES,authoredArmLength,authoredArmScale} from '../authored-parts.js';
 import {PIXEL_SPECIES} from '../native-content.js';
 import {nativePoseRig} from '../native-poses.js';
 import {paintCharacterPixels} from '../prototype-pixel-art.js';
@@ -44,8 +44,8 @@ for(let dir=0;dir<8;dir++)for(const [state,count]of states){
    if(pixels.clipped)clipped.push({identity:positions[i].identity,stage:location.stage,state,phase,dir,clipped:pixels.clipped});
    for(const arm of rig.arms){
     const profile=rig.artArmSkin?.art.profiles.get(rig.artArmScreens[arm.side]);if(!profile)throw Error('Unregistered procedural arm in '+positions[i].identity);
-    const points=[rig.artProject(arm.root),rig.artProject(arm.joint),rig.artProject(arm.end)],source=[profile.root,profile.joint,profile.end],scale=rig.artCreatureFit*(rig.artArmSkin.scale.width+rig.artArmSkin.scale.height)/2;
-    for(let part=0;part<2;part++){armChecks++;const actual=Math.hypot(points[part+1].x-points[part].x,points[part+1].y-points[part].y),expected=Math.hypot(source[part+1].x-source[part].x,source[part+1].y-source[part].y)*scale;if(Math.abs(actual-expected)>1e-6)armFailures.push({identity:positions[i].identity,stage:location.stage,state,phase,dir,side:arm.side,part,actual,expected});}
+    const points=[rig.artProject(arm.root),rig.artProject(arm.joint),rig.artProject(arm.end)],source=[profile.root,profile.joint,profile.end],scale=authoredArmScale(rig);
+    for(let part=0;part<2;part++){armChecks++;const actual=Math.hypot(points[part+1].x-points[part].x,points[part+1].y-points[part].y),expected=authoredArmLength(source[part],source[part+1],scale);if(Math.abs(actual-expected)>1e-6)armFailures.push({identity:positions[i].identity,stage:location.stage,state,phase,dir,side:arm.side,part,actual,expected});}
    }
    for(let y=0;y<64;y++)for(let x=0;x<64;x++){const n=(y*64+x)*4;if(pixels[n+3])rgba.set(pixels.subarray(n,n+4),((location.y+y)*width+location.x+x)*4);}
   }

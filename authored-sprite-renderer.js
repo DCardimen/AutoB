@@ -12,7 +12,7 @@ import {AUTHORED_LEGACY_STAGE1} from './authored-legacy-stage1-data.js';
 import {AUTHORED_LEGACY_STAGE2} from './authored-legacy-stage2-data.js';
 import {meleeWeaponBounds} from './melee-weapon-art.js';
 import {authoredArmArt,authoredArmBounds} from './authored-arm-skin.js';
-import {authoredParts,connectAuthoredArm,constrainHeldGrip,MELEE_ARM_FAMILIES} from './authored-parts.js';
+import {authoredParts,authoredArmLength,connectAuthoredArm,constrainHeldGrip,MELEE_ARM_FAMILIES} from './authored-parts.js';
 import {NATURAL_ANATOMY,naturalHeadWeight,naturalHeadDelta,companionFallAngle} from './companion-anatomy.js';
 import {portraitExpressionAt,portraitExpressionLayer,portraitSourceOffset} from './portrait-expressions.js';
 import {characterRig,projectRig} from './prototype-rig.js';
@@ -473,7 +473,7 @@ export function paintAtlasCharacter(b,id,rig,at,cellPass=0){
   rig.artArmRoots[arm.side]=root;rig.artHandColors[arm.side]=hand&&artColors[hand.index];rig.artHandHighlights[arm.side]=handHighlight(asset,artColors,hand);
   if(parts){
    const profile=armArt.profiles.get(screenSide);
-   if(profile){const attachedRoot=anchor(warped(profile.root.x,profile.root.y,false,false,false,false,parts.authoredLayers?'body':undefined)),pose=connectAuthoredArm(profile,attachedRoot,end,joint,fit*(scale.width+scale.height)/2);Object.assign(root,pose.root);Object.assign(joint,pose.joint);Object.assign(end,pose.end);}
+   if(profile){const attachedRoot=anchor(warped(profile.root.x,profile.root.y,false,false,false,false,parts.authoredLayers?'body':undefined)),pose=connectAuthoredArm(profile,attachedRoot,end,joint,{x:fit*scale.width,y:fit*scale.height});Object.assign(root,pose.root);Object.assign(joint,pose.joint);Object.assign(end,pose.end);}
   }
   rig.artLimbPoints.set(arm.root,root);rig.artLimbPoints.set(arm.joint,joint);rig.artLimbPoints.set(arm.end,end);
  }
@@ -508,7 +508,7 @@ export function paintAtlasCharacter(b,id,rig,at,cellPass=0){
  // a support wrist after IK stretched the source forearm into a loose strip.
  const support=main&&(id==='orc'||rig.bowString?.draw>.05)?rig.arms.find(a=>a!==main):null;
  if(parts&&main){
-  const radius=arm=>{const p=armArt.profiles.get(rig.artArmScreens[arm.side]);return Math.hypot(p.end.x-p.root.x,p.end.y-p.root.y)*fit*(scale.width+scale.height)/2;};
+  const radius=arm=>{const p=armArt.profiles.get(rig.artArmScreens[arm.side]),s={x:fit*scale.width,y:fit*scale.height};return authoredArmLength(p.root,p.joint,s)+authoredArmLength(p.joint,p.end,s);};
   const constraints=[{center:rig.artArmRoots[main.side],radius:radius(main)}];
   const relaxed=support&&rig.artLimbPoints.get(support.end),held=support&&heldPoint(support.end),weight=1-carryWeight;
   if(support&&weight>1e-6){const root=rig.artArmRoots[support.side],offset=difference(held,paintedGrip);constraints.push({center:{x:(root.x-relaxed.x*carryWeight)/weight-offset.x,y:(root.y-relaxed.y*carryWeight)/weight-offset.y},radius:radius(support)/weight});}
@@ -517,7 +517,7 @@ export function paintAtlasCharacter(b,id,rig,at,cellPass=0){
   rig.artGripConstraints={constraints,cell};
   if(support){const held=heldPoint(support.end);Object.assign(relaxed,mix(held,relaxed,carryWeight));}
   for(const arm of rig.arms){
-   const profile=armArt.profiles.get(rig.artArmScreens[arm.side]),root=rig.artArmRoots[arm.side],end=rig.artLimbPoints.get(arm.end),joint=rig.artLimbPoints.get(arm.joint),pose=connectAuthoredArm(profile,root,end,joint,fit*(scale.width+scale.height)/2);
+   const profile=armArt.profiles.get(rig.artArmScreens[arm.side]),root=rig.artArmRoots[arm.side],end=rig.artLimbPoints.get(arm.end),joint=rig.artLimbPoints.get(arm.joint),pose=connectAuthoredArm(profile,root,end,joint,{x:fit*scale.width,y:fit*scale.height});
    // Keep the held object's exact contact. An infeasible pair is observable
    // by the arm-length regression, never hidden by replacing just one wrist.
    Object.assign(joint,pose.joint);

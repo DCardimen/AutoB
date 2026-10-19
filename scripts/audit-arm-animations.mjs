@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import {ARM_ANATOMY} from '../companion-anatomy.js';
+import {authoredArmLength,authoredArmScale} from '../authored-parts.js';
 import {PIXEL_SPECIES} from '../native-content.js';
 import {nativePoseRig,NATIVE_POSES} from '../native-poses.js';
 import {paintCharacterPixels} from '../prototype-pixel-art.js';
@@ -27,9 +28,9 @@ for(const spec of specs)for(const evolution of [0,1,2])for(const evolutionPath o
  const body=new Set((rig.artArmSkin?.bodyPixels||[]).filter(p=>!p.bodyUnderlay).map(p=>p.y*64+p.x));
  for(const arm of rig.arms){
   counts.arms++;
-  const p=rig.artArmSkin.art.profiles.get(rig.artArmScreens[arm.side]),root=rig.artArmRoots[arm.side],joint=rig.artProject(arm.joint),end=rig.artProject(arm.end),scale=rig.artCreatureFit*(rig.artArmSkin.scale.width+rig.artArmSkin.scale.height)/2;
+  const p=rig.artArmSkin.art.profiles.get(rig.artArmScreens[arm.side]),root=rig.artArmRoots[arm.side],joint=rig.artProject(arm.joint),end=rig.artProject(arm.end),scale=authoredArmScale(rig);
   for(const [a,z,sa,sz,part]of [[root,joint,p.root,p.joint,'upper'],[joint,end,p.joint,p.end,'lower']]){
-   const length=Math.hypot(z.x-a.x,z.y-a.y),expected=Math.hypot(sz.x-sa.x,sz.y-sa.y)*scale;if(Math.abs(length-expected)>1e-6)fail('length',{side:arm.side,part,length,expected,root,joint,end});
+   const length=Math.hypot(z.x-a.x,z.y-a.y),expected=authoredArmLength(sa,sz,scale);if(Math.abs(length-expected)>1e-6)fail('length',{side:arm.side,part,length,expected,root,joint,end});
   }
   for(const source of p.pixels){counts.sourcePixels++;if(body.has(source.y*64+source.x))fail('frozen-source',{side:arm.side,source});}
  }

@@ -19259,20 +19259,20 @@
             29
           ],
           "rows": [
-            "1d1d1d1d2a1100000000000015",
-            "1d1d1d2a231511000000000000",
-            "2a2a2a2a1e0f1100001f00001f",
-            "002a1e1e2228111f0000000000",
-            "0015150e0e212b000000000000",
-            "000e0e0b28142b000000000000",
-            "00002a1e1e0e00000000000000",
-            "00001d1d0e1e00000000000000",
-            "00002a23280e0b2d0000000000",
-            "00001f202000201e0b00000000",
-            "00001f000000001f1513280000",
-            "000013201315152015132b0000",
-            "00000b0f0b0e210b2b140f0000",
-            "00000f131f1f130b210b140000"
+            "1d1d1d1d2a110000000000",
+            "1d1d1d2a23151100000000",
+            "2a2a2a2a1e0f1100001f00",
+            "002a1e1e2228111f000000",
+            "0015150e0e212b00000000",
+            "000e0e0b28142b00000000",
+            "00002a1e1e0e0000000000",
+            "00001d1d0e1e0000000000",
+            "00002a23280e0b2d000000",
+            "00001f202000201e0b0000",
+            "00001f000000001f151328",
+            "000013201315152015132b",
+            "00000b0f0b0e210b2b140f",
+            "00000f131f1f130b210b14"
           ]
         },
         "head": {
@@ -19345,9 +19345,9 @@
           ],
           "rows": [
             "101017112100",
-            "171717110000",
+            "171717111500",
             "101010171121",
-            "110024260020",
+            "110024261f20",
             "06080309070b",
             "1b010104061a",
             "02022f25050c",
@@ -22206,7 +22206,7 @@
         ],
         [
           1894,
-          "armor"
+          "right-arm"
         ],
         [
           1938,
@@ -22382,7 +22382,7 @@
         ],
         [
           2022,
-          "armor"
+          "right-arm"
         ],
         [
           2023,
@@ -23592,7 +23592,8 @@
         "Hidden chest, waist, pelvis and cape regions are reconstructed indexed artwork.",
         "Weapon layer is empty because these weaponless source masters use the separate equipped weapon renderer.",
         "Cape completion uses its saved visible ownership only. Legacy color-list repairs (which included gray armor) are discarded.",
-        "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot."
+        "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot.",
+        "Stranded outline islands bordering one arm belong to that arm (scripts/migrate-melee-arm-fragments.mjs)."
       ],
       "backingBottom": 38,
       "sourceCrop": {

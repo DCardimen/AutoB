@@ -10151,18 +10151,18 @@
       "layers": {
         "cape-back": {
           "origin": [
-            24,
+            25,
             24
           ],
           "rows": [
-            "0000000000000000000000002b",
-            "0000000000000000002b2b2b2b",
-            "00000000000025252b2b2b2b2b",
-            "00000025252525251e1e1e1e1e",
-            "2e2e2e25252525251e1e1e1e1e",
-            "002e2b2525252525251e1e1e1e",
-            "001e2b2b2b2b2b2b2b00000000",
-            "001e1e2b2b0000000000000000"
+            "00000000000000000000002b",
+            "00000000000000002b2b2b2b",
+            "000000000025252b2b2b2b2b",
+            "000025252525251e1e1e1e1e",
+            "2e2e25252525251e1e1e1e1e",
+            "2e2b2525252525251e1e1e1e",
+            "1e2b2b2b2b2b2b2b00000000",
+            "001e2b2b0000000000000000"
           ]
         },
         "body": {
@@ -10262,7 +10262,7 @@
             "000a1e0b02211b022c2c06252e2b190a1e25000000",
             "00002500000b0c1d1e2e2e2b2f152f200000000000",
             "00000000000000162e2b2b15222000000000000000",
-            "00000025000000252e0a0a1e0a1900000000000000"
+            "00000000000000252e0a0a1e0a1900000000000000"
           ]
         },
         "cape-front": {
@@ -10280,14 +10280,15 @@
           "rows": [
             "0000002600072c0000",
             "00003013161e1d2c14",
-            "001518301800302906",
+            "001518301825302906",
             "001818230519100c03",
             "06183008050e040c06",
             "181c29160523171700",
             "061606031e0e1f0000",
-            "000603030015220000",
+            "000603032e15220000",
             "000000002023190000",
-            "00000000151e190000"
+            "00000000151e190000",
+            "00000000001e000000"
           ]
         },
         "right-arm": {
@@ -11821,7 +11822,7 @@
         ],
         [
           1497,
-          "head"
+          "left-arm"
         ],
         [
           1498,
@@ -12257,7 +12258,7 @@
         ],
         [
           1816,
-          "cape-back"
+          "left-arm"
         ],
         [
           1817,
@@ -12485,7 +12486,7 @@
         ],
         [
           2009,
-          "cape-back"
+          "left-arm"
         ],
         [
           2010,
@@ -13393,7 +13394,8 @@
         "Hidden chest, waist, pelvis and cape regions are reconstructed indexed artwork.",
         "Weapon layer is empty because these weaponless source masters use the separate equipped weapon renderer.",
         "Cape completion uses its saved visible ownership only. Legacy color-list repairs (which included gray armor) are discarded.",
-        "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot."
+        "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot.",
+        "Stranded outline islands bordering one arm belong to that arm (scripts/migrate-melee-arm-fragments.mjs)."
       ],
       "backingBottom": 38,
       "sourceCrop": {
@@ -19545,16 +19547,16 @@
             24
           ],
           "rows": [
-            "0000250000002b2b2b2e002e2e2e2b2b",
-            "00002e2e2e2e2525252e002b25252b00",
-            "000025252e2b2e2b2e2e002525252500",
-            "00252500000000000000000025252500",
-            "00252e00000000000000000025250000",
-            "25252e2b2e2e2e002e2e2b2e2e250000",
-            "002e2b2b2b2b2b002b2b2b2b2b250000",
-            "000000002b2b2b2b2b2b2b0000000000",
-            "0000000000002b2b0000000000000000",
-            "000000001e0000000000000000000000"
+            "0000250000002b2b2b2e002e2e2e2b",
+            "00002e2e2e2e2525252e002b25252b",
+            "000025252e2b2e2b2e2e0025252525",
+            "002525000000000000000000252525",
+            "00252e000000000000000000252500",
+            "25252e2b2e2e2e002e2e2b2e2e2500",
+            "002e2b2b2b2b2b002b2b2b2b2b2500",
+            "000000002b2b2b2b2b2b2b00000000",
+            "0000000000002b2b00000000000000",
+            "000000001e00000000000000000000"
           ]
         },
         "left-arm": {
@@ -19586,7 +19588,7 @@
             "000026201500000000",
             "200e202f190e000000",
             "220e20202f26230000",
-            "001e1900301a292600",
+            "001e192b301a292600",
             "001e0e2d1a1a132600",
             "1e00082d1329292319",
             "0322220826181f2315",
@@ -21307,7 +21309,7 @@
         ],
         [
           1576,
-          "cape-front"
+          "right-arm"
         ],
         [
           1577,
@@ -22751,7 +22753,8 @@
         "Hidden chest, waist, pelvis and cape regions are reconstructed indexed artwork.",
         "Weapon layer is empty because these weaponless source masters use the separate equipped weapon renderer.",
         "Cape completion uses its saved visible ownership only. Legacy color-list repairs (which included gray armor) are discarded.",
-        "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot."
+        "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot.",
+        "Stranded outline islands bordering one arm belong to that arm (scripts/migrate-melee-arm-fragments.mjs)."
       ],
       "backingBottom": 38,
       "sourceCrop": {

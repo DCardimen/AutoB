@@ -172,8 +172,14 @@ export function authoredParts(asset,identity,stage,dir){
  return asset.parts={registration,hands,arms:{profiles,mask},body,head,torso,legs,cape,capeMask,clothing:garment,repairs,bodyRows,underbody};
 }
 
+// The body maps source pixels with separate horizontal and vertical scales.
+// A bone length from their average does not match the painted shoulder-to-
+// hand distance, so the IK bent a straight resting arm by up to two pixels
+// and uncovered the torso behind it. `scale` is {x,y} (or a legacy number).
+export const authoredArmLength=(a,b,scale)=>typeof scale==='number'?Math.hypot(b.x-a.x,b.y-a.y)*scale:Math.hypot((b.x-a.x)*scale.x,(b.y-a.y)*scale.y);
+export const authoredArmScale=rig=>({x:rig.artCreatureFit*rig.artArmSkin.scale.width,y:rig.artCreatureFit*rig.artArmSkin.scale.height});
 export function connectAuthoredArm(profile,root,goal,preferredJoint,scale){
- const upper=Math.hypot(profile.joint.x-profile.root.x,profile.joint.y-profile.root.y)*scale,lower=Math.hypot(profile.end.x-profile.joint.x,profile.end.y-profile.joint.y)*scale;
+ const upper=authoredArmLength(profile.root,profile.joint,scale),lower=authoredArmLength(profile.joint,profile.end,scale);
  const dx=goal.x-root.x,dy=goal.y-root.y,distance=Math.hypot(dx,dy)||.001,d=Math.min(distance,upper+lower),axis={x:dx/distance,y:dy/distance},end={x:root.x+axis.x*d,y:root.y+axis.y*d};
  const along=(upper*upper-lower*lower+d*d)/(2*d),height=Math.sqrt(Math.max(0,upper*upper-along*along)),base={x:root.x+axis.x*along,y:root.y+axis.y*along};
  // Keep the elbow on its authored bend branch. Selecting a branch from a

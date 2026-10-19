@@ -19029,20 +19029,20 @@
         },
         "left-leg": {
           "origin": [
-            19,
+            23,
             35
           ],
           "rows": [
-            "000000000000001623072b000000",
-            "0000000000002116210000063030",
-            "0000000000001326190000001e03",
-            "14132600000c030806000000001e",
-            "00000000001e0401102b0c000013",
-            "00000000000e04101006071e1e18",
-            "000000000c060402022b06070c00",
-            "000000001010100909052b060300",
-            "0000000004020109100504301e00",
-            "00000000000e0e1e081e080c1800"
+            "0000001623072b000000",
+            "00002116210000063030",
+            "00001326190000001e03",
+            "000c030806000000001e",
+            "001e0401102b0c000013",
+            "000e04101006071e1e18",
+            "0c060402022b06070c00",
+            "1010100909052b060300",
+            "04020109100504301e00",
+            "000e0e1e081e080c1800"
           ]
         },
         "right-leg": {
@@ -19140,7 +19140,8 @@
             "04090a0a0102041e14000000",
             "03090901052b302616000000",
             "0830052b031e0e1600000000",
-            "00180707031e182600000000"
+            "00180707031e182600000000",
+            "000014132600000000000000"
           ]
         },
         "right-arm": {
@@ -23093,15 +23094,15 @@
         ],
         [
           2451,
-          "left-leg"
+          "left-arm"
         ],
         [
           2452,
-          "left-leg"
+          "left-arm"
         ],
         [
           2453,
-          "left-leg"
+          "left-arm"
         ],
         [
           2456,
@@ -23819,7 +23820,8 @@
         "Hidden chest, waist, pelvis and cape regions are reconstructed indexed artwork.",
         "Weapon layer is empty because these weaponless source masters use the separate equipped weapon renderer.",
         "Cape completion uses its saved visible ownership only. Legacy color-list repairs (which included gray armor) are discarded.",
-        "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot."
+        "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot.",
+        "Stranded outline islands bordering one arm belong to that arm (scripts/migrate-melee-arm-fragments.mjs)."
       ],
       "backingBottom": 38,
       "sourceCrop": {
