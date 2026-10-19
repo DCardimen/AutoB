@@ -1,0 +1,32 @@
+{
+  "errors": [],
+  "layouts": [
+    {
+      "width": 288,
+      "content": 288,
+      "video": 288
+    },
+    {
+      "width": 704,
+      "content": 704,
+      "video": 704
+    },
+    {
+      "width": 992,
+      "content": 992,
+      "video": 992
+    }
+  ],
+  "video": {
+    "duration": 7.971668,
+    "paused": false,
+    "readyState": 4,
+    "playbackRate": 1
+  },
+  "live": {
+    "bones": 28,
+    "clips": 2,
+    "facing": "3",
+    "canvas": 1280
+  }
+}

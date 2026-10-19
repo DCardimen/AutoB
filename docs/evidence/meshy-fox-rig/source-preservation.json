@@ -1,0 +1,10 @@
+{
+  "sourceSHA256": "a8b9f02c6eb810e26b02c0e46b43cbb38e1983b65fc3a8b16c6fafbab8f5bbd0",
+  "originalBINBytes": 38363624,
+  "originalBINSHA256": "be2cad394625c78d44c5c669b883ba7c2ed46b47fef7d392e9af23aa23cb18c5",
+  "originalBINPreserved": true,
+  "materialsPreserved": true,
+  "imagesPreserved": true,
+  "triangles": 10353,
+  "vertices": 12572
+}
