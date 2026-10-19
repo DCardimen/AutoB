@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {ARM_ANATOMY} from '../companion-anatomy.js';
-import {authoredParts,constrainHeldGrip} from '../authored-parts.js';
+import {authoredParts,authoredArmLength,authoredArmScale,constrainHeldGrip} from '../authored-parts.js';
 import {authoredSourceFrame} from '../authored-sprite-renderer.js';
 import {PIXEL_SPECIES,pixelSpec} from '../native-content.js';
 import {nativePoseRig,NATIVE_POSES} from '../native-poses.js';
@@ -35,10 +35,10 @@ test('reach and cell constraints solve a nearly tangent two-hand hold without st
 });
 test('final elbows retain both authored bone lengths after weapon, support-hand and cell fitting',()=>{
  for(const spec of specimens)for(const evolution of [0,1,2])for(const evolutionPath of ['wild','warden'])for(const state of NATIVE_POSES)for(let dir=0;dir<8;dir++)for(const phase of [.13,.49,.625,.6875,.78]){
-  const rig=nativePoseRig(spec,{id:spec.id,evolution,evolutionPath},state,phase),pixels=paintCharacterPixels(rig.id,rig,dir*Math.PI/4),scale=rig.artCreatureFit*(rig.artArmSkin.scale.width+rig.artArmSkin.scale.height)/2,context=`${spec.id}/${evolution}/${evolutionPath}/${state}/${dir}/${phase}`;
+  const rig=nativePoseRig(spec,{id:spec.id,evolution,evolutionPath},state,phase),pixels=paintCharacterPixels(rig.id,rig,dir*Math.PI/4),scale=authoredArmScale(rig),context=`${spec.id}/${evolution}/${evolutionPath}/${state}/${dir}/${phase}`;
   assert.equal(pixels.clipped,0,context);const labels=components(pixels);
   for(const arm of rig.arms){const p=rig.artArmSkin.art.profiles.get(rig.artArmScreens[arm.side]),points=[rig.artProject(arm.root),rig.artProject(arm.joint),rig.artProject(arm.end)],source=[p.root,p.joint,p.end];
-   for(let i=0;i<2;i++)assert.ok(Math.abs(Math.hypot(points[i+1].x-points[i].x,points[i+1].y-points[i].y)-Math.hypot(source[i+1].x-source[i].x,source[i+1].y-source[i].y)*scale)<1e-6,context+': bone '+i);
+   for(let i=0;i<2;i++)assert.ok(Math.abs(Math.hypot(points[i+1].x-points[i].x,points[i+1].y-points[i].y)-authoredArmLength(source[i],source[i+1],scale))<1e-6,context+': bone '+i);
    const shoulder=nearComponents(labels,points[0]),hand=nearComponents(labels,points[2]);assert.ok([...hand].some(c=>shoulder.has(c)),context+': actual painted shoulder, elbow and hand stay in one connected raster');
   }
  }

@@ -205,10 +205,10 @@
             20
           ],
           "rows": [
-            "00000000000000000000002406120f011f09030303080303030c0b040404040315190c231c00000000",
-            "000000000000000000000f1212060c25130b030303030303030c0b040404040404040c1c0900000000",
-            "00000000000000000106250c1201250c190b030303030303030c0b040404040404040c0b1400000000",
-            "000000000000000c2512010f0106120c0c0b030303030303030c0b040a30040404040c0b0800000000",
+            "00000000000000000000002406120f011f09030303000303030c0b040404040000000c000000000000",
+            "000000000000000000000f1212060c25130b030303030303030c0b040404040404040c000000000000",
+            "00000000000000000106250c1201250c190b030303030303030c0b040404040404040c0b0000000000",
+            "000000000000000c2512010f0106120c0c0b030303030303030c0b040a30040404040c0b0000000000",
             "000000000000120f010f0f1201010f01030c0b030303030303030c0b1e0404040404040c0b16000000",
             "000000002a24010f2a2a01120f2a2401030c0b030303030303030c0b141520040404040c0b16000000",
             "0000002a032a04160306062a04040101030c0b030303030303030c0b1e20202d0404040c0b16000000",
@@ -350,7 +350,7 @@
           ],
           "rows": [
             "0000000000002200000000",
-            "0000000000001313200000",
+            "0000000000001313200800",
             "00000000000616171a2000",
             "000000000030110a0a1128",
             "000000000e262e21181e1b",
@@ -370,10 +370,10 @@
             20
           ],
           "rows": [
-            "000000001e00000000",
-            "0000211b2200000000",
-            "21232f0e281e000000",
-            "2c282d30091e000000",
+            "000315191e231c0000",
+            "0000211b221c090000",
+            "21232f0e281e140000",
+            "2c282d30091e080000",
             "162d181d281b1c0000",
             "0008281d0921270000",
             "0000261d09271b0e00",
@@ -2275,7 +2275,7 @@
         ],
         [
           1312,
-          "cape-back"
+          "left-arm"
         ],
         [
           1313,
@@ -2315,15 +2315,15 @@
         ],
         [
           1322,
-          "cape-back"
+          "right-arm"
         ],
         [
           1323,
-          "cape-back"
+          "right-arm"
         ],
         [
           1324,
-          "cape-back"
+          "right-arm"
         ],
         [
           1325,
@@ -2331,11 +2331,11 @@
         ],
         [
           1326,
-          "cape-back"
+          "right-arm"
         ],
         [
           1327,
-          "cape-back"
+          "right-arm"
         ],
         [
           1365,
@@ -2439,11 +2439,11 @@
         ],
         [
           1390,
-          "cape-back"
+          "right-arm"
         ],
         [
           1391,
-          "cape-back"
+          "right-arm"
         ],
         [
           1427,
@@ -2559,7 +2559,7 @@
         ],
         [
           1455,
-          "cape-back"
+          "right-arm"
         ],
         [
           1491,
@@ -2675,7 +2675,7 @@
         ],
         [
           1519,
-          "cape-back"
+          "right-arm"
         ],
         [
           1553,
@@ -8142,7 +8142,8 @@
         "Torso follows this facing’s measured chest center and includes backing at every shoulder socket.",
         "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot.",
         "Pale disconnected ground pixels below mature boots are retained only in the source-only ground layer; original boot pixels remain on their leg.",
-        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors."
+        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors.",
+        "Stranded outline islands bordering one arm belong to that arm (scripts/migrate-melee-arm-fragments.mjs)."
       ],
       "armContours": [
         {
@@ -8373,10 +8374,10 @@
             20
           ],
           "rows": [
-            "000000000000000000250106120f04140b030321210303030c0b040404042512040c2d2600000000",
-            "0000000000000000000e100c0101060c0b030303030303030c0b040404040404040c260700000000",
-            "0000000000000000010e12120c01130c0b030303030303030c0b040404040404040c0b1600000000",
-            "000000000000000b1201012a2a25010c0b030303030303030c0b040430040404040c0b161c000000",
+            "000000000000000000250106120f04140b030300000303030c0b040404040000040c000000000000",
+            "0000000000000000000e100c0101060c0b030303030303030c0b040404040404040c000000000000",
+            "0000000000000000010e12120c01130c0b030303030303030c0b040404040404040c0b0000000000",
+            "000000000000000b1201012a2a25010c0b030303030303030c0b040430040404040c0b1600000000",
             "000000000000010112120f2a0c2501030c0b030303030303030c0b211b04040404040c0b16000000",
             "0000000000011414120f2a060f0101030c0b030303030303030c0b071b1c040404040c0b16000000",
             "00000000012a0f2a032a060f2a0101030c0b030303030303030c0b282008080404040c0b16000000",
@@ -8521,7 +8522,7 @@
           ],
           "rows": [
             "0000000000002000000000",
-            "0000000000002d1f1d0000",
+            "0000000000002d1f1d2121",
             "0000000000131d28201e00",
             "0000000000062a0f0a0a30",
             "0000000013101c0a1a2b20",
@@ -8542,10 +8543,10 @@
             20
           ],
           "rows": [
-            "0000000c100000000000",
-            "00001e141e0000000000",
-            "00222d28221d00000000",
-            "2d1c212628102a000000",
+            "0025120c102d26000000",
+            "00001e141e2607000000",
+            "00222d28221d16000000",
+            "2d1c212628102a1c0000",
             "180e0826281e2d070000",
             "00101e1c091b302f0000",
             "00002d1c1d2d2e230000",
@@ -10445,11 +10446,11 @@
         ],
         [
           1311,
-          "cape-back"
+          "left-arm"
         ],
         [
           1312,
-          "cape-back"
+          "left-arm"
         ],
         [
           1313,
@@ -10489,11 +10490,11 @@
         ],
         [
           1322,
-          "cape-back"
+          "right-arm"
         ],
         [
           1323,
-          "cape-back"
+          "right-arm"
         ],
         [
           1324,
@@ -10505,11 +10506,11 @@
         ],
         [
           1326,
-          "cape-back"
+          "right-arm"
         ],
         [
           1327,
-          "cape-back"
+          "right-arm"
         ],
         [
           1365,
@@ -10613,11 +10614,11 @@
         ],
         [
           1390,
-          "cape-back"
+          "right-arm"
         ],
         [
           1391,
-          "cape-back"
+          "right-arm"
         ],
         [
           1429,
@@ -10725,7 +10726,7 @@
         ],
         [
           1455,
-          "cape-back"
+          "right-arm"
         ],
         [
           1492,
@@ -10841,7 +10842,7 @@
         ],
         [
           1520,
-          "cape-back"
+          "right-arm"
         ],
         [
           1555,
@@ -16450,7 +16451,8 @@
         "Torso follows this facing’s measured chest center and includes backing at every shoulder socket.",
         "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot.",
         "Pale disconnected ground pixels below mature boots are retained only in the source-only ground layer; original boot pixels remain on their leg.",
-        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors."
+        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors.",
+        "Stranded outline islands bordering one arm belong to that arm (scripts/migrate-melee-arm-fragments.mjs)."
       ],
       "armContours": [
         {
@@ -16681,8 +16683,8 @@
             20
           ],
           "rows": [
-            "0000000000000000190826231c0303030f010b030303040404040c240a2d0404161c220000000000000000",
-            "000000000000001e0c2b061803030303030c0b030303040404040c0b1c04040416160c2000000000000000",
+            "0000000000000000190826231c03030300000b030303040404040c0000000404161c220000000000000000",
+            "000000000000001e0c2b061803030303030c0b030303040404040c0b0004040416160c2000000000000000",
             "000000000000002520240a0103030303030c0b030303040404040c0b040404041616120609000000000000",
             "0000000000000114110a010103030303030c2d030303040404040c0b040404041616161110000000000000",
             "000000000000241e230c0b01030303032d21270b030304040404040c1d04040416161616140b0000000000",
@@ -16825,7 +16827,7 @@
           ],
           "rows": [
             "0000000000000000302b000000",
-            "00000000000000002e30030000",
+            "00000000000000002e30030f01",
             "00000000000000271d22071400",
             "0000000000003018071d1f1c1b",
             "00000000002e0a181b2309222d",
@@ -16841,23 +16843,23 @@
         },
         "right-arm": {
           "origin": [
-            38,
+            37,
             19
           ],
           "rows": [
-            "0000000027000000000000",
-            "0000272c1d000000000000",
-            "002121080e0c0000000000",
-            "1b22111a0a010000000000",
-            "071b27200a212100000000",
-            "0008072d2d262622000000",
-            "00001b1b212e262d000000",
-            "000000222e0d2e230e0000",
-            "000000002e2e262e211400",
-            "000000000023212e260800",
-            "0000000000072d210d1b24",
-            "000000000000092d271e00",
-            "000000000000002d000000"
+            "000000000027000000000000",
+            "240a2d272c1d000000000000",
+            "001c2121080e0c0000000000",
+            "001b22111a0a010000000000",
+            "00071b27200a212100000000",
+            "000008072d2d262622000000",
+            "0000001b1b212e262d000000",
+            "00000000222e0d2e230e0000",
+            "00000000002e2e262e211400",
+            "00000000000023212e260800",
+            "000000000000072d210d1b24",
+            "00000000000000092d271e00",
+            "00000000000000002d000000"
           ]
         },
         "weapon": {
@@ -18717,11 +18719,11 @@
         ],
         [
           1306,
-          "cape-back"
+          "left-arm"
         ],
         [
           1307,
-          "cape-back"
+          "left-arm"
         ],
         [
           1308,
@@ -18761,15 +18763,15 @@
         ],
         [
           1317,
-          "cape-back"
+          "right-arm"
         ],
         [
           1318,
-          "cape-back"
+          "right-arm"
         ],
         [
           1319,
-          "cape-back"
+          "right-arm"
         ],
         [
           1320,
@@ -18877,7 +18879,7 @@
         ],
         [
           1382,
-          "cape-back"
+          "right-arm"
         ],
         [
           1383,
@@ -24556,7 +24558,8 @@
         "Torso follows this facing’s measured chest center and includes backing at every shoulder socket.",
         "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot.",
         "Pale disconnected ground pixels below mature boots are retained only in the source-only ground layer; original boot pixels remain on their leg.",
-        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors."
+        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors.",
+        "Stranded outline islands bordering one arm belong to that arm (scripts/migrate-melee-arm-fragments.mjs)."
       ],
       "armContours": [
         {
@@ -24787,7 +24790,7 @@
             20
           ],
           "rows": [
-            "00000000002d1c270b030612030303030c0b040404262c04040c24060612061214000000000000000000",
+            "00000000002d1c270b030000030303030c0b040404000004040c24060612061214000000000000000000",
             "00000000000928260b030303030303030c0b040404040404040c141612120c1314000000000000000000",
             "0000000000142b0c0b030303030303030c0b040404040404040c0b0c020f2a0306160000000000000000",
             "000000000120030c0b030303032103030c0b040404040404040c0b100c290f1206011200000000000000",
@@ -24935,7 +24938,7 @@
             20
           ],
           "rows": [
-            "0000000000001e04000000",
+            "0000000000001e04061200",
             "0000000000001b18150000",
             "00000000001e0907212700",
             "00000000110c092730231c",
@@ -24955,7 +24958,7 @@
             20
           ],
           "rows": [
-            "0000092f2d000000",
+            "262c092f2d000000",
             "1c112b1009000000",
             "2e20112b10100000",
             "20111a1108090000",
@@ -26910,11 +26913,11 @@
         ],
         [
           1301,
-          "cape-back"
+          "left-arm"
         ],
         [
           1302,
-          "cape-back"
+          "left-arm"
         ],
         [
           1303,
@@ -26954,11 +26957,11 @@
         ],
         [
           1312,
-          "cape-back"
+          "right-arm"
         ],
         [
           1313,
-          "cape-back"
+          "right-arm"
         ],
         [
           1314,
@@ -33011,7 +33014,8 @@
         "Torso follows this facing’s measured chest center and includes backing at every shoulder socket.",
         "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot.",
         "Pale disconnected ground pixels below mature boots are retained only in the source-only ground layer; original boot pixels remain on their leg.",
-        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors."
+        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors.",
+        "Stranded outline islands bordering one arm belong to that arm (scripts/migrate-melee-arm-fragments.mjs)."
       ],
       "armContours": [
         {
@@ -33248,8 +33252,8 @@
             "00000020030c0b03030303030e040c0b040404040a15022a010f29040f1212060c0000000000",
             "0000002203030c0b03032e0a20090e0c0b0404040404161604012a1629292a01120600000000",
             "0000030303030c0b03271b212709090c0b0404040404161605041203290529040f0101120000",
-            "00001b0303030c0b1b272722280e040c0b04040404041616150503060305031616030f011200",
-            "0027030303030c0b2d1b071b1128040c0b04040404041616151502030103160f0416032a1224",
+            "0000000303030c0b1b272722280e040c0b04040404041616150503060305031616030f011200",
+            "0000030303030c0b2d1b071b1128040c0b04040404041616151502030103160f0416032a1224",
             "000103030303031b2727272e0a0a04040c0b040404041616161515020401240f0f1129032419",
             "000103030303221821180e212e0404040c0b0404040416160b05150b02030f0f142d0a11032b",
             "0001030303031804161519212d0404040c0b040404041616170b150b0b16030f162719282027",
@@ -33396,8 +33400,8 @@
             "000000201c1b262f0e19",
             "0000002707222d1c2100",
             "0000271b1d2c1b1b0000",
-            "0000212d072723000000",
-            "002d2d1b072222000000",
+            "001b212d072723000000",
+            "272d2d1b072222000000",
             "21300e1c1c1c00000000",
             "212707092d0000000000",
             "2d1c1c1c1e0000000000",
@@ -33407,23 +33411,23 @@
         },
         "right-arm": {
           "origin": [
-            18,
+            17,
             20
           ],
           "rows": [
-            "0000000027000000000000",
-            "0000272c1d000000000000",
-            "002121080e0c0000000000",
-            "1b22111a0a010000000000",
-            "071b27200a212100000000",
-            "0008072d2d262622000000",
-            "00001b1b212e262d000000",
-            "000000222e0d2e230e0000",
-            "000000002e2e262e211400",
-            "000000000023212e260800",
-            "0000000000072d210d1b24",
-            "000000000000092d271e00",
-            "000000000000002d000000"
+            "000000000027000000000000",
+            "240a2d272c1d000000000000",
+            "001c2121080e0c0000000000",
+            "001b22111a0a010000000000",
+            "00071b27200a212100000000",
+            "000008072d2d262622000000",
+            "0000001b1b212e262d000000",
+            "00000000222e0d2e230e0000",
+            "00000000002e2e262e211400",
+            "00000000000023212e260800",
+            "000000000000072d210d1b24",
+            "00000000000000092d271e00",
+            "00000000000000002d000000"
           ]
         },
         "weapon": {
@@ -36027,7 +36031,7 @@
         ],
         [
           1679,
-          "cape-back"
+          "left-arm"
         ],
         [
           1680,
@@ -36167,7 +36171,7 @@
         ],
         [
           1742,
-          "cape-back"
+          "left-arm"
         ],
         [
           1743,
@@ -41054,7 +41058,8 @@
         "Torso follows this facing’s measured chest center and includes backing at every shoulder socket.",
         "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot.",
         "Pale disconnected ground pixels below mature boots are retained only in the source-only ground layer; original boot pixels remain on their leg.",
-        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors."
+        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors.",
+        "Stranded outline islands bordering one arm belong to that arm (scripts/migrate-melee-arm-fragments.mjs)."
       ],
       "armContours": [
         {
@@ -41426,7 +41431,7 @@
             "000000000000001f1e271c00000015290f151a0b292902020505042a2a000015162a01",
             "000000000000281304201c00000b0b050f02171a0b1602291629020403030014161111",
             "000000000000001015110000001717150403151a170229150204161616042a0c060000",
-            "0000000019000000002000000017170b040f0217170b03151505160416040f0f0c0000",
+            "0000000000000000002000000017170b040f0217170b03151505160416040f0f0c0000",
             "0000000000000000000000130000170b04012915171715040b15150516030f01240000",
             "0000000000001920000010131a000b0b1614040500000003050515151502030f010100",
             "000000000000002019001325170b0b15292424150b1a1a0029020515150529040f0101",
@@ -41457,28 +41462,28 @@
             "2d22111e0e0e1f000000000000",
             "21221d18111e00000000000000",
             "00262c2f0e0000000000000000",
-            "00001b28000000000000000000"
+            "00001b28190000000000000000"
           ]
         },
         "right-arm": {
           "origin": [
-            36,
+            35,
             19
           ],
           "rows": [
-            "0000000027000000000000",
-            "0000272c1d000000000000",
-            "002121080e0c0000000000",
-            "1b22111a0a010000000000",
-            "071b27200a212100000000",
-            "0008072d2d262622000000",
-            "00001b1b212e262d000000",
-            "000000222e0d2e230e0000",
-            "000000002e2e262e211400",
-            "000000000023212e260800",
-            "0000000000072d210d1b24",
-            "000000000000092d271e00",
-            "000000000000002d000000"
+            "000000000027000000000000",
+            "240a2d272c1d000000000000",
+            "001c2121080e0c0000000000",
+            "001b22111a0a010000000000",
+            "00071b27200a212100000000",
+            "000008072d2d262622000000",
+            "0000001b1b212e262d000000",
+            "00000000222e0d2e230e0000",
+            "00000000002e2e262e211400",
+            "00000000000023212e260800",
+            "000000000000072d210d1b24",
+            "00000000000000092d271e00",
+            "00000000000000002d000000"
           ]
         },
         "weapon": {
@@ -44779,7 +44784,7 @@
         ],
         [
           2066,
-          "cape-front"
+          "left-arm"
         ],
         [
           2067,
@@ -47034,7 +47039,8 @@
         "Torso follows this facing’s measured chest center and includes backing at every shoulder socket.",
         "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot.",
         "Pale disconnected ground pixels below mature boots are retained only in the source-only ground layer; original boot pixels remain on their leg.",
-        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors."
+        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors.",
+        "Stranded outline islands bordering one arm belong to that arm (scripts/migrate-melee-arm-fragments.mjs)."
       ],
       "armContours": [
         {
@@ -47296,15 +47302,13 @@
             23
           ],
           "rows": [
-            "000000000000000000001f000000000000000000000000001f0000000000000000",
-            "0000000e0000000000001f000000000000000000000000001f0000000000000000",
-            "00000e000000000000000000000000000000000000000000000000000000000000",
-            "000000000000000000000000000000000000000000000000000000000000000018",
-            "1e0000000000000000000000000000000000000000000000000000000000000000",
-            "180000000000000000000000000000000000000000000000000000000000000000",
-            "1e0000000000000000000000000000000000000000000000000000000900000000",
-            "000000000000000000000000000000000000000000000000000000000000000000",
-            "000000000000000000000000000000000000000000000000000000000028000000"
+            "000000000000000000001f000000000000000000000000001f",
+            "000000000000000000001f000000000000000000000000001f",
+            "00000000000000000000000000000000000000000000000000",
+            "00000000000000000000000000000000000000000000000000",
+            "1e000000000000000000000000000000000000000000000000",
+            "18000000000000000000000000000000000000000000000000",
+            "1e000000000000000000000000000000000000000000000000"
           ]
         },
         "left-leg": {
@@ -47387,11 +47391,11 @@
             "00000000000000082525251f1f0000000000000000000c2512081300000000000000",
             "00000000000000000025010600000000000000000000000c01090000000000000000",
             "00000000000000000000000000000000000000000000000000000000000000000000",
-            "00000003140000000000000000000000000000000000000000000000000000000000",
+            "00000000000000000000000000000000000000000000000000000000000000000000",
             "000000000000000000000001010402150b02042a0129010100000000000000000000",
             "000000000000000000002916162a2a1602040f0f1605010f0f000000000000000000",
-            "00201000000000000001020529290303160f041615050f0f03240000000000000000",
-            "0020000000000000032a290516050216162929051529161401040c00000000000000",
+            "00000000000000000001020529290303160f041615050f0f03240000000000000000",
+            "0000000000000000032a290516050216162929051529161401040c00000000000000",
             "00000000000000022a2a0515162905151502290516160504120f2a10000000000000",
             "00000000000029042a020b1516020505152915050216150224012a0c000000000000",
             "000000000000162a2915171516290b0502050b0b2929151529122a01130000000000",
@@ -47418,11 +47422,11 @@
           "rows": [
             "0000000000000922060000",
             "0000000000241925120100",
-            "00000000000e19130f0f01",
-            "00000000201e190f010104",
-            "000000221e200c040f0100",
-            "00000007181004292a0000",
-            "00001922280c2902000000",
+            "00000003140e19130f0f01",
+            "0000000e201e190f010104",
+            "00000e221e200c040f0100",
+            "00201007181004292a0000",
+            "00201922280c2902000000",
             "0020201b090f0200000000",
             "002b201314040000000000",
             "19141910292a0000000000",
@@ -47441,12 +47445,12 @@
             "06130c281e1900000000",
             "010c300e19241e000000",
             "002b302d1e09071c0000",
-            "0000083020091c1b0000",
+            "0000083020091c1b1800",
             "0000001316201b271000",
             "000000002b192727101e",
-            "00000000002808182b00",
+            "00000000092808182b00",
             "0000000000282b141000",
-            "0000000000002b2b0000",
+            "0000000000282b2b0000",
             "00000000000000100000"
           ]
         },
@@ -49292,11 +49296,11 @@
         ],
         [
           1490,
-          "cape-front"
+          "left-arm"
         ],
         [
           1491,
-          "cape-front"
+          "left-arm"
         ],
         [
           1492,
@@ -49400,7 +49404,7 @@
         ],
         [
           1554,
-          "body"
+          "left-arm"
         ],
         [
           1555,
@@ -49512,7 +49516,7 @@
         ],
         [
           1617,
-          "body"
+          "left-arm"
         ],
         [
           1618,
@@ -49632,11 +49636,11 @@
         ],
         [
           1680,
-          "cape-front"
+          "left-arm"
         ],
         [
           1681,
-          "cape-front"
+          "left-arm"
         ],
         [
           1682,
@@ -49756,7 +49760,7 @@
         ],
         [
           1711,
-          "body"
+          "right-arm"
         ],
         [
           1743,
@@ -49764,7 +49768,7 @@
         ],
         [
           1744,
-          "cape-front"
+          "left-arm"
         ],
         [
           1745,
@@ -50140,7 +50144,7 @@
         ],
         [
           1899,
-          "body"
+          "right-arm"
         ],
         [
           1900,
@@ -50408,7 +50412,7 @@
         ],
         [
           2028,
-          "body"
+          "right-arm"
         ],
         [
           2029,
@@ -52535,7 +52539,8 @@
         "Torso follows this facing’s measured chest center and includes backing at every shoulder socket.",
         "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot.",
         "Pale disconnected ground pixels below mature boots are retained only in the source-only ground layer; original boot pixels remain on their leg.",
-        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors."
+        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors.",
+        "Stranded outline islands bordering one arm belong to that arm (scripts/migrate-melee-arm-fragments.mjs)."
       ],
       "armContours": [
         {
@@ -52907,7 +52912,7 @@
             "012a161500002a2a040505020229290b1a150f291500000000271e1f1f000000000000",
             "11111614000303040229162902160b1a17020f050b0b000000200413281e0000000000",
             "0000060c2a041616160402152902171a15030415171700000011151000000000000000",
-            "00000c0f0f04160416051515030b1717020f040b171700000020000000001900000000",
+            "00000c0f0f04160416051515030b1717020f040b171700000020000000000000000000",
             "000024010f03160515150b04151717152901040b170000130000000000000000000000",
             "0001010f0302151515050503000000050414160b0b001a131000002019000000000000",
             "01010f0429051515050229001a1a0b15242429150b0b17251300192000000000000000",
@@ -52927,7 +52932,7 @@
           ],
           "rows": [
             "0000000000000000302b000000",
-            "00000000000000002e30030000",
+            "00000000000000002e30030f01",
             "00000000000000271d22071400",
             "0000000000003018071d1f1c1b",
             "00000000002e0a181b2309222d",
@@ -52958,7 +52963,8 @@
             "000000000000091d09080a2727",
             "000000000000000e0e1e11222d",
             "000000000000000011181d2221",
-            "0000000000000000002f2c2600"
+            "0000000000000000002f2c2600",
+            "00000000000000001900000000"
           ]
         },
         "weapon": {
@@ -56363,7 +56369,7 @@
         ],
         [
           2093,
-          "cape-front"
+          "right-arm"
         ],
         [
           2094,
@@ -58526,7 +58532,8 @@
         "Torso follows this facing’s measured chest center and includes backing at every shoulder socket.",
         "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot.",
         "Pale disconnected ground pixels below mature boots are retained only in the source-only ground layer; original boot pixels remain on their leg.",
-        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors."
+        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors.",
+        "Stranded outline islands bordering one arm belong to that arm (scripts/migrate-melee-arm-fragments.mjs)."
       ],
       "armContours": [
         {

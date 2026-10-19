@@ -169,7 +169,7 @@
             29
           ],
           "rows": [
-            "0000100b040b040301021016091a1a070c04030303031303281d031725",
+            "0000100b040b040301021016091a1a070c040303030313030000031725",
             "00240b16030103080c070704190404070c04030303030303070c031101",
             "121116030803010104041504040404070c04030303030303070c202001",
             "060b03031608010c12241d0404040404070c03030303030313280b1d01",
@@ -279,8 +279,8 @@
             "00000000000e0707110a05061024241007100517120e0e05170000000000000000",
             "00000000070a0a0a0a09081d2410060504160b1313131317240000000000000000",
             "0000000e060b0505090000000028241d111315302d170020130000000000000000",
-            "00000e0a040b04081300000000131d13151b302a2d000017000028000000000000",
-            "24070b16041603091d131500001d2815151e1e0d13150000001511000000000000"
+            "00000e0a040b04081300000000131d13151b302a2d000017000000000000000000",
+            "24070b16041603091d131500001d2815151e1e0d13150000000000000000000000"
           ]
         },
         "cape-front": {
@@ -316,9 +316,9 @@
           "rows": [
             "0000000030000000",
             "002300001c000000",
-            "302d002330000000",
-            "001f0d2200000000",
-            "00001400002e1400",
+            "302d002330280000",
+            "001f0d2215110000",
+            "281d1400002e1400",
             "1e2c0f002e27261b",
             "1b1f00001e27271e",
             "00000000272d272a",
@@ -3315,7 +3315,7 @@
         ],
         [
           1771,
-          "head"
+          "right-arm"
         ],
         [
           1809,
@@ -3419,11 +3419,11 @@
         ],
         [
           1834,
-          "head"
+          "right-arm"
         ],
         [
           1835,
-          "head"
+          "right-arm"
         ],
         [
           1872,
@@ -3515,11 +3515,11 @@
         ],
         [
           1894,
-          "cape-back"
+          "right-arm"
         ],
         [
           1895,
-          "cape-back"
+          "right-arm"
         ],
         [
           1896,
@@ -5766,7 +5766,8 @@
         "Weapon layer is empty because these weaponless source masters use the separate equipped weapon renderer.",
         "Cape completion uses its saved visible ownership only. Legacy color-list repairs (which included gray armor) are discarded.",
         "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot.",
-        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors."
+        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors.",
+        "Stranded outline islands bordering one arm belong to that arm (scripts/migrate-melee-arm-fragments.mjs)."
       ],
       "backingBottom": 38,
       "sourceCrop": {
@@ -5914,16 +5915,16 @@
             29
           ],
           "rows": [
-            "0000240a0a050425201304190404070c04030303030815170c03150115",
-            "00240b040b0403161d0819040404070c04030303031903070c12150100",
-            "000a0b040303010e150404040404070c04030303030303070c03030100",
-            "10040b160101020e13040404040404070c030303030303281528030100",
-            "070404030101091024040404040404070c031e03031513110713030000",
-            "07031616080c101010040404040404070c033003031a0209151a1d0000",
-            "000516040125241010240404041d04070c032303031513030728130000",
-            "00000b1601011412141213131d280404070c0303000000000000000000",
-            "00000004011605070c0404170400000000000000000000000000000000",
-            "0000000e08050000000000000000000000000000000000000000000000"
+            "0000240a0a050425201304190404070c04030303030815170c030001",
+            "00240b040b0403161d0819040404070c04030303031903070c000001",
+            "000a0b040303010e150404040404070c04030303030303070c030301",
+            "10040b160101020e13040404040404070c0303030303032815280301",
+            "070404030101091024040404040404070c031e030315131107130300",
+            "07031616080c101010040404040404070c033003031a0209151a1d00",
+            "000516040125241010240404041d04070c0323030315130307281300",
+            "00000b1601011412141213131d280404070c03030000000000000000",
+            "00000004011605070c04041704000000000000000000000000000000",
+            "0000000e080500000000000000000000000000000000000000000000"
           ]
         },
         "body": {
@@ -6028,7 +6029,7 @@
             "000000000011060611131d07041604131107151c0616111d1700000000000000",
             "000000001006110408170013280e171315151530231d17171700000000000000",
             "000000070b050b1600000015150713282e2e1b1e300000280000000000000000",
-            "0024070b050b080e1500000013171315231e300d230000170000280000000000"
+            "0024070b050b080e1500000013171315231e300d230000170000000000000000"
           ]
         },
         "cape-front": {
@@ -6064,9 +6065,9 @@
           ],
           "rows": [
             "1b1f002329000000",
-            "3029001f1f000000",
-            "001f14002e000000",
-            "1b1f00002e271e00",
+            "3029001f1f280000",
+            "001f14152e150000",
+            "1b1f12152e271e00",
             "301c14231e27271e",
             "000000302727271b",
             "002e00301e271e00",
@@ -9159,7 +9160,7 @@
         ],
         [
           1835,
-          "head"
+          "right-arm"
         ],
         [
           1873,
@@ -9259,7 +9260,7 @@
         ],
         [
           1897,
-          "cape-back"
+          "right-arm"
         ],
         [
           1898,
@@ -9267,7 +9268,7 @@
         ],
         [
           1899,
-          "cape-back"
+          "right-arm"
         ],
         [
           1936,
@@ -9367,11 +9368,11 @@
         ],
         [
           1960,
-          "cape-back"
+          "right-arm"
         ],
         [
           1961,
-          "cape-back"
+          "right-arm"
         ],
         [
           1962,
@@ -11218,7 +11219,8 @@
         "Weapon layer is empty because these weaponless source masters use the separate equipped weapon renderer.",
         "Cape completion uses its saved visible ownership only. Legacy color-list repairs (which included gray armor) are discarded.",
         "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot.",
-        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors."
+        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors.",
+        "Stranded outline islands bordering one arm belong to that arm (scripts/migrate-melee-arm-fragments.mjs)."
       ],
       "backingBottom": 38,
       "sourceCrop": {
@@ -22701,23 +22703,23 @@
       "layers": {
         "cape-back": {
           "origin": [
-            21,
+            22,
             29
           ],
           "rows": [
-            "1504040404151504070c0403030303110602010303010104050a2400",
-            "0004040404041504070c04030303030810250c010103030303041100",
-            "0004040404040404070c040303030303110602252503041603160507",
-            "000c04150404040404070c0303030303032402252501030401030420",
-            "000c13040416161304070c0303030303240e160c2501011603010312",
-            "000c15151a1a020804070c03030303030707060c2525250116011d00",
-            "001715040428151304070c030303031d111d24022525250c10200000",
-            "00000000000004040404070c03030312282b14022525021100000000",
-            "00000000000000000000070c030303141c030302250c070000000000",
-            "0000000000000000000000000000001c170303030424000000000000",
-            "000000000000000000000000000000230d0000240000000000000000",
-            "0000000000000000000000000000001f0d0000000000000000000000",
-            "0000000000000000000000000000000d000000000000000000000000"
+            "04040404151504070c0403030303110602010303010104050a2400",
+            "04040404041504070c04030303030810250c010103030303041100",
+            "04040404040404070c040303030303110602252503041603160507",
+            "0c04150404040404070c0303030303032402252501030401030420",
+            "0c13040416161304070c0303030303240e160c2501011603010312",
+            "0c15151a1a020804070c03030303030707060c2525250116011d00",
+            "1715040428151304070c030303031d111d24022525250c10200000",
+            "000000000004040404070c03030312282b14022525021100000000",
+            "000000000000000000070c030303141c030302250c070000000000",
+            "00000000000000000000000000001c170303030424000000000000",
+            "0000000000000000000000000000230d0000240000000000000000",
+            "00000000000000000000000000001f0d0000000000000000000000",
+            "00000000000000000000000000000d000000000000000000000000"
           ]
         },
         "body": {
@@ -22841,7 +22843,7 @@
             "00000000210d001b",
             "0000000d0d1f301b",
             "0000231b0d1b1c00",
-            "0000002e23292300",
+            "0000152e23292300",
             "0027272e1c2a1e2e",
             "1b26271e1c232e1e",
             "1b271e1e1c00231e",
@@ -25708,7 +25710,7 @@
         ],
         [
           1877,
-          "cape-back"
+          "left-arm"
         ],
         [
           1878,
@@ -27630,7 +27632,8 @@
         "Cape completion uses its saved visible ownership only. Legacy color-list repairs (which included gray armor) are discarded.",
         "Arm -1 pivot registered to the retained source seam at 27,27.",
         "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot.",
-        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors."
+        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors.",
+        "Stranded outline islands bordering one arm belong to that arm (scripts/migrate-melee-arm-fragments.mjs)."
       ],
       "backingBottom": 38,
       "sourceCrop": {
@@ -27867,27 +27870,27 @@
             "000000000000002424050b2504050a1106060a05050a110620062400000000",
             "00000000000000172824001404160505040416040b05110611060724000000",
             "0000000000000000000000130e03031604031603031604050511060a100000",
-            "0000000000000015000000151d100c03031603160416030405050a05051000",
-            "00000000000000190000001528242508010301010b0b0b0b04050505040510"
+            "0000000000000000000000151d100c03031603160416030405050a05051000",
+            "00000000000000000000001528242508010301010b0b0b0b04050505040510"
           ]
         },
         "cape-front": {
           "origin": [
-            22,
+            23,
             29
           ],
           "rows": [
-            "00191a1a15001d000525080103250103040416040b0504040b0e",
-            "00191a09161300001d02080108030125010808030b051104160b",
-            "001919021628000000020801010308250c250101160b060b1603",
-            "0000151a0b121d0724020101250816010c0c25010316050a160b",
-            "00000020201d13111002252525011603250c0c25010804070610",
-            "120013151500151306080c0c0c0c030303250c0c250101060000",
-            "0000151500000000150b0c0c0c0c251616032525010102000000",
-            "00000000000000001211020c250c02080416012525091d000000",
-            "0000000000000000000a020c0209111d04082503052400000000",
-            "0000000000000000000416061200000000000000000000000000",
-            "0000000000000000001700170000000000001700000000000000"
+            "191a1a15001d000525080103250103040416040b0504040b0e",
+            "191a09161300001d02080108030125010808030b051104160b",
+            "1919021628000000020801010308250c250101160b060b1603",
+            "00151a0b121d0724020101250816010c0c25010316050a160b",
+            "000020201d13111002252525011603250c0c25010804070610",
+            "0013151500151306080c0c0c0c030303250c0c250101060000",
+            "00151500000000150b0c0c0c0c251616032525010102000000",
+            "000000000000001211020c250c02080416012525091d000000",
+            "00000000000000000a020c0209111d04082503052400000000",
+            "00000000000000000416061200000000000000000000000000",
+            "00000000000000001700170000000000001700000000000000"
           ]
         },
         "left-arm": {
@@ -27898,14 +27901,14 @@
           "rows": [
             "0000000000000d",
             "0000001c14301b",
-            "000014001b1e1b",
-            "00142e002e2d1b",
+            "000014151b1e1b",
+            "00142e192e2d1b",
             "221e2600000000",
             "26272e00000000",
             "27261e00000000",
             "1b27271b000000",
             "002d2d2a0d0000",
-            "0000001c000000"
+            "0000121c000000"
           ]
         },
         "right-arm": {
@@ -30556,7 +30559,7 @@
         ],
         [
           1751,
-          "head"
+          "left-arm"
         ],
         [
           1752,
@@ -30656,7 +30659,7 @@
         ],
         [
           1815,
-          "head"
+          "left-arm"
         ],
         [
           1816,
@@ -31308,7 +31311,7 @@
         ],
         [
           2198,
-          "cape-front"
+          "left-arm"
         ],
         [
           2199,
@@ -31997,7 +32000,8 @@
         "Weapon layer is empty because these weaponless source masters use the separate equipped weapon renderer.",
         "Cape completion uses its saved visible ownership only. Legacy color-list repairs (which included gray armor) are discarded.",
         "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot.",
-        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors."
+        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors.",
+        "Stranded outline islands bordering one arm belong to that arm (scripts/migrate-melee-arm-fragments.mjs)."
       ],
       "backingBottom": 38,
       "sourceCrop": {
@@ -36756,8 +36760,8 @@
             "0000000024062006110a05050a0606110a0504250b05242400000000000000",
             "000000240706110611050b0416040405051604140d24281700000000000000",
             "0000100a06110505041603031603041603030e131b00000000000000000000",
-            "001005050a05050403160416031603030c101d151b00001500000000000000",
-            "100504050505040b0b0b0b0101030108252428151b00001900000000000000"
+            "001005050a05050403160416031603030c101d151b00000000000000000000",
+            "100504050505040b0b0b0b0101030108252428151b00000000000000000000"
           ]
         },
         "cape-front": {
@@ -36766,17 +36770,17 @@
             29
           ],
           "rows": [
-            "0e0b0404050b041604040301250301082505001d00151a1a1900",
-            "0b160411050b03080801250103080108021d00001316091a1900",
-            "03160b060b160101250c25080301010802000000281602191900",
-            "0b160a05160301250c0c0116082501010224071d120b1a150000",
-            "100607040801250c0c25031601252525021011131d2020000000",
-            "0000060101250c0c250303030c0c0c0c08061315001515130012",
-            "0000000201012525031616250c0c0c0c0b150000000015150000",
-            "0000001d09252501160408020c250c0211120000000000000000",
-            "000000002405032508041d1109020c020a000000000000000000",
-            "0000000000000000000000000012061604000000000000000000",
-            "0000000000000017000000000000170017000000000000000000"
+            "0e0b0404050b041604040301250301082505001d00151a1a19",
+            "0b160411050b03080801250103080108021d00001316091a19",
+            "03160b060b160101250c250803010108020000002816021919",
+            "0b160a05160301250c0c0116082501010224071d120b1a1500",
+            "100607040801250c0c25031601252525021011131d20200000",
+            "0000060101250c0c250303030c0c0c0c080613150015151300",
+            "0000000201012525031616250c0c0c0c0b1500000000151500",
+            "0000001d09252501160408020c250c02111200000000000000",
+            "000000002405032508041d1109020c020a0000000000000000",
+            "00000000000000000000000000120616040000000000000000",
+            "00000000000000170000000000001700170000000000000000"
           ]
         },
         "left-arm": {
@@ -36803,14 +36807,14 @@
           ],
           "rows": [
             "30141c000000",
-            "1e1b00140000",
-            "2d2e002e1400",
+            "1e1b15140000",
+            "2d2e192e1400",
             "000000261e22",
             "0000002e2726",
             "0000001e2627",
             "00001b27271b",
             "000d2a2d2d00",
-            "00001c000000"
+            "00001c120000"
           ]
         },
         "weapon": {
@@ -39527,7 +39531,7 @@
         ],
         [
           1768,
-          "head"
+          "right-arm"
         ],
         [
           1769,
@@ -39627,7 +39631,7 @@
         ],
         [
           1832,
-          "head"
+          "right-arm"
         ],
         [
           1833,
@@ -40287,7 +40291,7 @@
         ],
         [
           2217,
-          "cape-front"
+          "right-arm"
         ],
         [
           2259,
@@ -40884,7 +40888,8 @@
         "Weapon layer is empty because these weaponless source masters use the separate equipped weapon renderer.",
         "Cape completion uses its saved visible ownership only. Legacy color-list repairs (which included gray armor) are discarded.",
         "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot.",
-        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors."
+        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors.",
+        "Stranded outline islands bordering one arm belong to that arm (scripts/migrate-melee-arm-fragments.mjs)."
       ],
       "backingBottom": 38,
       "sourceCrop": {
