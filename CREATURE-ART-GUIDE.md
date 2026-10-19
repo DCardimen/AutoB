@@ -20,6 +20,8 @@ Keep original/current comparison sheets. Review the small native sprite as well 
 
 Use fixed directional source hand/equipment landmarks, adding an explicit `GEAR` entry when a new silhouette needs one. Account for hidden hands and evolution costumes. Do not derive screen side, wielding hand or weapon choice from animated shoulder/hand positions that cross the torso during walking.
 
+The wielding hand is anatomical and constant: melee weapons and staves in the right hand, bows and shields in the left, in every facing. Each physical arm uses its own painted arm through `rightHandScreen(dir)` (right hand on the viewer's left in E–W, on the right in NW–NE). Never take the wielding side from where a source sprite drew its weapon; `GEAR` only locates sockets. See [docs/CONSTANT-WEAPON-HAND.md](docs/CONSTANT-WEAPON-HAND.md).
+
 Travelling melee weapons use the relaxed carry; bows and wands keep their intended orientation. Preserve the distinction between hand carry binding and melee carry rotation. Active attacks, casts and bow draws use the physical action pose. Weapon grip and wielding hand must coincide in rendered coordinates; two-handed handles and bowstrings need consistent transforms. Maintain source costume textures when removing a painted hand or old equipment patch.
 
 ## Acceptance evidence

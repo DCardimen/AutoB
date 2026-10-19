@@ -143,6 +143,12 @@ const GEAR={
  goblin:[[37,36,45,30],[27,36,43,34],[24,36,20,30],[39,36,24,34],[26,36,19,30],[39,36,44,30],[42,36,43,31],[25,36,39,30]],
 };
 GEAR.dwarf=GEAR.knight;GEAR.rogue=GEAR.knight;GEAR.frostelf=GEAR.caster;GEAR.skeleton=GEAR.elf;GEAR.troll=GEAR.orc;GEAR.minotaur=GEAR.orc;
+// Screen side of the character's RIGHT hand. Every authored camera-facing
+// frame (E, SE, S, SW, W) is turned toward the viewer, so the right hand is
+// on the viewer's left; in the away-facing frames (NW, N, NE) it is on the
+// right. The source sprites drew weapons in whichever hand suited each
+// frame, so taking the wielding hand from GEAR swapped hands while turning.
+export const rightHandScreen=dir=>dir>=5?1:-1;
 function gearDistance(x,y,g){const dx=g[2]-g[0],dy=g[3]-g[1],t=clamp(((x-g[0])*dx+(y-g[1])*dy)/(dx*dx+dy*dy),-.18,1.15);return Math.hypot(x-g[0]-t*dx,y-g[1]-t*dy);}
 function completeBodyLayer(asset,identity,stage,sourceGear,armMask){
  if(asset.parts){asset.bodyRepairs=asset.parts.repairs;return asset.parts.body;}
@@ -450,7 +456,9 @@ export function paintAtlasCharacter(b,id,rig,at,cellPass=0){
  rig.artLimbPoints=new Map();rig.artArmScreens={};
  for(const arm of rig.arms){
   const root=limbPoint(arm.root),joint=limbPoint(arm.joint),end=limbPoint(arm.end);
-  const bindGear=(GEAR[identity]||GEAR[id])?.[rig.dir],wield=rig.weapon?.hand==='left'?-1:1,mainSide=bindGear?Math.sign(bindGear[0]-32)||1:(rig.dir>=1&&rig.dir<=4?-1:1),screenSide=arm.side===wield?mainSide:-mainSide,hand=sourceHands[screenSide];
+  // Each physical arm always uses its own anatomical painted arm, so the
+  // weapon stays in the right hand (shield/bow in the left) in every facing.
+  const bindGear=(GEAR[identity]||GEAR[id])?.[rig.dir],screenSide=arm.side*rightHandScreen(rig.dir),hand=sourceHands[screenSide];
   rig.artArmScreens[arm.side]=screenSide;
   const armCarryWeight=rig.portraitWave?.side===arm.side?handCarryWeight*(1-rig.portraitWave.weight):handCarryWeight;
   root.y-=3*fit;joint.y-=1.5*fit;
@@ -460,7 +468,11 @@ export function paintAtlasCharacter(b,id,rig,at,cellPass=0){
    // directional equipment grip is a better fallback than an animated arm.
    const socket=hand||{x:32+screenSide*(Math.abs((bindGear?.[0]??41)-32)||9),y:bindGear?.[1]??34};
    const neutral=anchor({x:32+(socket.x-32)*scale.width+dc.x,y:44+(socket.y-45)*scale.height+dc.y}),bind=rest.arms.find(a=>a.side===arm.side),drift=bind?difference(limbPoint(arm.end),limbPoint(bind.end)):{x:0,y:0};
+   // Travel sway may bring a hand painted in front of the belly toward the
+   // centre line, but never carry it across to the other side of the torso.
+   const authoredSide=Math.sign(neutral.x-rig.artAnchors.body.x),margin=Math.min(.5,Math.abs(neutral.x-rig.artAnchors.body.x));
    neutral.x+=drift.x*.4;neutral.y+=drift.y*.4;
+   if(authoredSide&&authoredSide*(neutral.x-rig.artAnchors.body.x)<margin)neutral.x=rig.artAnchors.body.x+authoredSide*margin;
    // Profile-view hands can both lie on the same side of the chest. Keep
    // those authored sockets; forcing the near hand across the center pulled
    // the shield/cuff away from its original arm by several source pixels.
@@ -483,7 +495,7 @@ export function paintAtlasCharacter(b,id,rig,at,cellPass=0){
  const g3=rig.weapon?.grip,t3=rig.weapon?.tip;
  const normalize=v=>{const n=Math.hypot(v.x,v.y,v.z)||1;return {x:v.x/n,y:v.y/n,z:v.z/n};};
  const actual=g3?normalize({x:t3.x-g3.x,y:t3.y-g3.y,z:t3.z-g3.z}):null;
- const carryBind=(GEAR[identity]||GEAR[id])?.[rig.dir],screenSign=carryBind?Math.sign(carryBind[0]-32)||1:(rig.dir>=1&&rig.dir<=4?-1:1);
+ const screenSign=(rig.weapon?.hand==='left'?-1:1)*rightHandScreen(rig.dir);
  rig.artWeaponIdentity=rig.weapon&&{kind:rig.gear||rig.weapon.kind,hand:rig.weapon.hand,screenSide:screenSign};
  const carry=normalize({x:.32*screenSign*Math.cos(angle),y:-.32*screenSign*Math.sin(angle),z:-1});
  const presented=actual&&normalize({x:actual.x+(carry.x-actual.x)*carryWeight,y:actual.y+(carry.y-actual.y)*carryWeight,z:actual.z+(carry.z-actual.z)*carryWeight});
@@ -506,14 +518,21 @@ export function paintAtlasCharacter(b,id,rig,at,cellPass=0){
  }
  // Solve the held object and BOTH wrists before solving the elbows. Moving
  // a support wrist after IK stretched the source forearm into a loose strip.
- const support=main&&(id==='orc'||rig.bowString?.draw>.05)?rig.arms.find(a=>a!==main):null;
+ let support=main&&(id==='orc'||rig.bowString?.draw>.05)?rig.arms.find(a=>a!==main):null;
  if(parts&&main){
   const radius=arm=>{const p=armArt.profiles.get(rig.artArmScreens[arm.side]),s={x:fit*scale.width,y:fit*scale.height};return authoredArmLength(p.root,p.joint,s)+authoredArmLength(p.joint,p.end,s);};
   const constraints=[{center:rig.artArmRoots[main.side],radius:radius(main)}];
   const relaxed=support&&rig.artLimbPoints.get(support.end),held=support&&heldPoint(support.end),weight=1-carryWeight;
   if(support&&weight>1e-6){const root=rig.artArmRoots[support.side],offset=difference(held,paintedGrip);constraints.push({center:{x:(root.x-relaxed.x*carryWeight)/weight-offset.x,y:(root.y-relaxed.y*carryWeight)/weight-offset.y},radius:radius(support)/weight});}
   const bounds=melee&&meleeWeaponBounds(rig,paintedGrip,heldPoint(rig.weapon.tip)),cell=bounds&&{minX:1+paintedGrip.x-bounds.minX,maxX:62+paintedGrip.x-bounds.maxX,minY:1+paintedGrip.y-bounds.minY,maxY:62+paintedGrip.y-bounds.maxY};
-  const fitted=constrainHeldGrip(paintedGrip,constraints,cell);Object.assign(paintedGrip,fitted);
+  let fitted=constrainHeldGrip(paintedGrip,constraints,cell);
+  // When neither painted arm can reach a common grip (a short far arm during a
+  // get-up), the support hand lets go and keeps its own relaxed pose. The
+  // weapon hand keeps exact contact and no painted arm is stretched.
+  const reachable=p=>constraints.every(c=>Math.hypot(p.x-c.center.x,p.y-c.center.y)<=c.radius+1e-6);
+  rig.artSupportReleased=false;
+  if(support&&constraints.length>1&&!reachable(fitted)){constraints.length=1;fitted=constrainHeldGrip(paintedGrip,constraints,cell);support=null;rig.artSupportReleased=true;}
+  Object.assign(paintedGrip,fitted);
   rig.artGripConstraints={constraints,cell};
   if(support){const held=heldPoint(support.end);Object.assign(relaxed,mix(held,relaxed,carryWeight));}
   for(const arm of rig.arms){

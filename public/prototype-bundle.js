@@ -4093,6 +4093,7 @@
   GEAR.skeleton = GEAR.elf;
   GEAR.troll = GEAR.orc;
   GEAR.minotaur = GEAR.orc;
+  var rightHandScreen = (dir) => dir >= 5 ? 1 : -1;
   function gearDistance(x, y, g) {
     const dx = g[2] - g[0], dy = g[3] - g[1], t = clamp7(((x - g[0]) * dx + (y - g[1]) * dy) / (dx * dx + dy * dy), -0.18, 1.15);
     return Math.hypot(x - g[0] - t * dx, y - g[1] - t * dy);
@@ -4522,7 +4523,7 @@
     rig.artArmScreens = {};
     for (const arm of rig.arms) {
       const root = limbPoint(arm.root), joint = limbPoint(arm.joint), end = limbPoint(arm.end);
-      const bindGear = (GEAR[identity] || GEAR[id])?.[rig.dir], wield = rig.weapon?.hand === "left" ? -1 : 1, mainSide = bindGear ? Math.sign(bindGear[0] - 32) || 1 : rig.dir >= 1 && rig.dir <= 4 ? -1 : 1, screenSide = arm.side === wield ? mainSide : -mainSide, hand = sourceHands[screenSide];
+      const bindGear = (GEAR[identity] || GEAR[id])?.[rig.dir], screenSide = arm.side * rightHandScreen(rig.dir), hand = sourceHands[screenSide];
       rig.artArmScreens[arm.side] = screenSide;
       const armCarryWeight = rig.portraitWave?.side === arm.side ? handCarryWeight * (1 - rig.portraitWave.weight) : handCarryWeight;
       root.y -= 3 * fit;
@@ -4530,8 +4531,10 @@
       if (armCarryWeight) {
         const socket = hand || { x: 32 + screenSide * (Math.abs((bindGear?.[0] ?? 41) - 32) || 9), y: bindGear?.[1] ?? 34 };
         const neutral = anchor({ x: 32 + (socket.x - 32) * scale.width + dc.x, y: 44 + (socket.y - 45) * scale.height + dc.y }), bind = rest.arms.find((a) => a.side === arm.side), drift = bind ? difference(limbPoint(arm.end), limbPoint(bind.end)) : { x: 0, y: 0 };
+        const authoredSide = Math.sign(neutral.x - rig.artAnchors.body.x), margin = Math.min(0.5, Math.abs(neutral.x - rig.artAnchors.body.x));
         neutral.x += drift.x * 0.4;
         neutral.y += drift.y * 0.4;
+        if (authoredSide && authoredSide * (neutral.x - rig.artAnchors.body.x) < margin) neutral.x = rig.artAnchors.body.x + authoredSide * margin;
         if (armCarryWeight === 1 && !MELEE_ARM_FAMILIES.has(identity)) neutral.x = rig.artAnchors.body.x + screenSide * Math.max(2 * fit, screenSide * (neutral.x - rig.artAnchors.body.x));
         end.x += (neutral.x - end.x) * armCarryWeight;
         end.y += (neutral.y - end.y) * armCarryWeight;
@@ -4573,7 +4576,7 @@
       return { x: v.x / n, y: v.y / n, z: v.z / n };
     };
     const actual = g3 ? normalize({ x: t3.x - g3.x, y: t3.y - g3.y, z: t3.z - g3.z }) : null;
-    const carryBind = (GEAR[identity] || GEAR[id])?.[rig.dir], screenSign = carryBind ? Math.sign(carryBind[0] - 32) || 1 : rig.dir >= 1 && rig.dir <= 4 ? -1 : 1;
+    const screenSign = (rig.weapon?.hand === "left" ? -1 : 1) * rightHandScreen(rig.dir);
     rig.artWeaponIdentity = rig.weapon && { kind: rig.gear || rig.weapon.kind, hand: rig.weapon.hand, screenSide: screenSign };
     const carry = normalize({ x: 0.32 * screenSign * Math.cos(angle), y: -0.32 * screenSign * Math.sin(angle), z: -1 });
     const presented = actual && normalize({ x: actual.x + (carry.x - actual.x) * carryWeight, y: actual.y + (carry.y - actual.y) * carryWeight, z: actual.z + (carry.z - actual.z) * carryWeight });
@@ -4602,7 +4605,7 @@
         elbow.y += dy * 0.5;
       }
     }
-    const support = main && (id === "orc" || rig.bowString?.draw > 0.05) ? rig.arms.find((a) => a !== main) : null;
+    let support = main && (id === "orc" || rig.bowString?.draw > 0.05) ? rig.arms.find((a) => a !== main) : null;
     if (parts && main) {
       const radius = (arm) => {
         const p = armArt.profiles.get(rig.artArmScreens[arm.side]), s = { x: fit * scale.width, y: fit * scale.height };
@@ -4615,7 +4618,15 @@
         constraints.push({ center: { x: (root.x - relaxed.x * carryWeight) / weight - offset.x, y: (root.y - relaxed.y * carryWeight) / weight - offset.y }, radius: radius(support) / weight });
       }
       const bounds = melee && meleeWeaponBounds(rig, paintedGrip, heldPoint(rig.weapon.tip)), cell = bounds && { minX: 1 + paintedGrip.x - bounds.minX, maxX: 62 + paintedGrip.x - bounds.maxX, minY: 1 + paintedGrip.y - bounds.minY, maxY: 62 + paintedGrip.y - bounds.maxY };
-      const fitted = constrainHeldGrip(paintedGrip, constraints, cell);
+      let fitted = constrainHeldGrip(paintedGrip, constraints, cell);
+      const reachable = (p) => constraints.every((c2) => Math.hypot(p.x - c2.center.x, p.y - c2.center.y) <= c2.radius + 1e-6);
+      rig.artSupportReleased = false;
+      if (support && constraints.length > 1 && !reachable(fitted)) {
+        constraints.length = 1;
+        fitted = constrainHeldGrip(paintedGrip, constraints, cell);
+        support = null;
+        rig.artSupportReleased = true;
+      }
       Object.assign(paintedGrip, fitted);
       rig.artGripConstraints = { constraints, cell };
       if (support) {
