@@ -13,20 +13,21 @@ export function ik(root,end,upper,lower,bend=-1){
  const a=(upper*upper-lower*lower+d*d)/(2*d),h=Math.sqrt(Math.max(0,upper*upper-a*a));
  return {root:{...root},joint:{x:root.x+ux*a-uy*h*bend,y:root.y+uy*a+ux*h*bend},end:{x:root.x+ux*d,y:root.y+uy*d},upper,lower};
 }
-function foot(phase,stride){
+function foot(phase,stride,lift=5.2){
  const p=((phase%1)+1)%1,stance=.62;
  if(p<stance)return {x:mix(-stride/2,stride/2,p/stance),y:0,support:true};
- const q=(p-stance)/(1-stance);return {x:mix(stride/2,-stride/2,smooth(q)),y:-5.2*Math.sin(q*Math.PI),support:false};
+ const q=(p-stance)/(1-stance);return {x:mix(stride/2,-stride/2,smooth(q)),y:-lift*Math.sin(q*Math.PI),support:false};
 }
-export function poseAt(action,time,{stride=1,bowProfile=null}={}){
+export function poseAt(action,time,{stride=1,bowProfile=null,stocky=false}={}){
  const moving=action==='run',attack=action==='attack',phase=time/ .57,breath=Math.sin(time*2.8)*.15;
- const bodyY=moving?Math.sin(phase*Math.PI*4)*.2:breath;
- const hipR={x:28,y:43+bodyY},hipL={x:35,y:43+bodyY},shoulderR={x:25,y:33+bodyY},shoulderL={x:36,y:33+bodyY};
- const feet=[{x:28,y:53,support:true},{x:35,y:53,support:true}];
- if(moving){for(let side=0;side<2;side++){const f=foot(phase+side*.5,8*stride);feet[side]={x:[28,35][side]+f.x,y:53+f.y,support:f.support};}}
- let right={x:22,y:40+bodyY},left={x:40,y:40+bodyY},draw=0,attackPhase='Relaxed idle',releaseAge=-1;
+ const bodyY=moving?Math.sin(phase*Math.PI*4)*(stocky?.1:.2):breath;
+ const hipR={x:stocky?26:28,y:(stocky?47:43)+bodyY},hipL={x:stocky?38:35,y:(stocky?47:43)+bodyY},shoulderR={x:25,y:33+bodyY},shoulderL={x:36,y:33+bodyY};
+ const footX=stocky?[26,38]:[28,35],bootHeight=stocky?4:3;
+ const feet=footX.map(x=>({x,y:53,support:true}));
+ if(moving){for(let side=0;side<2;side++){const f=foot(phase+side*.5,(stocky?1.8:8)*stride,stocky?.8:5.2);feet[side]={x:footX[side]+f.x,y:53+f.y,support:f.support};}}
+ let right={x:22,y:(stocky?42:40)+bodyY},left={x:40,y:(stocky?43:40)+bodyY},draw=0,attackPhase='Relaxed idle',releaseAge=-1;
  const shotTime=((time%2.35)+2.35)%2.35;
- if(moving){right={x:21+Math.sin(phase*Math.PI*2)*.6,y:37+bodyY};left={x:39+Math.sin(phase*Math.PI*2)*2,y:39+Math.cos(phase*Math.PI*2)*1.3};attackPhase='Run · alternating support';}
+ if(moving){right={x:21+Math.sin(phase*Math.PI*2)*.6,y:(stocky?40:37)+bodyY};left={x:39+Math.sin(phase*Math.PI*2)*2,y:(stocky?42:39)+Math.cos(phase*Math.PI*2)*1.3};attackPhase='Run · alternating support';}
  if(attack){
   const raise=smooth(shotTime/.25),recover=smooth((shotTime-1.23)/.42),aim={x:17,y:31};
   right=point(point(right,aim,raise),right,recover);
@@ -42,19 +43,25 @@ export function poseAt(action,time,{stride=1,bowProfile=null}={}){
   const setup=smooth((shotTime-.15)/.28);
   left=point(left,point(nock,cheek,smooth((shotTime-.43)/.42)),setup);
   if(shotTime>=1.05)left=point(left,recoil,smooth((shotTime-1.05)/.06));
-  if(shotTime>=1.25)left=point(left,{x:40,y:40+bodyY},recover);
+  if(shotTime>=1.25)left=point(left,{x:40,y:(stocky?43:40)+bodyY},recover);
   if(shotTime>=1.05)releaseAge=shotTime-1.05;
  }
- const nearArm=ik(shoulderR,right,7,8,-1),farArm=ik(shoulderL,left,7,8,1);
- const bowGrip={...nearArm.end},topOffset=bowProfile?.top||{x:4,y:-15},bottomOffset=bowProfile?.bottom||{x:4,y:15};
+ const leftAngle=stocky&&attack?Math.PI/2*smooth((shotTime-.15)/.28)*(1-smooth((shotTime-1.25)/.4)):0;
+ const armWithHand=(root,grip,upper,lower,bend,handAngle)=>{
+  const handOffset=stocky?2.5:0,offset={x:-Math.sin(handAngle)*handOffset,y:Math.cos(handAngle)*handOffset};
+  const arm=ik(root,{x:grip.x-offset.x,y:grip.y-offset.y},upper,lower,bend);
+  return {...arm,grip:{x:arm.end.x+offset.x,y:arm.end.y+offset.y},handAngle,handOffset};
+ };
+ const nearArm=armWithHand(shoulderR,right,stocky?5:7,stocky?4.5:8,-1,0),farArm=armWithHand(shoulderL,left,stocky?6:7,stocky?6:8,1,leftAngle);
+ const bowGrip={...nearArm.grip},topOffset=bowProfile?.top||{x:4,y:-15},bottomOffset=bowProfile?.bottom||{x:4,y:15};
  const top={x:bowGrip.x+topOffset.x,y:bowGrip.y+topOffset.y},bottom={x:bowGrip.x+bottomOffset.x,y:bowGrip.y+bottomOffset.y};
- const engaged=attack&&shotTime>=.43&&shotTime<1.05,stringDraw=engaged?{...farArm.end}:point(top,bottom,.5);
+ const engaged=attack&&shotTime>=.43&&shotTime<1.05,stringDraw=engaged?{...farArm.grip}:point(top,bottom,.5);
  const blinkPhase=time%3.5,blink=!attack&&!moving&&blinkPhase>2.85&&blinkPhase<3.0;
- const legs=[hipR,hipL].map((hip,i)=>({...ik(hip,{x:feet[i].x,y:feet[i].y-3},6,5,1),foot:{x:feet[i].x,y:feet[i].y}}));
- const releaseGrip=ik(shoulderR,{x:17,y:31},7,8,-1).end,releaseNock=ik(shoulderL,{x:29,y:28},7,8,1).end,releaseRest={x:releaseGrip.x,y:releaseGrip.y-.5};
+ const legs=[hipR,hipL].map((hip,i)=>({...ik(hip,{x:feet[i].x,y:feet[i].y-bootHeight},stocky?1.35:6,stocky?1.35:5,1),foot:{x:feet[i].x,y:feet[i].y}}));
+ const releaseGrip=armWithHand(shoulderR,{x:17,y:31},stocky?5:7,stocky?4.5:8,-1,0).grip,releaseNock=armWithHand(shoulderL,{x:29,y:28},stocky?6:7,stocky?6:8,1,stocky?Math.PI/2:0).grip,releaseRest={x:releaseGrip.x,y:releaseGrip.y-.5};
  const dx=releaseRest.x-releaseNock.x,dy=releaseRest.y-releaseNock.y,d=Math.hypot(dx,dy);
  const releasedArrow={nock:releaseNock,rest:releaseRest,velocity:{x:dx/d*125,y:dy/d*125}};
- return {action,time,moving,attack,phase,bodyY,feet,legs,arms:{right:nearArm,left:farArm},bow:{hand:'right',drawHand:'left',grip:bowGrip,top,bottom,draw:stringDraw,drawAmount:draw,engaged},drawAmount:draw,attackPhase,shotTime,releaseAge,releasedArrow,blink,tailRoot:{x:35,y:42+bodyY},capeRoot:{x:34,y:29+bodyY},head:{x:29,y:19+bodyY*.8}};
+ return {action,time,moving,attack,phase,bodyY,feet,legs,legArt:{bootHeight,thighWidth:stocky?1.8:1},stocky,arms:{right:nearArm,left:farArm},bow:{hand:'right',drawHand:'left',grip:bowGrip,top,bottom,draw:stringDraw,drawAmount:draw,engaged},drawAmount:draw,attackPhase,shotTime,releaseAge,releasedArrow,blink,tailRoot:{x:35,y:42+bodyY},capeRoot:{x:34,y:29+bodyY},head:{x:29,y:19+bodyY*.8}};
 }
 
 const node=(x,y,pinned=false)=>({x,y,px:x,py:y,pinned});
@@ -117,5 +124,5 @@ export function tailPoint(tail,u,v,form){
 }
 export function dynamicsErrors(sim,pose){
  const lengths=sim.tails.flatMap(t=>t.links.map(l=>Math.abs(distance(l.a,l.b)-l.rest)));
- return {tailRoot:Math.max(...sim.tails.map(t=>distance(t.nodes[0],pose.tailRoot))),tailLength:Math.max(...lengths),capeRoot:Math.max(...sim.cloth.slice(0,sim.cols).map((n,i)=>distance(n,{x:pose.capeRoot.x+i/(sim.cols-1)*6,y:pose.capeRoot.y}))),bowGrip:distance(pose.bow.grip,pose.arms.right.end)};
+ return {tailRoot:Math.max(...sim.tails.map(t=>distance(t.nodes[0],pose.tailRoot))),tailLength:Math.max(...lengths),capeRoot:Math.max(...sim.cloth.slice(0,sim.cols).map((n,i)=>distance(n,{x:pose.capeRoot.x+i/(sim.cols-1)*6,y:pose.capeRoot.y}))),bowGrip:distance(pose.bow.grip,pose.arms.right.grip)};
 }

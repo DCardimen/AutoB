@@ -1,0 +1,21 @@
+{
+  "errors": [],
+  "inspection": {
+    "native": true,
+    "guides": true,
+    "tailCounts": [
+      1
+    ]
+  },
+  "hand": "right",
+  "layouts": [
+    {
+      "width": 288,
+      "scroll": 288
+    },
+    {
+      "width": 992,
+      "scroll": 992
+    }
+  ]
+}

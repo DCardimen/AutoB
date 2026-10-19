@@ -23,6 +23,7 @@ Typical biped parts are head, eye states, complete torso, anatomical left/right 
 
 - Keep a complete painted torso beneath moving arms and a complete neck beneath the head. Paint hidden joint overlap, not transparent holes or a flat borrowed color patch.
 - Preserve intended thickness, boot/paw shape, costume texture and palette. Use the approved material palette for repairs. A redesign can establish a new approved palette; incidental repairs cannot silently recolor it.
+- Match the head, chest centerline, belt, pelvis and boots to the same camera yaw. A directional head on a frontal chest is an art-registration failure. Prefer coherent whole painted limbs when segmented caps repeatedly expose seams; retain a separate rigid wrist/hand transform so elbow deformation cannot stretch fingers or thumbs. Inspect anatomical thumb roots with palm/back orientation, not only the hand's screen side.
 - Name left/right parts anatomically. Record far-limb visibility and direction-dependent draw order explicitly. Never assign hand identity from an animated screen coordinate.
 - Register source root, joint and tip landmarks, local bounds, overlap regions, palette identity and asset provenance. Record expected anatomy and equipment separately from the selected gait.
 - Keep the head/eye silhouette and pivots identical between open, half-closed and closed states. Blink the eyes without morphing the body or bouncing the head.

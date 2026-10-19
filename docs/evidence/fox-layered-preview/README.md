@@ -1,5 +1,7 @@
 # Layered fox archer preview
 
+Historical three-tier pilot evidence is retained below. The current entry points now show the user's narrowed base-fox working example; see [the current review](../fox-stocky-motion-preview/README.md). The original `kits.json` and its tests remain as regression coverage, not a claim about the new artwork.
+
 This is an isolated art and animation pilot, not a production game integration. No game entry point, creature renderer, gameplay evolution, weapon-hand convention, or offline game file is changed.
 
 ## Coverage
