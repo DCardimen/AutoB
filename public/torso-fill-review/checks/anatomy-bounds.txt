@@ -1,0 +1,54 @@
+{"naturalFamilies":29,"poses":35496,"quads":26205840,"minArea":0.0649875694638062}
+{"humanoidFamilies":12,"poses":14688,"quads":8797194,"minArea":0.2274881308948321}
+✔ painted natural heads and necks retain positive area through every facing, form and motion state (160077.3745ms)
+✔ humanoid head and collar skin retains positive area through every form, facing and motion (101408.4162ms)
+✔ limbless and flying bodies retain a visible fall instead of remaining upright (15.2222ms)
+✔ natural fall silhouettes settle progressively without spinning or jumping on entry (988.1408ms)
+✔ rooted mushroom caps preserve their painted width instead of inheriting jelly squash (142.6602ms)
+✔ arena uses a readable physical size; all families and evolutions stay within 70–150% of the new default (5.4707ms)
+✔ an evolution unlocks an executable skill, a separate gear slot and a support socket without destroying links (6.5403ms)
+✔ equipment respects capacity and applies health, healing, cooldown, speed, shields and poise in combat (15.7963ms)
+✔ weapon contacts and projectile origins scale with the same body as the rendered rig (63.2593ms)
+✔ grand evolution changes normalized anatomy instead of passing on enlargement alone (3575.4392ms)
+✔ cloth anchors remain on the shoulders while lower panels lag through a turn and settle above the floor (65.1761ms)
+✔ damage text reports actual HP loss and absorbed shield on the victim, aggregates status ticks and fades (8.125ms)
+✔ every pixel family and form remains within its 64-pixel cell during all combat motions (518811.8271ms)
+✔ grandfathered ascended companions retain complete valid loadouts even after their family loses an evolution route (2.994ms)
+✔ raised weapons and fallen bodies stay inside cells at both character-height slider limits (56502.254ms)
+✔ every anatomy retains reachable, fixed-length legs at both stride extremes throughout three gait cycles (334.9293ms)
+✔ heavy animals retain authored limb widths and textured materials in each facing and evolution (2619.8259ms)
+✔ material selection rejects neighboring crystals and outline pixels without recoloring white fur (0.6768ms)
+✔ all 89 collection families retain unclipped legs through movement, dodging and falls in eight views and three forms (61409.2836ms)
+✔ stride length migrates, clamps, resets and changes steps without changing combat travel or stats (9.9106ms)
+✔ 13,056 rendered idle and gait poses introduce no detached lower-limb clusters (64129.2438ms)
+✔ natural bodies and legs use exactly the same authored palette through every form and facing (5324.9822ms)
+✔ idle retains the authored stance and motion cannot exceed the source limb proportions (2610.3028ms)
+✔ every evolved crab crown has a tapered top and clear cell margins (200.3063ms)
+✔ stride tuning remains visible in the authored limbs, including short many-legged anatomies (391.5558ms)
+✔ apex stag hooves end in separate warm toes instead of a moving blue ground platform (18.5487ms)
+✔ sideways dodges lead with the correct foot and tilt toward their actual escape direction (6.875ms)
+✔ humanoid strides grow with pace while staying compact relative to short legs (0.2583ms)
+✔ hips and head stay continuous when the last supporting foot leaves the ground (3.0316ms)
+✔ movement-to-attack transitions begin at the carried pose and settle before active contact (1.9996ms)
+✔ dash and dodge poses enter and exit at the idle stance without crouch or hand pops (1.2653ms)
+✔ anatomical legs keep their lengths and planted ankle height through full walk/run/sprint cycles (44.8374ms)
+✔ supporting feet remain fixed in world space while creatures move and turn (231.9809ms)
+✔ local foot contacts reproduce fixed world anchors after a body turn (0.4895ms)
+✔ both axe hands follow one rigid handle and the contact/recovery pose is continuous (4.8413ms)
+✔ walking and running blend continuously and clear the ground during swing (0.3128ms)
+✔ the archer draws the animated bowstring with the same hand that holds it (2.0395ms)
+✔ a target inside the aim cone is missed when the actual blade path cannot reach it (9.96ms)
+✔ connected swings pause their weapon briefly without inflicting duplicate damage (12.3296ms)
+✔ creatures align toward a target before attacking rather than snapping through 180 degrees (4.7398ms)
+✔ live walking, running and sprinting keep every limb reachable while turning and accelerating (1018.8087ms)
+✔ carried weapons retain their grip through walk/run/sprint, including both axe hands (13.7388ms)
+✔ walking rolls heel to toe; sprint adds lift, forward lean and an alternating wolf trot (1.9612ms)
+✔ short many-legged steps preserve sole height and bone length through wide turn anchors (1.444ms)
+ℹ tests 44
+ℹ suites 0
+ℹ pass 44
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 579424.8315

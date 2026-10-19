@@ -1,0 +1,1 @@
+Lossless layer packing: 8568 complete rendered poses match byte-for-byte.

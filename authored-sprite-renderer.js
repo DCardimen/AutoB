@@ -11,14 +11,15 @@ import {AUTHORED_LEGACY} from './authored-legacy-data.js';
 import {AUTHORED_LEGACY_STAGE1} from './authored-legacy-stage1-data.js';
 import {AUTHORED_LEGACY_STAGE2} from './authored-legacy-stage2-data.js';
 import {meleeWeaponBounds} from './melee-weapon-art.js';
-import {authoredArmArt} from './authored-arm-skin.js';
-import {authoredParts,connectAuthoredArm,constrainHeldGrip} from './authored-parts.js';
+import {authoredArmArt,authoredArmBounds} from './authored-arm-skin.js';
+import {authoredParts,connectAuthoredArm,constrainHeldGrip,MELEE_ARM_FAMILIES} from './authored-parts.js';
 import {NATURAL_ANATOMY,naturalHeadWeight,naturalHeadDelta,companionFallAngle} from './companion-anatomy.js';
 import {portraitExpressionAt,portraitExpressionLayer,portraitSourceOffset} from './portrait-expressions.js';
 import {characterRig,projectRig} from './prototype-rig.js';
 import {buildLegVolumes} from './leg-volume.js';
 import {creatureLegArt,skinCreatureLegs,QUADRUPEDS} from './creature-leg-volume.js';
 import {creatureMouthSource} from './creature-attacks.js';
+import {paintMeleeLayers} from './melee-layer-art.js';
 import {legAnatomy,sampleLegMaterial} from './leg-anatomy.js';
 // Directional artwork is skinned to the same anatomical action poses as combat.
 // The imported art is never blurred, rotated by Canvas, or stretched as one bitmap.
@@ -75,7 +76,7 @@ function cleanStagSoles(pixels,colors,dir){
  const dark=colors.indexOf('#453329'),shadow=colors.indexOf('#331f13');
  for(const p of pixels)if(p.y===sole&&dark>=0&&shadow>=0){p.index=p.x%3?dark:shadow;p.color=colors[p.index];p.rgb=p.color.slice(1).match(/../g).map(c=>parseInt(c,16));}
 }
-function frameFor(id,dir,stage=0){const key=id+':'+dir+':'+stage;if(!decoded.has(key)){const a=STAGES[stage][id],hex=a.frames[dir],colors=a.palette.map(c=>'#'+c),pixels=[];for(let y=0;y<64;y++)for(let x=0;x<64;x++){const n=parseInt(hex.slice((y*64+x)*2,(y*64+x)*2+2),16);if(n)pixels.push({x,y,color:colors[n],rgb:colors[n].slice(1).match(/../g).map(v=>parseInt(v,16)),index:n});}if(['crab','mech'].includes(id)&&stage)restoreCrystalCrown(pixels,colors,id,stage);if(id==='stag'&&stage===2)cleanStagSoles(pixels,colors,dir);const shades=pixels.filter(p=>Math.max(...p.rgb)-Math.min(...p.rgb)<48&&Math.min(...p.rgb)>45&&Math.max(...p.rgb)<232).sort((a,b)=>a.rgb.reduce((n,v)=>n+v,0)-b.rgb.reduce((n,v)=>n+v,0));const metal=shades.length>12?[.08,.4,.72,.95].map(t=>shades[Math.floor((shades.length-1)*t)].color):null;decoded.set(key,{pixels,colors,metal});}return decoded.get(key);}
+function frameFor(id,dir,stage=0){const key=id+':'+dir+':'+stage;if(!decoded.has(key)){const a=STAGES[stage][id],hex=a.frames[dir],colors=a.palette.map(c=>'#'+c),pixels=[];for(let y=0;y<64;y++)for(let x=0;x<64;x++){const n=parseInt(hex.slice((y*64+x)*2,(y*64+x)*2+2),16);if(n)pixels.push({x,y,color:colors[n],rgb:colors[n].slice(1).match(/../g).map(v=>parseInt(v,16)),index:n});}if(['crab','mech'].includes(id)&&stage)restoreCrystalCrown(pixels,colors,id,stage);if(id==='stag'&&stage===2)cleanStagSoles(pixels,colors,dir);const shades=pixels.filter(p=>Math.max(...p.rgb)-Math.min(...p.rgb)<48&&Math.min(...p.rgb)>45&&Math.max(...p.rgb)<232).sort((a,b)=>a.rgb.reduce((n,v)=>n+v,0)-b.rgb.reduce((n,v)=>n+v,0));const metal=shades.length>12?[.08,.4,.72,.95].map(t=>shades[Math.floor((shades.length-1)*t)].color):null;decoded.set(key,{pixels,colors,metal,sourceFrame:facing=>frameFor(id,facing,stage)});}return decoded.get(key);}
 export const authoredIdentities=Object.keys(AUTHORED_SPRITES);
 export const authoredSourceFrame=(identity,dir,stage=0)=>frameFor(identity,dir,stage);
 const eyeColor=(id,[r,g,b])=>id==='elf'?g>r*1.2&&g>b*1.1:id==='caster'?b>g*1.5&&r<90&&b<90:['knight','fox','orc','goblin','fairy','dwarf','minotaur','rogue','troll','skeleton','frostelf'].includes(id)?Math.max(r,g,b)<65:false;
@@ -207,12 +208,13 @@ function legProfiles(asset,footIndices,footDeltas,identity,stage){
  }
  const result={profiles,mask,repairs};asset.legProfiles.set(key,result);return result;
 }
-export function paintAtlasCharacter(b,id,rig,at){
+export function paintAtlasCharacter(b,id,rig,at,cellPass=0){
+ if(!cellPass){rig.artCellFit=1;rig.artCellShift={x:0,y:0};rig.artCellPass=0;}
  const identity=atlasIdentity(id,rig);if(!identity)return false;
  const artStage=Math.min(2,rig.artStage??rig.form??0),asset=frameFor(identity,rig.dir,artStage),rest=rig.artBind||restFor(id),angle=rig.dir*Math.PI/4,base=q=>point(q,angle),poseHead=at(rig.head),poseBody=at(rig.body),posePelvis=at(rig.pelvis),head0=base(rest.head),body0=base(rest.body),pelvis0=base(rest.pelvis),dh=difference(poseHead,head0),dc=difference(poseBody,body0),dp=difference(posePelvis,pelvis0);
  const bodyPlan=NATURAL_ANATOMY[identity]?.plan,idleAmplitude=['shell','crustacean','walker','rooted'].includes(bodyPlan)?.65:['floating','tentacled','finned'].includes(bodyPlan)?.8:rig.legs.length>2?.7:1;
  const idleLift=rig.state==='idle'?Math.sin(rig.phase*Math.PI*2)*idleAmplitude:0;dh.y+=idleLift;dc.y+=idleLift;dp.y+=idleLift*.55;
- const humanoid=rig.arms.length>0||identity==='fairy'||identity==='harpy'||identity==='skeleton'||identity==='rogue'||identity==='frostelf',parts=rig.arms.length?authoredParts(asset,identity,artStage,rig.dir):null,scale=rig.artScale||{width:1,height:1},headCut=parts?.registration.neck??(identity==='orc'?27:29),headCenter={x:32,y:headCut-9},bodyCenter={x:32,y:33};
+ const humanoid=rig.arms.length>0||identity==='fairy'||identity==='harpy'||identity==='skeleton'||identity==='rogue'||identity==='frostelf',parts=rig.arms.length?authoredParts(asset,identity,artStage,rig.dir):null,scale=rig.artScale||{width:1,height:1},headCut=parts?.registration.neck??(identity==='orc'?27:29),headCenter={x:32,y:headCut-9},bodyCenter={x:parts?.bodyCenter??32,y:33};
  const sourceHands=parts?.hands||(rig.arms.length?handLandmarks(asset,identity,artStage):{}),artColors=authoredMaterialColors(identity,asset.colors,rig);
  rig.artArmPalette=materialRamp(identity,asset.colors,artColors);
  const headRoll=rig.ragdoll?0:clamp((rig.lean||0)*Math.cos(angle)+(rig.sideLean||0)*Math.sin(angle),-.08,.08),cos=Math.cos(headRoll),sin=Math.sin(headRoll);
@@ -243,8 +245,8 @@ export function paintAtlasCharacter(b,id,rig,at){
  const eyePixels=rig.dir<5?(asset.eyePixels??=asset.pixels.filter(p=>p.y>=14&&p.y<21&&p.x>=17&&p.x<47&&eyeColor(identity,p.rgb))):[];
  // A fall rotates the connected painted body. Neck travel alone cannot
  // express a collapse without folding a short source neck inside out.
- function warped(x,y,gearPixel=false,armPixel=false,clothPixel=false,hairPixel=false){const p=deformed(x,y,gearPixel,armPixel,clothPixel,hairPixel);return fallAngle?rotateFall(p):p;}
- function deformed(x,y,gearPixel=false,armPixel=false,clothPixel=false,hairPixel=false){
+ function warped(x,y,gearPixel=false,armPixel=false,clothPixel=false,hairPixel=false,surface){const p=deformed(x,y,gearPixel,armPixel,clothPixel,hairPixel,surface);return fallAngle?rotateFall(p):p;}
+ function deformed(x,y,gearPixel=false,armPixel=false,clothPixel=false,hairPixel=false,surface){
   if(gearPixel&&sourceGear&&grip&&gearDistance(x,y,sourceGear)<(identity==='orc'?4:identity==='caster'?2.8:2.4)&&Math.abs(x-32)>6){
    const dx=x-sourceGear[0],dy=y-sourceGear[1],theta=(weaponAngle-sourceAngle)*align,cos=Math.cos(theta),sin=Math.sin(theta),ratio=1+(clamp(weaponLen/sourceLen,.1,3)-1)*align;
    const arm=armDeltas.find(a=>a.side===(rig.weapon.hand==='left'?-1:1)),drift=arm?.delta||dc,g={x:sourceGear[0]+drift.x,y:sourceGear[1]+drift.y},target=mix(g,grip,align);
@@ -295,12 +297,12 @@ export function paintAtlasCharacter(b,id,rig,at){
   if(['feralfox','cat','rodent','rabbit'].includes(identity)&&y>26&&Math.abs(x-32)>14){const weight=ease((Math.abs(x-32)-14)/10)*ease((y-26)/4)*(1-naturalHeadWeight(identity,artStage,rig.dir,x,y));delta={x:delta.x,y:delta.y+Math.sin(rig.phase*Math.PI*2)*weight*2};}
   if(identity==='clam')delta={x:delta.x,y:delta.y-(rig.creatureAttack?.active?(rig.creatureAttack.jaw||0)*ease((34-y)/7):Math.sin(rig.phase*Math.PI*2)*ease((35-y)/18)*1.5)};
   if(hairPixel&&y>headCut+4&&Math.abs(x-32)>8){const lag=ease((y-19)/20),moving=['walk','run','sprint','turn','stop','dodge','dash'].includes(rig.state),drive=moving?(rig.state==='sprint'?1.3:1):.55,wave=Math.sin(rig.phase*Math.PI*2-lag*2.1+(x<32?-.25:.25));delta={x:delta.x+wave*lag*drive*1.1-(rig.lean||0)*lag*4,y:delta.y+Math.cos(rig.phase*Math.PI*2-lag*2.1)*lag*drive*.35};}
-  const ownedCape=parts?.capeMask.has(Math.round(y)*64+Math.round(x)),capeWeight=ownedCape?ease((y-parts.registration.neck-2)/Math.max(4,parts.registration.pelvis-parts.registration.neck)):0;
+  const ownedCape=surface?surface.startsWith('cape'):parts?.capeMask.has(Math.round(y)*64+Math.round(x)),capeWeight=ownedCape?ease((y-parts.registration.neck-2)/Math.max(4,parts.registration.pelvis-parts.registration.neck)):0;
   if(ownedCape&&!capeOffsets){const wave=Math.sin(rig.phase*Math.PI*2-(y-headCut)*.13);delta={x:delta.x+wave*capeWeight*(action?1.1:.55),y:delta.y+Math.cos(rig.phase*Math.PI*2-(y-headCut)*.13)*capeWeight*.2};}
   if(cape&&capeBind&&ownedCape){
    const u=clamp((x-18)/28,0,1)*(cape.length-1),v=clamp((y-26)/19,0,1)*(cape[0].length-1),i=Math.floor(u),j=Math.floor(v),ii=Math.min(i+1,cape.length-1),jj=Math.min(j+1,cape[0].length-1),lag=mix(mix(capeOffsets[i][j],capeOffsets[ii][j],u-i),mix(capeOffsets[i][jj],capeOffsets[ii][jj],u-i),v-j);delta={x:delta.x+clamp(lag.x-dc.x,-3,3)*capeWeight,y:delta.y+clamp(lag.y-dc.y,-3,3)*capeWeight};
   }
-  if(legSkin&&y>=legArt.rootY){const leg=legSkin.offset(x,y);delta=humanoid&&!NATURAL_ANATOMY[identity]?leg:{x:delta.x+leg.x-dc.x,y:delta.y+leg.y-dc.y};}
+  if(legSkin&&y>=legArt.rootY&&!ownedCape&&(!surface||surface.endsWith('-leg'))){const leg=legSkin.offset(x,y);delta=humanoid&&!NATURAL_ANATOMY[identity]?leg:{x:delta.x+leg.x-dc.x,y:delta.y+leg.y-dc.y};}
   if(portraitMenu&&identity!=='owl'){
    const offset=portraitSourceOffset(identity,x,y,portraitMenu);delta={x:delta.x+offset.x*scale.width,y:delta.y+offset.y*scale.height};
   }
@@ -309,7 +311,7 @@ export function paintAtlasCharacter(b,id,rig,at){
  // A complete costume sits behind the articulated arms and held equipment.
  // Its repaired pixels use palette indices, so collection recolors stay exact.
  const armArt=parts?.arms||(identity==='orc'&&artStage===0?authoredArmArt(asset,sourceHands):null);
- const bodyLayer=completeBodyLayer(asset,identity,artStage,sourceGear,armArt?.mask),baseLayer=solidLegs?[...bodyLayer.filter(p=>p.bodyUnderlay||!legArt.mask.has(p.y*64+p.x)),...legArt.repairs]:bodyLayer;
+ const bodyLayer=completeBodyLayer(asset,identity,artStage,sourceGear,armArt?.mask),clothedLayer=[...(!parts?.authoredLayers?parts?.clothing.repairs||[]:[]),...bodyLayer],baseLayer=solidLegs?[...clothedLayer.filter(p=>p.bodyUnderlay||!legArt.mask.has(p.y*64+p.x)),...legArt.repairs]:clothedLayer;
  const layer=rig.portraitMenu&&artStage===0&&rig.dir===2?portraitExpressionLayer(baseLayer,asset,identity,rig.portraitMenu.progress):baseLayer;
  const pixels=naturalLegs?layer.map(p=>({...warped(p.x,p.y),color:artColors[p.index],spanX:1,spanY:1})):layer.flatMap(p=>{
   const rgb=p.rgb,lum=(rgb[0]+rgb[1]+rgb[2])/3,range=Math.max(...rgb)-Math.min(...rgb),metal=range<45&&lum>55,wood=rgb[0]>rgb[1]*1.18&&rgb[1]>rgb[2]*1.15,gem=rgb[2]>rgb[0]*1.25&&rgb[1]>rgb[0]*1.2;
@@ -318,7 +320,7 @@ export function paintAtlasCharacter(b,id,rig,at){
   const armPixel=identity==='knight'?metal:skin,cloth=identity==='knight'?rgb[0]>rgb[1]*1.18&&rgb[0]>rgb[2]*1.1:['caster','frostelf','rogue','skeleton'].includes(identity)?rgb[2]>rgb[1]*1.08&&rgb[0]>38:rgb[1]>rgb[0]*1.07;
   const hair=!p.bodyUnderlay&&!p.hipUnderlay&&p.y>19&&p.y<42&&(['caster','frostelf'].includes(identity)?range<55&&lum>105:['elf','fairy','dwarf'].includes(identity)?rgb[0]>rgb[1]*1.1&&rgb[1]>rgb[2]*1.4&&rgb[0]>110:identity==='orc'&&artStage?lum<65&&range<35:false);
   const clothMotion=cloth&&!p.bodyUnderlay&&!p.hipUnderlay;
-  const q=warped(p.x,p.y,false,armPixel,clothMotion,hair),alongX=warped(p.x+1,p.y,false,armPixel,clothMotion,hair),alongY=warped(p.x,p.y+1,false,armPixel,clothMotion,hair),spanX=clamp(Math.max(Math.abs(alongX.x-q.x),Math.abs(alongY.x-q.x)),1,3),spanY=clamp(Math.max(Math.abs(alongX.y-q.y),Math.abs(alongY.y-q.y)),1,3);
+  const q=warped(p.x,p.y,false,armPixel,clothMotion,hair,p.layer),alongX=warped(p.x+1,p.y,false,armPixel,clothMotion,hair,p.layer),alongY=warped(p.x,p.y+1,false,armPixel,clothMotion,hair,p.layer),spanX=clamp(Math.max(Math.abs(alongX.x-q.x),Math.abs(alongY.x-q.x)),1,3),spanY=clamp(Math.max(Math.abs(alongX.y-q.y),Math.abs(alongY.y-q.y)),1,3);
   let color=artColors[p.index];
   if(expression!=='open'&&eyePixels.includes(p)){const below=asset.pixels.find(z=>z.x===p.x&&z.y===p.y+3);color=below?artColors[below.index]:(identity==='fox'?'#d48b3d':'#d3a879');}
   return [{...q,color,spanX,spanY}];
@@ -336,6 +338,7 @@ export function paintAtlasCharacter(b,id,rig,at){
   const lx=32+(left-32+ox)*fit,rx=32+(right-32+ox)*fit,ty=44+(top-44+oy)*fit,by=44+(bottom-44+oy)*fit;
   ox+=(lx<1?1-lx:rx>62?62-rx:0)/fit;oy+=(ty<1?1-ty:by>62?62-by:0)/fit;
  }
+ fit*=rig.artCellFit||1;ox+=(rig.artCellShift?.x||0)/fit;oy+=(rig.artCellShift?.y||0)/fit;
  if(!authoredLegs)for(const p of pixels){const x=32+(p.x-32+ox)*fit,y=44+(p.y-44+oy)*fit;b.dot(x,y,p.color);if(p.spanX*fit>1.01||p.spanY*fit>1.01)b.rect(clamp(Math.round(x-p.spanX*.3),0,63),clamp(Math.round(y-p.spanY*.3),0,63),Math.min(64-Math.round(x-p.spanX*.3),Math.ceil(p.spanX*fit)),Math.min(64-Math.round(y-p.spanY*.3),Math.ceil(p.spanY*fit)),p.color);}
  if(!authoredLegs){
   // Fins and wing membranes need the same source-edge continuity as legs.
@@ -351,7 +354,23 @@ export function paintAtlasCharacter(b,id,rig,at){
  // Inverse nearest-neighbor skinning preserves the source texture and fills
  // every destination sample. Forward splats and seam-colored cylinders lost
  // both width and texture, and left disconnected pixels at bent joints.
- if(authoredLegs){
+ if(parts?.authoredLayers){
+  rig.artLayerProjection=paintMeleeLayers(b,parts,artColors,(name,x,y)=>{const q=warped(x,y,false,false,false,false,name);return {x:32+(q.x-32+ox)*fit,y:44+(q.y-44+oy)*fit};});
+ }else if(authoredLegs){
+  const trunk=new Map((parts?.underbody||[]).map(p=>{const q=warped(p.x,p.y);return [p.y*64+p.x,{...p,q:{x:32+(q.x-32+ox)*fit,y:44+(q.y-44+oy)*fit},shade:artColors[p.index]}];}));
+  // Draw the independent body first. Moving hair, capes and arms can cover
+  // it, but cannot remove the shirt/armor beneath their original positions.
+  for(const p of trunk.values()){
+   b.dot(p.q.x,p.q.y,p.shade);
+   const samples=[[p.x,p.y],[p.x+1,p.y],[p.x+1,p.y+1],[p.x,p.y+1]].map(([x,y])=>trunk.get(y*64+x));if(samples.some(p=>!p))continue;
+   const vertices=samples.map(p=>p.q),ys=vertices.map(p=>p.y);
+   for(let y=Math.ceil(Math.min(...ys));y<=Math.floor(Math.max(...ys));y++){
+    const intersections=[];
+    for(let i=0;i<4;i++){const a=vertices[i],z=vertices[(i+1)%4];if(y<Math.min(a.y,z.y)||y>Math.max(a.y,z.y))continue;if(a.y===z.y)intersections.push(a.x,z.x);else intersections.push(a.x+(z.x-a.x)*(y-a.y)/(z.y-a.y));}
+    if(intersections.length)for(let x=Math.ceil(Math.min(...intersections));x<=Math.floor(Math.max(...intersections));x++)b.dot(x,y,p.shade);
+   }
+   const mid=warped(p.x+.5,p.y+.5);b.dot(32+(mid.x-32+ox)*fit,44+(mid.y-44+oy)*fit,p.shade);
+  }
   // Rasterize the source adjacency edges first. Thin diagonal hooves can
   // otherwise vanish under nearest-neighbor sampling at a fractional scale.
   // These edges connect only pixels adjacent in the original artwork and use
@@ -378,7 +397,7 @@ export function paintAtlasCharacter(b,id,rig,at){
   // branch. Keep only samples connected to the forward-mapped source graph;
   // every actual authored pixel (including separate ornaments) is a seed.
   const reached=new Uint8Array(4096),queue=new Uint16Array(4096);let count=0;
-  for(const p of mapped.values()){const x=Math.round(p.q.x),y=Math.round(p.q.y),k=y*64+x;if(x>=0&&x<64&&y>=0&&y<64&&!reached[k]){reached[k]=1;queue[count++]=k;}}
+  for(const p of [...mapped.values(),...trunk.values()]){const x=Math.round(p.q.x),y=Math.round(p.q.y),k=y*64+x;if(x>=0&&x<64&&y>=0&&y<64&&!reached[k]){reached[k]=1;queue[count++]=k;}}
   for(let i=0;i<count;i++){const k=queue[i],x=k%64,y=Math.floor(k/64);for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){const xx=x+dx,yy=y+dy,n=yy*64+xx;if(xx<0||xx>63||yy<0||yy>63||reached[n]||!b.data[n*4+3])continue;reached[n]=1;queue[count++]=n;}}
   for(let i=0;i<4096;i++)if(b.data[i*4+3]&&!reached[i])b.data.fill(0,i*4,i*4+4);
  }
@@ -403,8 +422,8 @@ export function paintAtlasCharacter(b,id,rig,at){
  rig.artLegVolumes=legMesh?.legs.map(l=>({...l,hip:anchor(l.hip),knee:anchor(l.knee),ankle:anchor(l.ankle),radius:l.radius*fit}));
  rig.artLegSkin=legSkin&&{...legSkin,offset:undefined,limbs:legSkin.limbs.map(l=>({...l,hip:anchor(warped(l.root.x,l.root.y)),ankle:anchor(warped(l.x,l.sole))})),palette:artColors};
  rig.artHipRepairs=legArt?.repairs?.map(p=>({...anchor(warped(p.x,p.y)),color:artColors[p.index]}));
- rig.artBodyRepairs=asset.bodyRepairs.map(p=>({...anchor(warped(p.x,p.y)),color:artColors[p.index],source:{x:p.x,y:p.y}}));
- rig.artAnchors={head:anchor(warped(32,headCenter.y)),body:anchor(warped(32,34)),pelvis:anchor(warped(32,38))};
+ rig.artBodyRepairs=asset.bodyRepairs.map(p=>({...anchor(warped(p.x,p.y,false,false,false,false,parts?.authoredLayers?'body':undefined)),color:artColors[p.index],source:{x:p.x,y:p.y}}));
+ rig.artAnchors={head:anchor(warped(32,headCenter.y)),body:anchor(warped(bodyCenter.x,34)),pelvis:anchor(warped(bodyCenter.x,38))};
  // Bind shoulders to the connected painted torso, rather than a guessed
  // row in the source sheet. Different species and evolved costumes have
  // different shoulder heights, widths and rear silhouettes.
@@ -442,7 +461,10 @@ export function paintAtlasCharacter(b,id,rig,at){
    const socket=hand||{x:32+screenSide*(Math.abs((bindGear?.[0]??41)-32)||9),y:bindGear?.[1]??34};
    const neutral=anchor({x:32+(socket.x-32)*scale.width+dc.x,y:44+(socket.y-45)*scale.height+dc.y}),bind=rest.arms.find(a=>a.side===arm.side),drift=bind?difference(limbPoint(arm.end),limbPoint(bind.end)):{x:0,y:0};
    neutral.x+=drift.x*.4;neutral.y+=drift.y*.4;
-   if(armCarryWeight===1)neutral.x=rig.artAnchors.body.x+screenSide*Math.max(2*fit,screenSide*(neutral.x-rig.artAnchors.body.x));
+   // Profile-view hands can both lie on the same side of the chest. Keep
+   // those authored sockets; forcing the near hand across the center pulled
+   // the shield/cuff away from its original arm by several source pixels.
+   if(armCarryWeight===1&&!MELEE_ARM_FAMILIES.has(identity))neutral.x=rig.artAnchors.body.x+screenSide*Math.max(2*fit,screenSide*(neutral.x-rig.artAnchors.body.x));
    end.x+=(neutral.x-end.x)*armCarryWeight;end.y+=(neutral.y-end.y)*armCarryWeight;
    root.x+=(neutral.x-screenSide*1.5*fit-root.x)*armCarryWeight;root.y+=(neutral.y-5.5*fit-root.y)*armCarryWeight;
   }
@@ -451,7 +473,7 @@ export function paintAtlasCharacter(b,id,rig,at){
   rig.artArmRoots[arm.side]=root;rig.artHandColors[arm.side]=hand&&artColors[hand.index];rig.artHandHighlights[arm.side]=handHighlight(asset,artColors,hand);
   if(parts){
    const profile=armArt.profiles.get(screenSide);
-   if(profile){const attachedRoot=anchor(warped(profile.root.x,profile.root.y)),pose=connectAuthoredArm(profile,attachedRoot,end,joint,fit*(scale.width+scale.height)/2);Object.assign(root,pose.root);Object.assign(joint,pose.joint);Object.assign(end,pose.end);}
+   if(profile){const attachedRoot=anchor(warped(profile.root.x,profile.root.y,false,false,false,false,parts.authoredLayers?'body':undefined)),pose=connectAuthoredArm(profile,attachedRoot,end,joint,fit*(scale.width+scale.height)/2);Object.assign(root,pose.root);Object.assign(joint,pose.joint);Object.assign(end,pose.end);}
   }
   rig.artLimbPoints.set(arm.root,root);rig.artLimbPoints.set(arm.joint,joint);rig.artLimbPoints.set(arm.end,end);
  }
@@ -507,9 +529,24 @@ export function paintAtlasCharacter(b,id,rig,at){
  rig.artGearPalette=asset.metal&&!rig.equipment?.includes('sunsteel-edge')?{...rig.palette,metal:asset.metal}:rig.palette;
  rig.artArmSkin=armArt?{art:armArt,colors:artColors,fit,scale,bodyPixels:bodyLayer}:null;
  rig.artGripPixels=new Map();rig.artArmPixels=new Map();
- rig.artSourceProject=(x,y)=>anchor(warped(x,y));
+ rig.artLayerProject=(name,x,y)=>anchor(warped(x,y,false,false,false,false,name));
+ rig.artSourceProject=(x,y)=>anchor(warped(x,y,false,false,false,false,parts?.authoredLayers?(parts.ownership.get(Math.round(y)*64+Math.round(x))??'body'):undefined));
  rig.artSourcePixels=new Map(layer.map((p,i)=>[p.y*64+p.x,anchor(pixels[i])]));
  rig.artParts=parts;
+ if(rig.artArmSkin&&(rig.artCellPass||0)<4){
+  const points=authoredArmBounds(rig);
+  if(points.some(p=>p.x<1||p.x>62||p.y<1||p.y>62)){
+   // Fit the COMPLETE painted pose. A wider source cuff can reach beyond
+   // its wrist in a fall; moving just the hand would deform or clip it.
+   // Prefer a translation, keeping every limb at its authored size.
+   for(let i=3;i<b.data.length;i+=4)if(b.data[i])points.push({x:(i>>2)%64,y:(i>>2)>>6});
+   if(melee){const bounds=meleeWeaponBounds(rig,paintedGrip,heldPoint(rig.weapon.tip));points.push({x:bounds.minX,y:bounds.minY},{x:bounds.maxX,y:bounds.maxY});}
+   const xs=points.map(p=>p.x),ys=points.map(p=>p.y),left=Math.min(...xs),right=Math.max(...xs),top=Math.min(...ys),bottom=Math.max(...ys),factor=Math.min(1,61/(right-left),61/(bottom-top));
+   const shift=rig.artCellShift||{x:0,y:0},lx=32+(left-shift.x-32)*factor+shift.x,rx=32+(right-shift.x-32)*factor+shift.x,ty=44+(top-shift.y-44)*factor+shift.y,by=44+(bottom-shift.y-44)*factor+shift.y;
+   rig.artCellShift={x:shift.x+(lx<1?1-lx:rx>62?62-rx:0),y:shift.y+(ty<1?1-ty:by>62?62-by:0)};rig.artCellFit=(rig.artCellFit||1)*factor;rig.artCellPass=(rig.artCellPass||0)+1;
+   b.data.fill(0);b.data.clipSamples=[];b.clipped=0;return paintAtlasCharacter(b,id,rig,at,cellPass+1);
+  }
+ }
  rig.authoredEvolution=true;b.data.artIdentity=identity;b.data.artStage=artStage;b.data.artFit=fit;b.data.contactGear=Boolean(rig.weapon&&rig.arms.length);b.data.expression=eyePixels.length?expression:'hidden';return true;
 }
 export function paintAtlasHead(b,id,rig,center){

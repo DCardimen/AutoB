@@ -160,3 +160,60 @@ export function capePixel(identity,p,registration){
   ['elf','fox'].includes(identity)?g>r*1.05&&g>b:
   ['rogue','frostelf'].includes(identity)?b>r*1.08:false;
 }
+
+// Indexed garment materials reviewed in the original three forms and eight
+// directions. Armor, leather gloves and fur are not interchangeable with a
+// cape just because their RGB values are close. In particular, the knight's
+// orange hem and dark red folds are part of the same red cloth.
+const MATERIALS={
+ dwarf:[[37,43,46],[11,28,41],[20,21,27,42,44]],
+ minotaur:[[19,20,26,27,40],[16,25,29,30,31,33,39,48],[29,30,31,36,43]],
+ knight:[
+  [11,12,13,14,23,25,26,31,32,37,40,44,47],
+  [1,8,9,10,12,13,15,18,22,23,25,27,31,34,35,38,42,43,44,45,46,47],
+  [1,8,10,13,14,16,18,23,24,27,34,36,38,43,45,46]],
+ orc:[[],[16,23,27,31],[13,21,27,31,41]],
+ goblin:[
+  [1,2,3,4,7,15,16,20,21,25,29,30,33,34,39,40,41,43],
+  [6,8,9,10,13,17,19,20,22,24,25,29,31,32,33,36,42,43,47],
+  [1,2,5,6,7,8,9,12,15,16,17,19,20,21,22,23,24,26,30,33,34,37,38,41,43]],
+ rogue:[
+  [1,2,3,4,5,6,7,8,9,10,11,12,14,16,17,18,22,26,32,36,37],
+  [1,2,3,4,5,6,11,12,15,18,19,20,21,22,23,26,31,36,37,41,42,43],
+  [1,2,3,4,5,6,7,10,13,14,15,17,19,20,21,23,24,25,28,29,31,32,33,35,37,39,40,42,46]],
+};
+const clothingKey=(x,y)=>y*64+x;
+export function authoredClothing(asset,identity,stage,dir,registration){
+ if(asset.clothing)return asset.clothing;
+ const materials=new Set(MATERIALS[identity]?.[stage]||[]);
+ // A palette index can also shade a cuff edge. Fixed source hand sockets
+ // disambiguate that small contact patch; a concealed rear rogue hand has
+ // no such foreground patch and must never punch a disk out of its cloak.
+ const visibleHands=Object.entries(registration.hands).filter(([side])=>!(identity==='rogue'&&(dir===6||dir===5&&Number(side)===1||dir===7&&Number(side)===-1))).map(([,p])=>p);
+ const pixels=asset.pixels.filter(p=>p.y>=registration.neck-2&&materials.has(p.index)&&
+  (identity!=='orc'||p.y>=registration.pelvis-4)&&
+  (identity!=='minotaur'||Math.abs(p.x-32)<=registration.torso*.8)&&
+  !visibleHands.some(h=>Math.hypot(p.x-h.x,p.y-h.y)<=1.5));
+ return asset.clothing={pixels,mask:new Set(pixels.map(p=>clothingKey(p.x,p.y))),materials,backdrop:['knight','goblin','rogue'].includes(identity)};
+}
+
+// Complete the garment behind the painted foreground arm. The hull is
+// bounded by this facing's actual cloth pixels, never by a fist or sleeve.
+// Only removed foreground pixels inside that silhouette need underpainting;
+// transparent space outside the authored silhouette remains transparent.
+export function completeClothing(clothing,armMask){
+ const points=clothing.pixels.slice().sort((a,b)=>a.x-b.x||a.y-b.y),hull=[];
+ if(!clothing.backdrop||points.length<3)return {...clothing,repairs:[]};
+ const cross=(a,b,c)=>(b.x-a.x)*(c.y-a.y)-(b.y-a.y)*(c.x-a.x);
+ for(const p of points){while(hull.length>1&&cross(hull.at(-2),hull.at(-1),p)<=0)hull.pop();hull.push(p);}
+ const lower=hull.length;
+ for(let i=points.length-2;i>=0;i--){const p=points[i];while(hull.length>lower&&cross(hull.at(-2),hull.at(-1),p)<=0)hull.pop();hull.push(p);}hull.pop();
+ const repairs=[];
+ for(const k of armMask){
+  const x=k%64,y=Math.floor(k/64);
+  if(!hull.every((a,i)=>cross(a,hull[(i+1)%hull.length],{x,y})>=0))continue;
+  const sample=points.reduce((a,b)=>Math.abs(b.y-y)*4+Math.abs(b.x-x)<Math.abs(a.y-y)*4+Math.abs(a.x-x)?b:a);
+  repairs.push({...sample,x,y,clothingUnderlay:true});
+ }
+ return {...clothing,repairs};
+}

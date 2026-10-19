@@ -20,7 +20,7 @@ test('every authored family has its own reviewed body plan; every weapon-bearing
    assert.equal(parts.arms.profiles.size,2,`${identity} ${stage} ${dir}`);
    for(const [side,arm]of parts.arms.profiles){assert.ok(arm.pixels.length>=3,'painted arm retained');assert.ok(arm.grid.has(arm.end.y*64+arm.end.x),'actual source hand belongs to its arm');
     for(const p of arm.pixels)assert.equal(p.color,asset.colors[p.index],'original arm material');
-    for(const p of arm.pixels)if(body.has(p.y*64+p.x))assert.ok(body.get(p.y*64+p.x).bodyUnderlay,'body has its own material behind a moving arm');
+    for(const p of arm.pixels)if(!arm.occluded&&body.has(p.y*64+p.x))assert.ok(body.get(p.y*64+p.x).bodyUnderlay,'body has its own material behind a moving arm');
    }
    for(const p of parts.repairs){assert.equal(p.color,asset.colors[p.index]);assert.ok(body.has(p.y*64+p.x));}
   }

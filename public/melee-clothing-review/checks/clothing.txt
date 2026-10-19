@@ -1,0 +1,13 @@
+{"originalGarmentPixels":18134,"hiddenGarmentPixels":4491}
+{"clothedBodyPoses":17136,"opaqueGarmentProbes":2596002}
+✔ the marked cape folds, orange hems and coat tails remain clothing, not moving arms (45.7278ms)
+✔ all melee garment materials retain original source pixels and source-indexed underpainting in every facing (1155.0135ms)
+✔ original cloth and exposed garment backgrounds stay opaque through complete motion without an arm hiding a cutout (97026.8538ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 98454.6722

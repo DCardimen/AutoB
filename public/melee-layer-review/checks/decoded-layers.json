@@ -1,0 +1,9 @@
+{
+  "status": "passed",
+  "frames": 168,
+  "images": 273,
+  "originalSourcePixels": 184530,
+  "independentBackingPixels": 36564,
+  "palette": "Original indexed materials only",
+  "verification": "Independent PNG checksum, decode, owner texture, backing and palette checks"
+}

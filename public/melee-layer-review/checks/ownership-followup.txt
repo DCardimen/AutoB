@@ -1,0 +1,14 @@
+✔ side-view evolved grips use the actual hand rather than cape or belt samples (21.7316ms)
+✔ concealed rear rogue arms use original indexed arm art without cutting holes in the cloak (29.395ms)
+✔ relaxed profile-view hands stay on their authored side even when both hands are left of the chest (33.0645ms)
+✔ all 168 melee sources keep moving arm ownership separate from torso repairs and feet (213.6888ms)
+✔ a tall falling troll keeps its complete cuff inside the cell without shrinking the arm (32.0792ms)
+✔ every melee companion and available evolution has its complete source asset and paints a substantial sprite in all facings (1659.9115ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2136.9476

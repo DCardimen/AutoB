@@ -1,0 +1,4394 @@
+{
+  "inputs": {
+    "affinity-gear.js": "0c5778f3a601d902df855f273c535e03270290997480560b2a821bfd3fe05b41",
+    "ai-relics.js": "17eeb1ecc72f92bb92f2ca2995e9c68aff2f1d8046690c3fa297f403a367651e",
+    "ambient-art.js": "0bc9948d5bb9307fb0e25908d5c04ebf3a7e39f4b5b87334417f9587271e3f99",
+    "ambient-ui.js": "91ae8ec84db9505116bcb6f20dbbce0cdb8e6f565f9ff81f098ef2bf7c2b5402",
+    "animation.js": "5ec10e51220ef506ec3ea31d81cea1f042938cb66456cc1755b74f45f2006a55",
+    "app.js": "07000ec32f03d001ca34027c90e5b9f3302dd5d801955cdfdfa628e6c0aa9a5e",
+    "arena-camera.js": "681bf91826ac505bd0659cfd7391a2fa70d0cd2bb1ae0de13914abd72705c020",
+    "arena.js": "e78488981c9c21e1879e832498669b227e8fd1c6740a4fc9855879e65b1db6fb",
+    "art.js": "3fc3e18c21da1e7624c0c3cb1f628f977b1d3885938c77e5432635b2bf305835",
+    "aura-stones.js": "6d266096c81182ebd20534e75b37db0280014d0d60f6d28951e8fb822ef1be8e",
+    "authored-arm-skin.js": "70ec39490fb58a2f31e3f416754e2e57c6a2b98402da6fc41f61ebbe59df7099",
+    "authored-body-data.js": "56edb58b077f166dbbdf28d4f254e3f8a5fc49ac5c6a5af5ff2ad9c72c9f783a",
+    "authored-body-stage1-data.js": "4a7720a8e4aca01cf29da90dd14ef11933b92b63891708ef181f00d230405824",
+    "authored-body-stage2-data.js": "7eb7714b992132e6ee1a836923d1ebab25bec628b6ec8acc5853bdb7e81b3ca6",
+    "authored-family-data.js": "1dcde00f7109ce07b5c5b7088a8e11a90de2b8c04f362bd2c45da3cd591e64fc",
+    "authored-family-stage1-data.js": "01e93e0b7d6d8cd4d3145ad618ed20924a6e18cc110d37c2f98238bbbd0205b3",
+    "authored-family-stage2-data.js": "2f5b8b6364f9d02a2a720343bfe7c00767fd8d852b05f5f8ca52efe465449445",
+    "authored-legacy-data.js": "6b917edf37e12e2270b92859a0ab15778f19d763205badaa49b4a8d5ffe19776",
+    "authored-legacy-stage1-data.js": "efa0aadc679825b807d79e8af39ab1bfd3d64d2c622e561e81c92201b37d76ee",
+    "authored-legacy-stage2-data.js": "0a1f07d2b1cce55c4ddb0dc0e70abf2570eb52c07e6447398113fca0defcb569",
+    "authored-parts.js": "46db6e8996e7a6a3cd625a715efe6eef455b8b584612a251cca657c20595ff1e",
+    "authored-pixel-art.js": "07e7a9ea5ba7e5f59ea3f58f7d4b05359da458ce9b8a2a68b0b34e6677a2c4c6",
+    "authored-pixel-maps.js": "888afe4efa02fdac9fc65a73d062a53136af6bc26541cf74cc4af0606ce1bc0f",
+    "authored-sprite-data.js": "2a1b79e2bbd6bb9a9fc532eadf148fefb82452f483d85cb7d390592ae6806490",
+    "authored-sprite-renderer.js": "1abc41c6b7b8d65244b015693d9f4c13d9288cb52068e698e5ca89f2876c1308",
+    "authored-sprite-stage1-data.js": "4c2b497a6bd613265f17c667f094bde3bb586a04e765ae1080922c96c8e1b5a7",
+    "authored-sprite-stage2-data.js": "5d8fab2d6b2a5cbe052848f8a7c8cf0d68e4399595d54c90c35d15c23f3c82bd",
+    "battle-enrage.js": "6e9972717bb4bb0da594a2021e11ba2c9db873f113782bfaab4bab8fe2b4b607",
+    "battle-summary.js": "7b82cf4dd2aa3aeae341efb213872f1a7e43df15905651f8bf5e8c89fc067c17",
+    "capture-celebration.js": "81b8ad8cf1d5efd75c4735a561c22a39e71384b7ddabb0314a8ca2a1a199d3b0",
+    "capture-tracker.js": "bbb875f9a1234e81b7ec0da1c018362b9fa5d1017f9e72b3c3d45faa3376b164",
+    "combat-expansion.js": "57269d0aa2b7eb30a2a1bef5235d8ab224457e166931ccb0751d9d1291f38668",
+    "combat-feedback.js": "7e09e3782ce3ac05ca3a686ada80eb25cfbdc8a95c4c2e75fbf7a9f8cfbd9233",
+    "combat-text.js": "d45b8034612aa9445050bfae0c70726e4d4e978c8259d3c60a28917e8f53bb9c",
+    "companion-anatomy.js": "2c583734e33ad79a911f0b43ca575f966006752a04be7df1f928e31860e0f077",
+    "companion-arm-bindings.js": "0e113dd95607a15ecd3997d704dffb570579787771848630c5ce0dc88737747c",
+    "core-species.js": "bde68cd97a9179a0e2b11a599879d1f15a4c4160b31c6e7840dd60a03d2cd94d",
+    "creature-attacks.js": "7b6bf250d8155d8bc2787eb5cf9e9b9a611ec88c280f1ddf653e80ae38b71a45",
+    "creature-equipment.js": "22609d73c778d3a1e39a4f3e7d73801582cccfe2aba5c4c3d7ede0cd6b02290c",
+    "creature-leg-volume.js": "26cfcbfbc3393e1f2242097b228f3b882d8da83a92105c91150cc116fc574517",
+    "deployment-physics.js": "ba4fb5c70e9bfc18d5505bfe48f4da6e09b7aef064408e74124aa51260af7942",
+    "elite-modifiers.js": "dbdf65c9da6cab03813f0710097d9b2cd2770091a5eb095b153b115e2d1921ba",
+    "equipment-affinity.js": "8255a371ad49e02092723a37565a44610d1be02487a2460ea51b503eedf864ef",
+    "equipment-catalog.js": "4ea09bb2ad838e27325dfaeb6f823caa6844ed0594d60febab5c70fafcd7234b",
+    "equipment-loot.js": "06d420455e06a373bf7724f5c88d56b64d43277f8c1f99f19bbd604bd3e21094",
+    "evolution-skills.js": "5f93363e366e68ef09d6383de07fd21066922c4f6613571b70c209e8bc4c36a8",
+    "expedition-rules.js": "c3c03739d858105513fd8c80271f80d87aa47076c32182e38133ad1be07c8dea",
+    "field-ui.js": "f455ecdd757582710daf2c9620ff3192ea21fd6bfb77bbab8d9962b7de7859ac",
+    "game.js": "7fab758d619fd3473ed4f07ff21390fb1de4dafd7b2c406556477d6a0902560a",
+    "grand-designs.js": "bbc666708e399a747ee0a17b6a44f3945c32a3bb684b2098396cfa91f4951385",
+    "grand-pixels.js": "dfdfc9af44cbf8315b5b8f60900b1445d5d1d444b1f7f9fc6d6209f8c248d5df",
+    "intro.js": "7616b61da468461b03f5adbaf57438935c76e890e9b759f0db38cf2f7b413a96",
+    "inventory-pouches.js": "989aa3f23467841e6b4f5b0d44781fc6a4f329d76f082206fdd57bdb4346626d",
+    "item-effects.js": "08463357de80cf143502b9d3e3e3174bda42aa6ebb3896fbddbdad16068bb926",
+    "leg-anatomy.js": "3be593b6c3132556dfa3ce272f44164c30f3c08138c50479d988cebc02013928",
+    "leg-volume.js": "3962d1f56da7ee12b3553529b93976b03f999a967664b2f514b074b3e6ca0ba3",
+    "live-roster.js": "bc0ff4a280c82e27ab93e11817552f2bdb699f97ea0acbd2cc9137c888ecd635",
+    "loadout-drag-ui.js": "5e2585562a086e62546f45ba74d3600c080269ba37ae3c3ab980a7ad63b95655",
+    "loadout-interactions.js": "75838fea168d1e0a3da191f29c74ff5568117b6ac83ad1db15a9363b74bba97b",
+    "melee-weapon-art.js": "d5938c7387f656eb3db5cb6ea65aedbd8f0dd39d61d693672f9f14b3ebf8abde",
+    "menagerie-browser.js": "bc26a6314d946d306c008ad739bbe5a274343cb7b4b61ffabe9435a43f79152a",
+    "modal-content.js": "e1c35a596de819c0bf22b26556d71fba0a4e7708706b0b87b994147f753e3147",
+    "movement-tuning.js": "3d107b859a6b892d668c9047672617302623cdf338f20d9821479908eb8abdf5",
+    "native-art.js": "25cd8151b6b41a81062d4a4f6d3282eaba166c971e4e51bfcfd987e1858de3d9",
+    "native-batch-two.js": "cebd831f650a9c2093b85fac2a080988d6f505d5008685e1f1c9f464e677b875",
+    "native-batch.js": "acfb94d327f762ec0d870d0372783233fb25ac380202a11760212e69e25ce5e7",
+    "native-cloth.js": "00bbdb07f47bbd3a64ac552d203a016578b0a7245c28792df946a6747111178b",
+    "native-combat.js": "46de85f85de8896e50b8f9e4ab18174dd26c1e3fee2760bb49620f3f7389b89a",
+    "native-content.js": "9eeca6e01d3b9e071f472e8d2b17b2fe69f6ab25a4b056fcd98d9171cf04b2e0",
+    "native-export.js": "c4e7953a1313bfa4e5284d9f834840c2d62872cdb90293794e5c5da86d991de1",
+    "native-faces.js": "7d1bbf7a6ed8f4653cf12ff27fa32bf147eccfcfb680617137ee61ef2028e280",
+    "native-forms.js": "77d1be3aa24bcd341f9237cf361af481b20f5585fca46f89f8d7a3d47a5c79a0",
+    "native-motion.js": "4abdb4d5eb5fa662b6ba628db1185125f6a66aec93d459909064ecbb20f0e815",
+    "native-poses.js": "45cf9bc50106b559ca516c2a26d7e7ac1ce2579aec4b5b3d47fb2663b34dff7a",
+    "native-size.js": "ca3817015957da5514ed035e3084a69a598950967abe4afbda4df28151914a27",
+    "native-tactics.js": "750931799108117dba36d174776aaae30f81b473cad5acf2fe2e79c5cb56ea71",
+    "opening-journey.js": "d4dcd14f15eb49ca380a23ae848613b6b5a34f242ea1b43c2ffbca837b4840d3",
+    "opening-relics.js": "2431dd49b965d5ccebe66831038596721e085f5d4448dd92df7e59b5b2deb800",
+    "pixel-face-tools.js": "34f91c988f6b14fa8560067075585183f4fcdc9fe2dd30216e9e926cbaef51d2",
+    "pixel-legacy.js": "6be7f9560d1ffeea5a3fcf89d66b97a57d8fcc93177b40288e9e428d7f86503e",
+    "planet-ui.js": "b0625f30b23c9500930bc0ac3db2e9da990f373835317def4a8dc87f3639bdec",
+    "portrait-expressions.js": "72fd6e006f70680cc92094fc6b06fc914d81bc39cb987fba8368ab7806c3c3e2",
+    "practice.js": "b8c29a4baff892e57ead679fc869dee5662eb321d75c1e8370c0e995f6d68211",
+    "prototype-dynamics.js": "bdbda534aa75182264b563c864dcbabc106f03b8719f7c1d2bebf5fbff6c50d9",
+    "prototype-engine.js": "75eaeaf88fa8717b19fda3dfe5fa983a540e6dc9c526dc7ce1e22c08848be50f",
+    "prototype-export.js": "2c75c0dda74abbad3ee57ffed1c2b39f379b73cf7512f74e67bfe6d90c75cfbe",
+    "prototype-faces.js": "760a79c02a5a74e1530121e6ca0f5602c92a17dfbc950e77d3ffc269cd77d5c0",
+    "prototype-models.js": "633170c26301f285627eaa948be061470128d6e282b2feb367a302e33ae0addc",
+    "prototype-motion.js": "9a098e139b14cdbcce08a37f9a4b50de6eb2c5e76a918a139b1b79d9487820d5",
+    "prototype-pixel-art.js": "0652e704e8cf8c1eeaa3f5c0729bb730a6d7e74f7bea3315051b5feb6110a79e",
+    "prototype-renderer.js": "ffff6f25b0d44d14fe233a28e08c0bfa18c25087dfe7b69cdbe636498733bcf0",
+    "prototype-rig.js": "46c4066f3c6f1a84fdc647e5695dd758833f44587da1e01aee83dcfa6e826303",
+    "prototype-sprites.js": "57ef086250e21897e6890ea65f95d8c680613eb1bb059f5f5533806b3062c8fe",
+    "prototype.js": "fdaf73115e3d8045484659319d63d3d047b7cb1e5472de8adb877b1617c80be5",
+    "rarity-aura.js": "c632cbd50c4cdcf2647eecb2cc80034bec6fae0f21722a5ba0d48d809de84778",
+    "relic-design.js": "a16f6abdeb1b6c6e5dbf7484ecaa6f0b389eb16370521aade4e32ffd9df195e2",
+    "relic-illustrations.js": "d324052330b3c0831f4d98e02b546832ec4d98d79fc502303dc53bd03f031ba4",
+    "relic-pacts.js": "d17a2b4b70e9d66e38616a1f17d11257180e425aca3c84098a4bcee7141e5d47",
+    "relic-selection-ui.js": "1edf093c4989f64151cc08f23591d87ab26b85d7b8ab6e1fbd1fa62c8cb2908f",
+    "relic-ui.js": "c7e2efe100ea301ab5463a87b431fd2ff90178e717bd93410dd9778d6d6b7057",
+    "reward-loadout.js": "5df933265b113040598686aeff1f354bfaf9af233f1584d637c5c1042924e463",
+    "rewards-ui.js": "81d683ed79f6628a0be00133dca7128b5c921b4fcd37e6c4c560fbad9542982e",
+    "roster.js": "f2e55c8ddd7090d465300a48513aefeba62ab07e673ed9ea0bc0bc9b6b573a5d",
+    "route-preview.js": "1eda594993261f787fe027520d4ba0b57466c57f123371263af8b0f6e5481831",
+    "run-relics.js": "0019b14a9b927c51e86059ac748e15f233834414d6cc2f01cd99b64f78f53fbe",
+    "server.js": "8dccf418b1cb8fe19a22d5f6befccb9e8d09451b2638ff8d7c5c10b54e1f2848",
+    "settings-movement-preview.js": "f3669304695c18fada8fa1f514ba3bee71522bd9e6d2e4329b5259aff2a98eb9",
+    "skill-vfx.js": "6ffb4d0d1dad52ad79a7722c327d217bd12c39f3a641a32e14201dc3e0300f2f",
+    "skill-visuals.js": "82634d6ac47f52dcb22cd19e303a2b5152eedd0dfc22b231fcd7f6d322f0bfda",
+    "skills.js": "4cdf30a4ea050670d9056a1a1dbb785bb50b899d39d38cbc4bc20b1835a51451",
+    "sound.js": "375e11b6ba699b1d8265c4f94909fa58c4dee3475fcd15530f4f075bbe7d0a3f",
+    "stage-background-loop.js": "0a8825a457953785060270b22d99db06c70c383155d1fa8ba707101ee426f3cc",
+    "starter-equipment.js": "f93006cf563a122de12ede8b2714975879d43943c8eee560e893a00dacc7106f",
+    "starter-reactions.js": "5facf039c5bfd3f1f0958920daf09fc4b8889a926eab1081d83ec520e923a342",
+    "status-ailments.js": "a1bdf481f240f7e4f0d13eaa2b982c620b3d3c52347fb3d323510b60c3771ab7",
+    "tactics.js": "11f6e1921d497bb4623afaaf2dc79f3423dcef4059408029e1eb411d12af214a",
+    "tuning.js": "978dd20d3598764a2a2652b65fc9ea886edc7ea38a9d21c7eaee2ac694d5fe93",
+    "ui-art-assets.js": "2ef0ad18cb2212037532dfa378865ef0120fbb8cfa44cef4774400d079d35cfb",
+    "ui-art.js": "1d2ad5a042e09c81d85a9e2e982f8ba26537817cc68c248339c95481209673b9",
+    "wearer-relics.js": "59a3dcce7bc58e47246823dd1143530106f08e86c7db72fe11faa6d69c57be18",
+    "xp-celebration.js": "498c2b52dabc428fad2ada70d36bc9bcd33c38b12cfa8e71eeebf7dff857e3ea",
+    "Starfall-Menagerie.html": "41d9963bf6e57239556c498c6b72e5f22dd060b6beed8e6684bebb118bc129d4",
+    "Starfall-Training-Glade.html": "d022bbe3347494f82ed338cd0a268592582ba3042ff38a417279e9291143cbdf",
+    "public/prototype-bundle.js": "1bf0f2512f4ae773a20d58c04ee3485964a5792b58f3bc24911a5f4c251c63f5"
+  },
+  "cases": [
+    {
+      "name": "source-aurel-0-wild",
+      "id": "aurel",
+      "family": "knight",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 0,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 2.6400000000000015,
+          "dir": 6,
+          "phase": 0.35714285714285743
+        },
+        "contact": {
+          "time": 2.8800000000000017,
+          "dir": 6,
+          "phase": 0.0892857142857154
+        },
+        "recovery": {
+          "time": 3.040000000000002,
+          "dir": 6,
+          "phase": 0.6845238095238112
+        }
+      },
+      "distinctFrames": 70,
+      "minPainted": 799,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "7276fb1bdac490ddd8baf0ac03a6a64a5bd0c18cf568c74c3acbd01a437885de",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-aurel-1-wild",
+      "id": "aurel",
+      "family": "knight",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 1,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.0800000000000003,
+          "dir": 0,
+          "phase": 0.4761904761904763
+        },
+        "contact": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.23809523809523894
+        },
+        "recovery": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.8333333333333347
+        }
+      },
+      "distinctFrames": 68,
+      "minPainted": 712,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "27f1fac98c33fe4304a9d18a353dda7eea450bcb0d00b80ded42af3d0bafdd69",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-aurel-1-warden",
+      "id": "aurel",
+      "family": "knight",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 1,
+      "evolutionPath": "warden",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.0400000000000003,
+          "dir": 0,
+          "phase": 0.3571428571428571
+        },
+        "contact": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.23809523809523894
+        },
+        "recovery": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.8333333333333347
+        }
+      },
+      "distinctFrames": 69,
+      "minPainted": 863,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "65784cb6792906e5cbb6234f4b226e948d33d8c0aff2f09cd94749314796a757",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-aurel-2-wild",
+      "id": "aurel",
+      "family": "knight",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 2,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 2.6400000000000015,
+          "dir": 6,
+          "phase": 0.35714285714285743
+        },
+        "contact": {
+          "time": 2.8800000000000017,
+          "dir": 6,
+          "phase": 0.0892857142857154
+        },
+        "recovery": {
+          "time": 3.040000000000002,
+          "dir": 6,
+          "phase": 0.6845238095238112
+        }
+      },
+      "distinctFrames": 72,
+      "minPainted": 1011,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "39881d2f8dadce07a6ac0bd558c1bd58c59d351770e412d989bded1cb405d3da",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-aurel-2-warden",
+      "id": "aurel",
+      "family": "knight",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 2,
+      "evolutionPath": "warden",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 2.6400000000000015,
+          "dir": 6,
+          "phase": 0.35714285714285743
+        },
+        "contact": {
+          "time": 2.8800000000000017,
+          "dir": 6,
+          "phase": 0.0892857142857154
+        },
+        "recovery": {
+          "time": 3.040000000000002,
+          "dir": 6,
+          "phase": 0.6845238095238112
+        }
+      },
+      "distinctFrames": 72,
+      "minPainted": 1040,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "363967ae910cd5176185de1739767c7b5ba50571514bd86a92b8aec552ddd6b2",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-brakk-0-wild",
+      "id": "brakk",
+      "family": "orc",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 0,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 2.320000000000001,
+          "dir": 6,
+          "phase": 0.35714285714285743
+        },
+        "contact": {
+          "time": 2.5600000000000014,
+          "dir": 6,
+          "phase": 0.0892857142857154
+        },
+        "recovery": {
+          "time": 2.7200000000000015,
+          "dir": 6,
+          "phase": 0.6845238095238112
+        }
+      },
+      "distinctFrames": 66,
+      "minPainted": 903,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "f5ea6ca23028cab3a0afc48ebe944631cf1ac05816e030f48078875197fb4182",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-brakk-1-wild",
+      "id": "brakk",
+      "family": "orc",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 1,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.0800000000000003,
+          "dir": 0,
+          "phase": 0.4761904761904763
+        },
+        "contact": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.23809523809523894
+        },
+        "recovery": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.8333333333333347
+        }
+      },
+      "distinctFrames": 67,
+      "minPainted": 1190,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "4dbb8a031b95a994e6019906b738aa5f11538549078557922aef15add365b915",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-brakk-1-warden",
+      "id": "brakk",
+      "family": "orc",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 1,
+      "evolutionPath": "warden",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.0400000000000003,
+          "dir": 0,
+          "phase": 0.3571428571428571
+        },
+        "contact": {
+          "time": 1.2800000000000005,
+          "dir": 0,
+          "phase": 0.089285714285715
+        },
+        "recovery": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.8333333333333347
+        }
+      },
+      "distinctFrames": 67,
+      "minPainted": 1207,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "8788b938ed431a8c5e710ce3dd8e2ac70b0ad54ccb0c63f8b9548553fa2e85fe",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-brom-0-wild",
+      "id": "brom",
+      "family": "dwarf",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 0,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.35714285714285743
+        },
+        "contact": {
+          "time": 1.5600000000000007,
+          "dir": 0,
+          "phase": 0.0892857142857154
+        },
+        "recovery": {
+          "time": 1.7200000000000009,
+          "dir": 0,
+          "phase": 0.6845238095238112
+        }
+      },
+      "distinctFrames": 68,
+      "minPainted": 426,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "d6b74ffe5b57c17c17d08a8ae0f13665d9e489e16a5d08f97fc8a1d4db69b35e",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-brom-1-wild",
+      "id": "brom",
+      "family": "dwarf",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 1,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.0400000000000003,
+          "dir": 0,
+          "phase": 0.3571428571428571
+        },
+        "contact": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.23809523809523894
+        },
+        "recovery": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.8333333333333347
+        }
+      },
+      "distinctFrames": 69,
+      "minPainted": 667,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "63d499caa485e677ab913e423f7af3f769427cb21a4afa027788f85683ea510e",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-brom-1-warden",
+      "id": "brom",
+      "family": "dwarf",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 1,
+      "evolutionPath": "warden",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.0400000000000003,
+          "dir": 0,
+          "phase": 0.3571428571428571
+        },
+        "contact": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.23809523809523894
+        },
+        "recovery": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.8333333333333347
+        }
+      },
+      "distinctFrames": 66,
+      "minPainted": 697,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "e991156d111cebbb2d7c0f7dfa215391934121842a9fdc6db091feb871a96dc5",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-brom-2-wild",
+      "id": "brom",
+      "family": "dwarf",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 2,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 2.8800000000000017,
+          "dir": 6,
+          "phase": 0.35714285714285743
+        },
+        "contact": {
+          "time": 3.160000000000002,
+          "dir": 6,
+          "phase": 0.23809523809523936
+        },
+        "recovery": {
+          "time": 3.320000000000002,
+          "dir": 6,
+          "phase": 0.8333333333333351
+        }
+      },
+      "distinctFrames": 72,
+      "minPainted": 692,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "ace88080e58f44d67ed346b40857106a82e4fe31cfc64edd22ba91fbb3fd68dd",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-brom-2-warden",
+      "id": "brom",
+      "family": "dwarf",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 2,
+      "evolutionPath": "warden",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 2.9600000000000017,
+          "dir": 6,
+          "phase": 0.4761904761904766
+        },
+        "contact": {
+          "time": 3.240000000000002,
+          "dir": 6,
+          "phase": 0.3869047619047633
+        },
+        "recovery": {
+          "time": 3.320000000000002,
+          "dir": 6,
+          "phase": 0.6845238095238112
+        }
+      },
+      "distinctFrames": 72,
+      "minPainted": 718,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "7104ba069770f144fff2a6c12537429316fb5d3377c438275fc87a51893621d1",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-tarka-0-wild",
+      "id": "tarka",
+      "family": "minotaur",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 0,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.35714285714285743
+        },
+        "contact": {
+          "time": 1.5600000000000007,
+          "dir": 0,
+          "phase": 0.0892857142857154
+        },
+        "recovery": {
+          "time": 1.7200000000000009,
+          "dir": 0,
+          "phase": 0.6845238095238112
+        }
+      },
+      "distinctFrames": 70,
+      "minPainted": 1067,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "a66c09144e5cf5975341d02edeb718e8367ff713c33a486655e0a785518ffa83",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-tarka-1-wild",
+      "id": "tarka",
+      "family": "minotaur",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 1,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.0800000000000003,
+          "dir": 0,
+          "phase": 0.4761904761904763
+        },
+        "contact": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.23809523809523894
+        },
+        "recovery": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.8333333333333347
+        }
+      },
+      "distinctFrames": 71,
+      "minPainted": 1320,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "33813a95b4e47ea6dd86f24f624327f1e42961d084e4b7f99e21a46e7fc242ec",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-tarka-1-warden",
+      "id": "tarka",
+      "family": "minotaur",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 1,
+      "evolutionPath": "warden",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.0400000000000003,
+          "dir": 0,
+          "phase": 0.3571428571428571
+        },
+        "contact": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.23809523809523894
+        },
+        "recovery": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.8333333333333347
+        }
+      },
+      "distinctFrames": 65,
+      "minPainted": 1210,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "44e5c0b8a8b6eb3307d1059a77ca671f8b3e312de8ae3c0691acec4675165a4b",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-tarka-2-wild",
+      "id": "tarka",
+      "family": "minotaur",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 2,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 2.160000000000001,
+          "dir": 6,
+          "phase": 0.35714285714285743
+        },
+        "contact": {
+          "time": 2.4000000000000012,
+          "dir": 6,
+          "phase": 0.0892857142857154
+        },
+        "recovery": {
+          "time": 2.5600000000000014,
+          "dir": 6,
+          "phase": 0.6845238095238112
+        }
+      },
+      "distinctFrames": 71,
+      "minPainted": 1233,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "e9ce5871ad5c4125f91cff478ec4d67f023e0058692cc091e229ee1cc55eab87",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-tarka-2-warden",
+      "id": "tarka",
+      "family": "minotaur",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 2,
+      "evolutionPath": "warden",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 2.080000000000001,
+          "dir": 6,
+          "phase": 0.4210526315789472
+        },
+        "contact": {
+          "time": 2.320000000000001,
+          "dir": 6,
+          "phase": 0.06666666666666711
+        },
+        "recovery": {
+          "time": 2.8000000000000016,
+          "dir": 6,
+          "phase": 0.6427067959348562
+        }
+      },
+      "distinctFrames": 69,
+      "minPainted": 1224,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "fc089f64ae82fd32bee94a81db0d638ee3fd3b3a132d43f415830f541d3e0130",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-aurel-0-wild",
+      "id": "aurel",
+      "family": "knight",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 0,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 2.6400000000000015,
+          "dir": 6,
+          "phase": 0.35714285714285743
+        },
+        "contact": {
+          "time": 2.8800000000000017,
+          "dir": 6,
+          "phase": 0.0892857142857154
+        },
+        "recovery": {
+          "time": 3.080000000000002,
+          "dir": 6,
+          "phase": 0.8333333333333351
+        }
+      },
+      "distinctFrames": 70,
+      "minPainted": 799,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "a476d8d97826d25444492611b82aa6d906c17fc1e9c96b5fa65f315479745d30",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-aurel-1-wild",
+      "id": "aurel",
+      "family": "knight",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 1,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.0400000000000003,
+          "dir": 0,
+          "phase": 0.3571428571428571
+        },
+        "contact": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.23809523809523894
+        },
+        "recovery": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.8333333333333347
+        }
+      },
+      "distinctFrames": 69,
+      "minPainted": 712,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "1fdef8f1438dd3a0b7118a81c9262e2e6eafe6689d30c15c70053f5ce2c07989",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-aurel-1-warden",
+      "id": "aurel",
+      "family": "knight",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 1,
+      "evolutionPath": "warden",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.0400000000000003,
+          "dir": 0,
+          "phase": 0.3571428571428571
+        },
+        "contact": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.23809523809523894
+        },
+        "recovery": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.8333333333333347
+        }
+      },
+      "distinctFrames": 68,
+      "minPainted": 863,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "517755f20dacda1649b2db5537d544967660b99fc281c9fbcf90b633210df915",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-aurel-2-wild",
+      "id": "aurel",
+      "family": "knight",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 2,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 2.6400000000000015,
+          "dir": 6,
+          "phase": 0.35714285714285743
+        },
+        "contact": {
+          "time": 2.9200000000000017,
+          "dir": 6,
+          "phase": 0.23809523809523936
+        },
+        "recovery": {
+          "time": 3.040000000000002,
+          "dir": 6,
+          "phase": 0.6845238095238112
+        }
+      },
+      "distinctFrames": 72,
+      "minPainted": 1014,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "909b18df3c67d22e2117d85f63112e4c8221b6d36a1776f5d6964f996bc24e3a",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-aurel-2-warden",
+      "id": "aurel",
+      "family": "knight",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 2,
+      "evolutionPath": "warden",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 2.6400000000000015,
+          "dir": 6,
+          "phase": 0.35714285714285743
+        },
+        "contact": {
+          "time": 2.8800000000000017,
+          "dir": 6,
+          "phase": 0.0892857142857154
+        },
+        "recovery": {
+          "time": 3.040000000000002,
+          "dir": 6,
+          "phase": 0.6845238095238112
+        }
+      },
+      "distinctFrames": 72,
+      "minPainted": 1061,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "9a8a58786a85377c77a8a97f9e4bc40a2af8b95bb2c210248bbb26c88d548d79",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-brakk-0-wild",
+      "id": "brakk",
+      "family": "orc",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 0,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 2.320000000000001,
+          "dir": 6,
+          "phase": 0.35714285714285743
+        },
+        "contact": {
+          "time": 2.5600000000000014,
+          "dir": 6,
+          "phase": 0.0892857142857154
+        },
+        "recovery": {
+          "time": 2.7200000000000015,
+          "dir": 6,
+          "phase": 0.6845238095238112
+        }
+      },
+      "distinctFrames": 66,
+      "minPainted": 903,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "0ed1c5c9c42d6e716d509713dd6ef9a5c51bb501a1f19cb400e5e0b51974d220",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-brakk-1-wild",
+      "id": "brakk",
+      "family": "orc",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 1,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.0400000000000003,
+          "dir": 0,
+          "phase": 0.3571428571428571
+        },
+        "contact": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.23809523809523894
+        },
+        "recovery": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.8333333333333347
+        }
+      },
+      "distinctFrames": 66,
+      "minPainted": 1190,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "2bfd2de8e6dfa39c5ee39bed45b5cc86e7ffcf0b10e0d2d282ba1acdd86071e0",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-brakk-1-warden",
+      "id": "brakk",
+      "family": "orc",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 1,
+      "evolutionPath": "warden",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.0800000000000003,
+          "dir": 0,
+          "phase": 0.4761904761904763
+        },
+        "contact": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.23809523809523894
+        },
+        "recovery": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.8333333333333347
+        }
+      },
+      "distinctFrames": 66,
+      "minPainted": 1207,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "4ad249285915afb799b947c1b865e26cb6d4858915be2958fa469431609fcefd",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-brom-0-wild",
+      "id": "brom",
+      "family": "dwarf",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 0,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.35714285714285743
+        },
+        "contact": {
+          "time": 1.5600000000000007,
+          "dir": 0,
+          "phase": 0.0892857142857154
+        },
+        "recovery": {
+          "time": 1.7200000000000009,
+          "dir": 0,
+          "phase": 0.6845238095238112
+        }
+      },
+      "distinctFrames": 66,
+      "minPainted": 426,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "8eb309ce4f5467053520a823b79ed5de95616eab152eeb62acb6779d46e862e1",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-brom-1-wild",
+      "id": "brom",
+      "family": "dwarf",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 1,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.0800000000000003,
+          "dir": 0,
+          "phase": 0.4761904761904763
+        },
+        "contact": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.23809523809523894
+        },
+        "recovery": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.8333333333333347
+        }
+      },
+      "distinctFrames": 71,
+      "minPainted": 657,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "b79a1fdfc97bc53290e1e33bae0c543fcbfb1a33ccdb7c81e69a2932e840327e",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-brom-1-warden",
+      "id": "brom",
+      "family": "dwarf",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 1,
+      "evolutionPath": "warden",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.0800000000000003,
+          "dir": 0,
+          "phase": 0.4761904761904763
+        },
+        "contact": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.23809523809523894
+        },
+        "recovery": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.8333333333333347
+        }
+      },
+      "distinctFrames": 70,
+      "minPainted": 686,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "c4739b62317047d07d2bac8eec421fa09754d5b93228fd2f0b41ada6b3fefc26",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-brom-2-wild",
+      "id": "brom",
+      "family": "dwarf",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 2,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 2.8800000000000017,
+          "dir": 6,
+          "phase": 0.35714285714285743
+        },
+        "contact": {
+          "time": 3.160000000000002,
+          "dir": 6,
+          "phase": 0.23809523809523936
+        },
+        "recovery": {
+          "time": 3.320000000000002,
+          "dir": 6,
+          "phase": 0.8333333333333351
+        }
+      },
+      "distinctFrames": 72,
+      "minPainted": 692,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "2ee55d819836567921688275209ae60ce46b949ea8b974ceeced1216c31f36e6",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-brom-2-warden",
+      "id": "brom",
+      "family": "dwarf",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 2,
+      "evolutionPath": "warden",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 2.9600000000000017,
+          "dir": 6,
+          "phase": 0.4761904761904766
+        },
+        "contact": {
+          "time": 3.160000000000002,
+          "dir": 6,
+          "phase": 0.0892857142857154
+        },
+        "recovery": {
+          "time": 3.320000000000002,
+          "dir": 6,
+          "phase": 0.6845238095238112
+        }
+      },
+      "distinctFrames": 72,
+      "minPainted": 718,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "966b298ceb1dc6eb46512e8bb5f3b70583a69bbf56549b9b8135f13c7d733d0b",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-tarka-0-wild",
+      "id": "tarka",
+      "family": "minotaur",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 0,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.35714285714285743
+        },
+        "contact": {
+          "time": 1.5600000000000007,
+          "dir": 0,
+          "phase": 0.0892857142857154
+        },
+        "recovery": {
+          "time": 1.7200000000000009,
+          "dir": 0,
+          "phase": 0.6845238095238112
+        }
+      },
+      "distinctFrames": 70,
+      "minPainted": 1053,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "ac24a5b40247d6ef0f48f0ad5cd085d10fe52a06c3a12a4191b527274abd904f",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-tarka-1-wild",
+      "id": "tarka",
+      "family": "minotaur",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 1,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.0800000000000003,
+          "dir": 0,
+          "phase": 0.4761904761904763
+        },
+        "contact": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.23809523809523894
+        },
+        "recovery": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.8333333333333347
+        }
+      },
+      "distinctFrames": 68,
+      "minPainted": 1320,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "cf52639e6f740539528e2378fd6aaa32ae701d724b600a0d6401a854a53bd3d4",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-tarka-1-warden",
+      "id": "tarka",
+      "family": "minotaur",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 1,
+      "evolutionPath": "warden",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.0400000000000003,
+          "dir": 0,
+          "phase": 0.3571428571428571
+        },
+        "contact": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.23809523809523894
+        },
+        "recovery": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.8333333333333347
+        }
+      },
+      "distinctFrames": 66,
+      "minPainted": 1210,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "472837ee58d18f3bf55c21560de2b0b52f4a132c23c2f3d9f771729a9488c3b8",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-tarka-2-wild",
+      "id": "tarka",
+      "family": "minotaur",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 2,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 2.240000000000001,
+          "dir": 6,
+          "phase": 0.5952380952380957
+        },
+        "contact": {
+          "time": 2.4000000000000012,
+          "dir": 6,
+          "phase": 0.0892857142857154
+        },
+        "recovery": {
+          "time": 2.5600000000000014,
+          "dir": 6,
+          "phase": 0.6845238095238112
+        }
+      },
+      "distinctFrames": 70,
+      "minPainted": 1233,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "762eff2528d7589ace6e40e46f3963e527b258e996c4f1753f69c1b9cb1ea38b",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-tarka-2-warden",
+      "id": "tarka",
+      "family": "minotaur",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 2,
+      "evolutionPath": "warden",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 2.040000000000001,
+          "dir": 6,
+          "phase": 0.31578947368421023
+        },
+        "contact": {
+          "time": 2.320000000000001,
+          "dir": 6,
+          "phase": 0.06666666666666711
+        },
+        "recovery": {
+          "time": 2.8400000000000016,
+          "dir": 6,
+          "phase": 0.7915163197443803
+        }
+      },
+      "distinctFrames": 68,
+      "minPainted": 1211,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "cf2ab9a725f8af94083f9e541cab407c7ab887d1762979fdde280012d62e2ad5",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-cloverimp-0-wild",
+      "id": "cloverimp",
+      "family": "goblin",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 0,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.2800000000000005,
+          "dir": 0,
+          "phase": 0.30769230769230793
+        },
+        "contact": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.08333333333333434
+        },
+        "recovery": {
+          "time": 1.6400000000000008,
+          "dir": 0,
+          "phase": 0.7500000000000017
+        }
+      },
+      "distinctFrames": 52,
+      "minPainted": 646,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "27c02fe25d44a36482cb2525e85f4d06df37316758be1cad5214ab3a0708022a",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-cloverimp-1-wild",
+      "id": "cloverimp",
+      "family": "goblin",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 1,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.0400000000000003,
+          "dir": 0,
+          "phase": 0.4615384615384615
+        },
+        "contact": {
+          "time": 1.2000000000000004,
+          "dir": 0,
+          "phase": 0.08333333333333387
+        },
+        "recovery": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.5833333333333344
+        }
+      },
+      "distinctFrames": 48,
+      "minPainted": 709,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "ed9de72ef323850da17cbdca1c18d06df021382975caa1f99414b72d6e658eda",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-cloverimp-1-warden",
+      "id": "cloverimp",
+      "family": "goblin",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 1,
+      "evolutionPath": "warden",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.0000000000000002,
+          "dir": 0,
+          "phase": 0.30769230769230754
+        },
+        "contact": {
+          "time": 1.2400000000000004,
+          "dir": 0,
+          "phase": 0.2500000000000007
+        },
+        "recovery": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.5833333333333344
+        }
+      },
+      "distinctFrames": 46,
+      "minPainted": 766,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "9c4330cc13ce1c7b21f5747fdf3812889d7e454d05fad3b336d80e52615e1bbd",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-cloverimp-2-wild",
+      "id": "cloverimp",
+      "family": "goblin",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 2,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.46153846153846195
+        },
+        "contact": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.08333333333333434
+        },
+        "recovery": {
+          "time": 1.6400000000000008,
+          "dir": 0,
+          "phase": 0.7500000000000017
+        }
+      },
+      "distinctFrames": 49,
+      "minPainted": 837,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "d32f4aa8452429c63144f5cced9223551ac99fba14970a48adef21eee5d6ab36",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-cloverimp-2-warden",
+      "id": "cloverimp",
+      "family": "goblin",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 2,
+      "evolutionPath": "warden",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.46153846153846195
+        },
+        "contact": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.08333333333333434
+        },
+        "recovery": {
+          "time": 1.6400000000000008,
+          "dir": 0,
+          "phase": 0.7500000000000017
+        }
+      },
+      "distinctFrames": 52,
+      "minPainted": 860,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "d47c90cb83a08a86892a45292feaf7d339f7b9a510969084ac6c4bb2ab707c3c",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-grit-0-wild",
+      "id": "grit",
+      "family": "goblin",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 0,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.35714285714285743
+        },
+        "contact": {
+          "time": 1.5600000000000007,
+          "dir": 0,
+          "phase": 0.0892857142857154
+        },
+        "recovery": {
+          "time": 1.7200000000000009,
+          "dir": 0,
+          "phase": 0.6845238095238112
+        }
+      },
+      "distinctFrames": 71,
+      "minPainted": 645,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "b521e2ec6d1c9890aed3f01ee7fb78fad7f8472f0a9e239f4019b9999d1d4756",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-grit-1-wild",
+      "id": "grit",
+      "family": "goblin",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 1,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.2400000000000004,
+          "dir": 0,
+          "phase": 0.4761904761904766
+        },
+        "contact": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.23809523809523936
+        },
+        "recovery": {
+          "time": 1.6400000000000008,
+          "dir": 0,
+          "phase": 0.8333333333333351
+        }
+      },
+      "distinctFrames": 72,
+      "minPainted": 824,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "073487f310ecba1df12ebe3053a592c6264f1346abd91eceb8ea7082267ea21a",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-grit-1-warden",
+      "id": "grit",
+      "family": "goblin",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 1,
+      "evolutionPath": "warden",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.2400000000000004,
+          "dir": 0,
+          "phase": 0.35714285714285743
+        },
+        "contact": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.0892857142857154
+        },
+        "recovery": {
+          "time": 1.6400000000000008,
+          "dir": 0,
+          "phase": 0.6845238095238112
+        }
+      },
+      "distinctFrames": 72,
+      "minPainted": 841,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "148d9e94a35eccfe7fce10f65991607068c1462f1836c33ef5cb4d72db1df2b1",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-grum-0-wild",
+      "id": "grum",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 0,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 2.6400000000000015,
+          "dir": 6,
+          "phase": 0.4761904761904766
+        },
+        "contact": {
+          "time": 2.8800000000000017,
+          "dir": 6,
+          "phase": 0.23809523809523936
+        },
+        "recovery": {
+          "time": 3.080000000000002,
+          "dir": 6,
+          "phase": 0.9821428571428591
+        }
+      },
+      "distinctFrames": 70,
+      "minPainted": 1021,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "01ba4296f5099027d717f5a5c84adc7b18ffd4907d55e4a3aadb70fb30601ab1",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-grum-1-wild",
+      "id": "grum",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 1,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.0800000000000003,
+          "dir": 0,
+          "phase": 0.4761904761904763
+        },
+        "contact": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.23809523809523894
+        },
+        "recovery": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.8333333333333347
+        }
+      },
+      "distinctFrames": 67,
+      "minPainted": 1438,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "479a0da124fb258fd878c59559937d8568c39431652f5f6315fb2f6cc133571d",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-grum-1-warden",
+      "id": "grum",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 1,
+      "evolutionPath": "warden",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.0400000000000003,
+          "dir": 0,
+          "phase": 0.3571428571428571
+        },
+        "contact": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.23809523809523894
+        },
+        "recovery": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.8333333333333347
+        }
+      },
+      "distinctFrames": 66,
+      "minPainted": 1614,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "e9424510e995221cd181aa5425adb00ebf374bef06f58f892126d63f0ac6e270",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-sable-0-wild",
+      "id": "sable",
+      "family": "rogue",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 0,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.35714285714285743
+        },
+        "contact": {
+          "time": 1.5600000000000007,
+          "dir": 0,
+          "phase": 0.0892857142857154
+        },
+        "recovery": {
+          "time": 1.7200000000000009,
+          "dir": 0,
+          "phase": 0.6845238095238112
+        }
+      },
+      "distinctFrames": 72,
+      "minPainted": 827,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "6283fae7ae277aba330a3294271b58a0ca73f0c38ce62cb585e0aeb5a2622ac9",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-sable-1-wild",
+      "id": "sable",
+      "family": "rogue",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 1,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.0400000000000003,
+          "dir": 0,
+          "phase": 0.3571428571428571
+        },
+        "contact": {
+          "time": 1.2800000000000005,
+          "dir": 0,
+          "phase": 0.089285714285715
+        },
+        "recovery": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.8333333333333347
+        }
+      },
+      "distinctFrames": 72,
+      "minPainted": 853,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "6e6b92933c8e62765276a87ea1b759553455df1893725d9e52604b3036fa74b9",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-sable-1-warden",
+      "id": "sable",
+      "family": "rogue",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 1,
+      "evolutionPath": "warden",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.0800000000000003,
+          "dir": 0,
+          "phase": 0.4761904761904763
+        },
+        "contact": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.23809523809523894
+        },
+        "recovery": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.8333333333333347
+        }
+      },
+      "distinctFrames": 71,
+      "minPainted": 854,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "019426ea6999ea40d55d0e8c59f8d5fefc9cdaa56c3ebae4eab36358181fa581",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-cloverimp-0-wild",
+      "id": "cloverimp",
+      "family": "goblin",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 0,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.46153846153846195
+        },
+        "contact": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.08333333333333434
+        },
+        "recovery": {
+          "time": 1.6400000000000008,
+          "dir": 0,
+          "phase": 0.7500000000000017
+        }
+      },
+      "distinctFrames": 53,
+      "minPainted": 645,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "6561a41bc8de032c8057bf0aa0451c163194ae326fe210beeae7fa52dbbf5451",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-cloverimp-1-wild",
+      "id": "cloverimp",
+      "family": "goblin",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 1,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.0800000000000003,
+          "dir": 0,
+          "phase": 0.6153846153846155
+        },
+        "contact": {
+          "time": 1.2400000000000004,
+          "dir": 0,
+          "phase": 0.2500000000000007
+        },
+        "recovery": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.5833333333333344
+        }
+      },
+      "distinctFrames": 46,
+      "minPainted": 709,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "b42f44cc0ce68224451e739616bb3937b0b9baa2b3a807efff1635cb585e55e5",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-cloverimp-1-warden",
+      "id": "cloverimp",
+      "family": "goblin",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 1,
+      "evolutionPath": "warden",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.0400000000000003,
+          "dir": 0,
+          "phase": 0.4615384615384615
+        },
+        "contact": {
+          "time": 1.2400000000000004,
+          "dir": 0,
+          "phase": 0.2500000000000007
+        },
+        "recovery": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.5833333333333344
+        }
+      },
+      "distinctFrames": 46,
+      "minPainted": 742,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "d625863f7f580eac888ad54e0e65188b508a3ab187be93ccdc514446ec948be0",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-cloverimp-2-wild",
+      "id": "cloverimp",
+      "family": "goblin",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 2,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.46153846153846195
+        },
+        "contact": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.08333333333333434
+        },
+        "recovery": {
+          "time": 1.6400000000000008,
+          "dir": 0,
+          "phase": 0.7500000000000017
+        }
+      },
+      "distinctFrames": 54,
+      "minPainted": 838,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "3b2aae00beb7de37741a2aba05ba3198a0130476186e81d970f19a2195d1240b",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-cloverimp-2-warden",
+      "id": "cloverimp",
+      "family": "goblin",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 2,
+      "evolutionPath": "warden",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.2800000000000005,
+          "dir": 0,
+          "phase": 0.30769230769230793
+        },
+        "contact": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.08333333333333434
+        },
+        "recovery": {
+          "time": 1.6400000000000008,
+          "dir": 0,
+          "phase": 0.7500000000000017
+        }
+      },
+      "distinctFrames": 52,
+      "minPainted": 859,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "a8bcd5bd2295520ff45c0cf9730f759b7acf16aa090d153746410616c4d1ddd1",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-grit-0-wild",
+      "id": "grit",
+      "family": "goblin",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 0,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.35714285714285743
+        },
+        "contact": {
+          "time": 1.5600000000000007,
+          "dir": 0,
+          "phase": 0.0892857142857154
+        },
+        "recovery": {
+          "time": 1.7200000000000009,
+          "dir": 0,
+          "phase": 0.6845238095238112
+        }
+      },
+      "distinctFrames": 72,
+      "minPainted": 646,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "6b430dbf69da6ed60c43329c696c302627fa4faa3ad2730e6c06f5922637b450",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-grit-1-wild",
+      "id": "grit",
+      "family": "goblin",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 1,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.2000000000000004,
+          "dir": 0,
+          "phase": 0.35714285714285743
+        },
+        "contact": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.23809523809523936
+        },
+        "recovery": {
+          "time": 1.6400000000000008,
+          "dir": 0,
+          "phase": 0.8333333333333351
+        }
+      },
+      "distinctFrames": 72,
+      "minPainted": 824,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "1a424da398e79fe845ac04b703a15797bbbfa497d9c8dce820d86c1586688fa9",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-grit-1-warden",
+      "id": "grit",
+      "family": "goblin",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 1,
+      "evolutionPath": "warden",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.2400000000000004,
+          "dir": 0,
+          "phase": 0.35714285714285743
+        },
+        "contact": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.0892857142857154
+        },
+        "recovery": {
+          "time": 1.6400000000000008,
+          "dir": 0,
+          "phase": 0.6845238095238112
+        }
+      },
+      "distinctFrames": 72,
+      "minPainted": 841,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "fd116030f2423c4a71c3eebc5de011bb78eb288d36db5b636cc167bf8b3e1a2c",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-grum-0-wild",
+      "id": "grum",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 0,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 2.6400000000000015,
+          "dir": 6,
+          "phase": 0.4761904761904766
+        },
+        "contact": {
+          "time": 2.8800000000000017,
+          "dir": 6,
+          "phase": 0.23809523809523936
+        },
+        "recovery": {
+          "time": 3.040000000000002,
+          "dir": 6,
+          "phase": 0.8333333333333351
+        }
+      },
+      "distinctFrames": 69,
+      "minPainted": 1021,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "c8146f99b8d4c6c294ac4cc80a8dfd2296ce6ea5af4041c3012cb4193e32ef97",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-grum-1-wild",
+      "id": "grum",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 1,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.0400000000000003,
+          "dir": 0,
+          "phase": 0.3571428571428571
+        },
+        "contact": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.23809523809523894
+        },
+        "recovery": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.8333333333333347
+        }
+      },
+      "distinctFrames": 67,
+      "minPainted": 1421,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "9e741040a1dd7dcd445def673c615d5d17c1387701af945bcbfaad26ba8f72e2",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-grum-1-warden",
+      "id": "grum",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 1,
+      "evolutionPath": "warden",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.0400000000000003,
+          "dir": 0,
+          "phase": 0.3571428571428571
+        },
+        "contact": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.23809523809523894
+        },
+        "recovery": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.8333333333333347
+        }
+      },
+      "distinctFrames": 67,
+      "minPainted": 1610,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "ca3c5af2e5c778132a03597bbd6ee291312c68bba45bdfe0c6b241f4d3f7bf1a",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-sable-0-wild",
+      "id": "sable",
+      "family": "rogue",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 0,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.35714285714285743
+        },
+        "contact": {
+          "time": 1.5600000000000007,
+          "dir": 0,
+          "phase": 0.0892857142857154
+        },
+        "recovery": {
+          "time": 1.7200000000000009,
+          "dir": 0,
+          "phase": 0.6845238095238112
+        }
+      },
+      "distinctFrames": 72,
+      "minPainted": 824,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "1426015321b64ffb9b6d9623717b008586ec3ce3fcc9cdb565aef4fc1adbda94",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-sable-1-wild",
+      "id": "sable",
+      "family": "rogue",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 1,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.0400000000000003,
+          "dir": 0,
+          "phase": 0.3571428571428571
+        },
+        "contact": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.23809523809523894
+        },
+        "recovery": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.8333333333333347
+        }
+      },
+      "distinctFrames": 72,
+      "minPainted": 860,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "7423cfcd27c4f0c045115f5825a482c8ce281851d57bffc60ea59c4e9571d3be",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-sable-1-warden",
+      "id": "sable",
+      "family": "rogue",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 1,
+      "evolutionPath": "warden",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.0400000000000003,
+          "dir": 0,
+          "phase": 0.3571428571428571
+        },
+        "contact": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.23809523809523894
+        },
+        "recovery": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.8333333333333347
+        }
+      },
+      "distinctFrames": 72,
+      "minPainted": 856,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "e33f7b871f84c60a464ab598904d177c74f6fb742b50ada08653b284a17c69f1",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-mossguard-0-wild",
+      "id": "mossguard",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 0,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 2.7200000000000015,
+          "dir": 6,
+          "phase": 0.4761904761904766
+        },
+        "contact": {
+          "time": 2.9600000000000017,
+          "dir": 6,
+          "phase": 0.23809523809523936
+        },
+        "recovery": {
+          "time": 3.120000000000002,
+          "dir": 6,
+          "phase": 0.8333333333333351
+        }
+      },
+      "distinctFrames": 70,
+      "minPainted": 1024,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "edf6a08bd14eac0fefd876c30543079422e991adba26621b9023b397018ee7d2",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-mossguard-1-wild",
+      "id": "mossguard",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 1,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.0800000000000003,
+          "dir": 0,
+          "phase": 0.4761904761904763
+        },
+        "contact": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.23809523809523894
+        },
+        "recovery": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.8333333333333347
+        }
+      },
+      "distinctFrames": 64,
+      "minPainted": 1623,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "92eabc689bdc37badca869690fa675d6ceed4b1144adcdcb241889a1f8418d50",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-mossguard-1-warden",
+      "id": "mossguard",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 1,
+      "evolutionPath": "warden",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.0800000000000003,
+          "dir": 0,
+          "phase": 0.4761904761904763
+        },
+        "contact": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.23809523809523894
+        },
+        "recovery": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.8333333333333347
+        }
+      },
+      "distinctFrames": 64,
+      "minPainted": 1688,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "50b87179db63d4004eee86677d3846e4f346ae532ffa291f3dd5c409b3d98a39",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-mossguard-2-wild",
+      "id": "mossguard",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 2,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 3.040000000000002,
+          "dir": 0,
+          "phase": 0.3157894736842108
+        },
+        "contact": {
+          "time": 3.320000000000002,
+          "dir": 0,
+          "phase": 0.06666666666666785
+        },
+        "recovery": {
+          "time": 3.480000000000002,
+          "dir": 0,
+          "phase": 0.6000000000000018
+        }
+      },
+      "distinctFrames": 71,
+      "minPainted": 1632,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "be9af8a16f62c855fa5c88fe108f6d4a8a8a0b4041464b0e0904a7acfc628f91",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-mossguard-2-warden",
+      "id": "mossguard",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 2,
+      "evolutionPath": "warden",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 3.040000000000002,
+          "dir": 0,
+          "phase": 0.3157894736842108
+        },
+        "contact": {
+          "time": 3.320000000000002,
+          "dir": 0,
+          "phase": 0.06666666666666785
+        },
+        "recovery": {
+          "time": 3.480000000000002,
+          "dir": 0,
+          "phase": 0.6000000000000018
+        }
+      },
+      "distinctFrames": 71,
+      "minPainted": 1701,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "6f564c99af23023d72e6cc7d4e78199166c98012d0ad29477f84eba5d4d408bb",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-glacier-0-wild",
+      "id": "glacier",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 0,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 2.7200000000000015,
+          "dir": 6,
+          "phase": 0.35714285714285743
+        },
+        "contact": {
+          "time": 2.9600000000000017,
+          "dir": 6,
+          "phase": 0.0892857142857154
+        },
+        "recovery": {
+          "time": 3.120000000000002,
+          "dir": 6,
+          "phase": 0.6845238095238112
+        }
+      },
+      "distinctFrames": 70,
+      "minPainted": 1034,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "8e9e65892e53351752cdd948850dbb00bc2ae0abe957ffec4b72c29f39bf1d4d",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-glacier-1-wild",
+      "id": "glacier",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 1,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.0400000000000003,
+          "dir": 0,
+          "phase": 0.3571428571428571
+        },
+        "contact": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.23809523809523894
+        },
+        "recovery": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.8333333333333347
+        }
+      },
+      "distinctFrames": 67,
+      "minPainted": 1626,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "62bf570db2a79ad81e88ce45a5cd14bfb1726df7227913bdcf13490ea0c1bd89",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-glacier-1-warden",
+      "id": "glacier",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 1,
+      "evolutionPath": "warden",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.0400000000000003,
+          "dir": 0,
+          "phase": 0.3571428571428571
+        },
+        "contact": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.23809523809523894
+        },
+        "recovery": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.8333333333333347
+        }
+      },
+      "distinctFrames": 63,
+      "minPainted": 1688,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "e1a2a0d541ebfded9af4048d9784a2bcea41b79d54b5612acc41738da19a79e1",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-glacier-2-wild",
+      "id": "glacier",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 2,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 3.080000000000002,
+          "dir": 0,
+          "phase": 0.42105263157894773
+        },
+        "contact": {
+          "time": 3.320000000000002,
+          "dir": 0,
+          "phase": 0.06666666666666785
+        },
+        "recovery": {
+          "time": 3.480000000000002,
+          "dir": 0,
+          "phase": 0.6000000000000018
+        }
+      },
+      "distinctFrames": 72,
+      "minPainted": 1628,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "c1df75b4028765604699123bf56bd6e4da1b37904d191232487a6e4fa80557cd",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-glacier-2-warden",
+      "id": "glacier",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 2,
+      "evolutionPath": "warden",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 3.040000000000002,
+          "dir": 0,
+          "phase": 0.3157894736842108
+        },
+        "contact": {
+          "time": 3.320000000000002,
+          "dir": 0,
+          "phase": 0.06666666666666785
+        },
+        "recovery": {
+          "time": 3.480000000000002,
+          "dir": 0,
+          "phase": 0.6000000000000018
+        }
+      },
+      "distinctFrames": 72,
+      "minPainted": 1689,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "d55193391c4c6cb2782f3b500d6fabf06326b97441f0b83ffa799e85e9838964",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-abyssal-0-wild",
+      "id": "abyssal",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 0,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.3200000000000005,
+          "dir": 6,
+          "phase": 0.35714285714285743
+        },
+        "contact": {
+          "time": 1.5600000000000007,
+          "dir": 6,
+          "phase": 0.0892857142857154
+        },
+        "recovery": {
+          "time": 1.7200000000000009,
+          "dir": 6,
+          "phase": 0.6845238095238112
+        }
+      },
+      "distinctFrames": 68,
+      "minPainted": 1089,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "34a36551838cd6d4849dcc96e7853e2758d5c6803ab778e00d66380a65162b42",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-abyssal-1-wild",
+      "id": "abyssal",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 1,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.0400000000000003,
+          "dir": 0,
+          "phase": 0.3571428571428571
+        },
+        "contact": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.23809523809523894
+        },
+        "recovery": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.8333333333333347
+        }
+      },
+      "distinctFrames": 67,
+      "minPainted": 1623,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "074adb68ee53668480062dfb12ef586bcf59a65ce4aa797ca6ce96b0c8e869ed",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-abyssal-1-warden",
+      "id": "abyssal",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 1,
+      "evolutionPath": "warden",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.0400000000000003,
+          "dir": 0,
+          "phase": 0.3571428571428571
+        },
+        "contact": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.23809523809523894
+        },
+        "recovery": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.8333333333333347
+        }
+      },
+      "distinctFrames": 67,
+      "minPainted": 1682,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "4959459ae31f8fa145313bb8bdb448ebe546f23ac1d1d2b19c35025acd45edcc",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-abyssal-2-wild",
+      "id": "abyssal",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 2,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.3200000000000005,
+          "dir": 6,
+          "phase": 0.35714285714285743
+        },
+        "contact": {
+          "time": 1.5600000000000007,
+          "dir": 6,
+          "phase": 0.0892857142857154
+        },
+        "recovery": {
+          "time": 1.7200000000000009,
+          "dir": 6,
+          "phase": 0.6845238095238112
+        }
+      },
+      "distinctFrames": 68,
+      "minPainted": 1450,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "60158be9b792c91162ee4a5965cd4695950d1ba5e79318a3be87363222471499",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-abyssal-2-warden",
+      "id": "abyssal",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 2,
+      "evolutionPath": "warden",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.3200000000000005,
+          "dir": 6,
+          "phase": 0.35714285714285743
+        },
+        "contact": {
+          "time": 1.5600000000000007,
+          "dir": 6,
+          "phase": 0.0892857142857154
+        },
+        "recovery": {
+          "time": 1.7200000000000009,
+          "dir": 6,
+          "phase": 0.6845238095238112
+        }
+      },
+      "distinctFrames": 69,
+      "minPainted": 1503,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "bac1cc1d2eba2e58b815367cf20062b939253f89cc324fc9d1537910ce30ab39",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-gravitan-0-wild",
+      "id": "gravitan",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 0,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.3200000000000005,
+          "dir": 6,
+          "phase": 0.35714285714285743
+        },
+        "contact": {
+          "time": 1.5600000000000007,
+          "dir": 6,
+          "phase": 0.0892857142857154
+        },
+        "recovery": {
+          "time": 1.7200000000000009,
+          "dir": 6,
+          "phase": 0.6845238095238112
+        }
+      },
+      "distinctFrames": 68,
+      "minPainted": 1091,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "226f37b93bcb175b796b80ea190be2d08f7796512c234b5501a0cd88ccead132",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-gravitan-1-wild",
+      "id": "gravitan",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 1,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.0400000000000003,
+          "dir": 0,
+          "phase": 0.3571428571428571
+        },
+        "contact": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.23809523809523894
+        },
+        "recovery": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.8333333333333347
+        }
+      },
+      "distinctFrames": 67,
+      "minPainted": 1626,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "9a1667e2f6c515b6d2d4989cf8851d4962b8f13ecd4166ab8c8c81431175a8cb",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-gravitan-1-warden",
+      "id": "gravitan",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 1,
+      "evolutionPath": "warden",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.0400000000000003,
+          "dir": 0,
+          "phase": 0.3571428571428571
+        },
+        "contact": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.23809523809523894
+        },
+        "recovery": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.8333333333333347
+        }
+      },
+      "distinctFrames": 66,
+      "minPainted": 1682,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "37d92c5dc6857b075d79577466c8330ffe477161ebdbfd6c52fd3985fd207e86",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-gravitan-2-wild",
+      "id": "gravitan",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 2,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.3200000000000005,
+          "dir": 6,
+          "phase": 0.35714285714285743
+        },
+        "contact": {
+          "time": 1.5600000000000007,
+          "dir": 6,
+          "phase": 0.0892857142857154
+        },
+        "recovery": {
+          "time": 1.7200000000000009,
+          "dir": 6,
+          "phase": 0.6845238095238112
+        }
+      },
+      "distinctFrames": 68,
+      "minPainted": 1431,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "671cab1228fea5e20171d4e376f22339a64e8e1cb5d2c2243a01757431ef54c6",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-gravitan-2-warden",
+      "id": "gravitan",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 2,
+      "evolutionPath": "warden",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.3200000000000005,
+          "dir": 6,
+          "phase": 0.35714285714285743
+        },
+        "contact": {
+          "time": 1.5600000000000007,
+          "dir": 6,
+          "phase": 0.0892857142857154
+        },
+        "recovery": {
+          "time": 1.7200000000000009,
+          "dir": 6,
+          "phase": 0.6845238095238112
+        }
+      },
+      "distinctFrames": 67,
+      "minPainted": 1485,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "32bbacb0d6fe2dc38bf41d77161736df8fb5aa1d4ecda7023ff217a1dd75e963",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-mossguard-0-wild",
+      "id": "mossguard",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 0,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 2.7200000000000015,
+          "dir": 6,
+          "phase": 0.4761904761904766
+        },
+        "contact": {
+          "time": 2.9600000000000017,
+          "dir": 6,
+          "phase": 0.23809523809523936
+        },
+        "recovery": {
+          "time": 3.120000000000002,
+          "dir": 6,
+          "phase": 0.8333333333333351
+        }
+      },
+      "distinctFrames": 70,
+      "minPainted": 1024,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "ed03a8f9a1c64a12b31ffb32b5cfdaefb69bc8d9e4c3da429ff2eb934e1a59fd",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-mossguard-1-wild",
+      "id": "mossguard",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 1,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.0400000000000003,
+          "dir": 0,
+          "phase": 0.3571428571428571
+        },
+        "contact": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.23809523809523894
+        },
+        "recovery": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.8333333333333347
+        }
+      },
+      "distinctFrames": 64,
+      "minPainted": 1623,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "f4c06561ac1eaf51ea5284ac13f9d4e8f829d7b8ab0225092d668891d5612884",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-mossguard-1-warden",
+      "id": "mossguard",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 1,
+      "evolutionPath": "warden",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.0400000000000003,
+          "dir": 0,
+          "phase": 0.3571428571428571
+        },
+        "contact": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.23809523809523894
+        },
+        "recovery": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.8333333333333347
+        }
+      },
+      "distinctFrames": 63,
+      "minPainted": 1682,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "7bec05b1c3e3ffbb0e3fb0eae7e122c73d0dfceffb69035d042bab0a86b38076",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-mossguard-2-wild",
+      "id": "mossguard",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 2,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 3.080000000000002,
+          "dir": 0,
+          "phase": 0.42105263157894773
+        },
+        "contact": {
+          "time": 3.320000000000002,
+          "dir": 0,
+          "phase": 0.06666666666666785
+        },
+        "recovery": {
+          "time": 3.480000000000002,
+          "dir": 0,
+          "phase": 0.6000000000000018
+        }
+      },
+      "distinctFrames": 72,
+      "minPainted": 1642,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "939ccab088227d7705f9adb6a931c962f6ca077663bbbdfde499b4d77f3db65a",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-mossguard-2-warden",
+      "id": "mossguard",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 2,
+      "evolutionPath": "warden",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 3.080000000000002,
+          "dir": 0,
+          "phase": 0.42105263157894773
+        },
+        "contact": {
+          "time": 3.320000000000002,
+          "dir": 0,
+          "phase": 0.06666666666666785
+        },
+        "recovery": {
+          "time": 3.480000000000002,
+          "dir": 0,
+          "phase": 0.6000000000000018
+        }
+      },
+      "distinctFrames": 72,
+      "minPainted": 1701,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "2230ce89c2b17b1afcfe415dc150b80a3b7d38d081c9be4122d7ef5e286ef804",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-glacier-0-wild",
+      "id": "glacier",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 0,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 2.7200000000000015,
+          "dir": 6,
+          "phase": 0.35714285714285743
+        },
+        "contact": {
+          "time": 2.9600000000000017,
+          "dir": 6,
+          "phase": 0.0892857142857154
+        },
+        "recovery": {
+          "time": 3.160000000000002,
+          "dir": 6,
+          "phase": 0.8333333333333351
+        }
+      },
+      "distinctFrames": 71,
+      "minPainted": 1028,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "0bc26aa9ba7952220bb07ed3168822c63341d7ada93a152430488526fda7fc22",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-glacier-1-wild",
+      "id": "glacier",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 1,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.0400000000000003,
+          "dir": 0,
+          "phase": 0.3571428571428571
+        },
+        "contact": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.23809523809523894
+        },
+        "recovery": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.8333333333333347
+        }
+      },
+      "distinctFrames": 67,
+      "minPainted": 1623,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "fa749109ea13b952475acc451bc3ac48584fee626af4a7cfa0c33cdc3d5c26c2",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-glacier-1-warden",
+      "id": "glacier",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 1,
+      "evolutionPath": "warden",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.0400000000000003,
+          "dir": 0,
+          "phase": 0.3571428571428571
+        },
+        "contact": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.23809523809523894
+        },
+        "recovery": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.8333333333333347
+        }
+      },
+      "distinctFrames": 64,
+      "minPainted": 1682,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "767f3b9b40b59cf6c702cca580736e62a725157e59e6e576a2a1a2bbc88bbfc5",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-glacier-2-wild",
+      "id": "glacier",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 2,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 3.040000000000002,
+          "dir": 0,
+          "phase": 0.3157894736842108
+        },
+        "contact": {
+          "time": 3.320000000000002,
+          "dir": 0,
+          "phase": 0.06666666666666785
+        },
+        "recovery": {
+          "time": 3.480000000000002,
+          "dir": 0,
+          "phase": 0.6000000000000018
+        }
+      },
+      "distinctFrames": 72,
+      "minPainted": 1624,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "88e2c9d5a037b7ee4f23c6a69292ee8dcfa402f198fae7e4ad991de3fb1858f1",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-glacier-2-warden",
+      "id": "glacier",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 2,
+      "evolutionPath": "warden",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 3.040000000000002,
+          "dir": 0,
+          "phase": 0.3157894736842108
+        },
+        "contact": {
+          "time": 3.400000000000002,
+          "dir": 0,
+          "phase": 0.3333333333333348
+        },
+        "recovery": {
+          "time": 3.480000000000002,
+          "dir": 0,
+          "phase": 0.6000000000000018
+        }
+      },
+      "distinctFrames": 71,
+      "minPainted": 1698,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "beeeb920ec3093830f6a0abadfb4c38371a7a790ca11632ff9e24d6d8751f4ca",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-abyssal-0-wild",
+      "id": "abyssal",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 0,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.3200000000000005,
+          "dir": 6,
+          "phase": 0.35714285714285743
+        },
+        "contact": {
+          "time": 1.5600000000000007,
+          "dir": 6,
+          "phase": 0.0892857142857154
+        },
+        "recovery": {
+          "time": 1.7200000000000009,
+          "dir": 6,
+          "phase": 0.6845238095238112
+        }
+      },
+      "distinctFrames": 70,
+      "minPainted": 1089,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "08e312dfaca04040c97d5edf24cb52330fef9432b954c488b6db7a3481031fcf",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-abyssal-1-wild",
+      "id": "abyssal",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 1,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.0400000000000003,
+          "dir": 0,
+          "phase": 0.3571428571428571
+        },
+        "contact": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.23809523809523894
+        },
+        "recovery": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.8333333333333347
+        }
+      },
+      "distinctFrames": 67,
+      "minPainted": 1623,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "4f9b22d1532f6e65ed8d7a4e20ee641b1880d89cd776023b024a44ffd4767bda",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-abyssal-1-warden",
+      "id": "abyssal",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 1,
+      "evolutionPath": "warden",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.0400000000000003,
+          "dir": 0,
+          "phase": 0.3571428571428571
+        },
+        "contact": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.23809523809523894
+        },
+        "recovery": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.8333333333333347
+        }
+      },
+      "distinctFrames": 65,
+      "minPainted": 1688,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "3e445c10e9c799482804e0e880b4410a5913ee63cc45cc0f6e84613600877617",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-abyssal-2-wild",
+      "id": "abyssal",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 2,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.3200000000000005,
+          "dir": 6,
+          "phase": 0.35714285714285743
+        },
+        "contact": {
+          "time": 1.5600000000000007,
+          "dir": 6,
+          "phase": 0.0892857142857154
+        },
+        "recovery": {
+          "time": 1.7200000000000009,
+          "dir": 6,
+          "phase": 0.6845238095238112
+        }
+      },
+      "distinctFrames": 67,
+      "minPainted": 1454,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "c803e16c5623cfe97eef523ade1d705fd5619b3a50cc35c9a3d16eba8175bc7b",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-abyssal-2-warden",
+      "id": "abyssal",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 2,
+      "evolutionPath": "warden",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.3200000000000005,
+          "dir": 6,
+          "phase": 0.35714285714285743
+        },
+        "contact": {
+          "time": 1.5600000000000007,
+          "dir": 6,
+          "phase": 0.0892857142857154
+        },
+        "recovery": {
+          "time": 1.7200000000000009,
+          "dir": 6,
+          "phase": 0.6845238095238112
+        }
+      },
+      "distinctFrames": 69,
+      "minPainted": 1503,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "0e662312f52a9f1a7078ab7f1fd915e023df98c628578965d2b35121dc0d01ab",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-gravitan-0-wild",
+      "id": "gravitan",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 0,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.3200000000000005,
+          "dir": 6,
+          "phase": 0.35714285714285743
+        },
+        "contact": {
+          "time": 1.5600000000000007,
+          "dir": 6,
+          "phase": 0.0892857142857154
+        },
+        "recovery": {
+          "time": 1.7200000000000009,
+          "dir": 6,
+          "phase": 0.6845238095238112
+        }
+      },
+      "distinctFrames": 68,
+      "minPainted": 1096,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "c404dbba2c73603d9f0c42e8e4c5d97c1dd32f1509d0dcff58e0254a14955851",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-gravitan-1-wild",
+      "id": "gravitan",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 1,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.0400000000000003,
+          "dir": 0,
+          "phase": 0.3571428571428571
+        },
+        "contact": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.23809523809523894
+        },
+        "recovery": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.8333333333333347
+        }
+      },
+      "distinctFrames": 67,
+      "minPainted": 1623,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "8127969a9d2f929bcac2c358d07a8525886bc2cc53be1224967ddde4616430d5",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-gravitan-1-warden",
+      "id": "gravitan",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 1,
+      "evolutionPath": "warden",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.0400000000000003,
+          "dir": 0,
+          "phase": 0.3571428571428571
+        },
+        "contact": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.23809523809523894
+        },
+        "recovery": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.8333333333333347
+        }
+      },
+      "distinctFrames": 65,
+      "minPainted": 1688,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "29e03632d866ba2dc92b5cf52b0bd116040fbcae936a7d680d741e14023c5efd",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-gravitan-2-wild",
+      "id": "gravitan",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 2,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.3200000000000005,
+          "dir": 6,
+          "phase": 0.35714285714285743
+        },
+        "contact": {
+          "time": 1.5600000000000007,
+          "dir": 6,
+          "phase": 0.0892857142857154
+        },
+        "recovery": {
+          "time": 1.7200000000000009,
+          "dir": 6,
+          "phase": 0.6845238095238112
+        }
+      },
+      "distinctFrames": 67,
+      "minPainted": 1431,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "2fa4f7fad653ea20d4d112f45024c6be4b87eea073ca8477ab5a49307e8d6312",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-gravitan-2-warden",
+      "id": "gravitan",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 2,
+      "evolutionPath": "warden",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.3200000000000005,
+          "dir": 6,
+          "phase": 0.35714285714285743
+        },
+        "contact": {
+          "time": 1.5600000000000007,
+          "dir": 6,
+          "phase": 0.0892857142857154
+        },
+        "recovery": {
+          "time": 1.7200000000000009,
+          "dir": 6,
+          "phase": 0.6845238095238112
+        }
+      },
+      "distinctFrames": 68,
+      "minPainted": 1493,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "f71ed8fa25a4495802e777ba69dfee9fc8257e3c3a5db79aad827ddd3d8e1cc0",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    }
+  ]
+}

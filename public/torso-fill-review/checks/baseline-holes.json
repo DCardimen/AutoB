@@ -1,0 +1,1383 @@
+{
+  "baseline": "e9fc1aca43b75c140b816d2312a4cab0394136a9",
+  "checked": 172,
+  "missingOnBaseline": 172,
+  "probes": [
+    {
+      "family": "knight",
+      "form": 0,
+      "direction": 0,
+      "x": 26,
+      "y": 33,
+      "wasTransparent": true
+    },
+    {
+      "family": "knight",
+      "form": 0,
+      "direction": 1,
+      "x": 26,
+      "y": 33,
+      "wasTransparent": true
+    },
+    {
+      "family": "knight",
+      "form": 0,
+      "direction": 2,
+      "x": 25,
+      "y": 33,
+      "wasTransparent": true
+    },
+    {
+      "family": "knight",
+      "form": 0,
+      "direction": 3,
+      "x": 25,
+      "y": 32,
+      "wasTransparent": true
+    },
+    {
+      "family": "knight",
+      "form": 0,
+      "direction": 4,
+      "x": 25,
+      "y": 30,
+      "wasTransparent": true
+    },
+    {
+      "family": "knight",
+      "form": 0,
+      "direction": 5,
+      "x": 25,
+      "y": 33,
+      "wasTransparent": true
+    },
+    {
+      "family": "knight",
+      "form": 0,
+      "direction": 6,
+      "x": 25,
+      "y": 33,
+      "wasTransparent": true
+    },
+    {
+      "family": "knight",
+      "form": 0,
+      "direction": 7,
+      "x": 25,
+      "y": 33,
+      "wasTransparent": true
+    },
+    {
+      "family": "knight",
+      "form": 1,
+      "direction": 0,
+      "x": 25,
+      "y": 26,
+      "wasTransparent": true
+    },
+    {
+      "family": "knight",
+      "form": 1,
+      "direction": 1,
+      "x": 24,
+      "y": 26,
+      "wasTransparent": true
+    },
+    {
+      "family": "knight",
+      "form": 1,
+      "direction": 2,
+      "x": 24,
+      "y": 26,
+      "wasTransparent": true
+    },
+    {
+      "family": "knight",
+      "form": 1,
+      "direction": 3,
+      "x": 24,
+      "y": 25,
+      "wasTransparent": true
+    },
+    {
+      "family": "knight",
+      "form": 1,
+      "direction": 4,
+      "x": 22,
+      "y": 26,
+      "wasTransparent": true
+    },
+    {
+      "family": "knight",
+      "form": 1,
+      "direction": 5,
+      "x": 22,
+      "y": 26,
+      "wasTransparent": true
+    },
+    {
+      "family": "knight",
+      "form": 1,
+      "direction": 6,
+      "x": 23,
+      "y": 26,
+      "wasTransparent": true
+    },
+    {
+      "family": "knight",
+      "form": 1,
+      "direction": 7,
+      "x": 24,
+      "y": 26,
+      "wasTransparent": true
+    },
+    {
+      "family": "knight",
+      "form": 2,
+      "direction": 0,
+      "x": 41,
+      "y": 26,
+      "wasTransparent": true
+    },
+    {
+      "family": "knight",
+      "form": 2,
+      "direction": 1,
+      "x": 22,
+      "y": 25,
+      "wasTransparent": true
+    },
+    {
+      "family": "knight",
+      "form": 2,
+      "direction": 2,
+      "x": 20,
+      "y": 26,
+      "wasTransparent": true
+    },
+    {
+      "family": "knight",
+      "form": 2,
+      "direction": 3,
+      "x": 19,
+      "y": 26,
+      "wasTransparent": true
+    },
+    {
+      "family": "knight",
+      "form": 2,
+      "direction": 4,
+      "x": 20,
+      "y": 26,
+      "wasTransparent": true
+    },
+    {
+      "family": "knight",
+      "form": 2,
+      "direction": 5,
+      "x": 21,
+      "y": 26,
+      "wasTransparent": true
+    },
+    {
+      "family": "knight",
+      "form": 2,
+      "direction": 6,
+      "x": 21,
+      "y": 26,
+      "wasTransparent": true
+    },
+    {
+      "family": "knight",
+      "form": 2,
+      "direction": 7,
+      "x": 20,
+      "y": 26,
+      "wasTransparent": true
+    },
+    {
+      "family": "orc",
+      "form": 0,
+      "direction": 0,
+      "x": 24,
+      "y": 32,
+      "wasTransparent": true
+    },
+    {
+      "family": "orc",
+      "form": 0,
+      "direction": 1,
+      "x": 24,
+      "y": 32,
+      "wasTransparent": true
+    },
+    {
+      "family": "orc",
+      "form": 0,
+      "direction": 2,
+      "x": 24,
+      "y": 32,
+      "wasTransparent": true
+    },
+    {
+      "family": "orc",
+      "form": 0,
+      "direction": 3,
+      "x": 38,
+      "y": 32,
+      "wasTransparent": true
+    },
+    {
+      "family": "orc",
+      "form": 0,
+      "direction": 4,
+      "x": 24,
+      "y": 31,
+      "wasTransparent": true
+    },
+    {
+      "family": "orc",
+      "form": 0,
+      "direction": 5,
+      "x": 26,
+      "y": 33,
+      "wasTransparent": true
+    },
+    {
+      "family": "orc",
+      "form": 0,
+      "direction": 6,
+      "x": 24,
+      "y": 31,
+      "wasTransparent": true
+    },
+    {
+      "family": "orc",
+      "form": 0,
+      "direction": 7,
+      "x": 24,
+      "y": 32,
+      "wasTransparent": true
+    },
+    {
+      "family": "orc",
+      "form": 1,
+      "direction": 0,
+      "x": 20,
+      "y": 27,
+      "wasTransparent": true
+    },
+    {
+      "family": "orc",
+      "form": 1,
+      "direction": 1,
+      "x": 19,
+      "y": 27,
+      "wasTransparent": true
+    },
+    {
+      "family": "orc",
+      "form": 1,
+      "direction": 2,
+      "x": 21,
+      "y": 27,
+      "wasTransparent": true
+    },
+    {
+      "family": "orc",
+      "form": 1,
+      "direction": 3,
+      "x": 19,
+      "y": 27,
+      "wasTransparent": true
+    },
+    {
+      "family": "orc",
+      "form": 1,
+      "direction": 4,
+      "x": 20,
+      "y": 27,
+      "wasTransparent": true
+    },
+    {
+      "family": "orc",
+      "form": 1,
+      "direction": 5,
+      "x": 20,
+      "y": 27,
+      "wasTransparent": true
+    },
+    {
+      "family": "orc",
+      "form": 1,
+      "direction": 6,
+      "x": 19,
+      "y": 27,
+      "wasTransparent": true
+    },
+    {
+      "family": "orc",
+      "form": 1,
+      "direction": 7,
+      "x": 19,
+      "y": 27,
+      "wasTransparent": true
+    },
+    {
+      "family": "orc",
+      "form": 2,
+      "direction": 0,
+      "x": 20,
+      "y": 27,
+      "wasTransparent": true
+    },
+    {
+      "family": "orc",
+      "form": 2,
+      "direction": 1,
+      "x": 18,
+      "y": 27,
+      "wasTransparent": true
+    },
+    {
+      "family": "orc",
+      "form": 2,
+      "direction": 2,
+      "x": 18,
+      "y": 27,
+      "wasTransparent": true
+    },
+    {
+      "family": "orc",
+      "form": 2,
+      "direction": 3,
+      "x": 19,
+      "y": 27,
+      "wasTransparent": true
+    },
+    {
+      "family": "orc",
+      "form": 2,
+      "direction": 4,
+      "x": 19,
+      "y": 27,
+      "wasTransparent": true
+    },
+    {
+      "family": "orc",
+      "form": 2,
+      "direction": 5,
+      "x": 18,
+      "y": 27,
+      "wasTransparent": true
+    },
+    {
+      "family": "orc",
+      "form": 2,
+      "direction": 6,
+      "x": 18,
+      "y": 27,
+      "wasTransparent": true
+    },
+    {
+      "family": "orc",
+      "form": 2,
+      "direction": 7,
+      "x": 18,
+      "y": 27,
+      "wasTransparent": true
+    },
+    {
+      "family": "dwarf",
+      "form": 0,
+      "direction": 0,
+      "x": 25,
+      "y": 26,
+      "wasTransparent": true
+    },
+    {
+      "family": "dwarf",
+      "form": 0,
+      "direction": 1,
+      "x": 25,
+      "y": 26,
+      "wasTransparent": true
+    },
+    {
+      "family": "dwarf",
+      "form": 0,
+      "direction": 2,
+      "x": 25,
+      "y": 26,
+      "wasTransparent": true
+    },
+    {
+      "family": "dwarf",
+      "form": 0,
+      "direction": 3,
+      "x": 25,
+      "y": 26,
+      "wasTransparent": true
+    },
+    {
+      "family": "dwarf",
+      "form": 0,
+      "direction": 4,
+      "x": 25,
+      "y": 26,
+      "wasTransparent": true
+    },
+    {
+      "family": "dwarf",
+      "form": 0,
+      "direction": 5,
+      "x": 25,
+      "y": 26,
+      "wasTransparent": true
+    },
+    {
+      "family": "dwarf",
+      "form": 0,
+      "direction": 6,
+      "x": 25,
+      "y": 26,
+      "wasTransparent": true
+    },
+    {
+      "family": "dwarf",
+      "form": 0,
+      "direction": 7,
+      "x": 25,
+      "y": 26,
+      "wasTransparent": true
+    },
+    {
+      "family": "dwarf",
+      "form": 1,
+      "direction": 0,
+      "x": 22,
+      "y": 26,
+      "wasTransparent": true
+    },
+    {
+      "family": "dwarf",
+      "form": 1,
+      "direction": 1,
+      "x": 21,
+      "y": 26,
+      "wasTransparent": true
+    },
+    {
+      "family": "dwarf",
+      "form": 1,
+      "direction": 2,
+      "x": 21,
+      "y": 26,
+      "wasTransparent": true
+    },
+    {
+      "family": "dwarf",
+      "form": 1,
+      "direction": 3,
+      "x": 22,
+      "y": 26,
+      "wasTransparent": true
+    },
+    {
+      "family": "dwarf",
+      "form": 1,
+      "direction": 4,
+      "x": 23,
+      "y": 26,
+      "wasTransparent": true
+    },
+    {
+      "family": "dwarf",
+      "form": 1,
+      "direction": 5,
+      "x": 21,
+      "y": 26,
+      "wasTransparent": true
+    },
+    {
+      "family": "dwarf",
+      "form": 1,
+      "direction": 6,
+      "x": 21,
+      "y": 26,
+      "wasTransparent": true
+    },
+    {
+      "family": "dwarf",
+      "form": 1,
+      "direction": 7,
+      "x": 21,
+      "y": 26,
+      "wasTransparent": true
+    },
+    {
+      "family": "dwarf",
+      "form": 2,
+      "direction": 0,
+      "x": 41,
+      "y": 26,
+      "wasTransparent": true
+    },
+    {
+      "family": "dwarf",
+      "form": 2,
+      "direction": 1,
+      "x": 23,
+      "y": 26,
+      "wasTransparent": true
+    },
+    {
+      "family": "dwarf",
+      "form": 2,
+      "direction": 2,
+      "x": 20,
+      "y": 26,
+      "wasTransparent": true
+    },
+    {
+      "family": "dwarf",
+      "form": 2,
+      "direction": 3,
+      "x": 21,
+      "y": 26,
+      "wasTransparent": true
+    },
+    {
+      "family": "dwarf",
+      "form": 2,
+      "direction": 4,
+      "x": 20,
+      "y": 26,
+      "wasTransparent": true
+    },
+    {
+      "family": "dwarf",
+      "form": 2,
+      "direction": 5,
+      "x": 21,
+      "y": 26,
+      "wasTransparent": true
+    },
+    {
+      "family": "dwarf",
+      "form": 2,
+      "direction": 6,
+      "x": 20,
+      "y": 26,
+      "wasTransparent": true
+    },
+    {
+      "family": "dwarf",
+      "form": 2,
+      "direction": 7,
+      "x": 20,
+      "y": 26,
+      "wasTransparent": true
+    },
+    {
+      "family": "troll",
+      "form": 0,
+      "direction": 0,
+      "x": 22,
+      "y": 32,
+      "wasTransparent": true
+    },
+    {
+      "family": "troll",
+      "form": 0,
+      "direction": 1,
+      "x": 23,
+      "y": 32,
+      "wasTransparent": true
+    },
+    {
+      "family": "troll",
+      "form": 0,
+      "direction": 2,
+      "x": 22,
+      "y": 32,
+      "wasTransparent": true
+    },
+    {
+      "family": "troll",
+      "form": 0,
+      "direction": 3,
+      "x": 22,
+      "y": 32,
+      "wasTransparent": true
+    },
+    {
+      "family": "troll",
+      "form": 0,
+      "direction": 4,
+      "x": 22,
+      "y": 32,
+      "wasTransparent": true
+    },
+    {
+      "family": "troll",
+      "form": 0,
+      "direction": 5,
+      "x": 24,
+      "y": 32,
+      "wasTransparent": true
+    },
+    {
+      "family": "troll",
+      "form": 0,
+      "direction": 6,
+      "x": 23,
+      "y": 32,
+      "wasTransparent": true
+    },
+    {
+      "family": "troll",
+      "form": 0,
+      "direction": 7,
+      "x": 22,
+      "y": 32,
+      "wasTransparent": true
+    },
+    {
+      "family": "troll",
+      "form": 1,
+      "direction": 0,
+      "x": 19,
+      "y": 27,
+      "wasTransparent": true
+    },
+    {
+      "family": "troll",
+      "form": 1,
+      "direction": 1,
+      "x": 17,
+      "y": 27,
+      "wasTransparent": true
+    },
+    {
+      "family": "troll",
+      "form": 1,
+      "direction": 2,
+      "x": 18,
+      "y": 27,
+      "wasTransparent": true
+    },
+    {
+      "family": "troll",
+      "form": 1,
+      "direction": 3,
+      "x": 17,
+      "y": 27,
+      "wasTransparent": true
+    },
+    {
+      "family": "troll",
+      "form": 1,
+      "direction": 4,
+      "x": 17,
+      "y": 27,
+      "wasTransparent": true
+    },
+    {
+      "family": "troll",
+      "form": 1,
+      "direction": 5,
+      "x": 18,
+      "y": 27,
+      "wasTransparent": true
+    },
+    {
+      "family": "troll",
+      "form": 1,
+      "direction": 6,
+      "x": 18,
+      "y": 27,
+      "wasTransparent": true
+    },
+    {
+      "family": "troll",
+      "form": 1,
+      "direction": 7,
+      "x": 17,
+      "y": 27,
+      "wasTransparent": true
+    },
+    {
+      "family": "troll",
+      "form": 2,
+      "direction": 0,
+      "x": 19,
+      "y": 27,
+      "wasTransparent": true
+    },
+    {
+      "family": "troll",
+      "form": 2,
+      "direction": 1,
+      "x": 17,
+      "y": 27,
+      "wasTransparent": true
+    },
+    {
+      "family": "troll",
+      "form": 2,
+      "direction": 2,
+      "x": 17,
+      "y": 27,
+      "wasTransparent": true
+    },
+    {
+      "family": "troll",
+      "form": 2,
+      "direction": 3,
+      "x": 17,
+      "y": 27,
+      "wasTransparent": true
+    },
+    {
+      "family": "troll",
+      "form": 2,
+      "direction": 4,
+      "x": 17,
+      "y": 27,
+      "wasTransparent": true
+    },
+    {
+      "family": "troll",
+      "form": 2,
+      "direction": 5,
+      "x": 17,
+      "y": 27,
+      "wasTransparent": true
+    },
+    {
+      "family": "troll",
+      "form": 2,
+      "direction": 6,
+      "x": 17,
+      "y": 27,
+      "wasTransparent": true
+    },
+    {
+      "family": "troll",
+      "form": 2,
+      "direction": 7,
+      "x": 17,
+      "y": 27,
+      "wasTransparent": true
+    },
+    {
+      "family": "goblin",
+      "form": 0,
+      "direction": 0,
+      "x": 25,
+      "y": 31,
+      "wasTransparent": true
+    },
+    {
+      "family": "goblin",
+      "form": 0,
+      "direction": 1,
+      "x": 25,
+      "y": 31,
+      "wasTransparent": true
+    },
+    {
+      "family": "goblin",
+      "form": 0,
+      "direction": 2,
+      "x": 39,
+      "y": 30,
+      "wasTransparent": true
+    },
+    {
+      "family": "goblin",
+      "form": 0,
+      "direction": 3,
+      "x": 39,
+      "y": 30,
+      "wasTransparent": true
+    },
+    {
+      "family": "goblin",
+      "form": 0,
+      "direction": 4,
+      "x": 38,
+      "y": 31,
+      "wasTransparent": true
+    },
+    {
+      "family": "goblin",
+      "form": 0,
+      "direction": 5,
+      "x": 25,
+      "y": 31,
+      "wasTransparent": true
+    },
+    {
+      "family": "goblin",
+      "form": 0,
+      "direction": 6,
+      "x": 25,
+      "y": 31,
+      "wasTransparent": true
+    },
+    {
+      "family": "goblin",
+      "form": 0,
+      "direction": 7,
+      "x": 38,
+      "y": 31,
+      "wasTransparent": true
+    },
+    {
+      "family": "goblin",
+      "form": 1,
+      "direction": 0,
+      "x": 24,
+      "y": 27,
+      "wasTransparent": true
+    },
+    {
+      "family": "goblin",
+      "form": 1,
+      "direction": 1,
+      "x": 23,
+      "y": 27,
+      "wasTransparent": true
+    },
+    {
+      "family": "goblin",
+      "form": 1,
+      "direction": 2,
+      "x": 23,
+      "y": 27,
+      "wasTransparent": true
+    },
+    {
+      "family": "goblin",
+      "form": 1,
+      "direction": 3,
+      "x": 22,
+      "y": 27,
+      "wasTransparent": true
+    },
+    {
+      "family": "goblin",
+      "form": 1,
+      "direction": 4,
+      "x": 39,
+      "y": 27,
+      "wasTransparent": true
+    },
+    {
+      "family": "goblin",
+      "form": 1,
+      "direction": 5,
+      "x": 23,
+      "y": 28,
+      "wasTransparent": true
+    },
+    {
+      "family": "goblin",
+      "form": 1,
+      "direction": 6,
+      "x": 22,
+      "y": 27,
+      "wasTransparent": true
+    },
+    {
+      "family": "goblin",
+      "form": 1,
+      "direction": 7,
+      "x": 23,
+      "y": 28,
+      "wasTransparent": true
+    },
+    {
+      "family": "goblin",
+      "form": 2,
+      "direction": 0,
+      "x": 24,
+      "y": 25,
+      "wasTransparent": true
+    },
+    {
+      "family": "goblin",
+      "form": 2,
+      "direction": 1,
+      "x": 22,
+      "y": 26,
+      "wasTransparent": true
+    },
+    {
+      "family": "goblin",
+      "form": 2,
+      "direction": 2,
+      "x": 23,
+      "y": 26,
+      "wasTransparent": true
+    },
+    {
+      "family": "goblin",
+      "form": 2,
+      "direction": 3,
+      "x": 39,
+      "y": 26,
+      "wasTransparent": true
+    },
+    {
+      "family": "goblin",
+      "form": 2,
+      "direction": 4,
+      "x": 22,
+      "y": 25,
+      "wasTransparent": true
+    },
+    {
+      "family": "goblin",
+      "form": 2,
+      "direction": 5,
+      "x": 41,
+      "y": 28,
+      "wasTransparent": true
+    },
+    {
+      "family": "goblin",
+      "form": 2,
+      "direction": 6,
+      "x": 42,
+      "y": 26,
+      "wasTransparent": true
+    },
+    {
+      "family": "goblin",
+      "form": 2,
+      "direction": 7,
+      "x": 23,
+      "y": 27,
+      "wasTransparent": true
+    },
+    {
+      "family": "minotaur",
+      "form": 0,
+      "direction": 0,
+      "x": 23,
+      "y": 31,
+      "wasTransparent": true
+    },
+    {
+      "family": "minotaur",
+      "form": 0,
+      "direction": 1,
+      "x": 22,
+      "y": 31,
+      "wasTransparent": true
+    },
+    {
+      "family": "minotaur",
+      "form": 0,
+      "direction": 2,
+      "x": 22,
+      "y": 31,
+      "wasTransparent": true
+    },
+    {
+      "family": "minotaur",
+      "form": 0,
+      "direction": 3,
+      "x": 22,
+      "y": 31,
+      "wasTransparent": true
+    },
+    {
+      "family": "minotaur",
+      "form": 0,
+      "direction": 4,
+      "x": 22,
+      "y": 31,
+      "wasTransparent": true
+    },
+    {
+      "family": "minotaur",
+      "form": 0,
+      "direction": 5,
+      "x": 39,
+      "y": 31,
+      "wasTransparent": true
+    },
+    {
+      "family": "minotaur",
+      "form": 0,
+      "direction": 6,
+      "x": 22,
+      "y": 31,
+      "wasTransparent": true
+    },
+    {
+      "family": "minotaur",
+      "form": 0,
+      "direction": 7,
+      "x": 22,
+      "y": 31,
+      "wasTransparent": true
+    },
+    {
+      "family": "minotaur",
+      "form": 1,
+      "direction": 0,
+      "x": 20,
+      "y": 26,
+      "wasTransparent": true
+    },
+    {
+      "family": "minotaur",
+      "form": 1,
+      "direction": 1,
+      "x": 18,
+      "y": 26,
+      "wasTransparent": true
+    },
+    {
+      "family": "minotaur",
+      "form": 1,
+      "direction": 2,
+      "x": 18,
+      "y": 26,
+      "wasTransparent": true
+    },
+    {
+      "family": "minotaur",
+      "form": 1,
+      "direction": 3,
+      "x": 18,
+      "y": 26,
+      "wasTransparent": true
+    },
+    {
+      "family": "minotaur",
+      "form": 1,
+      "direction": 4,
+      "x": 19,
+      "y": 26,
+      "wasTransparent": true
+    },
+    {
+      "family": "minotaur",
+      "form": 1,
+      "direction": 5,
+      "x": 18,
+      "y": 26,
+      "wasTransparent": true
+    },
+    {
+      "family": "minotaur",
+      "form": 1,
+      "direction": 6,
+      "x": 18,
+      "y": 26,
+      "wasTransparent": true
+    },
+    {
+      "family": "minotaur",
+      "form": 1,
+      "direction": 7,
+      "x": 18,
+      "y": 26,
+      "wasTransparent": true
+    },
+    {
+      "family": "minotaur",
+      "form": 2,
+      "direction": 0,
+      "x": 19,
+      "y": 25,
+      "wasTransparent": true
+    },
+    {
+      "family": "minotaur",
+      "form": 2,
+      "direction": 1,
+      "x": 18,
+      "y": 25,
+      "wasTransparent": true
+    },
+    {
+      "family": "minotaur",
+      "form": 2,
+      "direction": 2,
+      "x": 17,
+      "y": 25,
+      "wasTransparent": true
+    },
+    {
+      "family": "minotaur",
+      "form": 2,
+      "direction": 3,
+      "x": 19,
+      "y": 25,
+      "wasTransparent": true
+    },
+    {
+      "family": "minotaur",
+      "form": 2,
+      "direction": 4,
+      "x": 16,
+      "y": 25,
+      "wasTransparent": true
+    },
+    {
+      "family": "minotaur",
+      "form": 2,
+      "direction": 5,
+      "x": 18,
+      "y": 25,
+      "wasTransparent": true
+    },
+    {
+      "family": "minotaur",
+      "form": 2,
+      "direction": 6,
+      "x": 17,
+      "y": 25,
+      "wasTransparent": true
+    },
+    {
+      "family": "minotaur",
+      "form": 2,
+      "direction": 7,
+      "x": 16,
+      "y": 25,
+      "wasTransparent": true
+    },
+    {
+      "family": "rogue",
+      "form": 0,
+      "direction": 0,
+      "x": 25,
+      "y": 30,
+      "wasTransparent": true
+    },
+    {
+      "family": "rogue",
+      "form": 0,
+      "direction": 1,
+      "x": 24,
+      "y": 30,
+      "wasTransparent": true
+    },
+    {
+      "family": "rogue",
+      "form": 0,
+      "direction": 2,
+      "x": 24,
+      "y": 30,
+      "wasTransparent": true
+    },
+    {
+      "family": "rogue",
+      "form": 0,
+      "direction": 3,
+      "x": 24,
+      "y": 30,
+      "wasTransparent": true
+    },
+    {
+      "family": "rogue",
+      "form": 0,
+      "direction": 4,
+      "x": 24,
+      "y": 29,
+      "wasTransparent": true
+    },
+    {
+      "family": "rogue",
+      "form": 0,
+      "direction": 5,
+      "x": 24,
+      "y": 30,
+      "wasTransparent": true
+    },
+    {
+      "family": "rogue",
+      "form": 0,
+      "direction": 6,
+      "x": 24,
+      "y": 30,
+      "wasTransparent": true
+    },
+    {
+      "family": "rogue",
+      "form": 0,
+      "direction": 7,
+      "x": 24,
+      "y": 30,
+      "wasTransparent": true
+    },
+    {
+      "family": "rogue",
+      "form": 1,
+      "direction": 0,
+      "x": 26,
+      "y": 25,
+      "wasTransparent": true
+    },
+    {
+      "family": "rogue",
+      "form": 1,
+      "direction": 1,
+      "x": 24,
+      "y": 26,
+      "wasTransparent": true
+    },
+    {
+      "family": "rogue",
+      "form": 1,
+      "direction": 2,
+      "x": 23,
+      "y": 26,
+      "wasTransparent": true
+    },
+    {
+      "family": "rogue",
+      "form": 1,
+      "direction": 3,
+      "x": 23,
+      "y": 26,
+      "wasTransparent": true
+    },
+    {
+      "family": "rogue",
+      "form": 1,
+      "direction": 4,
+      "x": 23,
+      "y": 24,
+      "wasTransparent": true
+    },
+    {
+      "family": "rogue",
+      "form": 1,
+      "direction": 5,
+      "x": 39,
+      "y": 26,
+      "wasTransparent": true
+    },
+    {
+      "family": "rogue",
+      "form": 1,
+      "direction": 6,
+      "x": 23,
+      "y": 26,
+      "wasTransparent": true
+    },
+    {
+      "family": "rogue",
+      "form": 1,
+      "direction": 7,
+      "x": 24,
+      "y": 26,
+      "wasTransparent": true
+    },
+    {
+      "family": "rogue",
+      "form": 2,
+      "direction": 0,
+      "x": 26,
+      "y": 25,
+      "wasTransparent": true
+    },
+    {
+      "family": "rogue",
+      "form": 2,
+      "direction": 1,
+      "x": 24,
+      "y": 25,
+      "wasTransparent": true
+    },
+    {
+      "family": "rogue",
+      "form": 2,
+      "direction": 2,
+      "x": 23,
+      "y": 25,
+      "wasTransparent": true
+    },
+    {
+      "family": "rogue",
+      "form": 2,
+      "direction": 3,
+      "x": 23,
+      "y": 25,
+      "wasTransparent": true
+    },
+    {
+      "family": "rogue",
+      "form": 2,
+      "direction": 4,
+      "x": 23,
+      "y": 23,
+      "wasTransparent": true
+    },
+    {
+      "family": "rogue",
+      "form": 2,
+      "direction": 5,
+      "x": 38,
+      "y": 25,
+      "wasTransparent": true
+    },
+    {
+      "family": "rogue",
+      "form": 2,
+      "direction": 6,
+      "x": 23,
+      "y": 25,
+      "wasTransparent": true
+    },
+    {
+      "family": "rogue",
+      "form": 2,
+      "direction": 7,
+      "x": 26,
+      "y": 25,
+      "wasTransparent": true
+    },
+    {
+      "family": "troll",
+      "form": 0,
+      "direction": 2,
+      "x": 18,
+      "y": 32,
+      "wasTransparent": true
+    },
+    {
+      "family": "orc",
+      "form": 0,
+      "direction": 2,
+      "x": 19,
+      "y": 33,
+      "wasTransparent": true
+    },
+    {
+      "family": "knight",
+      "form": 2,
+      "direction": 2,
+      "x": 19,
+      "y": 29,
+      "wasTransparent": true
+    },
+    {
+      "family": "troll",
+      "form": 1,
+      "direction": 2,
+      "x": 15,
+      "y": 29,
+      "wasTransparent": true
+    }
+  ]
+}

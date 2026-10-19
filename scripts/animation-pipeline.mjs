@@ -43,7 +43,7 @@ const checks={
   await run('part-materials',['--test','tests/companion-material-ownership.test.js']);
   report.partsManifest=hashFile(path.join(out,'parts','manifest.json'));report.reproducible=true;
  },
- 3:()=>run('sockets',['--test','tests/companion-parts.test.js','tests/brakk-arms.test.js','tests/arm-animation.test.js']),
+ 3:()=>run('sockets',['--test','tests/companion-parts.test.js','tests/brakk-arms.test.js','tests/arm-animation.test.js','tests/torso-fill.test.js','tests/melee-ownership.test.js','tests/melee-clothing.test.js']),
  4:()=>run('locomotion',['--test','tests/gaits-carry.test.js','tests/legs-v3.test.js','tests/legs-v2.test.js','tests/creature-anatomy.test.js']),
  5:()=>run('secondary-motion',['--test','tests/companion-deformation.test.js','tests/prototype-rig.test.js','tests/sprite-art-v2.test.js']),
  6:()=>run('actions',['--test','tests/melee-weapon-art.test.js','tests/swing-body.test.js','tests/combat-spacing.test.js']),

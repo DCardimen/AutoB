@@ -1,0 +1,975 @@
+{
+  "status": "passed",
+  "inputs": {
+    "affinity-gear.js": "0c5778f3a601d902df855f273c535e03270290997480560b2a821bfd3fe05b41",
+    "ai-relics.js": "17eeb1ecc72f92bb92f2ca2995e9c68aff2f1d8046690c3fa297f403a367651e",
+    "ambient-art.js": "0bc9948d5bb9307fb0e25908d5c04ebf3a7e39f4b5b87334417f9587271e3f99",
+    "ambient-ui.js": "91ae8ec84db9505116bcb6f20dbbce0cdb8e6f565f9ff81f098ef2bf7c2b5402",
+    "animation.js": "5ec10e51220ef506ec3ea31d81cea1f042938cb66456cc1755b74f45f2006a55",
+    "app.js": "07000ec32f03d001ca34027c90e5b9f3302dd5d801955cdfdfa628e6c0aa9a5e",
+    "arena-camera.js": "681bf91826ac505bd0659cfd7391a2fa70d0cd2bb1ae0de13914abd72705c020",
+    "arena.js": "e78488981c9c21e1879e832498669b227e8fd1c6740a4fc9855879e65b1db6fb",
+    "art.js": "3fc3e18c21da1e7624c0c3cb1f628f977b1d3885938c77e5432635b2bf305835",
+    "aura-stones.js": "6d266096c81182ebd20534e75b37db0280014d0d60f6d28951e8fb822ef1be8e",
+    "authored-arm-skin.js": "70ec39490fb58a2f31e3f416754e2e57c6a2b98402da6fc41f61ebbe59df7099",
+    "authored-body-data.js": "56edb58b077f166dbbdf28d4f254e3f8a5fc49ac5c6a5af5ff2ad9c72c9f783a",
+    "authored-body-stage1-data.js": "4a7720a8e4aca01cf29da90dd14ef11933b92b63891708ef181f00d230405824",
+    "authored-body-stage2-data.js": "7eb7714b992132e6ee1a836923d1ebab25bec628b6ec8acc5853bdb7e81b3ca6",
+    "authored-family-data.js": "1dcde00f7109ce07b5c5b7088a8e11a90de2b8c04f362bd2c45da3cd591e64fc",
+    "authored-family-stage1-data.js": "01e93e0b7d6d8cd4d3145ad618ed20924a6e18cc110d37c2f98238bbbd0205b3",
+    "authored-family-stage2-data.js": "2f5b8b6364f9d02a2a720343bfe7c00767fd8d852b05f5f8ca52efe465449445",
+    "authored-legacy-data.js": "6b917edf37e12e2270b92859a0ab15778f19d763205badaa49b4a8d5ffe19776",
+    "authored-legacy-stage1-data.js": "efa0aadc679825b807d79e8af39ab1bfd3d64d2c622e561e81c92201b37d76ee",
+    "authored-legacy-stage2-data.js": "0a1f07d2b1cce55c4ddb0dc0e70abf2570eb52c07e6447398113fca0defcb569",
+    "authored-parts.js": "87d1259dc19fb19b96148913abdededbc3fbc96a9b4fbc26fe1bb1b2983ff49f",
+    "authored-pixel-art.js": "07e7a9ea5ba7e5f59ea3f58f7d4b05359da458ce9b8a2a68b0b34e6677a2c4c6",
+    "authored-pixel-maps.js": "888afe4efa02fdac9fc65a73d062a53136af6bc26541cf74cc4af0606ce1bc0f",
+    "authored-sprite-data.js": "2a1b79e2bbd6bb9a9fc532eadf148fefb82452f483d85cb7d390592ae6806490",
+    "authored-sprite-renderer.js": "4d4bc0bb897572cccac3eada14f7db1b7b05d3df245951b859c69518a50e0f3e",
+    "authored-sprite-stage1-data.js": "4c2b497a6bd613265f17c667f094bde3bb586a04e765ae1080922c96c8e1b5a7",
+    "authored-sprite-stage2-data.js": "5d8fab2d6b2a5cbe052848f8a7c8cf0d68e4399595d54c90c35d15c23f3c82bd",
+    "battle-enrage.js": "6e9972717bb4bb0da594a2021e11ba2c9db873f113782bfaab4bab8fe2b4b607",
+    "battle-summary.js": "7b82cf4dd2aa3aeae341efb213872f1a7e43df15905651f8bf5e8c89fc067c17",
+    "capture-celebration.js": "81b8ad8cf1d5efd75c4735a561c22a39e71384b7ddabb0314a8ca2a1a199d3b0",
+    "capture-tracker.js": "bbb875f9a1234e81b7ec0da1c018362b9fa5d1017f9e72b3c3d45faa3376b164",
+    "combat-expansion.js": "57269d0aa2b7eb30a2a1bef5235d8ab224457e166931ccb0751d9d1291f38668",
+    "combat-feedback.js": "7e09e3782ce3ac05ca3a686ada80eb25cfbdc8a95c4c2e75fbf7a9f8cfbd9233",
+    "combat-text.js": "d45b8034612aa9445050bfae0c70726e4d4e978c8259d3c60a28917e8f53bb9c",
+    "companion-anatomy.js": "7e16318a6ce3200346b38c5239f8982d126dd81e4a27f49b8aaac56c773c6144",
+    "companion-arm-bindings.js": "6a5ebd649541f930d6a77250b21d643fae2bce1b7190f313abf053eaae24254b",
+    "core-species.js": "bde68cd97a9179a0e2b11a599879d1f15a4c4160b31c6e7840dd60a03d2cd94d",
+    "creature-attacks.js": "7b6bf250d8155d8bc2787eb5cf9e9b9a611ec88c280f1ddf653e80ae38b71a45",
+    "creature-equipment.js": "22609d73c778d3a1e39a4f3e7d73801582cccfe2aba5c4c3d7ede0cd6b02290c",
+    "creature-leg-volume.js": "2de9b5b1a1516ea8101ab59f891a5e3400c67f3c6d6139636f852cd72d2a8e96",
+    "deployment-physics.js": "ba4fb5c70e9bfc18d5505bfe48f4da6e09b7aef064408e74124aa51260af7942",
+    "elite-modifiers.js": "dbdf65c9da6cab03813f0710097d9b2cd2770091a5eb095b153b115e2d1921ba",
+    "equipment-affinity.js": "8255a371ad49e02092723a37565a44610d1be02487a2460ea51b503eedf864ef",
+    "equipment-catalog.js": "4ea09bb2ad838e27325dfaeb6f823caa6844ed0594d60febab5c70fafcd7234b",
+    "equipment-loot.js": "06d420455e06a373bf7724f5c88d56b64d43277f8c1f99f19bbd604bd3e21094",
+    "evolution-skills.js": "5f93363e366e68ef09d6383de07fd21066922c4f6613571b70c209e8bc4c36a8",
+    "expedition-rules.js": "c3c03739d858105513fd8c80271f80d87aa47076c32182e38133ad1be07c8dea",
+    "field-ui.js": "f455ecdd757582710daf2c9620ff3192ea21fd6bfb77bbab8d9962b7de7859ac",
+    "game.js": "7fab758d619fd3473ed4f07ff21390fb1de4dafd7b2c406556477d6a0902560a",
+    "grand-designs.js": "bbc666708e399a747ee0a17b6a44f3945c32a3bb684b2098396cfa91f4951385",
+    "grand-pixels.js": "dfdfc9af44cbf8315b5b8f60900b1445d5d1d444b1f7f9fc6d6209f8c248d5df",
+    "indexed-layer-codec.js": "0a693932049666ea6069bcc32cd93b85875df14b83918a187dccdcf83fd6400f",
+    "intro.js": "7616b61da468461b03f5adbaf57438935c76e890e9b759f0db38cf2f7b413a96",
+    "inventory-pouches.js": "989aa3f23467841e6b4f5b0d44781fc6a4f329d76f082206fdd57bdb4346626d",
+    "item-effects.js": "08463357de80cf143502b9d3e3e3174bda42aa6ebb3896fbddbdad16068bb926",
+    "leg-anatomy.js": "3be593b6c3132556dfa3ce272f44164c30f3c08138c50479d988cebc02013928",
+    "leg-volume.js": "3962d1f56da7ee12b3553529b93976b03f999a967664b2f514b074b3e6ca0ba3",
+    "live-roster.js": "bc0ff4a280c82e27ab93e11817552f2bdb699f97ea0acbd2cc9137c888ecd635",
+    "loadout-drag-ui.js": "5e2585562a086e62546f45ba74d3600c080269ba37ae3c3ab980a7ad63b95655",
+    "loadout-interactions.js": "75838fea168d1e0a3da191f29c74ff5568117b6ac83ad1db15a9363b74bba97b",
+    "melee-layer-art.js": "fd2cb8f46461b3774bca0a2f60bf3b25edbabc07227fe0099c979161af4311e7",
+    "melee-layer-data.js": "d99ac8a9d83ff13eca11bd9fbfb3476b7174a830c038eddab68fb601d31ae052",
+    "melee-weapon-art.js": "d5938c7387f656eb3db5cb6ea65aedbd8f0dd39d61d693672f9f14b3ebf8abde",
+    "menagerie-browser.js": "bc26a6314d946d306c008ad739bbe5a274343cb7b4b61ffabe9435a43f79152a",
+    "modal-content.js": "e1c35a596de819c0bf22b26556d71fba0a4e7708706b0b87b994147f753e3147",
+    "movement-tuning.js": "3d107b859a6b892d668c9047672617302623cdf338f20d9821479908eb8abdf5",
+    "native-art.js": "25cd8151b6b41a81062d4a4f6d3282eaba166c971e4e51bfcfd987e1858de3d9",
+    "native-batch-two.js": "cebd831f650a9c2093b85fac2a080988d6f505d5008685e1f1c9f464e677b875",
+    "native-batch.js": "acfb94d327f762ec0d870d0372783233fb25ac380202a11760212e69e25ce5e7",
+    "native-cloth.js": "00bbdb07f47bbd3a64ac552d203a016578b0a7245c28792df946a6747111178b",
+    "native-combat.js": "46de85f85de8896e50b8f9e4ab18174dd26c1e3fee2760bb49620f3f7389b89a",
+    "native-content.js": "9eeca6e01d3b9e071f472e8d2b17b2fe69f6ab25a4b056fcd98d9171cf04b2e0",
+    "native-export.js": "c4e7953a1313bfa4e5284d9f834840c2d62872cdb90293794e5c5da86d991de1",
+    "native-faces.js": "7d1bbf7a6ed8f4653cf12ff27fa32bf147eccfcfb680617137ee61ef2028e280",
+    "native-forms.js": "77d1be3aa24bcd341f9237cf361af481b20f5585fca46f89f8d7a3d47a5c79a0",
+    "native-motion.js": "4abdb4d5eb5fa662b6ba628db1185125f6a66aec93d459909064ecbb20f0e815",
+    "native-poses.js": "45cf9bc50106b559ca516c2a26d7e7ac1ce2579aec4b5b3d47fb2663b34dff7a",
+    "native-size.js": "ca3817015957da5514ed035e3084a69a598950967abe4afbda4df28151914a27",
+    "native-tactics.js": "750931799108117dba36d174776aaae30f81b473cad5acf2fe2e79c5cb56ea71",
+    "opening-journey.js": "d4dcd14f15eb49ca380a23ae848613b6b5a34f242ea1b43c2ffbca837b4840d3",
+    "opening-relics.js": "2431dd49b965d5ccebe66831038596721e085f5d4448dd92df7e59b5b2deb800",
+    "pixel-face-tools.js": "34f91c988f6b14fa8560067075585183f4fcdc9fe2dd30216e9e926cbaef51d2",
+    "pixel-legacy.js": "6be7f9560d1ffeea5a3fcf89d66b97a57d8fcc93177b40288e9e428d7f86503e",
+    "planet-ui.js": "b0625f30b23c9500930bc0ac3db2e9da990f373835317def4a8dc87f3639bdec",
+    "portrait-expressions.js": "72fd6e006f70680cc92094fc6b06fc914d81bc39cb987fba8368ab7806c3c3e2",
+    "practice.js": "b8c29a4baff892e57ead679fc869dee5662eb321d75c1e8370c0e995f6d68211",
+    "prototype-dynamics.js": "bdbda534aa75182264b563c864dcbabc106f03b8719f7c1d2bebf5fbff6c50d9",
+    "prototype-engine.js": "75eaeaf88fa8717b19fda3dfe5fa983a540e6dc9c526dc7ce1e22c08848be50f",
+    "prototype-export.js": "2c75c0dda74abbad3ee57ffed1c2b39f379b73cf7512f74e67bfe6d90c75cfbe",
+    "prototype-faces.js": "760a79c02a5a74e1530121e6ca0f5602c92a17dfbc950e77d3ffc269cd77d5c0",
+    "prototype-models.js": "633170c26301f285627eaa948be061470128d6e282b2feb367a302e33ae0addc",
+    "prototype-motion.js": "9a098e139b14cdbcce08a37f9a4b50de6eb2c5e76a918a139b1b79d9487820d5",
+    "prototype-pixel-art.js": "9ff5bf2822271b99347289368c422bd85981d0c3ddfd755bd662f2b955493385",
+    "prototype-renderer.js": "ffff6f25b0d44d14fe233a28e08c0bfa18c25087dfe7b69cdbe636498733bcf0",
+    "prototype-rig.js": "46c4066f3c6f1a84fdc647e5695dd758833f44587da1e01aee83dcfa6e826303",
+    "prototype-sprites.js": "57ef086250e21897e6890ea65f95d8c680613eb1bb059f5f5533806b3062c8fe",
+    "prototype.js": "fdaf73115e3d8045484659319d63d3d047b7cb1e5472de8adb877b1617c80be5",
+    "rarity-aura.js": "c632cbd50c4cdcf2647eecb2cc80034bec6fae0f21722a5ba0d48d809de84778",
+    "relic-design.js": "a16f6abdeb1b6c6e5dbf7484ecaa6f0b389eb16370521aade4e32ffd9df195e2",
+    "relic-illustrations.js": "d324052330b3c0831f4d98e02b546832ec4d98d79fc502303dc53bd03f031ba4",
+    "relic-pacts.js": "d17a2b4b70e9d66e38616a1f17d11257180e425aca3c84098a4bcee7141e5d47",
+    "relic-selection-ui.js": "1edf093c4989f64151cc08f23591d87ab26b85d7b8ab6e1fbd1fa62c8cb2908f",
+    "relic-ui.js": "c7e2efe100ea301ab5463a87b431fd2ff90178e717bd93410dd9778d6d6b7057",
+    "reward-loadout.js": "5df933265b113040598686aeff1f354bfaf9af233f1584d637c5c1042924e463",
+    "rewards-ui.js": "81d683ed79f6628a0be00133dca7128b5c921b4fcd37e6c4c560fbad9542982e",
+    "roster.js": "f2e55c8ddd7090d465300a48513aefeba62ab07e673ed9ea0bc0bc9b6b573a5d",
+    "route-preview.js": "1eda594993261f787fe027520d4ba0b57466c57f123371263af8b0f6e5481831",
+    "run-relics.js": "0019b14a9b927c51e86059ac748e15f233834414d6cc2f01cd99b64f78f53fbe",
+    "server.js": "95f7a101b155cab5e899367ae593bd35becf521de4b05e74aa44a366f12cbd0f",
+    "settings-movement-preview.js": "f3669304695c18fada8fa1f514ba3bee71522bd9e6d2e4329b5259aff2a98eb9",
+    "skill-vfx.js": "6ffb4d0d1dad52ad79a7722c327d217bd12c39f3a641a32e14201dc3e0300f2f",
+    "skill-visuals.js": "82634d6ac47f52dcb22cd19e303a2b5152eedd0dfc22b231fcd7f6d322f0bfda",
+    "skills.js": "4cdf30a4ea050670d9056a1a1dbb785bb50b899d39d38cbc4bc20b1835a51451",
+    "sound.js": "375e11b6ba699b1d8265c4f94909fa58c4dee3475fcd15530f4f075bbe7d0a3f",
+    "stage-background-loop.js": "0a8825a457953785060270b22d99db06c70c383155d1fa8ba707101ee426f3cc",
+    "starter-equipment.js": "f93006cf563a122de12ede8b2714975879d43943c8eee560e893a00dacc7106f",
+    "starter-reactions.js": "5facf039c5bfd3f1f0958920daf09fc4b8889a926eab1081d83ec520e923a342",
+    "status-ailments.js": "a1bdf481f240f7e4f0d13eaa2b982c620b3d3c52347fb3d323510b60c3771ab7",
+    "tactics.js": "11f6e1921d497bb4623afaaf2dc79f3423dcef4059408029e1eb411d12af214a",
+    "tuning.js": "978dd20d3598764a2a2652b65fc9ea886edc7ea38a9d21c7eaee2ac694d5fe93",
+    "ui-art-assets.js": "2ef0ad18cb2212037532dfa378865ef0120fbb8cfa44cef4774400d079d35cfb",
+    "ui-art.js": "1d2ad5a042e09c81d85a9e2e982f8ba26537817cc68c248339c95481209673b9",
+    "wearer-relics.js": "59a3dcce7bc58e47246823dd1143530106f08e86c7db72fe11faa6d69c57be18",
+    "xp-celebration.js": "498c2b52dabc428fad2ada70d36bc9bcd33c38b12cfa8e71eeebf7dff857e3ea",
+    "Starfall-Menagerie.html": "b70dc710b7280f653d36ea5d037cb1efb6e7aa43dd4850be5d1d1100757a2b8c",
+    "Starfall-Training-Glade.html": "baa050d541c955071597157dae5d8fe16308bbc11c9647ddf38f92e989946540",
+    "public/prototype-bundle.js": "0bc84c892e1297e072f102c1690f7f35a237e48502e097feab6c8c48d59a2be5"
+  },
+  "scope": {
+    "companions": [
+      "mossguard",
+      "glacier",
+      "abyssal",
+      "cloverimp",
+      "gravitan",
+      "aurel",
+      "brakk",
+      "brom",
+      "grit",
+      "grum",
+      "tarka",
+      "sable"
+    ],
+    "families": [
+      "knight",
+      "orc",
+      "dwarf",
+      "troll",
+      "goblin",
+      "minotaur",
+      "rogue"
+    ],
+    "artForms": 3,
+    "facings": 8,
+    "sourceCells": 168,
+    "gameplayVariants": 52,
+    "individualCombats": 104
+  },
+  "targetedTests": {
+    "pass": 78,
+    "fail": 0
+  },
+  "contactBaseline": {
+    "pass": 36,
+    "fail": 2,
+    "unchangedFromPriorBaseline": true
+  },
+  "movies": {
+    "wild": {
+      "poses": 41328,
+      "duration": 164,
+      "decodedSegments": 136,
+      "videoHash": "0445ea23fb8e7a182ba9d176d677bfa1e177fd248fecccc4869513b46dadc42a"
+    },
+    "warden": {
+      "poses": 41328,
+      "duration": 164,
+      "decodedSegments": 136,
+      "videoHash": "868b81a14b23b23fcf449c48b93b8d504c91445067634b30b3e4253e0813f92f"
+    }
+  },
+  "visualReview": {
+    "schema": 1,
+    "reviewed": true,
+    "inputs": {
+      "affinity-gear.js": "0c5778f3a601d902df855f273c535e03270290997480560b2a821bfd3fe05b41",
+      "ai-relics.js": "17eeb1ecc72f92bb92f2ca2995e9c68aff2f1d8046690c3fa297f403a367651e",
+      "ambient-art.js": "0bc9948d5bb9307fb0e25908d5c04ebf3a7e39f4b5b87334417f9587271e3f99",
+      "ambient-ui.js": "91ae8ec84db9505116bcb6f20dbbce0cdb8e6f565f9ff81f098ef2bf7c2b5402",
+      "animation.js": "5ec10e51220ef506ec3ea31d81cea1f042938cb66456cc1755b74f45f2006a55",
+      "app.js": "07000ec32f03d001ca34027c90e5b9f3302dd5d801955cdfdfa628e6c0aa9a5e",
+      "arena-camera.js": "681bf91826ac505bd0659cfd7391a2fa70d0cd2bb1ae0de13914abd72705c020",
+      "arena.js": "e78488981c9c21e1879e832498669b227e8fd1c6740a4fc9855879e65b1db6fb",
+      "art.js": "3fc3e18c21da1e7624c0c3cb1f628f977b1d3885938c77e5432635b2bf305835",
+      "aura-stones.js": "6d266096c81182ebd20534e75b37db0280014d0d60f6d28951e8fb822ef1be8e",
+      "authored-arm-skin.js": "70ec39490fb58a2f31e3f416754e2e57c6a2b98402da6fc41f61ebbe59df7099",
+      "authored-body-data.js": "56edb58b077f166dbbdf28d4f254e3f8a5fc49ac5c6a5af5ff2ad9c72c9f783a",
+      "authored-body-stage1-data.js": "4a7720a8e4aca01cf29da90dd14ef11933b92b63891708ef181f00d230405824",
+      "authored-body-stage2-data.js": "7eb7714b992132e6ee1a836923d1ebab25bec628b6ec8acc5853bdb7e81b3ca6",
+      "authored-family-data.js": "1dcde00f7109ce07b5c5b7088a8e11a90de2b8c04f362bd2c45da3cd591e64fc",
+      "authored-family-stage1-data.js": "01e93e0b7d6d8cd4d3145ad618ed20924a6e18cc110d37c2f98238bbbd0205b3",
+      "authored-family-stage2-data.js": "2f5b8b6364f9d02a2a720343bfe7c00767fd8d852b05f5f8ca52efe465449445",
+      "authored-legacy-data.js": "6b917edf37e12e2270b92859a0ab15778f19d763205badaa49b4a8d5ffe19776",
+      "authored-legacy-stage1-data.js": "efa0aadc679825b807d79e8af39ab1bfd3d64d2c622e561e81c92201b37d76ee",
+      "authored-legacy-stage2-data.js": "0a1f07d2b1cce55c4ddb0dc0e70abf2570eb52c07e6447398113fca0defcb569",
+      "authored-parts.js": "87d1259dc19fb19b96148913abdededbc3fbc96a9b4fbc26fe1bb1b2983ff49f",
+      "authored-pixel-art.js": "07e7a9ea5ba7e5f59ea3f58f7d4b05359da458ce9b8a2a68b0b34e6677a2c4c6",
+      "authored-pixel-maps.js": "888afe4efa02fdac9fc65a73d062a53136af6bc26541cf74cc4af0606ce1bc0f",
+      "authored-sprite-data.js": "2a1b79e2bbd6bb9a9fc532eadf148fefb82452f483d85cb7d390592ae6806490",
+      "authored-sprite-renderer.js": "4d4bc0bb897572cccac3eada14f7db1b7b05d3df245951b859c69518a50e0f3e",
+      "authored-sprite-stage1-data.js": "4c2b497a6bd613265f17c667f094bde3bb586a04e765ae1080922c96c8e1b5a7",
+      "authored-sprite-stage2-data.js": "5d8fab2d6b2a5cbe052848f8a7c8cf0d68e4399595d54c90c35d15c23f3c82bd",
+      "battle-enrage.js": "6e9972717bb4bb0da594a2021e11ba2c9db873f113782bfaab4bab8fe2b4b607",
+      "battle-summary.js": "7b82cf4dd2aa3aeae341efb213872f1a7e43df15905651f8bf5e8c89fc067c17",
+      "capture-celebration.js": "81b8ad8cf1d5efd75c4735a561c22a39e71384b7ddabb0314a8ca2a1a199d3b0",
+      "capture-tracker.js": "bbb875f9a1234e81b7ec0da1c018362b9fa5d1017f9e72b3c3d45faa3376b164",
+      "combat-expansion.js": "57269d0aa2b7eb30a2a1bef5235d8ab224457e166931ccb0751d9d1291f38668",
+      "combat-feedback.js": "7e09e3782ce3ac05ca3a686ada80eb25cfbdc8a95c4c2e75fbf7a9f8cfbd9233",
+      "combat-text.js": "d45b8034612aa9445050bfae0c70726e4d4e978c8259d3c60a28917e8f53bb9c",
+      "companion-anatomy.js": "7e16318a6ce3200346b38c5239f8982d126dd81e4a27f49b8aaac56c773c6144",
+      "companion-arm-bindings.js": "6a5ebd649541f930d6a77250b21d643fae2bce1b7190f313abf053eaae24254b",
+      "core-species.js": "bde68cd97a9179a0e2b11a599879d1f15a4c4160b31c6e7840dd60a03d2cd94d",
+      "creature-attacks.js": "7b6bf250d8155d8bc2787eb5cf9e9b9a611ec88c280f1ddf653e80ae38b71a45",
+      "creature-equipment.js": "22609d73c778d3a1e39a4f3e7d73801582cccfe2aba5c4c3d7ede0cd6b02290c",
+      "creature-leg-volume.js": "2de9b5b1a1516ea8101ab59f891a5e3400c67f3c6d6139636f852cd72d2a8e96",
+      "deployment-physics.js": "ba4fb5c70e9bfc18d5505bfe48f4da6e09b7aef064408e74124aa51260af7942",
+      "elite-modifiers.js": "dbdf65c9da6cab03813f0710097d9b2cd2770091a5eb095b153b115e2d1921ba",
+      "equipment-affinity.js": "8255a371ad49e02092723a37565a44610d1be02487a2460ea51b503eedf864ef",
+      "equipment-catalog.js": "4ea09bb2ad838e27325dfaeb6f823caa6844ed0594d60febab5c70fafcd7234b",
+      "equipment-loot.js": "06d420455e06a373bf7724f5c88d56b64d43277f8c1f99f19bbd604bd3e21094",
+      "evolution-skills.js": "5f93363e366e68ef09d6383de07fd21066922c4f6613571b70c209e8bc4c36a8",
+      "expedition-rules.js": "c3c03739d858105513fd8c80271f80d87aa47076c32182e38133ad1be07c8dea",
+      "field-ui.js": "f455ecdd757582710daf2c9620ff3192ea21fd6bfb77bbab8d9962b7de7859ac",
+      "game.js": "7fab758d619fd3473ed4f07ff21390fb1de4dafd7b2c406556477d6a0902560a",
+      "grand-designs.js": "bbc666708e399a747ee0a17b6a44f3945c32a3bb684b2098396cfa91f4951385",
+      "grand-pixels.js": "dfdfc9af44cbf8315b5b8f60900b1445d5d1d444b1f7f9fc6d6209f8c248d5df",
+      "indexed-layer-codec.js": "0a693932049666ea6069bcc32cd93b85875df14b83918a187dccdcf83fd6400f",
+      "intro.js": "7616b61da468461b03f5adbaf57438935c76e890e9b759f0db38cf2f7b413a96",
+      "inventory-pouches.js": "989aa3f23467841e6b4f5b0d44781fc6a4f329d76f082206fdd57bdb4346626d",
+      "item-effects.js": "08463357de80cf143502b9d3e3e3174bda42aa6ebb3896fbddbdad16068bb926",
+      "leg-anatomy.js": "3be593b6c3132556dfa3ce272f44164c30f3c08138c50479d988cebc02013928",
+      "leg-volume.js": "3962d1f56da7ee12b3553529b93976b03f999a967664b2f514b074b3e6ca0ba3",
+      "live-roster.js": "bc0ff4a280c82e27ab93e11817552f2bdb699f97ea0acbd2cc9137c888ecd635",
+      "loadout-drag-ui.js": "5e2585562a086e62546f45ba74d3600c080269ba37ae3c3ab980a7ad63b95655",
+      "loadout-interactions.js": "75838fea168d1e0a3da191f29c74ff5568117b6ac83ad1db15a9363b74bba97b",
+      "melee-layer-art.js": "fd2cb8f46461b3774bca0a2f60bf3b25edbabc07227fe0099c979161af4311e7",
+      "melee-layer-data.js": "d99ac8a9d83ff13eca11bd9fbfb3476b7174a830c038eddab68fb601d31ae052",
+      "melee-weapon-art.js": "d5938c7387f656eb3db5cb6ea65aedbd8f0dd39d61d693672f9f14b3ebf8abde",
+      "menagerie-browser.js": "bc26a6314d946d306c008ad739bbe5a274343cb7b4b61ffabe9435a43f79152a",
+      "modal-content.js": "e1c35a596de819c0bf22b26556d71fba0a4e7708706b0b87b994147f753e3147",
+      "movement-tuning.js": "3d107b859a6b892d668c9047672617302623cdf338f20d9821479908eb8abdf5",
+      "native-art.js": "25cd8151b6b41a81062d4a4f6d3282eaba166c971e4e51bfcfd987e1858de3d9",
+      "native-batch-two.js": "cebd831f650a9c2093b85fac2a080988d6f505d5008685e1f1c9f464e677b875",
+      "native-batch.js": "acfb94d327f762ec0d870d0372783233fb25ac380202a11760212e69e25ce5e7",
+      "native-cloth.js": "00bbdb07f47bbd3a64ac552d203a016578b0a7245c28792df946a6747111178b",
+      "native-combat.js": "46de85f85de8896e50b8f9e4ab18174dd26c1e3fee2760bb49620f3f7389b89a",
+      "native-content.js": "9eeca6e01d3b9e071f472e8d2b17b2fe69f6ab25a4b056fcd98d9171cf04b2e0",
+      "native-export.js": "c4e7953a1313bfa4e5284d9f834840c2d62872cdb90293794e5c5da86d991de1",
+      "native-faces.js": "7d1bbf7a6ed8f4653cf12ff27fa32bf147eccfcfb680617137ee61ef2028e280",
+      "native-forms.js": "77d1be3aa24bcd341f9237cf361af481b20f5585fca46f89f8d7a3d47a5c79a0",
+      "native-motion.js": "4abdb4d5eb5fa662b6ba628db1185125f6a66aec93d459909064ecbb20f0e815",
+      "native-poses.js": "45cf9bc50106b559ca516c2a26d7e7ac1ce2579aec4b5b3d47fb2663b34dff7a",
+      "native-size.js": "ca3817015957da5514ed035e3084a69a598950967abe4afbda4df28151914a27",
+      "native-tactics.js": "750931799108117dba36d174776aaae30f81b473cad5acf2fe2e79c5cb56ea71",
+      "opening-journey.js": "d4dcd14f15eb49ca380a23ae848613b6b5a34f242ea1b43c2ffbca837b4840d3",
+      "opening-relics.js": "2431dd49b965d5ccebe66831038596721e085f5d4448dd92df7e59b5b2deb800",
+      "pixel-face-tools.js": "34f91c988f6b14fa8560067075585183f4fcdc9fe2dd30216e9e926cbaef51d2",
+      "pixel-legacy.js": "6be7f9560d1ffeea5a3fcf89d66b97a57d8fcc93177b40288e9e428d7f86503e",
+      "planet-ui.js": "b0625f30b23c9500930bc0ac3db2e9da990f373835317def4a8dc87f3639bdec",
+      "portrait-expressions.js": "72fd6e006f70680cc92094fc6b06fc914d81bc39cb987fba8368ab7806c3c3e2",
+      "practice.js": "b8c29a4baff892e57ead679fc869dee5662eb321d75c1e8370c0e995f6d68211",
+      "prototype-dynamics.js": "bdbda534aa75182264b563c864dcbabc106f03b8719f7c1d2bebf5fbff6c50d9",
+      "prototype-engine.js": "75eaeaf88fa8717b19fda3dfe5fa983a540e6dc9c526dc7ce1e22c08848be50f",
+      "prototype-export.js": "2c75c0dda74abbad3ee57ffed1c2b39f379b73cf7512f74e67bfe6d90c75cfbe",
+      "prototype-faces.js": "760a79c02a5a74e1530121e6ca0f5602c92a17dfbc950e77d3ffc269cd77d5c0",
+      "prototype-models.js": "633170c26301f285627eaa948be061470128d6e282b2feb367a302e33ae0addc",
+      "prototype-motion.js": "9a098e139b14cdbcce08a37f9a4b50de6eb2c5e76a918a139b1b79d9487820d5",
+      "prototype-pixel-art.js": "9ff5bf2822271b99347289368c422bd85981d0c3ddfd755bd662f2b955493385",
+      "prototype-renderer.js": "ffff6f25b0d44d14fe233a28e08c0bfa18c25087dfe7b69cdbe636498733bcf0",
+      "prototype-rig.js": "46c4066f3c6f1a84fdc647e5695dd758833f44587da1e01aee83dcfa6e826303",
+      "prototype-sprites.js": "57ef086250e21897e6890ea65f95d8c680613eb1bb059f5f5533806b3062c8fe",
+      "prototype.js": "fdaf73115e3d8045484659319d63d3d047b7cb1e5472de8adb877b1617c80be5",
+      "rarity-aura.js": "c632cbd50c4cdcf2647eecb2cc80034bec6fae0f21722a5ba0d48d809de84778",
+      "relic-design.js": "a16f6abdeb1b6c6e5dbf7484ecaa6f0b389eb16370521aade4e32ffd9df195e2",
+      "relic-illustrations.js": "d324052330b3c0831f4d98e02b546832ec4d98d79fc502303dc53bd03f031ba4",
+      "relic-pacts.js": "d17a2b4b70e9d66e38616a1f17d11257180e425aca3c84098a4bcee7141e5d47",
+      "relic-selection-ui.js": "1edf093c4989f64151cc08f23591d87ab26b85d7b8ab6e1fbd1fa62c8cb2908f",
+      "relic-ui.js": "c7e2efe100ea301ab5463a87b431fd2ff90178e717bd93410dd9778d6d6b7057",
+      "reward-loadout.js": "5df933265b113040598686aeff1f354bfaf9af233f1584d637c5c1042924e463",
+      "rewards-ui.js": "81d683ed79f6628a0be00133dca7128b5c921b4fcd37e6c4c560fbad9542982e",
+      "roster.js": "f2e55c8ddd7090d465300a48513aefeba62ab07e673ed9ea0bc0bc9b6b573a5d",
+      "route-preview.js": "1eda594993261f787fe027520d4ba0b57466c57f123371263af8b0f6e5481831",
+      "run-relics.js": "0019b14a9b927c51e86059ac748e15f233834414d6cc2f01cd99b64f78f53fbe",
+      "server.js": "95f7a101b155cab5e899367ae593bd35becf521de4b05e74aa44a366f12cbd0f",
+      "settings-movement-preview.js": "f3669304695c18fada8fa1f514ba3bee71522bd9e6d2e4329b5259aff2a98eb9",
+      "skill-vfx.js": "6ffb4d0d1dad52ad79a7722c327d217bd12c39f3a641a32e14201dc3e0300f2f",
+      "skill-visuals.js": "82634d6ac47f52dcb22cd19e303a2b5152eedd0dfc22b231fcd7f6d322f0bfda",
+      "skills.js": "4cdf30a4ea050670d9056a1a1dbb785bb50b899d39d38cbc4bc20b1835a51451",
+      "sound.js": "375e11b6ba699b1d8265c4f94909fa58c4dee3475fcd15530f4f075bbe7d0a3f",
+      "stage-background-loop.js": "0a8825a457953785060270b22d99db06c70c383155d1fa8ba707101ee426f3cc",
+      "starter-equipment.js": "f93006cf563a122de12ede8b2714975879d43943c8eee560e893a00dacc7106f",
+      "starter-reactions.js": "5facf039c5bfd3f1f0958920daf09fc4b8889a926eab1081d83ec520e923a342",
+      "status-ailments.js": "a1bdf481f240f7e4f0d13eaa2b982c620b3d3c52347fb3d323510b60c3771ab7",
+      "tactics.js": "11f6e1921d497bb4623afaaf2dc79f3423dcef4059408029e1eb411d12af214a",
+      "tuning.js": "978dd20d3598764a2a2652b65fc9ea886edc7ea38a9d21c7eaee2ac694d5fe93",
+      "ui-art-assets.js": "2ef0ad18cb2212037532dfa378865ef0120fbb8cfa44cef4774400d079d35cfb",
+      "ui-art.js": "1d2ad5a042e09c81d85a9e2e982f8ba26537817cc68c248339c95481209673b9",
+      "wearer-relics.js": "59a3dcce7bc58e47246823dd1143530106f08e86c7db72fe11faa6d69c57be18",
+      "xp-celebration.js": "498c2b52dabc428fad2ada70d36bc9bcd33c38b12cfa8e71eeebf7dff857e3ea",
+      "Starfall-Menagerie.html": "b70dc710b7280f653d36ea5d037cb1efb6e7aa43dd4850be5d1d1100757a2b8c",
+      "Starfall-Training-Glade.html": "baa050d541c955071597157dae5d8fe16308bbc11c9647ddf38f92e989946540",
+      "public/prototype-bundle.js": "0bc84c892e1297e072f102c1690f7f35a237e48502e097feab6c8c48d59a2be5"
+    },
+    "method": "Direct visual inspection of raw source rows, 21 layer/pose sheets, 24 source/offline combat phase montages, 14 full-cycle decoded family/path sheets, and all 13 individual decoded combat montages. Automated tests are reported separately.",
+    "coverage": {
+      "families": 7,
+      "artForms": 3,
+      "facings": 8,
+      "sourceCells": 168,
+      "companions": 12,
+      "gameplayVariants": 52,
+      "individualCombats": 104,
+      "phaseMontagesInspected": 24,
+      "cycleMontagesInspected": 14,
+      "individualDecodedMontagesInspected": 13
+    },
+    "characters": [
+      {
+        "id": "aurel",
+        "evidence": [
+          "companions/aurel-source.png",
+          "companions/aurel-offline.png"
+        ],
+        "factors": [
+          {
+            "factor": "Underlying body coverage",
+            "result": "pass",
+            "observation": "Chest and waist stay filled behind the raised sword arm; the front/SW mature body-only sheet retains the complete torso."
+          },
+          {
+            "factor": "Connected limbs without a stationary duplicate",
+            "result": "pass",
+            "observation": "Gold forearms change pose while the white apex fur mantle remains an intentional shoulder garment; no second resting forearm appears."
+          },
+          {
+            "factor": "Complete costume and palette",
+            "result": "pass",
+            "observation": "Red cape edges, orange hem highlights and dark folds remain visible in both builds, including the exact mature knight example."
+          },
+          {
+            "factor": "Hand?weapon attachment",
+            "result": "pass",
+            "observation": "The sword handle follows its painted glove through windup, forward contact and lowering recovery; shield and sword remain on their assigned hands."
+          },
+          {
+            "factor": "Silhouette and cell bounds",
+            "result": "pass",
+            "observation": "Helmet plume, fur mantle, full cape and sword fit in the cell in the decoded front, side, rear and falling samples."
+          }
+        ]
+      },
+      {
+        "id": "brakk",
+        "evidence": [
+          "companions/brakk-source.png",
+          "companions/brakk-offline.png"
+        ],
+        "factors": [
+          {
+            "factor": "Underlying body coverage",
+            "result": "pass",
+            "observation": "Brown leather and the green torso remain continuous when the evolved axe hand extends away from the waist."
+          },
+          {
+            "factor": "Connected limbs without a stationary duplicate",
+            "result": "pass",
+            "observation": "The visible green fist and forearm travel from the shoulder; the horned pauldron remains armor, without a frozen lower-arm copy."
+          },
+          {
+            "factor": "Complete costume and palette",
+            "result": "pass",
+            "observation": "Skull belt, brown textures, red waist cloth and horn tips retain the source silhouette through both evolution paths."
+          },
+          {
+            "factor": "Hand?weapon attachment",
+            "result": "pass",
+            "observation": "Axe shaft remains seated in the same green fist through the horizontal contact pose and lowered recovery."
+          },
+          {
+            "factor": "Silhouette and cell bounds",
+            "result": "pass",
+            "observation": "Both horns, broad shoulders, boots and axe remain complete in source/offline captures and the eight-direction decoded cycles."
+          }
+        ]
+      },
+      {
+        "id": "brom",
+        "evidence": [
+          "companions/brom-source.png",
+          "companions/brom-offline.png"
+        ],
+        "factors": [
+          {
+            "factor": "Underlying body coverage",
+            "result": "pass",
+            "observation": "The teal cuirass remains filled behind the hammer-side arm in mature side views and apex front views."
+          },
+          {
+            "factor": "Connected limbs without a stationary duplicate",
+            "result": "pass",
+            "observation": "Raised and lowered gold gauntlets remain joined to their shoulders; no resting sleeve is left beside the moving hand."
+          },
+          {
+            "factor": "Complete costume and palette",
+            "result": "pass",
+            "observation": "Orange beard, teal coat and gold armor keep their source texture; the coat hem remains on the garment in rear views."
+          },
+          {
+            "factor": "Hand?weapon attachment",
+            "result": "pass",
+            "observation": "Hammer handle stays in the moving glove in the mature forward extension and the apex raised-arm recovery."
+          },
+          {
+            "factor": "Silhouette and cell bounds",
+            "result": "pass",
+            "observation": "Crown, beard, wide gauntlets and boots retain their full outlines in the decoded side/front/rear and fall samples."
+          }
+        ]
+      },
+      {
+        "id": "grum",
+        "evidence": [
+          "companions/grum-source.png",
+          "companions/grum-offline.png"
+        ],
+        "factors": [
+          {
+            "factor": "Underlying body coverage",
+            "result": "pass",
+            "observation": "The wide evolved chest and brown waist remain present when the large arm swings away; no shoulder-shaped bite is exposed."
+          },
+          {
+            "factor": "Connected limbs without a stationary duplicate",
+            "result": "pass",
+            "observation": "The leaf-covered upper arm now travels with the forearm from the actual shoulder, and the green fist has no stationary source copy."
+          },
+          {
+            "factor": "Complete costume and palette",
+            "result": "pass",
+            "observation": "Green mottling, leaf shoulders and the brown vest remain intact; no cape is invented for this family."
+          },
+          {
+            "factor": "Hand?weapon attachment",
+            "result": "pass",
+            "observation": "The short wooden weapon remains attached to the painted green fist through horizontal contact and lowered recovery in both paths."
+          },
+          {
+            "factor": "Silhouette and cell bounds",
+            "result": "pass",
+            "observation": "The complete shoulder mass, hands and planted boot shapes remain inside the cell in source/offline fights and decoded falls."
+          }
+        ]
+      },
+      {
+        "id": "grit",
+        "evidence": [
+          "companions/grit-source.png",
+          "companions/grit-offline.png"
+        ],
+        "factors": [
+          {
+            "factor": "Underlying body coverage",
+            "result": "pass",
+            "observation": "The evolved brown chest stays solid behind the extended blade arm and in the arm-hidden inspection."
+          },
+          {
+            "factor": "Connected limbs without a stationary duplicate",
+            "result": "pass",
+            "observation": "The small gold/green hand travels as one limb from its shoulder; the scarf remains behind it without a spare stationary sleeve."
+          },
+          {
+            "factor": "Complete costume and palette",
+            "result": "pass",
+            "observation": "Red scarf tails and full evolved cape remain continuous, including the bottom folds beside the moving forearm."
+          },
+          {
+            "factor": "Hand?weapon attachment",
+            "result": "pass",
+            "observation": "The blade shaft remains held at the same hand through forward contact and recovery; its identity does not change with the leg phase."
+          },
+          {
+            "factor": "Silhouette and cell bounds",
+            "result": "pass",
+            "observation": "Long ears, red head cloth, cape tips, boots and blade remain present at native and enlarged size."
+          }
+        ]
+      },
+      {
+        "id": "tarka",
+        "evidence": [
+          "companions/tarka-source.png",
+          "companions/tarka-offline.png"
+        ],
+        "factors": [
+          {
+            "factor": "Underlying body coverage",
+            "result": "pass",
+            "observation": "The brown chest and red strap remain filled behind the moving arm, with natural space between the two boots."
+          },
+          {
+            "factor": "Connected limbs without a stationary duplicate",
+            "result": "pass",
+            "observation": "The muscular forearm stays attached to its shoulder through extension; the far arm remains appropriately occluded in rear views."
+          },
+          {
+            "factor": "Complete costume and palette",
+            "result": "pass",
+            "observation": "Red scarf/straps, orange-brown armor texture and both white horns retain their authored appearance."
+          },
+          {
+            "factor": "Hand?weapon attachment",
+            "result": "pass",
+            "observation": "The long axe handle follows the same fist through contact and lowering recovery in both source and offline fights."
+          },
+          {
+            "factor": "Silhouette and cell bounds",
+            "result": "pass",
+            "observation": "Horns, tail, broad shoulders and boots stay whole in all directional decoded samples, including knockdown and getup."
+          }
+        ]
+      },
+      {
+        "id": "sable",
+        "evidence": [
+          "companions/sable-source.png",
+          "companions/sable-offline.png"
+        ],
+        "factors": [
+          {
+            "factor": "Underlying body coverage",
+            "result": "pass",
+            "observation": "The leather torso stays behind the raised glove; no cloak-shaped or cuff-shaped hole appears in either evolved path."
+          },
+          {
+            "factor": "Connected limbs without a stationary duplicate",
+            "result": "pass",
+            "observation": "The visible glove and sleeve move from their registered shoulder; the cloak retains its own motion without a resting-arm silhouette."
+          },
+          {
+            "factor": "Complete costume and palette",
+            "result": "pass",
+            "observation": "The evolved blue cloak and bronze trim remain complete. Pale source floor marks and gray sampled bands are absent from the animated costume."
+          },
+          {
+            "factor": "Hand?weapon attachment",
+            "result": "pass",
+            "observation": "The blade meets the actual painted glove through windup, horizontal contact and recovery, rather than following a point on the cuff or cloak."
+          },
+          {
+            "factor": "Silhouette and cell bounds",
+            "result": "pass",
+            "observation": "Blue coat tails and real boots stay distinct; NW/NE apex far boots remain concealed, without extra moving bronze hem pieces."
+          }
+        ]
+      },
+      {
+        "id": "mossguard",
+        "evidence": [
+          "companions/mossguard-source.png",
+          "companions/mossguard-offline.png"
+        ],
+        "factors": [
+          {
+            "factor": "Underlying body coverage",
+            "result": "pass",
+            "observation": "Mature and apex green chest/waist stay filled as the large near arm moves forward and down."
+          },
+          {
+            "factor": "Connected limbs without a stationary duplicate",
+            "result": "pass",
+            "observation": "The full leaf-covered upper arm moves with its green fist, rather than remaining attached to the head as an extra limb."
+          },
+          {
+            "factor": "Complete costume and palette",
+            "result": "pass",
+            "observation": "Moss-green skin, brown leather and leaf highlights retain their texture across all five gameplay variants."
+          },
+          {
+            "factor": "Hand?weapon attachment",
+            "result": "pass",
+            "observation": "The wooden grip remains seated in the moving fist through horizontal extension and lowered recovery."
+          },
+          {
+            "factor": "Silhouette and cell bounds",
+            "result": "pass",
+            "observation": "The broad shoulder silhouette and two feet remain complete in source/offline combat, with no crop in the decoded falls."
+          }
+        ]
+      },
+      {
+        "id": "glacier",
+        "evidence": [
+          "companions/glacier-source.png",
+          "companions/glacier-offline.png"
+        ],
+        "factors": [
+          {
+            "factor": "Underlying body coverage",
+            "result": "pass",
+            "observation": "The blue torso and brown vest remain continuous behind the evolved swinging arm."
+          },
+          {
+            "factor": "Connected limbs without a stationary duplicate",
+            "result": "pass",
+            "observation": "Blue upper arm and fist move as one connected limb; the stationary shoulder detail does not retain a separate forearm."
+          },
+          {
+            "factor": "Complete costume and palette",
+            "result": "pass",
+            "observation": "The existing blue variant palette and brown costume remain consistent, with no introduced green patch in the reconstructed body."
+          },
+          {
+            "factor": "Hand?weapon attachment",
+            "result": "pass",
+            "observation": "The wooden weapon remains connected to the same blue fist during contact and recovery in both paths and both builds."
+          },
+          {
+            "factor": "Silhouette and cell bounds",
+            "result": "pass",
+            "observation": "The broad blue silhouette, leaf details and boot edges remain inside the cell in native/enlarged combat and cycle samples."
+          }
+        ]
+      },
+      {
+        "id": "abyssal",
+        "evidence": [
+          "companions/abyssal-source.png",
+          "companions/abyssal-offline.png"
+        ],
+        "factors": [
+          {
+            "factor": "Underlying body coverage",
+            "result": "pass",
+            "observation": "The purple chest and brown waist remain closed behind moving mature arms and the apex rear-view swing."
+          },
+          {
+            "factor": "Connected limbs without a stationary duplicate",
+            "result": "pass",
+            "observation": "The near forearm leaves its resting pose without leaving a second purple hand attached to the body."
+          },
+          {
+            "factor": "Complete costume and palette",
+            "result": "pass",
+            "observation": "Purple skin, gold leaf accents and brown costume retain their existing variant colors in every reviewed source/offline form."
+          },
+          {
+            "factor": "Hand?weapon attachment",
+            "result": "pass",
+            "observation": "The wooden grip travels with its fist and is correctly occluded by the rear torso where the hand passes behind the body."
+          },
+          {
+            "factor": "Silhouette and cell bounds",
+            "result": "pass",
+            "observation": "The complete shoulder mass and feet remain present in side and rear gameplay views, without cell-edge crop in the full cycles."
+          }
+        ]
+      },
+      {
+        "id": "gravitan",
+        "evidence": [
+          "companions/gravitan-source.png",
+          "companions/gravitan-offline.png"
+        ],
+        "factors": [
+          {
+            "factor": "Underlying body coverage",
+            "result": "pass",
+            "observation": "The purple evolved torso stays filled through arm extension and the rear-facing apex strike."
+          },
+          {
+            "factor": "Connected limbs without a stationary duplicate",
+            "result": "pass",
+            "observation": "Only the moving fist/forearm pair is visible at each shoulder; no idle arm remains beside the attack limb."
+          },
+          {
+            "factor": "Complete costume and palette",
+            "result": "pass",
+            "observation": "Purple skin, brown leather and gold shoulder highlights remain consistent between source and offline captures."
+          },
+          {
+            "factor": "Hand?weapon attachment",
+            "result": "pass",
+            "observation": "The short wooden weapon follows the same fist through contact and recovery, including rear-view occlusion."
+          },
+          {
+            "factor": "Silhouette and cell bounds",
+            "result": "pass",
+            "observation": "The broad shoulders, hands and separate foot outlines remain complete at native and enlarged size in all five gameplay variants."
+          }
+        ]
+      },
+      {
+        "id": "cloverimp",
+        "evidence": [
+          "companions/cloverimp-source.png",
+          "companions/cloverimp-offline.png"
+        ],
+        "factors": [
+          {
+            "factor": "Underlying body coverage",
+            "result": "pass",
+            "observation": "The green/brown chest remains behind the small moving hand throughout both evolved forms."
+          },
+          {
+            "factor": "Connected limbs without a stationary duplicate",
+            "result": "pass",
+            "observation": "The moving hand and sleeve remain connected without a stationary cuff beside them; scarf tails remain cloth."
+          },
+          {
+            "factor": "Complete costume and palette",
+            "result": "pass",
+            "observation": "The long red scarf, red cape and brown armor keep their full edges and original palette in both builds."
+          },
+          {
+            "factor": "Hand?weapon attachment",
+            "result": "pass",
+            "observation": "The small equipped blade remains at the painted hand through windup, contact and recovery; it is not a detached highlight."
+          },
+          {
+            "factor": "Silhouette and cell bounds",
+            "result": "pass",
+            "observation": "Long ears, head cloth, cape hems and boots remain visible and uncropped in all gameplay variants and the directional cycles."
+          }
+        ]
+      }
+    ],
+    "limitations": [
+      "The repository proves raw PNG identity only back to its earliest available upload, not before it. Hidden body/cape pixels are reconstructed, not recovered from invisible original layers.",
+      "Two unrelated contact/balance test failures remain identical to the prior baseline: 48 coalcrab/mireclaw reach cases and the shield-counter expectation."
+    ]
+  },
+  "layerImages": {
+    "status": "passed",
+    "frames": 168,
+    "images": 273,
+    "originalSourcePixels": 184530,
+    "independentBackingPixels": 36564,
+    "palette": "Original indexed materials only",
+    "verification": "Independent PNG checksum, decode, owner texture, backing and palette checks"
+  },
+  "inspector": {
+    "status": "passed",
+    "cases": 168,
+    "errors": [],
+    "badResponses": []
+  },
+  "live": {
+    "legs": {
+      "checks": [
+        "Source: 12 live creatures including evolved crab, drake and stag, both-team stride updates at 50/150/100%, animated combat, reset and phone layouts",
+        "Offline: 12 live creatures including evolved crab, drake and stag, both-team stride updates at 50/150/100%, animated combat, reset and phone layouts, zero external dependencies"
+      ],
+      "errors": []
+    },
+    "prototype": {
+      "checks": [
+        "Opening scene shows eight views side by side; all nine characters have eight distinct sprites at one fixed pose phase, with native 64×64 cells; clicking a view opens its close inspection",
+        "Randomized teams have six creatures each; cards match the lineup, and pause/frame stepping preserve simulation control",
+        "Selecting a character and clicking ground produces actual movement in the physical scene",
+        "All nine locomotion profiles travel around the circuits and turn through all eight facings; speed changes work",
+        "Walk/run/sprint pace controls, selected sprint toggle, Shift hold/release, acceleration, stride blending and stamina recovery work",
+        "Eight directional views and seventeen animation states are inspectable, including a close view and death",
+        "Restart changes the actual team composition; charged-strike control survives impact while taking damage, with visible anticipation levels",
+        "Rendered sparring resolves with physical hits, projectile travel, rolls and deaths; optional audio toggles",
+        "390px mobile layout has no horizontal overflow and retains scene and character controls",
+        "Standalone HTML runs combat and pose inspection with zero external requests"
+      ],
+      "errors": [],
+      "screenshots": [
+        "directions-knight.png",
+        "directions-orc.png",
+        "directions-elf.png",
+        "directions-caster.png",
+        "directions-wolf.png",
+        "directions-fox.png",
+        "directions-mech.png",
+        "directions-spider.png",
+        "directions-jelly.png",
+        "prototype-movement.png",
+        "prototype-sprint.png",
+        "prototype-study.png",
+        "prototype-battle.png",
+        "prototype-mobile.png",
+        "directions-mobile.png"
+      ],
+      "pixelPresentation": {
+        "mismatchedBlocks": 0,
+        "nativeArena": [
+          334,
+          218
+        ],
+        "nativeCell": 64,
+        "style": "native 64x64 pixel chibi"
+      },
+      "characterDirectionFrames": {
+        "knight": 8,
+        "orc": 8,
+        "elf": 8,
+        "caster": 8,
+        "wolf": 8,
+        "fox": 8,
+        "mech": 8,
+        "spider": 8,
+        "jelly": 8
+      },
+      "jointCoverage": {
+        "checks": 13296,
+        "gaps": []
+      },
+      "battleRosters": [
+        [
+          "mech",
+          "spider",
+          "wolf",
+          "orc",
+          "fox",
+          "elf"
+        ],
+        [
+          "orc",
+          "knight",
+          "spider",
+          "wolf",
+          "elf",
+          "fox"
+        ]
+      ],
+      "movementDirectionFrames": {
+        "knight": 8,
+        "orc": 8,
+        "elf": 8,
+        "caster": 8,
+        "wolf": 8,
+        "fox": 8,
+        "mech": 8,
+        "spider": 8,
+        "jelly": 8
+      },
+      "rigVersion": 7,
+      "sprint": [
+        {
+          "id": "knight",
+          "active": true,
+          "blend": 0.012243919970661663,
+          "stamina": 59.99999999999904
+        },
+        {
+          "id": "orc",
+          "active": true,
+          "blend": 0.000016824361519855407,
+          "stamina": 59.99999999999904
+        },
+        {
+          "id": "elf",
+          "active": true,
+          "blend": 0.13350653496723608,
+          "stamina": 59.99999999999904
+        },
+        {
+          "id": "caster",
+          "active": true,
+          "blend": 0.861789231392788,
+          "stamina": 59.99999999999904
+        },
+        {
+          "id": "wolf",
+          "active": true,
+          "blend": 0.013430796263974426,
+          "stamina": 59.99999999999904
+        },
+        {
+          "id": "fox",
+          "active": true,
+          "blend": 0.11413044342762386,
+          "stamina": 59.99999999999904
+        },
+        {
+          "id": "mech",
+          "active": true,
+          "blend": 0.0003264550097892008,
+          "stamina": 59.99999999999904
+        },
+        {
+          "id": "spider",
+          "active": true,
+          "blend": 0.27080433923105995,
+          "stamina": 59.99999999999904
+        },
+        {
+          "id": "jelly",
+          "active": true,
+          "blend": 0.6911839803561467,
+          "stamina": 59.99999999999904
+        }
+      ],
+      "directionFrames": 8,
+      "stateFrames": 16,
+      "chargeProtection": {
+        "sameAction": true,
+        "hpLost": 45,
+        "stagger": 0,
+        "knockdown": 0,
+        "impulse": 0,
+        "state": "charge"
+      },
+      "battle": {
+        "time": 57.49999999999738,
+        "metrics": {
+          "hits": 82,
+          "misses": 61,
+          "rolls": 59,
+          "avoided": 43,
+          "interrupts": 1,
+          "projectiles": 82,
+          "contacts": 3991,
+          "knockouts": 8,
+          "charged": 19,
+          "armorResists": 15
+        },
+        "cache": {
+          "frames": 192,
+          "maxFrames": 192,
+          "sourceReady": true,
+          "frameSize": 64,
+          "rasterScale": 1,
+          "rigVersion": 7,
+          "directionalArt": {
+            "columns": 8,
+            "characters": 9,
+            "nativeCell": [
+              64,
+              64
+            ]
+          },
+          "renderer": {
+            "type": "Canvas2D",
+            "artStyle": "native 64x64 pixel chibi",
+            "nativeArena": [
+              334,
+              218
+            ],
+            "nativePortrait": [
+              64,
+              64
+            ],
+            "nearestNeighbor": true,
+            "antialias": false,
+            "facings": 8,
+            "arenaPasses": 1,
+            "drawCalls": 12
+          }
+        }
+      },
+      "offlineExternalRequests": 0,
+      "showcase": {
+        "heroes": 5,
+        "directions": 4,
+        "examples": 12
+      }
+    }
+  }
+}

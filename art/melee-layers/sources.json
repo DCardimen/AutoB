@@ -1,0 +1,77 @@
+{
+  "schema": 1,
+  "meaning": "Earliest source PNGs available in this repository; no claim of provenance before these commits.",
+  "sources": [
+    {
+      "file": "public/authored-characters-juvenile-source.png",
+      "firstCommit": "758abf5651e48afc7c4bc82e54d10f92b9565582",
+      "sha256": "536b3d1cb80cb35d9c6f5cf21b9ea78092d96ba7504d7b95219f5bb0b6e4609a",
+      "bytes": 2680112,
+      "unchangedSinceFirstAvailableCommit": true
+    },
+    {
+      "file": "public/authored-characters-mature-source.png",
+      "firstCommit": "758abf5651e48afc7c4bc82e54d10f92b9565582",
+      "sha256": "94dc5804ff1c8ace4edcc9ab6ee3e0f9cb0e4cc8d8da82f3ce91e076e085718b",
+      "bytes": 3418842,
+      "unchangedSinceFirstAvailableCommit": true
+    },
+    {
+      "file": "public/authored-characters-apex-source.png",
+      "firstCommit": "758abf5651e48afc7c4bc82e54d10f92b9565582",
+      "sha256": "56fa8efa8c096b00d4ba1195b270cb56961a5e9dc4ffdd8f6328370ef6e524e7",
+      "bytes": 4083042,
+      "unchangedSinceFirstAvailableCommit": true
+    },
+    {
+      "file": "public/authored-families-juvenile-source.png",
+      "firstCommit": "758abf5651e48afc7c4bc82e54d10f92b9565582",
+      "sha256": "939e145e5f4bf0d8034fbff3a221e988442da4ca3e23ae4fd8691b65c9e9a707",
+      "bytes": 2911206,
+      "unchangedSinceFirstAvailableCommit": true
+    },
+    {
+      "file": "public/authored-families-mature-source.png",
+      "firstCommit": "758abf5651e48afc7c4bc82e54d10f92b9565582",
+      "sha256": "29cef04307aa88e8b892c47b37c1e4b70fe90f2c44774c4896c708465187cf98",
+      "bytes": 3859022,
+      "unchangedSinceFirstAvailableCommit": true
+    },
+    {
+      "file": "public/authored-families-apex-source.png",
+      "firstCommit": "758abf5651e48afc7c4bc82e54d10f92b9565582",
+      "sha256": "c80f0eab983c82ac70c590d22b69e8363996a61d12d93847d384b4a5bba5a81e",
+      "bytes": 4187841,
+      "unchangedSinceFirstAvailableCommit": true
+    },
+    {
+      "file": "public/authored-bodies-juvenile-source.png",
+      "firstCommit": "758abf5651e48afc7c4bc82e54d10f92b9565582",
+      "sha256": "a402fa5088b53430a79c3eaa3705f72a20f327c2d7f44352c8d5a9cb7e7e8c97",
+      "bytes": 3089580,
+      "unchangedSinceFirstAvailableCommit": true
+    },
+    {
+      "file": "public/authored-bodies-mature-source.png",
+      "firstCommit": "758abf5651e48afc7c4bc82e54d10f92b9565582",
+      "sha256": "548a59525c88f36850576c9a383fc366e675e033e812ae5b36f06899be0b2b58",
+      "bytes": 3775979,
+      "unchangedSinceFirstAvailableCommit": true
+    },
+    {
+      "file": "public/authored-bodies-apex-source.png",
+      "firstCommit": "758abf5651e48afc7c4bc82e54d10f92b9565582",
+      "sha256": "4f799fb33d35240ffc1231f25b511e0e6b311ab1373c54ba5543dce8c7823d78",
+      "bytes": 3978415,
+      "unchangedSinceFirstAvailableCommit": true
+    },
+    {
+      "file": "public/authored-dwarf-lineage-source.png",
+      "firstCommit": "758abf5651e48afc7c4bc82e54d10f92b9565582",
+      "sha256": "3f8175d2829393a96c8ca66820c9f7c3c3a6df0467dea88c96c885cd91e701a7",
+      "bytes": 2579015,
+      "unchangedSinceFirstAvailableCommit": true
+    }
+  ],
+  "conversion": "The 64px bind cells are the existing indexed conversion, separately frozen in each master. Scaling, alpha threshold, palette quantization, detached-component filtering and NE mirroring in the old importer are not edits to these PNGs. Reconstructed hidden pixels are separate layers, never source pixels."
+}

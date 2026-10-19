@@ -1,0 +1,13 @@
+{"bodyOnlyPoses":39168,"opaqueTorsoProbes":35612144}
+✔ all 168 reviewed melee shoulder cutouts contain independent body material (754.629ms)
+✔ the fill reaches the painted outer side of the sleeve opening, rather than stopping at the central chest (0.5036ms)
+✔ every complete torso row is opaque, retains source indices and leaves skeleton rib spaces intact (701.7082ms)
+✔ the chest stays filled through every motion without an arm or weapon hiding its holes (343057.9846ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 344765.6918
