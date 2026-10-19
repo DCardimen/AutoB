@@ -1,0 +1,2430 @@
+{
+  "inputs": {
+    "affinity-gear.js": "0c5778f3a601d902df855f273c535e03270290997480560b2a821bfd3fe05b41",
+    "ai-relics.js": "17eeb1ecc72f92bb92f2ca2995e9c68aff2f1d8046690c3fa297f403a367651e",
+    "ambient-art.js": "0bc9948d5bb9307fb0e25908d5c04ebf3a7e39f4b5b87334417f9587271e3f99",
+    "ambient-ui.js": "91ae8ec84db9505116bcb6f20dbbce0cdb8e6f565f9ff81f098ef2bf7c2b5402",
+    "animation.js": "5ec10e51220ef506ec3ea31d81cea1f042938cb66456cc1755b74f45f2006a55",
+    "app.js": "07000ec32f03d001ca34027c90e5b9f3302dd5d801955cdfdfa628e6c0aa9a5e",
+    "arena-camera.js": "681bf91826ac505bd0659cfd7391a2fa70d0cd2bb1ae0de13914abd72705c020",
+    "arena.js": "e78488981c9c21e1879e832498669b227e8fd1c6740a4fc9855879e65b1db6fb",
+    "art.js": "3fc3e18c21da1e7624c0c3cb1f628f977b1d3885938c77e5432635b2bf305835",
+    "aura-stones.js": "6d266096c81182ebd20534e75b37db0280014d0d60f6d28951e8fb822ef1be8e",
+    "authored-arm-skin.js": "70ec39490fb58a2f31e3f416754e2e57c6a2b98402da6fc41f61ebbe59df7099",
+    "authored-body-data.js": "56edb58b077f166dbbdf28d4f254e3f8a5fc49ac5c6a5af5ff2ad9c72c9f783a",
+    "authored-body-stage1-data.js": "4a7720a8e4aca01cf29da90dd14ef11933b92b63891708ef181f00d230405824",
+    "authored-body-stage2-data.js": "7eb7714b992132e6ee1a836923d1ebab25bec628b6ec8acc5853bdb7e81b3ca6",
+    "authored-family-data.js": "1dcde00f7109ce07b5c5b7088a8e11a90de2b8c04f362bd2c45da3cd591e64fc",
+    "authored-family-stage1-data.js": "01e93e0b7d6d8cd4d3145ad618ed20924a6e18cc110d37c2f98238bbbd0205b3",
+    "authored-family-stage2-data.js": "2f5b8b6364f9d02a2a720343bfe7c00767fd8d852b05f5f8ca52efe465449445",
+    "authored-legacy-data.js": "6b917edf37e12e2270b92859a0ab15778f19d763205badaa49b4a8d5ffe19776",
+    "authored-legacy-stage1-data.js": "efa0aadc679825b807d79e8af39ab1bfd3d64d2c622e561e81c92201b37d76ee",
+    "authored-legacy-stage2-data.js": "0a1f07d2b1cce55c4ddb0dc0e70abf2570eb52c07e6447398113fca0defcb569",
+    "authored-parts.js": "87d1259dc19fb19b96148913abdededbc3fbc96a9b4fbc26fe1bb1b2983ff49f",
+    "authored-pixel-art.js": "07e7a9ea5ba7e5f59ea3f58f7d4b05359da458ce9b8a2a68b0b34e6677a2c4c6",
+    "authored-pixel-maps.js": "888afe4efa02fdac9fc65a73d062a53136af6bc26541cf74cc4af0606ce1bc0f",
+    "authored-sprite-data.js": "2a1b79e2bbd6bb9a9fc532eadf148fefb82452f483d85cb7d390592ae6806490",
+    "authored-sprite-renderer.js": "3ffda4073d7160d41a660e637de37bafc7aa48ed7c86af9170ce818526eb6e91",
+    "authored-sprite-stage1-data.js": "4c2b497a6bd613265f17c667f094bde3bb586a04e765ae1080922c96c8e1b5a7",
+    "authored-sprite-stage2-data.js": "5d8fab2d6b2a5cbe052848f8a7c8cf0d68e4399595d54c90c35d15c23f3c82bd",
+    "battle-enrage.js": "6e9972717bb4bb0da594a2021e11ba2c9db873f113782bfaab4bab8fe2b4b607",
+    "battle-summary.js": "7b82cf4dd2aa3aeae341efb213872f1a7e43df15905651f8bf5e8c89fc067c17",
+    "capture-celebration.js": "81b8ad8cf1d5efd75c4735a561c22a39e71384b7ddabb0314a8ca2a1a199d3b0",
+    "capture-tracker.js": "bbb875f9a1234e81b7ec0da1c018362b9fa5d1017f9e72b3c3d45faa3376b164",
+    "combat-expansion.js": "57269d0aa2b7eb30a2a1bef5235d8ab224457e166931ccb0751d9d1291f38668",
+    "combat-feedback.js": "7e09e3782ce3ac05ca3a686ada80eb25cfbdc8a95c4c2e75fbf7a9f8cfbd9233",
+    "combat-text.js": "d45b8034612aa9445050bfae0c70726e4d4e978c8259d3c60a28917e8f53bb9c",
+    "companion-anatomy.js": "7e16318a6ce3200346b38c5239f8982d126dd81e4a27f49b8aaac56c773c6144",
+    "companion-arm-bindings.js": "6a5ebd649541f930d6a77250b21d643fae2bce1b7190f313abf053eaae24254b",
+    "core-species.js": "bde68cd97a9179a0e2b11a599879d1f15a4c4160b31c6e7840dd60a03d2cd94d",
+    "creature-attacks.js": "7b6bf250d8155d8bc2787eb5cf9e9b9a611ec88c280f1ddf653e80ae38b71a45",
+    "creature-equipment.js": "22609d73c778d3a1e39a4f3e7d73801582cccfe2aba5c4c3d7ede0cd6b02290c",
+    "creature-leg-volume.js": "2de9b5b1a1516ea8101ab59f891a5e3400c67f3c6d6139636f852cd72d2a8e96",
+    "deployment-physics.js": "ba4fb5c70e9bfc18d5505bfe48f4da6e09b7aef064408e74124aa51260af7942",
+    "elite-modifiers.js": "dbdf65c9da6cab03813f0710097d9b2cd2770091a5eb095b153b115e2d1921ba",
+    "equipment-affinity.js": "8255a371ad49e02092723a37565a44610d1be02487a2460ea51b503eedf864ef",
+    "equipment-catalog.js": "4ea09bb2ad838e27325dfaeb6f823caa6844ed0594d60febab5c70fafcd7234b",
+    "equipment-loot.js": "06d420455e06a373bf7724f5c88d56b64d43277f8c1f99f19bbd604bd3e21094",
+    "evolution-skills.js": "5f93363e366e68ef09d6383de07fd21066922c4f6613571b70c209e8bc4c36a8",
+    "expedition-rules.js": "c3c03739d858105513fd8c80271f80d87aa47076c32182e38133ad1be07c8dea",
+    "field-ui.js": "f455ecdd757582710daf2c9620ff3192ea21fd6bfb77bbab8d9962b7de7859ac",
+    "game.js": "7fab758d619fd3473ed4f07ff21390fb1de4dafd7b2c406556477d6a0902560a",
+    "grand-designs.js": "bbc666708e399a747ee0a17b6a44f3945c32a3bb684b2098396cfa91f4951385",
+    "grand-pixels.js": "dfdfc9af44cbf8315b5b8f60900b1445d5d1d444b1f7f9fc6d6209f8c248d5df",
+    "indexed-layer-codec.js": "0a693932049666ea6069bcc32cd93b85875df14b83918a187dccdcf83fd6400f",
+    "intro.js": "7616b61da468461b03f5adbaf57438935c76e890e9b759f0db38cf2f7b413a96",
+    "inventory-pouches.js": "989aa3f23467841e6b4f5b0d44781fc6a4f329d76f082206fdd57bdb4346626d",
+    "item-effects.js": "08463357de80cf143502b9d3e3e3174bda42aa6ebb3896fbddbdad16068bb926",
+    "leg-anatomy.js": "3be593b6c3132556dfa3ce272f44164c30f3c08138c50479d988cebc02013928",
+    "leg-volume.js": "3962d1f56da7ee12b3553529b93976b03f999a967664b2f514b074b3e6ca0ba3",
+    "live-roster.js": "bc0ff4a280c82e27ab93e11817552f2bdb699f97ea0acbd2cc9137c888ecd635",
+    "loadout-drag-ui.js": "5e2585562a086e62546f45ba74d3600c080269ba37ae3c3ab980a7ad63b95655",
+    "loadout-interactions.js": "75838fea168d1e0a3da191f29c74ff5568117b6ac83ad1db15a9363b74bba97b",
+    "melee-layer-art.js": "fd2cb8f46461b3774bca0a2f60bf3b25edbabc07227fe0099c979161af4311e7",
+    "melee-layer-data.js": "8aabba2f31b95c4e56c01ee52b5c5230c8a45808efdd53aae84b30fe35b24634",
+    "melee-shoulder-skin.js": "ca2ce6d8d23c7b662936327cabe100177e2cea95db58f2e0209a6960e5577faf",
+    "melee-weapon-art.js": "d5938c7387f656eb3db5cb6ea65aedbd8f0dd39d61d693672f9f14b3ebf8abde",
+    "menagerie-browser.js": "bc26a6314d946d306c008ad739bbe5a274343cb7b4b61ffabe9435a43f79152a",
+    "modal-content.js": "e1c35a596de819c0bf22b26556d71fba0a4e7708706b0b87b994147f753e3147",
+    "movement-tuning.js": "3d107b859a6b892d668c9047672617302623cdf338f20d9821479908eb8abdf5",
+    "native-art.js": "25cd8151b6b41a81062d4a4f6d3282eaba166c971e4e51bfcfd987e1858de3d9",
+    "native-batch-two.js": "cebd831f650a9c2093b85fac2a080988d6f505d5008685e1f1c9f464e677b875",
+    "native-batch.js": "acfb94d327f762ec0d870d0372783233fb25ac380202a11760212e69e25ce5e7",
+    "native-cloth.js": "00bbdb07f47bbd3a64ac552d203a016578b0a7245c28792df946a6747111178b",
+    "native-combat.js": "46de85f85de8896e50b8f9e4ab18174dd26c1e3fee2760bb49620f3f7389b89a",
+    "native-content.js": "9eeca6e01d3b9e071f472e8d2b17b2fe69f6ab25a4b056fcd98d9171cf04b2e0",
+    "native-export.js": "c4e7953a1313bfa4e5284d9f834840c2d62872cdb90293794e5c5da86d991de1",
+    "native-faces.js": "7d1bbf7a6ed8f4653cf12ff27fa32bf147eccfcfb680617137ee61ef2028e280",
+    "native-forms.js": "77d1be3aa24bcd341f9237cf361af481b20f5585fca46f89f8d7a3d47a5c79a0",
+    "native-motion.js": "4abdb4d5eb5fa662b6ba628db1185125f6a66aec93d459909064ecbb20f0e815",
+    "native-poses.js": "45cf9bc50106b559ca516c2a26d7e7ac1ce2579aec4b5b3d47fb2663b34dff7a",
+    "native-size.js": "ca3817015957da5514ed035e3084a69a598950967abe4afbda4df28151914a27",
+    "native-tactics.js": "750931799108117dba36d174776aaae30f81b473cad5acf2fe2e79c5cb56ea71",
+    "opening-journey.js": "d4dcd14f15eb49ca380a23ae848613b6b5a34f242ea1b43c2ffbca837b4840d3",
+    "opening-relics.js": "2431dd49b965d5ccebe66831038596721e085f5d4448dd92df7e59b5b2deb800",
+    "pixel-face-tools.js": "34f91c988f6b14fa8560067075585183f4fcdc9fe2dd30216e9e926cbaef51d2",
+    "pixel-legacy.js": "6be7f9560d1ffeea5a3fcf89d66b97a57d8fcc93177b40288e9e428d7f86503e",
+    "planet-ui.js": "b0625f30b23c9500930bc0ac3db2e9da990f373835317def4a8dc87f3639bdec",
+    "portrait-expressions.js": "72fd6e006f70680cc92094fc6b06fc914d81bc39cb987fba8368ab7806c3c3e2",
+    "practice.js": "b8c29a4baff892e57ead679fc869dee5662eb321d75c1e8370c0e995f6d68211",
+    "prototype-dynamics.js": "bdbda534aa75182264b563c864dcbabc106f03b8719f7c1d2bebf5fbff6c50d9",
+    "prototype-engine.js": "75eaeaf88fa8717b19fda3dfe5fa983a540e6dc9c526dc7ce1e22c08848be50f",
+    "prototype-export.js": "2c75c0dda74abbad3ee57ffed1c2b39f379b73cf7512f74e67bfe6d90c75cfbe",
+    "prototype-faces.js": "760a79c02a5a74e1530121e6ca0f5602c92a17dfbc950e77d3ffc269cd77d5c0",
+    "prototype-models.js": "633170c26301f285627eaa948be061470128d6e282b2feb367a302e33ae0addc",
+    "prototype-motion.js": "9a098e139b14cdbcce08a37f9a4b50de6eb2c5e76a918a139b1b79d9487820d5",
+    "prototype-pixel-art.js": "f90d8af829bbe8499dca287a0be8b93fa085beebd8bc991fb7e63f94964736d8",
+    "prototype-renderer.js": "ffff6f25b0d44d14fe233a28e08c0bfa18c25087dfe7b69cdbe636498733bcf0",
+    "prototype-rig.js": "46c4066f3c6f1a84fdc647e5695dd758833f44587da1e01aee83dcfa6e826303",
+    "prototype-sprites.js": "57ef086250e21897e6890ea65f95d8c680613eb1bb059f5f5533806b3062c8fe",
+    "prototype.js": "fdaf73115e3d8045484659319d63d3d047b7cb1e5472de8adb877b1617c80be5",
+    "rarity-aura.js": "c632cbd50c4cdcf2647eecb2cc80034bec6fae0f21722a5ba0d48d809de84778",
+    "relic-design.js": "a16f6abdeb1b6c6e5dbf7484ecaa6f0b389eb16370521aade4e32ffd9df195e2",
+    "relic-illustrations.js": "d324052330b3c0831f4d98e02b546832ec4d98d79fc502303dc53bd03f031ba4",
+    "relic-pacts.js": "d17a2b4b70e9d66e38616a1f17d11257180e425aca3c84098a4bcee7141e5d47",
+    "relic-selection-ui.js": "1edf093c4989f64151cc08f23591d87ab26b85d7b8ab6e1fbd1fa62c8cb2908f",
+    "relic-ui.js": "c7e2efe100ea301ab5463a87b431fd2ff90178e717bd93410dd9778d6d6b7057",
+    "reward-loadout.js": "5df933265b113040598686aeff1f354bfaf9af233f1584d637c5c1042924e463",
+    "rewards-ui.js": "81d683ed79f6628a0be00133dca7128b5c921b4fcd37e6c4c560fbad9542982e",
+    "roster.js": "f2e55c8ddd7090d465300a48513aefeba62ab07e673ed9ea0bc0bc9b6b573a5d",
+    "route-preview.js": "1eda594993261f787fe027520d4ba0b57466c57f123371263af8b0f6e5481831",
+    "run-relics.js": "0019b14a9b927c51e86059ac748e15f233834414d6cc2f01cd99b64f78f53fbe",
+    "server.js": "b3af42899296f78ed3c0fec8adca212f02f0d3a7cc4d29f2f349b162b0df8a86",
+    "settings-movement-preview.js": "f3669304695c18fada8fa1f514ba3bee71522bd9e6d2e4329b5259aff2a98eb9",
+    "skill-vfx.js": "6ffb4d0d1dad52ad79a7722c327d217bd12c39f3a641a32e14201dc3e0300f2f",
+    "skill-visuals.js": "82634d6ac47f52dcb22cd19e303a2b5152eedd0dfc22b231fcd7f6d322f0bfda",
+    "skills.js": "4cdf30a4ea050670d9056a1a1dbb785bb50b899d39d38cbc4bc20b1835a51451",
+    "sound.js": "375e11b6ba699b1d8265c4f94909fa58c4dee3475fcd15530f4f075bbe7d0a3f",
+    "stage-background-loop.js": "0a8825a457953785060270b22d99db06c70c383155d1fa8ba707101ee426f3cc",
+    "starter-equipment.js": "f93006cf563a122de12ede8b2714975879d43943c8eee560e893a00dacc7106f",
+    "starter-reactions.js": "5facf039c5bfd3f1f0958920daf09fc4b8889a926eab1081d83ec520e923a342",
+    "status-ailments.js": "a1bdf481f240f7e4f0d13eaa2b982c620b3d3c52347fb3d323510b60c3771ab7",
+    "tactics.js": "11f6e1921d497bb4623afaaf2dc79f3423dcef4059408029e1eb411d12af214a",
+    "tuning.js": "978dd20d3598764a2a2652b65fc9ea886edc7ea38a9d21c7eaee2ac694d5fe93",
+    "ui-art-assets.js": "2ef0ad18cb2212037532dfa378865ef0120fbb8cfa44cef4774400d079d35cfb",
+    "ui-art.js": "1d2ad5a042e09c81d85a9e2e982f8ba26537817cc68c248339c95481209673b9",
+    "wearer-relics.js": "59a3dcce7bc58e47246823dd1143530106f08e86c7db72fe11faa6d69c57be18",
+    "xp-celebration.js": "498c2b52dabc428fad2ada70d36bc9bcd33c38b12cfa8e71eeebf7dff857e3ea",
+    "Starfall-Menagerie.html": "c031af924306c803bb68106acd69c2a8f94d93978ce03e5aa98ccaa0eaaae00e",
+    "Starfall-Training-Glade.html": "7ca3ee5c6c2188336ad4a19bbdba90e27c52faa7978344c58bbec437321c6b38",
+    "public/prototype-bundle.js": "2f1e79bbc163dc535af1131c4f510996d39cc500abf78feee4cbff170d2db7a3"
+  },
+  "cases": [
+    {
+      "name": "source-mossguard-0-wild",
+      "id": "mossguard",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 0,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 2.7200000000000015,
+          "dir": 6,
+          "phase": 0.4761904761904766
+        },
+        "contact": {
+          "time": 2.9600000000000017,
+          "dir": 6,
+          "phase": 0.23809523809523936
+        },
+        "recovery": {
+          "time": 3.080000000000002,
+          "dir": 6,
+          "phase": 0.6845238095238112
+        }
+      },
+      "distinctFrames": 71,
+      "minPainted": 1033,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "fb419e18585a08c54c67cfba997f1b1fb72801c2a317ce0864e9d305e5b0a686",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-mossguard-1-wild",
+      "id": "mossguard",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 1,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.0400000000000003,
+          "dir": 0,
+          "phase": 0.3571428571428571
+        },
+        "contact": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.23809523809523894
+        },
+        "recovery": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.8333333333333347
+        }
+      },
+      "distinctFrames": 64,
+      "minPainted": 1590,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "9ffc724500cb770869b408fd6312a8b44280794a79812a5e70615f3d7a2a2a90",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-mossguard-1-warden",
+      "id": "mossguard",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 1,
+      "evolutionPath": "warden",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.0400000000000003,
+          "dir": 0,
+          "phase": 0.3571428571428571
+        },
+        "contact": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.23809523809523894
+        },
+        "recovery": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.8333333333333347
+        }
+      },
+      "distinctFrames": 62,
+      "minPainted": 1645,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "02b51a7b81ad02d48236afd42aab4ca332f99f02147b109384fa8004c8da7ee7",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-mossguard-2-wild",
+      "id": "mossguard",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 2,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 3.040000000000002,
+          "dir": 0,
+          "phase": 0.3157894736842108
+        },
+        "contact": {
+          "time": 3.320000000000002,
+          "dir": 0,
+          "phase": 0.06666666666666785
+        },
+        "recovery": {
+          "time": 3.480000000000002,
+          "dir": 0,
+          "phase": 0.6000000000000018
+        }
+      },
+      "distinctFrames": 71,
+      "minPainted": 1660,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "c963f2082c5b5cb4106287829166d5895a2f19acefd4f8e07a762b6c51141788",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-mossguard-2-warden",
+      "id": "mossguard",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 2,
+      "evolutionPath": "warden",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 3.040000000000002,
+          "dir": 0,
+          "phase": 0.3157894736842108
+        },
+        "contact": {
+          "time": 3.320000000000002,
+          "dir": 0,
+          "phase": 0.06666666666666785
+        },
+        "recovery": {
+          "time": 3.480000000000002,
+          "dir": 0,
+          "phase": 0.6000000000000018
+        }
+      },
+      "distinctFrames": 71,
+      "minPainted": 1702,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "e9e79144819892eaeae417b8c574386f23b64686f36be8927a25ef33f7b7fa23",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-glacier-0-wild",
+      "id": "glacier",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 0,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 2.7200000000000015,
+          "dir": 6,
+          "phase": 0.35714285714285743
+        },
+        "contact": {
+          "time": 2.9600000000000017,
+          "dir": 6,
+          "phase": 0.0892857142857154
+        },
+        "recovery": {
+          "time": 3.120000000000002,
+          "dir": 6,
+          "phase": 0.6845238095238112
+        }
+      },
+      "distinctFrames": 70,
+      "minPainted": 1035,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "6d5ad1d4c0147b3e39964dbc6d4b772624cc7f1fec16f251c80e15f95bd38dd9",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-glacier-1-wild",
+      "id": "glacier",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 1,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.0800000000000003,
+          "dir": 0,
+          "phase": 0.4761904761904763
+        },
+        "contact": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.23809523809523894
+        },
+        "recovery": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.8333333333333347
+        }
+      },
+      "distinctFrames": 65,
+      "minPainted": 1584,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "a2e7758103f113245f3fd795df8e23e9f95b471b96c7660669fcdecf3beeb4c3",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-glacier-1-warden",
+      "id": "glacier",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 1,
+      "evolutionPath": "warden",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.0400000000000003,
+          "dir": 0,
+          "phase": 0.3571428571428571
+        },
+        "contact": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.23809523809523894
+        },
+        "recovery": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.8333333333333347
+        }
+      },
+      "distinctFrames": 67,
+      "minPainted": 1651,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "66be1194c593d9a751a0bf9ec40450516a6fcb6a82b44d9876d4905d7527e658",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-glacier-2-wild",
+      "id": "glacier",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 2,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 3.080000000000002,
+          "dir": 0,
+          "phase": 0.42105263157894773
+        },
+        "contact": {
+          "time": 3.320000000000002,
+          "dir": 0,
+          "phase": 0.06666666666666785
+        },
+        "recovery": {
+          "time": 3.480000000000002,
+          "dir": 0,
+          "phase": 0.6000000000000018
+        }
+      },
+      "distinctFrames": 72,
+      "minPainted": 1671,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "b3c82ba4b2ecc8cb016c6272b41416e1dca348053bf76bddd5073b0c112a59da",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-glacier-2-warden",
+      "id": "glacier",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 2,
+      "evolutionPath": "warden",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 3.040000000000002,
+          "dir": 0,
+          "phase": 0.3157894736842108
+        },
+        "contact": {
+          "time": 3.320000000000002,
+          "dir": 0,
+          "phase": 0.06666666666666785
+        },
+        "recovery": {
+          "time": 3.480000000000002,
+          "dir": 0,
+          "phase": 0.6000000000000018
+        }
+      },
+      "distinctFrames": 71,
+      "minPainted": 1710,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "5486d3b14a178bbb96eab1647a843f6e927c650f37224a6e826e60ef5c23925c",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-abyssal-0-wild",
+      "id": "abyssal",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 0,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.3200000000000005,
+          "dir": 6,
+          "phase": 0.35714285714285743
+        },
+        "contact": {
+          "time": 1.5600000000000007,
+          "dir": 6,
+          "phase": 0.0892857142857154
+        },
+        "recovery": {
+          "time": 1.7200000000000009,
+          "dir": 6,
+          "phase": 0.6845238095238112
+        }
+      },
+      "distinctFrames": 68,
+      "minPainted": 1071,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "a7d11cdde0e169f35dcf92c0638d84810f287d00fc752986f8767e6b814c9a8f",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-abyssal-1-wild",
+      "id": "abyssal",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 1,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.0400000000000003,
+          "dir": 0,
+          "phase": 0.3571428571428571
+        },
+        "contact": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.23809523809523894
+        },
+        "recovery": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.8333333333333347
+        }
+      },
+      "distinctFrames": 65,
+      "minPainted": 1590,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "fb762c2fb334456f8aa0e1992cd2a948e9fc3213e04a7f5f91468172fa42cbcf",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-abyssal-1-warden",
+      "id": "abyssal",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 1,
+      "evolutionPath": "warden",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.0400000000000003,
+          "dir": 0,
+          "phase": 0.3571428571428571
+        },
+        "contact": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.23809523809523894
+        },
+        "recovery": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.8333333333333347
+        }
+      },
+      "distinctFrames": 68,
+      "minPainted": 1651,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "76652ee4bfb3e848814975e56874d27bb9aaf6f5d4951934e8135a640b22ca24",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-abyssal-2-wild",
+      "id": "abyssal",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 2,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.3200000000000005,
+          "dir": 6,
+          "phase": 0.35714285714285743
+        },
+        "contact": {
+          "time": 1.5600000000000007,
+          "dir": 6,
+          "phase": 0.0892857142857154
+        },
+        "recovery": {
+          "time": 1.7200000000000009,
+          "dir": 6,
+          "phase": 0.6845238095238112
+        }
+      },
+      "distinctFrames": 68,
+      "minPainted": 1418,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "20f947cad8486cda32b56af33b1493bcaf48aead4a9f3c13c5adaf733093b656",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-abyssal-2-warden",
+      "id": "abyssal",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 2,
+      "evolutionPath": "warden",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.3200000000000005,
+          "dir": 6,
+          "phase": 0.35714285714285743
+        },
+        "contact": {
+          "time": 1.5600000000000007,
+          "dir": 6,
+          "phase": 0.0892857142857154
+        },
+        "recovery": {
+          "time": 1.7200000000000009,
+          "dir": 6,
+          "phase": 0.6845238095238112
+        }
+      },
+      "distinctFrames": 68,
+      "minPainted": 1472,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "c566e10b2615f1aa1bae1f78aec50390872ab8928451a9a27fbbb542cf26938c",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-cloverimp-0-wild",
+      "id": "cloverimp",
+      "family": "goblin",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 0,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.46153846153846195
+        },
+        "contact": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.08333333333333434
+        },
+        "recovery": {
+          "time": 1.6400000000000008,
+          "dir": 0,
+          "phase": 0.7500000000000017
+        }
+      },
+      "distinctFrames": 70,
+      "minPainted": 670,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "c14985f3a4607d67a8eb3fcd5118c5404871916b84d4968a010df313074765d4",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-cloverimp-1-wild",
+      "id": "cloverimp",
+      "family": "goblin",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 1,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.0400000000000003,
+          "dir": 0,
+          "phase": 0.4615384615384615
+        },
+        "contact": {
+          "time": 1.2400000000000004,
+          "dir": 0,
+          "phase": 0.2500000000000007
+        },
+        "recovery": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.5833333333333344
+        }
+      },
+      "distinctFrames": 45,
+      "minPainted": 780,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "7b3f36fd64e37c1891c069e387dcf6ef578165835e4b84642c50a36c87092c2c",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-cloverimp-1-warden",
+      "id": "cloverimp",
+      "family": "goblin",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 1,
+      "evolutionPath": "warden",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.0000000000000002,
+          "dir": 0,
+          "phase": 0.30769230769230754
+        },
+        "contact": {
+          "time": 1.2400000000000004,
+          "dir": 0,
+          "phase": 0.2500000000000007
+        },
+        "recovery": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.5833333333333344
+        }
+      },
+      "distinctFrames": 46,
+      "minPainted": 835,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "355618f531faab7bfd2bb470efa321ec9d3a7a55cb8a1f410ca5f3f6ce34565b",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-cloverimp-2-wild",
+      "id": "cloverimp",
+      "family": "goblin",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 2,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.46153846153846195
+        },
+        "contact": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.08333333333333434
+        },
+        "recovery": {
+          "time": 1.6400000000000008,
+          "dir": 0,
+          "phase": 0.7500000000000017
+        }
+      },
+      "distinctFrames": 50,
+      "minPainted": 904,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "38fd06eba3cd8fd7cfde90ea43df7a149dc922c5ac259a1403002b2c7e88aca5",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-cloverimp-2-warden",
+      "id": "cloverimp",
+      "family": "goblin",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 2,
+      "evolutionPath": "warden",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.46153846153846195
+        },
+        "contact": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.08333333333333434
+        },
+        "recovery": {
+          "time": 1.6400000000000008,
+          "dir": 0,
+          "phase": 0.7500000000000017
+        }
+      },
+      "distinctFrames": 51,
+      "minPainted": 943,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "8a0e60dee5b202652780ee9f39157016633df6488bbd5602f0c077b8ad13bdba",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-gravitan-0-wild",
+      "id": "gravitan",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 0,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.3200000000000005,
+          "dir": 6,
+          "phase": 0.35714285714285743
+        },
+        "contact": {
+          "time": 1.5600000000000007,
+          "dir": 6,
+          "phase": 0.0892857142857154
+        },
+        "recovery": {
+          "time": 1.7200000000000009,
+          "dir": 6,
+          "phase": 0.6845238095238112
+        }
+      },
+      "distinctFrames": 67,
+      "minPainted": 1078,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "039a83460d06d72d433462d5fec46a5a55a3c147963b8d72b5b1cef04196b07b",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-gravitan-1-wild",
+      "id": "gravitan",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 1,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.0400000000000003,
+          "dir": 0,
+          "phase": 0.3571428571428571
+        },
+        "contact": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.23809523809523894
+        },
+        "recovery": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.8333333333333347
+        }
+      },
+      "distinctFrames": 66,
+      "minPainted": 1590,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "512350112816ae84b04456a9e79b5e069fb2721dd7a9f718e27fe865286da88a",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-gravitan-1-warden",
+      "id": "gravitan",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 1,
+      "evolutionPath": "warden",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.0400000000000003,
+          "dir": 0,
+          "phase": 0.3571428571428571
+        },
+        "contact": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.23809523809523894
+        },
+        "recovery": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.8333333333333347
+        }
+      },
+      "distinctFrames": 67,
+      "minPainted": 1651,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "559ed9fc5496345b07a6ca2065e581d151e24bf74a5a5f24d8f12c991ff0b733",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-gravitan-2-wild",
+      "id": "gravitan",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 2,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.3200000000000005,
+          "dir": 6,
+          "phase": 0.35714285714285743
+        },
+        "contact": {
+          "time": 1.5600000000000007,
+          "dir": 6,
+          "phase": 0.0892857142857154
+        },
+        "recovery": {
+          "time": 1.7200000000000009,
+          "dir": 6,
+          "phase": 0.6845238095238112
+        }
+      },
+      "distinctFrames": 66,
+      "minPainted": 1440,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "22ac9f3a6be8a486b1072dbf41afc7f521c5bdd7fa714b421b65eb0f7fe501db",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-gravitan-2-warden",
+      "id": "gravitan",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 2,
+      "evolutionPath": "warden",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.3200000000000005,
+          "dir": 6,
+          "phase": 0.35714285714285743
+        },
+        "contact": {
+          "time": 1.5600000000000007,
+          "dir": 6,
+          "phase": 0.0892857142857154
+        },
+        "recovery": {
+          "time": 1.7200000000000009,
+          "dir": 6,
+          "phase": 0.6845238095238112
+        }
+      },
+      "distinctFrames": 66,
+      "minPainted": 1485,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "c7a01020e9269df1ef023b3e243c9cbd901d525087dc99f2180d94885fd318ff",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-sable-0-wild",
+      "id": "sable",
+      "family": "rogue",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 0,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.35714285714285743
+        },
+        "contact": {
+          "time": 1.5600000000000007,
+          "dir": 0,
+          "phase": 0.0892857142857154
+        },
+        "recovery": {
+          "time": 1.7200000000000009,
+          "dir": 0,
+          "phase": 0.6845238095238112
+        }
+      },
+      "distinctFrames": 72,
+      "minPainted": 818,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "d169972b82d4418af8db3348c712363a0b975dba464e0c72c5e789d458431e9f",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-sable-1-wild",
+      "id": "sable",
+      "family": "rogue",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 1,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.0400000000000003,
+          "dir": 0,
+          "phase": 0.3571428571428571
+        },
+        "contact": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.23809523809523894
+        },
+        "recovery": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.8333333333333347
+        }
+      },
+      "distinctFrames": 72,
+      "minPainted": 946,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "e53ad052fa6a9805c2c5b5e49ed751a91e883220d18042976964d9a43fd771c2",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "source-sable-1-warden",
+      "id": "sable",
+      "family": "rogue",
+      "captureVersion": 2,
+      "offline": false,
+      "evolution": 1,
+      "evolutionPath": "warden",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.0400000000000003,
+          "dir": 0,
+          "phase": 0.3571428571428571
+        },
+        "contact": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.23809523809523894
+        },
+        "recovery": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.8333333333333347
+        }
+      },
+      "distinctFrames": 72,
+      "minPainted": 835,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "97e6e7d320b60b987b1a6056df568be390e8f5589f33d45606d90e98218015aa",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-mossguard-0-wild",
+      "id": "mossguard",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 0,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 2.7200000000000015,
+          "dir": 6,
+          "phase": 0.4761904761904766
+        },
+        "contact": {
+          "time": 2.9600000000000017,
+          "dir": 6,
+          "phase": 0.23809523809523936
+        },
+        "recovery": {
+          "time": 3.120000000000002,
+          "dir": 6,
+          "phase": 0.8333333333333351
+        }
+      },
+      "distinctFrames": 69,
+      "minPainted": 1029,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "9f8e8f8f169732f1f42a75bd794dd95d2316bd966e7f055715b8f830eb051ac2",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-mossguard-1-wild",
+      "id": "mossguard",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 1,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.0400000000000003,
+          "dir": 0,
+          "phase": 0.3571428571428571
+        },
+        "contact": {
+          "time": 1.2800000000000005,
+          "dir": 0,
+          "phase": 0.089285714285715
+        },
+        "recovery": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.8333333333333347
+        }
+      },
+      "distinctFrames": 62,
+      "minPainted": 1584,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "d3af91a2800992f07a323d3ac8dc36181c8602919bfb958a89b07c1c2b1d6d07",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-mossguard-1-warden",
+      "id": "mossguard",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 1,
+      "evolutionPath": "warden",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.0800000000000003,
+          "dir": 0,
+          "phase": 0.4761904761904763
+        },
+        "contact": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.23809523809523894
+        },
+        "recovery": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.8333333333333347
+        }
+      },
+      "distinctFrames": 63,
+      "minPainted": 1645,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "15331ebe65d28700ca54267909d53417dc5d024164a63d73d1af903e10325d6d",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-mossguard-2-wild",
+      "id": "mossguard",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 2,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 3.080000000000002,
+          "dir": 0,
+          "phase": 0.42105263157894773
+        },
+        "contact": {
+          "time": 3.320000000000002,
+          "dir": 0,
+          "phase": 0.06666666666666785
+        },
+        "recovery": {
+          "time": 3.480000000000002,
+          "dir": 0,
+          "phase": 0.6000000000000018
+        }
+      },
+      "distinctFrames": 72,
+      "minPainted": 1660,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "24e865998329c9850363df9d5759dd2ef1602b3d5145b2132a20d35df607c2dc",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-mossguard-2-warden",
+      "id": "mossguard",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 2,
+      "evolutionPath": "warden",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 3.080000000000002,
+          "dir": 0,
+          "phase": 0.42105263157894773
+        },
+        "contact": {
+          "time": 3.320000000000002,
+          "dir": 0,
+          "phase": 0.06666666666666785
+        },
+        "recovery": {
+          "time": 3.480000000000002,
+          "dir": 0,
+          "phase": 0.6000000000000018
+        }
+      },
+      "distinctFrames": 72,
+      "minPainted": 1703,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "1f22c4d5552ca3efaff2e440c4b8dacba88a96d22e71993f19113ceb4cc508f7",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-glacier-0-wild",
+      "id": "glacier",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 0,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 2.7200000000000015,
+          "dir": 6,
+          "phase": 0.35714285714285743
+        },
+        "contact": {
+          "time": 2.9600000000000017,
+          "dir": 6,
+          "phase": 0.0892857142857154
+        },
+        "recovery": {
+          "time": 3.160000000000002,
+          "dir": 6,
+          "phase": 0.8333333333333351
+        }
+      },
+      "distinctFrames": 71,
+      "minPainted": 1035,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "c3030fba1037de0fc7b7713bac6bc277a3d5926eb7640649e224b4cd4564e8ea",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-glacier-1-wild",
+      "id": "glacier",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 1,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.0800000000000003,
+          "dir": 0,
+          "phase": 0.4761904761904763
+        },
+        "contact": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.23809523809523894
+        },
+        "recovery": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.8333333333333347
+        }
+      },
+      "distinctFrames": 66,
+      "minPainted": 1584,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "3c6541a6ecad2f2d5cb69adc917d2c732ed4244ae6106ae2b08939c70996ca94",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-glacier-1-warden",
+      "id": "glacier",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 1,
+      "evolutionPath": "warden",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.0800000000000003,
+          "dir": 0,
+          "phase": 0.4761904761904763
+        },
+        "contact": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.23809523809523894
+        },
+        "recovery": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.8333333333333347
+        }
+      },
+      "distinctFrames": 62,
+      "minPainted": 1645,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "10db7750863a7e22b41feb8ebd7aa86b56aa768fff41bc879f617101b10f657f",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-glacier-2-wild",
+      "id": "glacier",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 2,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 3.040000000000002,
+          "dir": 0,
+          "phase": 0.3157894736842108
+        },
+        "contact": {
+          "time": 3.320000000000002,
+          "dir": 0,
+          "phase": 0.06666666666666785
+        },
+        "recovery": {
+          "time": 3.480000000000002,
+          "dir": 0,
+          "phase": 0.6000000000000018
+        }
+      },
+      "distinctFrames": 71,
+      "minPainted": 1673,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "8ce7e4d8406659e44e62498fa4b852ae7810fcff8409761e0d7a36ba709f56f3",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-glacier-2-warden",
+      "id": "glacier",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 2,
+      "evolutionPath": "warden",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 3.040000000000002,
+          "dir": 0,
+          "phase": 0.3157894736842108
+        },
+        "contact": {
+          "time": 3.400000000000002,
+          "dir": 0,
+          "phase": 0.3333333333333348
+        },
+        "recovery": {
+          "time": 3.480000000000002,
+          "dir": 0,
+          "phase": 0.6000000000000018
+        }
+      },
+      "distinctFrames": 71,
+      "minPainted": 1709,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "825c5cd8acb78caeabbb59f626eb228b20527c0f44d7d1c6391e5cac997d322b",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-abyssal-0-wild",
+      "id": "abyssal",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 0,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.3200000000000005,
+          "dir": 6,
+          "phase": 0.35714285714285743
+        },
+        "contact": {
+          "time": 1.5600000000000007,
+          "dir": 6,
+          "phase": 0.0892857142857154
+        },
+        "recovery": {
+          "time": 1.7200000000000009,
+          "dir": 6,
+          "phase": 0.6845238095238112
+        }
+      },
+      "distinctFrames": 70,
+      "minPainted": 1071,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "9285e4eb7cf09ab7af60d88ece711762077b1e7f6fd9c9b27bab2e7a07ac4850",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-abyssal-1-wild",
+      "id": "abyssal",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 1,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.0400000000000003,
+          "dir": 0,
+          "phase": 0.3571428571428571
+        },
+        "contact": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.23809523809523894
+        },
+        "recovery": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.8333333333333347
+        }
+      },
+      "distinctFrames": 65,
+      "minPainted": 1584,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "fa638ba94d7bd0059ee013e6844b6db97049059b905d0830d6f8586b75127d9e",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-abyssal-1-warden",
+      "id": "abyssal",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 1,
+      "evolutionPath": "warden",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.0400000000000003,
+          "dir": 0,
+          "phase": 0.3571428571428571
+        },
+        "contact": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.23809523809523894
+        },
+        "recovery": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.8333333333333347
+        }
+      },
+      "distinctFrames": 67,
+      "minPainted": 1645,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "a3d9f4cf17100a39cfbede5d2b20d75ff947699aff1083915b114d2bd9f0a394",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-abyssal-2-wild",
+      "id": "abyssal",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 2,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.3200000000000005,
+          "dir": 6,
+          "phase": 0.35714285714285743
+        },
+        "contact": {
+          "time": 1.5600000000000007,
+          "dir": 6,
+          "phase": 0.0892857142857154
+        },
+        "recovery": {
+          "time": 1.7200000000000009,
+          "dir": 6,
+          "phase": 0.6845238095238112
+        }
+      },
+      "distinctFrames": 68,
+      "minPainted": 1418,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "83068d58860f9471157f9b27a05cc4ae7bb6bad5a4cadfa4d94462493b3c5b50",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-abyssal-2-warden",
+      "id": "abyssal",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 2,
+      "evolutionPath": "warden",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.3200000000000005,
+          "dir": 6,
+          "phase": 0.35714285714285743
+        },
+        "contact": {
+          "time": 1.5600000000000007,
+          "dir": 6,
+          "phase": 0.0892857142857154
+        },
+        "recovery": {
+          "time": 1.7200000000000009,
+          "dir": 6,
+          "phase": 0.6845238095238112
+        }
+      },
+      "distinctFrames": 67,
+      "minPainted": 1472,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "27f7f07af97a952ac66a99f2e9ae4ddd1e3068ac832e60d4685486959e83e6e3",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-cloverimp-0-wild",
+      "id": "cloverimp",
+      "family": "goblin",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 0,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.46153846153846195
+        },
+        "contact": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.08333333333333434
+        },
+        "recovery": {
+          "time": 1.6400000000000008,
+          "dir": 0,
+          "phase": 0.7500000000000017
+        }
+      },
+      "distinctFrames": 71,
+      "minPainted": 670,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "cff2cf669939334b9f3f36eb2ba9f9858ebffe714ac1d57911bf483d330866f9",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-cloverimp-1-wild",
+      "id": "cloverimp",
+      "family": "goblin",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 1,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.0400000000000003,
+          "dir": 0,
+          "phase": 0.4615384615384615
+        },
+        "contact": {
+          "time": 1.2000000000000004,
+          "dir": 0,
+          "phase": 0.08333333333333387
+        },
+        "recovery": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.5833333333333344
+        }
+      },
+      "distinctFrames": 46,
+      "minPainted": 781,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "1bd558b686fe907de56cdbc8a24b2dbfa3df48b6b257000cb9d39ca6b3440cd4",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-cloverimp-1-warden",
+      "id": "cloverimp",
+      "family": "goblin",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 1,
+      "evolutionPath": "warden",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.0400000000000003,
+          "dir": 0,
+          "phase": 0.4615384615384615
+        },
+        "contact": {
+          "time": 1.2400000000000004,
+          "dir": 0,
+          "phase": 0.2500000000000007
+        },
+        "recovery": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.5833333333333344
+        }
+      },
+      "distinctFrames": 44,
+      "minPainted": 829,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "11ca1c168879f8a0dcaa0586da10db0edbd7bd1fe77f9ecfe39b6deb77c2c1f0",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-cloverimp-2-wild",
+      "id": "cloverimp",
+      "family": "goblin",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 2,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.46153846153846195
+        },
+        "contact": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.08333333333333434
+        },
+        "recovery": {
+          "time": 1.6400000000000008,
+          "dir": 0,
+          "phase": 0.7500000000000017
+        }
+      },
+      "distinctFrames": 52,
+      "minPainted": 905,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "62018e471ca3a328e632c3f1a60a12538fa97eb043ad7faa43780eaa22a75c8b",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-cloverimp-2-warden",
+      "id": "cloverimp",
+      "family": "goblin",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 2,
+      "evolutionPath": "warden",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.46153846153846195
+        },
+        "contact": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.08333333333333434
+        },
+        "recovery": {
+          "time": 1.6400000000000008,
+          "dir": 0,
+          "phase": 0.7500000000000017
+        }
+      },
+      "distinctFrames": 50,
+      "minPainted": 943,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "99c8053b8018d9c9aedd3b8607f3477dbde8614b9b140e3f02f5623f6f190d48",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-gravitan-0-wild",
+      "id": "gravitan",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 0,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.3200000000000005,
+          "dir": 6,
+          "phase": 0.35714285714285743
+        },
+        "contact": {
+          "time": 1.5600000000000007,
+          "dir": 6,
+          "phase": 0.0892857142857154
+        },
+        "recovery": {
+          "time": 1.7200000000000009,
+          "dir": 6,
+          "phase": 0.6845238095238112
+        }
+      },
+      "distinctFrames": 69,
+      "minPainted": 1078,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "533de2cec561487431bee9fcf0ebdfc7fbae1d334dc25aa0175bd090963ad831",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-gravitan-1-wild",
+      "id": "gravitan",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 1,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.0800000000000003,
+          "dir": 0,
+          "phase": 0.4761904761904763
+        },
+        "contact": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.23809523809523894
+        },
+        "recovery": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.8333333333333347
+        }
+      },
+      "distinctFrames": 66,
+      "minPainted": 1584,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "f9c1cac78ff85b799bb26d4082c07ccfe89cc14e8d34532caf6c72ac3fc86b5a",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-gravitan-1-warden",
+      "id": "gravitan",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 1,
+      "evolutionPath": "warden",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.0400000000000003,
+          "dir": 0,
+          "phase": 0.3571428571428571
+        },
+        "contact": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.23809523809523894
+        },
+        "recovery": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.8333333333333347
+        }
+      },
+      "distinctFrames": 68,
+      "minPainted": 1651,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "5a5f71b3df3e889a23dac93bc6157b599b2fa641377e409832168ab2484ddf92",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-gravitan-2-wild",
+      "id": "gravitan",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 2,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.4000000000000006,
+          "dir": 6,
+          "phase": 0.5952380952380957
+        },
+        "contact": {
+          "time": 1.5600000000000007,
+          "dir": 6,
+          "phase": 0.0892857142857154
+        },
+        "recovery": {
+          "time": 1.7200000000000009,
+          "dir": 6,
+          "phase": 0.6845238095238112
+        }
+      },
+      "distinctFrames": 68,
+      "minPainted": 1440,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "e34e4acb1494e2a3a9f4bda68d4db18423037dca0c8bbb8924d5c754833c6674",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-gravitan-2-warden",
+      "id": "gravitan",
+      "family": "troll",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 2,
+      "evolutionPath": "warden",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.4000000000000006,
+          "dir": 6,
+          "phase": 0.5952380952380957
+        },
+        "contact": {
+          "time": 1.5600000000000007,
+          "dir": 6,
+          "phase": 0.0892857142857154
+        },
+        "recovery": {
+          "time": 1.7200000000000009,
+          "dir": 6,
+          "phase": 0.6845238095238112
+        }
+      },
+      "distinctFrames": 69,
+      "minPainted": 1485,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "3275a62f5d0c9558d40c490aeea68d4e608d01deb011f77be1beddb2f54a6782",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-sable-0-wild",
+      "id": "sable",
+      "family": "rogue",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 0,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.4000000000000006,
+          "dir": 0,
+          "phase": 0.5952380952380957
+        },
+        "contact": {
+          "time": 1.5600000000000007,
+          "dir": 0,
+          "phase": 0.0892857142857154
+        },
+        "recovery": {
+          "time": 1.7200000000000009,
+          "dir": 0,
+          "phase": 0.6845238095238112
+        }
+      },
+      "distinctFrames": 71,
+      "minPainted": 818,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "b7abee04760f2ac70620abce2bd868c972d2d57311402e22b31e2849d7987fb8",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-sable-1-wild",
+      "id": "sable",
+      "family": "rogue",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 1,
+      "evolutionPath": "wild",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.0400000000000003,
+          "dir": 0,
+          "phase": 0.3571428571428571
+        },
+        "contact": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.23809523809523894
+        },
+        "recovery": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.8333333333333347
+        }
+      },
+      "distinctFrames": 72,
+      "minPainted": 946,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "19f1efa6e9bc737ecb0eeca126227c5bc7ffe3ce1bc941b465d93ae08d2e58f2",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    },
+    {
+      "name": "offline-sable-1-warden",
+      "id": "sable",
+      "family": "rogue",
+      "captureVersion": 2,
+      "offline": true,
+      "evolution": 1,
+      "evolutionPath": "warden",
+      "states": [
+        "idle",
+        "windup",
+        "contact",
+        "recovery"
+      ],
+      "stills": {
+        "windup": {
+          "time": 1.0800000000000003,
+          "dir": 0,
+          "phase": 0.4761904761904763
+        },
+        "contact": {
+          "time": 1.3200000000000005,
+          "dir": 0,
+          "phase": 0.23809523809523894
+        },
+        "recovery": {
+          "time": 1.4800000000000006,
+          "dir": 0,
+          "phase": 0.8333333333333347
+        }
+      },
+      "distinctFrames": 72,
+      "minPainted": 827,
+      "frames": 72,
+      "fps": 12,
+      "duration": 6,
+      "videoHash": "2f27e2a8ced43d5f5309995fb5e1e34ee8af7b08617c4a677b30787f7823c3af",
+      "errors": [],
+      "requests": [],
+      "missingImages": []
+    }
+  ]
+}

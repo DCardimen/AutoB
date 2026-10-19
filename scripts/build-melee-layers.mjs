@@ -21,7 +21,7 @@ function compress(text){
  for(const c of text){assert.ok(c.charCodeAt(0)<256);const joined=word+c;if(dictionary.has(joined)){word=joined;continue;}codes.push(dictionary.get(word));dictionary.set(joined,next++);word=c;if(next===65535){codes.push(256);dictionary=new Map(Array.from({length:256},(_,i)=>[String.fromCharCode(i),i]));next=257;}}
  if(word)codes.push(dictionary.get(word));const bytes=Buffer.alloc(codes.length*2);codes.forEach((n,i)=>bytes.writeUInt16LE(n,i*2));return bytes.toString('base64');
 }
-const exportDir='public/melee-layer-review/layers';fs.mkdirSync(exportDir,{recursive:true});
+const review=process.argv.find(a=>a.startsWith('--out='))?.slice(6)||'public/melee-layer-review',exportDir=review+'/layers';fs.mkdirSync(exportDir,{recursive:true});
 for(const file of fs.readdirSync(root+'/masters').filter(f=>f.endsWith('.json')).sort()){
  const m=JSON.parse(fs.readFileSync(root+'/masters/'+file,'utf8'));assert.equal(m.facings.length,8);assert.equal(m.cell,64);
  const rgba=Object.fromEntries(['bind','backing',...Object.keys(m.facings[0].layers)].map(n=>[n,new Uint8ClampedArray(512*64*4)]));
@@ -53,5 +53,5 @@ for(const file of fs.readdirSync(root+'/masters').filter(f=>f.endsWith('.json'))
  report.masters[file]=hash(fs.readFileSync(root+'/masters/'+file));
 }
 assert.equal(report.frames,168);const json=JSON.stringify(output),packed=compress(json);assert.deepEqual(decodeLayerData(packed),output,'Lossless dictionary packing');report.packing={decodedBytes:Buffer.byteLength(json),encodedBytes:packed.length};fs.writeFileSync('melee-layer-data.js','// Losslessly compiled from art/melee-layers/masters; npm run animation:layers.\nimport {decodeLayerData} from \'./indexed-layer-codec.js\';\nexport const MELEE_LAYER_DATA=decodeLayerData('+JSON.stringify(packed)+');\n');
-fs.mkdirSync('public/melee-layer-review/checks',{recursive:true});fs.writeFileSync('public/melee-layer-review/checks/layer-build.json',JSON.stringify(report,null,2)+'\n');
+fs.mkdirSync(review+'/checks',{recursive:true});fs.writeFileSync(review+'/checks/layer-build.json',JSON.stringify(report,null,2)+'\n');
 console.log(JSON.stringify(report));

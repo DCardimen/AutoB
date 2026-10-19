@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import assert from 'node:assert/strict';
 import {chromium} from 'playwright';
-const root='public/melee-layer-review',base=process.env.REVIEW_URL||'http://127.0.0.1:3054/public/melee-layer-review';
+const root=process.argv.find(a=>a.startsWith('--out='))?.slice(6)||'public/melee-layer-review',base=process.env.REVIEW_URL||'http://127.0.0.1:3054/public/melee-layer-review';
 const b=await chromium.launch({headless:true,executablePath:process.env.CHROMIUM_PATH||'C:/Program Files/Google/Chrome/Application/chrome.exe'});
 try{const p=await b.newPage();await p.goto(base+'/sheets/manifest.json');for(const kind of ['wild','warden']){
  const manifest=JSON.parse(fs.readFileSync(`${root}/${kind}/video-manifest.json`)),decoded=JSON.parse(fs.readFileSync(`${root}/${kind}/decoded-video.json`));assert.equal(decoded.status,'passed');assert.equal(decoded.captures.length,136);

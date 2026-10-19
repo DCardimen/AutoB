@@ -3395,7 +3395,27 @@
             "y": 30
           },
           "occluded": false,
-          "sourceDir": 0
+          "sourceDir": 0,
+          "shoulder": {
+            "bounds": [
+              16,
+              34,
+              14,
+              31
+            ],
+            "fade": 3,
+            "follow": 0.7,
+            "rest": [
+              -6.7392,
+              5.74754
+            ],
+            "protect": [
+              28,
+              40,
+              0,
+              32
+            ]
+          }
         },
         {
           "side": 1,
@@ -3412,7 +3432,27 @@
             "y": 26
           },
           "occluded": false,
-          "sourceDir": 0
+          "sourceDir": 0,
+          "shoulder": {
+            "bounds": [
+              31,
+              49,
+              14,
+              31
+            ],
+            "fade": 3,
+            "follow": 0.7,
+            "rest": [
+              7.05996,
+              2.2157
+            ],
+            "protect": [
+              28,
+              40,
+              0,
+              32
+            ]
+          }
         }
       ],
       "legs": {
@@ -3978,7 +4018,8 @@
         "Hidden chest, waist, pelvis and cape regions are reconstructed indexed artwork.",
         "Weapon layer is empty because these weaponless source masters use the separate equipped weapon renderer.",
         "Cape completion uses its saved visible ownership only. Legacy color-list repairs (which included gray armor) are discarded.",
-        "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot."
+        "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot.",
+        "Shoulder field: original deltoid/pauldron and backing roll with stable solved arm reach, blended into the fixed clavicle/chest. The driver is independent of elbow-branch and angle-wrap changes. Saved face/beard exclusions preserve the head; no source ownership or palette is changed."
       ],
       "backingBottom": 36,
       "sourceCrop": {
@@ -8057,7 +8098,27 @@
             "y": 31
           },
           "occluded": false,
-          "sourceDir": 1
+          "sourceDir": 1,
+          "shoulder": {
+            "bounds": [
+              15,
+              33,
+              14,
+              31
+            ],
+            "fade": 3,
+            "follow": 0.7,
+            "rest": [
+              -8.87463,
+              6.48643
+            ],
+            "protect": [
+              27,
+              39,
+              0,
+              32
+            ]
+          }
         },
         {
           "side": 1,
@@ -8074,7 +8135,27 @@
             "y": 28
           },
           "occluded": false,
-          "sourceDir": 1
+          "sourceDir": 1,
+          "shoulder": {
+            "bounds": [
+              32,
+              50,
+              14,
+              31
+            ],
+            "fade": 3,
+            "follow": 0.7,
+            "rest": [
+              8.33635,
+              3.81075
+            ],
+            "protect": [
+              27,
+              39,
+              0,
+              32
+            ]
+          }
         }
       ],
       "legs": {
@@ -8682,7 +8763,8 @@
         "Hidden chest, waist, pelvis and cape regions are reconstructed indexed artwork.",
         "Weapon layer is empty because these weaponless source masters use the separate equipped weapon renderer.",
         "Cape completion uses its saved visible ownership only. Legacy color-list repairs (which included gray armor) are discarded.",
-        "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot."
+        "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot.",
+        "Shoulder field: original deltoid/pauldron and backing roll with stable solved arm reach, blended into the fixed clavicle/chest. The driver is independent of elbow-branch and angle-wrap changes. Saved face/beard exclusions preserve the head; no source ownership or palette is changed."
       ],
       "backingBottom": 36,
       "sourceCrop": {
@@ -13387,7 +13469,27 @@
             "y": 30
           },
           "occluded": false,
-          "sourceDir": 2
+          "sourceDir": 2,
+          "shoulder": {
+            "bounds": [
+              11,
+              29,
+              14,
+              31
+            ],
+            "fade": 3,
+            "follow": 0.7,
+            "rest": [
+              -9.63019,
+              5.47542
+            ],
+            "protect": [
+              26,
+              37,
+              0,
+              31
+            ]
+          }
         },
         {
           "side": 1,
@@ -13404,7 +13506,27 @@
             "y": 30
           },
           "occluded": false,
-          "sourceDir": 2
+          "sourceDir": 2,
+          "shoulder": {
+            "bounds": [
+              36,
+              54,
+              14,
+              31
+            ],
+            "fade": 3,
+            "follow": 0.7,
+            "rest": [
+              9.63019,
+              5.47542
+            ],
+            "protect": [
+              26,
+              37,
+              0,
+              31
+            ]
+          }
         }
       ],
       "legs": {
@@ -13880,7 +14002,8 @@
         "Hidden chest, waist, pelvis and cape regions are reconstructed indexed artwork.",
         "Weapon layer is empty because these weaponless source masters use the separate equipped weapon renderer.",
         "Cape completion uses its saved visible ownership only. Legacy color-list repairs (which included gray armor) are discarded.",
-        "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot."
+        "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot.",
+        "Shoulder field: original deltoid/pauldron and backing roll with stable solved arm reach, blended into the fixed clavicle/chest. The driver is independent of elbow-branch and angle-wrap changes. Saved face/beard exclusions preserve the head; no source ownership or palette is changed."
       ],
       "backingBottom": 36,
       "sourceCrop": {
@@ -17832,7 +17955,27 @@
             "y": 27
           },
           "occluded": false,
-          "sourceDir": 3
+          "sourceDir": 3,
+          "shoulder": {
+            "bounds": [
+              12,
+              30,
+              14,
+              31
+            ],
+            "fade": 3,
+            "follow": 0.7,
+            "rest": [
+              -8.16118,
+              2.98591
+            ],
+            "protect": [
+              24,
+              36,
+              0,
+              32
+            ]
+          }
         },
         {
           "side": 1,
@@ -17849,7 +17992,27 @@
             "y": 30
           },
           "occluded": false,
-          "sourceDir": 3
+          "sourceDir": 3,
+          "shoulder": {
+            "bounds": [
+              34,
+              52,
+              14,
+              31
+            ],
+            "fade": 3,
+            "follow": 0.7,
+            "rest": [
+              9.63019,
+              5.47542
+            ],
+            "protect": [
+              24,
+              36,
+              0,
+              32
+            ]
+          }
         }
       ],
       "legs": {
@@ -18259,7 +18422,8 @@
         "Hidden chest, waist, pelvis and cape regions are reconstructed indexed artwork.",
         "Weapon layer is empty because these weaponless source masters use the separate equipped weapon renderer.",
         "Cape completion uses its saved visible ownership only. Legacy color-list repairs (which included gray armor) are discarded.",
-        "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot."
+        "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot.",
+        "Shoulder field: original deltoid/pauldron and backing roll with stable solved arm reach, blended into the fixed clavicle/chest. The driver is independent of elbow-branch and angle-wrap changes. Saved face/beard exclusions preserve the head; no source ownership or palette is changed."
       ],
       "backingBottom": 36,
       "sourceCrop": {
@@ -21569,7 +21733,27 @@
             "y": 26
           },
           "occluded": false,
-          "sourceDir": 4
+          "sourceDir": 4,
+          "shoulder": {
+            "bounds": [
+              14,
+              32,
+              14,
+              31
+            ],
+            "fade": 3,
+            "follow": 0.7,
+            "rest": [
+              -8.00501,
+              2.19826
+            ],
+            "protect": [
+              21,
+              31,
+              0,
+              31
+            ]
+          }
         },
         {
           "side": 1,
@@ -21586,7 +21770,27 @@
             "y": 30
           },
           "occluded": false,
-          "sourceDir": 4
+          "sourceDir": 4,
+          "shoulder": {
+            "bounds": [
+              30,
+              48,
+              14,
+              31
+            ],
+            "fade": 3,
+            "follow": 0.7,
+            "rest": [
+              3.3696,
+              5.74754
+            ],
+            "protect": [
+              21,
+              31,
+              0,
+              31
+            ]
+          }
         }
       ],
       "legs": {
@@ -22134,7 +22338,8 @@
         "Hidden chest, waist, pelvis and cape regions are reconstructed indexed artwork.",
         "Weapon layer is empty because these weaponless source masters use the separate equipped weapon renderer.",
         "Cape completion uses its saved visible ownership only. Legacy color-list repairs (which included gray armor) are discarded.",
-        "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot."
+        "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot.",
+        "Shoulder field: original deltoid/pauldron and backing roll with stable solved arm reach, blended into the fixed clavicle/chest. The driver is independent of elbow-branch and angle-wrap changes. Saved face/beard exclusions preserve the head; no source ownership or palette is changed."
       ],
       "backingBottom": 36,
       "sourceCrop": {
@@ -26236,7 +26441,21 @@
             "y": 31
           },
           "occluded": false,
-          "sourceDir": 5
+          "sourceDir": 5,
+          "shoulder": {
+            "bounds": [
+              15,
+              33,
+              14,
+              31
+            ],
+            "fade": 3,
+            "follow": 0.7,
+            "rest": [
+              -8.87463,
+              6.48643
+            ]
+          }
         },
         {
           "side": 1,
@@ -26253,7 +26472,21 @@
             "y": 27
           },
           "occluded": false,
-          "sourceDir": 5
+          "sourceDir": 5,
+          "shoulder": {
+            "bounds": [
+              32,
+              50,
+              14,
+              31
+            ],
+            "fade": 3,
+            "follow": 0.7,
+            "rest": [
+              8.16118,
+              2.98591
+            ]
+          }
         }
       ],
       "legs": {
@@ -27059,7 +27292,8 @@
         "Hidden chest, waist, pelvis and cape regions are reconstructed indexed artwork.",
         "Weapon layer is empty because these weaponless source masters use the separate equipped weapon renderer.",
         "Cape completion uses its saved visible ownership only. Legacy color-list repairs (which included gray armor) are discarded.",
-        "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot."
+        "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot.",
+        "Shoulder field: original deltoid/pauldron and backing roll with stable solved arm reach, blended into the fixed clavicle/chest. The driver is independent of elbow-branch and angle-wrap changes. Saved face/beard exclusions preserve the head; no source ownership or palette is changed."
       ],
       "backingBottom": 36,
       "sourceCrop": {
@@ -31758,7 +31992,21 @@
             "y": 30
           },
           "occluded": false,
-          "sourceDir": 6
+          "sourceDir": 6,
+          "shoulder": {
+            "bounds": [
+              12,
+              30,
+              14,
+              31
+            ],
+            "fade": 3,
+            "follow": 0.7,
+            "rest": [
+              -9.63019,
+              5.47542
+            ]
+          }
         },
         {
           "side": 1,
@@ -31775,7 +32023,21 @@
             "y": 30
           },
           "occluded": false,
-          "sourceDir": 6
+          "sourceDir": 6,
+          "shoulder": {
+            "bounds": [
+              36,
+              54,
+              14,
+              31
+            ],
+            "fade": 3,
+            "follow": 0.7,
+            "rest": [
+              9.63019,
+              5.47542
+            ]
+          }
         }
       ],
       "legs": {
@@ -32035,7 +32297,8 @@
         "Hidden chest, waist, pelvis and cape regions are reconstructed indexed artwork.",
         "Weapon layer is empty because these weaponless source masters use the separate equipped weapon renderer.",
         "Cape completion uses its saved visible ownership only. Legacy color-list repairs (which included gray armor) are discarded.",
-        "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot."
+        "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot.",
+        "Shoulder field: original deltoid/pauldron and backing roll with stable solved arm reach, blended into the fixed clavicle/chest. The driver is independent of elbow-branch and angle-wrap changes. Saved face/beard exclusions preserve the head; no source ownership or palette is changed."
       ],
       "backingBottom": 36,
       "sourceCrop": {
@@ -36136,7 +36399,21 @@
             "y": 27
           },
           "occluded": false,
-          "sourceDir": 7
+          "sourceDir": 7,
+          "shoulder": {
+            "bounds": [
+              13,
+              31,
+              14,
+              31
+            ],
+            "fade": 3,
+            "follow": 0.7,
+            "rest": [
+              -8.16118,
+              2.98591
+            ]
+          }
         },
         {
           "side": 1,
@@ -36153,7 +36430,21 @@
             "y": 31
           },
           "occluded": false,
-          "sourceDir": 7
+          "sourceDir": 7,
+          "shoulder": {
+            "bounds": [
+              34,
+              52,
+              14,
+              31
+            ],
+            "fade": 3,
+            "follow": 0.7,
+            "rest": [
+              8.87463,
+              6.48643
+            ]
+          }
         }
       ],
       "legs": {
@@ -36785,7 +37076,8 @@
         "Hidden chest, waist, pelvis and cape regions are reconstructed indexed artwork.",
         "Weapon layer is empty because these weaponless source masters use the separate equipped weapon renderer.",
         "Cape completion uses its saved visible ownership only. Legacy color-list repairs (which included gray armor) are discarded.",
-        "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot."
+        "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot.",
+        "Shoulder field: original deltoid/pauldron and backing roll with stable solved arm reach, blended into the fixed clavicle/chest. The driver is independent of elbow-branch and angle-wrap changes. Saved face/beard exclusions preserve the head; no source ownership or palette is changed."
       ],
       "backingBottom": 36,
       "sourceCrop": {

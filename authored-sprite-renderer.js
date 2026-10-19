@@ -20,6 +20,7 @@ import {buildLegVolumes} from './leg-volume.js';
 import {creatureLegArt,skinCreatureLegs,QUADRUPEDS} from './creature-leg-volume.js';
 import {creatureMouthSource} from './creature-attacks.js';
 import {paintMeleeLayers} from './melee-layer-art.js';
+import {meleeShoulderSkin} from './melee-shoulder-skin.js';
 import {legAnatomy,sampleLegMaterial} from './leg-anatomy.js';
 // Directional artwork is skinned to the same anatomical action poses as combat.
 // The imported art is never blurred, rotated by Canvas, or stretched as one bitmap.
@@ -245,7 +246,8 @@ export function paintAtlasCharacter(b,id,rig,at,cellPass=0){
  const eyePixels=rig.dir<5?(asset.eyePixels??=asset.pixels.filter(p=>p.y>=14&&p.y<21&&p.x>=17&&p.x<47&&eyeColor(identity,p.rgb))):[];
  // A fall rotates the connected painted body. Neck travel alone cannot
  // express a collapse without folding a short source neck inside out.
- function warped(x,y,gearPixel=false,armPixel=false,clothPixel=false,hairPixel=false,surface){const p=deformed(x,y,gearPixel,armPixel,clothPixel,hairPixel,surface);return fallAngle?rotateFall(p):p;}
+ let shoulderSkin=null;
+ function warped(x,y,gearPixel=false,armPixel=false,clothPixel=false,hairPixel=false,surface){const p=deformed(x,y,gearPixel,armPixel,clothPixel,hairPixel,surface),q=shoulderSkin?shoulderSkin.project(p,x,y):p;return fallAngle?rotateFall(q):q;}
  function deformed(x,y,gearPixel=false,armPixel=false,clothPixel=false,hairPixel=false,surface){
   if(gearPixel&&sourceGear&&grip&&gearDistance(x,y,sourceGear)<(identity==='orc'?4:identity==='caster'?2.8:2.4)&&Math.abs(x-32)>6){
    const dx=x-sourceGear[0],dy=y-sourceGear[1],theta=(weaponAngle-sourceAngle)*align,cos=Math.cos(theta),sin=Math.sin(theta),ratio=1+(clamp(weaponLen/sourceLen,.1,3)-1)*align;
@@ -355,7 +357,8 @@ export function paintAtlasCharacter(b,id,rig,at,cellPass=0){
  // every destination sample. Forward splats and seam-colored cylinders lost
  // both width and texture, and left disconnected pixels at bent joints.
  if(parts?.authoredLayers){
-  rig.artLayerProjection=paintMeleeLayers(b,parts,artColors,(name,x,y)=>{const q=warped(x,y,false,false,false,false,name);return {x:32+(q.x-32+ox)*fit,y:44+(q.y-44+oy)*fit};});
+  // Solve the arm first, then skin the painted shoulder from its stable
+  // wrist reach. No early body pass can leave a stationary shoulder copy.
  }else if(authoredLegs){
   const trunk=new Map((parts?.underbody||[]).map(p=>{const q=warped(p.x,p.y);return [p.y*64+p.x,{...p,q:{x:32+(q.x-32+ox)*fit,y:44+(q.y-44+oy)*fit},shade:artColors[p.index]}];}));
   // Draw the independent body first. Moving hair, capes and arms can cover
@@ -404,7 +407,8 @@ export function paintAtlasCharacter(b,id,rig,at,cellPass=0){
  // Close one-pixel interior gaps left by nearest-pixel skeletal deformation.
  const fills=[];if(!authoredLegs)for(let y=Math.max(1,Math.floor(minY+oy));y<Math.min(63,Math.ceil(maxY+oy));y++)for(let x=Math.max(1,Math.floor(minX+ox));x<Math.min(63,Math.ceil(maxX+ox));x++){const n=(y*64+x)*4;if(b.data[n+3])continue;const l=n-4,r=n+4,t=n-256,d=n+256;if(b.data[l+3]&&b.data[r+3]&&(b.data[t+3]||b.data[d+3])){const near=b.data[t+3]?t:l;fills.push([x,y,'#'+[0,1,2].map(k=>b.data[near+k].toString(16).padStart(2,'0')).join('')]);}}
  for(const p of fills)b.dot(...p);
- if(expression!=='open'&&eyePixels.length){for(const side of [-1,1]){const eye=eyePixels.filter(p=>side<0?p.x<32:p.x>=32);if(eye.length<2)continue;const x=eye.reduce((n,p)=>n+p.x,0)/eye.length,y=eye.reduce((n,p)=>n+p.y,0)/eye.length,v=warped(x,y),q={x:32+(v.x-32+ox)*fit,y:44+(v.y-44+oy)*fit},color='#30212b';b.line({x:q.x-1,y:q.y},{x:q.x+1,y:q.y},color);if(expression==='dead'){b.dot(q.x-1,q.y-1,color);b.dot(q.x+1,q.y+1,color);}}}
+ const paintExpression=()=>{if(expression!=='open'&&eyePixels.length){for(const side of [-1,1]){const eye=eyePixels.filter(p=>side<0?p.x<32:p.x>=32);if(eye.length<2)continue;const x=eye.reduce((n,p)=>n+p.x,0)/eye.length,y=eye.reduce((n,p)=>n+p.y,0)/eye.length,v=warped(x,y),q={x:32+(v.x-32+ox)*fit,y:44+(v.y-44+oy)*fit},color='#30212b';b.line({x:q.x-1,y:q.y},{x:q.x+1,y:q.y},color);if(expression==='dead'){b.dot(q.x-1,q.y-1,color);b.dot(q.x+1,q.y+1,color);}}}};
+ if(!parts?.authoredLayers)paintExpression();
  // Weld only uncovered pixels at joint seams, preserving the painted costume.
  const weld=(a,z,color)=>{const length=Math.hypot(z.x-a.x,z.y-a.y),steps=Math.max(1,Math.ceil(length*2));for(let i=0;i<=steps;i++){const x=Math.round(a.x+(z.x-a.x)*i/steps),y=Math.round(a.y+(z.y-a.y)*i/steps);if(x>0&&x<63&&y>0&&y<63&&!b.data[(y*64+x)*4+3])b.dot(x,y,color);}};
  const anchor=q=>({x:32+(q.x-32+ox)*fit,y:44+(q.y-44+oy)*fit});
@@ -428,7 +432,7 @@ export function paintAtlasCharacter(b,id,rig,at,cellPass=0){
  // row in the source sheet. Different species and evolved costumes have
  // different shoulder heights, widths and rear silhouettes.
  const torsoPixels=[];
- if(rig.arms.length){
+ if(rig.arms.length&&!parts?.authoredLayers){
   const center=rig.artAnchors.body,near=[];
   for(let y=Math.round(center.y)-3;y<=Math.round(center.y)+3;y++)for(let x=Math.round(center.x)-3;x<=Math.round(center.x)+3;x++)if(x>=0&&x<64&&y>=0&&y<64&&b.data[(y*64+x)*4+3])near.push({x,y});
   near.sort((a,z)=>Math.hypot(a.x-center.x,a.y-center.y)-Math.hypot(z.x-center.x,z.y-center.y));
@@ -529,9 +533,16 @@ export function paintAtlasCharacter(b,id,rig,at,cellPass=0){
  rig.artGearPalette=asset.metal&&!rig.equipment?.includes('sunsteel-edge')?{...rig.palette,metal:asset.metal}:rig.palette;
  rig.artArmSkin=armArt?{art:armArt,colors:artColors,fit,scale,bodyPixels:bodyLayer}:null;
  rig.artGripPixels=new Map();rig.artArmPixels=new Map();
+ if(parts?.authoredLayers){
+  shoulderSkin=meleeShoulderSkin(parts,rig,p=>({x:32+(p.x-32)/fit-ox,y:44+(p.y-44)/fit-oy}));
+  rig.artShoulderSkin=shoulderSkin;
+  rig.artLayerProjection=paintMeleeLayers(b,parts,artColors,(name,x,y)=>anchor(warped(x,y,false,false,false,false,name)));
+  rig.artBodyRepairs=asset.bodyRepairs.map(p=>({...anchor(warped(p.x,p.y,false,false,false,false,'body')),color:artColors[p.index],source:{x:p.x,y:p.y}}));
+  paintExpression();
+ }
  rig.artLayerProject=(name,x,y)=>anchor(warped(x,y,false,false,false,false,name));
  rig.artSourceProject=(x,y)=>anchor(warped(x,y,false,false,false,false,parts?.authoredLayers?(parts.ownership.get(Math.round(y)*64+Math.round(x))??'body'):undefined));
- rig.artSourcePixels=new Map(layer.map((p,i)=>[p.y*64+p.x,anchor(pixels[i])]));
+ rig.artSourcePixels=new Map(layer.map((p,i)=>[p.y*64+p.x,anchor(parts?.authoredLayers?warped(p.x,p.y,false,false,false,false,p.layer):pixels[i])]));
  rig.artParts=parts;
  if(rig.artArmSkin&&(rig.artCellPass||0)<4){
   const points=authoredArmBounds(rig);

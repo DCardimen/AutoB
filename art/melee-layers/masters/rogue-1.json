@@ -5286,7 +5286,27 @@
             "y": 28
           },
           "occluded": false,
-          "sourceDir": 0
+          "sourceDir": 0,
+          "shoulder": {
+            "bounds": [
+              21,
+              34,
+              15,
+              29
+            ],
+            "fade": 3,
+            "follow": 0.45,
+            "rest": [
+              -4.4409,
+              6.48384
+            ],
+            "protect": [
+              30,
+              42,
+              0,
+              20
+            ]
+          }
         },
         {
           "side": 1,
@@ -5303,7 +5323,27 @@
             "y": 29
           },
           "occluded": false,
-          "sourceDir": 0
+          "sourceDir": 0,
+          "shoulder": {
+            "bounds": [
+              40,
+              53,
+              16,
+              30
+            ],
+            "fade": 3,
+            "follow": 0.45,
+            "rest": [
+              3.53931,
+              6.45937
+            ],
+            "protect": [
+              30,
+              42,
+              0,
+              20
+            ]
+          }
         }
       ],
       "legs": {
@@ -8142,7 +8182,8 @@
         "Torso follows this facing’s measured chest center and includes backing at every shoulder socket.",
         "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot.",
         "Pale disconnected ground pixels below mature boots are retained only in the source-only ground layer; original boot pixels remain on their leg.",
-        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors."
+        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors.",
+        "Shoulder field: original deltoid/pauldron and backing roll with stable solved arm reach, blended into the fixed clavicle/chest. The driver is independent of elbow-branch and angle-wrap changes. Saved face/beard exclusions preserve the head; no source ownership or palette is changed."
       ],
       "armContours": [
         {
@@ -13420,7 +13461,27 @@
             "y": 29
           },
           "occluded": false,
-          "sourceDir": 1
+          "sourceDir": 1,
+          "shoulder": {
+            "bounds": [
+              20,
+              33,
+              15,
+              29
+            ],
+            "fade": 3,
+            "follow": 0.45,
+            "rest": [
+              -4.43047,
+              7.3927
+            ],
+            "protect": [
+              29,
+              41,
+              0,
+              20
+            ]
+          }
         },
         {
           "side": 1,
@@ -13437,7 +13498,27 @@
             "y": 29
           },
           "occluded": false,
-          "sourceDir": 1
+          "sourceDir": 1,
+          "shoulder": {
+            "bounds": [
+              40,
+              53,
+              16,
+              30
+            ],
+            "fade": 3,
+            "follow": 0.45,
+            "rest": [
+              5.34809,
+              6.50697
+            ],
+            "protect": [
+              29,
+              41,
+              0,
+              20
+            ]
+          }
         }
       ],
       "legs": {
@@ -16450,7 +16531,8 @@
         "Torso follows this facing’s measured chest center and includes backing at every shoulder socket.",
         "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot.",
         "Pale disconnected ground pixels below mature boots are retained only in the source-only ground layer; original boot pixels remain on their leg.",
-        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors."
+        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors.",
+        "Shoulder field: original deltoid/pauldron and backing roll with stable solved arm reach, blended into the fixed clavicle/chest. The driver is independent of elbow-branch and angle-wrap changes. Saved face/beard exclusions preserve the head; no source ownership or palette is changed."
       ],
       "armContours": [
         {
@@ -21784,7 +21866,27 @@
             "y": 28
           },
           "occluded": false,
-          "sourceDir": 2
+          "sourceDir": 2,
+          "shoulder": {
+            "bounds": [
+              15,
+              28,
+              15,
+              29
+            ],
+            "fade": 3,
+            "follow": 0.45,
+            "rest": [
+              -6.25942,
+              6.52781
+            ],
+            "protect": [
+              26,
+              38,
+              0,
+              20
+            ]
+          }
         },
         {
           "side": 1,
@@ -21801,7 +21903,27 @@
             "y": 28
           },
           "occluded": false,
-          "sourceDir": 2
+          "sourceDir": 2,
+          "shoulder": {
+            "bounds": [
+              37,
+              50,
+              15,
+              29
+            ],
+            "fade": 3,
+            "follow": 0.45,
+            "rest": [
+              4.4409,
+              6.48384
+            ],
+            "protect": [
+              26,
+              38,
+              0,
+              20
+            ]
+          }
         }
       ],
       "legs": {
@@ -24556,7 +24678,8 @@
         "Torso follows this facing’s measured chest center and includes backing at every shoulder socket.",
         "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot.",
         "Pale disconnected ground pixels below mature boots are retained only in the source-only ground layer; original boot pixels remain on their leg.",
-        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors."
+        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors.",
+        "Shoulder field: original deltoid/pauldron and backing roll with stable solved arm reach, blended into the fixed clavicle/chest. The driver is independent of elbow-branch and angle-wrap changes. Saved face/beard exclusions preserve the head; no source ownership or palette is changed."
       ],
       "armContours": [
         {
@@ -30017,7 +30140,27 @@
             "y": 28
           },
           "occluded": false,
-          "sourceDir": 3
+          "sourceDir": 3,
+          "shoulder": {
+            "bounds": [
+              11,
+              24,
+              16,
+              30
+            ],
+            "fade": 3,
+            "follow": 0.45,
+            "rest": [
+              -5.36522,
+              5.59527
+            ],
+            "protect": [
+              22,
+              34,
+              0,
+              20
+            ]
+          }
         },
         {
           "side": 1,
@@ -30034,7 +30177,27 @@
             "y": 28
           },
           "occluded": false,
-          "sourceDir": 3
+          "sourceDir": 3,
+          "shoulder": {
+            "bounds": [
+              31,
+              44,
+              15,
+              29
+            ],
+            "fade": 3,
+            "follow": 0.45,
+            "rest": [
+              2.64462,
+              6.43536
+            ],
+            "protect": [
+              22,
+              34,
+              0,
+              20
+            ]
+          }
         }
       ],
       "legs": {
@@ -33011,7 +33174,8 @@
         "Torso follows this facing’s measured chest center and includes backing at every shoulder socket.",
         "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot.",
         "Pale disconnected ground pixels below mature boots are retained only in the source-only ground layer; original boot pixels remain on their leg.",
-        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors."
+        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors.",
+        "Shoulder field: original deltoid/pauldron and backing roll with stable solved arm reach, blended into the fixed clavicle/chest. The driver is independent of elbow-branch and angle-wrap changes. Saved face/beard exclusions preserve the head; no source ownership or palette is changed."
       ],
       "armContours": [
         {
@@ -38342,7 +38506,27 @@
             "y": 29
           },
           "occluded": false,
-          "sourceDir": 4
+          "sourceDir": 4,
+          "shoulder": {
+            "bounds": [
+              11,
+              24,
+              15,
+              29
+            ],
+            "fade": 3,
+            "follow": 0.45,
+            "rest": [
+              -4.43047,
+              7.3927
+            ],
+            "protect": [
+              21,
+              33,
+              0,
+              20
+            ]
+          }
         },
         {
           "side": 1,
@@ -38359,7 +38543,27 @@
             "y": 29
           },
           "occluded": true,
-          "sourceDir": 2
+          "sourceDir": 2,
+          "shoulder": {
+            "bounds": [
+              17,
+              30,
+              16,
+              30
+            ],
+            "fade": 3,
+            "follow": 0.45,
+            "rest": [
+              4.4409,
+              6.48384
+            ],
+            "protect": [
+              21,
+              33,
+              0,
+              20
+            ]
+          }
         }
       ],
       "legs": {
@@ -41054,7 +41258,8 @@
         "Torso follows this facing’s measured chest center and includes backing at every shoulder socket.",
         "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot.",
         "Pale disconnected ground pixels below mature boots are retained only in the source-only ground layer; original boot pixels remain on their leg.",
-        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors."
+        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors.",
+        "Shoulder field: original deltoid/pauldron and backing roll with stable solved arm reach, blended into the fixed clavicle/chest. The driver is independent of elbow-branch and angle-wrap changes. Saved face/beard exclusions preserve the head; no source ownership or palette is changed."
       ],
       "armContours": [
         {
@@ -46086,7 +46291,21 @@
             "y": 29
           },
           "occluded": false,
-          "sourceDir": 5
+          "sourceDir": 5,
+          "shoulder": {
+            "bounds": [
+              14,
+              27,
+              16,
+              30
+            ],
+            "fade": 3,
+            "follow": 0.45,
+            "rest": [
+              -6.25942,
+              6.52781
+            ]
+          }
         },
         {
           "side": 1,
@@ -46103,7 +46322,21 @@
             "y": 28
           },
           "occluded": true,
-          "sourceDir": 2
+          "sourceDir": 2,
+          "shoulder": {
+            "bounds": [
+              35,
+              48,
+              15,
+              29
+            ],
+            "fade": 3,
+            "follow": 0.45,
+            "rest": [
+              4.4409,
+              6.48384
+            ]
+          }
         }
       ],
       "legs": {
@@ -47034,7 +47267,8 @@
         "Torso follows this facing’s measured chest center and includes backing at every shoulder socket.",
         "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot.",
         "Pale disconnected ground pixels below mature boots are retained only in the source-only ground layer; original boot pixels remain on their leg.",
-        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors."
+        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors.",
+        "Shoulder field: original deltoid/pauldron and backing roll with stable solved arm reach, blended into the fixed clavicle/chest. The driver is independent of elbow-branch and angle-wrap changes. Saved face/beard exclusions preserve the head; no source ownership or palette is changed."
       ],
       "armContours": [
         {
@@ -51779,7 +52013,21 @@
             "y": 29
           },
           "occluded": false,
-          "sourceDir": 6
+          "sourceDir": 6,
+          "shoulder": {
+            "bounds": [
+              13,
+              26,
+              16,
+              30
+            ],
+            "fade": 3,
+            "follow": 0.45,
+            "rest": [
+              -4.4409,
+              6.48384
+            ]
+          }
         },
         {
           "side": 1,
@@ -51796,7 +52044,21 @@
             "y": 29
           },
           "occluded": false,
-          "sourceDir": 6
+          "sourceDir": 6,
+          "shoulder": {
+            "bounds": [
+              38,
+              51,
+              16,
+              30
+            ],
+            "fade": 3,
+            "follow": 0.45,
+            "rest": [
+              4.4409,
+              6.48384
+            ]
+          }
         }
       ],
       "legs": {
@@ -52535,7 +52797,8 @@
         "Torso follows this facing’s measured chest center and includes backing at every shoulder socket.",
         "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot.",
         "Pale disconnected ground pixels below mature boots are retained only in the source-only ground layer; original boot pixels remain on their leg.",
-        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors."
+        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors.",
+        "Shoulder field: original deltoid/pauldron and backing roll with stable solved arm reach, blended into the fixed clavicle/chest. The driver is independent of elbow-branch and angle-wrap changes. Saved face/beard exclusions preserve the head; no source ownership or palette is changed."
       ],
       "armContours": [
         {
@@ -57566,7 +57829,21 @@
             "y": 28
           },
           "occluded": true,
-          "sourceDir": 2
+          "sourceDir": 2,
+          "shoulder": {
+            "bounds": [
+              21,
+              34,
+              15,
+              29
+            ],
+            "fade": 3,
+            "follow": 0.45,
+            "rest": [
+              -6.25942,
+              6.52781
+            ]
+          }
         },
         {
           "side": 1,
@@ -57583,7 +57860,21 @@
             "y": 29
           },
           "occluded": false,
-          "sourceDir": 7
+          "sourceDir": 7,
+          "shoulder": {
+            "bounds": [
+              36,
+              49,
+              16,
+              30
+            ],
+            "fade": 3,
+            "follow": 0.45,
+            "rest": [
+              7.1552,
+              6.52925
+            ]
+          }
         }
       ],
       "legs": {
@@ -58526,7 +58817,8 @@
         "Torso follows this facing’s measured chest center and includes backing at every shoulder socket.",
         "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot.",
         "Pale disconnected ground pixels below mature boots are retained only in the source-only ground layer; original boot pixels remain on their leg.",
-        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors."
+        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors.",
+        "Shoulder field: original deltoid/pauldron and backing roll with stable solved arm reach, blended into the fixed clavicle/chest. The driver is independent of elbow-branch and angle-wrap changes. Saved face/beard exclusions preserve the head; no source ownership or palette is changed."
       ],
       "armContours": [
         {

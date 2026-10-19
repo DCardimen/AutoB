@@ -5,7 +5,7 @@ import {AUTHORED_SPRITES} from '../authored-sprite-data.js';
 const heroes=['aurel','brakk','syl','nyra','rowan'];
 function colorCount(pixels,hex){const rgb=[1,3,5].map(i=>parseInt(hex.slice(i,i+2),16));let n=0;for(let i=0;i<pixels.length;i+=4)if(pixels[i+3]&&rgb.every((v,k)=>pixels[i+k]===v))n++;return n;}
 test('expressive eye clusters are present in front/profile faces and absent from rear faces',()=>{
- assert.equal(SPRITE_ART_REVISION,20);
+ assert.equal(SPRITE_ART_REVISION,21);
  // Check iris/pupil clusters in the face band, excluding collars and quivers.
  // A lone dark hair texel is not an eye; front faces have multi-pixel clusters.
  for(const id of ['elf','caster','fox'])for(let dir=0;dir<8;dir++){

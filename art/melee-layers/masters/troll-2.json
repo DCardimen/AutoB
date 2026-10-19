@@ -6900,7 +6900,27 @@
             "y": 33
           },
           "occluded": false,
-          "sourceDir": 0
+          "sourceDir": 0,
+          "shoulder": {
+            "bounds": [
+              12,
+              30,
+              11,
+              28
+            ],
+            "fade": 3,
+            "follow": 0.7,
+            "rest": [
+              -6.032,
+              14.196
+            ],
+            "protect": [
+              29,
+              43,
+              1,
+              20
+            ]
+          }
         },
         {
           "side": 1,
@@ -6917,7 +6937,27 @@
             "y": 29
           },
           "occluded": false,
-          "sourceDir": 0
+          "sourceDir": 0,
+          "shoulder": {
+            "bounds": [
+              41,
+              59,
+              12,
+              29
+            ],
+            "fade": 3,
+            "follow": 0.7,
+            "rest": [
+              6.032,
+              8.736
+            ],
+            "protect": [
+              29,
+              43,
+              1,
+              20
+            ]
+          }
         }
       ],
       "legs": {
@@ -7869,7 +7909,8 @@
         "Cape completion uses its saved visible ownership only. Legacy color-list repairs (which included gray armor) are discarded.",
         "Source-grid reviewed upper-arm boundaries and glove centers; no stationary biceps in the head. Rear N rogue arms use their visible source art. W/NW far and NE far rogue arms are concealed beneath the cloak.",
         "Torso follows this facing’s measured chest center and includes backing at every shoulder socket.",
-        "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot."
+        "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot.",
+        "Shoulder field: original deltoid/pauldron and backing roll with stable solved arm reach, blended into the fixed clavicle/chest. The driver is independent of elbow-branch and angle-wrap changes. Saved face/beard exclusions preserve the head; no source ownership or palette is changed."
       ],
       "armContours": [
         {
@@ -14292,7 +14333,27 @@
             "y": 33
           },
           "occluded": false,
-          "sourceDir": 1
+          "sourceDir": 1,
+          "shoulder": {
+            "bounds": [
+              11,
+              29,
+              11,
+              28
+            ],
+            "fade": 3,
+            "follow": 0.7,
+            "rest": [
+              -6.032,
+              14.196
+            ],
+            "protect": [
+              26,
+              40,
+              1,
+              20
+            ]
+          }
         },
         {
           "side": 1,
@@ -14309,7 +14370,27 @@
             "y": 31
           },
           "occluded": false,
-          "sourceDir": 1
+          "sourceDir": 1,
+          "shoulder": {
+            "bounds": [
+              40,
+              58,
+              11,
+              28
+            ],
+            "fade": 3,
+            "follow": 0.7,
+            "rest": [
+              6.032,
+              12.012
+            ],
+            "protect": [
+              26,
+              40,
+              1,
+              20
+            ]
+          }
         }
       ],
       "legs": {
@@ -15411,7 +15492,8 @@
         "Cape completion uses its saved visible ownership only. Legacy color-list repairs (which included gray armor) are discarded.",
         "Source-grid reviewed upper-arm boundaries and glove centers; no stationary biceps in the head. Rear N rogue arms use their visible source art. W/NW far and NE far rogue arms are concealed beneath the cloak.",
         "Torso follows this facing’s measured chest center and includes backing at every shoulder socket.",
-        "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot."
+        "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot.",
+        "Shoulder field: original deltoid/pauldron and backing roll with stable solved arm reach, blended into the fixed clavicle/chest. The driver is independent of elbow-branch and angle-wrap changes. Saved face/beard exclusions preserve the head; no source ownership or palette is changed."
       ],
       "armContours": [
         {
@@ -21958,7 +22040,27 @@
             "y": 33
           },
           "occluded": false,
-          "sourceDir": 2
+          "sourceDir": 2,
+          "shoulder": {
+            "bounds": [
+              10,
+              28,
+              11,
+              28
+            ],
+            "fade": 3,
+            "follow": 0.7,
+            "rest": [
+              -6.032,
+              14.196
+            ],
+            "protect": [
+              25,
+              39,
+              1,
+              20
+            ]
+          }
         },
         {
           "side": 1,
@@ -21975,7 +22077,27 @@
             "y": 33
           },
           "occluded": false,
-          "sourceDir": 2
+          "sourceDir": 2,
+          "shoulder": {
+            "bounds": [
+              37,
+              55,
+              11,
+              28
+            ],
+            "fade": 3,
+            "follow": 0.7,
+            "rest": [
+              6.032,
+              14.196
+            ],
+            "protect": [
+              25,
+              39,
+              1,
+              20
+            ]
+          }
         }
       ],
       "legs": {
@@ -23323,7 +23445,8 @@
         "Cape completion uses its saved visible ownership only. Legacy color-list repairs (which included gray armor) are discarded.",
         "Source-grid reviewed upper-arm boundaries and glove centers; no stationary biceps in the head. Rear N rogue arms use their visible source art. W/NW far and NE far rogue arms are concealed beneath the cloak.",
         "Torso follows this facing’s measured chest center and includes backing at every shoulder socket.",
-        "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot."
+        "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot.",
+        "Shoulder field: original deltoid/pauldron and backing roll with stable solved arm reach, blended into the fixed clavicle/chest. The driver is independent of elbow-branch and angle-wrap changes. Saved face/beard exclusions preserve the head; no source ownership or palette is changed."
       ],
       "armContours": [
         {
@@ -29727,7 +29850,27 @@
             "y": 31
           },
           "occluded": false,
-          "sourceDir": 3
+          "sourceDir": 3,
+          "shoulder": {
+            "bounds": [
+              8,
+              26,
+              11,
+              28
+            ],
+            "fade": 3,
+            "follow": 0.7,
+            "rest": [
+              -6.032,
+              12.012
+            ],
+            "protect": [
+              22,
+              36,
+              1,
+              20
+            ]
+          }
         },
         {
           "side": 1,
@@ -29744,7 +29887,27 @@
             "y": 33
           },
           "occluded": false,
-          "sourceDir": 3
+          "sourceDir": 3,
+          "shoulder": {
+            "bounds": [
+              36,
+              54,
+              11,
+              28
+            ],
+            "fade": 3,
+            "follow": 0.7,
+            "rest": [
+              3.6192,
+              14.196
+            ],
+            "protect": [
+              22,
+              36,
+              1,
+              20
+            ]
+          }
         }
       ],
       "legs": {
@@ -30954,7 +31117,8 @@
         "Cape completion uses its saved visible ownership only. Legacy color-list repairs (which included gray armor) are discarded.",
         "Source-grid reviewed upper-arm boundaries and glove centers; no stationary biceps in the head. Rear N rogue arms use their visible source art. W/NW far and NE far rogue arms are concealed beneath the cloak.",
         "Torso follows this facing’s measured chest center and includes backing at every shoulder socket.",
-        "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot."
+        "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot.",
+        "Shoulder field: original deltoid/pauldron and backing roll with stable solved arm reach, blended into the fixed clavicle/chest. The driver is independent of elbow-branch and angle-wrap changes. Saved face/beard exclusions preserve the head; no source ownership or palette is changed."
       ],
       "armContours": [
         {
@@ -37195,7 +37359,27 @@
             "y": 29
           },
           "occluded": false,
-          "sourceDir": 4
+          "sourceDir": 4,
+          "shoulder": {
+            "bounds": [
+              7,
+              25,
+              12,
+              29
+            ],
+            "fade": 3,
+            "follow": 0.7,
+            "rest": [
+              -4.8256,
+              8.736
+            ],
+            "protect": [
+              20,
+              34,
+              1,
+              20
+            ]
+          }
         },
         {
           "side": 1,
@@ -37212,7 +37396,27 @@
             "y": 33
           },
           "occluded": false,
-          "sourceDir": 4
+          "sourceDir": 4,
+          "shoulder": {
+            "bounds": [
+              34,
+              52,
+              11,
+              28
+            ],
+            "fade": 3,
+            "follow": 0.7,
+            "rest": [
+              -1.2064,
+              14.196
+            ],
+            "protect": [
+              20,
+              34,
+              1,
+              20
+            ]
+          }
         }
       ],
       "legs": {
@@ -38560,7 +38764,8 @@
         "Cape completion uses its saved visible ownership only. Legacy color-list repairs (which included gray armor) are discarded.",
         "Source-grid reviewed upper-arm boundaries and glove centers; no stationary biceps in the head. Rear N rogue arms use their visible source art. W/NW far and NE far rogue arms are concealed beneath the cloak.",
         "Torso follows this facing’s measured chest center and includes backing at every shoulder socket.",
-        "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot."
+        "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot.",
+        "Shoulder field: original deltoid/pauldron and backing roll with stable solved arm reach, blended into the fixed clavicle/chest. The driver is independent of elbow-branch and angle-wrap changes. Saved face/beard exclusions preserve the head; no source ownership or palette is changed."
       ],
       "armContours": [
         {
@@ -44178,7 +44383,21 @@
             "y": 33
           },
           "occluded": false,
-          "sourceDir": 5
+          "sourceDir": 5,
+          "shoulder": {
+            "bounds": [
+              9,
+              27,
+              11,
+              28
+            ],
+            "fade": 3,
+            "follow": 0.7,
+            "rest": [
+              -4.8256,
+              14.196
+            ]
+          }
         },
         {
           "side": 1,
@@ -44195,7 +44414,21 @@
             "y": 32
           },
           "occluded": false,
-          "sourceDir": 5
+          "sourceDir": 5,
+          "shoulder": {
+            "bounds": [
+              37,
+              55,
+              11,
+              28
+            ],
+            "fade": 3,
+            "follow": 0.7,
+            "rest": [
+              3.6192,
+              13.104
+            ]
+          }
         }
       ],
       "legs": {
@@ -45597,7 +45830,8 @@
         "Cape completion uses its saved visible ownership only. Legacy color-list repairs (which included gray armor) are discarded.",
         "Source-grid reviewed upper-arm boundaries and glove centers; no stationary biceps in the head. Rear N rogue arms use their visible source art. W/NW far and NE far rogue arms are concealed beneath the cloak.",
         "Torso follows this facing’s measured chest center and includes backing at every shoulder socket.",
-        "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot."
+        "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot.",
+        "Shoulder field: original deltoid/pauldron and backing roll with stable solved arm reach, blended into the fixed clavicle/chest. The driver is independent of elbow-branch and angle-wrap changes. Saved face/beard exclusions preserve the head; no source ownership or palette is changed."
       ],
       "armContours": [
         {
@@ -52118,7 +52352,21 @@
             "y": 34
           },
           "occluded": false,
-          "sourceDir": 6
+          "sourceDir": 6,
+          "shoulder": {
+            "bounds": [
+              9,
+              27,
+              11,
+              28
+            ],
+            "fade": 3,
+            "follow": 0.7,
+            "rest": [
+              -4.8256,
+              15.288
+            ]
+          }
         },
         {
           "side": 1,
@@ -52135,7 +52383,21 @@
             "y": 34
           },
           "occluded": false,
-          "sourceDir": 6
+          "sourceDir": 6,
+          "shoulder": {
+            "bounds": [
+              38,
+              56,
+              11,
+              28
+            ],
+            "fade": 3,
+            "follow": 0.7,
+            "rest": [
+              4.8256,
+              15.288
+            ]
+          }
         }
       ],
       "legs": {
@@ -53417,7 +53679,8 @@
         "Cape completion uses its saved visible ownership only. Legacy color-list repairs (which included gray armor) are discarded.",
         "Source-grid reviewed upper-arm boundaries and glove centers; no stationary biceps in the head. Rear N rogue arms use their visible source art. W/NW far and NE far rogue arms are concealed beneath the cloak.",
         "Torso follows this facing’s measured chest center and includes backing at every shoulder socket.",
-        "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot."
+        "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot.",
+        "Shoulder field: original deltoid/pauldron and backing roll with stable solved arm reach, blended into the fixed clavicle/chest. The driver is independent of elbow-branch and angle-wrap changes. Saved face/beard exclusions preserve the head; no source ownership or palette is changed."
       ],
       "armContours": [
         {
@@ -59035,7 +59298,21 @@
             "y": 32
           },
           "occluded": false,
-          "sourceDir": 7
+          "sourceDir": 7,
+          "shoulder": {
+            "bounds": [
+              8,
+              26,
+              11,
+              28
+            ],
+            "fade": 3,
+            "follow": 0.7,
+            "rest": [
+              -3.6192,
+              13.104
+            ]
+          }
         },
         {
           "side": 1,
@@ -59052,7 +59329,21 @@
             "y": 33
           },
           "occluded": false,
-          "sourceDir": 7
+          "sourceDir": 7,
+          "shoulder": {
+            "bounds": [
+              36,
+              54,
+              11,
+              28
+            ],
+            "fade": 3,
+            "follow": 0.7,
+            "rest": [
+              4.8256,
+              14.196
+            ]
+          }
         }
       ],
       "legs": {
@@ -60400,7 +60691,8 @@
         "Cape completion uses its saved visible ownership only. Legacy color-list repairs (which included gray armor) are discarded.",
         "Source-grid reviewed upper-arm boundaries and glove centers; no stationary biceps in the head. Rear N rogue arms use their visible source art. W/NW far and NE far rogue arms are concealed beneath the cloak.",
         "Torso follows this facing’s measured chest center and includes backing at every shoulder socket.",
-        "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot."
+        "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot.",
+        "Shoulder field: original deltoid/pauldron and backing roll with stable solved arm reach, blended into the fixed clavicle/chest. The driver is independent of elbow-branch and angle-wrap changes. Saved face/beard exclusions preserve the head; no source ownership or palette is changed."
       ],
       "armContours": [
         {

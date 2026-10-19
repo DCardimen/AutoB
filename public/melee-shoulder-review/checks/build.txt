@@ -1,0 +1,2 @@
+Built Fang & Feather standalone: 99.0 MiB, embedded artwork and fonts.
+Built Fang & Feather Training Glade: 15.62 MiB, zero remote dependencies.

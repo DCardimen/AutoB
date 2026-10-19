@@ -4786,7 +4786,27 @@
             "y": 32
           },
           "occluded": false,
-          "sourceDir": 0
+          "sourceDir": 0,
+          "shoulder": {
+            "bounds": [
+              21,
+              32,
+              24,
+              32
+            ],
+            "fade": 2,
+            "follow": 0.35,
+            "rest": [
+              -2.54538,
+              4.48895
+            ],
+            "protect": [
+              30,
+              42,
+              0,
+              29
+            ]
+          }
         },
         {
           "side": 1,
@@ -4803,7 +4823,27 @@
             "y": 31
           },
           "occluded": false,
-          "sourceDir": 0
+          "sourceDir": 0,
+          "shoulder": {
+            "bounds": [
+              35,
+              46,
+              24,
+              32
+            ],
+            "fade": 2,
+            "follow": 0.35,
+            "rest": [
+              5.16,
+              3.64
+            ],
+            "protect": [
+              30,
+              42,
+              0,
+              29
+            ]
+          }
         }
       ],
       "legs": {
@@ -5766,7 +5806,8 @@
         "Weapon layer is empty because these weaponless source masters use the separate equipped weapon renderer.",
         "Cape completion uses its saved visible ownership only. Legacy color-list repairs (which included gray armor) are discarded.",
         "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot.",
-        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors."
+        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors.",
+        "Shoulder field: original deltoid/pauldron and backing roll with stable solved arm reach, blended into the fixed clavicle/chest. The driver is independent of elbow-branch and angle-wrap changes. Saved face/beard exclusions preserve the head; no source ownership or palette is changed."
       ],
       "backingBottom": 38,
       "sourceCrop": {
@@ -10418,7 +10459,27 @@
             "y": 32
           },
           "occluded": false,
-          "sourceDir": 1
+          "sourceDir": 1,
+          "shoulder": {
+            "bounds": [
+              20,
+              31,
+              25,
+              33
+            ],
+            "fade": 2,
+            "follow": 0.35,
+            "rest": [
+              -2.55883,
+              3.61013
+            ],
+            "protect": [
+              29,
+              41,
+              0,
+              29
+            ]
+          }
         },
         {
           "side": 1,
@@ -10435,7 +10496,27 @@
             "y": 31
           },
           "occluded": false,
-          "sourceDir": 1
+          "sourceDir": 1,
+          "shoulder": {
+            "bounds": [
+              35,
+              46,
+              24,
+              32
+            ],
+            "fade": 2,
+            "follow": 0.35,
+            "rest": [
+              6.02,
+              3.64
+            ],
+            "protect": [
+              29,
+              41,
+              0,
+              29
+            ]
+          }
         }
       ],
       "legs": {
@@ -11218,7 +11299,8 @@
         "Weapon layer is empty because these weaponless source masters use the separate equipped weapon renderer.",
         "Cape completion uses its saved visible ownership only. Legacy color-list repairs (which included gray armor) are discarded.",
         "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot.",
-        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors."
+        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors.",
+        "Shoulder field: original deltoid/pauldron and backing roll with stable solved arm reach, blended into the fixed clavicle/chest. The driver is independent of elbow-branch and angle-wrap changes. Saved face/beard exclusions preserve the head; no source ownership or palette is changed."
       ],
       "backingBottom": 38,
       "sourceCrop": {
@@ -16042,7 +16124,27 @@
             "y": 32
           },
           "occluded": false,
-          "sourceDir": 2
+          "sourceDir": 2,
+          "shoulder": {
+            "bounds": [
+              18,
+              29,
+              24,
+              32
+            ],
+            "fade": 2,
+            "follow": 0.35,
+            "rest": [
+              -3.41752,
+              4.52026
+            ],
+            "protect": [
+              26,
+              38,
+              0,
+              29
+            ]
+          }
         },
         {
           "side": 1,
@@ -16059,7 +16161,27 @@
             "y": 32
           },
           "occluded": false,
-          "sourceDir": 2
+          "sourceDir": 2,
+          "shoulder": {
+            "bounds": [
+              35,
+              46,
+              24,
+              32
+            ],
+            "fade": 2,
+            "follow": 0.35,
+            "rest": [
+              5.16,
+              4.55
+            ],
+            "protect": [
+              26,
+              38,
+              0,
+              29
+            ]
+          }
         }
       ],
       "legs": {
@@ -17298,7 +17420,8 @@
         "Weapon layer is empty because these weaponless source masters use the separate equipped weapon renderer.",
         "Cape completion uses its saved visible ownership only. Legacy color-list repairs (which included gray armor) are discarded.",
         "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot.",
-        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors."
+        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors.",
+        "Shoulder field: original deltoid/pauldron and backing roll with stable solved arm reach, blended into the fixed clavicle/chest. The driver is independent of elbow-branch and angle-wrap changes. Saved face/beard exclusions preserve the head; no source ownership or palette is changed."
       ],
       "backingBottom": 38,
       "sourceCrop": {
@@ -21817,7 +21940,27 @@
             "y": 31
           },
           "occluded": false,
-          "sourceDir": 3
+          "sourceDir": 3,
+          "shoulder": {
+            "bounds": [
+              18,
+              29,
+              24,
+              32
+            ],
+            "fade": 2,
+            "follow": 0.35,
+            "rest": [
+              -5.16,
+              3.64
+            ],
+            "protect": [
+              22,
+              34,
+              0,
+              29
+            ]
+          }
         },
         {
           "side": 1,
@@ -21834,7 +21977,27 @@
             "y": 32
           },
           "occluded": false,
-          "sourceDir": 3
+          "sourceDir": 3,
+          "shoulder": {
+            "bounds": [
+              31,
+              42,
+              24,
+              32
+            ],
+            "fade": 2,
+            "follow": 0.35,
+            "rest": [
+              4.29829,
+              4.54819
+            ],
+            "protect": [
+              22,
+              34,
+              0,
+              29
+            ]
+          }
         }
       ],
       "legs": {
@@ -22557,7 +22720,8 @@
         "Weapon layer is empty because these weaponless source masters use the separate equipped weapon renderer.",
         "Cape completion uses its saved visible ownership only. Legacy color-list repairs (which included gray armor) are discarded.",
         "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot.",
-        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors."
+        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors.",
+        "Shoulder field: original deltoid/pauldron and backing roll with stable solved arm reach, blended into the fixed clavicle/chest. The driver is independent of elbow-branch and angle-wrap changes. Saved face/beard exclusions preserve the head; no source ownership or palette is changed."
       ],
       "backingBottom": 38,
       "sourceCrop": {
@@ -26895,7 +27059,27 @@
             "y": 31
           },
           "occluded": false,
-          "sourceDir": 4
+          "sourceDir": 4,
+          "shoulder": {
+            "bounds": [
+              18,
+              29,
+              24,
+              32
+            ],
+            "fade": 2,
+            "follow": 0.35,
+            "rest": [
+              -6.88,
+              3.64
+            ],
+            "protect": [
+              21,
+              33,
+              0,
+              29
+            ]
+          }
         },
         {
           "side": 1,
@@ -26912,7 +27096,27 @@
             "y": 32
           },
           "occluded": false,
-          "sourceDir": 4
+          "sourceDir": 4,
+          "shoulder": {
+            "bounds": [
+              31,
+              42,
+              24,
+              32
+            ],
+            "fade": 2,
+            "follow": 0.35,
+            "rest": [
+              1.68521,
+              4.45798
+            ],
+            "protect": [
+              21,
+              33,
+              0,
+              29
+            ]
+          }
         }
       ],
       "legs": {
@@ -27630,7 +27834,8 @@
         "Cape completion uses its saved visible ownership only. Legacy color-list repairs (which included gray armor) are discarded.",
         "Arm -1 pivot registered to the retained source seam at 27,27.",
         "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot.",
-        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors."
+        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors.",
+        "Shoulder field: original deltoid/pauldron and backing roll with stable solved arm reach, blended into the fixed clavicle/chest. The driver is independent of elbow-branch and angle-wrap changes. Saved face/beard exclusions preserve the head; no source ownership or palette is changed."
       ],
       "backingBottom": 38,
       "sourceCrop": {
@@ -31887,7 +32092,21 @@
             "y": 31
           },
           "occluded": false,
-          "sourceDir": 5
+          "sourceDir": 5,
+          "shoulder": {
+            "bounds": [
+              18,
+              29,
+              24,
+              32
+            ],
+            "fade": 2,
+            "follow": 0.35,
+            "rest": [
+              -6.02,
+              3.64
+            ]
+          }
         },
         {
           "side": 1,
@@ -31904,7 +32123,21 @@
             "y": 30
           },
           "occluded": true,
-          "sourceDir": 2
+          "sourceDir": 2,
+          "shoulder": {
+            "bounds": [
+              33,
+              44,
+              22,
+              30
+            ],
+            "fade": 2,
+            "follow": 0.35,
+            "rest": [
+              5.16,
+              4.55
+            ]
+          }
         }
       ],
       "legs": {
@@ -31997,7 +32230,8 @@
         "Weapon layer is empty because these weaponless source masters use the separate equipped weapon renderer.",
         "Cape completion uses its saved visible ownership only. Legacy color-list repairs (which included gray armor) are discarded.",
         "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot.",
-        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors."
+        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors.",
+        "Shoulder field: original deltoid/pauldron and backing roll with stable solved arm reach, blended into the fixed clavicle/chest. The driver is independent of elbow-branch and angle-wrap changes. Saved face/beard exclusions preserve the head; no source ownership or palette is changed."
       ],
       "backingBottom": 38,
       "sourceCrop": {
@@ -36445,7 +36679,21 @@
             "y": 30
           },
           "occluded": true,
-          "sourceDir": 2
+          "sourceDir": 2,
+          "shoulder": {
+            "bounds": [
+              17,
+              28,
+              22,
+              30
+            ],
+            "fade": 2,
+            "follow": 0.35,
+            "rest": [
+              -3.41752,
+              4.52026
+            ]
+          }
         },
         {
           "side": 1,
@@ -36462,7 +36710,21 @@
             "y": 30
           },
           "occluded": true,
-          "sourceDir": 2
+          "sourceDir": 2,
+          "shoulder": {
+            "bounds": [
+              35,
+              46,
+              22,
+              30
+            ],
+            "fade": 2,
+            "follow": 0.35,
+            "rest": [
+              5.16,
+              4.55
+            ]
+          }
         }
       ],
       "legs": {
@@ -36519,7 +36781,8 @@
         "Weapon layer is empty because these weaponless source masters use the separate equipped weapon renderer.",
         "Cape completion uses its saved visible ownership only. Legacy color-list repairs (which included gray armor) are discarded.",
         "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot.",
-        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors."
+        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors.",
+        "Shoulder field: original deltoid/pauldron and backing roll with stable solved arm reach, blended into the fixed clavicle/chest. The driver is independent of elbow-branch and angle-wrap changes. Saved face/beard exclusions preserve the head; no source ownership or palette is changed."
       ],
       "backingBottom": 38,
       "sourceCrop": {
@@ -40774,7 +41037,21 @@
             "y": 30
           },
           "occluded": true,
-          "sourceDir": 2
+          "sourceDir": 2,
+          "shoulder": {
+            "bounds": [
+              19,
+              30,
+              22,
+              30
+            ],
+            "fade": 2,
+            "follow": 0.35,
+            "rest": [
+              -3.41752,
+              4.52026
+            ]
+          }
         },
         {
           "side": 1,
@@ -40791,7 +41068,21 @@
             "y": 31
           },
           "occluded": false,
-          "sourceDir": 7
+          "sourceDir": 7,
+          "shoulder": {
+            "bounds": [
+              35,
+              46,
+              24,
+              32
+            ],
+            "fade": 2,
+            "follow": 0.35,
+            "rest": [
+              5.16,
+              3.64
+            ]
+          }
         }
       ],
       "legs": {
@@ -40884,7 +41175,8 @@
         "Weapon layer is empty because these weaponless source masters use the separate equipped weapon renderer.",
         "Cape completion uses its saved visible ownership only. Legacy color-list repairs (which included gray armor) are discarded.",
         "Reconstructed torso ends at the pelvis; authored crotch/foot gaps remain empty. Tabard, loincloth and coat hems stay on the garment surface rather than following a foot.",
-        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors."
+        "Grid-reviewed boot contours exclude bronze cloak trim. Fully concealed far boots remain concealed. Raw pale floor marks are source-only; hidden cloak folds use the saved blue material ramp, never sampled floor, skin or belt colors.",
+        "Shoulder field: original deltoid/pauldron and backing roll with stable solved arm reach, blended into the fixed clavicle/chest. The driver is independent of elbow-branch and angle-wrap changes. Saved face/beard exclusions preserve the head; no source ownership or palette is changed."
       ],
       "backingBottom": 38,
       "sourceCrop": {
