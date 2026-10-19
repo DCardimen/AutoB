@@ -12,6 +12,7 @@ Use painted parts and explicit attachment landmarks to keep character identity s
 - Read the repository's creature-art rules before choosing anatomy or touching assets. Inspect every existing form and all available facings, including occluded far limbs, equipment and cell edges. Record what is actually visible; a shared motion proxy does not establish anatomy.
 - Respect the user's current approval boundary. When asked for a preview first, create an isolated preview; choosing a technique does not by itself cancel an earlier instruction against game integration. Do not impose a preview approval step when integration is already authorized.
 - Establish the reference style, target cell size, directional order, material palette, evolution mapping and anatomical weapon hand. Scope character-specific exceptions to that character. Do not turn one character's right-hand bow preference into a universal archer rule.
+- Separate source-art resolution, animation raster resolution and display scale. A 64-unit gameplay cell need not mean a 64-pixel source texture. Inspect the artwork at its intended display size before downsampling or palette reduction; enlarging a reduced sprite cannot recover the reference's detail. Match short, broad chibi limbs and boot silhouettes before tuning their motion.
 - For AutoB / Fang and Feather, read [references/autob.md](references/autob.md) for the existing paths, evidence requirements and fox-specific decisions.
 
 ## Build a coherent painted kit
