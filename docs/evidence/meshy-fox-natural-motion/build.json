@@ -1,0 +1,163 @@
+{
+  "maxIKError": 4.0125770192081414e-16,
+  "maxSolverIterationError": 0.07035659657345754,
+  "maxGripError": 7.385278330912554e-16,
+  "maxWristAngle": 0.37017222981907705,
+  "maxClothLengthError": 2.959152734099968e-7,
+  "correctedTailVertices": 142,
+  "shoulderHalfWidth": 0.2,
+  "armScale": 0.75,
+  "legScale": 0.7,
+  "clips": {
+    "idle": {
+      "duration": 8,
+      "frames": 481
+    },
+    "walk": {
+      "duration": 1,
+      "frames": 61
+    },
+    "run": {
+      "duration": 0.72,
+      "frames": 45
+    },
+    "attack": {
+      "duration": 2.2,
+      "frames": 133
+    },
+    "dodgeLeft": {
+      "duration": 1.25,
+      "frames": 76
+    },
+    "dodgeRight": {
+      "duration": 1.25,
+      "frames": 76
+    },
+    "dash": {
+      "duration": 0.85,
+      "frames": 52
+    },
+    "shootForward": {
+      "duration": 2.2,
+      "frames": 133
+    },
+    "shootBackward": {
+      "duration": 2.2,
+      "frames": 133
+    },
+    "shootLeft": {
+      "duration": 2.2,
+      "frames": 133
+    },
+    "shootRight": {
+      "duration": 2.2,
+      "frames": 133
+    },
+    "hit": {
+      "duration": 1.2,
+      "frames": 73
+    },
+    "death": {
+      "duration": 2.4,
+      "frames": 145
+    }
+  },
+  "ikByClip": {
+    "idle": {
+      "error": 1.8410966031475738e-16,
+      "limb": "UpperArm_L",
+      "time": 1.1166666746139526,
+      "distance": 0.39328210613306336,
+      "reach": 0.4003504462716165
+    },
+    "walk": {
+      "error": 1.7772239894833365e-16,
+      "limb": "UpperArm_L",
+      "time": 0.15000000596046448,
+      "distance": 0.39933966493508927,
+      "reach": 0.4003504462716165
+    },
+    "run": {
+      "error": 2.2929868617541516e-16,
+      "limb": "UpperArm_R",
+      "time": 0.1666666716337204,
+      "distance": 0.2682844099601687,
+      "reach": 0.2703504462716165
+    },
+    "attack": {
+      "error": 3.554447978966673e-16,
+      "limb": "UpperArm_L",
+      "time": 1.8833333253860474,
+      "distance": 0.24002347134759056,
+      "reach": 0.4003504462716165
+    },
+    "dodgeLeft": {
+      "error": 1.942890293094024e-16,
+      "limb": "UpperArm_L",
+      "time": 0.6666666865348816,
+      "distance": 0.3869499930150101,
+      "reach": 0.4003504462716165
+    },
+    "dodgeRight": {
+      "error": 1.6653345369377348e-16,
+      "limb": "UpperArm_L",
+      "time": 1.2000000476837158,
+      "distance": 0.3934560707811768,
+      "reach": 0.4003504462716165
+    },
+    "dash": {
+      "error": 1.7554167342883506e-16,
+      "limb": "UpperArm_L",
+      "time": 0.11666666716337204,
+      "distance": 0.3932878351037804,
+      "reach": 0.4003504462716165
+    },
+    "shootForward": {
+      "error": 4.0125770192081414e-16,
+      "limb": "UpperArm_L",
+      "time": 0.9666666388511658,
+      "distance": 0.31070877202187647,
+      "reach": 0.4003504462716165
+    },
+    "shootBackward": {
+      "error": 4.0125770192081414e-16,
+      "limb": "UpperArm_L",
+      "time": 0.9666666388511658,
+      "distance": 0.31070877202187647,
+      "reach": 0.4003504462716165
+    },
+    "shootLeft": {
+      "error": 4.0125770192081414e-16,
+      "limb": "UpperArm_L",
+      "time": 0.9666666388511658,
+      "distance": 0.31070877202187647,
+      "reach": 0.4003504462716165
+    },
+    "shootRight": {
+      "error": 4.0125770192081414e-16,
+      "limb": "UpperArm_L",
+      "time": 0.9666666388511658,
+      "distance": 0.31070877202187647,
+      "reach": 0.4003504462716165
+    },
+    "hit": {
+      "error": 2.0206364052201326e-16,
+      "limb": "UpperArm_L",
+      "time": 0.550000011920929,
+      "distance": 0.39247631001628763,
+      "reach": 0.4003504462716165
+    },
+    "death": {
+      "error": 1.6243534171511178e-16,
+      "limb": "UpperArm_L",
+      "time": 0.550000011920929,
+      "distance": 0.3930312555218109,
+      "reach": 0.4003504462716165
+    }
+  },
+  "worstWrist": {
+    "mode": "dodgeLeft",
+    "t": 0.13333334028720856,
+    "side": "R"
+  }
+}

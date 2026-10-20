@@ -1,0 +1,317 @@
+{
+  "assetSHA256": "61392a858937074a93aaa446c1895cca96cd3e27d78ba244f8ab317341591081",
+  "sampling": "every exported frame, 60 Hz",
+  "frames": 1682,
+  "nonFinite": 0,
+  "bounds": {
+    "min": [
+      -0.8373174667358398,
+      -1.0518124149427877e-8,
+      -1.7908296585083008
+    ],
+    "max": [
+      0.8895562291145325,
+      1.6070002317428589,
+      2.4223737716674805
+    ]
+  },
+  "maxBowGripError": 0,
+  "maxDrawContactError": 5.991815276316036e-8,
+  "collisions": {},
+  "collisionExamples": {},
+  "clips": {
+    "Idle": {
+      "frames": 481,
+      "lowest": {
+        "y": -3.6156333482750824e-10,
+        "mesh": "FoxMesh",
+        "time": 2.9166666666666665
+      }
+    },
+    "Walk": {
+      "frames": 61,
+      "lowest": {
+        "y": -5.853214357642855e-9,
+        "mesh": "FoxMesh",
+        "time": 0.7
+      }
+    },
+    "Run": {
+      "frames": 45,
+      "lowest": {
+        "y": -2.622372541338791e-9,
+        "mesh": "FoxMesh",
+        "time": 0.55
+      }
+    },
+    "Bow_Attack": {
+      "frames": 134,
+      "lowest": {
+        "y": 2.383467312405685e-10,
+        "mesh": "FoxMesh",
+        "time": 1.5833333333333333
+      }
+    },
+    "Dodge_Left": {
+      "frames": 76,
+      "lowest": {
+        "y": -8.677758067676677e-9,
+        "mesh": "FoxMesh",
+        "time": 0.13333333333333333
+      }
+    },
+    "Dodge_Right": {
+      "frames": 76,
+      "lowest": {
+        "y": -2.906957341508587e-9,
+        "mesh": "FoxMesh",
+        "time": 0.45
+      }
+    },
+    "Dash_Forward": {
+      "frames": 53,
+      "lowest": {
+        "y": -8.532219375467776e-10,
+        "mesh": "FoxMesh",
+        "time": 0.1
+      }
+    },
+    "Shoot_Forward": {
+      "frames": 134,
+      "lowest": {
+        "y": -1.0518124149427877e-8,
+        "mesh": "FoxMesh",
+        "time": 1.1833333333333333
+      }
+    },
+    "Shoot_Backward": {
+      "frames": 134,
+      "lowest": {
+        "y": -8.739323043016611e-9,
+        "mesh": "FoxMesh",
+        "time": 2.0166666666666666
+      }
+    },
+    "Shoot_Strafe_Left": {
+      "frames": 134,
+      "lowest": {
+        "y": -5.377728040656393e-9,
+        "mesh": "FoxMesh",
+        "time": 1.35
+      }
+    },
+    "Shoot_Strafe_Right": {
+      "frames": 134,
+      "lowest": {
+        "y": -2.4268966836160644e-9,
+        "mesh": "FoxMesh",
+        "time": 1.3333333333333333
+      }
+    },
+    "Hit_Reaction": {
+      "frames": 74,
+      "lowest": {
+        "y": 9.795357858166653e-10,
+        "mesh": "FoxMesh",
+        "time": 0.1
+      }
+    },
+    "Fall_and_Death": {
+      "frames": 146,
+      "lowest": {
+        "y": 0.0029999599792063236,
+        "mesh": "Longbow_1",
+        "time": 1.15
+      }
+    }
+  },
+  "gltf": {
+    "numErrors": 0,
+    "numWarnings": 3,
+    "numInfos": 27,
+    "numHints": 0,
+    "messages": [
+      {
+        "code": "MESH_PRIMITIVE_GENERATED_TANGENT_SPACE",
+        "message": "Material requires a tangent space but the mesh primitive does not provide it. Runtime-generated tangent space may be non-portable across implementations.",
+        "severity": 1,
+        "pointer": "/meshes/0/primitives/0/material"
+      },
+      {
+        "code": "MESH_PRIMITIVE_GENERATED_TANGENT_SPACE",
+        "message": "Material requires a tangent space but the mesh primitive does not provide it. Runtime-generated tangent space may be non-portable across implementations.",
+        "severity": 1,
+        "pointer": "/meshes/1/primitives/0/material"
+      },
+      {
+        "code": "MESH_PRIMITIVE_GENERATED_TANGENT_SPACE",
+        "message": "Material requires a tangent space but the mesh primitive does not provide it. Runtime-generated tangent space may be non-portable across implementations.",
+        "severity": 1,
+        "pointer": "/meshes/2/primitives/0/material"
+      },
+      {
+        "code": "UNUSED_OBJECT",
+        "message": "This object may be unused.",
+        "severity": 2,
+        "pointer": "/meshes/6/primitives/0/attributes/TEXCOORD_0"
+      },
+      {
+        "code": "UNUSED_OBJECT",
+        "message": "This object may be unused.",
+        "severity": 2,
+        "pointer": "/meshes/6/primitives/1/attributes/TEXCOORD_0"
+      },
+      {
+        "code": "UNUSED_OBJECT",
+        "message": "This object may be unused.",
+        "severity": 2,
+        "pointer": "/meshes/7/primitives/0/attributes/TEXCOORD_0"
+      },
+      {
+        "code": "UNUSED_OBJECT",
+        "message": "This object may be unused.",
+        "severity": 2,
+        "pointer": "/meshes/7/primitives/1/attributes/TEXCOORD_0"
+      },
+      {
+        "code": "UNUSED_OBJECT",
+        "message": "This object may be unused.",
+        "severity": 2,
+        "pointer": "/meshes/8/primitives/0/attributes/TEXCOORD_0"
+      },
+      {
+        "code": "UNUSED_OBJECT",
+        "message": "This object may be unused.",
+        "severity": 2,
+        "pointer": "/meshes/8/primitives/1/attributes/TEXCOORD_0"
+      },
+      {
+        "code": "UNUSED_OBJECT",
+        "message": "This object may be unused.",
+        "severity": 2,
+        "pointer": "/meshes/8/primitives/2/attributes/TEXCOORD_0"
+      },
+      {
+        "code": "UNUSED_OBJECT",
+        "message": "This object may be unused.",
+        "severity": 2,
+        "pointer": "/meshes/8/primitives/3/attributes/TEXCOORD_0"
+      },
+      {
+        "code": "UNUSED_OBJECT",
+        "message": "This object may be unused.",
+        "severity": 2,
+        "pointer": "/meshes/8/primitives/4/attributes/TEXCOORD_0"
+      },
+      {
+        "code": "UNUSED_OBJECT",
+        "message": "This object may be unused.",
+        "severity": 2,
+        "pointer": "/meshes/9/primitives/0/attributes/TEXCOORD_0"
+      },
+      {
+        "code": "UNUSED_OBJECT",
+        "message": "This object may be unused.",
+        "severity": 2,
+        "pointer": "/meshes/10/primitives/0/attributes/TEXCOORD_0"
+      },
+      {
+        "code": "UNUSED_OBJECT",
+        "message": "This object may be unused.",
+        "severity": 2,
+        "pointer": "/meshes/11/primitives/0/attributes/TEXCOORD_0"
+      },
+      {
+        "code": "UNUSED_OBJECT",
+        "message": "This object may be unused.",
+        "severity": 2,
+        "pointer": "/meshes/12/primitives/0/attributes/TEXCOORD_0"
+      },
+      {
+        "code": "UNUSED_OBJECT",
+        "message": "This object may be unused.",
+        "severity": 2,
+        "pointer": "/meshes/13/primitives/0/attributes/TEXCOORD_0"
+      },
+      {
+        "code": "UNUSED_OBJECT",
+        "message": "This object may be unused.",
+        "severity": 2,
+        "pointer": "/meshes/14/primitives/0/attributes/TEXCOORD_0"
+      },
+      {
+        "code": "UNUSED_OBJECT",
+        "message": "This object may be unused.",
+        "severity": 2,
+        "pointer": "/accessors/0"
+      },
+      {
+        "code": "UNUSED_OBJECT",
+        "message": "This object may be unused.",
+        "severity": 2,
+        "pointer": "/accessors/1"
+      },
+      {
+        "code": "UNUSED_OBJECT",
+        "message": "This object may be unused.",
+        "severity": 2,
+        "pointer": "/accessors/3"
+      },
+      {
+        "code": "UNUSED_OBJECT",
+        "message": "This object may be unused.",
+        "severity": 2,
+        "pointer": "/accessors/4"
+      },
+      {
+        "code": "UNUSED_OBJECT",
+        "message": "This object may be unused.",
+        "severity": 2,
+        "pointer": "/accessors/5"
+      },
+      {
+        "code": "UNUSED_OBJECT",
+        "message": "This object may be unused.",
+        "severity": 2,
+        "pointer": "/accessors/6"
+      },
+      {
+        "code": "UNUSED_OBJECT",
+        "message": "This object may be unused.",
+        "severity": 2,
+        "pointer": "/accessors/7"
+      },
+      {
+        "code": "UNUSED_OBJECT",
+        "message": "This object may be unused.",
+        "severity": 2,
+        "pointer": "/accessors/8"
+      },
+      {
+        "code": "UNUSED_OBJECT",
+        "message": "This object may be unused.",
+        "severity": 2,
+        "pointer": "/accessors/9"
+      },
+      {
+        "code": "UNUSED_OBJECT",
+        "message": "This object may be unused.",
+        "severity": 2,
+        "pointer": "/accessors/10"
+      },
+      {
+        "code": "UNUSED_OBJECT",
+        "message": "This object may be unused.",
+        "severity": 2,
+        "pointer": "/accessors/11"
+      },
+      {
+        "code": "UNUSED_OBJECT",
+        "message": "This object may be unused.",
+        "severity": 2,
+        "pointer": "/accessors/12"
+      }
+    ],
+    "truncated": true
+  }
+}

@@ -1,16 +1,18 @@
 import * as T from 'three';
+import {foxExpressions} from './fox-expressions.mjs';
 import {CLIPS,isShooting,tailSwishAngle} from './fox-motion.mjs';
 
 // Preview behavior layered after the portable clip. This keeps gait direction,
 // upper-body aim, and the ambient tail clock independent of one another.
 export class FoxPreviewController {
- constructor(model){this.model=model;this.bone=name=>model.getObjectByName(name);this.up=new T.Vector3(0,1,0);this.base=[];}
+ constructor(model){this.model=model;this.bone=name=>model.getObjectByName(name);this.up=new T.Vector3(0,1,0);this.base=[];this.morphBase=[];this.expressionMeshes=[];for(const name of ['Head_Open','Head_Closed'])this.bone(name).traverse(o=>{if(o.isMesh&&o.morphTargetInfluences?.length===3)this.expressionMeshes.push(o);});}
  // Restore before sampling the mixer. Three may skip an unchanged channel;
  // without this, repeated scrubbing would accumulate the procedural turn.
- restore(){for(const [o,p,q]of this.base){o.position.copy(p);o.quaternion.copy(q);}this.base=[];}
+ restore(){for(const [o,p,q]of this.base){o.position.copy(p);o.quaternion.copy(q);}this.base=[];for(const [o,w]of this.morphBase)o.morphTargetInfluences.splice(0,w.length,...w);this.morphBase=[];}
  apply({mode,clipTime,ambientTime,target=null}){
   const {model}=this;
   if(mode==='death')return;
+  const expressions=foxExpressions(ambientTime,mode);for(const o of this.expressionMeshes){this.morphBase.push([o,[...o.morphTargetInfluences]]);o.morphTargetInfluences.splice(0,3,...expressions);}
   for(const name of ['Chest','Head',...Array.from({length:6},(_,i)=>`Tail_${String(i).padStart(2,'0')}`),'Arrow_Nock_and_Flight','Release_Flair',...Array.from({length:5},(_,i)=>`Release_Spark_${i}`)]){
    const o=this.bone(name);this.base.push([o,o.position.clone(),o.quaternion.clone()]);
   }

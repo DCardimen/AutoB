@@ -1,4 +1,5 @@
 import * as T from 'three';
+import {registerHeadExpressions} from './fox-head-expressions.mjs';
 import {execFileSync} from 'node:child_process';
 
 export function addChibiBlink(glb,bones,sourcePositions,positions,normals,sourceIndices,sourceUV,headPosition){
@@ -32,8 +33,9 @@ export function addChibiBlink(glb,bones,sourcePositions,positions,normals,source
   colors.set(rgb,i*3);
  });
  const eyeMaterial=g.materials.push({name:'Closed eye fur',pbrMetallicRoughness:{baseColorFactor:[1,1,1,1],metallicFactor:0,roughnessFactor:.85}})-1;
- const openMesh=g.meshes.push({name:'OpenHead',primitives:[{attributes:attrs,indices:append(new Uint16Array(head),'SCALAR',5123,34963),material:0}]})-1;
- const closedMesh=g.meshes.push({name:'ClosedHead',primitives:[{attributes:attrs,indices:append(new Uint16Array(other),'SCALAR',5123,34963),material:0},{attributes:{POSITION:append(new Float32Array(patchP),'VEC3',5126,34962),NORMAL:append(new Float32Array(patchN),'VEC3',5126,34962),COLOR_0:append(colors,'VEC3',5126,34962)},material:eyeMaterial}]})-1;
+ const expressionTargets=registerHeadExpressions(glb,Array.from({length:sourcePositions.length/3},(_,i)=>new T.Vector3().fromArray(sourcePositions,i*3)),normals),patchTargets=registerHeadExpressions(glb,sourcePoints,new Float32Array(patchN));
+ const openMesh=g.meshes.push({name:'OpenHead',weights:[0,0,0],extras:{targetNames:['Ear_Right','Ear_Left','Nose_Sniff']},primitives:[{targets:expressionTargets,attributes:attrs,indices:append(new Uint16Array(head),'SCALAR',5123,34963),material:0}]})-1;
+ const closedMesh=g.meshes.push({name:'ClosedHead',weights:[0,0,0],extras:{targetNames:['Ear_Right','Ear_Left','Nose_Sniff']},primitives:[{targets:expressionTargets,attributes:attrs,indices:append(new Uint16Array(other),'SCALAR',5123,34963),material:0},{targets:patchTargets,attributes:{POSITION:append(new Float32Array(patchP),'VEC3',5126,34962),NORMAL:append(new Float32Array(patchN),'VEC3',5126,34962),COLOR_0:append(colors,'VEC3',5126,34962)},material:eyeMaterial}]})-1;
  const open=g.nodes.push({name:'Head_Open',mesh:openMesh,scale:[1,1,1]})-1,closed=g.nodes.push({name:'Head_Closed',mesh:closedMesh,scale:[0,0,0]})-1;
  g.nodes[bones.get('Head')].children??=[];g.nodes[bones.get('Head')].children.push(open,closed);
  // Standard two-state chibi blink. No eyelid decal or face deformation.
@@ -45,5 +47,5 @@ export function addChibiBlink(glb,bones,sourcePositions,positions,normals,source
  }
  const lineMaterial=g.materials.push({name:'Chibi closed eye line',pbrMetallicRoughness:{baseColorFactor:[.003,.0015,.0007,1],metallicFactor:0,roughnessFactor:.9}})-1;
  const lineMesh=g.meshes.push({name:'ClosedEyeLines',primitives:[{attributes:{POSITION:append(new Float32Array(p),'VEC3',5126,34962),NORMAL:append(new Float32Array(ns),'VEC3',5126,34962)},material:lineMaterial}]})-1,line=g.nodes.push({name:'Closed_Eye_Lines',mesh:lineMesh})-1;g.nodes[closed].children=[line];
- return {open,closed,line};
+ return {open,closed,line,expressionTargets:['Ear_Right','Ear_Left','Nose_Sniff']};
 }

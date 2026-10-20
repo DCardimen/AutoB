@@ -1,0 +1,134 @@
+TAP version 13
+# Subtest: default asset opens with hands down and the loose projectile hidden
+ok 1 - default asset opens with hands down and the loose projectile hidden
+  ---
+  duration_ms: 1.2474
+  ...
+# Subtest: portable export has complete normalized clips and closed loop endpoints
+ok 2 - portable export has complete normalized clips and closed loop endpoints
+  ---
+  duration_ms: 123.6973
+  ...
+# Subtest: right bow grip and left string nock remain attached after export in eight views
+ok 3 - right bow grip and left string nock remain attached after export in eight views
+  ---
+  duration_ms: 118.5366
+  ...
+# Subtest: shots travel forward and remain aligned while the upper body tracks an enemy
+ok 4 - shots travel forward and remain aligned while the upper body tracks an enemy
+  ---
+  duration_ms: 5.3241
+  ...
+# Subtest: compact shooting gaits move along the chosen axis and dash lands with raised death feet
+ok 5 - compact shooting gaits move along the chosen axis and dash lands with raised death feet
+  ---
+  duration_ms: 1.7383
+  ...
+# Subtest: shooting travel cancels planted foot motion in every facing
+ok 6 - shooting travel cancels planted foot motion in every facing
+  ---
+  duration_ms: 4.8876
+  ...
+# Subtest: ambient tail swishes are occasional and separated by six to ten seconds
+ok 7 - ambient tail swishes are occasional and separated by six to ten seconds
+  ---
+  duration_ms: 10.4481
+  ...
+# Subtest: simple fur paws replace added gloves with closed continuous surfaces
+ok 8 - simple fur paws replace added gloves with closed continuous surfaces
+  ---
+  duration_ms: 101.3521
+  ...
+# Subtest: bow and string use actual open grip channels throughout all animation frames
+ok 9 - bow and string use actual open grip channels throughout all animation frames
+  ---
+  duration_ms: 4955.1433
+  ...
+# Subtest: carried bow curves upward while its grip remains in the right paw
+ok 10 - carried bow curves upward while its grip remains in the right paw
+  ---
+  duration_ms: 4.3866
+  ...
+# Subtest: smooth foot lifts preserve velocity at contact and running arms alternate visibly
+ok 11 - smooth foot lifts preserve velocity at contact and running arms alternate visibly
+  ---
+  duration_ms: 2.6103
+  ...
+# Subtest: registered ear and nose gestures move source anatomy while eye vertices stay fixed
+ok 12 - registered ear and nose gestures move source anatomy while eye vertices stay fixed
+  ---
+  duration_ms: 21.3228
+  ...
+# Subtest: ambient expressions stay independent of gait playback and restore cleanly
+ok 13 - ambient expressions stay independent of gait playback and restore cleanly
+  ---
+  duration_ms: 0.4072
+  ...
+# Subtest: both bowstring endpoints stay on the flexing wooden tips
+ok 14 - both bowstring endpoints stay on the flexing wooden tips
+  ---
+  duration_ms: 14.8431
+  ...
+# Subtest: the undrawn string is straight and pulls back into a shallow draw
+ok 15 - the undrawn string is straight and pulls back into a shallow draw
+  ---
+  duration_ms: 0.5701
+  ...
+# Subtest: walk and run alternate lifted feet while support soles remain level and grounded
+ok 16 - walk and run alternate lifted feet while support soles remain level and grounded
+  ---
+  duration_ms: 17.8798
+  ...
+# Subtest: blink swaps only the eyes; the open and closed head are never visible together
+ok 17 - blink swaps only the eyes; the open and closed head are never visible together
+  ---
+  duration_ms: 3.3641
+  ...
+# Subtest: dodges retain their landing displacement and cloth/tail remain animated
+ok 18 - dodges retain their landing displacement and cloth/tail remain animated
+  ---
+  duration_ms: 0.8053
+  ...
+# Subtest: complete front and lower tail fluff belongs to tail bones rather than the thigh
+ok 19 - complete front and lower tail fluff belongs to tail bones rather than the thigh
+  ---
+  duration_ms: 22.4651
+  ...
+# Subtest: complete normalized weights preserve the exact rest pose
+ok 2 - complete normalized weights preserve the exact rest pose
+  ---
+  duration_ms: 22.7868
+  ...
+# Subtest: tail is a connected pelvis chain with exclusive distal weights
+ok 3 - tail is a connected pelvis chain with exclusive distal weights
+  ---
+  duration_ms: 10.4301
+  ...
+# Subtest: arm motion cannot pull ears or tail; leg motion cannot pull the tail bulb
+ok 4 - arm motion cannot pull ears or tail; leg motion cannot pull the tail bulb
+  ---
+  duration_ms: 13.2457
+  ...
+# Subtest: anatomical hand identities and rigid glove skinning are stable
+ok 5 - anatomical hand identities and rigid glove skinning are stable
+  ---
+  duration_ms: 12.818
+  ...
+# Subtest: source geometry attributes and original rig data remain recoverable
+ok 6 - source geometry attributes and original rig data remain recoverable
+  ---
+  duration_ms: 15.6897
+  ...
+# Subtest: embedded articulation clips are normalized and loop without a jump
+ok 7 - embedded articulation clips are normalized and loop without a jump
+  ---
+  duration_ms: 2.0534
+  ...
+1..25
+# tests 25
+# pass 25
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 5912.9439

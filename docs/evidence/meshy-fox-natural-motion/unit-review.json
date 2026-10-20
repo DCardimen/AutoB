@@ -1,0 +1,7 @@
+{
+  "assetSHA256": "61392a858937074a93aaa446c1895cca96cd3e27d78ba244f8ab317341591081",
+  "tests": 25,
+  "passed": 25,
+  "failed": 0,
+  "command": "node --test tests/meshy-fox-rig.test.js tests/meshy-fox-motion.test.js"
+}

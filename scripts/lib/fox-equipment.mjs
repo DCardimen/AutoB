@@ -7,13 +7,13 @@ export function addEquipment(glb,bones,world){
  function primitive(geometry,mat){const a=geometry.attributes,attr={};for(const [key,name,type]of [['position','POSITION','VEC3'],['normal','NORMAL','VEC3'],['uv','TEXCOORD_0','VEC2']])if(a[key])attr[name]=append(a[key].array,type,5126,34962);const p={attributes:attr,material:mat};if(geometry.index)p.indices=append(Uint16Array.from(geometry.index.array),'SCALAR',5123,34963);return p;}
  function meshNode(name,geometries,parent,translation=[0,0,0]){const mesh=g.meshes.push({name,primitives:geometries.map(([geo,mat])=>primitive(geo,mat))})-1,node=g.nodes.push({name,mesh,translation})-1;if(parent!==null){g.nodes[parent].children??=[];g.nodes[parent].children.push(node);}else g.scenes[0].nodes.push(node);return node;}
  // A shallow longbow: one continuous arc, with a straight central grip.
- const curve=new T.CatmullRomCurve3([[-.045,-.29,0],[-.022,-.22,0],[-.004,-.13,0],[0,-.08,0],[0,.08,0],[-.004,.13,0],[-.022,.22,0],[-.045,.29,0]].map(p=>new T.Vector3(...p)),false,'catmullrom',0);
+ const curve=new T.CatmullRomCurve3([[.10,-.29,0],[.050,-.22,0],[.010,-.13,0],[0,-.08,0],[0,.08,0],[.010,.13,0],[.050,.22,0],[.10,.29,0]].map(p=>new T.Vector3(...p)),false,'catmullrom',0);
 
  const bowRoot=g.nodes.push({name:'Bow_Right_Hand',translation:[-.095,-.025,-.025],children:[]})-1;g.nodes[bones.get('Hand_R')].children??=[];g.nodes[bones.get('Hand_R')].children.push(bowRoot);
  const handle=new T.CylinderGeometry(.013,.013,.18,10),bowTube=new T.TubeGeometry(curve,40,.008,7,false);const bow=meshNode('Longbow',[[bowTube,wood],[handle,gold]],bowRoot);
  const bowMesh=g.meshes[g.nodes[bow].mesh];bowMesh.weights=[0];bowMesh.extras={targetNames:['Flex']};for(let i=0;i<bowMesh.primitives.length;i++){const geo=i?handle:bowTube,delta=new Float32Array(geo.attributes.position.array.length);if(!i)for(let n=0;n<delta.length;n+=3)delta[n]=.018*Math.pow(Math.min(1,Math.abs(curve.getPointAt(Math.floor(n/3/8)/40).y)/.29),1.7);bowMesh.primitives[i].targets=[{POSITION:append(delta,'VEC3',5126,34962)}];}
  // Two tubular string segments with a draw morph. Endpoints remain fixed.
- const top=new T.Vector3(-.045,.29,0),bottom=new T.Vector3(-.045,-.29,0),rest=new T.Vector3(.045,.025,0),draw=new T.Vector3(.12,.025,0);
+ const top=new T.Vector3(.10,.29,0),bottom=new T.Vector3(.10,-.29,0),rest=new T.Vector3(.10,.025,0),draw=new T.Vector3(.14,.025,0);
  const stringGeos=[top,bottom].map(endpoint=>new T.TubeGeometry(new T.LineCurve3(endpoint,rest),12,.0019,5,false));
  const stringPrims=stringGeos.map((geo,n)=>{const endpoint=(n?bottom:top).clone();endpoint.x+=.018;const target=new T.TubeGeometry(new T.LineCurve3(endpoint,draw),12,.0019,5,false),delta=Float32Array.from(geo.attributes.position.array,(v,i)=>target.attributes.position.array[i]-v),p=primitive(geo,cord);p.targets=[{POSITION:append(delta,'VEC3',5126,34962)}];return p;});
  const sm=g.meshes.push({name:'BowStringDraw',primitives:stringPrims,weights:[0],extras:{targetNames:['Draw']}})-1,string=g.nodes.push({name:'Bow_String',mesh:sm,weights:[0]})-1;g.nodes[bowRoot].children.push(string);

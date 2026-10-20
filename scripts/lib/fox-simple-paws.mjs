@@ -25,7 +25,8 @@ export function addSimplePaws(glb,bones){
    if(side==='L'){
     d=softMin(d,capsule(x,y,z,[.104,-.012,.026],[.126,-.004,.012],.012));
     d=Math.max(d,.006-Math.hypot(x-.130,y,z));
-    for(const ray of [[.137,.251,-.958],[.151,.277,.949],[.124,.276,-.953],[.151,.337,.929],[.077,.357,-.931],[.123,.568,.814],[.065,.356,-.932],[.112,.610,.785]])d=Math.max(d,-capsule(x,y,z,[.130,0,0],[.130+ray[0]*.10,ray[1]*.10,ray[2]*.10],.006));
+    // Follow the string through the pinch, including the changing draw angle.
+    for(const ray of [[-.33,0,-.944],[-.35,.07,-.934],[.34,0,.94],[.37,.085,.925]])d=Math.max(d,-capsule(x,y,z,[.130,0,0],[.130+ray[0]*.10,ray[1]*.10,ray[2]*.10],.006));
    }else d=Math.max(d,.0155-radius);
    mc.field[index]=-d;
   }

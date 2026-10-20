@@ -8,9 +8,10 @@ export function attackAt(t){
  return {aim:aim*(1-recover),nock:nock*(1-recover),draw:aim*(1-release),release,releaseAge:t-1.18,engaged:t>=.2&&t<1.18,stage:t<.2?'Ready':t<.45?'Nock':t<1.02?'Draw':t<1.18?'Aim':t<1.32?'Release':t<1.7?'Follow-through':'Recover'};
 }
 export function footCycle(mode,t,side){
- const duration=CLIPS[mode].duration,p=((t/duration+(side==='R'?0:.5))%1+1)%1,support=mode==='walk'?.64:.58,stride=mode==='walk'?.055:.065,lift=mode==='walk'?.025:.058;
+ const duration=CLIPS[mode].duration,p=((t/duration+(side==='R'?0:.5))%1+1)%1,support=mode==='walk'?.64:.48,stride=mode==='walk'?.055:.053,lift=mode==='walk'?.025:.064;
  if(p<support)return {z:lerp(stride,-stride,p/support),y:0,support:true,p};
- const u=(p-support)/(1-support);return {z:lerp(-stride,stride,smooth(0,1,u)),y:lift*Math.sin(Math.PI*u),support:false,p};
+ const u=(p-support)/(1-support),s5=u*u*u*(10+u*(-15+6*u)),tangent=-2*stride*(1-support)/support;
+ return {z:-stride+tangent*u+(2*stride-tangent)*s5,y:lift*64*u**3*(1-u)**3,support:false,p};
 }
 
 export const isShooting=mode=>mode==='attack'||mode.startsWith('shoot');
@@ -18,16 +19,16 @@ export const isShooting=mode=>mode==='attack'||mode.startsWith('shoot');
 export function tailSwish(time,index=0){
  let start=0,cycle=0,duration=8;
  while(time>=start+duration){start+=duration;cycle++;duration=6+((cycle*37)%41)/10;}
- const local=time-start-index*.075,begin=duration-2.5;
- if(local<begin||local>=duration-.6)return 0;
- const u=(local-begin)/1.9;
+ const local=time-start-index*.075,begin=duration-3.2;
+ if(local<begin||local>=duration-.5)return 0;
+ const u=(local-begin)/2.7;
  return Math.sin(u*Math.PI)**2;
 }
 
 // In-place gait velocity: cancels the planted foot's local stance travel.
 CLIPS.walk.velocity=[0,0,.11/.64];
-CLIPS.run.velocity=[0,0,.13/(.58*.72)];
-const shootingSpeed=.13/(.58*(2.2/3));
+CLIPS.run.velocity=[0,0,.106/(.48*.72)];
+const shootingSpeed=.106/(.48*(2.2/3));
 CLIPS.shootForward.velocity=[0,0,shootingSpeed];
 CLIPS.shootBackward.velocity=[0,0,-shootingSpeed];
 CLIPS.shootLeft.velocity=[-shootingSpeed,0,0];
@@ -35,4 +36,4 @@ CLIPS.shootRight.velocity=[shootingSpeed,0,0];
 
 // The uploaded tail curls toward +X. Rotate its root through the rear arc to
 // produce a real left/right sweep, rather than only bobbing that sideways tip.
-export const tailSwishAngle=(time,index=0)=>(index===0?1.8:.025)*tailSwish(time,index);
+export const tailSwishAngle=(time,index=0)=>(index===0?1.40:.032)*tailSwish(time,index);
