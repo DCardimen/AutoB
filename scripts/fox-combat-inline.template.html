@@ -1,0 +1,42 @@
+<div id="rowan-combat-review">
+  <div class="viz-controls">
+    <label class="form-label">Combat movement
+      <select class="form-select" aria-label="Preview combat movement">
+        <option value="0">Shoot moving forward</option>
+        <option value="2.2">Shoot moving backward</option>
+        <option value="4.4">Shoot strafing left</option>
+        <option value="6.6">Shoot strafing right</option>
+        <option value="8.8">Dash forward</option>
+        <option value="9.65">Dodge left</option>
+        <option value="10.9">Dodge right</option>
+        <option value="12.15">Hit reaction</option>
+        <option value="13.35">Fall with raised feet</option>
+      </select>
+    </label>
+  </div>
+  <video controls playsinline muted preload="auto" poster="@@POSTER@@" aria-label="Base fox shooting movement, dash and fall at normal speed" style="display:block;width:100%;aspect-ratio:1;object-fit:contain" src="data:video/webm;base64,@@VIDEO@@"></video>
+</div>
+<script>
+(() => {
+  const root = document.getElementById('rowan-combat-review');
+  const video = root.querySelector('video');
+  const select = root.querySelector('select');
+  const apply = state => {
+    const chapter = state?.privateContent?.chapter;
+    if ([...select.options].some(option => option.value === chapter)) {
+      select.value = chapter;
+      video.currentTime = Number(chapter);
+    }
+  };
+  video.addEventListener('loadedmetadata', () => apply(window.openai?.widgetState), { once: true });
+  window.addEventListener('openai:set_globals', event => apply(event.detail?.globals?.widgetState));
+  select.addEventListener('change', () => {
+    video.currentTime = Number(select.value);
+    video.play().catch(() => {});
+    window.openai?.setWidgetState?.({
+      modelContent: { action: select.selectedOptions[0].textContent },
+      privateContent: { chapter: select.value }
+    }).catch(() => {});
+  });
+})();
+</script>

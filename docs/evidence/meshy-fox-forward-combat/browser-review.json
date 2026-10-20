@@ -1,0 +1,106 @@
+{
+  "assetSHA256": "c5ba4abec79f2d5130d32d56a5f6039b1115ac7ab36cfc4c12f808e39d034d0a",
+  "errors": [],
+  "controllerReview": {
+    "stableScrubbing": true,
+    "independentHeadTracking": true,
+    "movingTargetContact": 3.916906504853483e-8,
+    "travelWorks": true,
+    "oneShotDefault": true
+  },
+  "normalSpeedPlayback": true,
+  "framing": [
+    {
+      "mode": "idle",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "walk",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "run",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "attack",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "shootForward",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "shootBackward",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "shootLeft",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "shootRight",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "dash",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "dodgeLeft",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "dodgeRight",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "hit",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "death",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "blink",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "tailSwish",
+      "clippedVertices": 0
+    }
+  ],
+  "videoBytes": 3555966,
+  "views": [
+    "S",
+    "SE",
+    "E",
+    "NE",
+    "N",
+    "NW",
+    "W",
+    "SW"
+  ],
+  "actions": [
+    "idle",
+    "walk",
+    "run",
+    "attack",
+    "shootForward",
+    "shootBackward",
+    "shootLeft",
+    "shootRight",
+    "dash",
+    "dodgeLeft",
+    "dodgeRight",
+    "hit",
+    "death",
+    "blink",
+    "tailSwish"
+  ],
+  "inlineVideoBytes": {
+    "pose": 560356,
+    "combat": 467044
+  }
+}

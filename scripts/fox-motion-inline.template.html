@@ -1,16 +1,13 @@
-<div id="rowan-motion-review">
+<div id="rowan-pose-review">
   <div class="viz-controls">
     <label class="form-label">Animation
       <select class="form-select" aria-label="Preview animation">
         <option value="0">Idle and blink</option>
-        <option value="4">Walk</option>
-        <option value="6">Run, side</option>
-        <option value="7.92">Run, rear</option>
-        <option value="9.84">Bow attack</option>
-        <option value="14.24">Dodge left</option>
-        <option value="15.49">Dodge right</option>
-        <option value="16.74">Hit reaction</option>
-        <option value="17.94">Fall</option>
+        <option value="5.5">Occasional tail swish</option>
+        <option value="8">Compact run, side</option>
+        <option value="9.44">Compact run, rear</option>
+        <option value="10.88">Forward bow attack</option>
+        <option value="13.08">Head tracks enemy</option>
       </select>
     </label>
   </div>
@@ -18,7 +15,7 @@
 </div>
 <script>
 (() => {
-  const root = document.getElementById('rowan-motion-review');
+  const root = document.getElementById('rowan-pose-review');
   const video = root.querySelector('video');
   const select = root.querySelector('select');
   const saved = window.openai?.widgetState?.privateContent?.chapter;
@@ -26,6 +23,13 @@
     select.value = saved;
     video.addEventListener('loadedmetadata', () => { video.currentTime = Number(saved); }, { once: true });
   }
+  window.addEventListener('openai:set_globals', event => {
+    const chapter = event.detail?.globals?.widgetState?.privateContent?.chapter;
+    if ([...select.options].some(option => option.value === chapter)) {
+      select.value = chapter;
+      video.currentTime = Number(chapter);
+    }
+  });
   select.addEventListener('change', () => {
     video.currentTime = Number(select.value);
     video.play().catch(() => {});
