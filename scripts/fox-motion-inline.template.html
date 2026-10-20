@@ -1,0 +1,38 @@
+<div id="rowan-motion-review">
+  <div class="viz-controls">
+    <label class="form-label">Animation
+      <select class="form-select" aria-label="Preview animation">
+        <option value="0">Idle and blink</option>
+        <option value="4">Walk</option>
+        <option value="6">Run, side</option>
+        <option value="7.92">Run, rear</option>
+        <option value="9.84">Bow attack</option>
+        <option value="14.24">Dodge left</option>
+        <option value="15.49">Dodge right</option>
+        <option value="16.74">Hit reaction</option>
+        <option value="17.94">Fall</option>
+      </select>
+    </label>
+  </div>
+  <video controls playsinline muted preload="auto" poster="@@POSTER@@" aria-label="Base fox animation preview at normal speed" style="display:block;width:100%;aspect-ratio:1;object-fit:contain" src="data:video/webm;base64,@@VIDEO@@"></video>
+</div>
+<script>
+(() => {
+  const root = document.getElementById('rowan-motion-review');
+  const video = root.querySelector('video');
+  const select = root.querySelector('select');
+  const saved = window.openai?.widgetState?.privateContent?.chapter;
+  if ([...select.options].some(option => option.value === saved)) {
+    select.value = saved;
+    video.addEventListener('loadedmetadata', () => { video.currentTime = Number(saved); }, { once: true });
+  }
+  select.addEventListener('change', () => {
+    video.currentTime = Number(select.value);
+    video.play().catch(() => {});
+    window.openai?.setWidgetState?.({
+      modelContent: { action: select.selectedOptions[0].textContent },
+      privateContent: { chapter: select.value }
+    }).catch(() => {});
+  });
+})();
+</script>

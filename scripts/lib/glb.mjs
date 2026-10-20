@@ -1,0 +1,10 @@
+import fs from 'node:fs';
+export function readGLB(file){
+ const b=fs.readFileSync(file),n=b.readUInt32LE(12),json=JSON.parse(b.subarray(20,20+n));
+ let binary=Buffer.from(b.subarray(28+n,28+n+b.readUInt32LE(20+n))),byteLength=binary.length;const chunks=[binary];
+ const widths={SCALAR:1,VEC2:2,VEC3:3,VEC4:4,MAT4:16},appendedData=new Map();
+ function read(id){if(appendedData.has(id))return appendedData.get(id);const a=json.accessors[id],v=json.bufferViews[a.bufferView],C=({5126:Float32Array,5123:Uint16Array,5121:Uint8Array,5125:Uint32Array})[a.componentType];if(v.byteStride)throw Error('Interleaved accessor');return new C(binary.buffer,binary.byteOffset+(v.byteOffset||0)+(a.byteOffset||0),a.count*widths[a.type]);}
+ function append(a,type,componentType=5126,target){const pad=(4-byteLength%4)%4,offset=byteLength+pad,bytes=Buffer.from(a.buffer,a.byteOffset,a.byteLength);chunks.push(Buffer.alloc(pad),bytes);byteLength=offset+bytes.length;const view=json.bufferViews.push({buffer:0,byteOffset:offset,byteLength:bytes.length,...target?{target}:{}})-1;const accessor={bufferView:view,componentType,count:a.length/widths[type],type};if(type==='VEC3'){accessor.min=[0,1,2].map(k=>{let v=Infinity;for(let i=k;i<a.length;i+=3)v=Math.min(v,a[i]);return v;});accessor.max=[0,1,2].map(k=>{let v=-Infinity;for(let i=k;i<a.length;i+=3)v=Math.max(v,a[i]);return v;});}const id=json.accessors.push(accessor)-1;appendedData.set(id,a);return id;}
+ function write(file){binary=Buffer.concat(chunks);json.buffers[0].byteLength=binary.length;const text=Buffer.from(JSON.stringify(json)),jp=Buffer.alloc((4-text.length%4)%4,32),bp=Buffer.alloc((4-binary.length%4)%4),h=Buffer.alloc(20),bh=Buffer.alloc(8);h.writeUInt32LE(0x46546c67,0);h.writeUInt32LE(2,4);h.writeUInt32LE(28+text.length+jp.length+binary.length+bp.length,8);h.writeUInt32LE(text.length+jp.length,12);h.writeUInt32LE(0x4e4f534a,16);bh.writeUInt32LE(binary.length+bp.length,0);bh.writeUInt32LE(0x004e4942,4);fs.writeFileSync(file,Buffer.concat([h,text,jp,bh,binary,bp]));}
+ return {json,read,append,write};
+}

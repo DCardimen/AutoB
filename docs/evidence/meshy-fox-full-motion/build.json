@@ -1,0 +1,108 @@
+{
+  "maxIKError": 2.0014830212433605e-16,
+  "maxSolverIterationError": 0.0672659092867845,
+  "maxGripError": 2.435541875787129e-16,
+  "maxWristAngle": 0.37017222981907705,
+  "maxClothLengthError": 2.93732586045814e-7,
+  "correctedTailVertices": 142,
+  "shoulderHalfWidth": 0.2,
+  "armScale": 0.75,
+  "legScale": 0.7,
+  "clips": {
+    "idle": {
+      "duration": 4,
+      "frames": 241
+    },
+    "walk": {
+      "duration": 1,
+      "frames": 61
+    },
+    "run": {
+      "duration": 0.64,
+      "frames": 40
+    },
+    "attack": {
+      "duration": 2.2,
+      "frames": 133
+    },
+    "dodgeLeft": {
+      "duration": 1.25,
+      "frames": 76
+    },
+    "dodgeRight": {
+      "duration": 1.25,
+      "frames": 76
+    },
+    "hit": {
+      "duration": 1.2,
+      "frames": 73
+    },
+    "death": {
+      "duration": 2.4,
+      "frames": 145
+    }
+  },
+  "ikByClip": {
+    "idle": {
+      "error": 1.5700924586837752e-16,
+      "limb": "UpperArm_L",
+      "time": 3.9000000953674316,
+      "distance": 0.2650070421771441,
+      "reach": 0.2703504462716165
+    },
+    "walk": {
+      "error": 1.6199010924212654e-16,
+      "limb": "Thigh_L",
+      "time": 0.36666667461395264,
+      "distance": 0.21396414998575702,
+      "reach": 0.26219368926359865
+    },
+    "run": {
+      "error": 1.6883057536160649e-16,
+      "limb": "UpperArm_R",
+      "time": 0.2297435849905014,
+      "distance": 0.254968065667085,
+      "reach": 0.2703504462716165
+    },
+    "attack": {
+      "error": 2.0014830212433605e-16,
+      "limb": "UpperArm_R",
+      "time": 2.0333333015441895,
+      "distance": 0.20688496471955298,
+      "reach": 0.2703504462716165
+    },
+    "dodgeLeft": {
+      "error": 1.6711069443220838e-16,
+      "limb": "UpperArm_R",
+      "time": 0.699999988079071,
+      "distance": 0.2615388843469284,
+      "reach": 0.2703504462716165
+    },
+    "dodgeRight": {
+      "error": 1.3738309013483032e-16,
+      "limb": "UpperArm_R",
+      "time": 0.4833333194255829,
+      "distance": 0.24692952641992474,
+      "reach": 0.2703504462716165
+    },
+    "hit": {
+      "error": 1.8619006149354548e-16,
+      "limb": "UpperArm_R",
+      "time": 0.0833333358168602,
+      "distance": 0.2640006965193104,
+      "reach": 0.2703504462716165
+    },
+    "death": {
+      "error": 1.594436429147036e-16,
+      "limb": "UpperArm_R",
+      "time": 0.5833333134651184,
+      "distance": 0.2636888783511398,
+      "reach": 0.2703504462716165
+    }
+  },
+  "worstWrist": {
+    "mode": "dodgeLeft",
+    "t": 0.13333334028720856,
+    "side": "R"
+  }
+}
