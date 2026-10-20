@@ -4,7 +4,7 @@ import {createHash} from 'node:crypto';
 import http from 'node:http';
 import {launchReviewBrowser} from './lib/review-browser.mjs';
 import {webmWriter} from './lib/encode-webm.mjs';
-import {BOW} from '../public/meshy-fox-preview/fox-motion.mjs';
+import {BOW,CLIPS} from '../public/meshy-fox-preview/fox-motion.mjs';
 
 const directory='docs/evidence/meshy-fox-archer-stance';fs.mkdirSync(directory,{recursive:true});
 const root=path.resolve('public/meshy-fox-preview');
@@ -46,9 +46,11 @@ try{
  }
  // Each frame is rendered at its exact sequence time and encoded at 30 fps, so
  // the recordings play at true speed even when rendering is slower.
- const FPS=30,total=await page.evaluate(()=>{
+ // Each loop plays on its clip's own period; a stale period would hold the
+ // last frame for the difference on every cycle and read as a stutter.
+ const FPS=30,total=await page.evaluate(runPeriod=>{
   const a=foxAnimation,{renderer,camera,scene}=a;renderer.setSize(768,768,false);camera.aspect=1;camera.updateProjectionMatrix();
-  const sequence=[['idle',8,0,8],['run',1.44,Math.PI/2,.72],['run',1.44,5*Math.PI/4,.72],['attack',2.2,Math.PI/4,2.2],['face',2.8,0,8],['shootForward',2.2,Math.PI/4,2.2],['shootBackward',2.2,Math.PI/4,2.2],['shootLeft',2.2,0,2.2],['shootRight',2.2,0,2.2],['dash',.85,Math.PI/4,.85],['dodgeLeft',1.25,0,1.25],['dodgeRight',1.25,0,1.25],['hit',1.2,Math.PI/4,1.2],['death',2.4,Math.PI/4,2.4],['turnLeft90',.95,0,.95],['turnRight45',.62,Math.PI/2,.62],['dashBack',.85,Math.PI/4,.85],['quickTurnLeft',.75,Math.PI/4,.75],['runStop',.75,Math.PI/2,.75],['shootBackwardLeft',2.2,Math.PI/4,2.2]];
+  const sequence=[['idle',8,0,8],['run',1.44,Math.PI/2,runPeriod],['run',1.44,5*Math.PI/4,runPeriod],['attack',2.2,Math.PI/4,2.2],['face',2.8,0,8],['shootForward',2.2,Math.PI/4,2.2],['shootBackward',2.2,Math.PI/4,2.2],['shootLeft',2.2,0,2.2],['shootRight',2.2,0,2.2],['dash',.85,Math.PI/4,.85],['dodgeLeft',1.25,0,1.25],['dodgeRight',1.25,0,1.25],['hit',1.2,Math.PI/4,1.2],['death',2.4,Math.PI/4,2.4],['turnLeft90',.95,0,.95],['turnRight45',.62,Math.PI/2,.62],['dashBack',.85,Math.PI/4,.85],['quickTurnLeft',.75,Math.PI/4,.75],['runStop',.75,Math.PI/2,.75],['shootBackwardLeft',2.2,Math.PI/4,2.2]];
   const labels={idle:'Idle / blink / occasional tail swish',run:'Run: flight, high knees, pumping arms',attack:'Forward bow attack',face:'Ear twitch / nose sniff',shootForward:'Shoot while moving forward',shootBackward:'Shoot while moving backward',shootLeft:'Shoot while strafing left',shootRight:'Shoot while strafing right',dash:'Forward dash',dodgeLeft:'Dodge left',dodgeRight:'Dodge right',hit:'Hit reaction',death:'Fall / feet raised',turnLeft90:'Turn left 90° (gaze leads)',turnRight45:'Turn right 45°',dashBack:'Dash back',quickTurnLeft:'Quick turn 180°',runStop:'Run stop',shootBackwardLeft:'Shoot while kiting back-left'};
   const canvases=[768,640].map(size=>{const c=document.createElement('canvas');c.width=c.height=size;return c;});let index=-1;
   window.reviewFrame=total=>{
@@ -58,7 +60,7 @@ try{
    return {part:i<5?'pose':'combat',images:canvases.map(c=>{const g=c.getContext('2d');g.drawImage(renderer.domElement,0,0,c.width,c.height);g.fillStyle='#edf1e6';g.font='18px system-ui';g.fillText(labels[mode],20,32);return c.toDataURL('image/jpeg',.9).split(',')[1];})};
   };
   return sequence.reduce((sum,step)=>sum+step[1],0);
- });
+ },CLIPS.run.duration);
  const full=webmWriter(`${directory}/motion-preview.webm`,{fps:FPS,bitrate:'4M'}),parts={pose:webmWriter(`${directory}/pose-preview.webm`,{fps:FPS,bitrate:'220k'}),combat:webmWriter(`${directory}/combat-preview.webm`,{fps:FPS,bitrate:'220k'})};
  for(let f=0;f<Math.round(total*FPS);f++){const frame=await page.evaluate(t=>reviewFrame(t),f/FPS);full.write(Buffer.from(frame.images[0],'base64'));parts[frame.part].write(Buffer.from(frame.images[1],'base64'));}
  for(const writer of [full,parts.pose,parts.combat])await writer.finish();
