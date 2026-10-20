@@ -40,7 +40,9 @@
   },
   "devDependencies": {
     "esbuild": "0.25.10",
-    "playwright": "1.58.2"
+    "gltf-validator": "^2.0.0-dev.3.10",
+    "playwright": "1.58.2",
+    "three-mesh-bvh": "^0.9.1"
   },
   "engines": {
     "node": ">=20"
