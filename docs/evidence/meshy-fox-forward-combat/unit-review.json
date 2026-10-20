@@ -1,0 +1,8 @@
+{
+  "command": "node --test tests/meshy-fox-rig.test.js tests/meshy-fox-motion.test.js",
+  "tests": 20,
+  "passed": 20,
+  "failed": 0,
+  "assetSHA256": "c5ba4abec79f2d5130d32d56a5f6039b1115ac7ab36cfc4c12f808e39d034d0a",
+  "node": "v18.16.1"
+}

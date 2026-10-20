@@ -1,0 +1,32 @@
+{
+  "offlineBuilds": [
+    "Starfall-Menagerie.html",
+    "Starfall-Training-Glade.html"
+  ],
+  "checks": [
+    {
+      "source": "playtest-artifacts/legs-v2-browser.json",
+      "checks": [
+        "Source: 12 live creatures including evolved crab, drake and stag, both-team stride updates at 50/150/100%, animated combat, reset and phone layouts",
+        "Offline: 12 live creatures including evolved crab, drake and stag, both-team stride updates at 50/150/100%, animated combat, reset and phone layouts, zero external dependencies"
+      ],
+      "errors": []
+    },
+    {
+      "source": "playtest-artifacts/prototype-browser-report.json",
+      "checks": [
+        "Opening scene shows eight views side by side; all nine characters have eight distinct sprites at one fixed pose phase, with native 64×64 cells; clicking a view opens its close inspection",
+        "Randomized teams have six creatures each; cards match the lineup, and pause/frame stepping preserve simulation control",
+        "Selecting a character and clicking ground produces actual movement in the physical scene",
+        "All nine locomotion profiles travel around the circuits and turn through all eight facings; speed changes work",
+        "Walk/run/sprint pace controls, selected sprint toggle, Shift hold/release, acceleration, stride blending and stamina recovery work",
+        "Eight directional views and seventeen animation states are inspectable, including a close view and death",
+        "Restart changes the actual team composition; charged-strike control survives impact while taking damage, with visible anticipation levels",
+        "Rendered sparring resolves with physical hits, projectile travel, rolls and deaths; optional audio toggles",
+        "390px mobile layout has no horizontal overflow and retains scene and character controls",
+        "Standalone HTML runs combat and pose inspection with zero external requests"
+      ],
+      "errors": []
+    }
+  ]
+}
