@@ -6,7 +6,7 @@ import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {MeshBVH} from 'three-mesh-bvh';
 import validator from 'gltf-validator';
 import {readGLB} from '../scripts/lib/glb.mjs';
-import {tailSwish,footCycle} from '../public/meshy-fox-preview/fox-motion.mjs';
+import {AIM,BOW,CLIPS,GAIT,nockOffset,tailSwish,footCycle} from '../public/meshy-fox-preview/fox-motion.mjs';
 import {FoxPreviewController,travelVelocity} from '../public/meshy-fox-preview/fox-preview-controller.mjs';
 
 globalThis.self=globalThis;
@@ -25,13 +25,13 @@ test('default asset opens with hands down and the loose projectile hidden',()=>{
 
 test('portable export has complete normalized clips and closed loop endpoints',async()=>{
  const result=await validator.validateBytes(new Uint8Array(bytes),{maxIssues:10});assert.equal(result.issues.numErrors,0);
- assert.deepEqual(asset.animations.map(c=>c.name),['Idle','Walk','Run','Bow_Attack','Dodge_Left','Dodge_Right','Dash_Forward','Shoot_Forward','Shoot_Backward','Shoot_Strafe_Left','Shoot_Strafe_Right','Hit_Reaction','Fall_and_Death']);
+ assert.deepEqual(asset.animations.map(c=>c.name),['Idle','Walk','Run','Bow_Attack','Dodge_Left','Dodge_Right','Dash_Forward','Shoot_Forward','Shoot_Backward','Shoot_Strafe_Left','Shoot_Strafe_Right','Hit_Reaction','Fall_and_Death','Turn_Left_45','Turn_Right_45','Turn_Left_90','Turn_Right_90','Dash_Back','Shoot_Forward_Left','Shoot_Forward_Right','Shoot_Backward_Left','Shoot_Backward_Right','Quick_Turn_Left_180','Quick_Turn_Right_180','Run_Stop']);
  for(const clip of g.animations)for(const channel of clip.channels){const sampler=clip.samplers[channel.sampler],values=glb.read(sampler.output),width=channel.target.path==='rotation'?4:channel.target.path==='weights'?(g.meshes[g.nodes[channel.target.node].mesh].weights?.length||1):3;assert.ok([...values].every(Number.isFinite));if(width===4)for(let i=0;i<values.length;i+=4)assert.ok(Math.abs(Math.hypot(...values.subarray(i,i+4))-1)<1e-6);if(clip.extras.loop)for(let k=0;k<width;k++)assert.ok(Math.abs(values[k]-values[values.length-width+k])<1e-6);}
 });
 
 test('right bow grip and left string nock remain attached after export in eight views',()=>{
  let max=0;
- for(const clip of asset.animations){action(clip.name);for(let i=0;i<80;i++){seek(i/80*clip.duration);for(let view=0;view<8;view++){model.rotation.y=view*Math.PI/4;model.updateMatrixWorld(true);const grip=node('Hand_R').localToWorld(new T.Vector3(-.095,-.025,-.025)),bow=node('Bow_Right_Hand').getWorldPosition(new T.Vector3());assert.ok(grip.distanceTo(bow)<1e-7);if(/^(Bow_Attack|Shoot_)/.test(clip.name)&&i/80*clip.duration>=.48&&i/80*clip.duration<1.18){const draw=node('BowStringDraw').morphTargetInfluences[0],nock=node('Bow_Right_Hand').localToWorld(new T.Vector3(.10+.04*draw,.025,0)),left=node('Hand_L').localToWorld(new T.Vector3(.130,0,0));max=Math.max(max,nock.distanceTo(left));}}model.rotation.y=0;}}
+ for(const clip of asset.animations){action(clip.name);for(let i=0;i<80;i++){seek(i/80*clip.duration);for(let view=0;view<8;view++){model.rotation.y=view*Math.PI/4;model.updateMatrixWorld(true);const grip=node('Hand_R').localToWorld(new T.Vector3(-.095,-.025,-.025)),bow=node('Bow_Right_Hand').getWorldPosition(new T.Vector3());assert.ok(grip.distanceTo(bow)<1e-7);if(/^(Bow_Attack|Shoot_)/.test(clip.name)&&i/80*clip.duration>=.48&&i/80*clip.duration<1.18){const draw=node('BowStringDraw').morphTargetInfluences[0],nock=node('Bow_Right_Hand').localToWorld(new T.Vector3(nockOffset(draw),BOW.nockY,0)),left=node('Hand_L').localToWorld(new T.Vector3(.130,0,0));max=Math.max(max,nock.distanceTo(left));}}model.rotation.y=0;}}
  assert.ok(max<.0006,`interpolated nock separation ${max}`);
 });
 
@@ -44,25 +44,31 @@ test('shots travel forward and remain aligned while the upper body tracks an ene
   assert.ok(delta.z>.29&&Math.abs(delta.x)<1e-7);
   for(const yaw of [-.35,0,.35]){
    controller.restore();seek(1.1);const target=new T.Vector3(Math.sin(yaw)*3,1.03,Math.cos(yaw)*3);controller.apply({mode:'attack',clipTime:1.1,ambientTime:4,target});model.updateMatrixWorld(true);
-   const nock=node('Bow_Right_Hand').localToWorld(new T.Vector3(.14,.025,0)),left=node('Hand_L').localToWorld(new T.Vector3(.130,0,0));assert.ok(nock.distanceTo(left)<1e-6);
-   const forward=new T.Vector3(-1,0,0).applyQuaternion(node('Bow_Right_Hand').getWorldQuaternion(new T.Quaternion()));assert.ok(Math.abs(Math.atan2(forward.x,forward.z)-Math.atan2(target.x-node('Chest').getWorldPosition(new T.Vector3()).x,target.z-node('Chest').getWorldPosition(new T.Vector3()).z))<1e-6);
+   const nock=node('Bow_Right_Hand').localToWorld(new T.Vector3(BOW.fullDraw,BOW.nockY,0)),left=node('Hand_L').localToWorld(new T.Vector3(.130,0,0));assert.ok(nock.distanceTo(left)<1e-6);
+   // The arrow's own line, which runs beside the turning axis, passes through the target.
+   const forward=new T.Vector3(-1,0,0).applyQuaternion(node('Bow_Right_Hand').getWorldQuaternion(new T.Quaternion())),toTarget=target.clone().sub(nock);
+   assert.ok(Math.abs(forward.x*toTarget.z-forward.z*toTarget.x)<1e-6,`horizontal miss ${forward.x*toTarget.z-forward.z*toTarget.x}`);assert.ok(forward.dot(toTarget)>0);
    const headForward=new T.Vector3(0,0,1).applyQuaternion(node('Head').getWorldQuaternion(new T.Quaternion())),toward=target.clone().sub(node('Head').getWorldPosition(new T.Vector3())).normalize();assert.ok(headForward.dot(toward)>.9999);
   }
   controller.restore();
  }
 });
 
-test('compact shooting gaits move along the chosen axis and dash lands with raised death feet',()=>{
- for(const [name,axis,sign]of [['shootForward','z',1],['shootBackward','z',-1],['shootLeft','x',-1],['shootRight','x',1]])assert.ok(travelVelocity(name)[axis]*sign>.30);
+test('shooting gaits creep along the chosen axis at about half running speed; dashes land',()=>{
+ // Moving shots walk while aiming; the run is the reference speed.
+ for(const [name,axis,sign]of [['shootForward','z',1],['shootBackward','z',-1],['shootLeft','x',-1],['shootRight','x',1]]){const v=travelVelocity(name)[axis]*sign;assert.ok(v>.12&&v<.6*travelVelocity('run').z,`${name} ${v}`);}
+ action('Dash_Back');seek(.84);assert.ok(Math.abs(node('Root').position.z+.50)<1e-6);
  action('Dash_Forward');seek(.84);assert.ok(Math.abs(node('Root').position.z-.65)<1e-6);
  action('Fall_and_Death');seek(2.3);const pelvis=node('Pelvis').getWorldPosition(new T.Vector3());for(const side of ['R','L'])assert.ok(node('Foot_'+side).getWorldPosition(new T.Vector3()).y>pelvis.y+.10);
- const stance=[];action('Run');for(let f=0;f<60;f++){seek(f/60*.72);stance.push(node('Foot_R').getWorldPosition(new T.Vector3()).z);}assert.ok(Math.max(...stance)-Math.min(...stance)<.131);
+ const stance=[];action('Run');for(let f=0;f<60;f++){seek(f/60*CLIPS.run.duration);stance.push(node('Foot_R').getWorldPosition(new T.Vector3()).z);}// A real run: the paw covers a full stride (twice GAIT.run.stride); the swing
+ // reaches a little past its landing point and draws back before contact.
+ const range=Math.max(...stance)-Math.min(...stance),full=2*GAIT.run.stride;assert.ok(range>full&&range<1.45*full,`run stride ${range}`);
 });
 
 test('shooting travel cancels planted foot motion in every facing',()=>{
  for(const [mode,name]of [['shootForward','Shoot_Forward'],['shootBackward','Shoot_Backward'],['shootLeft','Shoot_Strafe_Left'],['shootRight','Shoot_Strafe_Right']]){
   action(name);
-  for(let facing=0;facing<8;facing++)for(const [side,start]of [['R',.10],['L',.45]]){
+  for(let facing=0;facing<8;facing++)for(const [side,start]of [['R',.10],['L',.65]]){
    const yaw=facing*Math.PI/4,points=[];model.rotation.y=yaw;
    for(const t of [start,start+.05,start+.10]){model.position.copy(travelVelocity(mode).multiplyScalar(t).applyAxisAngle(new T.Vector3(0,1,0),yaw));seek(t);points.push(node('Foot_'+side).getWorldPosition(new T.Vector3()));}
    for(const p of points)assert.ok(p.distanceTo(points[0])<.001,`${mode} ${side} view ${facing}: planted foot drift ${p.distanceTo(points[0])}`);
@@ -102,8 +108,8 @@ test('carried bow curves upward while its grip remains in the right paw',()=>{
 });
 
 test('smooth foot lifts preserve velocity at contact and running arms alternate visibly',()=>{
- const duration=.72,h=1e-5;
- for(const contact of [.48*duration,duration]){
+ const duration=CLIPS.run.duration,h=1e-5;
+ for(const contact of [GAIT.run.support*duration,duration]){
   const position=t=>{const c=footCycle('run',t,'R');return new T.Vector3(0,c.y,c.z);};
   const left=position(contact).sub(position(contact-h)).multiplyScalar(1/h),right=position(contact+h).sub(position(contact)).multiplyScalar(1/h);
   assert.ok(left.distanceTo(right)<.001,`foot velocity jumps at ${contact}`);
@@ -135,11 +141,12 @@ test('both bowstring endpoints stay on the flexing wooden tips',()=>{
  for(const clip of asset.animations){action(clip.name);for(let f=0;f<60;f++){seek(f/60*clip.duration);assert.ok(centre(strings[0],0,5).distanceTo(centre(wood,40*8,7))<1e-6,'top string endpoint');assert.ok(centre(strings[1],0,5).distanceTo(centre(wood,0,7))<1e-6,'bottom string endpoint');}}
 });
 
-test('the undrawn string is straight and pulls back into a shallow draw',()=>{
+test('the undrawn string is straight and pulls back into a full draw',()=>{
  const bow=node('Bow_Right_Hand'),string=node('BowStringDraw');
- function deviation(){const draw=string.morphTargetInfluences[0],tip=.10+.018*draw,top=bow.localToWorld(new T.Vector3(tip,.29,0)),bottom=bow.localToWorld(new T.Vector3(tip,-.29,0)),nock=bow.localToWorld(new T.Vector3(.10+.04*draw,.025,0));return new T.Line3(bottom,top).closestPointToPoint(nock,true,new T.Vector3()).distanceTo(nock);}
+ function deviation(){const draw=string.morphTargetInfluences[0],tip=BOW.brace+BOW.flex*draw,top=bow.localToWorld(new T.Vector3(tip,.29,0)),bottom=bow.localToWorld(new T.Vector3(tip,-.29,0)),nock=bow.localToWorld(new T.Vector3(nockOffset(draw),BOW.nockY,0));return new T.Line3(bottom,top).closestPointToPoint(nock,true,new T.Vector3()).distanceTo(nock);}
  action('Idle');seek(0);assert.ok(deviation()<1e-7);
- action('Bow_Attack');seek(1.1);assert.ok(deviation()>.02&&deviation()<.023);
+ // At anchor the nock sits fullDraw-brace-flex behind the flexed string line.
+ action('Bow_Attack');seek(1.1);const expected=BOW.fullDraw-BOW.brace-BOW.flex;assert.ok(Math.abs(deviation()-expected)<.002,`draw depth ${deviation()}`);
 });
 
 test('walk and run alternate lifted feet while support soles remain level and grounded',()=>{

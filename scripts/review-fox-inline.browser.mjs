@@ -1,9 +1,9 @@
 import fs from 'node:fs';
 import assert from 'node:assert/strict';
-import {chromium} from 'playwright';
+import {launchReviewBrowser} from './lib/review-browser.mjs';
 
-const directory='docs/evidence/meshy-fox-natural-motion';
-const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||'C:/Program Files/Google/Chrome/Application/chrome.exe',headless:true});
+const directory='docs/evidence/meshy-fox-archer-stance';
+const browser=await launchReviewBrowser();
 const report={errors:[],previews:[]};
 try{
  for(const [name,chapter]of [['rowan-pose-preview','5.5'],['rowan-combat-preview','13.35']]){

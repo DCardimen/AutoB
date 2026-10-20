@@ -1,8 +1,8 @@
 import fs from 'node:fs';
-import {chromium} from 'playwright';
+import {launchReviewBrowser} from './lib/review-browser.mjs';
 
-const directory='docs/evidence/meshy-fox-natural-motion';
-const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||'C:/Program Files/Google/Chrome/Application/chrome.exe',headless:true});
+const directory='docs/evidence/meshy-fox-archer-stance';
+const browser=await launchReviewBrowser();
 try{
  const page=await browser.newPage();
  for(const [videoName,templateName,outputName,posterName]of [['pose-preview','fox-motion-inline','rowan-pose-preview','decoded-0.6'],['combat-preview','fox-combat-inline','rowan-combat-preview','decoded-16.98']]){

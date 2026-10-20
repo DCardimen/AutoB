@@ -8,6 +8,10 @@ if(fs.existsSync('public/meshy-fox-preview/animated-viewer.mjs')){
   const animated=await build({entryPoints:['public/meshy-fox-preview/animated-viewer.mjs'],bundle:true,format:'esm',minify:true,write:false});
   fs.writeFileSync('public/meshy-fox-preview/animated-viewer.bundle.js',animated.outputFiles[0].text.replace(/[ \t]+$/gm,'').trimEnd()+'\n');
 }
+for(const [entry,out]of [['combat-demo.mjs','combat-demo.bundle.js']]){
+  const bundle=await build({entryPoints:['public/meshy-fox-preview/'+entry],bundle:true,format:'esm',minify:true,write:false});
+  fs.writeFileSync('public/meshy-fox-preview/'+out,bundle.outputFiles[0].text.replace(/[ \t]+$/gm,'').trimEnd()+'\n');
+}
 const video='docs/evidence/meshy-fox-rig/tail.webm';
 if(fs.existsSync(video)){
   const fragment=fs.readFileSync('public/meshy-fox-preview/inline.template.html','utf8').replace('{{TAIL_VIDEO}}',fs.readFileSync(video).toString('base64'));
