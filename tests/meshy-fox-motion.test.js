@@ -6,7 +6,7 @@ import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {MeshBVH} from 'three-mesh-bvh';
 import validator from 'gltf-validator';
 import {readGLB} from '../scripts/lib/glb.mjs';
-import {tailSwish} from '../public/meshy-fox-preview/fox-motion.mjs';
+import {tailSwish,footCycle} from '../public/meshy-fox-preview/fox-motion.mjs';
 import {FoxPreviewController,travelVelocity} from '../public/meshy-fox-preview/fox-preview-controller.mjs';
 
 globalThis.self=globalThis;
@@ -26,12 +26,12 @@ test('default asset opens with hands down and the loose projectile hidden',()=>{
 test('portable export has complete normalized clips and closed loop endpoints',async()=>{
  const result=await validator.validateBytes(new Uint8Array(bytes),{maxIssues:10});assert.equal(result.issues.numErrors,0);
  assert.deepEqual(asset.animations.map(c=>c.name),['Idle','Walk','Run','Bow_Attack','Dodge_Left','Dodge_Right','Dash_Forward','Shoot_Forward','Shoot_Backward','Shoot_Strafe_Left','Shoot_Strafe_Right','Hit_Reaction','Fall_and_Death']);
- for(const clip of g.animations)for(const channel of clip.channels){const sampler=clip.samplers[channel.sampler],values=glb.read(sampler.output),width=channel.target.path==='rotation'?4:channel.target.path==='weights'?1:3;assert.ok([...values].every(Number.isFinite));if(width===4)for(let i=0;i<values.length;i+=4)assert.ok(Math.abs(Math.hypot(...values.subarray(i,i+4))-1)<1e-6);if(clip.extras.loop)for(let k=0;k<width;k++)assert.ok(Math.abs(values[k]-values[values.length-width+k])<1e-6);}
+ for(const clip of g.animations)for(const channel of clip.channels){const sampler=clip.samplers[channel.sampler],values=glb.read(sampler.output),width=channel.target.path==='rotation'?4:channel.target.path==='weights'?(g.meshes[g.nodes[channel.target.node].mesh].weights?.length||1):3;assert.ok([...values].every(Number.isFinite));if(width===4)for(let i=0;i<values.length;i+=4)assert.ok(Math.abs(Math.hypot(...values.subarray(i,i+4))-1)<1e-6);if(clip.extras.loop)for(let k=0;k<width;k++)assert.ok(Math.abs(values[k]-values[values.length-width+k])<1e-6);}
 });
 
 test('right bow grip and left string nock remain attached after export in eight views',()=>{
  let max=0;
- for(const clip of asset.animations){action(clip.name);for(let i=0;i<80;i++){seek(i/80*clip.duration);for(let view=0;view<8;view++){model.rotation.y=view*Math.PI/4;model.updateMatrixWorld(true);const grip=node('Hand_R').localToWorld(new T.Vector3(-.095,-.025,-.025)),bow=node('Bow_Right_Hand').getWorldPosition(new T.Vector3());assert.ok(grip.distanceTo(bow)<1e-7);if(/^(Bow_Attack|Shoot_)/.test(clip.name)&&i/80*clip.duration>=.48&&i/80*clip.duration<1.18){const draw=node('BowStringDraw').morphTargetInfluences[0],nock=node('Bow_Right_Hand').localToWorld(new T.Vector3(.045+.075*draw,.025,0)),left=node('Hand_L').localToWorld(new T.Vector3(.130,0,0));max=Math.max(max,nock.distanceTo(left));}}model.rotation.y=0;}}
+ for(const clip of asset.animations){action(clip.name);for(let i=0;i<80;i++){seek(i/80*clip.duration);for(let view=0;view<8;view++){model.rotation.y=view*Math.PI/4;model.updateMatrixWorld(true);const grip=node('Hand_R').localToWorld(new T.Vector3(-.095,-.025,-.025)),bow=node('Bow_Right_Hand').getWorldPosition(new T.Vector3());assert.ok(grip.distanceTo(bow)<1e-7);if(/^(Bow_Attack|Shoot_)/.test(clip.name)&&i/80*clip.duration>=.48&&i/80*clip.duration<1.18){const draw=node('BowStringDraw').morphTargetInfluences[0],nock=node('Bow_Right_Hand').localToWorld(new T.Vector3(.10+.04*draw,.025,0)),left=node('Hand_L').localToWorld(new T.Vector3(.130,0,0));max=Math.max(max,nock.distanceTo(left));}}model.rotation.y=0;}}
  assert.ok(max<.0006,`interpolated nock separation ${max}`);
 });
 
@@ -44,7 +44,7 @@ test('shots travel forward and remain aligned while the upper body tracks an ene
   assert.ok(delta.z>.29&&Math.abs(delta.x)<1e-7);
   for(const yaw of [-.35,0,.35]){
    controller.restore();seek(1.1);const target=new T.Vector3(Math.sin(yaw)*3,1.03,Math.cos(yaw)*3);controller.apply({mode:'attack',clipTime:1.1,ambientTime:4,target});model.updateMatrixWorld(true);
-   const nock=node('Bow_Right_Hand').localToWorld(new T.Vector3(.12,.025,0)),left=node('Hand_L').localToWorld(new T.Vector3(.130,0,0));assert.ok(nock.distanceTo(left)<1e-6);
+   const nock=node('Bow_Right_Hand').localToWorld(new T.Vector3(.14,.025,0)),left=node('Hand_L').localToWorld(new T.Vector3(.130,0,0));assert.ok(nock.distanceTo(left)<1e-6);
    const forward=new T.Vector3(-1,0,0).applyQuaternion(node('Bow_Right_Hand').getWorldQuaternion(new T.Quaternion()));assert.ok(Math.abs(Math.atan2(forward.x,forward.z)-Math.atan2(target.x-node('Chest').getWorldPosition(new T.Vector3()).x,target.z-node('Chest').getWorldPosition(new T.Vector3()).z))<1e-6);
    const headForward=new T.Vector3(0,0,1).applyQuaternion(node('Head').getWorldQuaternion(new T.Quaternion())),toward=target.clone().sub(node('Head').getWorldPosition(new T.Vector3())).normalize();assert.ok(headForward.dot(toward)>.9999);
   }
@@ -91,8 +91,41 @@ test('simple fur paws replace added gloves with closed continuous surfaces',()=>
 test('bow and string use actual open grip channels throughout all animation frames',()=>{
  const gloves=Object.fromEntries(['R','L'].map(s=>{const mesh=node('Simple_Paw_'+s),geo=mesh.geometry.clone();return [s,{mesh,bvh:new MeshBVH(geo)}];}));
  const failures=[];
- for(const clip of asset.animations){action(clip.name);for(let f=0;f<Math.ceil(clip.duration*60);f++){const t=f/60;seek(t);for(const [side,gear]of [['R','Longbow'],['L','Bow_String']])node(gear).traverse(mesh=>{if(!mesh.isMesh)return;const geo=mesh.geometry.clone(),p=geo.attributes.position,v=new T.Vector3();for(let i=0;i<p.count;i++){mesh.getVertexPosition(i,v);p.setXYZ(i,v.x,v.y,v.z);}geo.boundsTree=new MeshBVH(geo);const matrix=gloves[side].mesh.matrixWorld.clone().invert().multiply(mesh.matrixWorld);if(gloves[side].bvh.intersectsGeometry(geo,matrix))failures.push(`${clip.name} ${t.toFixed(3)} ${side}`);geo.dispose();});}}
+ for(const clip of asset.animations){action(clip.name);for(let f=0;f<Math.ceil(clip.duration*60);f++){const t=f/60;seek(t);for(const [side,gear]of [['R','Longbow'],['R','Bow_String'],['L','Bow_String']])node(gear).traverse(mesh=>{if(!mesh.isMesh)return;const geo=mesh.geometry.clone(),p=geo.attributes.position,v=new T.Vector3();for(let i=0;i<p.count;i++){mesh.getVertexPosition(i,v);p.setXYZ(i,v.x,v.y,v.z);}geo.boundsTree=new MeshBVH(geo);const matrix=gloves[side].mesh.matrixWorld.clone().invert().multiply(mesh.matrixWorld);if(gloves[side].bvh.intersectsGeometry(geo,matrix))failures.push(`${clip.name} ${t.toFixed(3)} ${side} ${gear}`);geo.dispose();});}}
  assert.deepEqual(failures,[]);
+});
+
+test('carried bow curves upward while its grip remains in the right paw',()=>{
+ const wood=node('Longbow').children.find(o=>o.isMesh&&o.geometry.attributes.position.count>300);
+ function centre(start){const v=new T.Vector3();for(let k=0;k<7;k++)v.add(wood.getVertexPosition(start+k,new T.Vector3()));return v.multiplyScalar(1/7).applyMatrix4(wood.matrixWorld);}
+ for(const name of ['Idle','Walk','Run']){const clip=action(name);for(let i=0;i<80;i++){seek(i/80*clip.duration);const tips=centre(0).add(centre(40*8)).multiplyScalar(.5),grip=node('Bow_Right_Hand').getWorldPosition(new T.Vector3());assert.ok(tips.y>grip.y+.02,`${name} carry curvature must point up`);}}
+});
+
+test('smooth foot lifts preserve velocity at contact and running arms alternate visibly',()=>{
+ const duration=.72,h=1e-5;
+ for(const contact of [.48*duration,duration]){
+  const position=t=>{const c=footCycle('run',t,'R');return new T.Vector3(0,c.y,c.z);};
+  const left=position(contact).sub(position(contact-h)).multiplyScalar(1/h),right=position(contact+h).sub(position(contact)).multiplyScalar(1/h);
+  assert.ok(left.distanceTo(right)<.001,`foot velocity jumps at ${contact}`);
+ }
+ action('Run');const hands={R:[],L:[]};for(let f=0;f<120;f++){seek(f/120*duration);for(const s of ['R','L'])hands[s].push(node('Hand_'+s).getWorldPosition(new T.Vector3()).z);}
+ for(const s of ['R','L'])assert.ok(Math.max(...hands[s])-Math.min(...hands[s])>.12,'visible running arm swing');
+ const mean=s=>hands[s].reduce((a,b)=>a+b,0)/hands[s].length;assert.ok(hands.R.reduce((sum,v,i)=>sum+(v-mean('R'))*(hands.L[i]-mean('L')),0)<0,'opposite arm phases');
+});
+
+test('registered ear and nose gestures move source anatomy while eye vertices stay fixed',()=>{
+ const source=readGLB('public/meshy-fox-preview/fox-repaired.glb'),p=source.read(source.json.meshes[0].primitives[0].attributes.POSITION),head=node('Head_Open'),tips={};
+ for(const [s,sign]of [['R',-1],['L',1]]){let best=-1;for(let v=0;v<p.length/3;v++)if(p[v*3]*sign>.15&&(best<0||p[v*3+1]>p[best*3+1]))best=v;tips[s]=best;}
+ action('Idle');seek(0);const rest=Object.fromEntries(['R','L'].map(s=>[s,head.getVertexPosition(tips[s],new T.Vector3())]));
+ seek(1.34);assert.ok(head.getVertexPosition(tips.R,new T.Vector3()).distanceTo(rest.R)>.03);assert.ok(head.getVertexPosition(tips.L,new T.Vector3()).distanceTo(rest.L)<1e-7);
+ seek(4.14);assert.ok(head.getVertexPosition(tips.L,new T.Vector3()).distanceTo(rest.L)>.025);
+ seek(0);const nose=head.getVertexPosition(1954,new T.Vector3());const eyeIndex=Array.from({length:p.length/3},(_,i)=>i).find(i=>p[i*3]>.15&&p[i*3]<.18&&p[i*3+1]>1.12&&p[i*3+1]<1.16&&p[i*3+2]>.15),eye=head.getVertexPosition(eyeIndex,new T.Vector3());
+ seek(2.17);const travel=head.getVertexPosition(1954,new T.Vector3()).distanceTo(nose);assert.ok(travel>.0015&&travel<.0041,'small nose sniff');assert.ok(head.getVertexPosition(eyeIndex,new T.Vector3()).distanceTo(eye)<1e-7);
+});
+
+test('ambient expressions stay independent of gait playback and restore cleanly',()=>{
+ const controller=new FoxPreviewController(model);action('Run');seek(.1);controller.apply({mode:'run',clipTime:.1,ambientTime:1.34});assert.ok(node('Head_Open').morphTargetInfluences[0]>.9);controller.restore();seek(.1);assert.deepEqual(node('Head_Open').morphTargetInfluences,[0,0,0]);
+ controller.apply({mode:'run',clipTime:.1,ambientTime:2.17});assert.ok(node('Head_Open').morphTargetInfluences[2]>.8);controller.restore();
 });
 
 test('both bowstring endpoints stay on the flexing wooden tips',()=>{
@@ -100,6 +133,13 @@ test('both bowstring endpoints stay on the flexing wooden tips',()=>{
  assert.ok(wood&&strings.length===2);
  function centre(mesh,start,count){const result=new T.Vector3();for(let i=0;i<count;i++)result.add(mesh.getVertexPosition(start+i,new T.Vector3()));return result.multiplyScalar(1/count).applyMatrix4(mesh.matrixWorld);}
  for(const clip of asset.animations){action(clip.name);for(let f=0;f<60;f++){seek(f/60*clip.duration);assert.ok(centre(strings[0],0,5).distanceTo(centre(wood,40*8,7))<1e-6,'top string endpoint');assert.ok(centre(strings[1],0,5).distanceTo(centre(wood,0,7))<1e-6,'bottom string endpoint');}}
+});
+
+test('the undrawn string is straight and pulls back into a shallow draw',()=>{
+ const bow=node('Bow_Right_Hand'),string=node('BowStringDraw');
+ function deviation(){const draw=string.morphTargetInfluences[0],tip=.10+.018*draw,top=bow.localToWorld(new T.Vector3(tip,.29,0)),bottom=bow.localToWorld(new T.Vector3(tip,-.29,0)),nock=bow.localToWorld(new T.Vector3(.10+.04*draw,.025,0));return new T.Line3(bottom,top).closestPointToPoint(nock,true,new T.Vector3()).distanceTo(nock);}
+ action('Idle');seek(0);assert.ok(deviation()<1e-7);
+ action('Bow_Attack');seek(1.1);assert.ok(deviation()>.02&&deviation()<.023);
 });
 
 test('walk and run alternate lifted feet while support soles remain level and grounded',()=>{
