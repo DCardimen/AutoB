@@ -1,5 +1,6 @@
 import * as T from 'three';
 import {foxExpressions} from './fox-expressions.mjs';
+import {FoxTailClearance} from './fox-tail-clearance.mjs';
 import {AIM,BOW,CLIPS,NOCK,RELEASE,angerAt,blinkAt,blinkSchedule,isShooting,isTurn,settlesToIdle,tailSwishAngle} from './fox-motion.mjs';
 
 // Preview behavior layered after the portable clip. This keeps gait direction,
@@ -10,6 +11,8 @@ export class FoxPreviewController {
   // v2 face: one head mesh (ears, sniff, brows) and the eyelids, by target name.
   const meshes=name=>{const list=[];this.bone(name)?.traverse(o=>{if(o.isMesh&&o.morphTargetDictionary)list.push(o);});return list;};
   this.headMeshes=meshes('Fox_Head');this.lidMeshes=meshes('Eyelids');
+  const mesh=this.bone('FoxMesh'),g=mesh.geometry;
+  this.tailClearance=new FoxTailClearance(g.attributes.position.array,g.index.array,g.attributes.skinIndex.array,g.attributes.skinWeight.array,mesh.skeleton.bones.map(b=>b.name),(id,out)=>mesh.getVertexPosition(id,out));this.tailMesh=mesh;
  }
  // Restore before sampling the mixer. Three may skip an unchanged channel;
  // without this, repeated scrubbing would accumulate the procedural turn.
@@ -26,7 +29,7 @@ export class FoxPreviewController {
   const {model}=this;
   if(mode==='death')return;
   this.setFace(this.face(mode,clipTime,ambientTime,weights?.anger));
-  for(const name of ['Spine','Chest','Neck','Head',...Array.from({length:6},(_,i)=>`Tail_${String(i).padStart(2,'0')}`),'Arrow_Nock_and_Flight','Arrow_Second','Release_Flair',...Array.from({length:5},(_,i)=>`Release_Spark_${i}`)]){
+  for(const name of ['Spine','Chest','Neck','Head',...Array.from({length:6},(_,i)=>`Tail_${String(i).padStart(2,'0')}`),'Arrow_Nock_and_Flight','Arrow_Second','Arrow_Third','Release_Flair',...Array.from({length:5},(_,i)=>`Release_Spark_${i}`)]){
    const o=this.bone(name);if(!o)continue;this.base.push([o,o.position.clone(),o.quaternion.clone()]);
   }
   // The ambient tail layer acts past the root bone, which keeps the authored
@@ -36,7 +39,7 @@ export class FoxPreviewController {
    tail.quaternion.premultiply(new T.Quaternion().setFromAxisAngle(this.up,tailSwishAngle(ambientTime,i)-(mode==='idle'?tailSwishAngle(clipTime,i):settlesToIdle(mode)?tailSwishAngle(0,i):0)));
   }
   model.updateMatrixWorld(true);
-  if(!target)return;
+  if(!target){this.clearTail();return;}
   // Weights blend the tracking styles continuously: track fades the whole
   // chain in, aim moves the trunk's share onto the bow line, and turn hands
   // the trunk to a turning clip. Defaults follow the mode, so a scrubbed
@@ -69,7 +72,7 @@ export class FoxPreviewController {
   // Loose arrow/effects are scene children; rotate them around the same chest
   // pivot as the held equipment, so release and trajectory agree with aim.
   const q=new T.Quaternion().setFromAxisAngle(this.up,spineYaw+chestYaw);
-  for(const name of ['Arrow_Nock_and_Flight','Arrow_Second','Release_Flair',...Array.from({length:5},(_,i)=>`Release_Spark_${i}`)]){
+  for(const name of ['Arrow_Nock_and_Flight','Arrow_Second','Arrow_Third','Release_Flair',...Array.from({length:5},(_,i)=>`Release_Spark_${i}`)]){
    const o=this.bone(name);if(!o)continue;o.position.sub(pivot).applyQuaternion(q).add(pivot);o.quaternion.premultiply(q);
   }
   this.turnAboutUp(neck,w.track*((1-w.turn)*(1-w.aim)*.24*lookYaw+w.turn*turnYaw));
@@ -79,7 +82,9 @@ export class FoxPreviewController {
   const turnHead=new T.Quaternion().setFromUnitVectors(forward,toward),limit=.75,amount=2*Math.acos(Math.min(1,Math.abs(turnHead.w)));
   if(amount>limit)turnHead.slerp(new T.Quaternion(),1-limit/amount);
   turnHead.slerp(new T.Quaternion(),1-w.track);this.rotateInWorld(head,turnHead);
+  this.clearTail();
  }
+ clearTail(){const update=()=>{this.model.updateMatrixWorld(true);this.tailMesh.skeleton.update();};update();this.tailClearance.solve(this.bone('Tail_01'),update);}
  // Yaw from a bone's facing to the target, about the vertical.
  relativeYaw(o,target){const f=new T.Vector3(0,0,1).applyQuaternion(o.getWorldQuaternion(new T.Quaternion())),d=target.clone().sub(o.getWorldPosition(new T.Vector3()));return Math.atan2(d.x,d.z)-Math.atan2(f.x,f.z);}
  rotateInWorld(o,q){const parent=o.parent.getWorldQuaternion(new T.Quaternion());o.quaternion.premultiply(parent.clone().invert().multiply(q).multiply(parent));this.model.updateMatrixWorld(true);}

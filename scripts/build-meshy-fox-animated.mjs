@@ -10,13 +10,17 @@ import {PinnedCloth} from './lib/fox-dynamics.mjs';
 import {KayKitMotion} from './lib/kaykit-motion.mjs';
 import {CLIPS,BOW,AIM,ARROW,QUIVER,DODGE,DASH,NOCK,BOW_ANGLES,READY_CANT,RELEASE,STANCE,TAIL_REST,nockOffset,smooth,lerp,spring,blinkAt,angerAt,attackAt,footCycle,isShooting,isTurn,isAttackLoop,isRunStop,settlesToIdle,tailSwishAngle} from '../public/meshy-fox-preview/fox-motion.mjs';
 
-const EVIDENCE='docs/evidence/meshy-fox-archer-v2';
+const EVIDENCE='docs/evidence/meshy-fox-archer-v3';
 const glb=readGLB('public/meshy-fox-preview/fox-repaired.glb'),g=glb.json,{read,append}=glb;
 const body=g.meshes[0].primitives[0],originalPositions=Float32Array.from(read(body.attributes.POSITION)),oldNormals=Float32Array.from(read(body.attributes.NORMAL)),oldJ=Uint16Array.from(read(body.attributes.JOINTS_0)),oldW=Float32Array.from(read(body.attributes.WEIGHTS_0));
 const originalIndices=Uint16Array.from(read(body.indices)),sourceUV=Float32Array.from(read(body.attributes.TEXCOORD_0));
 const skin=g.skins[0],boneNodes=new Map(skin.joints.map(id=>[g.nodes[id].name,id])),oldJointNames=skin.joints.map(id=>g.nodes[id].name),oldWorld=new Map();
 function walk(id,p=new T.Vector3()){const node=g.nodes[id],v=p.clone().add(new T.Vector3(...node.translation||[0,0,0]));oldWorld.set(id,v);for(const c of node.children||[])walk(c,v);}for(const id of g.scenes[0].nodes)walk(id);
 const HEIGHT=.096;
+// The uploaded tail was modelled beside the left thigh. Move the complete
+// painted tail (and every bind joint) onto the sacrum, behind the belt.
+// This is a rigid registration repair, preserving its length and thickness.
+const TAIL_SOCKET_SHIFT=new T.Vector3(-.035,.10,-.10);
 const kaykit=new KayKitMotion();
 function yMap(y){return y<.2?y:y<.52?.2+(y-.2)*.7:y-HEIGHT;}
 function xMap(x){const a=Math.abs(x),sign=Math.sign(x);return sign*(a<=.13?a:a<.275?.13+(a-.13)*(.07/.145):a<.635?.20+(a-.275)*.75:a-.165);}
@@ -36,18 +40,29 @@ for(let v=0;v<originalPositions.length/3;v++){
 // vertices hand their tail weight to the pelvis; tail fur keeps its weights.
 const vertexColour=JSON.parse(execFileSync('python',['scripts/lib/sample-glb-texture.py'],{input:JSON.stringify({file:'public/meshy-fox-preview/fox-repaired.glb',uvs:Array.from({length:sourceUV.length/2},(_,i)=>[sourceUV[i*2],sourceUV[i*2+1]])}),maxBuffer:64*1024*1024}));
 const costume=v=>{const [r,gr,b]=vertexColour.slice(v*3,v*3+3);return (gr>r*1.15&&gr>b&&gr>40)||(r>150&&gr>110&&b<110&&r<gr*1.5);};
+// The proximal orange fur was still weighted to the thigh. Include that
+// complete bridge in the tail, while keeping the green/gold tunic on pelvis.
+for(let v=0;v<originalPositions.length/3;v++){
+ const [x,y,z]=originalPositions.subarray(v*3,v*3+3),tail=regionWeight(v,n=>n.startsWith('Tail_'));
+ if(costume(v)||tail<=.01||x<.07||z>-.12||y<.28||y>.70)continue;
+ const centres=g.extras.foxRigRepair.tailPoints;let i=0;while(i<4&&x>centres[i+1][0])i++;const t=smooth(centres[i][0],centres[i+1][0],x);
+ setInfluences(v,[[oldJointNames.indexOf(`Tail_${String(i).padStart(2,'0')}`),1-t],[oldJointNames.indexOf(`Tail_${String(i+1).padStart(2,'0')}`),t]]);
+}
 let hemVertices=0;const pelvisJoint=oldJointNames.indexOf('Pelvis');
 for(let v=0;v<originalPositions.length/3;v++){const tail=regionWeight(v,n=>n.startsWith('Tail_'));if(tail<=0||tail>=.5||!costume(v))continue;hemVertices++;const list=new Map();for(let k=0;k<4;k++){const id=oldJointNames[oldJ[v*4+k]].startsWith('Tail_')?pelvisJoint:oldJ[v*4+k];list.set(id,(list.get(id)||0)+oldW[v*4+k]);}setInfluences(v,list);}
+// A tail-owned vertex cannot inherit even a small thigh/boot influence.
+// Residual weights here were the visible leg attachment during crouching.
+for(let v=0;v<originalPositions.length/3;v++)if(regionWeight(v,n=>n.startsWith('Tail_'))>.5){const list=[];for(let k=0;k<4;k++)if(oldJointNames[oldJ[v*4+k]].startsWith('Tail_'))list.push([oldJ[v*4+k],oldW[v*4+k]]);setInfluences(v,list);}
 const position=new Float32Array(originalPositions.length),normal=new Float32Array(oldNormals.length);
 for(let i=0;i<position.length/3;i++){
  const x=originalPositions[i*3],y=originalPositions[i*3+1],z=originalPositions[i*3+2],arm=regionWeight(i,n=>/arm|hand|clavicle/i.test(n)),tail=regionWeight(i,n=>n.startsWith('Tail_'));
- position.set([lerp(x,xMap(x),arm),lerp(yMap(y),y-HEIGHT,tail),z+arm*.065],i*3);
+ position.set([lerp(x,xMap(x),arm)+TAIL_SOCKET_SHIFT.x*tail,lerp(yMap(y),y-HEIGHT,tail)+TAIL_SOCKET_SHIFT.y*tail,z+arm*.065+TAIL_SOCKET_SHIFT.z*tail],i*3);
  const ax=Math.abs(x),dx=ax<.13?1:ax<.275?.07/.145:ax<.635?.75:1,dy=y>.2&&y<.52?.7:1;
  new T.Vector3(oldNormals[i*3]/lerp(1,dx,arm),oldNormals[i*3+1]/lerp(dy,1,tail),oldNormals[i*3+2]).normalize().toArray(normal,i*3);
 }
 body.attributes.POSITION=append(position,'VEC3',5126,34962);body.attributes.NORMAL=append(normal,'VEC3',5126,34962);
 // Refit bones to the shortened mesh, with shoulder pivots inside the tunic.
-const world=new Map();for(const [name,id]of boneNodes){const p=oldWorld.get(id).clone();p.y=name.startsWith('Tail_')?p.y-HEIGHT:yMap(p.y);if(/arm|hand|clavicle/i.test(name)){p.x=xMap(p.x);p.z+=.065;}world.set(name,p);}
+const world=new Map();for(const [name,id]of boneNodes){const p=oldWorld.get(id).clone();p.y=name.startsWith('Tail_')?p.y-HEIGHT:yMap(p.y);if(name.startsWith('Tail_'))p.add(TAIL_SOCKET_SHIFT);if(/arm|hand|clavicle/i.test(name)){p.x=xMap(p.x);p.z+=.065;}world.set(name,p);}
 function addBone(name,parent,p){const id=g.nodes.push({name,translation:[0,0,0]})-1;boneNodes.set(name,id);world.set(name,new T.Vector3(...p));const parentID=boneNodes.get(parent);g.nodes[parentID].children??=[];g.nodes[parentID].children.push(id);skin.joints.push(id);return id;}
 const clothColumns=[];
 for(let c=0;c<3;c++){
@@ -161,7 +176,7 @@ const bump=(a,b,x)=>Math.sin(Math.PI*smooth(a,b,x));
 const soft=(a,b,x)=>{const t=Math.max(0,Math.min(1,(x-a)/(b-a)));return t*t*(3-2*t);};
 const tilt=angle=>new T.Quaternion().setFromAxisAngle(new T.Vector3(1,0,0),angle);
 const aimFrameFor=cant=>new T.Quaternion().setFromAxisAngle(up,Math.PI/2).multiply(tilt(cant));
-const bowVariant=mode=>CLIPS[mode].bow||'canted',gripKey=mode=>CLIPS[mode].crouch?'crouched':bowVariant(mode),fullGrips={};
+const bowVariant=mode=>CLIPS[mode].bow==='sideways'?'canted':CLIPS[mode].bow||'canted',gripKey=mode=>CLIPS[mode].crouch?'crouched':bowVariant(mode),fullGrips={};
 const quiverAxis=new T.Vector3(...QUIVER.axis).normalize(),quiverMouth=new T.Vector3(...QUIVER.mouth),chestRest=world.get('Chest');
 // A point on the quiver axis, `along` past the mouth, in the chest's frame.
 const quiverLocal=along=>quiverMouth.clone().addScaledVector(quiverAxis,along).sub(chestRest);
@@ -191,7 +206,7 @@ function composePose(mode,t,cloth){
   // Gaze stabilization: neck and head absorb nine tenths of the trunk's yaw and lean.
   B('Neck').rotation.set(-.4*(lean+tilt),-.4*(pelvis+spine),0);B('Head').rotation.set(-.5*(lean+tilt),-.5*(pelvis+spine),0);
   // The run sinks at each mid-stance and rises through the flight phase.
-  if(run)rootY=-.050-.012*Math.cos(2*phase-2*Math.PI*.4);}
+  if(run)rootY=-.060-.008*Math.cos(2*phase-2*Math.PI*.4);}
  // A run stop starts at the run's crouch. The planted paw brakes, the trunk
  // leans back over it and sinks to absorb the stop, then rises into Idle's
  // first frame. Braking into a pivot stops shorter and harder.
@@ -223,6 +238,12 @@ function composePose(mode,t,cloth){
  }
  // A duck: a quick drop under a swing, head down and back up, paws planted.
  if(mode==='duck'){const low=smooth(0,.10,t)*(1-smooth(.34,.68,t));rootY-=.11*low;rootZ-=.02*low;B('Pelvis').rotation.x+=.12*low;B('Chest').rotation.x+=.26*low;B('Head').rotation.x-=.22*low;}
+ // Acrobatic shots preserve the coupled bow/string/paws. Flight has a
+ // compression, takeoff, hang and soft landing; the legs tuck independently.
+ let air=0,roll=0;
+ if(info.acro==='jump'){const flight=smooth(.48,.86,t)*(1-smooth(1.30,1.74,t));air=.34*flight;rootY+=air-.035*bump(.22,.58,t)-.035*bump(1.64,1.94,t);}
+ if(info.acro==='slide'){const low=smooth(.08,.38,t)*(1-smooth(1.65,2.12,t));rootZ=.72*smooth(.10,1.72,t);rootY-=.045*low;}
+ if(info.acro==='flip'||info.acro==='vault'){const f=smooth(.12,D-.14,t),flight=Math.sin(Math.PI*f);air=(info.flip?.88:.58)*flight;rootY+=air-.025*bump(0,.14,t)-.025*bump(D-.18,D,t);if(info.flip){rootX=info.flip*.70*f;roll=-info.flip*Math.PI*2*f;B('Root').rotation.z=roll;const cy=world.get('Pelvis').y;rootX+=Math.sin(roll)*cy;rootY+=(1-Math.cos(roll))*cy;}else{rootZ=.78*f;B('Chest').rotation.x=.32*flight;B('Head').rotation.x=-.22*flight;}}
  // Turns are led by the gaze: head, then chest, then hips. v2 turns are
  // quicker, with a small counter-move before the hips go and a slight
  // overshoot that settles; each relative yaw still returns to zero, so the
@@ -279,8 +300,12 @@ function composePose(mode,t,cloth){
    const centre=new T.Vector3(0,0,stop?rootZ:0);target.sub(centre).applyAxisAngle(up,turn*share).add(centre);lift=Math.max(lift,turnLift);footYaw=turn*share;
   }
   target.y+=lift;
+  if(info.acro==='jump'){target.y+=air;target.z-=.015*(air/.34);}
+  if(info.acro==='slide')target.z+=rootZ;
+  if(info.acro==='flip'||info.acro==='vault'){const f=smooth(.12,D-.14,t),flight=Math.sin(Math.PI*f);target.sub(world.get('Pelvis')).add(new T.Vector3(0,.10*flight,.045*flight));if(info.flip)target.applyAxisAngle(new T.Vector3(0,0,1),roll);target.add(world.get('Pelvis')).add(new T.Vector3(info.flip?info.flip*.70*f:rootX,air,rootZ));footYaw=0;}
   // The knee aims ahead of the paw; it travels with a sliding stop's root.
-  solveIK(`Thigh_${side}`,`Shin_${side}`,`Foot_${side}`,target,new T.Vector3(side==='R'?-.23:.23,.30,.8).applyAxisAngle(up,footYaw).add(new T.Vector3(0,0,stop?rootZ:0)),);setGlobalQuaternion(B('Foot_'+side),new T.Quaternion().setFromAxisAngle(up,footYaw));
+  const pole=new T.Vector3(side==='R'?-.23:.23,.30,.8).applyAxisAngle(up,footYaw);if(info.acro==='flip')pole.sub(world.get('Pelvis')).applyAxisAngle(new T.Vector3(0,0,1),roll).add(world.get('Pelvis')).add(new T.Vector3(info.flip*.70*smooth(.12,D-.14,t),air,rootZ));else if(info.acro==='vault')pole.add(new T.Vector3(rootX,air,rootZ));else if(stop)pole.z+=rootZ;
+  solveIK(`Thigh_${side}`,`Shin_${side}`,`Foot_${side}`,target,pole);setGlobalQuaternion(B('Foot_'+side),info.acro==='flip'?new T.Quaternion().setFromAxisAngle(new T.Vector3(0,0,1),roll):new T.Quaternion().setFromAxisAngle(up,footYaw));
  }
  const natural=naturalArms(mode,t),offset=new T.Vector3(rootX,rootY,rootZ);
  if(dodge){natural.L.pole.x+=.10*dodgeEnvelope;natural.R.pole.x-=.10*dodgeEnvelope;}
@@ -392,6 +417,7 @@ function composePose(mode,t,cloth){
  const stanceBlend=enter||exit?ramps.wind:null,speed=stanceBlend!==null?stanceBlend:mode==='run'||shooting?1:mode==='walk'?.5:0,tailDrive=(dodge?dodgeSign*dodgeEnvelope:0)+(shooting?.25*a.aim:0),turnLag=turn?-turn*(snap?.45:.9)*(turnHips-smooth(.30,1,tu)):0,fall=mode==='death'?smooth(.15,1.2,t):0;
  for(let i=1;i<6;i++){const b=B(`Tail_${String(i).padStart(2,'0')}`),k=i/5,[pitch,yaw]=TAIL_REST[i];
   b.rotation.set(pitch*(1-fall)+(.025+.020*speed)*Math.sin(phase-i*.5)+.30*stopBrace*(.3+.7*k)+(mode==='run'&&i===1?.06:0),yaw*(1-fall)+(.012+.025*speed)*Math.sin(phase*(shooting?3:1)-i*.55)+tailDrive*.06*k+turnLag*(.25+.15*k)-(i===1?.5*hipTwist:0)-(i===1?.35*fall:0),(.025+.025*speed)*Math.sin(phase-i*.6)+(i===1?.50*fall:0));
+  if(i===1)b.rotation.z+=.12*(1-fall);
   if(mode==='idle'||settlesToIdle(mode)||enter)b.quaternion.premultiply(new T.Quaternion().setFromAxisAngle(up,tailSwishAngle(mode==='idle'?t:0,i)*(stanceBlend!==null?1-stanceBlend:1)));}
  const rotations=cloth.rotations();for(let c=0;c<3;c++)for(let r=0;r<2;r++)B(`Cape${c}_${r}`).quaternion.copy(r?rotations[c][r-1].clone().invert().multiply(rotations[c][r]):rotations[c][r]);
  // Turns, stops and the attack exit start and end on Idle's first frame, so
@@ -423,9 +449,20 @@ function composePose(mode,t,cloth){
  const fan=new T.Quaternion().setFromAxisAngle(new T.Vector3(0,0,1),-.045),second=objects[gear.arrowSecond];
  if(info.double&&arrowScale>0){if(inFlight){const q2=aimFrame.clone().multiply(fan),age2=aT-RELEASE;second.quaternion.copy(q2);second.position.copy(releaseNock).add(offset).add(new T.Vector3(0,.032,0).applyQuaternion(aimFrame)).addScaledVector(new T.Vector3(-1,0,0).applyQuaternion(q2),3.7*age2).add(new T.Vector3(0,.03*age2,0));}else{second.quaternion.copy(arrowQ).multiply(fan);second.position.copy(arrowNock).add(new T.Vector3(0,.032,0).applyQuaternion(arrowQ));}second.scale.setScalar(1);}
  else{second.position.copy(arrowNock);second.quaternion.copy(arrowQ);second.scale.setScalar(0);}
+ const third=objects[gear.arrowThird];third.position.copy(arrowNock);third.quaternion.copy(arrowQ);third.scale.setScalar(info.triple?arrowScale:0);
+ if(info.triple&&arrowScale){const fan3=new T.Quaternion().setFromAxisAngle(new T.Vector3(0,0,1),.045);third.quaternion.copy(inFlight?aimFrame:arrowQ).multiply(fan3);if(inFlight){const age3=aT-RELEASE;third.position.copy(releaseNock).add(offset).add(new T.Vector3(0,-.032,0).applyQuaternion(aimFrame)).addScaledVector(new T.Vector3(-1,0,0).applyQuaternion(third.quaternion),3.7*age3).add(new T.Vector3(0,.03*age3,0));}else third.position.add(new T.Vector3(0,-.032,0).applyQuaternion(arrowQ));}
  const age=shooting?aT-RELEASE:-1,flair=age>=0&&age<.14?Math.sin(Math.PI*age/.14):0,shotQ=inFlight?aimFrame:bowQ;
  objects[gear.flare].quaternion.copy(shotQ);objects[gear.flare].position.copy(bowPosition).add(new T.Vector3(-.035,.025,0).applyQuaternion(shotQ));objects[gear.flare].scale.setScalar(flair*(1+age*5));
  for(let i=0;i<gear.sparks.length;i++){const spark=objects[gear.sparks[i]],angle=i*Math.PI*2/5;spark.position.copy(bowPosition).add(new T.Vector3(-age*.4,.025+Math.sin(angle)*Math.max(0,age)*.45,Math.cos(angle)*Math.max(0,age)*.45).applyQuaternion(shotQ));spark.scale.setScalar(flair);}
+ // Sideways shooting rolls the connected shoulder girdle, both arms, bow,
+ // string and arrows as one unit about the aim axis. The head counter-rolls.
+ // This retains the proven grip anatomy instead of breaking either wrist.
+ if(info.bow==='sideways'){
+  const amount=-.82*smooth(.62,1.08,aT)*(1-smooth(1.45,1.98,aT)),q=new T.Quaternion().setFromAxisAngle(new T.Vector3(0,0,1),amount),chest=B('Chest'),pivot=chest.getWorldPosition(new T.Vector3()),headQ=B('Head').getWorldQuaternion(new T.Quaternion());
+  setGlobalQuaternion(chest,q.clone().multiply(chest.getWorldQuaternion(new T.Quaternion())));setGlobalQuaternion(B('Head'),headQ);
+  for(const id of [gear.arrow,gear.arrowSecond,gear.arrowThird,gear.flare,...gear.sparks]){objects[id].position.sub(pivot).applyQuaternion(q).add(pivot);objects[id].quaternion.premultiply(q);}
+  root.updateMatrixWorld(true);
+ }
  return {stringDraw,blink:blinkAt(t,mode),anger:angerAt(mode,t),bowPosition,arrowNock,root:[rootX,rootY,rootZ],flair,stage:shooting?a.stage:mode};
 }
 
@@ -439,7 +476,7 @@ for(const [variant,mode]of [['canted','attack'],['upright','attackUpright'],['ti
  if(variant==='upright')fullGrips[variant].x+=.02;
  // Fit across the whole anchor hold; the bow paw's twist settles per frame.
  const extension=t=>{composePose(mode,t,new PinnedCloth(clothColumns));return B('Hand_R').getWorldPosition(new T.Vector3()).distanceTo(B('UpperArm_R').getWorldPosition(new T.Vector3()))/reach;};
- let near=.30,far=.70;for(let i=0;i<18;i++){fullGrips[variant].z=(near+far)/2;if(Math.max(...[1.12,1.15,1.18,1.22,1.245].map(extension))>.988)far=fullGrips[variant].z;else near=fullGrips[variant].z;}fullGrips[variant].z=near;
+ let near=.10,far=.70;for(let i=0;i<18;i++){fullGrips[variant].z=(near+far)/2;if(Math.max(...[1.12,1.15,1.18,1.22,1.245].map(extension))>.988)far=fullGrips[variant].z;else near=fullGrips[variant].z;}fullGrips[variant].z=near;
  for(const key of Object.keys(metrics))if(!(key in saved))delete metrics[key];Object.assign(metrics,saved);metrics.aimGrip={...metrics.aimGrip,[variant]:fullGrips[variant].toArray()};
 }
 // The crouched shot is the canted one moved straight down with the hips (grips
@@ -472,11 +509,12 @@ for(const [mode,info]of Object.entries(CLIPS)){
   add(face.face,'weights',[...(mode==='idle'?foxExpressions(t,mode):[0,0,0]),state.anger,.9*state.anger]);add(face.lids,'weights',[state.blink,state.anger*(1-state.blink)]);
   add(gear.bowRoot,'rotation',objects[gear.bowRoot].quaternion.toArray());add(gear.string,'weights',[state.stringDraw+recoil]);add(gear.bow,'weights',[state.stringDraw+recoil]);add(gear.arrow,'rotation',objects[gear.arrow].quaternion.toArray());add(gear.flare,'rotation',objects[gear.flare].quaternion.toArray());
   add(gear.arrowSecond,'rotation',objects[gear.arrowSecond].quaternion.toArray());
-  for(const id of [gear.arrow,gear.arrowSecond,gear.flare,...gear.sparks]){add(id,'translation',objects[id].position.toArray());add(id,'scale',objects[id].scale.toArray());}
+  add(gear.arrowThird,'rotation',objects[gear.arrowThird].quaternion.toArray());
+  for(const id of [gear.arrow,gear.arrowSecond,gear.arrowThird,gear.flare,...gear.sparks]){add(id,'translation',objects[id].position.toArray());add(id,'scale',objects[id].scale.toArray());}
  }
  clothPushes+=cloth.pushes;
  // Match the seam of repeated actions; one-shot clips retain their final pose.
- if(info.loop)for(const track of tracks.values()){const width=track.width;const error=Math.max(...Array.from({length:width},(_,k)=>Math.abs(track.values[k]-track.values[track.values.length-width+k])));const isEffect=[gear.arrow,gear.arrowSecond,gear.flare,...gear.sparks].includes(track.node);if(!isEffect&&error>1e-4)throw Error(`Visible loop seam ${mode} ${g.nodes[track.node].name} ${track.path}: ${error}`);for(let k=0;k<width;k++)track.values[track.values.length-width+k]=track.values[k];}
+ if(info.loop)for(const track of tracks.values()){const width=track.width;const error=Math.max(...Array.from({length:width},(_,k)=>Math.abs(track.values[k]-track.values[track.values.length-width+k])));const isEffect=[gear.arrow,gear.arrowSecond,gear.arrowThird,gear.flare,...gear.sparks].includes(track.node);if(!isEffect&&error>1e-4)throw Error(`Visible loop seam ${mode} ${g.nodes[track.node].name} ${track.path}: ${error}`);for(let k=0;k<width;k++)track.values[track.values.length-width+k]=track.values[k];}
  const input=append(times,'SCALAR');g.accessors[input].min=[0];g.accessors[input].max=[info.duration];const clip={name:info.name,samplers:[],channels:[],extras:{loop:info.loop,mode,velocity:info.velocity}};
  for(const track of tracks.values()){const width=track.path==='rotation'?'VEC4':track.path==='weights'?'SCALAR':'VEC3',output=append(new Float32Array(track.values),width),sampler=clip.samplers.push({input,output,interpolation:'LINEAR'})-1;clip.channels.push({sampler,target:{node:track.node,path:track.path}});}
  g.animations.push(clip);metrics.clips[mode]={duration:info.duration,frames:frameCount};
@@ -485,7 +523,7 @@ metrics.clothColliderPushes=clothPushes;
 // Open the portable asset in the finished relaxed pose, even in viewers that
 // do not start an animation. Inverse binds still retain the authored bind pose.
 for(const channel of g.animations[0].channels){const sampler=g.animations[0].samplers[channel.sampler],width=channel.target.path==='rotation'?4:channel.target.path==='weights'?(g.meshes[g.nodes[channel.target.node].mesh].weights?.length||1):3;g.nodes[channel.target.node][channel.target.path]=Array.from(read(sampler.output).subarray(0,width));}
-g.extras.foxAnimated={version:2,scope:'Base fox 3D preview only',source:'fox-repaired.glb',proportions:{shoulderHalfWidth:.20,armLengthScale:.75,legLengthScale:.70,heightOffset:HEIGHT},handedness:{bow:'right',draw:'left'},equipment:gear,face,hands,clips:CLIPS,metrics};
-g.asset.generator='AutoB model-specific chibi rig and animation bake (archer v2)';
+g.extras.foxAnimated={version:3,scope:'Base fox 3D preview only',source:'fox-repaired.glb',proportions:{shoulderHalfWidth:.20,armLengthScale:.75,legLengthScale:.70,heightOffset:HEIGHT},handedness:{bow:'right',draw:'left'},equipment:gear,face,hands,clips:CLIPS,metrics};
+g.asset.generator='AutoB model-specific chibi rig and animation bake (archer v3)';
 if(!only){fs.mkdirSync(EVIDENCE,{recursive:true});fs.writeFileSync(`${EVIDENCE}/build.json`,JSON.stringify(metrics,null,2));}
 glb.write(process.env.FOX_OUT||'public/meshy-fox-preview/fox-animated.glb');console.log(JSON.stringify({bones:skin.joints.length,maxIKError:metrics.maxIKError,worstIK:Object.entries(metrics.ikByClip).filter(([,v])=>v.error>1e-6).map(([k,v])=>`${k} ${v.limb} ${v.time.toFixed(3)} ${v.error.toFixed(4)}`),maxGripError:metrics.maxGripError,maxWristAngle:metrics.maxWristAngle,cloth:metrics.maxClothLengthError,clothColliderPushes:clothPushes,hemVertices,aimGrip:metrics.aimGrip}));

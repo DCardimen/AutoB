@@ -8,6 +8,6 @@ export function foxExpressions(time,mode='idle'){
  const t=((time%8)+8)%8;
  const right=pulse(t,1.25,.09,.22)-.18*pulse(t,1.56,.08,.18)+.35*pulse(t,6.05,.12,.28);
  const left=.85*pulse(t,4.05,.09,.24)-.14*pulse(t,4.38,.08,.18)+.28*pulse(t,6.16,.12,.28);
- const nose=.85*pulse(t,2.05,.12,.18)+.65*pulse(t,2.42,.11,.18)+.35*pulse(t,5.35,.13,.22);
+ const nose=.85*pulse(t,2.05,.12,.18)+.65*pulse(t,2.37,.10,.19)+.28*pulse(t,5.35,.13,.22);
  return [right,left,nose];
 }

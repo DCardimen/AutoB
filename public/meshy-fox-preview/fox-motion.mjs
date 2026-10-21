@@ -44,10 +44,20 @@ Object.assign(CLIPS,{shootForwardLeft:{name:'Shoot_Forward_Left',duration:2.2,lo
  duck:{name:'Duck',duration:.70,loop:false,settle:true}});
 // Model-space travel direction of each moving shot (yaw from +Z; +X is the fox's left).
 for(const [mode,travel]of Object.entries({shootForward:0,shootForwardRight:Math.PI/4,shootRight:Math.PI/2,shootBackwardRight:3*Math.PI/4,shootBackward:Math.PI,shootBackwardLeft:-3*Math.PI/4,shootLeft:-Math.PI/2,shootForwardLeft:-Math.PI/4}))CLIPS[mode].travel=travel;
-export const ATTACKS=['attack','attackUpright','attackTilted','attackCrouched','attackDouble'];
+Object.assign(CLIPS,{
+ jumpShot:{name:'Jump_Shot',duration:2.2,loop:true,bow:'tilted',acro:'jump',double:true},
+ slideShot:{name:'Slide_Shot',duration:2.2,loop:false,bow:'sideways',acro:'slide',crouch:.09,double:true},
+ crouchVolley:{name:'Crouch_Volley',duration:2.2,loop:true,bow:'sideways',crouch:.095,double:true,triple:true},
+ sideFlipLeft:{name:'Side_Flip_Left',duration:.95,loop:false,acro:'flip',flip:-1,settle:true},
+ sideFlipRight:{name:'Side_Flip_Right',duration:.95,loop:false,acro:'flip',flip:1,settle:true},
+ vault:{name:'Forward_Vault',duration:1.05,loop:false,acro:'vault',settle:true}
+});
+BOW_ANGLES.sideways=1.32;
+export const ATTACKS=['attack','attackUpright','attackTilted','attackCrouched','attackDouble','crouchVolley'];
+export const ACROBATIC_SHOTS=['jumpShot','slideShot'];
 // The bow-angle loops share one ready pose; the crouched loop holds lower.
 export const BOW_LOOPS=['attack','attackUpright','attackTilted','attackDouble'];
-export const isAttackLoop=mode=>ATTACKS.includes(mode);
+export const isAttackLoop=mode=>ATTACKS.includes(mode)||ACROBATIC_SHOTS.includes(mode);
 export const isTurn=mode=>!!CLIPS[mode]?.turn;
 // Clips that start and end on Idle's first frame (a turn ends on it rotated).
 export const settlesToIdle=mode=>isTurn(mode)||!!CLIPS[mode]?.stop||!!CLIPS[mode]?.exit||!!CLIPS[mode]?.settle;
@@ -131,7 +141,7 @@ for(const info of Object.values(CLIPS))if(info.travel!==undefined)info.velocity=
 // (rotating it sheared that seam through the tunic). The tail is carried
 // straight out behind by bending the bones past the junction, and every sway
 // lives on those bones too.
-export const TAIL_REST=[[0,0],[.05,.54],[.05,.54],[-.02,.44],[-.04,.22],[0,.06]];
+export const TAIL_REST=[[0,0],[.05,.64],[.05,.54],[-.02,.44],[-.04,.22],[0,.06]];
 // Lateral sway down the tail with a lag; its periods divide the 8 s idle loop.
 export const tailSway=(time,index=0)=>index?(.20*Math.sin(2*Math.PI*time/4-index*.45)+.07*Math.sin(2*Math.PI*time/1.6+1.3-index*.6)+.04*Math.sin(2*Math.PI*time/(8/3)+.7-index*.35))*(index===1?1:.40):0;
 export const tailSwishAngle=(time,index=0)=>index?(index===1?.55:.10)*tailSwish(time,index)+tailSway(time,index):0;

@@ -12,6 +12,8 @@ export const KITE=['shootForward','shootForwardRight','shootRight','shootBackwar
 // ready pose, so those hand-overs are near instant too. Runs and aim changes
 // blend longer.
 export function fadeLength(from,to){
+ if(CLIPS[from]?.acro||CLIPS[to]?.acro)return .30;
+ if(from==='crouchVolley'||to==='crouchVolley')return .30;
  // The crouched loop holds lower than the others, so changing to or from it blends.
  if(isAttackLoop(from)&&isAttackLoop(to)&&!!CLIPS[from].crouch!==!!CLIPS[to].crouch)return .30;
  if(from==='attackEnter'&&isAttackLoop(to)&&CLIPS[to].crouch)return .30;
