@@ -1,0 +1,165 @@
+{
+  "assetSHA256": "2fde42dc5e9e90d89f76bbb3d20f89b04ef35c66245d47701546e9fd4114ac19",
+  "errors": [],
+  "controllerReview": {
+    "stableScrubbing": true,
+    "connectedHeadTracking": true,
+    "movingTargetContact": 2.8598309465453014e-8,
+    "travelWorks": true,
+    "oneShotDefault": true
+  },
+  "normalSpeedPlayback": true,
+  "framing": [
+    {
+      "mode": "idle",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "walk",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "run",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "attack",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "shootForward",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "shootBackward",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "shootLeft",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "shootRight",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "dash",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "dashBack",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "turnLeft45",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "turnRight45",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "turnLeft90",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "turnRight90",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "quickTurnLeft",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "runStop",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "shootForwardLeft",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "shootBackwardRight",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "attackStep",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "attackRelease",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "dodgeLeft",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "dodgeRight",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "hit",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "death",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "blink",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "tailSwish",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "earRight",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "earLeft",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "sniff",
+      "clippedVertices": 0
+    }
+  ],
+  "videoBytes": 19061762,
+  "views": [
+    "S",
+    "SE",
+    "E",
+    "NE",
+    "N",
+    "NW",
+    "W",
+    "SW"
+  ],
+  "actions": [
+    "idle",
+    "walk",
+    "run",
+    "attack",
+    "shootForward",
+    "shootBackward",
+    "shootLeft",
+    "shootRight",
+    "dash",
+    "dodgeLeft",
+    "dodgeRight",
+    "hit",
+    "death",
+    "blink",
+    "tailSwish",
+    "earRight",
+    "earLeft",
+    "sniff"
+  ],
+  "inlineVideoBytes": {
+    "pose": 464727,
+    "combat": 648655
+  }
+}
