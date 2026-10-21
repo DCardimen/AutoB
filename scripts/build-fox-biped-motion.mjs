@@ -151,3 +151,5 @@ glb.write('public/meshy-fox-preview/fox-biped.glb');console.log(JSON.stringify({
 await refineBipedRun();await refineBipedHands();await refitBipedQuiver();bakeBipedTailWave();await stabilizeBipedTail();compactBiped();
 await import('./round-fox-biped-hands.mjs');
 await import('./refine-fox-biped-stances.mjs');
+const {refineBipedArms}=await import('./refine-fox-biped-arms.mjs');
+await refineBipedArms();

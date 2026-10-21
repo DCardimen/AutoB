@@ -8,6 +8,7 @@ import {readGLB} from '../scripts/lib/glb.mjs';
 import {CLIPS,NOCK,RELEASE} from '../public/meshy-fox-preview/fox-motion.mjs';
 import {BIPED_CLIPS,JUMP,jumpPhysics} from '../public/meshy-fox-preview/biped-motion.mjs';
 import {BipedSkin} from '../public/meshy-fox-preview/biped-skin.mjs';
+import {armAngles} from '../scripts/refine-fox-biped-arms.mjs';
 const source=readGLB('public/meshy-fox-preview/fox-biped-source.glb'),final=readGLB('public/meshy-fox-preview/fox-biped.glb');
 const primitive=g=>g.json.meshes[0].primitives[0];
 const digest=a=>createHash('sha256').update(Buffer.from(a.buffer,a.byteOffset,a.byteLength)).digest('hex');
@@ -86,11 +87,22 @@ test('the reference run has narrow alternating strides, supported boots and a cl
 
 function stancePose(name,t){mixer.stopAllAction();const clip=asset.animations.find(c=>c.name===name),action=mixer.clipAction(clip).setLoop(T.LoopOnce,1);action.clampWhenFinished=true;action.play();mixer.setTime(Math.min(t,clip.duration-1e-7));model.updateMatrixWorld(true);return clip;}
 const world=n=>model.getObjectByName(n).getWorldPosition(new T.Vector3());
-test('idle arms hang beside the thighs with soft elbows and a lowered bow clear of the floor',()=>{
- for(const t of [0,1,2.08,4,6.3,7.99]){stancePose('Idle',t);for(const side of ['Right','Left']){const shoulder=world('smartrig'+side+'Arm'),elbow=world('smartrig'+side+'ForeArm'),hand=world('smartrig'+side+'Hand');assert.ok(shoulder.y-hand.y>.21,'arms down');assert.ok(Math.abs(hand.x-shoulder.x)<.05,'hands beside the body');assert.ok(Math.abs(elbow.x-shoulder.x)<.04,'elbows do not flare out');assert.ok(hand.y<world('smartrigHips').y-.05,'hands at thigh height');}
+// The rejected retarget lifted the upper arms to the horizontal with folded
+// elbows, and Idle bent its elbows backwards. Natural arms stay near the body
+// and only flex forward; shots rest in the same pose outside their action.
+test('resting, travelling and reaction arms stay near the body and only flex their elbows forward',()=>{
+ const bindChest=originalAsset.scene.getObjectByName('smartrigSpine2').getWorldQuaternion(new T.Quaternion());
+ const angles=side=>{const inv=model.getObjectByName('smartrigSpine2').getWorldQuaternion(new T.Quaternion()).multiply(bindChest.clone().invert()).invert(),a=world('smartrig'+side+'Arm'),b=world('smartrig'+side+'ForeArm'),c=world('smartrig'+side+'Hand'),u=b.clone().sub(a).applyQuaternion(inv).normalize(),f=c.clone().sub(b).applyQuaternion(inv).normalize();return {...armAngles(side==='Right'?-1:1,u,f),forward:f.addScaledVector(u,-f.dot(u)).z};};
+ const action=/^(Bow_Attack(_Upright|_Tilted|_Crouched|_Double)?|Shoot_.*|Jump_Shot.*|Slide_Shot|Crouch_Volley|Side_Flip_.*|Forward_Vault)$/;
+ for(const clip of asset.animations.filter(c=>!action.test(c.name)))for(let i=0;i<=24;i++){stancePose(clip.name,clip.duration*i/24);for(const side of ['Right','Left']){const a=angles(side);
+  assert.ok(a.abd<46,`${clip.name} ${side} upper arm lifted to ${a.abd.toFixed(0)} deg`);assert.ok(a.bend>=15,`${clip.name} ${side} locked elbow`);assert.ok(a.forward>-.02,`${clip.name} ${side} elbow bends backwards`);}}
+ for(const clip of asset.animations.filter(c=>action.test(c.name)&&!/Side_Flip|Forward_Vault/.test(c.name)))for(const t of [0,clip.duration]){stancePose(clip.name,t);for(const side of ['Right','Left'])assert.ok(angles(side).abd<24,`${clip.name} rests with ${side} arm lifted`);}
+ for(const t of [0,1,2.08,4,6.3,7.99]){stancePose('Idle',t);
+  for(const side of ['Right','Left']){const a=angles(side),hand=world('smartrig'+side+'Hand');assert.ok(a.abd>12&&a.abd<24,'arms near the body');assert.ok(a.bend>28&&a.bend<50,'soft forward elbows');assert.ok(hand.y<world('smartrigHips').y-.05,'hands at thigh height');assert.ok(hand.z>world('smartrig'+side+'Arm').z+.04,'hands rest in front of the hips');}
   const bow=model.getObjectByName('Bow_Right_Hand');let low=Infinity;bow.traverse(o=>{if(!o.isMesh)return;for(let i=0;i<o.geometry.attributes.position.count;i++){const p=new T.Vector3().fromBufferAttribute(o.geometry.attributes.position,i).applyMatrix4(o.matrixWorld);low=Math.min(low,p.y);}});assert.ok(low>.005,`lowered bow touches floor: ${low}`);
  }
 });
+
 
 test('standing attacks keep both authored boots flat, planted and staggered like the prior form',()=>{
  const mesh=model.getObjectByName('Biped_Fox'),skin=new BipedSkin(mesh),raw=mesh.geometry.attributes.position.array,boots={Right:[],Left:[]};for(const id of new Set(mesh.geometry.index.array))if(raw[id*3+2]<.13)boots[raw[id*3]<0?'Right':'Left'].push(id);

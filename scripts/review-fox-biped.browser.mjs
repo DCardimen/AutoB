@@ -8,7 +8,7 @@ const assetSHA256=createHash('sha256').update(fs.readFileSync('public/meshy-fox-
 const browser=await launchReviewBrowser(),errors=[];
 try{
  const page=await browser.newPage({viewport:{width:1000,height:800}});page.on('pageerror',e=>errors.push(e.message));
- await page.goto('http://127.0.0.1:3117/public/meshy-fox-preview/animated.html');await page.waitForFunction(()=>window.foxBiped?.ready);
+ await page.goto((process.env.BASE_URL||'http://127.0.0.1:3117')+'/public/meshy-fox-preview/animated.html');await page.waitForFunction(()=>window.foxBiped?.ready);
  const clips=await page.evaluate(()=>{foxBiped.pause();return foxBiped.asset.animations.map(c=>({name:c.name,duration:c.duration}))});
  for(const clip of clips){
   const image=await page.evaluate(clip=>{
