@@ -1,0 +1,9 @@
+{
+  "style": "One rounded orange mass with a fused thumb nub per hand; no individual fingers.",
+  "removedSourceTriangles": 5522,
+  "retainedSourceTriangles": 78262,
+  "boundaryVertices": 330,
+  "maxWristMovement": 9.527865432228639e-8,
+  "maxGripMovement": 9.527865428817732e-8,
+  "forearm": "Shortest-arc authored bind orientation removes axial pronation from the skinned forearms. Rigid hand mounts retain grip orientation."
+}

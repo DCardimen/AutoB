@@ -3,7 +3,8 @@ import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
 import {launchReviewBrowser} from './lib/review-browser.mjs';
 import {webmWriter} from './lib/encode-webm.mjs';
-const out='docs/evidence/fox-biped1';fs.mkdirSync(out,{recursive:true});
+const out=process.env.BIPED_REVIEW_OUT||'docs/evidence/fox-biped1';fs.mkdirSync(out,{recursive:true});
+const assetSHA256=createHash('sha256').update(fs.readFileSync('public/meshy-fox-preview/fox-biped.glb')).digest('hex');
 const browser=await launchReviewBrowser(),errors=[];
 try{
  const page=await browser.newPage({viewport:{width:1000,height:800}});page.on('pageerror',e=>errors.push(e.message));
@@ -35,5 +36,6 @@ try{
  const enlarged=await page.evaluate(async data=>{const im=new Image();im.src='data:image/png;base64,'+data;await im.decode();const c=document.createElement('canvas');c.width=c.height=1280;c.getContext('2d').drawImage(im,0,0,1280,1280);return c.toDataURL().split(',')[1]},decoded.frames[4].image);fs.writeFileSync(`${out}/decoded-volley-enlarged.png`,Buffer.from(enlarged,'base64'));
  await page.selectOption('#action','Idle');await page.locator('#acro').click();await page.waitForTimeout(120);assert.ok(await page.evaluate(()=>foxBiped.routine&&foxBiped.routine.time>0));await page.selectOption('#action','Walk');assert.equal(await page.evaluate(()=>foxBiped.routine),null);
  await page.setViewportSize({width:390,height:844});await page.screenshot({path:`${out}/mobile-viewer.png`});assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
- const report={assetSHA256:createHash('sha256').update(fs.readFileSync('public/meshy-fox-preview/fox-biped.glb')).digest('hex'),clips,facings:['S','SE','E','NE','N','NW','W','SW'],fps:30,chapters,comboDuration,history,normalSpeedPlayback:decoded.normalSpeed,errors};fs.writeFileSync(`${out}/browser-review.json`,JSON.stringify(report,null,2)+'\n');assert.deepEqual(errors,[]);assert.ok(decoded.normalSpeed);console.log('44 clips / eight facings; full cycles and runtime combo recorded, decoded, and played at 1x; mobile and UI pass');
+ assert.equal(assetSHA256,createHash('sha256').update(fs.readFileSync('public/meshy-fox-preview/fox-biped.glb')).digest('hex'),'asset must stay unchanged throughout review');
+ const report={assetSHA256,clips,facings:['S','SE','E','NE','N','NW','W','SW'],fps:30,chapters,comboDuration,history,normalSpeedPlayback:decoded.normalSpeed,errors};fs.writeFileSync(`${out}/browser-review.json`,JSON.stringify(report,null,2)+'\n');assert.deepEqual(errors,[]);assert.ok(decoded.normalSpeed);console.log('44 clips / eight facings; full cycles and runtime combo recorded, decoded, and played at 1x; mobile and UI pass');
 }finally{await browser.close()}
