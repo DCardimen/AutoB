@@ -167,6 +167,6 @@ test('dodges retain their landing displacement and cloth/tail remain animated',(
 
 test('complete front and lower tail fluff belongs to tail bones rather than the thigh',()=>{
  const source=readGLB('public/meshy-fox-preview/fox-repaired.glb'),original=source.read(source.json.meshes[0].primitives[0].attributes.POSITION),primitive=g.meshes[0].primitives[0],p=glb.read(primitive.attributes.POSITION),j=glb.read(primitive.attributes.JOINTS_0),w=glb.read(primitive.attributes.WEIGHTS_0),names=g.skins[0].joints.map(id=>g.nodes[id].name);let count=0;
- for(let i=0;i<original.length;i+=3){const [x,y,z]=original.subarray(i,i+3);if(x>.31&&y>.25&&y<.70&&z<-.06){const v=i/3,total=[0,1,2,3].reduce((sum,k)=>sum+(names[j[v*4+k]].startsWith('Tail_')?w[v*4+k]:0),0);assert.ok(total>.99999);assert.ok(Math.abs(p[i+1]-(y-.096+.10))<1e-7,'tail keeps source shape at the repaired pelvis socket');count++;}}
+ for(let i=0;i<original.length;i+=3){const [x,y,z]=original.subarray(i,i+3);if(x>.31&&y>.25&&y<.70&&z<-.06){const v=i/3,total=[0,1,2,3].reduce((sum,k)=>sum+(names[j[v*4+k]].startsWith('Tail_')?w[v*4+k]:0),0);assert.ok(total>.99999);assert.ok(Math.abs(p[i]-(x-.035))<1e-7,'tail retains its complete authored length at the pelvis socket');count++;}}
  assert.equal(count,424,'all 424 vertices in the inspected tail-bulb region are covered');
 });

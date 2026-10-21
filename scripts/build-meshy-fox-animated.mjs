@@ -8,9 +8,10 @@ import {addFoxFace} from './lib/fox-face.mjs';
 import {foxExpressions} from '../public/meshy-fox-preview/fox-expressions.mjs';
 import {PinnedCloth} from './lib/fox-dynamics.mjs';
 import {KayKitMotion} from './lib/kaykit-motion.mjs';
+import {createFoxTailProfile} from './lib/fox-tail-profile.mjs';
 import {CLIPS,BOW,AIM,ARROW,QUIVER,DODGE,DASH,NOCK,BOW_ANGLES,READY_CANT,RELEASE,STANCE,TAIL_REST,nockOffset,smooth,lerp,spring,blinkAt,angerAt,attackAt,footCycle,isShooting,isTurn,isAttackLoop,isRunStop,settlesToIdle,tailSwishAngle} from '../public/meshy-fox-preview/fox-motion.mjs';
 
-const EVIDENCE='docs/evidence/meshy-fox-archer-v3';
+const EVIDENCE=process.env.FOX_EVIDENCE_DIR||'docs/evidence/meshy-fox-archer-v3';
 const glb=readGLB('public/meshy-fox-preview/fox-repaired.glb'),g=glb.json,{read,append}=glb;
 const body=g.meshes[0].primitives[0],originalPositions=Float32Array.from(read(body.attributes.POSITION)),oldNormals=Float32Array.from(read(body.attributes.NORMAL)),oldJ=Uint16Array.from(read(body.attributes.JOINTS_0)),oldW=Float32Array.from(read(body.attributes.WEIGHTS_0));
 const originalIndices=Uint16Array.from(read(body.indices)),sourceUV=Float32Array.from(read(body.attributes.TEXCOORD_0));
@@ -53,12 +54,19 @@ for(let v=0;v<originalPositions.length/3;v++){const tail=regionWeight(v,n=>n.sta
 // A tail-owned vertex cannot inherit even a small thigh/boot influence.
 // Residual weights here were the visible leg attachment during crouching.
 for(let v=0;v<originalPositions.length/3;v++)if(regionWeight(v,n=>n.startsWith('Tail_'))>.5){const list=[];for(let k=0;k<4;k++)if(oldJointNames[oldJ[v*4+k]].startsWith('Tail_'))list.push([oldJ[v*4+k],oldW[v*4+k]]);setInfluences(v,list);}
+const tailSourcePoints=new Map();for(let v=0;v<originalPositions.length/3;v++)if(regionWeight(v,n=>n.startsWith('Tail_'))>.5)tailSourcePoints.set(v,new T.Vector3().fromArray(originalPositions,v*3));
+const tailSourceTriangles=[];for(let i=0;i<originalIndices.length;i+=3){const tri=Array.from(originalIndices.subarray(i,i+3));if(tri.every(v=>tailSourcePoints.has(v)))tailSourceTriangles.push(tri.map(v=>tailSourcePoints.get(v)));}
+const shapeFoxTail=createFoxTailProfile([...tailSourcePoints.values()],tailSourceTriangles);
 const position=new Float32Array(originalPositions.length),normal=new Float32Array(oldNormals.length);
 for(let i=0;i<position.length/3;i++){
  const x=originalPositions[i*3],y=originalPositions[i*3+1],z=originalPositions[i*3+2],arm=regionWeight(i,n=>/arm|hand|clavicle/i.test(n)),tail=regionWeight(i,n=>n.startsWith('Tail_'));
  position.set([lerp(x,xMap(x),arm)+TAIL_SOCKET_SHIFT.x*tail,lerp(yMap(y),y-HEIGHT,tail)+TAIL_SOCKET_SHIFT.y*tail,z+arm*.065+TAIL_SOCKET_SHIFT.z*tail],i*3);
+ if(tail>0){const shaped=shapeFoxTail(x,y,z,tail);position[i*3+1]+=shaped.y-y;position[i*3+2]+=shaped.z-z;}
  const ax=Math.abs(x),dx=ax<.13?1:ax<.275?.07/.145:ax<.635?.75:1,dy=y>.2&&y<.52?.7:1;
  new T.Vector3(oldNormals[i*3]/lerp(1,dx,arm),oldNormals[i*3+1]/lerp(dy,1,tail),oldNormals[i*3+2]).normalize().toArray(normal,i*3);
+ // Inverse-transpose of the flank deformation keeps the authored fur shading
+ // coherent with the slimmer surface, without refaceting the rest of the fox.
+ if(tail>0){const e=1e-5,tx=shapeFoxTail(x+e,y,z,tail).sub(shapeFoxTail(x-e,y,z,tail)).multiplyScalar(.5/e),ty=shapeFoxTail(x,y+e,z,tail).sub(shapeFoxTail(x,y-e,z,tail)).multiplyScalar(.5/e),tz=shapeFoxTail(x,y,z+e,tail).sub(shapeFoxTail(x,y,z-e,tail)).multiplyScalar(.5/e);tx.x+=lerp(1,dx,arm)-1;ty.y+=lerp(dy,1,tail)-1;const matrix=new T.Matrix3().set(tx.x,ty.x,tz.x,tx.y,ty.y,tz.y,tx.z,ty.z,tz.z).invert().transpose();new T.Vector3().fromArray(oldNormals,i*3).applyMatrix3(matrix).normalize().toArray(normal,i*3);}
 }
 body.attributes.POSITION=append(position,'VEC3',5126,34962);body.attributes.NORMAL=append(normal,'VEC3',5126,34962);
 // Refit bones to the shortened mesh, with shoulder pivots inside the tunic.

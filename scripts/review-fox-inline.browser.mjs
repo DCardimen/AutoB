@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import assert from 'node:assert/strict';
 import {launchReviewBrowser} from './lib/review-browser.mjs';
 
-const directory='docs/evidence/meshy-fox-archer-v3';
+const directory=process.env.FOX_EVIDENCE_DIR||'docs/evidence/meshy-fox-archer-v3';
 const browser=await launchReviewBrowser();
 const report={errors:[],previews:[]};
 try{
