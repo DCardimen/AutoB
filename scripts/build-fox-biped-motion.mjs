@@ -150,3 +150,4 @@ g.animations=outAnimations;g.asset.extras.scope='Base fox biped (1), reference-r
 glb.write('public/meshy-fox-preview/fox-biped.glb');console.log(JSON.stringify({clips:g.animations.length,maxWristError,output:'public/meshy-fox-preview/fox-biped.glb'}));
 await refineBipedRun();await refineBipedHands();await refitBipedQuiver();bakeBipedTailWave();await stabilizeBipedTail();compactBiped();
 await import('./round-fox-biped-hands.mjs');
+await import('./refine-fox-biped-stances.mjs');

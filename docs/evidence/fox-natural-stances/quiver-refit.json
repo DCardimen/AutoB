@@ -1,0 +1,112 @@
+[
+  {
+    "clip": "Run_Stop",
+    "maxShift": 0.0021776561785216515,
+    "maxGap": 0.0014931906054828884
+  },
+  {
+    "clip": "Bow_Attack_Enter",
+    "maxShift": 0.0017490324059352995,
+    "maxGap": 0.0014804699025633451
+  },
+  {
+    "clip": "Run_Stop_Turn_Left_180",
+    "maxShift": 0.001573323673448621,
+    "maxGap": 0.0014978005276202798
+  },
+  {
+    "clip": "Run_Stop_Turn_Right_180",
+    "maxShift": 0.0030516768368852743,
+    "maxGap": 0.001498323262718455
+  },
+  {
+    "clip": "Run_Stop_Turn_Left_90",
+    "maxShift": 0.0016814441216691,
+    "maxGap": 0.0014734299207366257
+  },
+  {
+    "clip": "Run_Stop_Turn_Right_90",
+    "maxShift": 0.002529748179262722,
+    "maxGap": 0.0014976750450404182
+  },
+  {
+    "clip": "Duck",
+    "maxShift": 0.0027080583275991,
+    "maxGap": 0.0014938549362283292
+  },
+  {
+    "clip": "Dodge_Left",
+    "maxShift": 0.0024078509686109237,
+    "maxGap": 0.0014999513270932427
+  },
+  {
+    "clip": "Dodge_Right",
+    "maxShift": 0.0022724563952428354,
+    "maxGap": 0.001499655001016643
+  },
+  {
+    "clip": "Dash_Forward",
+    "maxShift": 0.002208737292330559,
+    "maxGap": 0.0014997899652029454
+  },
+  {
+    "clip": "Hit_Reaction",
+    "maxShift": 0.002203677909635987,
+    "maxGap": 0.0014997748021197146
+  },
+  {
+    "clip": "Turn_Left_45",
+    "maxShift": 0.003272788920201695,
+    "maxGap": 0.0014989630034684535
+  },
+  {
+    "clip": "Turn_Right_45",
+    "maxShift": 0.0022744780242459806,
+    "maxGap": 0.0014965142862349797
+  },
+  {
+    "clip": "Turn_Left_90",
+    "maxShift": 0.005857510356697713,
+    "maxGap": 0.0014902748120923794
+  },
+  {
+    "clip": "Turn_Right_90",
+    "maxShift": 0.0025828430738020413,
+    "maxGap": 0.001496716928685933
+  },
+  {
+    "clip": "Dash_Back",
+    "maxShift": 0.0022074962900754014,
+    "maxGap": 0.0014977978144922722
+  },
+  {
+    "clip": "Quick_Turn_Left_180",
+    "maxShift": 0.004718447657467241,
+    "maxGap": 0.001495422651782224
+  },
+  {
+    "clip": "Quick_Turn_Right_180",
+    "maxShift": 0.0029594551804821363,
+    "maxGap": 0.001498998494433289
+  },
+  {
+    "clip": "Bow_Attack_Exit",
+    "maxShift": 0.001550718594201291,
+    "maxGap": 0.001497112292710984
+  },
+  {
+    "clip": "Side_Flip_Left",
+    "maxShift": 0.001441386904378992,
+    "maxGap": 0.001499633876798
+  },
+  {
+    "clip": "Side_Flip_Right",
+    "maxShift": 0.001441386904378992,
+    "maxGap": 0.0014996282190903479
+  },
+  {
+    "clip": "Forward_Vault",
+    "maxShift": 0.001441386904378992,
+    "maxGap": 0.0014928182707177405
+  }
+]

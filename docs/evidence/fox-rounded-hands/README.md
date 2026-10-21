@@ -1,5 +1,7 @@
 # Rounded orange hands
 
+The hand geometry in this revision is retained. Later [idle and attack stance refinements](../fox-natural-stances/README.md) supersede its idle arm placement and standing leg poses.
+
 The base biped fox now has one rounded orange hand mass and one fused thumb nub per side, following the older simple-paw style. Individual glove fingers and their animation channels are removed. The anatomical RIGHT hand holds the bow; the LEFT hand draws. This is the isolated 3D preview, with no gameplay creature or evolution changes.
 
 ## Visual review
