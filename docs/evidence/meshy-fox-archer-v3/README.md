@@ -8,7 +8,7 @@ This updates the existing base-fox 3D preview. Open the [self-contained acrobati
 - Added a skinned-triangle collision check and continuous minimal tail correction after ambient sway and target tracking. It includes the proximal fur, costume, cape, legs and boots; it does not hide intersecting geometry or shrink the tail.
 - Added jumping double shots, travelling sliding shots, a sideways crouched triple volley, left/right side flips, and a forward vault. Existing dashes, ducks, kiting, braking pivots and alternate bow angles remain available. The run carries its weight lower with less bounce.
 - Sideways shots roll the connected shoulder girdle, arms, bow, string and arrows around the aim line, with a counter-rolling head. The right bow hand and left draw hand retain their established contact geometry.
-- The sniff lifts/flairs the nose pad slightly, with zero forward extrusion and no mouth movement.
+- The sniff lifts and flares the nose pad slightly, with zero forward extrusion and no mouth movement.
 
 ## Visual review
 
@@ -26,7 +26,8 @@ The animated form is the uploaded **base fox**, a biped with one tail. All eight
 - [51 fox tests pass](fox-tests.txt), including portable GLB validation, normalized rotations, sealed loops, grip/string intersections through all animation frames, eight-view hand ownership, face stability, tail ownership, airborne head clearance, real travel, landings, runtime transitions, and the continuous combo.
 - [Tail surface audit](tail-surface-audit.json): **11,433 samples at 60 Hz, zero intersections**. It covers every portable clip and runtime poses with two ambient clocks plus a moving aim target. Each report identifies the exact GLB by SHA-256.
 - [Browser/action/framing review](browser-review.json), [runtime combo review](combo-review.json), and [inline/mobile-width playback](inline-review.json). Normal-speed videos are decoded and played at 1×.
-- Both game offline builds were regenerated. Source/offline live gait and prototype combat scenarios pass, with zero offline external requests. These builds remain unchanged because this is the established isolated 3D preview.
+- [All six core roster regression files pass](roster-regression.json): gait/carry, legs v2/v3, weapon art, prototype rig and sprite art. [All eight grand-form shards pass](grand-forms-sharded.json), covering every original assertion and all 89 families through their forms, variants, directions, motions and cell boundaries.
+- Both game offline builds were regenerated. [Source/offline live gait](source-offline-legs.txt) and [prototype combat](source-offline-prototype.txt) scenarios pass, with zero offline external requests. These builds remain unchanged because this is the established isolated 3D preview.
 
 The production indexed game renderer and evolution forms are outside this preview update. No known tail/clothing/boot intersection remains in the reviewed coverage. A pre-existing sub-4mm bow raise IK residual on the upright/tilted angles is unchanged; the exact grip/string contact assertions pass.
 
@@ -39,6 +40,9 @@ node --test tests/meshy-fox-motion.test.js tests/meshy-fox-archer.test.js tests/
 node scripts/audit-fox-tail.mjs
 node scripts/review-fox-animated.browser.mjs
 node scripts/review-fox-combat.browser.mjs
+node scripts/test-grand-forms-sharded.mjs
 ```
 
 For the runtime-combo/mobile review, serve the repository on port 3117 (or set `BASE_URL`), then run `scripts/review-fox-acrobatics.browser.mjs`, `scripts/review-fox-registration.browser.mjs`, `scripts/build-fox-motion-inline.mjs`, and `scripts/review-fox-inline.browser.mjs` in that order. Windows uses installed Chrome; `CHROMIUM_PATH` overrides the browser path.
+
+The roster audit distributes the original `grand-forms.test.js` species loops across eight processes. All original assertions, forms, paths, states, directions and phases remain intact. Its report records the source hash and proves disjoint coverage of all 89 families. Temporary test copies are removed after execution.

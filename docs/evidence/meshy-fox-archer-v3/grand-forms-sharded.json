@@ -1,0 +1,154 @@
+{
+  "source": "tests/grand-forms.test.js",
+  "sourceSHA256": "0c93ecdb73e132844895751fa09d2f57c954e291cd468ebf9f6bc7d111c8be00",
+  "species": 89,
+  "shards": 8,
+  "originalAssertionsUnchanged": true,
+  "results": [
+    {
+      "shard": 0,
+      "species": [
+        "cinderfox",
+        "nightmaw",
+        "elderoot",
+        "pipthorn",
+        "zipmouse",
+        "kilnram",
+        "floebear",
+        "gravitan",
+        "emberhound",
+        "grum",
+        "solara",
+        "nyxwing"
+      ],
+      "code": 0,
+      "log": "docs/evidence/meshy-fox-archer-v3/grand-forms-shard-0.txt"
+    },
+    {
+      "shard": 1,
+      "species": [
+        "mossguard",
+        "sparkhare",
+        "starborn",
+        "barkbeetle",
+        "dynamoar",
+        "flarefin",
+        "mirrormanta",
+        "riftmoth",
+        "rowan",
+        "tarka",
+        "mireclaw"
+      ],
+      "code": 0,
+      "log": "docs/evidence/meshy-fox-archer-v3/grand-forms-shard-1.txt"
+    },
+    {
+      "shard": 2,
+      "species": [
+        "brookfin",
+        "solwyrm",
+        "abyssal",
+        "cloverimp",
+        "lumenjelly",
+        "saffrake",
+        "trenchfang",
+        "nullraptor",
+        "cogwalker",
+        "nix",
+        "onyxscarab"
+      ],
+      "code": 0,
+      "log": "docs/evidence/meshy-fox-archer-v3/grand-forms-shard-2.txt"
+    },
+    {
+      "shard": 3,
+      "species": [
+        "voltwing",
+        "lunacrest",
+        "coralisk",
+        "reedcobra",
+        "arcscarab",
+        "phoenix",
+        "leviacrown",
+        "eclipsaur",
+        "runespider",
+        "zephyr",
+        "sunlion"
+      ],
+      "code": 0,
+      "log": "docs/evidence/meshy-fox-archer-v3/grand-forms-shard-3.txt"
+    },
+    {
+      "shard": 4,
+      "species": [
+        "pyrehorn",
+        "astralisk",
+        "ashpup",
+        "dewotter",
+        "gloomkit",
+        "mycobear",
+        "thunderram",
+        "aurel",
+        "moonjelly",
+        "luma",
+        "frostursa"
+      ],
+      "code": 0,
+      "log": "docs/evidence/meshy-fox-archer-v3/grand-forms-shard-4.txt"
+    },
+    {
+      "shard": 5,
+      "species": [
+        "bloomkin",
+        "tempest",
+        "coalcrab",
+        "brineclam",
+        "onyxarmadillo",
+        "orchimantis",
+        "cloudlynx",
+        "brakk",
+        "brom",
+        "vesper",
+        "crownstag"
+      ],
+      "code": 0,
+      "log": "docs/evidence/meshy-fox-archer-v3/grand-forms-shard-5.txt"
+    },
+    {
+      "shard": 6,
+      "species": [
+        "glacier",
+        "duskcap",
+        "wickmoth",
+        "pearlsquid",
+        "dreamslug",
+        "canopyowl",
+        "skyray",
+        "syl",
+        "grit",
+        "sable",
+        "stormdrake"
+      ],
+      "code": 0,
+      "log": "docs/evidence/meshy-fox-archer-v3/grand-forms-shard-6.txt"
+    },
+    {
+      "shard": 7,
+      "species": [
+        "thornstag",
+        "flintback",
+        "glassfang",
+        "riptalon",
+        "veilspider",
+        "worldtortoise",
+        "thunderroc",
+        "nyra",
+        "morrow",
+        "eira",
+        "ironscolopendra"
+      ],
+      "code": 0,
+      "log": "docs/evidence/meshy-fox-archer-v3/grand-forms-shard-7.txt"
+    }
+  ]
+}

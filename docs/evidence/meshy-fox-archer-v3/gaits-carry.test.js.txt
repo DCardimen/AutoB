@@ -1,0 +1,29 @@
+TAP version 13
+# Subtest: every four-leg physics proxy has an explicit source-anatomy classification
+ok 1 - every four-leg physics proxy has an explicit source-anatomy classification
+  ---
+  duration_ms: 45.5139
+  ...
+# Subtest: all quadruped anatomies alternate visible footfall groups through walk, run and sprint in every form and facing
+ok 2 - all quadruped anatomies alternate visible footfall groups through walk, run and sprint in every form and facing
+  ---
+  duration_ms: 45194.0773
+  ...
+# Subtest: humanoid weapon identity and authored carry hand remain fixed throughout walking cycles
+ok 3 - humanoid weapon identity and authored carry hand remain fixed throughout walking cycles
+  ---
+  duration_ms: 50667.9667
+  ...
+# Subtest: production humanoids retain painted boots and clothing with no replacement leg mesh showing through
+ok 4 - production humanoids retain painted boots and clothing with no replacement leg mesh showing through
+  ---
+  duration_ms: 13104.9718
+  ...
+1..4
+# tests 4
+# pass 4
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 109386.6969
