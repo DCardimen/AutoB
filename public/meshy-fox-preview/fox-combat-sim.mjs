@@ -1,14 +1,16 @@
 import * as T from 'three';
 import {FoxActor} from './fox-actor.mjs';
-import {isShooting,isTurn,smooth} from './fox-motion.mjs';
+import {ARROW,RELEASE,isAttackLoop,isShooting,isTurn,smooth} from './fox-motion.mjs';
 
 // Scripted skirmish with a blank training dummy. The simulation advances in
 // fixed 60 Hz steps and touches no DOM, so a recording, the page and a
 // headless test all see the same fight.
-export const STEP=1/60,DURATION=34;
-const RELEASE=1.18,ARROW_SPEED=9,up=new T.Vector3(0,1,0);
+export const STEP=1/60,DURATION=34,HITS_TO_FELL=7;
+const ARROW_SPEED=9,up=new T.Vector3(0,1,0);
 export function createCombat(asset,scene,camera=new T.PerspectiveCamera(38,16/9,.01,80)){
 const actor=new FoxActor(asset),fox=actor.model;scene.add(fox);
+// Standing volleys cycle the three bow angles while the stance holds.
+actor.bowAngles=['attack','attackUpright','attackTilted'];
 fox.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true;}});
 const clipArrow=fox.getObjectByName('Arrow_Nock_and_Flight');
 
@@ -23,7 +25,8 @@ const state={time:0,shots:[],arrows:[],events:[],track:[],lead:new T.Vector3(),e
 function enemyPlan(t){
  const p=new T.Vector3();
  if(t<3)p.set(3.2,0,4.2).lerp(new T.Vector3(1.6,0,3.2),t/3);
- else if(t<8.5)p.set(1.6,0,3.2).lerp(new T.Vector3(-1.6,0,3.0),(t-3)/5.5);
+ // During the held standing volley it drifts across within the trunk's aim arc.
+ else if(t<8.5)p.set(1.6,0,3.2).lerp(new T.Vector3(.1,0,3.1),smooth(3,8.5,t));
  else return null; // later phases react to the archer's position
  return p;
 }
@@ -36,7 +39,7 @@ function enemyStep(dt){
   // It charges until the archer dashes off, then pursues slower than a run.
   // Each phase eases into its stand-off distance instead of stopping dead.
   if(t<15.5)dummy.position.addScaledVector(toFox.normalize(),(t<9.3?1.05:.22)*smooth(.8,1.2,d)*dt);
-  else if(t<24){const r=dummy.position.clone().sub(fox.position).setY(0);const radius=r.length(),angle=Math.atan2(r.x,r.z)+.32*dt,target=lerpR(radius,2.6,dt);dummy.position.set(fox.position.x+Math.sin(angle)*target,0,fox.position.z+Math.cos(angle)*target);}
+  else if(t<21){const r=dummy.position.clone().sub(fox.position).setY(0);const radius=r.length(),angle=Math.atan2(r.x,r.z)+.32*dt,target=lerpR(radius,2.6,dt);dummy.position.set(fox.position.x+Math.sin(angle)*target,0,fox.position.z+Math.cos(angle)*target);}
   else dummy.position.addScaledVector(toFox.normalize(),.45*smooth(1.5,1.9,d)*dt);
  }
  // A low-passed velocity feeds the lead aim, so it does not flicker.
@@ -54,21 +57,22 @@ const yawTo=p=>actor.yawToward(p),distance=()=>fox.position.distanceTo(dummy.pos
 // Archer behaviour: each task starts its clips, may steer every step, and
 // reports when it is done. Kiting re-aims its travel direction continuously.
 const faceYaw=()=>yawTo(dummy.position),awayYaw=()=>faceYaw()+Math.PI;
-const kiteFor=(label,direction)=>({label,start(){actor.turnTo(faceYaw(),['idle']);this.kiting=false;},update(){if(!this.kiting&&actor.mode==='idle'){this.kiting=true;}if(this.kiting)actor.kite(direction());},done(){return this.kiting&&isShooting(actor.mode)&&actor.time>2.12;}});
+const kiteFor=(label,direction)=>({label,start(){actor.turnTo(faceYaw(),['idle']);this.kiting=false;this.shots=state.shots.length;},update(){if(!this.kiting&&actor.mode==='idle'){this.kiting=true;}if(this.kiting)actor.kite(direction());},done(){return this.kiting&&isShooting(actor.mode)&&state.shots.length>this.shots&&actor.time>2.12;}});
 const tasks=[
  {label:'Watch the approach',start(){actor.play('idle');},done:t=>t>1.2},
  {label:'Turn to face',start(){actor.turnTo(faceYaw(),['idle']);},done:()=>actor.mode==='idle'},
- {label:'Standing shots',start(){actor.play('attack');},done:()=>state.shots.length>=2&&actor.time>2.1},
- {label:'Hold and track',start(){actor.play('idle');},done:()=>state.time>8.6},
+ {label:'Standing volley, three bow angles',start(){actor.play('attack');},done:()=>state.shots.length>=3&&actor.time>2.1},
+ {label:'Hold and track',start(){actor.play('idle');},done:()=>state.time>8.6&&actor.mode==='idle'},
  {label:'Dash away',start(){actor.turnTo(faceYaw(),['dashBack','idle']);},done:()=>actor.mode==='idle'&&actor.history.at(-2)?.mode==='dashBack'},
  // Backing off at an angle that swings across the rear: the legs blend the
  // backward and diagonal steps as the direction moves.
- {...kiteFor('Kite back, shooting',()=>awayYaw()+.75*Math.sin((state.time-state.taskStart)*1.6)),start(){this.kiting=true;}},
+ {...kiteFor('Kite back, shooting',()=>awayYaw()+.75*Math.sin((state.time-state.taskStart)*1.6)),start(){this.kiting=true;this.shots=state.shots.length;}},
  {label:'Quick turn and run away',start(){actor.turnTo(awayYaw(),['run'],{quick:true});},done:(t,s)=>actor.mode==='run'&&t-s>3.0},
- {label:'Abrupt stop',start(){actor.stop();},done:()=>actor.mode==='idle'},
+ {label:'Brake and pivot to fight',start(){actor.stopAndTurn(faceYaw());},done:()=>actor.mode==='idle'},
  kiteFor('Turn and circle-strafe',()=>faceYaw()-Math.PI/2),
  kiteFor('Strafe back diagonally',()=>faceYaw()+Math.PI*.65),
- {label:'Dash in, final shot',start(){actor.turnTo(faceYaw(),['dash','attack']);},done:()=>actor.mode==='attack'&&actor.time>2.12},
+ // Dash in, re-face the dummy, then take the stance for the last shot.
+ {label:'Dash in, final shot',start(){actor.turnTo(faceYaw(),['dash']);this.faced=false;},update(){if(!this.faced&&actor.mode==='idle'&&actor.history.at(-2)?.mode==='dash'){this.faced=true;actor.turnTo(faceYaw(),['attack']);}},done:()=>isAttackLoop(actor.mode)&&actor.time>2.12},
  {label:'Settle',start(){actor.play('idle');},done:()=>false},
 ];
 function archerStep(){
@@ -86,14 +90,14 @@ function spawnArrow(){
 function arrowsStep(dt){
  for(const a of state.arrows){
   if(a.stuck)continue;a.age+=dt;
-  const tip=new T.Vector3(-.453,0,0).applyQuaternion(a.mesh.quaternion).add(a.mesh.position),move=a.direction.clone().multiplyScalar(ARROW_SPEED*dt);
+  const tip=new T.Vector3(ARROW.tip-.0275,0,0).applyQuaternion(a.mesh.quaternion).add(a.mesh.position),move=a.direction.clone().multiplyScalar(ARROW_SPEED*dt);
   // Swept tip against the dummy's capsule axis.
   const axisA=dummy.position.clone().setY(.35),axisB=dummy.position.clone().setY(.95),seg=new T.Line3(tip,tip.clone().add(move)),onSeg=new T.Vector3(),onAxis=new T.Vector3();
   closestPoints(seg,new T.Line3(axisA,axisB),onSeg,onAxis);
   if(state.defeated<0&&onSeg.distanceTo(onAxis)<RADIUS){
    const travel=onSeg.distanceTo(tip)+.05;a.mesh.position.addScaledVector(a.direction,travel);a.stuck=true;a.hit=true;
    tilt.attach(a.mesh);state.flinch=1;const shot=state.shots[state.arrows.indexOf(a)];shot.hit={time:state.time,height:onSeg.y,miss:onSeg.distanceTo(onAxis)};
-   if(state.shots.filter(s=>s.hit).length>=6&&state.defeated<0)state.defeated=state.time+.15;continue;
+   if(state.shots.filter(s=>s.hit).length>=HITS_TO_FELL&&state.defeated<0)state.defeated=state.time+.15;continue;
   }
   a.mesh.position.add(move);if(a.age>2)a.mesh.visible=false;
  }

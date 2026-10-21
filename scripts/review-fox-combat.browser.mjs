@@ -8,12 +8,12 @@ import {webmWriter} from './lib/encode-webm.mjs';
 // Records the scripted skirmish at true speed, decodes the video back into
 // frames and stores the fight summary: shots, hits, gaze error and task order.
 // Frames are rendered from the fixed-step simulation at exactly 30 per second.
-const directory='docs/evidence/meshy-fox-archer-stance';fs.mkdirSync(directory,{recursive:true});
+const directory='docs/evidence/meshy-fox-archer-v2';fs.mkdirSync(directory,{recursive:true});
 const root=path.resolve('public/meshy-fox-preview');
 const server=http.createServer((req,res)=>{const file=path.resolve(root,'.'+new URL(req.url,'http://local').pathname);if(!file.startsWith(root+path.sep)){res.writeHead(403).end();return;}try{res.setHeader('Content-Type',({'.html':'text/html','.js':'text/javascript','.mjs':'text/javascript','.glb':'model/gltf-binary'})[path.extname(file)]||'application/octet-stream');res.end(fs.readFileSync(file));}catch{res.writeHead(404).end();}});
 await new Promise(r=>server.listen(0,'127.0.0.1',r));
 const browser=await launchReviewBrowser();
-const decodeTimes=[1,3.1,6,9.4,11.2,13,15,17.5,19.4,21.6,24,25.8,27.6,31];
+const decodeTimes=[1,2.6,3.4,5.6,7.8,9.6,11.5,12.7,14,15.7,17.5,19.7,21.1,23.1,25,31];
 try{
  const page=await browser.newPage({viewport:{width:960,height:640}});const errors=[];page.on('pageerror',e=>errors.push(e.message));
  await page.goto(`http://127.0.0.1:${server.address().port}/combat-demo.html`);await page.waitForFunction(()=>window.foxCombat?.ready);
@@ -33,7 +33,7 @@ try{
  },[recorded.data,decodeTimes]);
  fs.writeFileSync(`${directory}/combat-decoded.png`,Buffer.from(decoded.sheet,'base64'));
  for(const f of decoded.frames)fs.writeFileSync(`${directory}/combat-decoded-${f.time}.png`,Buffer.from(f.data,'base64'));
- for(const time of [11.2,25.8]){
+ for(const time of [7.8,23.1]){
   const enlarged=await page.evaluate(async data=>{const image=new Image();image.src='data:image/png;base64,'+data;await image.decode();const c=document.createElement('canvas');c.width=image.width*2;c.height=image.height*2;const g=c.getContext('2d');g.imageSmoothingEnabled=false;g.drawImage(image,0,0,c.width,c.height);return c.toDataURL().split(',')[1];},decoded.frames.find(f=>f.time===time).data);
   fs.writeFileSync(`${directory}/combat-decoded-${time}-enlarged.png`,Buffer.from(enlarged,'base64'));
  }

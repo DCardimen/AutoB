@@ -1,0 +1,34 @@
+{
+  "offlineBuilds": [
+    "Starfall-Menagerie.html",
+    "Starfall-Training-Glade.html"
+  ],
+  "note": "Both offline files were rebuilt; neither changed (identical SHA-256), since this patch does not touch the game. Live checks ran against this worktree on its own port (3117) because another process held port 3000.",
+  "game": {
+    "command": "BASE_URL=http://127.0.0.1:3117 node tests/legs-v2.browser.mjs",
+    "checks": [
+      "Source: 12 live creatures including evolved crab, drake and stag, both-team stride updates at 50/150/100%, animated combat, reset and phone layouts",
+      "Offline: 12 live creatures including evolved crab, drake and stag, both-team stride updates at 50/150/100%, animated combat, reset and phone layouts, zero external dependencies"
+    ],
+    "errors": []
+  },
+  "prototype": {
+    "command": "CHROMIUM_PATH=<Chrome> BASE_URL=http://127.0.0.1:3117 node tests/prototype.browser.mjs",
+    "result": "pass",
+    "offlineExternalRequests": 0
+  },
+  "creatureArtRegression": {
+    "files": [
+      "gaits-carry",
+      "legs-v3",
+      "legs-v2",
+      "melee-weapon-art",
+      "prototype-rig",
+      "sprite-art-v2",
+      "grand-forms"
+    ],
+    "tests": 50,
+    "pass": 50,
+    "fail": 0
+  }
+}

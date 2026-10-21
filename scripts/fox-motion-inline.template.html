@@ -2,16 +2,20 @@
   <div class="viz-controls">
     <label class="form-label">Animation
       <select class="form-select" aria-label="Preview animation">
-        <option value="0">Idle and blink</option>
-        <option value="5.5">Occasional tail swish</option>
-        <option value="8">Compact run, side</option>
-        <option value="9.44">Compact run, rear</option>
-        <option value="10.88">Forward bow attack</option>
-        <option value="13.08">Ear twitch and nose close-up</option>
+        <option value="0">Idle: small blinks, straight tail</option>
+        <option value="8">Run, side</option>
+        <option value="9.28">Run, rear</option>
+        <option value="10.56">Take the stance</option>
+        <option value="11.06">Canted shot: quiver draw, loose, bow drop</option>
+        <option value="13.26">Upright bow, stance held</option>
+        <option value="15.46">Tilted bow, stance held</option>
+        <option value="17.66">Leave the stance</option>
+        <option value="18.21">Ear, nose and blink close-up</option>
+        <option value="21.01">Angry while shooting</option>
       </select>
     </label>
   </div>
-  <video controls playsinline muted preload="auto" poster="@@POSTER@@" aria-label="Base fox animation preview at normal speed" style="display:block;width:100%;aspect-ratio:1;object-fit:contain" src="data:video/webm;base64,@@VIDEO@@"></video>
+  <video controls playsinline muted preload="auto" poster="@@POSTER@@" aria-label="Archer v2 fox stance and shot cycle at normal speed" style="display:block;width:100%;aspect-ratio:1;object-fit:contain" src="data:video/webm;base64,@@VIDEO@@"></video>
 </div>
 <script>
 (() => {

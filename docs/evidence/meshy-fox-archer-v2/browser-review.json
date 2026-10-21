@@ -1,0 +1,260 @@
+{
+  "assetSHA256": "2d4dca846e8d1c2816bc7bd0ffaf404fffad115ffdc2e1d6e24a7e9a3b5fb77a",
+  "errors": [],
+  "controllerReview": {
+    "stableScrubbing": true,
+    "connectedHeadTracking": true,
+    "movingTargetContact": 7.950631036532987e-9,
+    "travelWorks": true,
+    "oneShotDefault": true
+  },
+  "normalSpeedPlayback": true,
+  "framing": [
+    {
+      "mode": "idle",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "walk",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "run",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "attackEnterStep",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "quiverReach",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "quiverDraw",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "quiverCarry",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "attack",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "attackRelease",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "bowDrop",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "attackUpright",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "attackTilted",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "attackCrouched",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "doubleNocked",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "doubleLoosed",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "attackExitStep",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "angry",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "shootForward",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "shootBackward",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "shootLeft",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "shootRight",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "shootForwardLeft",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "shootBackwardRight",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "dash",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "dashBack",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "turnLeft45",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "turnRight45",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "turnLeft90",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "turnRight90",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "quickTurnLeft",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "runStop",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "runStopTurnLeft",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "runStopTurnRight90",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "dodgeLeft",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "dodgeRight",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "duck",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "hit",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "death",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "blink",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "tailSwish",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "earRight",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "earLeft",
+      "clippedVertices": 0
+    },
+    {
+      "mode": "sniff",
+      "clippedVertices": 0
+    }
+  ],
+  "videoBytes": 22133332,
+  "views": [
+    "S",
+    "SE",
+    "E",
+    "NE",
+    "N",
+    "NW",
+    "W",
+    "SW"
+  ],
+  "actions": [
+    "idle",
+    "walk",
+    "run",
+    "attackEnterStep",
+    "quiverReach",
+    "quiverDraw",
+    "quiverCarry",
+    "attack",
+    "attackRelease",
+    "bowDrop",
+    "attackUpright",
+    "attackTilted",
+    "attackCrouched",
+    "doubleNocked",
+    "doubleLoosed",
+    "attackExitStep",
+    "angry",
+    "shootForward",
+    "shootBackward",
+    "shootLeft",
+    "shootRight",
+    "shootForwardLeft",
+    "shootBackwardRight",
+    "dash",
+    "dashBack",
+    "turnLeft45",
+    "turnRight45",
+    "turnLeft90",
+    "turnRight90",
+    "quickTurnLeft",
+    "runStop",
+    "runStopTurnLeft",
+    "runStopTurnRight90",
+    "dodgeLeft",
+    "dodgeRight",
+    "duck",
+    "hit",
+    "death",
+    "blink",
+    "tailSwish",
+    "earRight",
+    "earLeft",
+    "sniff"
+  ],
+  "decodedMarks": [
+    4.4,
+    10.83,
+    12.27,
+    14.47,
+    16.67,
+    22.22,
+    24.42,
+    26.62,
+    33.15,
+    34.69,
+    38.76,
+    43.35
+  ],
+  "inlineVideoBytes": {
+    "pose": 638517,
+    "combat": 518012
+  }
+}

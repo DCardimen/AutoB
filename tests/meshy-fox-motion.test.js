@@ -6,7 +6,7 @@ import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {MeshBVH} from 'three-mesh-bvh';
 import validator from 'gltf-validator';
 import {readGLB} from '../scripts/lib/glb.mjs';
-import {AIM,BOW,CLIPS,GAIT,nockOffset,tailSwish,footCycle} from '../public/meshy-fox-preview/fox-motion.mjs';
+import {AIM,BOW,CLIPS,DASH,DODGE,GAIT,NOCK,RELEASE,nockOffset,tailSwish,footCycle} from '../public/meshy-fox-preview/fox-motion.mjs';
 import {FoxPreviewController,travelVelocity} from '../public/meshy-fox-preview/fox-preview-controller.mjs';
 
 globalThis.self=globalThis;
@@ -18,6 +18,8 @@ model.updateMatrixWorld(true);
 const defaultDirections=['R','L'].map(s=>new T.Vector3(s==='R'?-1:1,0,0).applyQuaternion(node('Hand_'+s).getWorldQuaternion(new T.Quaternion()))),defaultArrowScale=node('Arrow_Nock_and_Flight').scale.clone();
 function action(name){mixer.stopAllAction();const clip=asset.animations.find(c=>c.name===name);mixer.clipAction(clip).reset().setLoop(T.LoopOnce,1).play();model.rotation.y=0;return clip;}
 function seek(t){mixer.setTime(t);model.updateMatrixWorld(true);node('FoxMesh').skeleton.update();}
+// Clips that loose an arrow: the three standing shot loops and the moving shots.
+const shotClip=name=>/^(Bow_Attack(_Upright|_Tilted)?|Shoot_.*)$/.test(name);
 
 test('default asset opens with hands down and the loose projectile hidden',()=>{
  assert.ok(defaultDirections.every(d=>d.y<-.8));assert.equal(defaultArrowScale.lengthSq(),0);
@@ -25,25 +27,25 @@ test('default asset opens with hands down and the loose projectile hidden',()=>{
 
 test('portable export has complete normalized clips and closed loop endpoints',async()=>{
  const result=await validator.validateBytes(new Uint8Array(bytes),{maxIssues:10});assert.equal(result.issues.numErrors,0);
- assert.deepEqual(asset.animations.map(c=>c.name),['Idle','Walk','Run','Bow_Attack','Dodge_Left','Dodge_Right','Dash_Forward','Shoot_Forward','Shoot_Backward','Shoot_Strafe_Left','Shoot_Strafe_Right','Hit_Reaction','Fall_and_Death','Turn_Left_45','Turn_Right_45','Turn_Left_90','Turn_Right_90','Dash_Back','Shoot_Forward_Left','Shoot_Forward_Right','Shoot_Backward_Left','Shoot_Backward_Right','Quick_Turn_Left_180','Quick_Turn_Right_180','Run_Stop']);
+ assert.deepEqual(asset.animations.map(c=>c.name),['Idle','Walk','Run','Bow_Attack','Dodge_Left','Dodge_Right','Dash_Forward','Shoot_Forward','Shoot_Backward','Shoot_Strafe_Left','Shoot_Strafe_Right','Hit_Reaction','Fall_and_Death','Turn_Left_45','Turn_Right_45','Turn_Left_90','Turn_Right_90','Dash_Back','Shoot_Forward_Left','Shoot_Forward_Right','Shoot_Backward_Left','Shoot_Backward_Right','Quick_Turn_Left_180','Quick_Turn_Right_180','Run_Stop','Bow_Attack_Enter','Bow_Attack_Exit','Bow_Attack_Upright','Bow_Attack_Tilted','Run_Stop_Turn_Left_180','Run_Stop_Turn_Right_180','Run_Stop_Turn_Left_90','Run_Stop_Turn_Right_90','Bow_Attack_Crouched','Bow_Attack_Double','Duck']);
  for(const clip of g.animations)for(const channel of clip.channels){const sampler=clip.samplers[channel.sampler],values=glb.read(sampler.output),width=channel.target.path==='rotation'?4:channel.target.path==='weights'?(g.meshes[g.nodes[channel.target.node].mesh].weights?.length||1):3;assert.ok([...values].every(Number.isFinite));if(width===4)for(let i=0;i<values.length;i+=4)assert.ok(Math.abs(Math.hypot(...values.subarray(i,i+4))-1)<1e-6);if(clip.extras.loop)for(let k=0;k<width;k++)assert.ok(Math.abs(values[k]-values[values.length-width+k])<1e-6);}
 });
 
 test('right bow grip and left string nock remain attached after export in eight views',()=>{
  let max=0;
- for(const clip of asset.animations){action(clip.name);for(let i=0;i<80;i++){seek(i/80*clip.duration);for(let view=0;view<8;view++){model.rotation.y=view*Math.PI/4;model.updateMatrixWorld(true);const grip=node('Hand_R').localToWorld(new T.Vector3(-.095,-.025,-.025)),bow=node('Bow_Right_Hand').getWorldPosition(new T.Vector3());assert.ok(grip.distanceTo(bow)<1e-7);if(/^(Bow_Attack|Shoot_)/.test(clip.name)&&i/80*clip.duration>=.48&&i/80*clip.duration<1.18){const draw=node('BowStringDraw').morphTargetInfluences[0],nock=node('Bow_Right_Hand').localToWorld(new T.Vector3(nockOffset(draw),BOW.nockY,0)),left=node('Hand_L').localToWorld(new T.Vector3(.130,0,0));max=Math.max(max,nock.distanceTo(left));}}model.rotation.y=0;}}
+ for(const clip of asset.animations){action(clip.name);for(let i=0;i<80;i++){seek(i/80*clip.duration);for(let view=0;view<8;view++){model.rotation.y=view*Math.PI/4;model.updateMatrixWorld(true);const grip=node('Hand_R').localToWorld(new T.Vector3(-.095,-.025,-.025)),bow=node('Bow_Right_Hand').getWorldPosition(new T.Vector3());assert.ok(grip.distanceTo(bow)<1e-7);if(shotClip(clip.name)&&i/80*clip.duration>=NOCK+.02&&i/80*clip.duration<RELEASE){const draw=node('BowStringDraw').morphTargetInfluences[0],nock=node('Bow_Right_Hand').localToWorld(new T.Vector3(nockOffset(draw),BOW.nockY,0)),left=node('Hand_L').localToWorld(new T.Vector3(.130,0,0));max=Math.max(max,nock.distanceTo(left));}}model.rotation.y=0;}}
  assert.ok(max<.0006,`interpolated nock separation ${max}`);
 });
 
 test('shots travel forward and remain aligned while the upper body tracks an enemy',()=>{
  const controller=new FoxPreviewController(model);
- for(const name of ['Bow_Attack','Shoot_Forward','Shoot_Backward','Shoot_Strafe_Left','Shoot_Strafe_Right']){
-  action(name);seek(1.1);
+ for(const name of ['Bow_Attack','Bow_Attack_Upright','Bow_Attack_Tilted','Shoot_Forward','Shoot_Backward','Shoot_Strafe_Left','Shoot_Strafe_Right']){
+  action(name);seek(1.15);
   assert.ok(new T.Vector3(-1,0,0).applyQuaternion(node('Bow_Right_Hand').getWorldQuaternion(new T.Quaternion())).z>.9999);
-  seek(1.22);const first=node('Arrow_Nock_and_Flight').position.clone();seek(1.30);const delta=node('Arrow_Nock_and_Flight').position.clone().sub(first);
+  seek(RELEASE+.04);const first=node('Arrow_Nock_and_Flight').position.clone();seek(RELEASE+.12);const delta=node('Arrow_Nock_and_Flight').position.clone().sub(first);
   assert.ok(delta.z>.29&&Math.abs(delta.x)<1e-7);
   for(const yaw of [-.35,0,.35]){
-   controller.restore();seek(1.1);const target=new T.Vector3(Math.sin(yaw)*3,1.03,Math.cos(yaw)*3);controller.apply({mode:'attack',clipTime:1.1,ambientTime:4,target});model.updateMatrixWorld(true);
+   controller.restore();seek(1.15);const target=new T.Vector3(Math.sin(yaw)*3,1.03,Math.cos(yaw)*3);controller.apply({mode:'attack',clipTime:1.15,ambientTime:4,target});model.updateMatrixWorld(true);
    const nock=node('Bow_Right_Hand').localToWorld(new T.Vector3(BOW.fullDraw,BOW.nockY,0)),left=node('Hand_L').localToWorld(new T.Vector3(.130,0,0));assert.ok(nock.distanceTo(left)<1e-6);
    // The arrow's own line, which runs beside the turning axis, passes through the target.
    const forward=new T.Vector3(-1,0,0).applyQuaternion(node('Bow_Right_Hand').getWorldQuaternion(new T.Quaternion())),toTarget=target.clone().sub(nock);
@@ -57,8 +59,8 @@ test('shots travel forward and remain aligned while the upper body tracks an ene
 test('shooting gaits creep along the chosen axis at about half running speed; dashes land',()=>{
  // Moving shots walk while aiming; the run is the reference speed.
  for(const [name,axis,sign]of [['shootForward','z',1],['shootBackward','z',-1],['shootLeft','x',-1],['shootRight','x',1]]){const v=travelVelocity(name)[axis]*sign;assert.ok(v>.12&&v<.6*travelVelocity('run').z,`${name} ${v}`);}
- action('Dash_Back');seek(.84);assert.ok(Math.abs(node('Root').position.z+.50)<1e-6);
- action('Dash_Forward');seek(.84);assert.ok(Math.abs(node('Root').position.z-.65)<1e-6);
+ action('Dash_Back');seek(CLIPS.dashBack.duration-1e-6);assert.ok(Math.abs(node('Root').position.z-DASH.dashBack)<1e-6);
+ action('Dash_Forward');seek(CLIPS.dash.duration-1e-6);assert.ok(Math.abs(node('Root').position.z-DASH.dash)<1e-6);
  action('Fall_and_Death');seek(2.3);const pelvis=node('Pelvis').getWorldPosition(new T.Vector3());for(const side of ['R','L'])assert.ok(node('Foot_'+side).getWorldPosition(new T.Vector3()).y>pelvis.y+.10);
  const stance=[];action('Run');for(let f=0;f<60;f++){seek(f/60*CLIPS.run.duration);stance.push(node('Foot_R').getWorldPosition(new T.Vector3()).z);}// A real run: the paw covers a full stride (twice GAIT.run.stride); the swing
  // reaches a little past its landing point and draws back before contact.
@@ -82,7 +84,9 @@ test('ambient tail swishes are occasional and separated by six to ten seconds',(
  // Each event makes one complete outward-and-return sweep.
  const events=starts.filter((t,i)=>i===0||t-starts[i-1]>3);assert.ok(events.length>15);
  for(let i=1;i<events.length;i++)assert.ok(events[i]-events[i-1]>=6-1/60&&events[i]-events[i-1]<=10+1/60);
- action('Idle');const positions=[];for(let f=0;f<480;f++){seek(f/60);positions.push(node('Tail_05').getWorldPosition(new T.Vector3()).x);}assert.ok(Math.min(...positions)<-.1&&Math.max(...positions)>.5,'tail sweeps to both anatomical sides');seek(5);const rest=node('Tail_00').quaternion.clone();seek(6.2);assert.ok(rest.angleTo(node('Tail_00').quaternion)>.05);
+ // v2: the tail is carried straight out behind and sweeps across the midline
+ // to both anatomical sides; the swish moves the bones past the root junction.
+ action('Idle');const positions=[];for(let f=0;f<480;f++){seek(f/60);positions.push(node('Tail_05').getWorldPosition(new T.Vector3()).x);}assert.ok(Math.min(...positions)<-.1&&Math.max(...positions)>.2,'tail sweeps to both anatomical sides');seek(5);const rest=node('Tail_01').quaternion.clone();seek(6.2);assert.ok(rest.angleTo(node('Tail_01').quaternion)>.05);
 });
 
 test('simple fur paws replace added gloves with closed continuous surfaces',()=>{
@@ -120,7 +124,7 @@ test('smooth foot lifts preserve velocity at contact and running arms alternate 
 });
 
 test('registered ear and nose gestures move source anatomy while eye vertices stay fixed',()=>{
- const source=readGLB('public/meshy-fox-preview/fox-repaired.glb'),p=source.read(source.json.meshes[0].primitives[0].attributes.POSITION),head=node('Head_Open'),tips={};
+ const source=readGLB('public/meshy-fox-preview/fox-repaired.glb'),p=source.read(source.json.meshes[0].primitives[0].attributes.POSITION),head=node('Fox_Head'),tips={};
  for(const [s,sign]of [['R',-1],['L',1]]){let best=-1;for(let v=0;v<p.length/3;v++)if(p[v*3]*sign>.15&&(best<0||p[v*3+1]>p[best*3+1]))best=v;tips[s]=best;}
  action('Idle');seek(0);const rest=Object.fromEntries(['R','L'].map(s=>[s,head.getVertexPosition(tips[s],new T.Vector3())]));
  seek(1.34);assert.ok(head.getVertexPosition(tips.R,new T.Vector3()).distanceTo(rest.R)>.03);assert.ok(head.getVertexPosition(tips.L,new T.Vector3()).distanceTo(rest.L)<1e-7);
@@ -130,8 +134,8 @@ test('registered ear and nose gestures move source anatomy while eye vertices st
 });
 
 test('ambient expressions stay independent of gait playback and restore cleanly',()=>{
- const controller=new FoxPreviewController(model);action('Run');seek(.1);controller.apply({mode:'run',clipTime:.1,ambientTime:1.34});assert.ok(node('Head_Open').morphTargetInfluences[0]>.9);controller.restore();seek(.1);assert.deepEqual(node('Head_Open').morphTargetInfluences,[0,0,0]);
- controller.apply({mode:'run',clipTime:.1,ambientTime:2.17});assert.ok(node('Head_Open').morphTargetInfluences[2]>.8);controller.restore();
+ const controller=new FoxPreviewController(model);action('Run');seek(.1);controller.apply({mode:'run',clipTime:.1,ambientTime:1.34});assert.ok(node('Fox_Head').morphTargetInfluences[0]>.9);controller.restore();seek(.1);assert.deepEqual(node('Fox_Head').morphTargetInfluences,[0,0,0,0,0]);
+ controller.apply({mode:'run',clipTime:.1,ambientTime:2.17});assert.ok(node('Fox_Head').morphTargetInfluences[2]>.8);controller.restore();
 });
 
 test('both bowstring endpoints stay on the flexing wooden tips',()=>{
@@ -146,7 +150,7 @@ test('the undrawn string is straight and pulls back into a full draw',()=>{
  function deviation(){const draw=string.morphTargetInfluences[0],tip=BOW.brace+BOW.flex*draw,top=bow.localToWorld(new T.Vector3(tip,.29,0)),bottom=bow.localToWorld(new T.Vector3(tip,-.29,0)),nock=bow.localToWorld(new T.Vector3(nockOffset(draw),BOW.nockY,0));return new T.Line3(bottom,top).closestPointToPoint(nock,true,new T.Vector3()).distanceTo(nock);}
  action('Idle');seek(0);assert.ok(deviation()<1e-7);
  // At anchor the nock sits fullDraw-brace-flex behind the flexed string line.
- action('Bow_Attack');seek(1.1);const expected=BOW.fullDraw-BOW.brace-BOW.flex;assert.ok(Math.abs(deviation()-expected)<.002,`draw depth ${deviation()}`);
+ action('Bow_Attack');seek(1.15);const expected=BOW.fullDraw-BOW.brace-BOW.flex;assert.ok(Math.abs(deviation()-expected)<.002,`draw depth ${deviation()}`);
 });
 
 test('walk and run alternate lifted feet while support soles remain level and grounded',()=>{
@@ -156,12 +160,8 @@ test('walk and run alternate lifted feet while support soles remain level and gr
  for(const name of ['Walk','Run']){const clip=action(name);let liftedR=0,liftedL=0;for(let f=0;f<100;f++){seek(f/100*clip.duration);for(const s of ['R','L']){const ankle=node('Foot_'+s).getWorldPosition(new T.Vector3()),normal=new T.Vector3(0,1,0).applyQuaternion(node('Foot_'+s).getWorldQuaternion(new T.Quaternion()));assert.ok(normal.y>.9999);if(ankle.y>.135){if(s==='R')liftedR++;else liftedL++;}else if(Math.abs(ankle.y-.125)<1e-4){const y=Math.min(...soles[s].map(i=>body.getVertexPosition(i,new T.Vector3()).applyMatrix4(body.matrixWorld).y));assert.ok(y>-.001&&y<.003,`${name} ${s} sole ${y}`);}}}assert.ok(liftedR>10&&liftedL>10);}
 });
 
-test('blink swaps only the eyes; the open and closed head are never visible together',()=>{
- action('Idle');let open=0,closed=0;for(let i=0;i<240;i++){seek(i/60);const a=node('Head_Open').scale.x,b=node('Head_Closed').scale.x;assert.equal(a+b,1);if(a)open++;else closed++;}assert.ok(open>220&&closed>=5);assert.equal(node('Closed_Eye_Lines').parent.name,'Head_Closed');
-});
-
 test('dodges retain their landing displacement and cloth/tail remain animated',()=>{
- for(const [name,sign]of [['Dodge_Left',-1],['Dodge_Right',1]]){const clip=action(name);seek(clip.duration-1e-6);assert.ok(Math.abs(node('Root').position.x-sign*.3)<1e-6);}
+ for(const [name,sign]of [['Dodge_Left',-1],['Dodge_Right',1]]){const clip=action(name);seek(clip.duration-1e-6);assert.ok(Math.abs(node('Root').position.x-sign*DODGE)<1e-6);}
  action('Run');seek(.1);const first=node('Tail_05').getWorldPosition(new T.Vector3()),cloth=node('Cape1_1').quaternion.clone();seek(.4);assert.ok(first.distanceTo(node('Tail_05').getWorldPosition(new T.Vector3()))>.01);assert.ok(cloth.angleTo(node('Cape1_1').quaternion)>.001);
 });
 

@@ -1,0 +1,724 @@
+{
+  "maxIKError": 0.0038730793625647024,
+  "maxSolverIterationError": 0.0830598278905209,
+  "maxGripError": 0.0038730793625647024,
+  "maxWristAngle": 0.9334032631295163,
+  "maxClothLengthError": 3.265209728292584e-7,
+  "correctedTailVertices": 142,
+  "hemVertices": 12,
+  "shoulderHalfWidth": 0.2,
+  "armScale": 0.75,
+  "legScale": 0.7,
+  "clips": {
+    "idle": {
+      "duration": 8,
+      "frames": 481
+    },
+    "walk": {
+      "duration": 1,
+      "frames": 61
+    },
+    "run": {
+      "duration": 0.64,
+      "frames": 40
+    },
+    "attack": {
+      "duration": 2.2,
+      "frames": 265
+    },
+    "dodgeLeft": {
+      "duration": 0.8,
+      "frames": 49
+    },
+    "dodgeRight": {
+      "duration": 0.8,
+      "frames": 49
+    },
+    "dash": {
+      "duration": 0.7,
+      "frames": 43
+    },
+    "shootForward": {
+      "duration": 2.2,
+      "frames": 265
+    },
+    "shootBackward": {
+      "duration": 2.2,
+      "frames": 265
+    },
+    "shootLeft": {
+      "duration": 2.2,
+      "frames": 265
+    },
+    "shootRight": {
+      "duration": 2.2,
+      "frames": 265
+    },
+    "hit": {
+      "duration": 1,
+      "frames": 61
+    },
+    "death": {
+      "duration": 2.4,
+      "frames": 145
+    },
+    "turnLeft45": {
+      "duration": 0.42,
+      "frames": 27
+    },
+    "turnRight45": {
+      "duration": 0.42,
+      "frames": 27
+    },
+    "turnLeft90": {
+      "duration": 0.6,
+      "frames": 37
+    },
+    "turnRight90": {
+      "duration": 0.6,
+      "frames": 37
+    },
+    "dashBack": {
+      "duration": 0.66,
+      "frames": 41
+    },
+    "shootForwardLeft": {
+      "duration": 2.2,
+      "frames": 265
+    },
+    "shootForwardRight": {
+      "duration": 2.2,
+      "frames": 265
+    },
+    "shootBackwardLeft": {
+      "duration": 2.2,
+      "frames": 265
+    },
+    "shootBackwardRight": {
+      "duration": 2.2,
+      "frames": 265
+    },
+    "quickTurnLeft": {
+      "duration": 0.62,
+      "frames": 39
+    },
+    "quickTurnRight": {
+      "duration": 0.62,
+      "frames": 39
+    },
+    "runStop": {
+      "duration": 0.62,
+      "frames": 39
+    },
+    "attackEnter": {
+      "duration": 0.5,
+      "frames": 31
+    },
+    "attackExit": {
+      "duration": 0.55,
+      "frames": 34
+    },
+    "attackUpright": {
+      "duration": 2.2,
+      "frames": 265
+    },
+    "attackTilted": {
+      "duration": 2.2,
+      "frames": 265
+    },
+    "runStopTurnLeft": {
+      "duration": 0.9,
+      "frames": 55
+    },
+    "runStopTurnRight": {
+      "duration": 0.9,
+      "frames": 55
+    },
+    "runStopTurnLeft90": {
+      "duration": 0.72,
+      "frames": 45
+    },
+    "runStopTurnRight90": {
+      "duration": 0.72,
+      "frames": 45
+    },
+    "attackCrouched": {
+      "duration": 2.2,
+      "frames": 265
+    },
+    "attackDouble": {
+      "duration": 2.2,
+      "frames": 265
+    },
+    "duck": {
+      "duration": 0.7,
+      "frames": 43
+    }
+  },
+  "ikByClip": {
+    "idle": {
+      "error": 2.3551386880256624e-16,
+      "limb": "UpperArm_R",
+      "time": 4.5333333015441895,
+      "distance": 0.2633390255051939,
+      "reach": 0.2703504462716165
+    },
+    "walk": {
+      "error": 2.5172027167143304e-16,
+      "limb": "UpperArm_L",
+      "time": 0.28333333134651184,
+      "distance": 0.39888560098153547,
+      "reach": 0.4003504462716165
+    },
+    "run": {
+      "error": 1.8410966031475738e-16,
+      "limb": "UpperArm_R",
+      "time": 0.6000000238418579,
+      "distance": 0.2395921887367329,
+      "reach": 0.2703504462716165
+    },
+    "attack": {
+      "error": 2.665835984225005e-16,
+      "limb": "UpperArm_R",
+      "time": 0.5833333134651184,
+      "distance": 0.2193144018903309,
+      "reach": 0.2703504462716165
+    },
+    "dodgeLeft": {
+      "error": 2.2247786310271853e-16,
+      "limb": "UpperArm_R",
+      "time": 0.23333333432674408,
+      "distance": 0.22308648383066257,
+      "reach": 0.2703504462716165
+    },
+    "dodgeRight": {
+      "error": 1.8619006149354548e-16,
+      "limb": "UpperArm_L",
+      "time": 0.0833333358168602,
+      "distance": 0.35024989973300297,
+      "reach": 0.4003504462716165
+    },
+    "dash": {
+      "error": 2.0014830212433605e-16,
+      "limb": "UpperArm_L",
+      "time": 0.44999998807907104,
+      "distance": 0.3926595058837817,
+      "reach": 0.4003504462716165
+    },
+    "shootForward": {
+      "error": 2.9893669801409083e-16,
+      "limb": "UpperArm_L",
+      "time": 1.2000000476837158,
+      "distance": 0.31732538871160504,
+      "reach": 0.4003504462716165
+    },
+    "shootBackward": {
+      "error": 2.7894008272968645e-16,
+      "limb": "UpperArm_R",
+      "time": 0.7166666388511658,
+      "distance": 0.22516478149783067,
+      "reach": 0.2703504462716165
+    },
+    "shootLeft": {
+      "error": 2.498001805406602e-16,
+      "limb": "UpperArm_R",
+      "time": 1.8416666984558105,
+      "distance": 0.2587565501772826,
+      "reach": 0.2703504462716165
+    },
+    "shootRight": {
+      "error": 2.5438405243138006e-16,
+      "limb": "UpperArm_R",
+      "time": 0.8416666388511658,
+      "distance": 0.2252914083758447,
+      "reach": 0.2703504462716165
+    },
+    "hit": {
+      "error": 1.594436429147036e-16,
+      "limb": "UpperArm_L",
+      "time": 0.18333333730697632,
+      "distance": 0.3931664806312346,
+      "reach": 0.4003504462716165
+    },
+    "death": {
+      "error": 2.0770370905276122e-16,
+      "limb": "UpperArm_L",
+      "time": 0.8999999761581421,
+      "distance": 0.39261494206969344,
+      "reach": 0.4003504462716165
+    },
+    "turnLeft45": {
+      "error": 1.7772239894833365e-16,
+      "limb": "UpperArm_R",
+      "time": 0.4000000059604645,
+      "distance": 0.2640399834104345,
+      "reach": 0.2703504462716165
+    },
+    "turnRight45": {
+      "error": 1.7772239894833365e-16,
+      "limb": "UpperArm_L",
+      "time": 0.38333332538604736,
+      "distance": 0.3934764442290527,
+      "reach": 0.4003504462716165
+    },
+    "turnLeft90": {
+      "error": 1.7554167342883506e-16,
+      "limb": "UpperArm_L",
+      "time": 0.36666667461395264,
+      "distance": 0.3934764442290527,
+      "reach": 0.4003504462716165
+    },
+    "turnRight90": {
+      "error": 1.3597399555105182e-16,
+      "limb": "UpperArm_R",
+      "time": 0.4166666567325592,
+      "distance": 0.26366986851649926,
+      "reach": 0.2703504462716165
+    },
+    "dashBack": {
+      "error": 1.6653345369377348e-16,
+      "limb": "UpperArm_R",
+      "time": 0.2666666805744171,
+      "distance": 0.26337435662002984,
+      "reach": 0.2703504462716165
+    },
+    "shootForwardLeft": {
+      "error": 2.482534153247273e-16,
+      "limb": "UpperArm_R",
+      "time": 0.9666666388511658,
+      "distance": 0.22186912208103446,
+      "reach": 0.2703504462716165
+    },
+    "shootForwardRight": {
+      "error": 2.7194799110210365e-16,
+      "limb": "UpperArm_L",
+      "time": 0.8666666746139526,
+      "distance": 0.33589604759608477,
+      "reach": 0.4003504462716165
+    },
+    "shootBackwardLeft": {
+      "error": 2.9893669801409083e-16,
+      "limb": "UpperArm_R",
+      "time": 0.6583333611488342,
+      "distance": 0.22439250690011386,
+      "reach": 0.2703504462716165
+    },
+    "shootBackwardRight": {
+      "error": 2.482534153247273e-16,
+      "limb": "UpperArm_R",
+      "time": 0.9666666388511658,
+      "distance": 0.22186912208103446,
+      "reach": 0.2703504462716165
+    },
+    "quickTurnLeft": {
+      "error": 1.3092278833360675e-16,
+      "limb": "UpperArm_R",
+      "time": 0.03333333507180214,
+      "distance": 0.2640229919021092,
+      "reach": 0.2703504462716165
+    },
+    "quickTurnRight": {
+      "error": 1.5704757352569647e-16,
+      "limb": "UpperArm_R",
+      "time": 0.25,
+      "distance": 0.26205056356123807,
+      "reach": 0.2703504462716165
+    },
+    "runStop": {
+      "error": 1.8410966031475738e-16,
+      "limb": "UpperArm_L",
+      "time": 0.10000000149011612,
+      "distance": 0.3895543960834674,
+      "reach": 0.4003504462716165
+    },
+    "attackEnter": {
+      "error": 1.7554167342883506e-16,
+      "limb": "UpperArm_L",
+      "time": 0.11666666716337204,
+      "distance": 0.3874766440554172,
+      "reach": 0.4003504462716165
+    },
+    "attackExit": {
+      "error": 0.0011572433036952856,
+      "limb": "UpperArm_R",
+      "time": 0.23333333432674408,
+      "distance": 0.2714578790966388,
+      "reach": 0.2703504462716165
+    },
+    "attackUpright": {
+      "error": 0.0038730793625647024,
+      "limb": "UpperArm_R",
+      "time": 0.49166667461395264,
+      "distance": 0.27417414818353214,
+      "reach": 0.2703504462716165
+    },
+    "attackTilted": {
+      "error": 0.00353851284791209,
+      "limb": "UpperArm_R",
+      "time": 0.4833333194255829,
+      "distance": 0.2738395291916881,
+      "reach": 0.2703504462716165
+    },
+    "runStopTurnLeft": {
+      "error": 1.8410966031475738e-16,
+      "limb": "UpperArm_L",
+      "time": 0.10000000149011612,
+      "distance": 0.3895543960834674,
+      "reach": 0.4003504462716165
+    },
+    "runStopTurnRight": {
+      "error": 1.8410966031475738e-16,
+      "limb": "UpperArm_L",
+      "time": 0.10000000149011612,
+      "distance": 0.3895543960834674,
+      "reach": 0.4003504462716165
+    },
+    "runStopTurnLeft90": {
+      "error": 1.8410966031475738e-16,
+      "limb": "UpperArm_L",
+      "time": 0.10000000149011612,
+      "distance": 0.3895543960834674,
+      "reach": 0.4003504462716165
+    },
+    "runStopTurnRight90": {
+      "error": 1.8410966031475738e-16,
+      "limb": "UpperArm_L",
+      "time": 0.10000000149011612,
+      "distance": 0.3895543960834674,
+      "reach": 0.4003504462716165
+    },
+    "attackCrouched": {
+      "error": 2.7336071744532853e-16,
+      "limb": "UpperArm_R",
+      "time": 0.8666666746139526,
+      "distance": 0.22611015193480483,
+      "reach": 0.2703504462716165
+    },
+    "attackDouble": {
+      "error": 2.665835984225005e-16,
+      "limb": "UpperArm_R",
+      "time": 0.5833333134651184,
+      "distance": 0.2193144018903309,
+      "reach": 0.2703504462716165
+    },
+    "duck": {
+      "error": 1.6883057536160649e-16,
+      "limb": "UpperArm_R",
+      "time": 0.6499999761581421,
+      "distance": 0.2640399834104345,
+      "reach": 0.2703504462716165
+    }
+  },
+  "aimGrip": {
+    "canted": [
+      0.22,
+      0.74,
+      0.4953567504882813
+    ],
+    "upright": [
+      0.24,
+      0.74,
+      0.4995147705078125
+    ],
+    "tilted": [
+      0.22,
+      0.74,
+      0.4770751953125
+    ],
+    "crouched": [
+      0.22,
+      0.74,
+      0.4953567504882813
+    ]
+  },
+  "armByClip": {
+    "idle": {
+      "grip": 2.884444029575346e-16,
+      "wrist": 2.1073424255447017e-8,
+      "gripAt": 4.5333333015441895,
+      "gripSide": "R",
+      "wristAt": 3.200000047683716,
+      "wristSide": "R"
+    },
+    "walk": {
+      "grip": 3.1676639673831405e-16,
+      "wrist": 2.1073424255447017e-8,
+      "gripAt": 0.6000000238418579,
+      "gripSide": "L",
+      "wristAt": 0.8666666746139526,
+      "wristSide": "R"
+    },
+    "run": {
+      "grip": 2.7755575615628914e-16,
+      "wrist": 1.4901161193847656e-8,
+      "gripAt": 0.30000001192092896,
+      "gripSide": "L",
+      "wristAt": 0.5333333611488342,
+      "wristSide": "R"
+    },
+    "attack": {
+      "grip": 4.871083751574258e-16,
+      "wrist": 0.7451910970697392,
+      "gripAt": 1.8333333730697632,
+      "gripSide": "L",
+      "wristAt": 1.0333333015441895,
+      "wristSide": "R"
+    },
+    "dodgeLeft": {
+      "grip": 2.2887833992611187e-16,
+      "wrist": 0.37819215614531754,
+      "gripAt": 0.30000001192092896,
+      "gripSide": "L",
+      "wristAt": 0.06666667014360428,
+      "wristSide": "R"
+    },
+    "dodgeRight": {
+      "grip": 2.5438405243138006e-16,
+      "wrist": 0.27846418749333857,
+      "gripAt": 0.36666667461395264,
+      "gripSide": "L",
+      "wristAt": 0.15000000596046448,
+      "wristSide": "R"
+    },
+    "dash": {
+      "grip": 2.7194799110210365e-16,
+      "wrist": 0,
+      "gripAt": 0.38333332538604736,
+      "gripSide": "L"
+    },
+    "shootForward": {
+      "grip": 5.578801654593729e-16,
+      "wrist": 0.7451451222143413,
+      "gripAt": 1.2000000476837158,
+      "gripSide": "L",
+      "wristAt": 1.0333333015441895,
+      "wristSide": "R"
+    },
+    "shootBackward": {
+      "grip": 4.619448428525918e-16,
+      "wrist": 0.7451451222143423,
+      "gripAt": 0.9333333373069763,
+      "gripSide": "L",
+      "wristAt": 1.0333333015441895,
+      "wristSide": "R"
+    },
+    "shootLeft": {
+      "grip": 4.847302891456678e-16,
+      "wrist": 0.7452920232032403,
+      "gripAt": 1.0333333015441895,
+      "gripSide": "L",
+      "wristAt": 1.024999976158142,
+      "wristSide": "R"
+    },
+    "shootRight": {
+      "grip": 4.75098925995612e-16,
+      "wrist": 0.7448927176327564,
+      "gripAt": 1.3416666984558105,
+      "gripSide": "L",
+      "wristAt": 1.0333333015441895,
+      "wristSide": "R"
+    },
+    "hit": {
+      "grip": 2.435541875787129e-16,
+      "wrist": 0,
+      "gripAt": 0.2666666805744171,
+      "gripSide": "L"
+    },
+    "death": {
+      "grip": 3.040470972244059e-16,
+      "wrist": 2.1073424255447017e-8,
+      "gripAt": 0.8500000238418579,
+      "gripSide": "L",
+      "wristAt": 1.0833333730697632,
+      "wristSide": "R"
+    },
+    "turnLeft45": {
+      "grip": 2.498001805406602e-16,
+      "wrist": 0.2484409253245687,
+      "gripAt": 0.25,
+      "gripSide": "L",
+      "wristAt": 0.18333333730697632,
+      "wristSide": "R"
+    },
+    "turnRight45": {
+      "grip": 2.618455766672135e-16,
+      "wrist": 0.09738784102747028,
+      "gripAt": 0.4166666567325592,
+      "gripSide": "L",
+      "wristAt": 0.23333333432674408,
+      "wristSide": "R"
+    },
+    "turnLeft90": {
+      "grip": 2.0206364052201326e-16,
+      "wrist": 0.30322825502464934,
+      "gripAt": 0.20000000298023224,
+      "gripSide": "L",
+      "wristAt": 0.25,
+      "wristSide": "R"
+    },
+    "turnRight90": {
+      "grip": 2.0770370905276122e-16,
+      "wrist": 0.06650241794950744,
+      "gripAt": 0.13333334028720856,
+      "gripSide": "L",
+      "wristAt": 0.3499999940395355,
+      "wristSide": "R"
+    },
+    "dashBack": {
+      "grip": 2.0770370905276122e-16,
+      "wrist": 1.4901161193847656e-8,
+      "gripAt": 0.23333333432674408,
+      "gripSide": "L",
+      "wristAt": 0.4166666567325592,
+      "wristSide": "R"
+    },
+    "shootForwardLeft": {
+      "grip": 4.041272810440265e-16,
+      "wrist": 0.7452573393736609,
+      "gripAt": 0.8999999761581421,
+      "gripSide": "L",
+      "wristAt": 1.024999976158142,
+      "wristSide": "R"
+    },
+    "shootForwardRight": {
+      "grip": 4.236704743275018e-16,
+      "wrist": 0.7449802604002848,
+      "gripAt": 0.8083333373069763,
+      "gripSide": "L",
+      "wristAt": 1.0333333015441895,
+      "wristSide": "R"
+    },
+    "shootBackwardLeft": {
+      "grip": 5.502328482176191e-16,
+      "wrist": 0.744980260400285,
+      "gripAt": 1.024999976158142,
+      "gripSide": "L",
+      "wristAt": 1.0333333015441895,
+      "wristSide": "R"
+    },
+    "shootBackwardRight": {
+      "grip": 4.041272810440265e-16,
+      "wrist": 0.7452573393736609,
+      "gripAt": 0.8999999761581421,
+      "gripSide": "L",
+      "wristAt": 1.024999976158142,
+      "wristSide": "R"
+    },
+    "quickTurnLeft": {
+      "grip": 2.4196749845665633e-16,
+      "wrist": 0.28468097548353655,
+      "gripAt": 0.550000011920929,
+      "gripSide": "L",
+      "wristAt": 0.2666666805744171,
+      "wristSide": "R"
+    },
+    "quickTurnRight": {
+      "grip": 2.7894008272968645e-16,
+      "wrist": 0.07964070502308067,
+      "gripAt": 0.3499999940395355,
+      "gripSide": "L",
+      "wristAt": 0.1666666716337204,
+      "wristSide": "R"
+    },
+    "runStop": {
+      "grip": 2.5438405243138006e-16,
+      "wrist": 0.19505392290799867,
+      "gripAt": 0.10000000149011612,
+      "gripSide": "L",
+      "wristAt": 0.2666666805744171,
+      "wristSide": "R"
+    },
+    "attackEnter": {
+      "grip": 2.435541875787129e-16,
+      "wrist": 4.277437953474353e-7,
+      "gripAt": 0.11666666716337204,
+      "gripSide": "L",
+      "wristAt": 0.44999998807907104,
+      "wristSide": "R"
+    },
+    "attackExit": {
+      "grip": 0.001157243303695279,
+      "wrist": 4.277437953474353e-7,
+      "gripAt": 0.23333333432674408,
+      "gripSide": "R",
+      "wristAt": 0,
+      "wristSide": "R"
+    },
+    "attackUpright": {
+      "grip": 0.0038730793625647024,
+      "wrist": 0.6680561382064395,
+      "gripAt": 0.49166667461395264,
+      "gripSide": "R",
+      "wristAt": 0.7749999761581421,
+      "wristSide": "R"
+    },
+    "attackTilted": {
+      "grip": 0.0035385128479121534,
+      "wrist": 0.9334032631295163,
+      "gripAt": 0.4833333194255829,
+      "gripSide": "R",
+      "wristAt": 1.0583332777023315,
+      "wristSide": "R"
+    },
+    "runStopTurnLeft": {
+      "grip": 2.5438405243138006e-16,
+      "wrist": 0.2977416831042819,
+      "gripAt": 0.10000000149011612,
+      "gripSide": "L",
+      "wristAt": 0.5,
+      "wristSide": "R"
+    },
+    "runStopTurnRight": {
+      "grip": 3.236828524569469e-16,
+      "wrist": 0.09657237640268745,
+      "gripAt": 0.23333333432674408,
+      "gripSide": "L",
+      "wristAt": 0.36666667461395264,
+      "wristSide": "R"
+    },
+    "runStopTurnLeft90": {
+      "grip": 2.5438405243138006e-16,
+      "wrist": 0.26615950488819906,
+      "gripAt": 0.10000000149011612,
+      "gripSide": "L",
+      "wristAt": 0.4333333373069763,
+      "wristSide": "R"
+    },
+    "runStopTurnRight90": {
+      "grip": 2.5438405243138006e-16,
+      "wrist": 0.12617803613888393,
+      "gripAt": 0.10000000149011612,
+      "gripSide": "L",
+      "wristAt": 0.36666667461395264,
+      "wristSide": "R"
+    },
+    "attackCrouched": {
+      "grip": 4.611102534756203e-16,
+      "wrist": 0.7451910970697392,
+      "gripAt": 1.2583333253860474,
+      "gripSide": "L",
+      "wristAt": 1.0333333015441895,
+      "wristSide": "R"
+    },
+    "attackDouble": {
+      "grip": 4.871083751574258e-16,
+      "wrist": 0.7451910970697392,
+      "gripAt": 1.8333333730697632,
+      "gripSide": "L",
+      "wristAt": 1.0333333015441895,
+      "wristSide": "R"
+    },
+    "duck": {
+      "grip": 2.031330821370476e-16,
+      "wrist": 0,
+      "gripAt": 0.4166666567325592,
+      "gripSide": "L"
+    }
+  },
+  "worstWrist": {
+    "mode": "attackTilted",
+    "t": 1.0583332777023315,
+    "side": "R"
+  },
+  "clothColliderPushes": 0
+}

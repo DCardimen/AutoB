@@ -3,10 +3,10 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import * as T from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
-import {BOW,CLIPS,GAIT,STANCE,nockOffset,settlesToIdle} from '../public/meshy-fox-preview/fox-motion.mjs';
+import {BOW,CLIPS,GAIT,RELEASE,STANCE,nockOffset,settlesToIdle} from '../public/meshy-fox-preview/fox-motion.mjs';
 import {FoxPreviewController} from '../public/meshy-fox-preview/fox-preview-controller.mjs';
 import {FoxActor,KITE} from '../public/meshy-fox-preview/fox-actor.mjs';
-import {createCombat,DURATION} from '../public/meshy-fox-preview/fox-combat-sim.mjs';
+import {createCombat,DURATION,HITS_TO_FELL} from '../public/meshy-fox-preview/fox-combat-sim.mjs';
 
 globalThis.self=globalThis;
 globalThis.createImageBitmap=async()=>({width:4096,height:4096,close(){}});
@@ -41,22 +41,24 @@ test('full draw: bow arm locked toward the target, draw elbow folded back at sho
 
 test('open stance: front paw steps toward the target, rear paw steps back and turns out',()=>{
  const F=STANCE.front,R=F==='L'?'R':'L',out=s=>s==='L'?1:-1;
- pose('Bow_Attack',0);const restF=W('Foot_'+F),restR=W('Foot_'+R);
+ // v2: the shot loop is already in stance; the paws step from Idle's stance.
+ pose('Idle',0);const restF=W('Foot_'+F),restR=W('Foot_'+R);
  pose('Bow_Attack',1.1);const front=W('Foot_'+F),rear=W('Foot_'+R);
  assert.ok(front.z-rear.z>.18,`stance depth ${front.z-rear.z}`);assert.ok(front.z>restF.z+.08&&rear.z<restR.z-.08);
  assert.ok(Math.abs(footYaw(F))<15,`front paw points at target ${footYaw(F)}`);assert.ok(out(R)*footYaw(R)>75,`rear paw turned out ${footYaw(R)}`);
  for(const s of ['R','L']){const n=new T.Vector3(0,1,0).applyQuaternion(Q('Foot_'+s));assert.ok(n.y>.9999,'flat sole');assert.ok(Math.abs(W('Foot_'+s).y-.125)<1e-4,'planted');}
- // Each paw is one lifted step in and out, and the stance is fully recovered.
- for(const [s,t]of [[F,.14],[R,.27],[R,1.74],[F,1.95]]){pose('Bow_Attack',t);assert.ok(W('Foot_'+s).y>.15,`${s} lifted at ${t}`);}
- pose('Bow_Attack',2.19);assert.ok(W('Foot_'+F).distanceTo(restF)<1e-3&&W('Foot_'+R).distanceTo(restR)<1e-3);
+ // Each paw is one lifted step in (Bow_Attack_Enter) and one out
+ // (Bow_Attack_Exit), and leaving the stance fully recovers Idle's.
+ for(const [clip,s,t]of [['Bow_Attack_Enter',F,.12],['Bow_Attack_Enter',R,.26],['Bow_Attack_Exit',R,.15],['Bow_Attack_Exit',F,.34]]){pose(clip,t);assert.ok(W('Foot_'+s).y>.15,`${clip} ${s} lifted at ${t}`);}
+ pose('Bow_Attack_Exit',CLIPS.attackExit.duration);assert.ok(W('Foot_'+F).distanceTo(restF)<1e-3&&W('Foot_'+R).distanceTo(restR)<1e-3);
 });
 
 test('push-pull draw, back tension at anchor and a real follow-through',()=>{
  const reach=t=>{pose('Bow_Attack',t);return W('UpperArm_R').distanceTo(W('Hand_R'));},string=t=>{pose('Bow_Attack',t);return node('BowStringDraw').morphTargetInfluences[0];};
- assert.ok(reach(.55)<reach(1.0)-.008,'bow arm pushes out while drawing');assert.ok(string(.55)<.1&&string(1.1)>.999,'string drawn to anchor');
- pose('Bow_Attack',1.03);const early=node('Clavicle_L').position.z;pose('Bow_Attack',1.17);assert.ok(node('Clavicle_L').position.z<early-.004,'draw shoulder creeps back at anchor');
- pose('Bow_Attack',1.17);const anchor=node('Hand_L').localToWorld(new T.Vector3(.13,0,0)),tipBefore=node('Bow_Right_Hand').localToWorld(new T.Vector3(BOW.brace,.29,0));
- pose('Bow_Attack',1.34);const after=node('Hand_L').localToWorld(new T.Vector3(.13,0,0)),tipAfter=node('Bow_Right_Hand').localToWorld(new T.Vector3(BOW.brace,.29,0));
+ assert.ok(reach(.55)<reach(1.0)-.008,'bow arm pushes out while drawing');assert.ok(string(.55)<.1&&string(1.15)>.999,'string drawn to anchor');
+ pose('Bow_Attack',1.03);const early=node('Clavicle_L').position.z;pose('Bow_Attack',RELEASE-.01);assert.ok(node('Clavicle_L').position.z<early-.004,'draw shoulder creeps back at anchor');
+ pose('Bow_Attack',RELEASE-.01);const anchor=node('Hand_L').localToWorld(new T.Vector3(.13,0,0)),tipBefore=node('Bow_Right_Hand').localToWorld(new T.Vector3(BOW.brace,.29,0));
+ pose('Bow_Attack',RELEASE+.16);const after=node('Hand_L').localToWorld(new T.Vector3(.13,0,0)),tipAfter=node('Bow_Right_Hand').localToWorld(new T.Vector3(BOW.brace,.29,0));
  assert.ok(after.z<anchor.z-.04&&after.x>anchor.x+.08,'released paw slides back and out');assert.ok(tipAfter.z>tipBefore.z+.03,'bow tips forward in the relaxed paw');
  assert.ok(new T.Vector3(-1,0,0).applyQuaternion(Q('Arrow_Nock_and_Flight')).z>.9999,'loosed arrow keeps the aim line');
 });
@@ -117,12 +119,12 @@ test('scripted skirmish: smooth transitions, gaze follows, every arrow lands, th
  const combat=createCombat(await load(),new T.Scene()),bones=bodyBones(combat.fox),frames=[];combat.reset();
  while(combat.state.time<DURATION-1e-9){combat.step();frames.push(bones.map(o=>o.getWorldPosition(new T.Vector3())));}
  const s=combat.summary();
- assert.equal(s.shots,6);assert.equal(s.hits,6);assert.ok(s.defeated>0);
+ assert.equal(s.shots,HITS_TO_FELL);assert.equal(s.hits,HITS_TO_FELL);assert.ok(s.defeated>0);
  // Settled tracking is exact; a new look target is crossed as a turn of the
  // head, never a one-frame snap (the quick pivot is the fastest, by design).
  assert.ok(s.gaze.settledSamples>900&&s.gaze.settledP95Degrees<.05,`gaze ${JSON.stringify(s.gaze)}`);assert.ok(s.gaze.maxSwingDegreesPerFrame<16);
  for(const shot of s.shotsDetail)assert.ok(Math.abs(shot.hit.height-.72)<.05,'arrow meets the dummy at chest height');
- const modes=s.history.map(h=>h.mode);for(const m of ['dashBack','run','runStop','dash'])assert.ok(modes.includes(m),m);
+ const modes=s.history.map(h=>h.mode);for(const m of ['dashBack','run','dash','attackEnter','attackExit','attack','attackUpright','attackTilted'])assert.ok(modes.includes(m),m);assert.ok(modes.some(m=>/^runStop/.test(m)),'braking stop');
  assert.ok(modes.some(m=>m.startsWith('quickTurn'))&&modes.some(m=>/^turn(Left|Right)/.test(m)));assert.ok(new Set(modes.filter(m=>KITE.includes(m))).size>=3,'kiting blends several directions');
  // No transition is rougher than the baked clips themselves.
  const fight=roughness(frames);assert.ok(fight<1.15*bakedRoughness(),`fight ${fight} vs baked ${bakedRoughness()}`);

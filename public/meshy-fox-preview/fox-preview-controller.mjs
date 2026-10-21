@@ -1,22 +1,37 @@
 import * as T from 'three';
 import {foxExpressions} from './fox-expressions.mjs';
-import {AIM,BOW,CLIPS,isShooting,isTurn,settlesToIdle,tailSwishAngle} from './fox-motion.mjs';
+import {AIM,BOW,CLIPS,NOCK,RELEASE,angerAt,blinkAt,blinkSchedule,isShooting,isTurn,settlesToIdle,tailSwishAngle} from './fox-motion.mjs';
 
 // Preview behavior layered after the portable clip. This keeps gait direction,
-// upper-body aim, and the ambient tail clock independent of one another.
+// upper-body aim, the face and the ambient tail clock independent of one another.
 export class FoxPreviewController {
- constructor(model){this.model=model;this.bone=name=>model.getObjectByName(name);this.up=new T.Vector3(0,1,0);this.base=[];this.morphBase=[];this.expressionMeshes=[];for(const name of ['Head_Open','Head_Closed'])this.bone(name).traverse(o=>{if(o.isMesh&&o.morphTargetInfluences?.length===3)this.expressionMeshes.push(o);});}
+ constructor(model){
+  this.model=model;this.bone=name=>model.getObjectByName(name);this.up=new T.Vector3(0,1,0);this.base=[];this.morphBase=[];
+  // v2 face: one head mesh (ears, sniff, brows) and the eyelids, by target name.
+  const meshes=name=>{const list=[];this.bone(name)?.traverse(o=>{if(o.isMesh&&o.morphTargetDictionary)list.push(o);});return list;};
+  this.headMeshes=meshes('Fox_Head');this.lidMeshes=meshes('Eyelids');
+ }
  // Restore before sampling the mixer. Three may skip an unchanged channel;
  // without this, repeated scrubbing would accumulate the procedural turn.
  restore(){for(const [o,p,q]of this.base){o.position.copy(p);o.quaternion.copy(q);}this.base=[];for(const [o,w]of this.morphBase)o.morphTargetInfluences.splice(0,w.length,...w);this.morphBase=[];}
+ // Face weights for a moment: ambient ear and nose gestures, irregular small
+ // blinks on the ambient clock (plus the blink that rides a turn), and anger
+ // while shooting. `anger` may come eased from the runtime.
+ face(mode,clipTime,ambientTime,anger=angerAt(mode,clipTime)){
+  const [earRight,earLeft,sniff]=foxExpressions(ambientTime,mode),blink=Math.max(blinkSchedule(ambientTime),isTurn(mode)?blinkAt(clipTime,mode):0);
+  return {Ear_Right:earRight,Ear_Left:earLeft,Nose_Sniff:sniff*(1-anger),Brow_Angry:anger,Ears_Back:.9*anger,Blink:blink,Lid_Angry:anger*(1-blink)};
+ }
+ setFace(weights){for(const o of [...this.headMeshes,...this.lidMeshes]){this.morphBase.push([o,[...o.morphTargetInfluences]]);for(const [name,index]of Object.entries(o.morphTargetDictionary))if(weights[name]!==undefined)o.morphTargetInfluences[index]=weights[name];}}
  apply({mode,clipTime,ambientTime,target=null,look=null,weights=null}){
   const {model}=this;
   if(mode==='death')return;
-  const expressions=foxExpressions(ambientTime,mode);for(const o of this.expressionMeshes){this.morphBase.push([o,[...o.morphTargetInfluences]]);o.morphTargetInfluences.splice(0,3,...expressions);}
-  for(const name of ['Spine','Chest','Neck','Head',...Array.from({length:6},(_,i)=>`Tail_${String(i).padStart(2,'0')}`),'Arrow_Nock_and_Flight','Release_Flair',...Array.from({length:5},(_,i)=>`Release_Spark_${i}`)]){
-   const o=this.bone(name);this.base.push([o,o.position.clone(),o.quaternion.clone()]);
+  this.setFace(this.face(mode,clipTime,ambientTime,weights?.anger));
+  for(const name of ['Spine','Chest','Neck','Head',...Array.from({length:6},(_,i)=>`Tail_${String(i).padStart(2,'0')}`),'Arrow_Nock_and_Flight','Arrow_Second','Release_Flair',...Array.from({length:5},(_,i)=>`Release_Spark_${i}`)]){
+   const o=this.bone(name);if(!o)continue;this.base.push([o,o.position.clone(),o.quaternion.clone()]);
   }
-  for(let i=0;i<6;i++){
+  // The ambient tail layer acts past the root bone, which keeps the authored
+  // junction with the belt (tailSwishAngle is zero for index 0).
+  for(let i=1;i<6;i++){
    const tail=this.bone(`Tail_${String(i).padStart(2,'0')}`);
    tail.quaternion.premultiply(new T.Quaternion().setFromAxisAngle(this.up,tailSwishAngle(ambientTime,i)-(mode==='idle'?tailSwishAngle(clipTime,i):settlesToIdle(mode)?tailSwishAngle(0,i):0)));
   }
@@ -37,13 +52,13 @@ export class FoxPreviewController {
   // Aiming, spine and chest share the turn about one vertical axis through
   // both pivots, so the bow, string and loose arrow turn as one rigid frame.
   // The arrow runs beside that axis, so solve for the yaw that puts its own
-  // line, not the pivot's, through the target. While nocked and aimed the
-  // arrow node carries that line; it is a direct child of the model, so its
-  // local transform stays valid at zero scale (a world decomposition would
-  // not). Before nocking and after the loose it sits on the carried bow or
-  // down-range, so the fixed full-draw line (parallel to +Z through the nock)
-  // is used instead.
-  const nocked=isShooting(mode)&&clipTime>=.46&&clipTime<1.6,arrow=this.bone('Arrow_Nock_and_Flight');
+  // line, not the pivot's, through the target. From the nock to the end of
+  // its flight the arrow node carries that line; it is a direct child of the
+  // model, so its local transform stays valid at zero scale (a world
+  // decomposition would not). While the arrow is in the paw on its way from
+  // the quiver, or hidden, the fixed full-draw line (parallel to +Z through
+  // the nock) is used instead.
+  const nocked=isShooting(mode)&&clipTime>=NOCK&&clipTime<RELEASE+.35,arrow=this.bone('Arrow_Nock_and_Flight');
   const along=nocked?arrow.position.clone().sub(pivot):new T.Vector3(AIM.grip[0]+BOW.nockY*Math.sin(AIM.cant)-pivot.x,0,0),direction=nocked?new T.Vector3(-1,0,0).applyQuaternion(arrow.quaternion):new T.Vector3(0,0,1);
   const range=Math.hypot(localTarget.x-pivot.x,localTarget.z-pivot.z),offset=along.x*direction.z-along.z*direction.x;
   const aimYaw=T.MathUtils.clamp(angle-Math.atan2(direction.x,direction.z)-Math.asin(T.MathUtils.clamp(offset/Math.max(range,1e-6),-1,1)),-.6,.6);
@@ -54,8 +69,8 @@ export class FoxPreviewController {
   // Loose arrow/effects are scene children; rotate them around the same chest
   // pivot as the held equipment, so release and trajectory agree with aim.
   const q=new T.Quaternion().setFromAxisAngle(this.up,spineYaw+chestYaw);
-  for(const name of ['Arrow_Nock_and_Flight','Release_Flair',...Array.from({length:5},(_,i)=>`Release_Spark_${i}`)]){
-   const o=this.bone(name);o.position.sub(pivot).applyQuaternion(q).add(pivot);o.quaternion.premultiply(q);
+  for(const name of ['Arrow_Nock_and_Flight','Arrow_Second','Release_Flair',...Array.from({length:5},(_,i)=>`Release_Spark_${i}`)]){
+   const o=this.bone(name);if(!o)continue;o.position.sub(pivot).applyQuaternion(q).add(pivot);o.quaternion.premultiply(q);
   }
   this.turnAboutUp(neck,w.track*((1-w.turn)*(1-w.aim)*.24*lookYaw+w.turn*turnYaw));
   // The head takes the remaining, smallest rotation onto the gaze point.
