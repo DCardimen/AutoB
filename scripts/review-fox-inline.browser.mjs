@@ -2,11 +2,11 @@ import fs from 'node:fs';
 import assert from 'node:assert/strict';
 import {launchReviewBrowser} from './lib/review-browser.mjs';
 
-const directory='docs/evidence/meshy-fox-archer-stance';
+const directory='docs/evidence/meshy-fox-archer-v2';
 const browser=await launchReviewBrowser();
 const report={errors:[],previews:[]};
 try{
- for(const [name,chapter]of [['rowan-pose-preview','5.5'],['rowan-combat-preview','13.35']]){
+ for(const [name,chapter]of [['rowan-pose-preview','11.06'],['rowan-combat-preview','2.2']]){
   const html=fs.readFileSync(`${directory}/${name}.html`,'utf8');assert.ok(Buffer.byteLength(html)<1_000_000);assert.ok(!html.includes('@@VIDEO@@'));
   const page=await browser.newPage();page.on('pageerror',e=>report.errors.push(e.message));
   await page.setContent(html);await page.waitForFunction(()=>document.querySelector('video').readyState>=2);
