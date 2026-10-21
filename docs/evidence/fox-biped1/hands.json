@@ -1,0 +1,229 @@
+{
+  "clips": [
+    {
+      "clip": "Idle",
+      "maxSourceReachProjection": 0,
+      "maxPinchError": 0
+    },
+    {
+      "clip": "Walk",
+      "maxSourceReachProjection": 0,
+      "maxPinchError": 0
+    },
+    {
+      "clip": "Run",
+      "maxSourceReachProjection": 0,
+      "maxPinchError": 0
+    },
+    {
+      "clip": "Bow_Attack",
+      "maxSourceReachProjection": 6.123249196320793e-8,
+      "maxPinchError": 0.0000027354628548858872
+    },
+    {
+      "clip": "Dodge_Left",
+      "maxSourceReachProjection": 0,
+      "maxPinchError": 0
+    },
+    {
+      "clip": "Dodge_Right",
+      "maxSourceReachProjection": 0,
+      "maxPinchError": 0
+    },
+    {
+      "clip": "Dash_Forward",
+      "maxSourceReachProjection": 0,
+      "maxPinchError": 0
+    },
+    {
+      "clip": "Shoot_Forward",
+      "maxSourceReachProjection": 0.019660586962958512,
+      "maxPinchError": 0.0000027744868640834066
+    },
+    {
+      "clip": "Shoot_Backward",
+      "maxSourceReachProjection": 0.019660586962958658,
+      "maxPinchError": 0.000002774486317790331
+    },
+    {
+      "clip": "Shoot_Strafe_Left",
+      "maxSourceReachProjection": 0.01966057059214363,
+      "maxPinchError": 0.0000026438660897350204
+    },
+    {
+      "clip": "Shoot_Strafe_Right",
+      "maxSourceReachProjection": 0.019660625364260668,
+      "maxPinchError": 0.0000029247050402546403
+    },
+    {
+      "clip": "Hit_Reaction",
+      "maxSourceReachProjection": 0,
+      "maxPinchError": 0
+    },
+    {
+      "clip": "Fall_and_Death",
+      "maxSourceReachProjection": 0,
+      "maxPinchError": 0
+    },
+    {
+      "clip": "Turn_Left_45",
+      "maxSourceReachProjection": 0,
+      "maxPinchError": 0
+    },
+    {
+      "clip": "Turn_Right_45",
+      "maxSourceReachProjection": 0,
+      "maxPinchError": 0
+    },
+    {
+      "clip": "Turn_Left_90",
+      "maxSourceReachProjection": 0,
+      "maxPinchError": 0
+    },
+    {
+      "clip": "Turn_Right_90",
+      "maxSourceReachProjection": 0,
+      "maxPinchError": 0
+    },
+    {
+      "clip": "Dash_Back",
+      "maxSourceReachProjection": 0,
+      "maxPinchError": 0
+    },
+    {
+      "clip": "Shoot_Forward_Left",
+      "maxSourceReachProjection": 0.0196605766860423,
+      "maxPinchError": 0.000002680778008845702
+    },
+    {
+      "clip": "Shoot_Forward_Right",
+      "maxSourceReachProjection": 0.01966062382578801,
+      "maxPinchError": 0.0000028794581556902256
+    },
+    {
+      "clip": "Shoot_Backward_Left",
+      "maxSourceReachProjection": 0.019660623825787867,
+      "maxPinchError": 0.0000028794587767259814
+    },
+    {
+      "clip": "Shoot_Backward_Right",
+      "maxSourceReachProjection": 0.019660576686042545,
+      "maxPinchError": 0.0000026807780086680516
+    },
+    {
+      "clip": "Quick_Turn_Left_180",
+      "maxSourceReachProjection": 0,
+      "maxPinchError": 0
+    },
+    {
+      "clip": "Quick_Turn_Right_180",
+      "maxSourceReachProjection": 0,
+      "maxPinchError": 0
+    },
+    {
+      "clip": "Run_Stop",
+      "maxSourceReachProjection": 0,
+      "maxPinchError": 0
+    },
+    {
+      "clip": "Bow_Attack_Enter",
+      "maxSourceReachProjection": 0,
+      "maxPinchError": 0
+    },
+    {
+      "clip": "Bow_Attack_Exit",
+      "maxSourceReachProjection": 0,
+      "maxPinchError": 0
+    },
+    {
+      "clip": "Bow_Attack_Upright",
+      "maxSourceReachProjection": 0.01966057969565473,
+      "maxPinchError": 0.000002735462854568326
+    },
+    {
+      "clip": "Bow_Attack_Tilted",
+      "maxSourceReachProjection": 0.01966057969565473,
+      "maxPinchError": 0.000002735462854568326
+    },
+    {
+      "clip": "Run_Stop_Turn_Left_180",
+      "maxSourceReachProjection": 0,
+      "maxPinchError": 0
+    },
+    {
+      "clip": "Run_Stop_Turn_Right_180",
+      "maxSourceReachProjection": 0,
+      "maxPinchError": 0
+    },
+    {
+      "clip": "Run_Stop_Turn_Left_90",
+      "maxSourceReachProjection": 0,
+      "maxPinchError": 0
+    },
+    {
+      "clip": "Run_Stop_Turn_Right_90",
+      "maxSourceReachProjection": 0,
+      "maxPinchError": 0
+    },
+    {
+      "clip": "Bow_Attack_Crouched",
+      "maxSourceReachProjection": 0.01966058325828429,
+      "maxPinchError": 0.0000027354628546363755
+    },
+    {
+      "clip": "Bow_Attack_Double",
+      "maxSourceReachProjection": 0.01966057969565473,
+      "maxPinchError": 0.000002735462854568326
+    },
+    {
+      "clip": "Duck",
+      "maxSourceReachProjection": 0,
+      "maxPinchError": 0
+    },
+    {
+      "clip": "Jump_Shot",
+      "maxSourceReachProjection": 0.01966057053835783,
+      "maxPinchError": 0.0000027354628546795458
+    },
+    {
+      "clip": "Slide_Shot",
+      "maxSourceReachProjection": 0.019660590039248024,
+      "maxPinchError": 0.0000027354628547886195
+    },
+    {
+      "clip": "Crouch_Volley",
+      "maxSourceReachProjection": 0.019660569113306478,
+      "maxPinchError": 0.0000027354628546363755
+    },
+    {
+      "clip": "Side_Flip_Left",
+      "maxSourceReachProjection": 0,
+      "maxPinchError": 0
+    },
+    {
+      "clip": "Side_Flip_Right",
+      "maxSourceReachProjection": 0,
+      "maxPinchError": 0
+    },
+    {
+      "clip": "Forward_Vault",
+      "maxSourceReachProjection": 0,
+      "maxPinchError": 0
+    },
+    {
+      "clip": "Jump_Shot_Forward",
+      "maxSourceReachProjection": 0.01966057053835783,
+      "maxPinchError": 0.0000027354628546795458
+    },
+    {
+      "clip": "Jump_Shot_Backward",
+      "maxSourceReachProjection": 0.01966057053835783,
+      "maxPinchError": 0.0000027354628546795458
+    }
+  ],
+  "maxSourceReachProjection": 0.019660625364260668,
+  "maxPinchError": 0.0000029247050402546403,
+  "fingersPerHand": 4,
+  "wristPolicy": "Authored neutral Hand rotation; active grips use forearm pronation.",
+  "palmFacing": "Both source T-pose palms face forward; anatomical curl axes are mirrored."
+}

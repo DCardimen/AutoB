@@ -1,0 +1,43 @@
+{
+  "source": "Meshy_AI_fox_ranger_riggable_t_biped (1)",
+  "provenance": [
+    {
+      "file": "Meshy_AI_fox_ranger_riggable_t_biped_Character_output.fbx",
+      "bytes": 33031820,
+      "sha256": "439967be5aa391dee6aef33e2643c7fef126de4f8f0ca9d6584c699eb482e98a"
+    },
+    {
+      "file": "Meshy_AI_fox_ranger_riggable_t_biped_Animation_Running_withSkin.fbx",
+      "bytes": 55271712,
+      "sha256": "d0031bc4bf880c2544d3f0c2c14a7bf14579fa9278340cefb1000f63f5f5c5cb"
+    },
+    {
+      "file": "Meshy_AI_fox_ranger_riggable_t_biped_texture_0.png",
+      "bytes": 15556046,
+      "sha256": "81c0773850b961c39b201ab25f6def573c374a51d59620ce4bab632c6392c624"
+    },
+    {
+      "file": "Meshy_AI_fox_ranger_riggable_t_biped_texture_0_normal.png",
+      "bytes": 12340518,
+      "sha256": "ca339973ffac5afe9c0a7ff0bd96aa115b5b35fbd1d4576757fbf421ca6383a5"
+    },
+    {
+      "file": "Meshy_AI_fox_ranger_riggable_t_biped_texture_0_roughness.png",
+      "bytes": 2760769,
+      "sha256": "da37f06e8dbe6768cea1e8b36632481938ce9e82d62b60be205dace6b2a39b84"
+    },
+    {
+      "file": "Meshy_AI_fox_ranger_riggable_t_biped_texture_0_metallic.png",
+      "bytes": 2059755,
+      "sha256": "391f52f4affbbff27bae791dbd72aab2e76f401dec6cd40b6e6823e2416721f6"
+    }
+  ],
+  "scope": "Base fox only. Original SmartRig geometry, finger/ear/tail rig and supplied Running animation.",
+  "changes": [
+    "centimeters to meters on wrapper",
+    "20 cm scene centering on wrapper",
+    "four-weight normalization",
+    "lossless PBR channel packing",
+    "FBX-to-glTF UV vertical convention"
+  ]
+}
