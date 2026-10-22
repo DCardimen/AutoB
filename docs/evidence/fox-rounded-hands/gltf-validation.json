@@ -1,0 +1,297 @@
+{
+  "numErrors": 0,
+  "numWarnings": 3,
+  "numInfos": 45,
+  "numHints": 0,
+  "messages": [
+    {
+      "code": "MESH_PRIMITIVE_GENERATED_TANGENT_SPACE",
+      "message": "Material requires a tangent space but the mesh primitive does not provide it. Runtime-generated tangent space may be non-portable across implementations.",
+      "severity": 1,
+      "pointer": "/meshes/0/primitives/0/material"
+    },
+    {
+      "code": "UNUSED_OBJECT",
+      "message": "This object may be unused.",
+      "severity": 2,
+      "pointer": "/meshes/1/primitives/0/attributes/TEXCOORD_0"
+    },
+    {
+      "code": "UNUSED_OBJECT",
+      "message": "This object may be unused.",
+      "severity": 2,
+      "pointer": "/meshes/1/primitives/1/attributes/TEXCOORD_0"
+    },
+    {
+      "code": "UNUSED_OBJECT",
+      "message": "This object may be unused.",
+      "severity": 2,
+      "pointer": "/meshes/2/primitives/0/attributes/TEXCOORD_0"
+    },
+    {
+      "code": "UNUSED_OBJECT",
+      "message": "This object may be unused.",
+      "severity": 2,
+      "pointer": "/meshes/2/primitives/1/attributes/TEXCOORD_0"
+    },
+    {
+      "code": "UNUSED_OBJECT",
+      "message": "This object may be unused.",
+      "severity": 2,
+      "pointer": "/meshes/3/primitives/0/attributes/TEXCOORD_0"
+    },
+    {
+      "code": "UNUSED_OBJECT",
+      "message": "This object may be unused.",
+      "severity": 2,
+      "pointer": "/meshes/3/primitives/1/attributes/TEXCOORD_0"
+    },
+    {
+      "code": "UNUSED_OBJECT",
+      "message": "This object may be unused.",
+      "severity": 2,
+      "pointer": "/meshes/3/primitives/2/attributes/TEXCOORD_0"
+    },
+    {
+      "code": "UNUSED_OBJECT",
+      "message": "This object may be unused.",
+      "severity": 2,
+      "pointer": "/meshes/3/primitives/3/attributes/TEXCOORD_0"
+    },
+    {
+      "code": "UNUSED_OBJECT",
+      "message": "This object may be unused.",
+      "severity": 2,
+      "pointer": "/meshes/3/primitives/4/attributes/TEXCOORD_0"
+    },
+    {
+      "code": "UNUSED_OBJECT",
+      "message": "This object may be unused.",
+      "severity": 2,
+      "pointer": "/meshes/4/primitives/0/attributes/TEXCOORD_0"
+    },
+    {
+      "code": "UNUSED_OBJECT",
+      "message": "This object may be unused.",
+      "severity": 2,
+      "pointer": "/meshes/4/primitives/1/attributes/TEXCOORD_0"
+    },
+    {
+      "code": "UNUSED_OBJECT",
+      "message": "This object may be unused.",
+      "severity": 2,
+      "pointer": "/meshes/4/primitives/2/attributes/TEXCOORD_0"
+    },
+    {
+      "code": "UNUSED_OBJECT",
+      "message": "This object may be unused.",
+      "severity": 2,
+      "pointer": "/meshes/4/primitives/3/attributes/TEXCOORD_0"
+    },
+    {
+      "code": "UNUSED_OBJECT",
+      "message": "This object may be unused.",
+      "severity": 2,
+      "pointer": "/meshes/4/primitives/4/attributes/TEXCOORD_0"
+    },
+    {
+      "code": "UNUSED_OBJECT",
+      "message": "This object may be unused.",
+      "severity": 2,
+      "pointer": "/meshes/5/primitives/0/attributes/TEXCOORD_0"
+    },
+    {
+      "code": "UNUSED_OBJECT",
+      "message": "This object may be unused.",
+      "severity": 2,
+      "pointer": "/meshes/5/primitives/1/attributes/TEXCOORD_0"
+    },
+    {
+      "code": "UNUSED_OBJECT",
+      "message": "This object may be unused.",
+      "severity": 2,
+      "pointer": "/meshes/5/primitives/2/attributes/TEXCOORD_0"
+    },
+    {
+      "code": "UNUSED_OBJECT",
+      "message": "This object may be unused.",
+      "severity": 2,
+      "pointer": "/meshes/5/primitives/3/attributes/TEXCOORD_0"
+    },
+    {
+      "code": "UNUSED_OBJECT",
+      "message": "This object may be unused.",
+      "severity": 2,
+      "pointer": "/meshes/5/primitives/4/attributes/TEXCOORD_0"
+    },
+    {
+      "code": "UNUSED_OBJECT",
+      "message": "This object may be unused.",
+      "severity": 2,
+      "pointer": "/meshes/6/primitives/0/attributes/TEXCOORD_0"
+    },
+    {
+      "code": "UNUSED_OBJECT",
+      "message": "This object may be unused.",
+      "severity": 2,
+      "pointer": "/meshes/7/primitives/0/attributes/TEXCOORD_0"
+    },
+    {
+      "code": "UNUSED_OBJECT",
+      "message": "This object may be unused.",
+      "severity": 2,
+      "pointer": "/meshes/8/primitives/0/attributes/TEXCOORD_0"
+    },
+    {
+      "code": "UNUSED_OBJECT",
+      "message": "This object may be unused.",
+      "severity": 2,
+      "pointer": "/meshes/9/primitives/0/attributes/TEXCOORD_0"
+    },
+    {
+      "code": "UNUSED_OBJECT",
+      "message": "This object may be unused.",
+      "severity": 2,
+      "pointer": "/meshes/10/primitives/0/attributes/TEXCOORD_0"
+    },
+    {
+      "code": "UNUSED_OBJECT",
+      "message": "This object may be unused.",
+      "severity": 2,
+      "pointer": "/meshes/11/primitives/0/attributes/TEXCOORD_0"
+    },
+    {
+      "code": "UNUSED_OBJECT",
+      "message": "This object may be unused.",
+      "severity": 2,
+      "pointer": "/meshes/12/primitives/0/attributes/TEXCOORD_0"
+    },
+    {
+      "code": "UNUSED_OBJECT",
+      "message": "This object may be unused.",
+      "severity": 2,
+      "pointer": "/meshes/12/primitives/1/attributes/TEXCOORD_0"
+    },
+    {
+      "code": "UNUSED_OBJECT",
+      "message": "This object may be unused.",
+      "severity": 2,
+      "pointer": "/meshes/12/primitives/2/attributes/TEXCOORD_0"
+    },
+    {
+      "code": "UNUSED_OBJECT",
+      "message": "This object may be unused.",
+      "severity": 2,
+      "pointer": "/meshes/12/primitives/3/attributes/TEXCOORD_0"
+    },
+    {
+      "code": "UNUSED_OBJECT",
+      "message": "This object may be unused.",
+      "severity": 2,
+      "pointer": "/meshes/12/primitives/4/attributes/TEXCOORD_0"
+    },
+    {
+      "code": "UNUSED_OBJECT",
+      "message": "This object may be unused.",
+      "severity": 2,
+      "pointer": "/meshes/12/primitives/5/attributes/TEXCOORD_0"
+    },
+    {
+      "code": "UNUSED_OBJECT",
+      "message": "This object may be unused.",
+      "severity": 2,
+      "pointer": "/meshes/12/primitives/6/attributes/TEXCOORD_0"
+    },
+    {
+      "code": "UNUSED_OBJECT",
+      "message": "This object may be unused.",
+      "severity": 2,
+      "pointer": "/meshes/12/primitives/7/attributes/TEXCOORD_0"
+    },
+    {
+      "code": "UNUSED_OBJECT",
+      "message": "This object may be unused.",
+      "severity": 2,
+      "pointer": "/meshes/12/primitives/8/attributes/TEXCOORD_0"
+    },
+    {
+      "code": "UNUSED_OBJECT",
+      "message": "This object may be unused.",
+      "severity": 2,
+      "pointer": "/meshes/12/primitives/9/attributes/TEXCOORD_0"
+    },
+    {
+      "code": "UNUSED_OBJECT",
+      "message": "This object may be unused.",
+      "severity": 2,
+      "pointer": "/meshes/12/primitives/10/attributes/TEXCOORD_0"
+    },
+    {
+      "code": "UNUSED_OBJECT",
+      "message": "This object may be unused.",
+      "severity": 2,
+      "pointer": "/meshes/12/primitives/11/attributes/TEXCOORD_0"
+    },
+    {
+      "code": "UNUSED_OBJECT",
+      "message": "This object may be unused.",
+      "severity": 2,
+      "pointer": "/meshes/12/primitives/12/attributes/TEXCOORD_0"
+    },
+    {
+      "code": "UNUSED_OBJECT",
+      "message": "This object may be unused.",
+      "severity": 2,
+      "pointer": "/meshes/12/primitives/13/attributes/TEXCOORD_0"
+    },
+    {
+      "code": "UNUSED_OBJECT",
+      "message": "This object may be unused.",
+      "severity": 2,
+      "pointer": "/meshes/12/primitives/14/attributes/TEXCOORD_0"
+    },
+    {
+      "code": "UNUSED_OBJECT",
+      "message": "This object may be unused.",
+      "severity": 2,
+      "pointer": "/meshes/12/primitives/15/attributes/TEXCOORD_0"
+    },
+    {
+      "code": "NODE_SKINNED_MESH_NON_ROOT",
+      "message": "Node with a skinned mesh is not root. Parent transforms will not affect a skinned mesh.",
+      "severity": 1,
+      "pointer": "/nodes/72"
+    },
+    {
+      "code": "NODE_SKINNED_MESH_LOCAL_TRANSFORMS",
+      "message": "Local transforms will not affect a skinned mesh.",
+      "severity": 1,
+      "pointer": "/nodes/72"
+    },
+    {
+      "code": "NODE_EMPTY",
+      "message": "Empty node encountered.",
+      "severity": 2,
+      "pointer": "/nodes/75"
+    },
+    {
+      "code": "NODE_EMPTY",
+      "message": "Empty node encountered.",
+      "severity": 2,
+      "pointer": "/nodes/100"
+    },
+    {
+      "code": "NODE_EMPTY",
+      "message": "Empty node encountered.",
+      "severity": 2,
+      "pointer": "/nodes/102"
+    },
+    {
+      "code": "UNUSED_MESH_WEIGHTS",
+      "message": "The static morph target weights are always overridden.",
+      "severity": 2,
+      "pointer": "/meshes/2/weights"
+    }
+  ],
+  "truncated": false
+}

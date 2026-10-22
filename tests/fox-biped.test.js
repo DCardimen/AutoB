@@ -14,8 +14,10 @@ const digest=a=>createHash('sha256').update(Buffer.from(a.buffer,a.byteOffset,a.
 function imageDigest(bytes,g,id){const v=g.bufferViews[g.images[id].bufferView],offset=28+bytes.readUInt32LE(12)+(v.byteOffset||0);return digest(bytes.subarray(offset,offset+v.byteLength));}
 test('the replacement is the newly supplied biped, with its authored geometry and material data',()=>{
  assert.equal(final.json.asset.extras.source,'Meshy_AI_fox_ranger_riggable_t_biped (1)');
- for(const name of ['POSITION','NORMAL','TEXCOORD_0'])assert.equal(digest(final.read(primitive(final).attributes[name])),digest(source.read(primitive(source).attributes[name])),name);
- assert.equal(final.json.accessors[primitive(final).attributes.POSITION].count,250614);
+ // The hand replacement adds only clipped wrist-edge vertices. All original
+ // body/costume vertex data remains byte-identical before that appended edge.
+ for(const name of ['POSITION','NORMAL','TEXCOORD_0']){const original=source.read(primitive(source).attributes[name]);assert.equal(digest(final.read(primitive(final).attributes[name]).subarray(0,original.length)),digest(original),name);}
+ assert.equal(final.json.accessors[primitive(final).attributes.POSITION].count,250614+final.json.asset.extras.roundHands.boundaryVertices);
  const sb=fs.readFileSync('public/meshy-fox-preview/fox-biped-source.glb'),fb=fs.readFileSync('public/meshy-fox-preview/fox-biped.glb');for(const [i,image]of source.json.images.entries()){assert.equal(final.json.images[i].name,image.name);assert.equal(imageDigest(fb,final.json,i),imageDigest(sb,source.json,i),'authored texture bytes');}
  assert.equal(final.json.skins[0].joints.length,69);
 });
@@ -30,6 +32,7 @@ test('tail fur has no thigh influence, and remains on its original hips-attached
 });
 test('all archer actions are portable and the downloaded Running motion is not added',()=>{
  const names=new Set(final.json.animations.map(a=>a.name));assert.ok(!names.has('Meshy_Running'));assert.equal(names.size,44);for(const c of Object.values(BIPED_CLIPS))assert.ok(names.has(c.name),c.name);
+ for(const a of final.json.animations)for(const sampler of a.samplers){const times=final.read(sampler.input);for(let i=1;i<times.length;i++)assert.ok(times[i]>times[i-1],`${a.name}: strictly increasing exported key times`);}
  for(const a of final.json.animations)for(const c of a.channels){assert.ok(final.json.nodes[c.target.node],`${a.name}: valid target`);const values=final.read(a.samplers[c.sampler].output);for(const value of values)assert.ok(Number.isFinite(value));if(c.target.path==='rotation')for(let i=0;i<values.length;i+=4)assert.ok(Math.abs(Math.hypot(...values.slice(i,i+4))-1)<.0001,`${a.name}: unit rotation`);}
  const run=final.json.animations.find(c=>c.name==='Run'),times=final.read(run.samplers[0].input);assert.ok(Math.abs(times[times.length-1]-CLIPS.run.duration)<1e-6);
 
@@ -43,13 +46,17 @@ test('cached collision skinning agrees with Three on the actual authored mesh',(
 });
 test('every nocked arrow remains in contact with the new bow string through the complete shot set',()=>{
  let worst=0;const bow=model.getObjectByName('Bow_Right_Hand'),string=model.getObjectByName('BowStringDraw'),arrow=model.getObjectByName('Arrow_Nock_and_Flight');
- for(const [mode,c]of Object.entries(BIPED_CLIPS)){if(!c.bow&&!mode.startsWith('shoot')&&mode!=='attack')continue;const clip=asset.animations.find(a=>a.name===c.name);mixer.stopAllAction();mixer.clipAction(clip).play();for(let t=NOCK+.02;t<RELEASE;t+=1/60){mixer.setTime(t);model.updateMatrixWorld(true);const draw=string.morphTargetInfluences[0],nock=bow.localToWorld(new T.Vector3(.10+.13*draw,.025,0)),error=nock.distanceTo(arrow.getWorldPosition(new T.Vector3()));worst=Math.max(worst,error);assert.ok(error<.002,`${mode} ${t}: ${error}m`);const pinch=model.getObjectByName('smartrigLeftHandMiddle1').getWorldPosition(new T.Vector3()).multiplyScalar(.45).addScaledVector(model.getObjectByName('smartrigLeftHandThumb4').getWorldPosition(new T.Vector3()),.55);assert.ok(pinch.distanceTo(nock)<.002,`${mode} ${t} anatomical left string grip ${pinch.distanceTo(nock)}m`);}}
+ for(const [mode,c]of Object.entries(BIPED_CLIPS)){if(!c.bow&&!mode.startsWith('shoot')&&mode!=='attack')continue;const clip=asset.animations.find(a=>a.name===c.name);mixer.stopAllAction();mixer.clipAction(clip).play();for(let t=NOCK+.02;t<RELEASE;t+=1/60){mixer.setTime(t);model.updateMatrixWorld(true);const draw=string.morphTargetInfluences[0],nock=bow.localToWorld(new T.Vector3(.10+.13*draw,.025,0)),error=nock.distanceTo(arrow.getWorldPosition(new T.Vector3()));worst=Math.max(worst,error);assert.ok(error<.002,`${mode} ${t}: ${error}m`);const pinch=model.getObjectByName('RoundHand_L_Grip').getWorldPosition(new T.Vector3());assert.ok(pinch.distanceTo(nock)<.002,`${mode} ${t} rounded left string grip ${pinch.distanceTo(nock)}m`);const grip=model.getObjectByName('RoundHand_R_Grip').getWorldPosition(new T.Vector3());assert.ok(grip.distanceTo(bow.getWorldPosition(new T.Vector3()))<.002,`${mode} ${t} rounded bow grip`);}}
  console.log('Maximum new-rig arrow/string error',worst);
 });
 
-test('both wrists stay neutral and mirrored fingers curl toward their actual palms',()=>{
+test('round orange hands replace the finger surfaces and keep neutral connected wrists',()=>{
  const sourceModel=originalAsset.scene;
- for(const clip of asset.animations){mixer.stopAllAction();mixer.clipAction(clip).play();for(const share of [.1,.47,.8]){mixer.setTime(clip.duration*share);model.updateMatrixWorld(true);for(const side of ['Right','Left']){const name='smartrig'+side+'Hand',hand=model.getObjectByName(name),bind=sourceModel.getObjectByName(name),tip=model.getObjectByName(name+'Middle4').getWorldPosition(new T.Vector3()),bindTip=sourceModel.getObjectByName(name+'Middle4').getWorldPosition(new T.Vector3()),inside=new T.Vector3(0,0,1).applyQuaternion(bind.getWorldQuaternion(new T.Quaternion()).invert());assert.ok(hand.quaternion.angleTo(bind.quaternion)<.003,`${clip.name} ${side} wrist kink`);const curl=hand.worldToLocal(tip).sub(bind.worldToLocal(bindTip)).dot(inside);assert.ok(curl>.001,`${clip.name} ${side} outward curl ${curl}`);}}}
+ const meta=final.json.asset.extras.roundHands;assert.ok(meta.removedSourceTriangles>5000);assert.ok(meta.boundaryVertices<500);assert.ok(meta.maxWristMovement<.000001);assert.ok(meta.maxGripMovement<.000001);
+ const rendered=new Set(final.read(primitive(final).indices)),raw=final.read(primitive(final).attributes.POSITION),sourceMesh=sourceModel.getObjectByName('Biped_Fox');
+ for(const side of ['Right','Left']){const transform=sourceModel.getObjectByName('smartrig'+side+'Hand').matrixWorld.clone().invert().multiply(sourceMesh.matrixWorld);for(const id of rendered){const p=new T.Vector3().fromArray(raw,id*3).applyMatrix4(transform);if(p.y<.18&&Math.hypot(p.x,p.z)<.10)assert.ok(p.y<=.005001,`${side}: source finger/palm surface remains rendered`);}}
+ for(const short of ['R','L']){const paw=model.getObjectByName('RoundHand_'+short);assert.ok(paw.isMesh);assert.ok(paw.material.color.r>paw.material.color.g*3);assert.equal(paw.children.length,1,'only a grip socket; no separate fingers');paw.geometry.computeBoundingBox();const size=paw.geometry.boundingBox.getSize(new T.Vector3());assert.ok(size.x>.085&&size.x<.12);assert.ok(size.y>.10&&size.y<.13);assert.ok(size.z>.065&&size.z<.09);}
+ for(const clip of asset.animations){assert.ok(!clip.tracks.some(t=>/^smartrig(Right|Left)Hand(Middle|Ring|Pinky|Thumb)/.test(t.name)));mixer.stopAllAction();mixer.clipAction(clip).play();for(const share of [.1,.47,.8]){mixer.setTime(clip.duration*share);model.updateMatrixWorld(true);for(const [side,short]of [['Right','R'],['Left','L']]){const name='smartrig'+side+'Hand',hand=model.getObjectByName(name),bind=sourceModel.getObjectByName(name),paw=model.getObjectByName('RoundHand_'+short);assert.ok(hand.quaternion.angleTo(bind.quaternion)<.003,`${clip.name} ${side} wrist kink`);assert.ok(paw.getWorldPosition(new T.Vector3()).distanceTo(hand.getWorldPosition(new T.Vector3()))<.000001,`${clip.name} ${side} disconnected hand`);}}}
 });
 test('the nose twitch is visible, sideways and attached, with an unmoved mouth',()=>{
  const p=primitive(final),positions=final.read(p.attributes.POSITION);assert.equal(p.targets.length,2);

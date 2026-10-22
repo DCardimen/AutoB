@@ -1,5 +1,7 @@
 # Rowan v3: supplied biped (1)
 
+Historical evidence for the fingered biped revision. The current preview uses the later [rounded orange hand replacement](../fox-rounded-hands/README.md), which supersedes the hand anatomy and forearm rotation described below.
+
 This replaces the isolated 3D fox preview with the newly supplied **biped (1)**. Reviewed scope: **base fox, all 44 actions, S/SE/E/NE/N/NW/W/SW**, original bind geometry, full animation cycles and runtime acrobatic transitions. No gameplay evolution or indexed game artwork is replaced.
 
 The latest running reference supersedes the earlier request to keep Run unchanged. The existing 0.64-second Run is refined into longer, narrower alternating strides, a stronger rear push, tucked foot recovery, forward torso lean and a steadier head. The downloaded Running FBX is retained in the source archive for provenance and is **not** added to the final action library.

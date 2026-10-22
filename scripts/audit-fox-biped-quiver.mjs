@@ -4,6 +4,7 @@ import * as T from 'three';
 import {MeshBVH} from 'three-mesh-bvh';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {bipedTailAudit} from '../public/meshy-fox-preview/biped-tail.mjs';
+const out=process.env.BIPED_REVIEW_OUT||'docs/evidence/fox-biped1';fs.mkdirSync(out,{recursive:true});
 globalThis.self=globalThis;globalThis.createImageBitmap=async()=>({width:4096,height:4096,close(){}});
 const bytes=fs.readFileSync('public/meshy-fox-preview/fox-biped.glb'),asset=await new GLTFLoader().parseAsync(bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength),''),model=asset.scene,body=model.getObjectByName('Biped_Fox'),mixer=new T.AnimationMixer(model),audit=bipedTailAudit(body),meshes=model.getObjectByName('Quiver_Body').children.slice(0,4),indices=[];let count=0;
 for(const mesh of meshes){for(const id of mesh.geometry.index.array)indices.push(count+id);count+=mesh.geometry.attributes.position.count;}
@@ -18,4 +19,4 @@ for(const clip of asset.animations){
  }
  report.clips.push({clip:clip.name,samples,maxGap});console.log(clip.name,maxGap);
 }
-fs.writeFileSync('docs/evidence/fox-biped1/quiver-audit.json',JSON.stringify(report,null,2)+'\n');assert.equal(report.intersections.length,0,JSON.stringify(report.intersections.slice(0,10)));assert.ok(report.maxGap<.006,`quiver gap ${report.maxGap}m`);console.log(`${report.samples} samples: quiver touches clothing without surface intersections`);
+fs.writeFileSync(`${out}/quiver-audit.json`,JSON.stringify(report,null,2)+'\n');assert.equal(report.intersections.length,0,JSON.stringify(report.intersections.slice(0,10)));assert.ok(report.maxGap<.006,`quiver gap ${report.maxGap}m`);console.log(`${report.samples} samples: quiver touches clothing without surface intersections`);

@@ -14,7 +14,7 @@ const floor=new T.Mesh(new T.PlaneGeometry(12,12),new T.ShadowMaterial({color:0x
 const grid=new T.GridHelper(5,25,0x526964,0x33433e);grid.position.y=-.004;scene.add(grid);
 const camera=new T.PerspectiveCamera(34,1,.01,50);camera.position.set(1.65,.9,2.7);const controls=new OrbitControls(camera,renderer.domElement);controls.target.set(0,.55,0);controls.update();
 const source=new URLSearchParams(location.search).has('source');
-const asset=await new GLTFLoader().loadAsync((source?'./fox-biped-source.glb':'./fox-biped.glb')+'?revision=biped1-hands-v3-final');
+const asset=await new GLTFLoader().loadAsync((source?'./fox-biped-source.glb':'./fox-biped.glb')+'?revision=biped-rounded-orange-v1');
 const model=asset.scene;scene.add(model);const mixer=new T.AnimationMixer(model),guides=new T.SkeletonHelper(model);guides.visible=false;scene.add(guides);
 model.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true;}});
 let active=null,time=0,blendRemaining=0,paused=matchMedia('(prefers-reduced-motion: reduce)').matches,last=performance.now(),routine=null;
