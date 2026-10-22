@@ -1,0 +1,380 @@
+TAP version 13
+# Subtest: short base-fox legs reach planted boots without sideways knee curls at every stride setting
+ok 1 - short base-fox legs reach planted boots without sideways knee curls at every stride setting
+  ---
+  duration_ms: 44.5763
+  ...
+# Subtest: the replacement is the newly supplied biped, with its authored geometry and material data
+ok 2 - the replacement is the newly supplied biped, with its authored geometry and material data
+  ---
+  duration_ms: 106.8199
+  ...
+# Subtest: tail fur has no thigh influence, and remains on its original hips-attached chain
+ok 3 - tail fur has no thigh influence, and remains on its original hips-attached chain
+  ---
+  duration_ms: 49.9686
+  ...
+# Subtest: all archer actions are portable and the downloaded Running motion is not added
+ok 4 - all archer actions are portable and the downloaded Running motion is not added
+  ---
+  duration_ms: 125.2051
+  ...
+# Maximum new-rig arrow/string error 0.000014898697542420062
+# Subtest: cached collision skinning agrees with Three on the actual authored mesh
+ok 5 - cached collision skinning agrees with Three on the actual authored mesh
+  ---
+  duration_ms: 13.2313
+  ...
+# Subtest: every nocked arrow remains in contact with the new bow string through the complete shot set
+ok 6 - every nocked arrow remains in contact with the new bow string through the complete shot set
+  ---
+  duration_ms: 28.3756
+  ...
+# Subtest: round orange hands replace the finger surfaces and keep neutral connected wrists
+ok 7 - round orange hands replace the finger surfaces and keep neutral connected wrists
+  ---
+  duration_ms: 74.6542
+  ...
+# Subtest: the nose twitch is visible, sideways and attached, with an unmoved mouth
+ok 8 - the nose twitch is visible, sideways and attached, with an unmoved mouth
+  ---
+  duration_ms: 78.9344
+  ...
+# Subtest: all three jump shots launch explosively, fall under gravity immediately after the apex, and land
+ok 9 - all three jump shots launch explosively, fall under gravity immediately after the apex, and land
+  ---
+  duration_ms: 57.5849
+  ...
+# Subtest: the reference run has narrow alternating strides, supported boots and a closed cycle
+ok 10 - the reference run has narrow alternating strides, supported boots and a closed cycle
+  ---
+  duration_ms: 115.9897
+  ...
+# Subtest: resting, travelling and reaction arms stay near the body and only flex their elbows forward
+ok 11 - resting, travelling and reaction arms stay near the body and only flex their elbows forward
+  ---
+  duration_ms: 60.1046
+  ...
+# Subtest: standing attacks keep both authored boots flat, planted and staggered like the prior form
+ok 12 - standing attacks keep both authored boots flat, planted and staggered like the prior form
+  ---
+  duration_ms: 442.4964
+  ...
+# Subtest: stance entry and exit meet the new idle and planted attack without pose discontinuities
+ok 13 - stance entry and exit meet the new idle and planted attack without pose discontinuities
+  ---
+  duration_ms: 1.186
+  ...
+# Subtest: pilot declares its real coverage and provides complete painted parts for all three authored tiers
+ok 3 - pilot declares its real coverage and provides complete painted parts for all three authored tiers
+  ---
+  duration_ms: 53.3015
+  ...
+# Subtest: anatomical bow/draw hands and string contact persist through movement and every attack phase
+ok 4 - anatomical bow/draw hands and string contact persist through movement and every attack phase
+  ---
+  duration_ms: 42.2604
+  ...
+# Subtest: running alternates planted boots, keeps an independent ankle, and never hops
+ok 5 - running alternates planted boots, keeps an independent ankle, and never hops
+  ---
+  duration_ms: 7.4793
+  ...
+# Subtest: cape and all tails keep pinned roots and bounded lengths under wind, motion, release and long frame gaps
+ok 6 - cape and all tails keep pinned roots and bounded lengths under wind, motion, release and long frame gaps
+  ---
+  duration_ms: 472.9334
+  ...
+# Subtest: standing shots hold the stance: paws planted and unmoved through every shot of every bow angle
+ok 4 - standing shots hold the stance: paws planted and unmoved through every shot of every bow angle
+  ---
+  duration_ms: 52.5762
+  ...
+# Subtest: the stance is entered from Idle and left back to Idle through its own clips
+ok 5 - the stance is entered from Idle and left back to Idle through its own clips
+  ---
+  duration_ms: 1.3328
+  ...
+# Subtest: the runtime holds the stance across shots, cycles bow angles at the ready pose and steps out only to stand
+ok 6 - the runtime holds the stance across shots, cycles bow angles at the ready pose and steps out only to stand
+  ---
+  duration_ms: 1022.877
+  ...
+# Subtest: every arrow is drawn from the back quiver over the left shoulder, then carried to the string
+ok 7 - every arrow is drawn from the back quiver over the left shoulder, then carried to the string
+  ---
+  duration_ms: 20.4781
+  ...
+# Subtest: a satisfying bow drop after the loose: fast, with a bounce, then back to ready
+ok 8 - a satisfying bow drop after the loose: fast, with a bounce, then back to ready
+  ---
+  duration_ms: 1.1709
+  ...
+# Subtest: three bow angles at full draw: upright, canted and tilted
+ok 9 - three bow angles at full draw: upright, canted and tilted
+  ---
+  duration_ms: 0.2237
+  ...
+# Subtest: the face turns angry while shooting and calm otherwise; eyes never move under the brows
+ok 10 - the face turns angry while shooting and calm otherwise; eyes never move under the brows
+  ---
+  duration_ms: 55.1621
+  ...
+# Subtest: blinks are small eyelids inside the eye sockets: a single head mesh, never hidden or scaled
+ok 11 - blinks are small eyelids inside the eye sockets: a single head mesh, never hidden or scaled
+  ---
+  duration_ms: 502.0524
+  ...
+# Subtest: the tail keeps its authored junction and is carried straight out behind, the hem left alone
+ok 12 - the tail keeps its authored junction and is carried straight out behind, the hem left alone
+  ---
+  duration_ms: 27.9246
+  ...
+# Subtest: sharper turns: quick, led by the head, and settled exactly on Idle
+ok 13 - sharper turns: quick, led by the head, and settled exactly on Idle
+  ---
+  duration_ms: 1.0851
+  ...
+# Subtest: dodges and dashes burst: fast, front-loaded and landing where they should
+ok 14 - dodges and dashes burst: fast, front-loaded and landing where they should
+  ---
+  duration_ms: 4.6481
+  ...
+# Subtest: run stop and turn: brakes from the run, pivots on the planted paws and settles on Idle turned
+ok 15 - run stop and turn: brakes from the run, pivots on the planted paws and settles on Idle turned
+  ---
+  duration_ms: 8.8319
+  ...
+# Subtest: v2 eases are smoother: quintic transitions start and settle with zero acceleration
+ok 16 - v2 eases are smoother: quintic transitions start and settle with zero acceleration
+  ---
+  duration_ms: 0.7632
+  ...
+# Subtest: toward the agile archer: a crouched shot, a double shot and a duck
+ok 17 - toward the agile archer: a crouched shot, a double shot and a duck
+  ---
+  duration_ms: 1.303
+  ...
+# Subtest: the complete tail registers behind the pelvis and its proximal fur has no thigh ownership
+ok 5 - the complete tail registers behind the pelvis and its proximal fur has no thigh ownership
+  ---
+  duration_ms: 47.0131
+  ...
+# Subtest: the sniff lifts the nose pad without extending the muzzle or moving the mouth
+ok 6 - the sniff lifts the nose pad without extending the muzzle or moving the mouth
+  ---
+  duration_ms: 36.6087
+  ...
+# Subtest: jump shots and flips leave the ground, keep the head clear, and land upright
+ok 7 - jump shots and flips leave the ground, keep the head clear, and land upright
+  ---
+  duration_ms: 98.8838
+  ...
+# Subtest: all acrobatic shots keep their arrow on the string, a horizontal bow and distinct multi-arrow flight
+ok 8 - all acrobatic shots keep their arrow on the string, a horizontal bow and distinct multi-arrow flight
+  ---
+  duration_ms: 6.7857
+  ...
+# Subtest: runtime commits acrobatic travel and blends into crouched volleys and back
+ok 9 - runtime commits acrobatic travel and blends into crouched volleys and back
+  ---
+  duration_ms: 869.6488
+  ...
+# Subtest: the visible acrobatic combo performs every requested move through the runtime
+ok 10 - the visible acrobatic combo performs every requested move through the runtime
+  ---
+  duration_ms: 1243.5696
+  ...
+# Subtest: full draw: the trunk winds up over square hips while the head stays on the target
+ok 6 - full draw: the trunk winds up over square hips while the head stays on the target
+  ---
+  duration_ms: 5.8811
+  ...
+# Subtest: full draw: bow arm locked toward the target, draw elbow folded back at shoulder height
+ok 7 - full draw: bow arm locked toward the target, draw elbow folded back at shoulder height
+  ---
+  duration_ms: 0.7264
+  ...
+# Subtest: open stance: front paw steps toward the target, rear paw steps back and turns out
+ok 8 - open stance: front paw steps toward the target, rear paw steps back and turns out
+  ---
+  duration_ms: 2.3258
+  ...
+# Subtest: push-pull draw, back tension at anchor and a real follow-through
+ok 9 - push-pull draw, back tension at anchor and a real follow-through
+  ---
+  duration_ms: 1.5456
+  ...
+# Subtest: turns start and end exactly on Idle, led by the head, with stepping paws
+ok 10 - turns start and end exactly on Idle, led by the head, with stepping paws
+  ---
+  duration_ms: 25.6353
+  ...
+# Subtest: gait: arms swing against the opposite paw and the gaze stays level
+ok 11 - gait: arms swing against the opposite paw and the gaze stays level
+  ---
+  duration_ms: 8.02
+  ...
+# Subtest: looking around turns the spine, chest and neck with the head, and restores cleanly
+ok 12 - looking around turns the spine, chest and neck with the head, and restores cleanly
+  ---
+  duration_ms: 30.0978
+  ...
+# Subtest: actor cross-fades clips and commits root motion without pops
+ok 13 - actor cross-fades clips and commits root motion without pops
+  ---
+  duration_ms: 904.2099
+  ...
+# Subtest: scripted skirmish: smooth transitions, gaze follows, every arrow lands, the archer kites, pivots, runs and stops
+ok 14 - scripted skirmish: smooth transitions, gaze follows, every arrow lands, the archer kites, pivots, runs and stops
+  ---
+  duration_ms: 2510.9547
+  ...
+# Subtest: run: flight phase, high knees, pumping bent arms and a full stride
+ok 15 - run: flight phase, high knees, pumping bent arms and a full stride
+  ---
+  duration_ms: 3.2886
+  ...
+# Subtest: tail sways constantly rather than resting between swishes
+ok 16 - tail sways constantly rather than resting between swishes
+  ---
+  duration_ms: 12.3984
+  ...
+# Subtest: kiting legs step along all eight travel directions with planted paws
+ok 17 - kiting legs step along all eight travel directions with planted paws
+  ---
+  duration_ms: 2.5557
+  ...
+# Subtest: run stop brakes from the crouch and settles exactly into Idle
+ok 18 - run stop brakes from the crouch and settles exactly into Idle
+  ---
+  duration_ms: 0.6592
+  ...
+# Subtest: default asset opens with hands down and the loose projectile hidden
+ok 7 - default asset opens with hands down and the loose projectile hidden
+  ---
+  duration_ms: 0.7892
+  ...
+# Subtest: portable export has complete normalized clips and closed loop endpoints
+ok 8 - portable export has complete normalized clips and closed loop endpoints
+  ---
+  duration_ms: 193.8585
+  ...
+# Subtest: right bow grip and left string nock remain attached after export in eight views
+ok 9 - right bow grip and left string nock remain attached after export in eight views
+  ---
+  duration_ms: 312.764
+  ...
+# Subtest: shots travel forward and remain aligned while the upper body tracks an enemy
+ok 10 - shots travel forward and remain aligned while the upper body tracks an enemy
+  ---
+  duration_ms: 58.7076
+  ...
+# Subtest: shooting gaits creep along the chosen axis at about half running speed; dashes land
+ok 11 - shooting gaits creep along the chosen axis at about half running speed; dashes land
+  ---
+  duration_ms: 1.5669
+  ...
+# Subtest: shooting travel cancels planted foot motion in every facing
+ok 12 - shooting travel cancels planted foot motion in every facing
+  ---
+  duration_ms: 4.5616
+  ...
+# Subtest: ambient tail swishes are occasional and separated by six to ten seconds
+ok 13 - ambient tail swishes are occasional and separated by six to ten seconds
+  ---
+  duration_ms: 10.7271
+  ...
+# Subtest: simple fur paws replace added gloves with closed continuous surfaces
+ok 14 - simple fur paws replace added gloves with closed continuous surfaces
+  ---
+  duration_ms: 84.0031
+  ...
+# Subtest: bow and string use actual open grip channels throughout all animation frames
+ok 15 - bow and string use actual open grip channels throughout all animation frames
+  ---
+  duration_ms: 10495.1988
+  ...
+# Subtest: carried bow curves upward while its grip remains in the right paw
+ok 16 - carried bow curves upward while its grip remains in the right paw
+  ---
+  duration_ms: 4.8463
+  ...
+# Subtest: smooth foot lifts preserve velocity at contact and running arms alternate visibly
+ok 17 - smooth foot lifts preserve velocity at contact and running arms alternate visibly
+  ---
+  duration_ms: 2.849
+  ...
+# Subtest: registered ear and nose gestures move source anatomy while eye vertices stay fixed
+ok 18 - registered ear and nose gestures move source anatomy while eye vertices stay fixed
+  ---
+  duration_ms: 17.2847
+  ...
+# Subtest: ambient expressions stay independent of gait playback and restore cleanly
+ok 19 - ambient expressions stay independent of gait playback and restore cleanly
+  ---
+  duration_ms: 30.1418
+  ...
+# Subtest: both bowstring endpoints stay on the flexing wooden tips
+ok 20 - both bowstring endpoints stay on the flexing wooden tips
+  ---
+  duration_ms: 44.5214
+  ...
+# Subtest: the undrawn string is straight and pulls back into a full draw
+ok 21 - the undrawn string is straight and pulls back into a full draw
+  ---
+  duration_ms: 0.443
+  ...
+# Subtest: walk and run alternate lifted feet while support soles remain level and grounded
+ok 22 - walk and run alternate lifted feet while support soles remain level and grounded
+  ---
+  duration_ms: 11.4253
+  ...
+# Subtest: dodges retain their landing displacement and cloth/tail remain animated
+ok 23 - dodges retain their landing displacement and cloth/tail remain animated
+  ---
+  duration_ms: 0.2963
+  ...
+# Subtest: complete front and lower tail fluff belongs to tail bones rather than the thigh
+ok 24 - complete front and lower tail fluff belongs to tail bones rather than the thigh
+  ---
+  duration_ms: 17.3475
+  ...
+# Subtest: complete normalized weights preserve the exact rest pose
+ok 8 - complete normalized weights preserve the exact rest pose
+  ---
+  duration_ms: 20.4042
+  ...
+# Subtest: tail is a connected pelvis chain with exclusive distal weights
+ok 9 - tail is a connected pelvis chain with exclusive distal weights
+  ---
+  duration_ms: 8.3444
+  ...
+# Subtest: arm motion cannot pull ears or tail; leg motion cannot pull the tail bulb
+ok 10 - arm motion cannot pull ears or tail; leg motion cannot pull the tail bulb
+  ---
+  duration_ms: 10.3784
+  ...
+# Subtest: anatomical hand identities and rigid glove skinning are stable
+ok 11 - anatomical hand identities and rigid glove skinning are stable
+  ---
+  duration_ms: 12.4365
+  ...
+# Subtest: source geometry attributes and original rig data remain recoverable
+ok 12 - source geometry attributes and original rig data remain recoverable
+  ---
+  duration_ms: 15.1728
+  ...
+# Subtest: embedded articulation clips are normalized and loop without a jump
+ok 13 - embedded articulation clips are normalized and loop without a jump
+  ---
+  duration_ms: 1.3518
+  ...
+1..74
+# tests 74
+# pass 74
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 22627.3023

@@ -1,0 +1,260 @@
+{
+  "rest": {
+    "abd": 17,
+    "flex": 7,
+    "bend": 36,
+    "inward": 9
+  },
+  "clips": [
+    {
+      "clip": "Idle",
+      "maxArmError": 1.2690532473676752e-7,
+      "maxAbduction": 17.339123927332892,
+      "minElbowBend": 38.48363580750525
+    },
+    {
+      "clip": "Walk",
+      "maxArmError": 1.3288656521000112e-7,
+      "maxAbduction": 17.776917542417905,
+      "minElbowBend": 24.726851495374653
+    },
+    {
+      "clip": "Run",
+      "maxArmError": 8.556403723362234e-8,
+      "maxAbduction": 24.979241924002327,
+      "minElbowBend": 92.88246068565114
+    },
+    {
+      "clip": "Bow_Attack",
+      "maxArmError": 1.0605169076380719e-7,
+      "maxAbduction": 84.2497701562185,
+      "minElbowBend": 22.914607113841136
+    },
+    {
+      "clip": "Dodge_Left",
+      "maxArmError": 1.409329838247475e-7,
+      "maxAbduction": 41.87455019677715,
+      "minElbowBend": 38.48363895942338
+    },
+    {
+      "clip": "Dodge_Right",
+      "maxArmError": 1.4105150518769227e-7,
+      "maxAbduction": 41.996183708021185,
+      "minElbowBend": 38.48363895942338
+    },
+    {
+      "clip": "Dash_Forward",
+      "maxArmError": 1.3230108825603603e-7,
+      "maxAbduction": 17.339117913594354,
+      "minElbowBend": 38.48363895942338
+    },
+    {
+      "clip": "Shoot_Forward",
+      "maxArmError": 1.5207914662491846e-7,
+      "maxAbduction": 87.20061996823408,
+      "minElbowBend": 3.0862606306122133
+    },
+    {
+      "clip": "Shoot_Backward",
+      "maxArmError": 1.5207914662491846e-7,
+      "maxAbduction": 87.20061996823408,
+      "minElbowBend": 3.0862606306122133
+    },
+    {
+      "clip": "Shoot_Strafe_Left",
+      "maxArmError": 1.4717501839432248e-7,
+      "maxAbduction": 87.2009219720892,
+      "minElbowBend": 3.0862657014013655
+    },
+    {
+      "clip": "Shoot_Strafe_Right",
+      "maxArmError": 1.5482683934817253e-7,
+      "maxAbduction": 87.20009580545822,
+      "minElbowBend": 3.086256759382489
+    },
+    {
+      "clip": "Hit_Reaction",
+      "maxArmError": 1.3027646675337584e-7,
+      "maxAbduction": 17.339114805861954,
+      "minElbowBend": 38.48363895942338
+    },
+    {
+      "clip": "Fall_and_Death",
+      "maxArmError": 1.5716551395708405e-7,
+      "maxAbduction": 17.339101392746215,
+      "minElbowBend": 38.48362224732871
+    },
+    {
+      "clip": "Turn_Left_45",
+      "maxArmError": 1.2936190180124934e-7,
+      "maxAbduction": 18.47961713622368,
+      "minElbowBend": 38.483618667014234
+    },
+    {
+      "clip": "Turn_Right_45",
+      "maxArmError": 1.2690357392708454e-7,
+      "maxAbduction": 17.330907227485987,
+      "minElbowBend": 38.4836164712906
+    },
+    {
+      "clip": "Turn_Left_90",
+      "maxArmError": 1.2976385598834592e-7,
+      "maxAbduction": 19.39784592680738,
+      "minElbowBend": 35.873804680067806
+    },
+    {
+      "clip": "Turn_Right_90",
+      "maxArmError": 1.271811790314286e-7,
+      "maxAbduction": 17.035145726252942,
+      "minElbowBend": 38.48361793556747
+    },
+    {
+      "clip": "Dash_Back",
+      "maxArmError": 1.2903257654839746e-7,
+      "maxAbduction": 17.338504557768808,
+      "minElbowBend": 38.483635643671086
+    },
+    {
+      "clip": "Shoot_Forward_Left",
+      "maxArmError": 1.4718168232155455e-7,
+      "maxAbduction": 87.2008588467495,
+      "minElbowBend": 3.086264154493915
+    },
+    {
+      "clip": "Shoot_Forward_Right",
+      "maxArmError": 1.509421517429928e-7,
+      "maxAbduction": 87.2002771742252,
+      "minElbowBend": 3.086258264067351
+    },
+    {
+      "clip": "Shoot_Backward_Left",
+      "maxArmError": 1.509421517429928e-7,
+      "maxAbduction": 87.2002771742252,
+      "minElbowBend": 3.086258264067351
+    },
+    {
+      "clip": "Shoot_Backward_Right",
+      "maxArmError": 1.4718168232155455e-7,
+      "maxAbduction": 87.2008588467495,
+      "minElbowBend": 3.086264154493915
+    },
+    {
+      "clip": "Quick_Turn_Left_180",
+      "maxArmError": 1.3127006069092127e-7,
+      "maxAbduction": 19.030572728711448,
+      "minElbowBend": 37.16327968506569
+    },
+    {
+      "clip": "Quick_Turn_Right_180",
+      "maxArmError": 1.2775696743545748e-7,
+      "maxAbduction": 17.124597680974688,
+      "minElbowBend": 38.483601046020596
+    },
+    {
+      "clip": "Run_Stop",
+      "maxArmError": 1.2740074012792585e-7,
+      "maxAbduction": 17.57653469696645,
+      "minElbowBend": 38.483634463080975
+    },
+    {
+      "clip": "Bow_Attack_Enter",
+      "maxArmError": 1.2244406189875396e-7,
+      "maxAbduction": 17.000013122567353,
+      "minElbowBend": 38.48360651025592
+    },
+    {
+      "clip": "Bow_Attack_Exit",
+      "maxArmError": 1.1803460296305458e-7,
+      "maxAbduction": 17.000013911090605,
+      "minElbowBend": 38.483611582719476
+    },
+    {
+      "clip": "Bow_Attack_Upright",
+      "maxArmError": 1.0693360484488438e-7,
+      "maxAbduction": 87.19477252713801,
+      "minElbowBend": 3.086261241554526
+    },
+    {
+      "clip": "Bow_Attack_Tilted",
+      "maxArmError": 1.0433216560345028e-7,
+      "maxAbduction": 87.19601613364273,
+      "minElbowBend": 3.086261241554526
+    },
+    {
+      "clip": "Run_Stop_Turn_Left_180",
+      "maxArmError": 1.267647090090888e-7,
+      "maxAbduction": 19.47557768634383,
+      "minElbowBend": 37.20822813539354
+    },
+    {
+      "clip": "Run_Stop_Turn_Right_180",
+      "maxArmError": 1.2343267656615611e-7,
+      "maxAbduction": 17.578725981597955,
+      "minElbowBend": 38.48360421890205
+    },
+    {
+      "clip": "Run_Stop_Turn_Left_90",
+      "maxArmError": 1.2836265834834121e-7,
+      "maxAbduction": 19.00131766303066,
+      "minElbowBend": 38.48363080695301
+    },
+    {
+      "clip": "Run_Stop_Turn_Right_90",
+      "maxArmError": 1.0923291658414032e-7,
+      "maxAbduction": 17.735576100024083,
+      "minElbowBend": 38.483631044280955
+    },
+    {
+      "clip": "Bow_Attack_Crouched",
+      "maxArmError": 1.0605169077565487e-7,
+      "maxAbduction": 87.20074707486279,
+      "minElbowBend": 3.086261241554526
+    },
+    {
+      "clip": "Bow_Attack_Double",
+      "maxArmError": 1.0605169076380719e-7,
+      "maxAbduction": 87.20075040815823,
+      "minElbowBend": 3.086261241554526
+    },
+    {
+      "clip": "Duck",
+      "maxArmError": 1.4093130805998651e-7,
+      "maxAbduction": 17.000014642392664,
+      "minElbowBend": 38.48361859284961
+    },
+    {
+      "clip": "Jump_Shot",
+      "maxArmError": 1.5957047451837934e-7,
+      "maxAbduction": 87.19600693058605,
+      "minElbowBend": 3.086260712143007
+    },
+    {
+      "clip": "Slide_Shot",
+      "maxArmError": 1.5727844403290478e-7,
+      "maxAbduction": 87.2007461911802,
+      "minElbowBend": 3.0862610604152234
+    },
+    {
+      "clip": "Crouch_Volley",
+      "maxArmError": 1.5727844396179996e-7,
+      "maxAbduction": 87.20073852303466,
+      "minElbowBend": 3.086260712143125
+    },
+    {
+      "clip": "Jump_Shot_Forward",
+      "maxArmError": 1.5957047451582662e-7,
+      "maxAbduction": 87.19600693058605,
+      "minElbowBend": 3.086260712143007
+    },
+    {
+      "clip": "Jump_Shot_Backward",
+      "maxArmError": 1.5957047445079892e-7,
+      "maxAbduction": 87.19600693058605,
+      "minElbowBend": 3.086260712143007
+    }
+  ],
+  "maxArmError": 1.5957047451837934e-7,
+  "maxAbduction": 87.2009219720892,
+  "minElbowBend": 3.086256759382489,
+  "backwardElbowFrames": 0
+}
