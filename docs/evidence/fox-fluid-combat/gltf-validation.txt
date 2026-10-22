@@ -1,0 +1,1 @@
+public/meshy-fox-preview/fox-biped.glb {"errors":0,"warnings":3,"infos":45,"codes":["MESH_PRIMITIVE_GENERATED_TANGENT_SPACE","NODE_SKINNED_MESH_NON_ROOT","NODE_SKINNED_MESH_LOCAL_TRANSFORMS"]}

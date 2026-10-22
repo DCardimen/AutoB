@@ -1,0 +1,8 @@
+== playtest-artifacts/arms/final.glb
+isolated pops (>25° above both neighbours): 103
+{"t":"7.47","bone":"LeftArm","d":"163","excess":"156","label":"Brakk: Ironjaw Cleave"}
+{"t":"11.18","bone":"LeftArm","d":"163","excess":"156","label":"Rowan: Moontrail Arrow"}
+== public/meshy-fox-preview/fox-biped.glb
+isolated pops (>25° above both neighbours): 4
+{"t":"1.98","bone":"LeftForeArm","d":"53","excess":"26","label":"Brakk rolls away from the arrow"}
+{"t":"2.65","bone":"LeftForeArm","d":"48","excess":"26","label":"Rowan: Moontrail Arrow"}
