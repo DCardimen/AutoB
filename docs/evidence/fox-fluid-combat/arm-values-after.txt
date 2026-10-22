@@ -1,0 +1,4 @@
+max per 120Hz frame 11.8 Forward_Vault smartrigRightForeArm 0.975
+idle t0 R {"abd":15.000009456455096,"flex":7.000028291303217,"bend":39.941393818886745} L {"abd":13.999994882796793,"flex":-2.9999572712223195,"bend":31.89508640653119} pawZ R 0.196 L 0.163 bend range {"Right":{"min":38.17953089996532,"max":43.28354830914054},"Left":{"min":30.93272980027607,"max":36.09721917815015}}
+walk Right flex amp 37.0 corr with same thigh -0.82
+walk Left flex amp 43.8 corr with same thigh -0.84

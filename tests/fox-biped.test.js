@@ -104,6 +104,31 @@ test('resting, travelling and reaction arms stay near the body and only flex the
 });
 
 
+// Fluid arms: no clip may snap an arm, paw or the bow in one frame (the
+// retarget had elbow flips, sleeve roll flips and a paw jumping to the quiver).
+test('arm, paw and bow tracks never snap within a frame in any clip',()=>{
+ const bones=['smartrigRightArm','smartrigRightForeArm','smartrigRightHand','smartrigLeftArm','smartrigLeftForeArm','smartrigLeftHand','RoundHand_R','RoundHand_L','Bow_Right_Hand'];
+ for(const clip of asset.animations){let prev=null;for(let i=0;i<=Math.round(clip.duration*120);i++){stancePose(clip.name,i/120);const q=bones.map(b=>model.getObjectByName(b).getWorldQuaternion(new T.Quaternion()));
+  if(prev)q.forEach((x,k)=>{const d=prev[k].angleTo(x)*180/Math.PI;assert.ok(d<25,`${clip.name} ${bones[k]} turns ${d.toFixed(1)} degrees in one 120 Hz frame at ${(i/120).toFixed(3)}s`);});prev=q;}}
+});
+
+test('the free arm rests looser and further back than the bow arm, and Idle breathes',()=>{
+ const bindChest=originalAsset.scene.getObjectByName('smartrigSpine2').getWorldQuaternion(new T.Quaternion()),angles=side=>{const inv=model.getObjectByName('smartrigSpine2').getWorldQuaternion(new T.Quaternion()).multiply(bindChest.clone().invert()).invert(),u=world('smartrig'+side+'ForeArm').sub(world('smartrig'+side+'Arm')).applyQuaternion(inv).normalize(),f=world('smartrig'+side+'Hand').sub(world('smartrig'+side+'ForeArm')).applyQuaternion(inv).normalize();return armAngles(side==='Right'?-1:1,u,f);};
+ stancePose('Idle',0);const bow=angles('Right'),free=angles('Left'),chest=model.getObjectByName('smartrigSpine2').matrixWorld.clone().invert(),z=n=>world(n).applyMatrix4(chest).z;
+ assert.ok(bow.bend-free.bend>=5,'the bow arm bends to carry the bow');assert.ok(free.flex<bow.flex-5,'the free arm hangs further back');assert.ok(z('RoundHand_R')-z('RoundHand_L')>.015,'the free paw rests behind the bow paw');
+ const range={Right:[Infinity,-Infinity],Left:[Infinity,-Infinity]};for(let t=0;t<8;t+=.1){stancePose('Idle',t);for(const side of ['Right','Left']){const b=angles(side).bend;range[side]=[Math.min(range[side][0],b),Math.max(range[side][1],b)];}}
+ for(const side of ['Right','Left'])assert.ok(range[side][1]-range[side][0]>=2,`${side} Idle arm breathes`);
+});
+
+test('Walk swings the free arm fuller than the bow arm, against the same-side leg',()=>{
+ const bindChest=originalAsset.scene.getObjectByName('smartrigSpine2').getWorldQuaternion(new T.Quaternion()),flex=side=>{const inv=model.getObjectByName('smartrigSpine2').getWorldQuaternion(new T.Quaternion()).multiply(bindChest.clone().invert()).invert(),u=world('smartrig'+side+'ForeArm').sub(world('smartrig'+side+'Arm')).applyQuaternion(inv).normalize();return Math.atan2(u.z,-u.y)*180/Math.PI;};
+ const thigh=side=>{const d=world('smartrig'+side+'Leg').sub(world('smartrig'+side+'UpLeg')).applyQuaternion(model.getObjectByName('smartrigHips').getWorldQuaternion(new T.Quaternion()).invert());return Math.atan2(d.z,-d.y);};
+ const arm={Right:[],Left:[]},leg={Right:[],Left:[]};for(let t=0;t<1;t+=.02){stancePose('Walk',t);for(const side of ['Right','Left']){arm[side].push(flex(side));leg[side].push(thigh(side));}}
+ const amp=v=>Math.max(...v)-Math.min(...v),corr=(x,y)=>{const mx=x.reduce((a,b)=>a+b)/x.length,my=y.reduce((a,b)=>a+b)/y.length;let a=0,b=0,c=0;x.forEach((v,i)=>{a+=(v-mx)*(y[i]-my);b+=(v-mx)**2;c+=(y[i]-my)**2;});return a/Math.sqrt(b*c);};
+ assert.ok(amp(arm.Left)>amp(arm.Right)+3,'the free arm swings fuller');for(const side of ['Right','Left'])assert.ok(corr(arm[side],leg[side])<-.6,`${side} arm counter-swings its leg`);
+});
+
+
 test('standing attacks keep both authored boots flat, planted and staggered like the prior form',()=>{
  const mesh=model.getObjectByName('Biped_Fox'),skin=new BipedSkin(mesh),raw=mesh.geometry.attributes.position.array,boots={Right:[],Left:[]};for(const id of new Set(mesh.geometry.index.array))if(raw[id*3+2]<.13)boots[raw[id*3]<0?'Right':'Left'].push(id);
  for(const name of ['Bow_Attack','Bow_Attack_Upright','Bow_Attack_Tilted','Bow_Attack_Double','Bow_Attack_Crouched']){let initial;for(let f=0;f<=60;f++){stancePose(name,2.2*f/60);skin.update();const feet=['Right','Left'].map(s=>world('smartrig'+s+'Foot'));if(!initial)initial=feet.map(v=>v.clone());for(const [i,side]of ['Right','Left'].entries()){assert.ok(feet[i].distanceTo(initial[i])<.0002,`${name} ${side} sliding`);let low=Infinity;const p=new T.Vector3();for(const id of boots[side]){skin.vertex(id,p).applyMatrix4(mesh.matrixWorld);low=Math.min(low,p.y);}assert.ok(Math.abs(low-.002)<.001,`${name} ${side} hovering/penetrating ${low}`);const foot=model.getObjectByName('smartrig'+side+'Foot'),bind=originalAsset.scene.getObjectByName(foot.name),up=new T.Vector3(0,1,0).applyQuaternion(bind.getWorldQuaternion(new T.Quaternion()).invert()).applyQuaternion(foot.getWorldQuaternion(new T.Quaternion()));assert.ok(up.y>.999,'flat authored sole orientation');}assert.ok(feet[1].z-feet[0].z>.12&&feet[1].z-feet[0].z<.15,'modest prior-form stagger');}}
