@@ -1,0 +1,273 @@
+{
+  "method": "Continuous previous-pose hinge planning, with 1 mm separation; source socket seam only is excluded",
+  "fps": 120,
+  "samples": 8169,
+  "projected": 0,
+  "maxStep": 0.00017670855254535013,
+  "clips": [
+    {
+      "clip": "Idle",
+      "projected": 0,
+      "maxStep": 0.00017670855254535013,
+      "samples": 961
+    },
+    {
+      "clip": "Walk",
+      "projected": 0,
+      "maxStep": 0.00017670855254535013,
+      "samples": 121
+    },
+    {
+      "clip": "Run",
+      "projected": 0,
+      "maxStep": 0.00017670855254535013,
+      "samples": 78
+    },
+    {
+      "clip": "Bow_Attack",
+      "projected": 0,
+      "maxStep": 0.00017670855254535013,
+      "samples": 265
+    },
+    {
+      "clip": "Dodge_Left",
+      "projected": 0,
+      "maxStep": 0.00017670855254535013,
+      "samples": 97
+    },
+    {
+      "clip": "Dodge_Right",
+      "projected": 0,
+      "maxStep": 0.00017670855254535013,
+      "samples": 97
+    },
+    {
+      "clip": "Dash_Forward",
+      "projected": 0,
+      "maxStep": 0.00017670855254535013,
+      "samples": 85
+    },
+    {
+      "clip": "Shoot_Forward",
+      "projected": 0,
+      "maxStep": 0.00017670855254535013,
+      "samples": 265
+    },
+    {
+      "clip": "Shoot_Backward",
+      "projected": 0,
+      "maxStep": 0.00017670855254535013,
+      "samples": 265
+    },
+    {
+      "clip": "Shoot_Strafe_Left",
+      "projected": 0,
+      "maxStep": 0.00017670855254535013,
+      "samples": 265
+    },
+    {
+      "clip": "Shoot_Strafe_Right",
+      "projected": 0,
+      "maxStep": 0.00017670855254535013,
+      "samples": 265
+    },
+    {
+      "clip": "Hit_Reaction",
+      "projected": 0,
+      "maxStep": 0.00017670855254535013,
+      "samples": 121
+    },
+    {
+      "clip": "Fall_and_Death",
+      "projected": 0,
+      "maxStep": 0.00017670855254535013,
+      "samples": 289
+    },
+    {
+      "clip": "Turn_Left_45",
+      "projected": 0,
+      "maxStep": 0.00017670855254535013,
+      "samples": 52
+    },
+    {
+      "clip": "Turn_Right_45",
+      "projected": 0,
+      "maxStep": 0.00017670855254535013,
+      "samples": 52
+    },
+    {
+      "clip": "Turn_Left_90",
+      "projected": 0,
+      "maxStep": 0.00017670855254535013,
+      "samples": 73
+    },
+    {
+      "clip": "Turn_Right_90",
+      "projected": 0,
+      "maxStep": 0.00017670855254535013,
+      "samples": 73
+    },
+    {
+      "clip": "Dash_Back",
+      "projected": 0,
+      "maxStep": 0.00017670855254535013,
+      "samples": 81
+    },
+    {
+      "clip": "Shoot_Forward_Left",
+      "projected": 0,
+      "maxStep": 0.00017670855254535013,
+      "samples": 265
+    },
+    {
+      "clip": "Shoot_Forward_Right",
+      "projected": 0,
+      "maxStep": 0.00017670855254535013,
+      "samples": 265
+    },
+    {
+      "clip": "Shoot_Backward_Left",
+      "projected": 0,
+      "maxStep": 0.00017670855254535013,
+      "samples": 265
+    },
+    {
+      "clip": "Shoot_Backward_Right",
+      "projected": 0,
+      "maxStep": 0.00017670855254535013,
+      "samples": 265
+    },
+    {
+      "clip": "Quick_Turn_Left_180",
+      "projected": 0,
+      "maxStep": 0.00017670855254535013,
+      "samples": 76
+    },
+    {
+      "clip": "Quick_Turn_Right_180",
+      "projected": 0,
+      "maxStep": 0.00017670855254535013,
+      "samples": 76
+    },
+    {
+      "clip": "Run_Stop",
+      "projected": 0,
+      "maxStep": 0.00017670855254535013,
+      "samples": 76
+    },
+    {
+      "clip": "Bow_Attack_Enter",
+      "projected": 0,
+      "maxStep": 0.00017670855254535013,
+      "samples": 61
+    },
+    {
+      "clip": "Bow_Attack_Exit",
+      "projected": 0,
+      "maxStep": 0.00017670855254535013,
+      "samples": 67
+    },
+    {
+      "clip": "Bow_Attack_Upright",
+      "projected": 0,
+      "maxStep": 0.00017670855254535013,
+      "samples": 265
+    },
+    {
+      "clip": "Bow_Attack_Tilted",
+      "projected": 0,
+      "maxStep": 0.00017670855254535013,
+      "samples": 265
+    },
+    {
+      "clip": "Run_Stop_Turn_Left_180",
+      "projected": 0,
+      "maxStep": 0.00017670855254535013,
+      "samples": 109
+    },
+    {
+      "clip": "Run_Stop_Turn_Right_180",
+      "projected": 0,
+      "maxStep": 0.00017670855254535013,
+      "samples": 109
+    },
+    {
+      "clip": "Run_Stop_Turn_Left_90",
+      "projected": 0,
+      "maxStep": 0.00017670855254535013,
+      "samples": 88
+    },
+    {
+      "clip": "Run_Stop_Turn_Right_90",
+      "projected": 0,
+      "maxStep": 0.00017670855254535013,
+      "samples": 88
+    },
+    {
+      "clip": "Bow_Attack_Crouched",
+      "projected": 0,
+      "maxStep": 0.00017670855254535013,
+      "samples": 265
+    },
+    {
+      "clip": "Bow_Attack_Double",
+      "projected": 0,
+      "maxStep": 0.00017670855254535013,
+      "samples": 265
+    },
+    {
+      "clip": "Duck",
+      "projected": 0,
+      "maxStep": 0.00017670855254535013,
+      "samples": 85
+    },
+    {
+      "clip": "Jump_Shot",
+      "projected": 0,
+      "maxStep": 0.00017670855254535013,
+      "samples": 274
+    },
+    {
+      "clip": "Slide_Shot",
+      "projected": 0,
+      "maxStep": 0.00017670855254535013,
+      "samples": 265
+    },
+    {
+      "clip": "Crouch_Volley",
+      "projected": 0,
+      "maxStep": 0.00017670855254535013,
+      "samples": 265
+    },
+    {
+      "clip": "Side_Flip_Left",
+      "projected": 0,
+      "maxStep": 0.00017670855254535013,
+      "samples": 115
+    },
+    {
+      "clip": "Side_Flip_Right",
+      "projected": 0,
+      "maxStep": 0.00017670855254535013,
+      "samples": 115
+    },
+    {
+      "clip": "Forward_Vault",
+      "projected": 0,
+      "maxStep": 0.00017670855254535013,
+      "samples": 127
+    },
+    {
+      "clip": "Jump_Shot_Forward",
+      "projected": 0,
+      "maxStep": 0.00017670855254535013,
+      "samples": 274
+    },
+    {
+      "clip": "Jump_Shot_Backward",
+      "projected": 0,
+      "maxStep": 0.00017670855254535013,
+      "samples": 274
+    }
+  ]
+}
