@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
 import {launchReviewBrowser} from './lib/review-browser.mjs';
 import {webmWriter} from './lib/encode-webm.mjs';
-const directory='docs/evidence/meshy-fox-archer-v3',browser=await launchReviewBrowser(),errors=[];
+const directory=process.env.FOX_EVIDENCE_DIR||'docs/evidence/meshy-fox-archer-v3',browser=await launchReviewBrowser(),errors=[];
 try{
  const page=await browser.newPage({viewport:{width:1000,height:900}});page.on('pageerror',e=>errors.push(e.message));await page.goto((process.env.BASE_URL||'http://127.0.0.1:3117')+'/public/meshy-fox-preview/animated.html');await page.waitForFunction(()=>window.foxAnimation?.ready);
  const duration=await page.evaluate(()=>{const a=foxAnimation;a.combo(true);a.renderer.setSize(768,768,false);a.camera.aspect=1;a.camera.updateProjectionMatrix();return a.routine.duration;});

@@ -4,7 +4,7 @@ import os from 'node:os';
 import {execFileSync} from 'node:child_process';
 import {launchReviewBrowser} from './lib/review-browser.mjs';
 
-const directory='docs/evidence/meshy-fox-archer-v3';
+const directory=process.env.FOX_EVIDENCE_DIR||'docs/evidence/meshy-fox-archer-v3';
 // Posters: the idle and double-shot moments decoded by the clip review.
 const review=JSON.parse(fs.readFileSync(`${directory}/browser-review.json`,'utf8')),marks=review.decodedMarks;
 const cache=process.platform==='win32'?path.join(process.env.LOCALAPPDATA||path.join(os.homedir(),'AppData/Local'),'ms-playwright'):path.join(os.homedir(),'.cache/ms-playwright'),ffmpeg=process.env.FFMPEG_PATH||path.join(cache,'ffmpeg-1011',process.platform==='win32'?'ffmpeg-win64.exe':'ffmpeg-linux');

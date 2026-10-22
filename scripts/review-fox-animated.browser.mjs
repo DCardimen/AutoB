@@ -6,7 +6,7 @@ import {launchReviewBrowser} from './lib/review-browser.mjs';
 import {webmWriter} from './lib/encode-webm.mjs';
 import {BOW,CLIPS,RELEASE} from '../public/meshy-fox-preview/fox-motion.mjs';
 
-const directory='docs/evidence/meshy-fox-archer-v3';fs.mkdirSync(directory,{recursive:true});
+const directory=process.env.FOX_EVIDENCE_DIR||'docs/evidence/meshy-fox-archer-v3';fs.mkdirSync(directory,{recursive:true});
 const root=path.resolve('public/meshy-fox-preview');
 const server=http.createServer((req,res)=>{const file=path.resolve(root,'.'+new URL(req.url,'http://local').pathname);if(!file.startsWith(root+path.sep)){res.writeHead(403).end();return;}try{res.setHeader('Content-Type',({'.html':'text/html','.js':'text/javascript','.mjs':'text/javascript','.glb':'model/gltf-binary'})[path.extname(file)]||'application/octet-stream');res.end(fs.readFileSync(file));}catch{res.writeHead(404).end();}});
 await new Promise(r=>server.listen(0,'127.0.0.1',r));

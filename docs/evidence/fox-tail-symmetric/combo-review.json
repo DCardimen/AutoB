@@ -1,0 +1,93 @@
+{
+  "assetSHA256": "e32bb1defd766e9e053a2fe79464e4f4234806262d9c84ffd37284152395143a",
+  "errors": [],
+  "duration": 16.7,
+  "fps": 30,
+  "normalSpeedPlayback": true,
+  "history": [
+    {
+      "mode": "idle",
+      "at": 0
+    },
+    {
+      "mode": "run",
+      "at": 0
+    },
+    {
+      "mode": "dash",
+      "at": 1.2333333333333338
+    },
+    {
+      "mode": "idle",
+      "at": 1.9333333333333313
+    },
+    {
+      "mode": "sideFlipLeft",
+      "at": 1.9833333333333312
+    },
+    {
+      "mode": "idle",
+      "at": 2.933333333333328
+    },
+    {
+      "mode": "vault",
+      "at": 2.9833333333333276
+    },
+    {
+      "mode": "idle",
+      "at": 4.033333333333324
+    },
+    {
+      "mode": "attackEnter",
+      "at": 4.083333333333324
+    },
+    {
+      "mode": "jumpShot",
+      "at": 4.599999999999989
+    },
+    {
+      "mode": "slideShot",
+      "at": 6.849999999999981
+    },
+    {
+      "mode": "idle",
+      "at": 9.066666666666697
+    },
+    {
+      "mode": "attackEnter",
+      "at": 9.100000000000032
+    },
+    {
+      "mode": "crouchVolley",
+      "at": 9.616666666666724
+    },
+    {
+      "mode": "attackExit",
+      "at": 11.850000000000168
+    },
+    {
+      "mode": "sideFlipRight",
+      "at": 12.400000000000196
+    },
+    {
+      "mode": "duck",
+      "at": 12.850000000000218
+    },
+    {
+      "mode": "idle",
+      "at": 13.550000000000253
+    },
+    {
+      "mode": "run",
+      "at": 13.600000000000255
+    },
+    {
+      "mode": "runStopTurnLeft",
+      "at": 14.70000000000031
+    },
+    {
+      "mode": "idle",
+      "at": 15.600000000000355
+    }
+  ]
+}

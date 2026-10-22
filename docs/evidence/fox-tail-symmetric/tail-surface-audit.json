@@ -1,0 +1,223 @@
+{
+  "assetSHA256": "e32bb1defd766e9e053a2fe79464e4f4234806262d9c84ffd37284152395143a",
+  "fps": 60,
+  "samples": 11433,
+  "clocks": [
+    "portable clip",
+    "runtime ambient",
+    "runtime swish + moving target"
+  ],
+  "coverage": [
+    {
+      "mode": "idle",
+      "clip": "Idle",
+      "intersections": 0
+    },
+    {
+      "mode": "walk",
+      "clip": "Walk",
+      "intersections": 0
+    },
+    {
+      "mode": "run",
+      "clip": "Run",
+      "intersections": 0
+    },
+    {
+      "mode": "attack",
+      "clip": "Bow_Attack",
+      "intersections": 0
+    },
+    {
+      "mode": "dodgeLeft",
+      "clip": "Dodge_Left",
+      "intersections": 0
+    },
+    {
+      "mode": "dodgeRight",
+      "clip": "Dodge_Right",
+      "intersections": 0
+    },
+    {
+      "mode": "dash",
+      "clip": "Dash_Forward",
+      "intersections": 0
+    },
+    {
+      "mode": "shootForward",
+      "clip": "Shoot_Forward",
+      "intersections": 0
+    },
+    {
+      "mode": "shootBackward",
+      "clip": "Shoot_Backward",
+      "intersections": 0
+    },
+    {
+      "mode": "shootLeft",
+      "clip": "Shoot_Strafe_Left",
+      "intersections": 0
+    },
+    {
+      "mode": "shootRight",
+      "clip": "Shoot_Strafe_Right",
+      "intersections": 0
+    },
+    {
+      "mode": "hit",
+      "clip": "Hit_Reaction",
+      "intersections": 0
+    },
+    {
+      "mode": "death",
+      "clip": "Fall_and_Death",
+      "intersections": 0
+    },
+    {
+      "mode": "turnLeft45",
+      "clip": "Turn_Left_45",
+      "intersections": 0
+    },
+    {
+      "mode": "turnRight45",
+      "clip": "Turn_Right_45",
+      "intersections": 0
+    },
+    {
+      "mode": "turnLeft90",
+      "clip": "Turn_Left_90",
+      "intersections": 0
+    },
+    {
+      "mode": "turnRight90",
+      "clip": "Turn_Right_90",
+      "intersections": 0
+    },
+    {
+      "mode": "dashBack",
+      "clip": "Dash_Back",
+      "intersections": 0
+    },
+    {
+      "mode": "shootForwardLeft",
+      "clip": "Shoot_Forward_Left",
+      "intersections": 0
+    },
+    {
+      "mode": "shootForwardRight",
+      "clip": "Shoot_Forward_Right",
+      "intersections": 0
+    },
+    {
+      "mode": "shootBackwardLeft",
+      "clip": "Shoot_Backward_Left",
+      "intersections": 0
+    },
+    {
+      "mode": "shootBackwardRight",
+      "clip": "Shoot_Backward_Right",
+      "intersections": 0
+    },
+    {
+      "mode": "quickTurnLeft",
+      "clip": "Quick_Turn_Left_180",
+      "intersections": 0
+    },
+    {
+      "mode": "quickTurnRight",
+      "clip": "Quick_Turn_Right_180",
+      "intersections": 0
+    },
+    {
+      "mode": "runStop",
+      "clip": "Run_Stop",
+      "intersections": 0
+    },
+    {
+      "mode": "attackEnter",
+      "clip": "Bow_Attack_Enter",
+      "intersections": 0
+    },
+    {
+      "mode": "attackExit",
+      "clip": "Bow_Attack_Exit",
+      "intersections": 0
+    },
+    {
+      "mode": "attackUpright",
+      "clip": "Bow_Attack_Upright",
+      "intersections": 0
+    },
+    {
+      "mode": "attackTilted",
+      "clip": "Bow_Attack_Tilted",
+      "intersections": 0
+    },
+    {
+      "mode": "runStopTurnLeft",
+      "clip": "Run_Stop_Turn_Left_180",
+      "intersections": 0
+    },
+    {
+      "mode": "runStopTurnRight",
+      "clip": "Run_Stop_Turn_Right_180",
+      "intersections": 0
+    },
+    {
+      "mode": "runStopTurnLeft90",
+      "clip": "Run_Stop_Turn_Left_90",
+      "intersections": 0
+    },
+    {
+      "mode": "runStopTurnRight90",
+      "clip": "Run_Stop_Turn_Right_90",
+      "intersections": 0
+    },
+    {
+      "mode": "attackCrouched",
+      "clip": "Bow_Attack_Crouched",
+      "intersections": 0
+    },
+    {
+      "mode": "attackDouble",
+      "clip": "Bow_Attack_Double",
+      "intersections": 0
+    },
+    {
+      "mode": "duck",
+      "clip": "Duck",
+      "intersections": 0
+    },
+    {
+      "mode": "jumpShot",
+      "clip": "Jump_Shot",
+      "intersections": 0
+    },
+    {
+      "mode": "slideShot",
+      "clip": "Slide_Shot",
+      "intersections": 0
+    },
+    {
+      "mode": "crouchVolley",
+      "clip": "Crouch_Volley",
+      "intersections": 0
+    },
+    {
+      "mode": "sideFlipLeft",
+      "clip": "Side_Flip_Left",
+      "intersections": 0
+    },
+    {
+      "mode": "sideFlipRight",
+      "clip": "Side_Flip_Right",
+      "intersections": 0
+    },
+    {
+      "mode": "vault",
+      "clip": "Forward_Vault",
+      "intersections": 0
+    }
+  ],
+  "collisions": []
+}
