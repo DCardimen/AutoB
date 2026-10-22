@@ -15,9 +15,11 @@ export function headExpressionDeltas(points,normals){
    const v=source.clone(),normal=new T.Vector3().fromArray(normals,i*3);
    if(target<2){const sign=target===0?-1:1;ear(v,normal,sign,[-.055,sign*.09,-sign*.16]);}
    else if(target===2){
-    const radius=Math.hypot(v.x/.072,(v.y-1.038)/.065,(v.z-.378)/.080);
-    const weight=1-smooth(.40,1,radius);
-    v.y+=.0020*weight;v.z+=.0035*weight;
+    // Lift the nose pad and gently flare its sides. The muzzle and mouth
+    // stay still, and nothing protrudes toward the camera like a second lip.
+    const radius=Math.hypot(v.x/.053,(v.y-1.038)/.038,(v.z-.378)/.030);
+    const weight=(1-smooth(.45,1,radius))*smooth(.350,.369,v.z);
+    v.y+=.0026*weight;v.x+=Math.sign(v.x)*.0007*weight;
    }else if(target===3){
     // Angry brows: the fur over each eye presses down, most at the inner
     // end, and draws toward the nose. Nothing below the socket edge moves.

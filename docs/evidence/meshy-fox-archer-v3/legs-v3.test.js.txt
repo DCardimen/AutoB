@@ -1,0 +1,39 @@
+TAP version 13
+# Subtest: 13,056 rendered idle and gait poses introduce no detached lower-limb clusters
+ok 1 - 13,056 rendered idle and gait poses introduce no detached lower-limb clusters
+  ---
+  duration_ms: 192353.0963
+  ...
+# Subtest: natural bodies and legs use exactly the same authored palette through every form and facing
+ok 2 - natural bodies and legs use exactly the same authored palette through every form and facing
+  ---
+  duration_ms: 14341.9131
+  ...
+# Subtest: idle retains the authored stance and motion cannot exceed the source limb proportions
+ok 3 - idle retains the authored stance and motion cannot exceed the source limb proportions
+  ---
+  duration_ms: 8437.4749
+  ...
+# Subtest: every evolved crab crown has a tapered top and clear cell margins
+ok 4 - every evolved crab crown has a tapered top and clear cell margins
+  ---
+  duration_ms: 763.5183
+  ...
+# Subtest: stride tuning remains visible in the authored limbs, including short many-legged anatomies
+ok 5 - stride tuning remains visible in the authored limbs, including short many-legged anatomies
+  ---
+  duration_ms: 1563.2304
+  ...
+# Subtest: apex stag hooves end in separate warm toes instead of a moving blue ground platform
+ok 6 - apex stag hooves end in separate warm toes instead of a moving blue ground platform
+  ---
+  duration_ms: 116.738
+  ...
+1..6
+# tests 6
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 218258.5851

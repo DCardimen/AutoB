@@ -1,0 +1,59 @@
+TAP version 13
+# Subtest: arena uses a readable physical size; all families and evolutions stay within 70–150% of the new default
+ok 1 - arena uses a readable physical size; all families and evolutions stay within 70–150% of the new default
+  ---
+  duration_ms: 6.3286
+  ...
+# Subtest: an evolution unlocks an executable skill, a separate gear slot and a support socket without destroying links
+ok 2 - an evolution unlocks an executable skill, a separate gear slot and a support socket without destroying links
+  ---
+  duration_ms: 7.3526
+  ...
+# Subtest: equipment respects capacity and applies health, healing, cooldown, speed, shields and poise in combat
+ok 3 - equipment respects capacity and applies health, healing, cooldown, speed, shields and poise in combat
+  ---
+  duration_ms: 3.6776
+  ...
+# Subtest: weapon contacts and projectile origins scale with the same body as the rendered rig
+ok 4 - weapon contacts and projectile origins scale with the same body as the rendered rig
+  ---
+  duration_ms: 19.0394
+  ...
+# Subtest: grand evolution changes normalized anatomy instead of passing on enlargement alone
+ok 5 - grand evolution changes normalized anatomy instead of passing on enlargement alone
+  ---
+  duration_ms: 4134.8924
+  ...
+# Subtest: cloth anchors remain on the shoulders while lower panels lag through a turn and settle above the floor
+ok 6 - cloth anchors remain on the shoulders while lower panels lag through a turn and settle above the floor
+  ---
+  duration_ms: 127.3933
+  ...
+# Subtest: damage text reports actual HP loss and absorbed shield on the victim, aggregates status ticks and fades
+ok 7 - damage text reports actual HP loss and absorbed shield on the victim, aggregates status ticks and fades
+  ---
+  duration_ms: 2.653
+  ...
+# Subtest: every pixel family and form remains within its 64-pixel cell during all combat motions
+ok 8 - every pixel family and form remains within its 64-pixel cell during all combat motions
+  ---
+  duration_ms: 265838.2566
+  ...
+# Subtest: grandfathered ascended companions retain complete valid loadouts even after their family loses an evolution route
+ok 9 - grandfathered ascended companions retain complete valid loadouts even after their family loses an evolution route
+  ---
+  duration_ms: 6.2014
+  ...
+# Subtest: raised weapons and fallen bodies stay inside cells at both character-height slider limits
+ok 10 - raised weapons and fallen bodies stay inside cells at both character-height slider limits
+  ---
+  duration_ms: 29187.7077
+  ...
+1..10
+# tests 10
+# pass 10
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 299625.3608

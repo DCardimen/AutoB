@@ -1,0 +1,57 @@
+{
+  "workers": 4,
+  "timeoutMs": 300000,
+  "seconds": 218.4,
+  "passed": 6,
+  "failed": 0,
+  "results": [
+    {
+      "file": "tests/gaits-carry.test.js",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "seconds": 109.5,
+      "log": "playtest-artifacts/unit-suite/gaits-carry.test.js.txt"
+    },
+    {
+      "file": "tests/legs-v2.test.js",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "seconds": 183.91,
+      "log": "playtest-artifacts/unit-suite/legs-v2.test.js.txt"
+    },
+    {
+      "file": "tests/legs-v3.test.js",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "seconds": 218.38,
+      "log": "playtest-artifacts/unit-suite/legs-v3.test.js.txt"
+    },
+    {
+      "file": "tests/melee-weapon-art.test.js",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "seconds": 131.18,
+      "log": "playtest-artifacts/unit-suite/melee-weapon-art.test.js.txt"
+    },
+    {
+      "file": "tests/prototype-rig.test.js",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "seconds": 3.67,
+      "log": "playtest-artifacts/unit-suite/prototype-rig.test.js.txt"
+    },
+    {
+      "file": "tests/sprite-art-v2.test.js",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "seconds": 18.72,
+      "log": "playtest-artifacts/unit-suite/sprite-art-v2.test.js.txt"
+    }
+  ]
+}

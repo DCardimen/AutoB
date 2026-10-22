@@ -28,6 +28,7 @@ export function addEquipment(glb,bones,world){
  const arrow=meshNode('Arrow_Nock_and_Flight',arrowParts(),null);
  // The second arrow of a double shot, hidden in every other clip.
  const arrowSecond=meshNode('Arrow_Second',arrowParts(),null);g.nodes[arrowSecond].scale=[0,0,0];
+ const arrowThird=meshNode('Arrow_Third',arrowParts(),null);g.nodes[arrowThird].scale=[0,0,0];
  const flareGeo=new T.TorusGeometry(.035,.002,5,20);flareGeo.rotateY(Math.PI/2);
  const flare=meshNode('Release_Flair',[[flareGeo,flash]],null);g.nodes[flare].scale=[0,0,0];
  const sparks=[];for(let i=0;i<5;i++){const geo=new T.OctahedronGeometry(.009,0);const id=meshNode(`Release_Spark_${i}`,[[geo,flash]],null);g.nodes[id].scale=[0,0,0];sparks.push(id);}
@@ -43,5 +44,5 @@ export function addEquipment(glb,bones,world){
   for(const [geo,mat]of arrowParts().filter((_,k)=>k!==1)){geo.rotateZ(Math.PI/2);geo.applyQuaternion(lean);geo.translate(offset.x,QUIVER.length/2+QUIVER.stickOut,offset.z);spares.push([geo,mat]);}}
  const quiver=g.nodes.push({name:'Quiver',translation:centre.toArray(),rotation:orient.toArray()})-1;g.nodes[bones.get('Chest')].children??=[];g.nodes[bones.get('Chest')].children.push(quiver);
  const quiverMesh=g.meshes.push({name:'Quiver',primitives:[[tube,leather],[cap,strap],[rim,gold],[band,gold],...spares].map(([geo,mat])=>primitive(geo,mat))})-1,quiverBody=g.nodes.push({name:'Quiver_Body',mesh:quiverMesh})-1;g.nodes[quiver].children=[quiverBody];
- return {bowRoot,bow,string,arrow,arrowSecond,flare,sparks,quiver,materials:{wood,gold,cord,steel,leather}};
+ return {bowRoot,bow,string,arrow,arrowSecond,arrowThird,flare,sparks,quiver,materials:{wood,gold,cord,steel,leather}};
 }

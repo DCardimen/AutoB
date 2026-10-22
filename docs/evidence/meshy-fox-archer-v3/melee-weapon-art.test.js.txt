@@ -1,0 +1,29 @@
+TAP version 13
+# Subtest: resting melee weapons hang down from their hands instead of crossing the chest
+ok 1 - resting melee weapons hang down from their hands instead of crossing the chest
+  ---
+  duration_ms: 12548.9982
+  ...
+# Subtest: Brakk rests both hands below his shoulders on opposite sides of his torso
+ok 2 - Brakk rests both hands below his shoulders on opposite sides of his torso
+  ---
+  duration_ms: 374.3199
+  ...
+# Subtest: melee silhouettes retain the complete weapon and limbs during swings, dodges, hits and falls
+ok 3 - melee silhouettes retain the complete weapon and limbs during swings, dodges, hits and falls
+  ---
+  duration_ms: 86223.9683
+  ...
+# Subtest: active melee contacts keep their physical direction and the weapon remains in its wielding hand
+ok 4 - active melee contacts keep their physical direction and the weapon remains in its wielding hand
+  ---
+  duration_ms: 31589.9404
+  ...
+1..4
+# tests 4
+# pass 4
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 131071.6871

@@ -1,0 +1,37 @@
+{
+  "errors": [],
+  "previews": [
+    {
+      "name": "rowan-pose-preview",
+      "bytes": 878022,
+      "widths": [
+        320,
+        736,
+        1024
+      ],
+      "chapter": "11.06",
+      "playback": {
+        "time": 11.528275,
+        "playing": true,
+        "rate": 1,
+        "duration": 23.233
+      }
+    },
+    {
+      "name": "rowan-combat-preview",
+      "bytes": 681698,
+      "widths": [
+        320,
+        736,
+        1024
+      ],
+      "chapter": "2.2",
+      "playback": {
+        "time": 2.691811,
+        "playing": true,
+        "rate": 1,
+        "duration": 30.733
+      }
+    }
+  ]
+}

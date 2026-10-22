@@ -1,0 +1,99 @@
+TAP version 13
+# Subtest: sideways dodges lead with the correct foot and tilt toward their actual escape direction
+ok 1 - sideways dodges lead with the correct foot and tilt toward their actual escape direction
+  ---
+  duration_ms: 6.4094
+  ...
+# Subtest: humanoid strides grow with pace while staying compact relative to short legs
+ok 2 - humanoid strides grow with pace while staying compact relative to short legs
+  ---
+  duration_ms: 0.1787
+  ...
+# Subtest: hips and head stay continuous when the last supporting foot leaves the ground
+ok 3 - hips and head stay continuous when the last supporting foot leaves the ground
+  ---
+  duration_ms: 4.7676
+  ...
+# Subtest: movement-to-attack transitions begin at the carried pose and settle before active contact
+ok 4 - movement-to-attack transitions begin at the carried pose and settle before active contact
+  ---
+  duration_ms: 3.6023
+  ...
+# Subtest: dash and dodge poses enter and exit at the idle stance without crouch or hand pops
+ok 5 - dash and dodge poses enter and exit at the idle stance without crouch or hand pops
+  ---
+  duration_ms: 5.3909
+  ...
+# Subtest: anatomical legs keep their lengths and planted ankle height through full walk/run/sprint cycles
+ok 6 - anatomical legs keep their lengths and planted ankle height through full walk/run/sprint cycles
+  ---
+  duration_ms: 249.232
+  ...
+# Subtest: supporting feet remain fixed in world space while creatures move and turn
+ok 7 - supporting feet remain fixed in world space while creatures move and turn
+  ---
+  duration_ms: 624.6547
+  ...
+# Subtest: local foot contacts reproduce fixed world anchors after a body turn
+ok 8 - local foot contacts reproduce fixed world anchors after a body turn
+  ---
+  duration_ms: 0.6831
+  ...
+# Subtest: both axe hands follow one rigid handle and the contact/recovery pose is continuous
+ok 9 - both axe hands follow one rigid handle and the contact/recovery pose is continuous
+  ---
+  duration_ms: 11.6728
+  ...
+# Subtest: walking and running blend continuously and clear the ground during swing
+ok 10 - walking and running blend continuously and clear the ground during swing
+  ---
+  duration_ms: 0.4601
+  ...
+# Subtest: the archer draws the animated bowstring with the same hand that holds it
+ok 11 - the archer draws the animated bowstring with the same hand that holds it
+  ---
+  duration_ms: 4.8174
+  ...
+# Subtest: a target inside the aim cone is missed when the actual blade path cannot reach it
+ok 12 - a target inside the aim cone is missed when the actual blade path cannot reach it
+  ---
+  duration_ms: 18.7438
+  ...
+# Subtest: connected swings pause their weapon briefly without inflicting duplicate damage
+ok 13 - connected swings pause their weapon briefly without inflicting duplicate damage
+  ---
+  duration_ms: 11.1242
+  ...
+# Subtest: creatures align toward a target before attacking rather than snapping through 180 degrees
+ok 14 - creatures align toward a target before attacking rather than snapping through 180 degrees
+  ---
+  duration_ms: 9.2219
+  ...
+# Subtest: live walking, running and sprinting keep every limb reachable while turning and accelerating
+ok 15 - live walking, running and sprinting keep every limb reachable while turning and accelerating
+  ---
+  duration_ms: 2411.494
+  ...
+# Subtest: carried weapons retain their grip through walk/run/sprint, including both axe hands
+ok 16 - carried weapons retain their grip through walk/run/sprint, including both axe hands
+  ---
+  duration_ms: 64.2441
+  ...
+# Subtest: walking rolls heel to toe; sprint adds lift, forward lean and an alternating wolf trot
+ok 17 - walking rolls heel to toe; sprint adds lift, forward lean and an alternating wolf trot
+  ---
+  duration_ms: 8.5674
+  ...
+# Subtest: short many-legged steps preserve sole height and bone length through wide turn anchors
+ok 18 - short many-legged steps preserve sole height and bone length through wide turn anchors
+  ---
+  duration_ms: 2.5241
+  ...
+1..18
+# tests 18
+# pass 18
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3573.852
