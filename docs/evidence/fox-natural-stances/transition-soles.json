@@ -1,0 +1,12 @@
+[
+  {
+    "clip": "Bow_Attack_Enter",
+    "minimumSoleHeight": 0.0019999652249094273,
+    "time": 0.10833333333333334
+  },
+  {
+    "clip": "Bow_Attack_Exit",
+    "minimumSoleHeight": 0.0019999642064050787,
+    "time": 0.3
+  }
+]

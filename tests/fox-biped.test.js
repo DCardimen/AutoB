@@ -83,3 +83,21 @@ test('the reference run has narrow alternating strides, supported boots and a cl
   if(f===0)for(const b of mesh.skeleton.bones)begin.set(b.name,b.quaternion.clone());if(f===64)for(const b of mesh.skeleton.bones)assert.ok(begin.get(b.name).angleTo(b.quaternion)<.003,b.name+' loop seam');
  }assert.ok(maxZ-minZ>.18);assert.ok(BIPED_CLIPS.run.velocity[2]>.7);
 });
+
+function stancePose(name,t){mixer.stopAllAction();const clip=asset.animations.find(c=>c.name===name),action=mixer.clipAction(clip).setLoop(T.LoopOnce,1);action.clampWhenFinished=true;action.play();mixer.setTime(Math.min(t,clip.duration-1e-7));model.updateMatrixWorld(true);return clip;}
+const world=n=>model.getObjectByName(n).getWorldPosition(new T.Vector3());
+test('idle arms hang beside the thighs with soft elbows and a lowered bow clear of the floor',()=>{
+ for(const t of [0,1,2.08,4,6.3,7.99]){stancePose('Idle',t);for(const side of ['Right','Left']){const shoulder=world('smartrig'+side+'Arm'),elbow=world('smartrig'+side+'ForeArm'),hand=world('smartrig'+side+'Hand');assert.ok(shoulder.y-hand.y>.21,'arms down');assert.ok(Math.abs(hand.x-shoulder.x)<.05,'hands beside the body');assert.ok(Math.abs(elbow.x-shoulder.x)<.04,'elbows do not flare out');assert.ok(hand.y<world('smartrigHips').y-.05,'hands at thigh height');}
+  const bow=model.getObjectByName('Bow_Right_Hand');let low=Infinity;bow.traverse(o=>{if(!o.isMesh)return;for(let i=0;i<o.geometry.attributes.position.count;i++){const p=new T.Vector3().fromBufferAttribute(o.geometry.attributes.position,i).applyMatrix4(o.matrixWorld);low=Math.min(low,p.y);}});assert.ok(low>.005,`lowered bow touches floor: ${low}`);
+ }
+});
+
+test('standing attacks keep both authored boots flat, planted and staggered like the prior form',()=>{
+ const mesh=model.getObjectByName('Biped_Fox'),skin=new BipedSkin(mesh),raw=mesh.geometry.attributes.position.array,boots={Right:[],Left:[]};for(const id of new Set(mesh.geometry.index.array))if(raw[id*3+2]<.13)boots[raw[id*3]<0?'Right':'Left'].push(id);
+ for(const name of ['Bow_Attack','Bow_Attack_Upright','Bow_Attack_Tilted','Bow_Attack_Double','Bow_Attack_Crouched']){let initial;for(let f=0;f<=60;f++){stancePose(name,2.2*f/60);skin.update();const feet=['Right','Left'].map(s=>world('smartrig'+s+'Foot'));if(!initial)initial=feet.map(v=>v.clone());for(const [i,side]of ['Right','Left'].entries()){assert.ok(feet[i].distanceTo(initial[i])<.0002,`${name} ${side} sliding`);let low=Infinity;const p=new T.Vector3();for(const id of boots[side]){skin.vertex(id,p).applyMatrix4(mesh.matrixWorld);low=Math.min(low,p.y);}assert.ok(Math.abs(low-.002)<.001,`${name} ${side} hovering/penetrating ${low}`);const foot=model.getObjectByName('smartrig'+side+'Foot'),bind=originalAsset.scene.getObjectByName(foot.name),up=new T.Vector3(0,1,0).applyQuaternion(bind.getWorldQuaternion(new T.Quaternion()).invert()).applyQuaternion(foot.getWorldQuaternion(new T.Quaternion()));assert.ok(up.y>.999,'flat authored sole orientation');}assert.ok(feet[1].z-feet[0].z>.12&&feet[1].z-feet[0].z<.15,'modest prior-form stagger');}}
+});
+
+test('stance entry and exit meet the new idle and planted attack without pose discontinuities',()=>{
+ const names=['smartrigHips','smartrigRightLeg','smartrigLeftLeg','smartrigRightFoot','smartrigLeftFoot','smartrigRightHand','smartrigLeftHand','RoundHand_R_Grip','RoundHand_L_Grip','Bow_Right_Hand'];
+ for(const [a,ta,b,tb]of [['Idle',0,'Bow_Attack_Enter',0],['Bow_Attack_Enter',.5,'Bow_Attack',0],['Bow_Attack',0,'Bow_Attack_Exit',0],['Bow_Attack_Exit',.55,'Idle',0]]){stancePose(a,ta);const before=names.map(world);stancePose(b,tb);for(const [i,name]of names.entries())assert.ok(world(name).distanceTo(before[i])<.001,`${a} -> ${b}: ${name} jumps ${world(name).distanceTo(before[i])}`);}
+});
