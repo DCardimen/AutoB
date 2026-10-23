@@ -38,7 +38,9 @@ export class BipedController{
   for(const o of [spine,chest,neck,head,...CARRIED.map(this.bone)])if(o)this.base.push([o,o.position.clone(),o.quaternion.clone()]);
   this.model.updateMatrixWorld(true);
   const w={track:1,aim:isShooting(mode)?1:0,turn:isTurn(mode)?1:0,...weights};
-  const local=p=>root.worldToLocal(p.clone()),aim=local(target),pivot=local(chest.getWorldPosition(new T.Vector3())),angle=Math.atan2(aim.x-pivot.x,aim.z-pivot.z),lookYaw=T.MathUtils.clamp(angle,-1.1,1.1);
+  // The trunk's look turn fades out as the target passes behind, as the
+  // head's does below, instead of swinging to the other side.
+  const local=p=>root.worldToLocal(p.clone()),aim=local(target),pivot=local(chest.getWorldPosition(new T.Vector3())),angle=Math.atan2(aim.x-pivot.x,aim.z-pivot.z),rear=Math.min(1,Math.max(0,(Math.abs(angle)-1.9)/.5)),lookYaw=T.MathUtils.clamp(angle,-1.1,1.1)*(1-rear*rear*(3-2*rear));
   // Solve for the yaw that puts the arrow's own line, not the pivot's,
   // through the target: the nocked arrow while it is on the string, else the
   // fixed full-draw line.

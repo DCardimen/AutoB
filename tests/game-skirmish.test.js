@@ -26,17 +26,25 @@ test('the replay places, shoots and lands exactly as the game did',async()=>{
  assert.ok(Math.abs(U-120*recording.units[0].scale/1.102)<1e-9,'units map by the game creature height');
  const names=['smartrigRightArm','smartrigRightForeArm','smartrigLeftArm','smartrigLeftForeArm','smartrigRightHand','smartrigLeftHand','Bow_Right_Hand','smartrigHips','smartrigSpine2','smartrigHead'],bones=names.map(n=>replay.fox.getObjectByName(n)),turns=names.map(()=>[]);
  let prev=null,spawned=0;const spawnTimes=[];
+ // Life layer: feet planted under the body, the body kept up, the tail clear.
+ const L=replay.life,life={far:0,skate:0,drop:0};let feetBefore=null;
  while(!replay.finished){
   const t=replay.state.time;replay.step(1/60);
   // Ground position is the game's, every frame.
   const i=Math.min(recording.frames.length-2,Math.floor(t/recording.step)),k=Math.min(1,Math.max(0,(t-recording.frames[i].t)/recording.step)),a=recording.frames[i].u[0],c=recording.frames[i+1].u[0];
   assert.ok(Math.abs(replay.fox.position.x-((a.x+(c.x-a.x)*k)-cx)/U)<1e-9&&Math.abs(replay.fox.position.z-((a.y+(c.y-a.y)*k)-cy)/U)<1e-9,`fox off the game's position at ${t.toFixed(3)}s`);
   if(replay.state.arrows.length>spawned){spawned=replay.state.arrows.length;spawnTimes.push(t);}
+  const lc=L.ctx,air=lc.dodge&&lc.dodge.p>0&&lc.dodge.p<.82,feet=L.feet.map(f=>({p:f.foot.getWorldPosition(new T.Vector3()),planted:!f.swing&&!air&&!L.skidding}));
+  if(!air&&!L.skidding)for(const f of feet)life.far=Math.max(life.far,f.p.clone().sub(replay.fox.position).setY(0).length());
+  if(feetBefore)feet.forEach((f,k)=>{if(f.planted&&feetBefore[k].planted)life.skate=Math.max(life.skate,f.p.distanceTo(feetBefore[k].p));});feetBefore=feet;
+  life.drop=Math.max(life.drop,L.drop);
   const q=bones.map(o=>o.getWorldQuaternion(new T.Quaternion()));if(prev)q.forEach((x,j)=>turns[j].push(prev[j].angleTo(x)*180/Math.PI));prev=q;
  }
  // One loose arrow per game shot, leaving the bow on the game's shot time.
  assert.equal(spawnTimes.length,shots.length);shots.forEach((s,j)=>assert.ok(Math.abs(spawnTimes[j]-s.t)<=1/60+1e-9,`arrow ${j} leaves at ${spawnTimes[j]} for a game shot at ${s.t}`));
  const summary=replay.summary();assert.equal(summary.arrowsStuck,summary.hitsOnBrakk,'every game hit leaves an arrow in Brakk');
+ assert.ok(life.far<.35,`a grounded foot strays ${life.far.toFixed(2)} m from the body`);assert.ok(life.skate<.015,`a planted foot slides ${life.skate.toFixed(3)} m in a frame`);assert.ok(life.drop<=.0501,`the pelvis sinks ${life.drop.toFixed(3)} m to reach the feet`);
+ assert.equal(replay.controller.tailMisses||0,0,'the tail always finds a clear pose');
  // Fluid: no isolated per-frame snap well above its neighbours.
  for(const [j,d]of turns.entries())for(let n=1;n<d.length-1;n++)assert.ok(d[n]-Math.max(d[n-1],d[n+1])<30,`${names[j]} snaps ${d[n].toFixed(1)} degrees at frame ${n}`);
 });
