@@ -1,0 +1,231 @@
+{
+  "fps": 60,
+  "offset": "half-frame between baked keys",
+  "distance": "witnessed upper bound on closest surface gap",
+  "samples": 4121,
+  "intersections": [],
+  "minGap": 0.00025044893390378906,
+  "maxGap": 0.0014999849239344522,
+  "clips": [
+    {
+      "clip": "Idle",
+      "samples": 481,
+      "maxGap": 0.0014999849239344522
+    },
+    {
+      "clip": "Walk",
+      "samples": 61,
+      "maxGap": 0.0014959828700178536
+    },
+    {
+      "clip": "Run",
+      "samples": 40,
+      "maxGap": 0.0014682497777190173
+    },
+    {
+      "clip": "Bow_Attack",
+      "samples": 134,
+      "maxGap": 0.0014664267866047998
+    },
+    {
+      "clip": "Dodge_Left",
+      "samples": 50,
+      "maxGap": 0.001499650965975851
+    },
+    {
+      "clip": "Dodge_Right",
+      "samples": 50,
+      "maxGap": 0.001499655001016643
+    },
+    {
+      "clip": "Dash_Forward",
+      "samples": 43,
+      "maxGap": 0.001498723096845108
+    },
+    {
+      "clip": "Shoot_Forward",
+      "samples": 134,
+      "maxGap": 0.0014642246492882745
+    },
+    {
+      "clip": "Shoot_Backward",
+      "samples": 134,
+      "maxGap": 0.0014642211290135342
+    },
+    {
+      "clip": "Shoot_Strafe_Left",
+      "samples": 134,
+      "maxGap": 0.0014955671240942242
+    },
+    {
+      "clip": "Shoot_Strafe_Right",
+      "samples": 134,
+      "maxGap": 0.0014945293720676526
+    },
+    {
+      "clip": "Hit_Reaction",
+      "samples": 61,
+      "maxGap": 0.0014997748021197146
+    },
+    {
+      "clip": "Fall_and_Death",
+      "samples": 146,
+      "maxGap": 0.001447481074363321
+    },
+    {
+      "clip": "Turn_Left_45",
+      "samples": 27,
+      "maxGap": 0.0014989475592890578
+    },
+    {
+      "clip": "Turn_Right_45",
+      "samples": 27,
+      "maxGap": 0.0014965159365089022
+    },
+    {
+      "clip": "Turn_Left_90",
+      "samples": 38,
+      "maxGap": 0.0014887922601507458
+    },
+    {
+      "clip": "Turn_Right_90",
+      "samples": 38,
+      "maxGap": 0.0014865305368816425
+    },
+    {
+      "clip": "Dash_Back",
+      "samples": 41,
+      "maxGap": 0.0014977978144922722
+    },
+    {
+      "clip": "Shoot_Forward_Left",
+      "samples": 134,
+      "maxGap": 0.0014988243769089688
+    },
+    {
+      "clip": "Shoot_Forward_Right",
+      "samples": 134,
+      "maxGap": 0.0014997405429705822
+    },
+    {
+      "clip": "Shoot_Backward_Left",
+      "samples": 134,
+      "maxGap": 0.0014997516827629336
+    },
+    {
+      "clip": "Shoot_Backward_Right",
+      "samples": 134,
+      "maxGap": 0.0014988016542423932
+    },
+    {
+      "clip": "Quick_Turn_Left_180",
+      "samples": 39,
+      "maxGap": 0.0014953619991687399
+    },
+    {
+      "clip": "Quick_Turn_Right_180",
+      "samples": 39,
+      "maxGap": 0.0014938357247371264
+    },
+    {
+      "clip": "Run_Stop",
+      "samples": 39,
+      "maxGap": 0.0014747202588623976
+    },
+    {
+      "clip": "Bow_Attack_Enter",
+      "samples": 31,
+      "maxGap": 0.001494140409228906
+    },
+    {
+      "clip": "Bow_Attack_Exit",
+      "samples": 35,
+      "maxGap": 0.0014971057143609529
+    },
+    {
+      "clip": "Bow_Attack_Upright",
+      "samples": 134,
+      "maxGap": 0.0014940423638743051
+    },
+    {
+      "clip": "Bow_Attack_Tilted",
+      "samples": 134,
+      "maxGap": 0.0014860638512197168
+    },
+    {
+      "clip": "Run_Stop_Turn_Left_180",
+      "samples": 55,
+      "maxGap": 0.001483724970179797
+    },
+    {
+      "clip": "Run_Stop_Turn_Right_180",
+      "samples": 55,
+      "maxGap": 0.0014983322267256218
+    },
+    {
+      "clip": "Run_Stop_Turn_Left_90",
+      "samples": 45,
+      "maxGap": 0.0014644812821076486
+    },
+    {
+      "clip": "Run_Stop_Turn_Right_90",
+      "samples": 45,
+      "maxGap": 0.0014910609820651206
+    },
+    {
+      "clip": "Bow_Attack_Crouched",
+      "samples": 134,
+      "maxGap": 0.0014664288345899578
+    },
+    {
+      "clip": "Bow_Attack_Double",
+      "samples": 134,
+      "maxGap": 0.0014664267866047998
+    },
+    {
+      "clip": "Duck",
+      "samples": 43,
+      "maxGap": 0.0014938505060092192
+    },
+    {
+      "clip": "Jump_Shot",
+      "samples": 134,
+      "maxGap": 0.0014860532783317665
+    },
+    {
+      "clip": "Slide_Shot",
+      "samples": 134,
+      "maxGap": 0.001477042610498613
+    },
+    {
+      "clip": "Crouch_Volley",
+      "samples": 134,
+      "maxGap": 0.001477046121406101
+    },
+    {
+      "clip": "Side_Flip_Left",
+      "samples": 58,
+      "maxGap": 0.0014996342738519723
+    },
+    {
+      "clip": "Side_Flip_Right",
+      "samples": 58,
+      "maxGap": 0.0014996286076773622
+    },
+    {
+      "clip": "Forward_Vault",
+      "samples": 64,
+      "maxGap": 0.001492820021222649
+    },
+    {
+      "clip": "Jump_Shot_Forward",
+      "samples": 134,
+      "maxGap": 0.0014860312977234866
+    },
+    {
+      "clip": "Jump_Shot_Backward",
+      "samples": 134,
+      "maxGap": 0.0014860312977234866
+    }
+  ]
+}

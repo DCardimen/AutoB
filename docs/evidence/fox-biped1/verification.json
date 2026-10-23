@@ -1,0 +1,37 @@
+{
+  "assetSHA256": "9d466e76d530b2d5c512e2a43b13f886cccd208dad7520d56b732f91d891158f",
+  "reviewMatchesDeliveredAsset": true,
+  "clips": 44,
+  "facings": [
+    "S",
+    "SE",
+    "E",
+    "NE",
+    "N",
+    "NW",
+    "W",
+    "SW"
+  ],
+  "unitTests": 60,
+  "tail": {
+    "samples": 16256,
+    "fps": 240,
+    "intersections": 0,
+    "connectedRootSeamCorners": 1688
+  },
+  "quiver": {
+    "samples": 4121,
+    "fps": 60,
+    "intersections": 0,
+    "maximumWitnessedGapMeters": 0.0018248538469877054
+  },
+  "gltf": {
+    "errors": 0,
+    "warnings": 3
+  },
+  "normalSpeedPlayback": true,
+  "browserErrors": 0,
+  "offlineBuilds": "passed",
+  "sourceAndOfflineMovement": "passed",
+  "sourceAndOfflineCombat": "passed"
+}

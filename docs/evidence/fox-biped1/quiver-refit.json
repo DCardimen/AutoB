@@ -1,0 +1,17 @@
+[
+  {
+    "clip": "Side_Flip_Left",
+    "maxShift": 0.002730135361441933,
+    "maxGap": 0.0014855399339535641
+  },
+  {
+    "clip": "Side_Flip_Right",
+    "maxShift": 0.0027589739410039432,
+    "maxGap": 0.0014855379977404286
+  },
+  {
+    "clip": "Forward_Vault",
+    "maxShift": 0.00171556719702994,
+    "maxGap": 0.0014919955660292188
+  }
+]

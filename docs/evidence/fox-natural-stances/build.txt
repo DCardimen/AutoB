@@ -1,0 +1,65 @@
+Natural stance Idle
+Natural stance Bow_Attack
+Natural stance Dodge_Left
+Natural stance Dodge_Right
+Natural stance Dash_Forward
+Natural stance Hit_Reaction
+Natural stance Turn_Left_45
+Natural stance Turn_Right_45
+Natural stance Turn_Left_90
+Natural stance Turn_Right_90
+Natural stance Dash_Back
+Natural stance Quick_Turn_Left_180
+Natural stance Quick_Turn_Right_180
+Natural stance Run_Stop
+Natural stance Bow_Attack_Enter
+Natural stance Bow_Attack_Exit
+Natural stance Bow_Attack_Upright
+Natural stance Bow_Attack_Tilted
+Natural stance Run_Stop_Turn_Left_180
+Natural stance Run_Stop_Turn_Right_180
+Natural stance Run_Stop_Turn_Left_90
+Natural stance Run_Stop_Turn_Right_90
+Natural stance Bow_Attack_Crouched
+Natural stance Bow_Attack_Double
+Natural stance Duck
+Natural stance Side_Flip_Left
+Natural stance Side_Flip_Right
+Natural stance Forward_Vault
+Compacted biped 75220716 71367620
+{
+  reference: 'Prior fox-animated.glb Idle and planted standing bow stance',
+  clips: [
+    { clip: 'Idle', legs: false, arms: true },
+    { clip: 'Bow_Attack', legs: true, arms: false },
+    { clip: 'Dodge_Left', legs: false, arms: true },
+    { clip: 'Dodge_Right', legs: false, arms: true },
+    { clip: 'Dash_Forward', legs: false, arms: true },
+    { clip: 'Hit_Reaction', legs: false, arms: true },
+    { clip: 'Turn_Left_45', legs: false, arms: true },
+    { clip: 'Turn_Right_45', legs: false, arms: true },
+    { clip: 'Turn_Left_90', legs: false, arms: true },
+    { clip: 'Turn_Right_90', legs: false, arms: true },
+    { clip: 'Dash_Back', legs: false, arms: true },
+    { clip: 'Quick_Turn_Left_180', legs: false, arms: true },
+    { clip: 'Quick_Turn_Right_180', legs: false, arms: true },
+    { clip: 'Run_Stop', legs: false, arms: true },
+    { clip: 'Bow_Attack_Enter', legs: true, arms: true },
+    { clip: 'Bow_Attack_Exit', legs: true, arms: true },
+    { clip: 'Bow_Attack_Upright', legs: true, arms: false },
+    { clip: 'Bow_Attack_Tilted', legs: true, arms: false },
+    { clip: 'Run_Stop_Turn_Left_180', legs: false, arms: true },
+    { clip: 'Run_Stop_Turn_Right_180', legs: false, arms: true },
+    { clip: 'Run_Stop_Turn_Left_90', legs: false, arms: true },
+    { clip: 'Run_Stop_Turn_Right_90', legs: false, arms: true },
+    { clip: 'Bow_Attack_Crouched', legs: true, arms: false },
+    { clip: 'Bow_Attack_Double', legs: true, arms: false },
+    { clip: 'Duck', legs: false, arms: true },
+    { clip: 'Side_Flip_Left', legs: false, arms: true },
+    { clip: 'Side_Flip_Right', legs: false, arms: true },
+    { clip: 'Forward_Vault', legs: false, arms: true }
+  ],
+  maximumLegError: 1.2519143671725095e-7,
+  maximumArmError: 1.306528283871885e-7,
+  maximumSupportLowering: 0.008421642347539782
+}

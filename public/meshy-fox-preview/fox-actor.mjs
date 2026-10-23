@@ -40,19 +40,19 @@ function ease(weights,key,target,duration,dt){
 // turns and a smoothed look-at. Every state is a pure function of the fixed
 // steps taken, so playback repeats.
 export class FoxActor {
- constructor(asset){
-  this.model=asset.scene;this.mixer=new T.AnimationMixer(this.model);this.controller=new FoxPreviewController(this.model);
-  this.root=this.model.getObjectByName('Root');
+ constructor(asset,{controller=null,rootName='Root',clips=CLIPS}={}){
+  this.clips=clips;this.model=asset.scene;this.mixer=new T.AnimationMixer(this.model);this.controller=controller||new FoxPreviewController(this.model);
+  this.root=this.model.getObjectByName(rootName);
   // A second action set plays the outgoing pose of a cross-fade, so a clip
   // can fade into itself (one turn into the next) at two different times.
   this.actions=new Map();this.outgoing=new Map();this.rootEnd=new Map();this.rootTurns=new Map();
-  for(const [mode,info]of Object.entries(CLIPS)){
+  for(const [mode,info]of Object.entries(this.clips)){
    const clip=asset.animations.find(c=>c.name===info.name),action=this.mixer.clipAction(clip);action.setLoop(info.loop?T.LoopRepeat:T.LoopOnce,Infinity);action.clampWhenFinished=true;this.actions.set(mode,action);
    const ghost=this.mixer.clipAction(clip.clone());ghost.setLoop(action.loop,Infinity);ghost.clampWhenFinished=true;this.outgoing.set(mode,ghost);
    // Ground displacement a one-shot clip leaves on the root, committed when it ends.
-   const track=clip.tracks.find(t=>t.name==='Root.position');let end=new T.Vector3();if(track&&!info.loop){const v=track.values,n=v.length;end=new T.Vector3(v[n-3],0,v[n-1]);}
+   const track=clip.tracks.find(t=>t.name===rootName+'.position');let end=new T.Vector3();if(track&&!info.loop){const v=track.values,n=v.length;end=new T.Vector3(v[n-3],0,v[n-1]);}
    this.rootEnd.set(mode,end);
-   const turning=clip.tracks.find(t=>t.name==='Root.quaternion');if(turning)this.rootTurns.set(mode,turning.createInterpolant());
+   const turning=clip.tracks.find(t=>t.name===rootName+'.quaternion');if(turning)this.rootTurns.set(mode,turning.createInterpolant());
   }
   this.target=null;this.look=null;this.onFinish=null;this.bowAngles=null;this.reset();
  }
@@ -62,7 +62,9 @@ export class FoxActor {
   // more slowly, and the style weights blend between tracking behaviours.
   this.gaze={point:null,yaw:null};this.trunk={point:null,yaw:null};this.weights={track:0,aim:0,turn:0,anger:0,changes:{}};
  }
- get duration(){return CLIPS[this.mode].duration;}
+ shooting(mode){return isShooting(mode)||!!this.clips[mode]?.bow;}
+ attackLoop(mode){return isAttackLoop(mode)||this.clips[mode]?.jumpTravel!==undefined;}
+ get duration(){return this.clips[this.mode].duration;}
  // Begin a clip (or a blend of clips sharing one cycle), keeping the outgoing
  // pose for a cross-fade whose length suits the transition.
  start(mode,mix=new Map([[mode,1]])){
@@ -75,9 +77,9 @@ export class FoxActor {
   // A moving shot taken up from outside the shot cycle starts in the last
   // moment of its still ready hold, so the cross-fade settles before the paw
   // sets off for the quiver.
-  const from=this.mode;this.mode=mode;this.mix=mix;this.time=mode.startsWith('shoot')&&!isShooting(from)?CLIPS[mode].duration-.12:0;this.history.push({mode,at:this.ambient});
+  const from=this.mode;this.mode=mode;this.mix=mix;this.time=mode.startsWith('shoot')&&!this.shooting(from)?this.clips[mode].duration-.12:0;this.history.push({mode,at:this.ambient});
  }
- get inStance(){return isAttackLoop(this.mode)||this.mode==='attackEnter';}
+ get inStance(){return this.attackLoop(this.mode)||this.mode==='attackEnter';}
  // The standing shot is entered once and held: the stance steps in through
  // Bow_Attack_Enter, holds through any number of shots (bowAngles, if set,
  // cycles the bow angle shot by shot) and steps out through Bow_Attack_Exit
@@ -85,12 +87,12 @@ export class FoxActor {
  play(mode,then=null){
   then=then?[...then]:[];
   if(mode==='attack'&&this.bowAngles)mode=this.bowAngles[this.shots%this.bowAngles.length];
-  if(isAttackLoop(mode)&&!this.inStance){this.queue=[mode,...then];this.start('attackEnter');return;}
-  const standing=!isAttackLoop(mode)&&!isShooting(mode)&&!['run','walk','dash','dashBack','dodgeLeft','dodgeRight','duck','hit','death'].includes(mode);
+  if(this.attackLoop(mode)&&!this.inStance){this.queue=[mode,...then];this.start('attackEnter');return;}
+  const standing=!this.attackLoop(mode)&&!this.shooting(mode)&&!['run','walk','dash','dashBack','dodgeLeft','dodgeRight','duck','hit','death'].includes(mode);
   if(this.inStance&&standing){this.queue=mode==='idle'?then:[mode,...then];this.start('attackExit');return;}
   // Stepping out of the stance finishes before anything else done standing.
   if(this.mode==='attackExit'&&standing){this.queue=mode==='idle'?then:[mode,...then];return;}
-  this.queue=then;if(mode!==this.mode||this.mix.size>1||!CLIPS[mode].loop)this.start(mode);
+  this.queue=then;if(mode!==this.mode||this.mix.size>1||!this.clips[mode].loop)this.start(mode);
  }
  // Move while shooting toward a world direction: the two nearest of the
  // eight moving shots blend by angle, so the legs step along any direction.
@@ -128,11 +130,11 @@ export class FoxActor {
  // Finishing a one-shot clip moves the model by its root displacement (and
  // turn), so the next clip starts from the same ground position.
  finish(){
-  const mode=this.mode,end=this.rootEnd.get(mode).clone().applyAxisAngle(up,this.model.rotation.y),turn=CLIPS[mode].turn||0;
+  const mode=this.mode,end=this.rootEnd.get(mode).clone().applyAxisAngle(up,this.model.rotation.y),turn=this.clips[mode].turn||0;
   this.model.position.add(end);this.model.rotation.y=wrap(this.model.rotation.y+turn);
   let next=this.queue.shift()||'idle';
   // A queued shot is taken from the stance: enter it first.
-  if(isAttackLoop(next)&&mode!=='attackEnter'){this.queue.unshift(next);next='attackEnter';}
+  if(this.attackLoop(next)&&mode!=='attackEnter'){this.queue.unshift(next);next='attackEnter';}
   this.start(next);
   // The held outgoing pose is now expressed relative to the moved model.
   this.previous.offset.copy(this.rootEnd.get(mode));this.previous.yaw=turn;this.onFinish?.(mode,next);
@@ -140,7 +142,7 @@ export class FoxActor {
  // Yaw of the body's facing, including a turning clip's root rotation.
  facingYaw(){const z=new T.Vector3(0,0,1).applyQuaternion(this.root.getWorldQuaternion(new T.Quaternion()));return Math.atan2(z.x,z.z);}
  bearing(point){return wrap(this.yawToward(point)-this.facingYaw());}
- velocity(mix){const v=new T.Vector3();for(const [mode,weight]of mix)v.addScaledVector(travelVelocity(mode),weight);return v;}
+ velocity(mix){const v=new T.Vector3();for(const [mode,weight]of mix)v.addScaledVector(new T.Vector3(...(this.clips[mode]?.velocity||[0,0,0])),weight);return v;}
  // Second-order follow of the target's world yaw around the fox, with
  // feed-forward: smooth target motion (a few tenths of a radian per second)
  // is tracked without lag, while a jump (a new target, or a different point
@@ -166,11 +168,11 @@ export class FoxActor {
  }
  step(dt){
   this.ambient+=dt;this.time+=dt;
-  if(this.previous){this.previous.age+=dt;if([...this.previous.mix.keys()].every(m=>CLIPS[m].loop))this.previous.time+=dt;if(this.previous.age>=this.previous.length)this.previous=null;}
-  if(!CLIPS[this.mode].loop&&this.time>=this.duration){const leftover=this.time-this.duration;this.time=this.duration;this.finish();this.time=leftover;}
+  if(this.previous){this.previous.age+=dt;if([...this.previous.mix.keys()].every(m=>this.clips[m].loop))this.previous.time+=dt;if(this.previous.age>=this.previous.length)this.previous=null;}
+  if(!this.clips[this.mode].loop&&this.time>=this.duration){const leftover=this.time-this.duration;this.time=this.duration;this.finish();this.time=leftover;}
   // A shot loop wraps at its ready pose; a new bow angle takes over there.
-  if(isAttackLoop(this.mode)&&this.time>=this.duration){this.shots++;const next=this.bowAngles?.[this.shots%this.bowAngles.length];if(next&&next!==this.mode&&!this.queue.length){const leftover=this.time-this.duration;this.start(next);this.time=leftover;}}
-  if(CLIPS[this.mode].loop)this.time%=this.duration;
+  if(this.attackLoop(this.mode)&&this.time>=this.duration){this.shots++;const next=this.bowAngles?.[this.shots%this.bowAngles.length];if(next&&next!==this.mode&&!this.queue.length){const leftover=this.time-this.duration;this.start(next);this.time=leftover;}}
+  if(this.clips[this.mode].loop)this.time%=this.duration;
   // Travelling gaits carry the model with their planted-foot velocity, which
   // blends through the cross-fade instead of jumping.
   const w=this.previous?smooth(0,this.previous.length,this.previous.age):1,velocity=this.velocity(this.mix).multiplyScalar(w);
@@ -180,9 +182,9 @@ export class FoxActor {
   // pace, so a circling enemy stays inside the trunk's aim range.
   if(this.target&&[...this.mix.keys()].every(m=>KITE.includes(m))){const bearing=wrap(this.yawToward(this.target)-this.model.rotation.y);this.model.rotation.y=wrap(this.model.rotation.y+T.MathUtils.clamp(2*bearing,-.5,.5)*dt);}
   // Tracking fades in on a new target and out while it is beyond reach behind.
-  const W=this.weights,visible=this.target&&Math.abs(this.bearing(this.target))<2.5;ease(W,'track',visible?1:0,visible?.5:.35,dt);ease(W,'aim',isShooting(this.mode)?1:0,.45,dt);ease(W,'turn',isTurn(this.mode)?1:0,.35,dt);
+  const W=this.weights,visible=this.target&&Math.abs(this.bearing(this.target))<2.5;ease(W,'track',visible?1:0,visible?.5:.35,dt);ease(W,'aim',this.shooting(this.mode)?1:0,.45,dt);ease(W,'turn',isTurn(this.mode)?1:0,.35,dt);
   // The face hardens as the stance is taken and relaxes after it is left.
-  const angry=isShooting(this.mode)||this.mode==='attackEnter';ease(W,'anger',angry?1:0,angry?.25:.40,dt);
+  const angry=this.shooting(this.mode)||this.mode==='attackEnter';ease(W,'anger',angry?1:0,angry?.25:.40,dt);
   // The clips are posed first, so the look state reads the current facing
   // (a just-committed turn would otherwise count twice for one frame).
   this.poseClips();this.follow(this.gaze,this.look||this.target,13,dt);this.follow(this.trunk,this.target,8,dt);this.applyLook();
@@ -191,7 +193,7 @@ export class FoxActor {
  poseClips(){
   const {mixer,model}=this;this.controller.restore();
   const w=this.previous?smooth(0,this.previous.length,this.previous.age):1;
-  const drive=(actions,mix,time,scale)=>{for(const [mode,action]of actions){const weight=(mix?.get(mode)||0)*scale;if(weight<1e-6){action.enabled=false;continue;}action.enabled=true;action.play();action.time=Math.min(time,CLIPS[mode].duration-1e-6);action.setEffectiveWeight(weight);}};
+  const drive=(actions,mix,time,scale)=>{for(const [mode,action]of actions){const weight=(mix?.get(mode)||0)*scale;if(weight<1e-6){action.enabled=false;continue;}action.enabled=true;action.play();action.time=Math.min(time,this.clips[mode].duration-1e-6);action.setEffectiveWeight(weight);}};
   drive(this.actions,this.mix,this.time,w);drive(this.outgoing,this.previous?.mix,this.previous?.time??0,1-w);
   mixer.update(0);
   if(this.previous){
@@ -206,12 +208,12 @@ export class FoxActor {
   model.updateMatrixWorld(true);
  }
  // The root's own rotation in a clip mix at a moment.
- rootRotation(mix,time){const q=new T.Quaternion();let total=0;for(const [mode,weight]of mix){const i=this.rootTurns.get(mode);if(!i||weight<1e-6)continue;const v=i.evaluate(Math.min(time,CLIPS[mode].duration-1e-6)),r=new T.Quaternion(v[0],v[1],v[2],v[3]);total+=weight;q.slerp(r,weight/total);}return q;}
+ rootRotation(mix,time){const q=new T.Quaternion();let total=0;for(const [mode,weight]of mix){const i=this.rootTurns.get(mode);if(!i||weight<1e-6)continue;const v=i.evaluate(Math.min(time,this.clips[mode].duration-1e-6)),r=new T.Quaternion(v[0],v[1],v[2],v[3]);total+=weight;q.slerp(r,weight/total);}return q;}
  applyLook(){
   // Both follows track smooth motion without lag, so the aim needs no raw
   // target; a swapped target point is crossed smoothly instead of kicking.
   const target=this.target?this.trunk.point:null;
-  this.controller.apply({mode:this.mode,clipTime:this.time,ambientTime:this.ambient,target,look:this.gaze.point,weights:this.weights});
+  this.controller.apply({mode:this.mode,clipTime:this.time,ambientTime:this.ambient,target,look:this.gaze.point,weights:this.weights,resolve:!!this.previous||this.mix.size>1});
   this.model.traverse(o=>{if(o.isSkinnedMesh)o.skeleton.update();});
  }
 }

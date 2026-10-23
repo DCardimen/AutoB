@@ -1,0 +1,214 @@
+{
+  "assetSHA256": "ab5e265ea34af483a31fe2567fb8a29f3191eb6e6f1b90e8d49b63ad46f60892",
+  "errors": [],
+  "video": {
+    "bytes": 4364612,
+    "duration": 14.166,
+    "width": 960,
+    "height": 460,
+    "normalPlayback": true,
+    "fightSeconds": 14.166666666666666,
+    "fps": 30
+  },
+  "replay": {
+    "source": "game.js Battle (headless, visuals off)",
+    "rulesVersion": 17,
+    "winner": 0,
+    "duration": 11.92,
+    "unitsPerMeter": 41.37931034482759,
+    "units": [
+      {
+        "id": "rowan",
+        "name": "rowan",
+        "hp": 187,
+        "maxHp": 187,
+        "atk": 39,
+        "armor": 7,
+        "range": 230,
+        "speed": 94.85,
+        "attackInterval": 1.3,
+        "radius": 16.72,
+        "scale": 0.38,
+        "mass": 0.855,
+        "maxPoise": 42,
+        "dodgeStyle": "sidestep",
+        "equipment": [
+          "copper-practice-bow"
+        ]
+      },
+      {
+        "id": "brakk",
+        "name": "brakk",
+        "hp": 247.52,
+        "maxHp": 247.52,
+        "atk": 21.42,
+        "armor": 12,
+        "range": 30.16,
+        "speed": 75.46,
+        "attackInterval": 1.3,
+        "radius": 22.88,
+        "scale": 0.52,
+        "mass": 3.3800000000000003,
+        "maxPoise": 42,
+        "dodgeStyle": "roll",
+        "equipment": [
+          "cinder-cleaver"
+        ]
+      }
+    ],
+    "shots": 7,
+    "releases": [
+      {
+        "clip": "Bow_Attack",
+        "release": 1.52
+      },
+      {
+        "clip": "Bow_Attack_Crouched",
+        "release": 2.16
+      },
+      {
+        "clip": "Bow_Attack_Tilted",
+        "release": 2.84
+      },
+      {
+        "clip": "Bow_Attack",
+        "release": 6.72
+      },
+      {
+        "clip": "Bow_Attack_Upright",
+        "release": 8.04
+      },
+      {
+        "clip": "Bow_Attack_Tilted",
+        "release": 10.44
+      },
+      {
+        "clip": "Bow_Attack",
+        "release": 11.76
+      }
+    ],
+    "segments": [
+      {
+        "clip": "Bow_Attack",
+        "t0": 0.781,
+        "t1": 1.52,
+        "time0": 0,
+        "rate": 1.692
+      },
+      {
+        "clip": "Bow_Attack",
+        "t0": 1.52,
+        "t1": 1.796,
+        "time0": 1.25,
+        "rate": 3.437
+      },
+      {
+        "clip": "Bow_Attack_Crouched",
+        "t0": 1.796,
+        "t1": 2.16,
+        "time0": 0,
+        "rate": 3.437
+      },
+      {
+        "clip": "Bow_Attack_Crouched",
+        "t0": 2.16,
+        "t1": 2.454,
+        "time0": 1.25,
+        "rate": 3.235
+      },
+      {
+        "clip": "Bow_Attack_Tilted",
+        "t0": 2.454,
+        "t1": 2.84,
+        "time0": 0,
+        "rate": 3.235
+      },
+      {
+        "clip": "Bow_Attack_Tilted",
+        "t0": 2.84,
+        "t1": 3.401,
+        "time0": 1.25,
+        "rate": 1.692
+      },
+      {
+        "clip": "Bow_Attack",
+        "t0": 5.981,
+        "t1": 6.72,
+        "time0": 0,
+        "rate": 1.692
+      },
+      {
+        "clip": "Bow_Attack",
+        "t0": 6.72,
+        "t1": 7.29,
+        "time0": 1.25,
+        "rate": 1.667
+      },
+      {
+        "clip": "Bow_Attack_Upright",
+        "t0": 7.29,
+        "t1": 8.04,
+        "time0": 0,
+        "rate": 1.667
+      },
+      {
+        "clip": "Bow_Attack_Upright",
+        "t0": 8.04,
+        "t1": 8.601,
+        "time0": 1.25,
+        "rate": 1.692
+      },
+      {
+        "clip": "Bow_Attack_Tilted",
+        "t0": 9.701,
+        "t1": 10.44,
+        "time0": 0,
+        "rate": 1.692
+      },
+      {
+        "clip": "Bow_Attack_Tilted",
+        "t0": 10.44,
+        "t1": 11.01,
+        "time0": 1.25,
+        "rate": 1.667
+      },
+      {
+        "clip": "Bow_Attack",
+        "t0": 11.01,
+        "t1": 11.76,
+        "time0": 0,
+        "rate": 1.667
+      },
+      {
+        "clip": "Bow_Attack",
+        "t0": 11.76,
+        "t1": 12.321,
+        "time0": 1.25,
+        "rate": 1.692
+      }
+    ],
+    "dodges": 2,
+    "strikes": [
+      {
+        "t": 3.56,
+        "skill": "brakk",
+        "windup": 0.631,
+        "charged": false
+      },
+      {
+        "t": 7.36,
+        "skill": "auto-brakk",
+        "windup": 0.336,
+        "charged": false
+      },
+      {
+        "t": 8.72,
+        "skill": "auto-brakk",
+        "windup": 0.336,
+        "charged": false
+      }
+    ],
+    "arrowsStuck": 7,
+    "hitsOnBrakk": 7
+  }
+}

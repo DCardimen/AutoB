@@ -1,0 +1,27 @@
+{
+  "assetSHA256": "ef1749ffa1a593fc17dbed7554a8b85bd88834a047ac144d14761ea1955f2f7c",
+  "errors": [],
+  "video": {
+    "bytes": 4301814,
+    "duration": 14.433,
+    "width": 720,
+    "height": 540,
+    "normalPlayback": true,
+    "fightSeconds": 14.433333333333334,
+    "fps": 30
+  },
+  "decodeTimes": [
+    0.4,
+    0.55,
+    1.5,
+    1.62,
+    1.85,
+    3.3,
+    4.15,
+    5.55,
+    9,
+    12.4,
+    13.4,
+    14.2
+  ]
+}

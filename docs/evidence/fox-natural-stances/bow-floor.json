@@ -1,0 +1,142 @@
+[
+  {
+    "clip": "Idle",
+    "minimumBowHeight": 0.09062939869304074,
+    "time": 6
+  },
+  {
+    "clip": "Bow_Attack",
+    "minimumBowHeight": 0.28962726493660296,
+    "time": 1.9666666666666666
+  },
+  {
+    "clip": "Dodge_Left",
+    "minimumBowHeight": 0.05855968986227203,
+    "time": 0.041666666666666664
+  },
+  {
+    "clip": "Dodge_Right",
+    "minimumBowHeight": 0.09269236256286195,
+    "time": 0
+  },
+  {
+    "clip": "Dash_Forward",
+    "minimumBowHeight": 0.09129189415205999,
+    "time": 0.6999998880790711
+  },
+  {
+    "clip": "Hit_Reaction",
+    "minimumBowHeight": 0.09127398177622406,
+    "time": 0.025
+  },
+  {
+    "clip": "Turn_Left_45",
+    "minimumBowHeight": 0.0926620866167403,
+    "time": 0.4166666666666667
+  },
+  {
+    "clip": "Turn_Right_45",
+    "minimumBowHeight": 0.09265771992721725,
+    "time": 0.4166666666666667
+  },
+  {
+    "clip": "Turn_Left_90",
+    "minimumBowHeight": 0.09269227963098764,
+    "time": 0.599999923841858
+  },
+  {
+    "clip": "Turn_Right_90",
+    "minimumBowHeight": 0.09269230688265961,
+    "time": 0.599999923841858
+  },
+  {
+    "clip": "Dash_Back",
+    "minimumBowHeight": 0.09222916502078968,
+    "time": 0.008333333333333333
+  },
+  {
+    "clip": "Quick_Turn_Left_180",
+    "minimumBowHeight": 0.09260359074672334,
+    "time": 0.6166666666666667
+  },
+  {
+    "clip": "Quick_Turn_Right_180",
+    "minimumBowHeight": 0.09260030271713346,
+    "time": 0.6166666666666667
+  },
+  {
+    "clip": "Run_Stop",
+    "minimumBowHeight": 0.0580655126358538,
+    "time": 0
+  },
+  {
+    "clip": "Bow_Attack_Enter",
+    "minimumBowHeight": 0.09269236675381354,
+    "time": 0
+  },
+  {
+    "clip": "Bow_Attack_Exit",
+    "minimumBowHeight": 0.07149176427833667,
+    "time": 0.4583333333333333
+  },
+  {
+    "clip": "Bow_Attack_Upright",
+    "minimumBowHeight": 0.2892354376723004,
+    "time": 1.9666666666666666
+  },
+  {
+    "clip": "Bow_Attack_Tilted",
+    "minimumBowHeight": 0.2899129609930274,
+    "time": 1.9666666666666666
+  },
+  {
+    "clip": "Run_Stop_Turn_Left_180",
+    "minimumBowHeight": 0.0580655126358538,
+    "time": 0
+  },
+  {
+    "clip": "Run_Stop_Turn_Right_180",
+    "minimumBowHeight": 0.0580655126358538,
+    "time": 0
+  },
+  {
+    "clip": "Run_Stop_Turn_Left_90",
+    "minimumBowHeight": 0.0580655126358538,
+    "time": 0
+  },
+  {
+    "clip": "Run_Stop_Turn_Right_90",
+    "minimumBowHeight": 0.0580655126358538,
+    "time": 0
+  },
+  {
+    "clip": "Bow_Attack_Crouched",
+    "minimumBowHeight": 0.22855037265453412,
+    "time": 1.9583333333333333
+  },
+  {
+    "clip": "Bow_Attack_Double",
+    "minimumBowHeight": 0.28962726493660296,
+    "time": 1.9666666666666666
+  },
+  {
+    "clip": "Duck",
+    "minimumBowHeight": 0.09269236256286195,
+    "time": 0
+  },
+  {
+    "clip": "Side_Flip_Left",
+    "minimumBowHeight": 0.08416929307468171,
+    "time": 0.008333333333333333
+  },
+  {
+    "clip": "Side_Flip_Right",
+    "minimumBowHeight": 0.08416929307468171,
+    "time": 0.008333333333333333
+  },
+  {
+    "clip": "Forward_Vault",
+    "minimumBowHeight": 0.08416929307468171,
+    "time": 0.008333333333333333
+  }
+]

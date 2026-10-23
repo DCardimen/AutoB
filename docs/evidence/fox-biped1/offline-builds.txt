@@ -1,0 +1,10 @@
+
+> fang-and-feather@0.13.1 build:standalone
+> node scripts/build-standalone.mjs
+
+Built Fang & Feather standalone: 99.0 MiB, embedded artwork and fonts.
+
+> fang-and-feather@0.13.1 build:prototype
+> node scripts/build-prototype.mjs
+
+Built Fang & Feather Training Glade: 15.60 MiB, zero remote dependencies.

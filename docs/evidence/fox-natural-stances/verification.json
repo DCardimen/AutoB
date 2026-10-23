@@ -1,0 +1,32 @@
+{
+  "assetSHA256": "24dc10d1a74f964f75eb8a6e37e38d5a680335faaa7da62dc32dd9d69d7dc5ee",
+  "reviewMatchesDeliveredAsset": true,
+  "geometryAndMaterialsMatchParent": true,
+  "actions": 44,
+  "facings": [
+    "S",
+    "SE",
+    "E",
+    "NE",
+    "N",
+    "NW",
+    "W",
+    "SW"
+  ],
+  "unitTests": 63,
+  "normalSpeedPlayback": true,
+  "stanceTransitionPlayback": true,
+  "tailSamples": 16256,
+  "tailIntersections": 0,
+  "connectedTailRootSeamException": true,
+  "quiverSamples": 4121,
+  "quiverIntersections": 0,
+  "maximumQuiverContactWitnessMeters": 0.0014999849239344522,
+  "gltf": {
+    "errors": 0,
+    "warnings": 3
+  },
+  "bothOfflineBuilds": "passed",
+  "sourceAndOfflineMovement": "passed",
+  "sourceAndOfflineCombat": "passed"
+}

@@ -1,0 +1,44 @@
+Bow_Attack_Enter         2494034 deg/s² LeftForeArm    @ 0.275  vel   182 
+Dodge_Right              2278347 deg/s² LeftForeArm    @ 0.183  vel     5 
+Bow_Attack               2256710 deg/s² LeftArm        @ 0.383  vel 19355 seam 0.02° smartrigRightArm
+Shoot_Forward_Left       2144961 deg/s² LeftArm        @ 0.267  vel 18114 seam 0.02° smartrigRightForeArm
+Shoot_Backward_Right     2144961 deg/s² LeftArm        @ 0.267  vel 18114 seam 0.02° smartrigRightForeArm
+Shoot_Strafe_Left        2144930 deg/s² LeftArm        @ 0.267  vel 18113 seam 0.02° smartrigRightForeArm
+Shoot_Forward            2144827 deg/s² LeftArm        @ 0.267  vel 18114 seam 0.02° smartrigRightArm
+Shoot_Backward           2144827 deg/s² LeftArm        @ 0.267  vel 18114 seam 0.02° smartrigRightArm
+Bow_Attack_Upright       2144732 deg/s² LeftArm        @ 0.267  vel 18112 seam 0.02° smartrigRightArm
+Bow_Attack_Tilted        2144732 deg/s² LeftArm        @ 0.267  vel 18112 seam 0.02° smartrigRightArm
+Bow_Attack_Crouched      2144732 deg/s² LeftArm        @ 0.267  vel 18112 seam 0.02° smartrigRightArm
+Bow_Attack_Double        2144732 deg/s² LeftArm        @ 0.267  vel 18112 seam 0.02° smartrigRightArm
+Jump_Shot                2144732 deg/s² LeftArm        @ 0.267  vel 18112 seam 0.02° smartrigRightForeArm
+Slide_Shot               2144732 deg/s² LeftArm        @ 0.267  vel 18112 
+Crouch_Volley            2144732 deg/s² LeftArm        @ 0.267  vel 18112 seam 0.02° smartrigRightArm
+Jump_Shot_Forward        2144732 deg/s² LeftArm        @ 0.267  vel 18112 
+Jump_Shot_Backward       2144732 deg/s² LeftArm        @ 0.267  vel 18112 
+Shoot_Forward_Right      2144730 deg/s² LeftArm        @ 0.267  vel 18114 seam 0.02° smartrigRightForeArm
+Shoot_Backward_Left      2144730 deg/s² LeftArm        @ 0.267  vel 18114 seam 0.02° smartrigRightForeArm
+Shoot_Strafe_Right       2144677 deg/s² LeftArm        @ 0.267  vel 18114 seam 0.02° smartrigRightArm
+Run                      2026128 deg/s² RightForeArm   @ 0.567  vel   201 seam 0.04° smartrigRightHand
+Turn_Left_45             2000698 deg/s² RightForeArm   @ 0.1    vel   663 
+Turn_Left_90             1952262 deg/s² RightForeArm   @ 0.133  vel   665 
+Forward_Vault            1846069 deg/s² LeftArm        @ 0.183  vel    12 
+Side_Flip_Left           1846032 deg/s² LeftArm        @ 0.175  vel 15413 
+Side_Flip_Right          1829708 deg/s² LeftArm        @ 0.725  vel   155 
+Quick_Turn_Left_180      1777380 deg/s² RightForeArm   @ 0.442  vel    34 
+Bow_Attack_Exit          1767070 deg/s² Bow_Right_Hand @ 0.475  vel   127 
+Run_Stop_Turn_Left_180   1751982 deg/s² RightForeArm   @ 0.675  vel    78 
+Turn_Right_90            1667038 deg/s² RightForeArm   @ 0.425  vel    54 
+Quick_Turn_Right_180     1644927 deg/s² RightForeArm   @ 0.442  vel    48 
+Run_Stop                 1628752 deg/s² RightHand      @ 0.483  vel  4689 
+Run_Stop_Turn_Right_180  1533038 deg/s² RightForeArm   @ 0.675  vel    87 
+Run_Stop_Turn_Left_90    1502832 deg/s² RightForeArm   @ 0.533  vel 19257 
+Run_Stop_Turn_Right_90   1278498 deg/s² RightForeArm   @ 0.508  vel   204 
+Duck                     1239689 deg/s² LeftForeArm    @ 0.158  vel     1 
+Turn_Right_45            1238209 deg/s² LeftForeArm    @ 0.292  vel 10340 
+Hit_Reaction             1202058 deg/s² LeftForeArm    @ 0.183  vel     5 
+Dash_Forward             1187682 deg/s² LeftForeArm    @ 0.158  vel     3 
+Dash_Back                1187402 deg/s² LeftForeArm    @ 0.15   vel     3 
+Dodge_Left                856988 deg/s² LeftForeArm    @ 0.567  vel  7274 
+Walk                      611990 deg/s² RightForeArm   @ 0.55   vel    43 seam 0.03° smartrigLeftArm
+Fall_and_Death            518048 deg/s² RightHand      @ 0.708  vel   151 
+Idle                         265 deg/s² LeftForeArm    @ 7.367  vel     0 seam 0.02° smartrigLeftHand

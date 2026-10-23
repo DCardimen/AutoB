@@ -1,0 +1,191 @@
+{
+  "fps": 240,
+  "attachmentSeam": {
+    "affectedInfluences": 53579,
+    "tailFurVertices": 12949,
+    "pelvisSeamVertices": 21974,
+    "rearBeltVertices": 4942,
+    "attachmentVertices": 1688,
+    "method": "Original texture separates orange/cream fur from green/gold cloth and brown rear leather. Tail fur retains its source tail/pelvis blend, with thigh influence transferred to pelvis. Tail influence on costume transfers to pelvis; the rear belt and leather panel are pelvis-bound. Original mixed-weight attachment within 45 mm of the authored socket is the connected seam, excluded from surface collision only. All triangles remain visible. No positions, normals, UVs or textures changed."
+  },
+  "clips": [
+    {
+      "clip": "Idle",
+      "samples": 1921
+    },
+    {
+      "clip": "Walk",
+      "samples": 241
+    },
+    {
+      "clip": "Run",
+      "samples": 155
+    },
+    {
+      "clip": "Bow_Attack",
+      "samples": 530
+    },
+    {
+      "clip": "Dodge_Left",
+      "samples": 194
+    },
+    {
+      "clip": "Dodge_Right",
+      "samples": 194
+    },
+    {
+      "clip": "Dash_Forward",
+      "samples": 169
+    },
+    {
+      "clip": "Shoot_Forward",
+      "samples": 530
+    },
+    {
+      "clip": "Shoot_Backward",
+      "samples": 530
+    },
+    {
+      "clip": "Shoot_Strafe_Left",
+      "samples": 530
+    },
+    {
+      "clip": "Shoot_Strafe_Right",
+      "samples": 530
+    },
+    {
+      "clip": "Hit_Reaction",
+      "samples": 241
+    },
+    {
+      "clip": "Fall_and_Death",
+      "samples": 578
+    },
+    {
+      "clip": "Turn_Left_45",
+      "samples": 102
+    },
+    {
+      "clip": "Turn_Right_45",
+      "samples": 102
+    },
+    {
+      "clip": "Turn_Left_90",
+      "samples": 146
+    },
+    {
+      "clip": "Turn_Right_90",
+      "samples": 146
+    },
+    {
+      "clip": "Dash_Back",
+      "samples": 160
+    },
+    {
+      "clip": "Shoot_Forward_Left",
+      "samples": 530
+    },
+    {
+      "clip": "Shoot_Forward_Right",
+      "samples": 530
+    },
+    {
+      "clip": "Shoot_Backward_Left",
+      "samples": 530
+    },
+    {
+      "clip": "Shoot_Backward_Right",
+      "samples": 530
+    },
+    {
+      "clip": "Quick_Turn_Left_180",
+      "samples": 150
+    },
+    {
+      "clip": "Quick_Turn_Right_180",
+      "samples": 150
+    },
+    {
+      "clip": "Run_Stop",
+      "samples": 150
+    },
+    {
+      "clip": "Bow_Attack_Enter",
+      "samples": 121
+    },
+    {
+      "clip": "Bow_Attack_Exit",
+      "samples": 134
+    },
+    {
+      "clip": "Bow_Attack_Upright",
+      "samples": 530
+    },
+    {
+      "clip": "Bow_Attack_Tilted",
+      "samples": 530
+    },
+    {
+      "clip": "Run_Stop_Turn_Left_180",
+      "samples": 217
+    },
+    {
+      "clip": "Run_Stop_Turn_Right_180",
+      "samples": 217
+    },
+    {
+      "clip": "Run_Stop_Turn_Left_90",
+      "samples": 174
+    },
+    {
+      "clip": "Run_Stop_Turn_Right_90",
+      "samples": 174
+    },
+    {
+      "clip": "Bow_Attack_Crouched",
+      "samples": 530
+    },
+    {
+      "clip": "Bow_Attack_Double",
+      "samples": 530
+    },
+    {
+      "clip": "Duck",
+      "samples": 169
+    },
+    {
+      "clip": "Jump_Shot",
+      "samples": 530
+    },
+    {
+      "clip": "Slide_Shot",
+      "samples": 530
+    },
+    {
+      "clip": "Crouch_Volley",
+      "samples": 530
+    },
+    {
+      "clip": "Side_Flip_Left",
+      "samples": 229
+    },
+    {
+      "clip": "Side_Flip_Right",
+      "samples": 229
+    },
+    {
+      "clip": "Forward_Vault",
+      "samples": 253
+    },
+    {
+      "clip": "Jump_Shot_Forward",
+      "samples": 530
+    },
+    {
+      "clip": "Jump_Shot_Backward",
+      "samples": 530
+    }
+  ],
+  "intersections": [],
+  "samples": 16256
+}

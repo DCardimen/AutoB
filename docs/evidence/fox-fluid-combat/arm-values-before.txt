@@ -1,0 +1,4 @@
+max per 120Hz frame 175.2 Side_Flip_Left smartrigRightHand 0.858
+idle t0 R {"abd":17.000015228766408,"flex":7.000004502004085,"bend":38.48365385875767} L {"abd":17.000006895664143,"flex":7.00000281023327,"bend":38.48363942681453} pawZ R 0.194 L 0.198 bend range {"Right":{"min":38.48365385875767,"max":39.93533750815736},"Left":{"min":38.48363601729952,"max":40.167702887942035}}
+walk Right flex amp 39.5 corr with same thigh -0.83
+walk Left flex amp 38.6 corr with same thigh -0.83

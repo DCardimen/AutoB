@@ -1,0 +1,70 @@
+{
+  "clips": [
+    {
+      "name": "Bow_Ready",
+      "duration": 2,
+      "maxBowGripError": 9.940381994327463e-8,
+      "maxDrawGripError": 4.7862284689831825e-8,
+      "minDrawArmReach": 0.8673094361814397,
+      "minDrawPoleStrength": 0.5980722372751973
+    },
+    {
+      "name": "Bow_Draw",
+      "duration": 0.26,
+      "maxBowGripError": 9.940381981256396e-8,
+      "maxDrawGripError": 7.718163394390633e-8,
+      "minDrawArmReach": 0.6934361317793969,
+      "minDrawPoleStrength": 0.20167513908441775
+    },
+    {
+      "name": "Bow_Release",
+      "duration": 0.24,
+      "maxBowGripError": 4.5681078922600524e-8,
+      "maxDrawGripError": 6.63804535930044e-8,
+      "minDrawArmReach": 0.35490674561574254,
+      "minDrawPoleStrength": 0.46504166667323377
+    },
+    {
+      "name": "Bow_Reload",
+      "duration": 0.55,
+      "maxBowGripError": 1.092314388092872e-7,
+      "maxDrawGripError": 1.2064202678958502e-7,
+      "minDrawArmReach": 0.48779867115239656,
+      "minDrawPoleStrength": 0.1586144359276325
+    },
+    {
+      "name": "Bow_Nock",
+      "duration": 0.3,
+      "maxBowGripError": 1.092314388092872e-7,
+      "maxDrawGripError": 7.013922902009289e-8,
+      "minDrawArmReach": 0.5756356063457524,
+      "minDrawPoleStrength": 0.472640600617447
+    },
+    {
+      "name": "Bow_Ready_Enter",
+      "duration": 0.7,
+      "maxBowGripError": 1.1730935751554286e-7,
+      "maxDrawGripError": 0.0023099144074597276,
+      "minDrawArmReach": 0.5826012625289209,
+      "minDrawPoleStrength": 0.17582017727426186
+    },
+    {
+      "name": "Bow_Ready_Exit",
+      "duration": 0.7,
+      "maxBowGripError": 1.1730935755017611e-7,
+      "maxDrawGripError": 0.0023099144074597276,
+      "minDrawArmReach": 0.5824438105713579,
+      "minDrawPoleStrength": 0.15962883211211423
+    },
+    {
+      "name": "Victory",
+      "duration": 1.6,
+      "maxBowGripError": 1.1730946765941735e-7,
+      "maxDrawGripError": 0.002309914563163058,
+      "minDrawArmReach": 0.3672831453558215,
+      "minDrawPoleStrength": 0.7763736063394512
+    }
+  ],
+  "maxGripError": 1.1730946765941735e-7,
+  "maxDrawError": 0.002309914563163058
+}
