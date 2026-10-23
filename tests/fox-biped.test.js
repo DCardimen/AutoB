@@ -32,7 +32,7 @@ test('tail fur has no thigh influence, and remains on its original hips-attached
  assert.ok(g.asset.extras.tailWeights.attachmentVertices>0);assert.ok(g.asset.extras.tailWeights.attachmentVertices<2000,'bounded original socket seam');
 });
 test('all archer actions are portable and the downloaded Running motion is not added',()=>{
- const names=new Set(final.json.animations.map(a=>a.name));assert.ok(!names.has('Meshy_Running'));assert.equal(names.size,44);for(const c of Object.values(BIPED_CLIPS))assert.ok(names.has(c.name),c.name);
+ const names=new Set(final.json.animations.map(a=>a.name));assert.ok(!names.has('Meshy_Running'));assert.equal(names.size,52);for(const n of ['Bow_Ready','Bow_Draw','Bow_Release','Bow_Reload','Bow_Nock','Bow_Ready_Enter','Bow_Ready_Exit','Victory'])assert.ok(names.has(n),n);for(const c of Object.values(BIPED_CLIPS))assert.ok(names.has(c.name),c.name);
  for(const a of final.json.animations)for(const sampler of a.samplers){const times=final.read(sampler.input);for(let i=1;i<times.length;i++)assert.ok(times[i]>times[i-1],`${a.name}: strictly increasing exported key times`);}
  for(const a of final.json.animations)for(const c of a.channels){assert.ok(final.json.nodes[c.target.node],`${a.name}: valid target`);const values=final.read(a.samplers[c.sampler].output);for(const value of values)assert.ok(Number.isFinite(value));if(c.target.path==='rotation')for(let i=0;i<values.length;i+=4)assert.ok(Math.abs(Math.hypot(...values.slice(i,i+4))-1)<.0001,`${a.name}: unit rotation`);}
  const run=final.json.animations.find(c=>c.name==='Run'),times=final.read(run.samplers[0].input);assert.ok(Math.abs(times[times.length-1]-CLIPS.run.duration)<1e-6);
@@ -93,7 +93,7 @@ const world=n=>model.getObjectByName(n).getWorldPosition(new T.Vector3());
 test('resting, travelling and reaction arms stay near the body and only flex their elbows forward',()=>{
  const bindChest=originalAsset.scene.getObjectByName('smartrigSpine2').getWorldQuaternion(new T.Quaternion());
  const angles=side=>{const inv=model.getObjectByName('smartrigSpine2').getWorldQuaternion(new T.Quaternion()).multiply(bindChest.clone().invert()).invert(),a=world('smartrig'+side+'Arm'),b=world('smartrig'+side+'ForeArm'),c=world('smartrig'+side+'Hand'),u=b.clone().sub(a).applyQuaternion(inv).normalize(),f=c.clone().sub(b).applyQuaternion(inv).normalize();return {...armAngles(side==='Right'?-1:1,u,f),forward:f.addScaledVector(u,-f.dot(u)).z};};
- const action=/^(Bow_Attack(_Upright|_Tilted|_Crouched|_Double)?|Shoot_.*|Jump_Shot.*|Slide_Shot|Crouch_Volley|Side_Flip_.*|Forward_Vault)$/;
+ const action=/^(Bow_Attack(_Upright|_Tilted|_Crouched|_Double)?|Bow_(Ready|Draw|Release|Reload|Nock)|Bow_Ready_(Enter|Exit)|Victory|Shoot_.*|Jump_Shot.*|Slide_Shot|Crouch_Volley|Side_Flip_.*|Forward_Vault)$/;
  for(const clip of asset.animations.filter(c=>!action.test(c.name)))for(let i=0;i<=24;i++){stancePose(clip.name,clip.duration*i/24);for(const side of ['Right','Left']){const a=angles(side);
   assert.ok(a.abd<46,`${clip.name} ${side} upper arm lifted to ${a.abd.toFixed(0)} deg`);assert.ok(a.bend>=15,`${clip.name} ${side} locked elbow`);assert.ok(a.forward>-.02,`${clip.name} ${side} elbow bends backwards`);}}
  for(const clip of asset.animations.filter(c=>action.test(c.name)&&!/Side_Flip|Forward_Vault/.test(c.name)))for(const t of [0,clip.duration]){stancePose(clip.name,t);for(const side of ['Right','Left'])assert.ok(angles(side).abd<24,`${clip.name} rests with ${side} arm lifted`);}
@@ -137,4 +137,24 @@ test('standing attacks keep both authored boots flat, planted and staggered like
 test('stance entry and exit meet the new idle and planted attack without pose discontinuities',()=>{
  const names=['smartrigHips','smartrigRightLeg','smartrigLeftLeg','smartrigRightFoot','smartrigLeftFoot','smartrigRightHand','smartrigLeftHand','RoundHand_R_Grip','RoundHand_L_Grip','Bow_Right_Hand'];
  for(const [a,ta,b,tb]of [['Idle',0,'Bow_Attack_Enter',0],['Bow_Attack_Enter',.5,'Bow_Attack',0],['Bow_Attack',0,'Bow_Attack_Exit',0],['Bow_Attack_Exit',.55,'Idle',0]]){stancePose(a,ta);const before=names.map(world);stancePose(b,tb);for(const [i,name]of names.entries())assert.ok(world(name).distanceTo(before[i])<.001,`${a} -> ${b}: ${name} jumps ${world(name).distanceTo(before[i])}`);}
+});
+
+// The archery set is posed on the biped and timed by the game (game.js, rules
+// v17: an auto shot's windup is 0.26 s, its recovery 0.24 s). The bow stays in
+// the bow paw, a nocked arrow on the drawing paw, the reload reaches the
+// quiver mouth, and trips to the quiver arc round the shoulder rather than
+// folding the arm flat, where the elbow has no direction and flips.
+test('the archery set keeps the game timing, its contacts and an unfolded drawing arm',async()=>{
+ const {ARCHERY:replay}=await import('../public/meshy-fox-preview/game-replay.mjs'),set=final.json.asset.extras.archery;
+ assert.equal(replay.shot.windup,set.draw);assert.equal(replay.shot.recovery,set.release);assert.equal(Number(fs.readFileSync('game.js','utf8').match(/const shotWindup=\(this\.run\.rulesVersion\|\|0\)>=17\?([.\d]+):/)[1]),set.draw);
+ for(const [name,key]of [['Bow_Draw','draw'],['Bow_Release','release'],['Bow_Reload','reload'],['Bow_Nock','nock'],['Bow_Ready_Enter','enter'],['Bow_Ready_Exit','exit'],['Victory','victory']]){assert.ok(Math.abs(asset.animations.find(c=>c.name===name).duration-set[key])<1e-6,name);assert.equal(replay[key],set[key],'replay '+key);}
+ assert.equal(replay.grab.reload,set.reloadPhases[0]);assert.equal(replay.grab.enter,set.enterPhases[0]);
+ const reach=side=>world('smartrig'+side+'Arm').distanceTo(world('smartrig'+side+'Hand'))/(world('smartrig'+side+'Arm').distanceTo(world('smartrig'+side+'ForeArm'))+world('smartrig'+side+'ForeArm').distanceTo(world('smartrig'+side+'Hand')));
+ for(const name of ['Bow_Ready','Bow_Draw','Bow_Release','Bow_Reload','Bow_Nock','Bow_Ready_Enter','Bow_Ready_Exit']){const clip=asset.animations.find(c=>c.name===name);
+  for(let i=0;i<=Math.round(clip.duration*120);i++){stancePose(name,i/120);
+   assert.ok(world('Bow_Right_Hand').distanceTo(world('RoundHand_R_Grip'))<.01,`${name} bow leaves the bow paw at ${(i/120).toFixed(3)}s`);
+   if(/Reload|Ready_Enter|Ready_Exit|Nock/.test(name))assert.ok(reach('Left')>.45,`${name} folds the drawing arm flat at ${(i/120).toFixed(3)}s`);}}
+ for(const t of [0,.1,.2,.26]){stancePose(t?'Bow_Draw':'Bow_Ready',t);assert.ok(world('Arrow_Nock_and_Flight').distanceTo(world('RoundHand_L_Grip'))<.015,`the nocked arrow sits on the drawing paw at ${t}s`);}
+ const mouth=()=>model.getObjectByName('Quiver').localToWorld(new T.Vector3(0,.205/2+.03,0));
+ for(const [name,t]of [['Bow_Reload',set.reloadPhases[0]],['Bow_Ready_Enter',set.enterPhases[0]]]){stancePose(name,t);assert.ok(world('RoundHand_L_Grip').distanceTo(mouth())<.03,name+' reaches the quiver mouth');}
 });

@@ -1,0 +1,7 @@
+Bow_Draw         fastest arm/paw/bow turn 15.7 deg per 120 Hz frame
+Bow_Release      fastest arm/paw/bow turn 13.5 deg per 120 Hz frame
+Bow_Reload       fastest arm/paw/bow turn 23.7 deg per 120 Hz frame
+Bow_Nock         fastest arm/paw/bow turn 9.2 deg per 120 Hz frame
+Bow_Ready_Enter  fastest arm/paw/bow turn 21.4 deg per 120 Hz frame
+Bow_Ready_Exit   fastest arm/paw/bow turn 22.7 deg per 120 Hz frame
+Victory          fastest arm/paw/bow turn 11.0 deg per 120 Hz frame

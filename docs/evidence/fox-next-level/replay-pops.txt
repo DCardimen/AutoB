@@ -1,0 +1,1 @@
+isolated pops (>25° above both neighbours): 0
